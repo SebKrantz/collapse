@@ -19,7 +19,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data — fdiff"><meta 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -199,10 +199,7 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954    3  -16   47   -8    7   30   38   -9  -34  -30  -26   26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955   13   -9   34    2    1   45   49  -17  -35  -38  -37   41</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956    6   -7   40   -4    5   56   39   -8  -50  -49  -35   35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957    9  -14   55   -8    7   67   43    2  -63  -57  -42   31</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958    4  -22   44  -14   15   72   56   14 -101  -45  -49   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959   23  -18   64  -10   24   52   76   11  -96  -56  -45   43</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960   12  -26   28   42   11   63   87  -16  -98  -47  -71   42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-in"><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>                  <span class="co"># Forward difference</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  -6 -14   3   8 -14 -13   0  12  17  15 -14   3</span>
@@ -213,10 +210,7 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954  16 -47   8  -7 -30 -38   9  34  30  26 -26 -13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955   9 -34  -2  -1 -45 -49  17  35  38  37 -41  -6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956   7 -40   4  -5 -56 -39   8  50  49  35 -35  -9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  14 -55   8  -7 -67 -43  -2  63  57  42 -31  -4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958  22 -44  14 -15 -72 -56 -14 101  45  49 -27 -23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959  18 -64  10 -24 -52 -76 -11  96  56  45 -43 -12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960  26 -28 -42 -11 -63 -87  16  98  47  71 -42  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-in"><span class="fu">Dlog</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                   <span class="co"># Log-difference</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               Jan          Feb          Mar          Apr          May</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949           NA  0.052185753  0.112117298 -0.022989518 -0.064021859</span>
@@ -227,10 +221,6 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954  0.014815086 -0.081678031  0.223143551 -0.034635497  0.030371098</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955  0.055215723 -0.037899273  0.136210205  0.007462721  0.003710579</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956  0.021353124 -0.024956732  0.134884268 -0.012698583  0.015848192</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  0.028987537 -0.045462374  0.167820466 -0.022728251  0.019915310</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958  0.011834458 -0.066894235  0.129592829 -0.039441732  0.042200354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959  0.066021101 -0.051293294  0.171542423 -0.024938948  0.058840500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960  0.029199155 -0.064378662  0.069163360  0.095527123  0.023580943</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               Jun          Jul          Aug          Sep          Oct</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  0.109484233  0.091937495  0.000000000 -0.084557388 -0.133531393</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  0.175632569  0.131852131  0.000000000 -0.073203404 -0.172245905</span>
@@ -240,10 +230,6 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954  0.120627988  0.134477914 -0.030254408 -0.123344547 -0.123106058</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955  0.154150680  0.144581229 -0.047829088 -0.106321592 -0.129875081</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956  0.162204415  0.099191796 -0.019560526 -0.131769278 -0.148532688</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  0.172887525  0.097032092  0.004291852 -0.144914380 -0.152090098</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958  0.180943197  0.121098097  0.028114301 -0.223143551 -0.118092489</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959  0.116724274  0.149296301  0.019874186 -0.188422419 -0.128913869</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960  0.125287761  0.150673346 -0.026060107 -0.176398538 -0.097083405</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               Nov          Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949 -0.134732594  0.126293725</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950 -0.154150680  0.205443974</span>
@@ -253,10 +239,7 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954 -0.120516025  0.120516025</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955 -0.145067965  0.159560973</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956 -0.121466281  0.121466281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957 -0.129013003  0.096799383</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958 -0.146750091  0.083510633</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959 -0.117168974  0.112242855</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960 -0.167251304  0.102278849</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-in"><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>                <span class="co"># Second difference</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949   NA   NA    8  -17   -5   22   -1  -13  -12   -5    2   29</span>
@@ -267,10 +250,7 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954  -18  -19   63  -55   15   23    8  -47  -25    4    4   52</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955  -13  -22   43  -32   -1   44    4  -66  -18   -3    1   78</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956  -35  -13   47  -44    9   51  -17  -47  -42    1   14   70</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  -26  -23   69  -63   15   60  -24  -41  -65    6   15   73</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958  -27  -26   66  -58   29   57  -16  -42 -115   56   -4   76</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959   -4  -41   82  -74   34   28   24  -65 -107   40   11   88</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960  -31  -38   54   14  -31   52   24 -103  -82   51  -24  113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-in"><span class="fu">Dlog</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>             <span class="co"># Second log-difference</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Jan           Feb           Mar           Apr           May</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949            NA            NA  0.0599315450 -0.1351068163 -0.0410323405</span>
@@ -281,10 +261,6 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954 -0.0955329714 -0.0964931168  0.3048215823 -0.2577790480  0.0650065945</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955 -0.0653003019 -0.0931149952  0.1741094774 -0.1287474836 -0.0037521418</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956 -0.1382078481 -0.0463098564  0.1598409997 -0.1475828510  0.0285467756</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957 -0.0924787442 -0.0744499110  0.2132828402 -0.1905487172  0.0426435608</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958 -0.0849649257 -0.0787286925  0.1964870639 -0.1690345611  0.0816420865</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959 -0.0174895318 -0.1173143955  0.2228357169 -0.1964813709  0.0837794484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960 -0.0830437006 -0.0935778165  0.1335420218  0.0263637631 -0.0719461805</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Jun           Jul           Aug           Sep           Oct</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  0.1735060916 -0.0175467375 -0.0919374953 -0.0845573880 -0.0489740046</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  0.2525936098 -0.0437804375 -0.1318521311 -0.0732034040 -0.0990425008</span>
@@ -294,10 +270,6 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954  0.0902568899  0.0138499264 -0.1647323226 -0.0930901390  0.0002384892</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955  0.1504401004 -0.0095694510 -0.1924103165 -0.0584925044 -0.0235534893</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956  0.1463562224 -0.0630126191 -0.1187523214 -0.1122087518 -0.0167634099</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  0.1529722149 -0.0758554330 -0.0927402395 -0.1492062318 -0.0071757183</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958  0.1387428423 -0.0598451001 -0.0929837952 -0.2512578528  0.1050510618</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959  0.0578837743  0.0325720271 -0.1294221152 -0.2082966053  0.0595085504</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960  0.1017068187  0.0253855845 -0.1767334525 -0.1503384318  0.0793151339</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Nov           Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949 -0.0012012013  0.2610263193</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  0.0180952250  0.3595946540</span>
@@ -307,10 +279,7 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954  0.0025900336  0.2410320490</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955 -0.0151928838  0.3046289378</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956  0.0270664065  0.2429325621</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  0.0230770947  0.2258123867</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958 -0.0286576015  0.2302607239</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959  0.0117448950  0.2294118289</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960 -0.0701678993  0.2695301530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-in"><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">12</span><span class="op">)</span>                  <span class="co"># Seasonal difference (data is monthly)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA</span>
@@ -321,10 +290,7 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954   8  -8  -1  -8   5  21  38  21  22  18  23  28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955  38  45  32  42  36  51  62  54  53  45  34  49</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956  42  44  50  44  48  59  49  58  43  32  34  28</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  31  24  39  35  37  48  52  62  49  41  34  30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958  25  17   6   0   8  13  26  38   0  12   5   1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959  20  24  44  48  57  37  57  54  59  48  52  68</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960  57  49  13  65  52  63  74  47  45  54  28  27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-in"><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>,                      <span class="co"># Quasi-difference, see a better example below</span></span>
 <span class="r-in">  rho <span class="op">=</span> <span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Jan         Feb         Mar         Apr         May         Jun</span>
@@ -336,10 +302,6 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954  11.0008757  -7.8797082  54.4834062   1.3542577  16.0358149  39.3144524</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955  22.1154256   0.6328952  43.2746470  12.6280290  11.7076397  55.7474450</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956  17.0658878   4.3047200  51.0260825   8.6182966  17.4590752  68.6581019</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  21.1804377  -1.4613141  66.9814109   6.1707053  20.8522625  81.1308999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958  17.3745983  -8.4661803  56.6581019   0.4095374  28.8522625  86.4493428</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959  36.4144036  -3.6700733  77.6134304   6.1609729  39.7629194  68.7182478</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960  28.1211675  -9.4011682  43.5638926  58.6784425  29.3502672  81.7881261</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Jul         Aug         Sep         Oct         Nov         Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  18.3737225   5.8911921  -6.1088079 -11.5864721 -10.2631631  18.1397566</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  26.9309974   6.7669098  -5.2330902 -18.7107544 -13.7058882  30.5378101</span>
@@ -349,10 +311,7 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1954  48.5086129   3.0212163 -22.3370319 -19.6904138 -16.8845744  34.0804864</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1955  61.5386859  -2.5108519 -21.1875429 -25.5807302 -26.0933336  50.4338684</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1956  53.8872016   8.4396104 -33.8788325 -34.8691001 -22.8195623  45.7872504</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1957  59.7978585  20.5094887 -44.4109006 -40.9186378 -28.1875429  43.1406323</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1958  73.3153281  33.5444278 -80.8982973 -28.9186378 -34.7098786  39.3396591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1959  94.7881261  32.8133329 -73.7488083 -37.5701220 -28.7992218  57.4095374</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1960 108.2958633   8.7589289 -73.8779567 -26.7788812 -52.6497328  57.5240873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">2</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>     <span class="co"># Sequence of leaded/lagged and iterated differences</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      F2D1 F2D2 F2D3 FD1 FD2 FD3  -- D1  D2  D3 L2D1 L2D2 L2D3</span>
@@ -582,7 +541,7 @@ For computational details and efficiency considerations see the help page for <c
 <span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.1314,	Adjusted R-squared:  0.1309 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic: 260.4 on 5 and 8609 DF,  p-value: &lt; 2.2e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"> </span>
 <span class="r-in"><span class="co">## Using plm can make things easier, but avoid attaching or 'with' calls:</span></span>
 <span class="r-in"><span class="va">pwlddev</span> <span class="op">&lt;-</span> <span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/pdata.frame.html" class="external-link">pdata.frame</a></span><span class="op">(</span><span class="va">wlddev</span>, index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"country"</span>,<span class="st">"year"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">D</span><span class="op">(</span><span class="va">pwlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>                          <span class="co"># Again differences of LIFEEX and PCGDP</span></span>

@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -176,8 +176,10 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## data.frame method</span></span>
 <span class="r-in"><span class="fu">fnth</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">0.75</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  22.80   8.00 334.00 180.00   3.92   3.65  18.90   1.00   1.00   4.00   4.00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg         cyl        disp          hp        drat          wt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  22.8000000   8.0000000 334.0000000 180.0000000   3.9200000   3.6500000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        qsec          vs          am        gear        carb           X </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  18.9000000   1.0000000   1.0000000   4.0000000   4.0000000   0.4251434 </span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fnth</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">0.75</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp  drat     wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -1.8  -2 -174 -70 -0.02 -1.030 -2.44 -1  0    0    0</span>
@@ -186,39 +188,48 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -1.4  -2  -76 -70 -0.84 -0.435  0.54  0 -1   -1   -3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -4.1   0   26  -5 -0.77 -0.210 -1.88 -1 -1   -1   -2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -4.7  -2 -109 -75 -1.16 -0.190  1.32  0 -1   -1   -3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -1.1878639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.5115573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         0.9621367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -1.0787593</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.6938510</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -0.1334928</span>
 <span class="r-in"><span class="fu">fnth</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">0.75</span>, <span class="va">g</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg cyl  disp    hp drat   wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 26.00   4 120.3  91.0 4.43 2.14 16.70  0  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 22.80   4 140.8  95.0 3.70 3.15 20.01  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.1 30.40   4  95.1  93.0 4.11 2.20 18.90  1  1    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1 21.00   6 160.0 110.0 3.90 2.77 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 20.30   6 241.5 123.0 3.92 3.45 19.83  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 16.85   8 420.0 222.5 3.18 4.66 17.71  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.1 15.40   8 326.0 299.5 3.88 3.37 14.55  0  1    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg cyl  disp    hp drat   wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 26.00   4 120.3  91.0 4.43 2.14 16.70  0  1    5    2 -0.55381411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 22.80   4 140.8  95.0 3.70 3.15 20.01  1  0    4    2 -0.90357957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.1 30.40   4  95.1  93.0 4.11 2.20 18.90  1  1    4    2  1.34516688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1 21.00   6 160.0 110.0 3.90 2.77 16.46  0  1    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 20.30   6 241.5 123.0 3.92 3.45 19.83  1  0    4    4 -0.18098268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 16.85   8 420.0 222.5 3.18 4.66 17.71  0  0    3    4  0.42514337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.1 15.40   8 326.0 299.5 3.88 3.37 14.55  0  1    5    6 -1.18932646</span>
 <span class="r-in"><span class="fu">fnth</span><span class="op">(</span><span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span>, <span class="fl">0.75</span><span class="op">)</span>   <span class="co"># Another way of doing it..</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am   mpg  disp    hp drat   wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 26.00 120.3  91.0 4.43 2.14 16.70    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 22.80 140.8  95.0 3.70 3.15 20.01    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   4  1  1 30.40  95.1  93.0 4.11 2.20 18.90    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   6  0  1 21.00 160.0 110.0 3.90 2.77 16.46    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0 20.30 241.5 123.0 3.92 3.45 19.83    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 16.85 420.0 222.5 3.18 4.66 17.71    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1 15.40 326.0 299.5 3.88 3.37 14.55    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am   mpg  disp    hp drat   wt  qsec gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 26.00 120.3  91.0 4.43 2.14 16.70    5    2 -0.55381411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 22.80 140.8  95.0 3.70 3.15 20.01    4    2 -0.90357957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   4  1  1 30.40  95.1  93.0 4.11 2.20 18.90    4    2  1.34516688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   6  0  1 21.00 160.0 110.0 3.90 2.77 16.46    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0 20.30 241.5 123.0 3.92 3.45 19.83    4    4 -0.18098268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 16.85 420.0 222.5 3.18 4.66 17.71    3    4  0.42514337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1 15.40 326.0 299.5 3.88 3.37 14.55    5    6 -1.18932646</span>
 <span class="r-in"><span class="fu">fnth</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">0.75</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>   <span class="co"># No row-names generated</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     mpg cyl  disp    hp drat   wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 26.00   4 120.3  91.0 4.43 2.14 16.70  0  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 22.80   4 140.8  95.0 3.70 3.15 20.01  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 30.40   4  95.1  93.0 4.11 2.20 18.90  1  1    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 21.00   6 160.0 110.0 3.90 2.77 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 20.30   6 241.5 123.0 3.92 3.45 19.83  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 16.85   8 420.0 222.5 3.18 4.66 17.71  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 15.40   8 326.0 299.5 3.88 3.37 14.55  0  1    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     mpg cyl  disp    hp drat   wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 26.00   4 120.3  91.0 4.43 2.14 16.70  0  1    5    2 -0.55381411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 22.80   4 140.8  95.0 3.70 3.15 20.01  1  0    4    2 -0.90357957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 30.40   4  95.1  93.0 4.11 2.20 18.90  1  1    4    2  1.34516688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 21.00   6 160.0 110.0 3.90 2.77 16.46  0  1    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 20.30   6 241.5 123.0 3.92 3.45 19.83  1  0    4    4 -0.18098268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 16.85   8 420.0 222.5 3.18 4.66 17.71  0  0    3    4  0.42514337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 15.40   8 326.0 299.5 3.88 3.37 14.55  0  1    5    6 -1.18932646</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## matrix method</span></span>
 <span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">fnth</span><span class="op">(</span><span class="va">m</span>, <span class="fl">0.75</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear   carb </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  22.80   8.00 334.00 180.00   3.92   3.65  18.90   1.00   1.00   4.00   4.00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg         cyl        disp          hp        drat          wt </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  22.8000000   8.0000000 334.0000000 180.0000000   3.9200000   3.6500000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        qsec          vs          am        gear        carb           X </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  18.9000000   1.0000000   1.0000000   4.0000000   4.0000000   0.4251434 </span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fnth</span><span class="op">(</span><span class="va">m</span>, <span class="fl">0.75</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp  drat     wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -1.8  -2 -174 -70 -0.02 -1.030 -2.44 -1  0    0    0</span>
@@ -227,89 +238,76 @@ but if <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -1.4  -2  -76 -70 -0.84 -0.435  0.54  0 -1   -1   -3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -4.1   0   26  -5 -0.77 -0.210 -1.88 -1 -1   -1   -2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -4.7  -2 -109 -75 -1.16 -0.190  1.32  0 -1   -1   -3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -1.1878639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.5115573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         0.9621367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -1.0787593</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.6938510</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -0.1334928</span>
 <span class="r-in"><span class="fu">fnth</span><span class="op">(</span><span class="va">m</span>, <span class="fl">0.75</span>, <span class="va">g</span><span class="op">)</span> <span class="co"># etc..</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg cyl  disp    hp drat   wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 26.00   4 120.3  91.0 4.43 2.14 16.70  0  1    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 22.80   4 140.8  95.0 3.70 3.15 20.01  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.1 30.40   4  95.1  93.0 4.11 2.20 18.90  1  1    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1 21.00   6 160.0 110.0 3.90 2.77 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 20.30   6 241.5 123.0 3.92 3.45 19.83  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 16.85   8 420.0 222.5 3.18 4.66 17.71  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.1 15.40   8 326.0 299.5 3.88 3.37 14.55  0  1    5    6</span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg cyl  disp    hp drat   wt  qsec vs am gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 26.00   4 120.3  91.0 4.43 2.14 16.70  0  1    5    2 -0.55381411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 22.80   4 140.8  95.0 3.70 3.15 20.01  1  0    4    2 -0.90357957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.1 30.40   4  95.1  93.0 4.11 2.20 18.90  1  1    4    2  1.34516688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1 21.00   6 160.0 110.0 3.90 2.77 16.46  0  1    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 20.30   6 241.5 123.0 3.92 3.45 19.83  1  0    4    4 -0.18098268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 16.85   8 420.0 222.5 3.18 4.66 17.71  0  0    3    4  0.42514337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.1 15.40   8 326.0 299.5 3.88 3.37 14.55  0  1    5    6 -1.18932646</span>
+<span class="r-in"> </span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="co">## grouped_df method</span></span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fnth</span><span class="op">(</span><span class="fl">0.75</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     4     0     1  26   120.    91   4.43  2.14  16.7     5     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     1     0  22.8 141.    95   3.7   3.15  20.0     4     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     4     1     1  30.4  95.1   93   4.11  2.2   18.9     4     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0     1  21   160    110   3.9   2.77  16.5     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0  20.3 242.   123   3.92  3.45  19.8     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0  16.8 420    222.  3.18  4.66  17.7     3     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1  15.4 326    300.  3.88  3.37  14.6     5     6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb       X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     4     0     1  26   120.    91   4.43  2.14  16.7     5     2 -<span style="color: #BB0000;">0.554</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     1     0  22.8 141.    95   3.7   3.15  20.0     4     2 -<span style="color: #BB0000;">0.904</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     4     1     1  30.4  95.1   93   4.11  2.2   18.9     4     2  1.35  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0     1  21   160    110   3.9   2.77  16.5     4     4 -<span style="color: #BB0000;">0.086</span><span style="color: #BB0000; text-decoration: underline;">4</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0  20.3 242.   123   3.92  3.45  19.8     4     4 -<span style="color: #BB0000;">0.181</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0  16.8 420    222.  3.18  4.66  17.7     3     4  0.425 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1  15.4 326    300.  3.88  3.37  14.6     5     6 -<span style="color: #BB0000;">1.19</span>  </span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fnth</span><span class="op">(</span><span class="fl">0.75</span>, <span class="va">hp</span><span class="op">)</span>           <span class="co"># Weighted</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am sum.hp   mpg  disp  drat    wt  qsec  gear  carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     4     0     1     91  26    120.  4.43  2.14  16.7     5     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     1     0    254  22.8  141.  3.92  3.15  22.9     4     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     4     1     1    564  30.4  108   4.11  2.32  18.9     4     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0     1    395  21    160   3.9   2.88  17.0     5     6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0    461  19.2  225   3.92  3.44  19.4     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0   <span style="text-decoration: underline;">2</span>330  16.4  440   3.21  5.25  17.8     3     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1    599  15.8  351   4.22  3.57  14.6     5     8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am sum.hp   mpg  disp  drat    wt  qsec  gear  carb      X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     4     0     1     91  26    120.  4.43  2.14  16.7     5     2 -<span style="color: #BB0000;">0.554</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     1     0    254  22.8  141.  3.92  3.15  22.9     4     2 -<span style="color: #BB0000;">0.904</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     4     1     1    564  30.4  108   4.11  2.32  18.9     4     2  1.36 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0     1    395  21    160   3.9   2.88  17.0     5     6  0.322</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0    461  19.2  225   3.92  3.44  19.4     4     4 -<span style="color: #BB0000;">0.654</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0   <span style="text-decoration: underline;">2</span>330  16.4  440   3.21  5.25  17.8     3     4  0.383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1    599  15.8  351   4.22  3.57  14.6     5     8 -<span style="color: #BB0000;">0.230</span></span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fnth</span><span class="op">(</span><span class="fl">0.75</span><span class="op">)</span>              <span class="co"># Faster grouping!</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am   mpg  disp    hp drat   wt  qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 26.00 120.3  91.0 4.43 2.14 16.70    5    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 22.80 140.8  95.0 3.70 3.15 20.01    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   4  1  1 30.40  95.1  93.0 4.11 2.20 18.90    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   6  0  1 21.00 160.0 110.0 3.90 2.77 16.46    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0 20.30 241.5 123.0 3.92 3.45 19.83    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 16.85 420.0 222.5 3.18 4.66 17.71    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1 15.40 326.0 299.5 3.88 3.37 14.55    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am   mpg  disp    hp drat   wt  qsec gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 26.00 120.3  91.0 4.43 2.14 16.70    5    2 -0.55381411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 22.80 140.8  95.0 3.70 3.15 20.01    4    2 -0.90357957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   4  1  1 30.40  95.1  93.0 4.11 2.20 18.90    4    2  1.34516688</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   6  0  1 21.00 160.0 110.0 3.90 2.77 16.46    4    4 -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0 20.30 241.5 123.0 3.92 3.45 19.83    4    4 -0.18098268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 16.85 420.0 222.5 3.18 4.66 17.71    3    4  0.42514337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1 15.40 326.0 299.5 3.88 3.37 14.55    5    6 -1.18932646</span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fnth</span><span class="op">(</span><span class="fl">0.75</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>   <span class="co"># Divide by third quartile</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     cyl vs am       mpg      disp        hp      drat        wt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4             6  0  1 1.0000000 1.0000000 1.0000000 1.0000000 0.9458484</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag         6  0  1 1.0000000 1.0000000 1.0000000 1.0000000 1.0379061</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710            4  1  1 0.7500000 1.1356467 1.0000000 0.9367397 1.0545455</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive        6  1  0 1.0541872 1.0683230 0.8943089 0.7857143 0.9318841</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     8  0  0 1.1097923 0.8571429 0.7865169 0.9905660 0.7381974</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               6  1  0 0.8916256 0.9316770 0.8536585 0.7040816 1.0028986</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360            8  0  0 0.8486647 0.8571429 1.1011236 1.0094340 0.7660944</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D             4  1  0 1.0701754 1.0419034 0.6526316 0.9972973 1.0126984</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230              4  1  0 1.0000000 1.0000000 1.0000000 1.0594595 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280              6  1  0 0.9458128 0.6939959 1.0000000 1.0000000 0.9971014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C             6  1  0 0.8768473 0.6939959 1.0000000 1.0000000 0.9971014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE            8  0  0 0.9732938 0.6566667 0.8089888 0.9654088 0.8733906</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL            8  0  0 1.0267062 0.6566667 0.8089888 0.9654088 0.8004292</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC           8  0  0 0.9020772 0.6566667 0.8089888 0.9654088 0.8111588</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood    8  0  0 0.6172107 1.1238095 0.9213483 0.9213836 1.1266094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental   8  0  0 0.6172107 1.0952381 0.9662921 0.9433962 1.1639485</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial     8  0  0 0.8724036 1.0476190 1.0337079 1.0157233 1.1469957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128              4  1  1 1.0657895 0.8275499 0.7096774 0.9927007 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          qsec gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           1.0000000 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       1.0340219 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          0.9846561 1.00 0.50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      0.9803328 0.75 0.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   0.9610390 1.00 0.50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             1.0196672 0.75 0.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          0.8944099 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           0.9995002 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            1.1444278 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            0.9228442 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C           0.9531014 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          0.9824958 1.00 0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          0.9937888 1.00 0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         1.0163749 1.00 0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  1.0152456 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 1.0062112 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   0.9836251 1.00 1.00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            1.0301587 1.00 0.50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   cyl vs am       mpg      disp        hp      drat        wt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           6  0  1 1.0000000 1.0000000 1.0000000 1.0000000 0.9458484</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       6  0  1 1.0000000 1.0000000 1.0000000 1.0000000 1.0379061</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          4  1  1 0.7500000 1.1356467 1.0000000 0.9367397 1.0545455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      6  1  0 1.0541872 1.0683230 0.8943089 0.7857143 0.9318841</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   8  0  0 1.1097923 0.8571429 0.7865169 0.9905660 0.7381974</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             6  1  0 0.8916256 0.9316770 0.8536585 0.7040816 1.0028986</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          8  0  0 0.8486647 0.8571429 1.1011236 1.0094340 0.7660944</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           4  1  0 1.0701754 1.0419034 0.6526316 0.9972973 1.0126984</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        qsec gear carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         1.0000000 1.00 1.00  8.8263556</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     1.0340219 1.00 1.00  1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        0.9846561 1.00 0.50  1.0313070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.9803328 0.75 0.25  3.6114834</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.9610390 1.00 0.50 -0.6320401</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           1.0196672 0.75 0.25 -1.6114834</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        0.8944099 1.00 1.00 -2.0439434</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         0.9995002 1.00 1.00 -0.2491504</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>     <span class="co"># Faster selecting</span></span>

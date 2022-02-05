@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -101,39 +101,23 @@
 <span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu">group</span><span class="op">(</span><span class="va">wlddev</span>, starts <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span class="r-in"><span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">g</span>, <span class="st">"N.groups"</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="programming.html">fnrow</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span> <span class="va">wlddev</span> <span class="kw">else</span></span>
 <span class="r-in">   <span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">g</span>, <span class="st">"starts"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        country iso3c       date year decade     region     income  OECD PCGDP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Afghanistan   AFG 1966-01-01 1965   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Afghanistan   AFG 1967-01-01 1966   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Afghanistan   AFG 1968-01-01 1967   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Afghanistan   AFG 1969-01-01 1968   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Afghanistan   AFG 1970-01-01 1969   1960 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Afghanistan   AFG 1971-01-01 1970   1970 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Afghanistan   AFG 1972-01-01 1971   1970 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Afghanistan   AFG 1973-01-01 1972   1970 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Afghanistan   AFG 1974-01-01 1973   1970 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Afghanistan   AFG 1975-01-01 1974   1970 South Asia Low income FALSE    NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    LIFEEX GINI       ODA      POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  32.446   NA 116769997  8996973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  32.962   NA 232080002  9169410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  33.471   NA 112839996  9351441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  33.971   NA 237720001  9543205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  34.463   NA 295920013  9744781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  34.948   NA 341839996  9956320</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  35.430   NA 311609985 10174836</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  35.914   NA 247610001 10399926</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  36.403   NA 171270004 10637063</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 36.900   NA 155229996 10893776</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 37.409   NA 164380005 11173642</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 37.930   NA 241899994 11475445</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 38.461   NA 278799988 11791215</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 39.003   NA 250750000 12108963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 39.558   NA 201279999 12412950</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13161 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan   AFG 1966-01-01 1965   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 Afghanistan   AFG 1967-01-01 1966   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   LIFEEX GINI       ODA      POP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 32.446   NA 116769997  8996973</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 32.962   NA 232080002  9169410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 33.471   NA 112839996  9351441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 33.971   NA 237720001  9543205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 34.463   NA 295920013  9744781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 34.948   NA 341839996  9956320</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 35.430   NA 311609985 10174836</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13169 rows ]</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

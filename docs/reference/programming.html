@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -117,7 +117,7 @@
 <dt>vind1</dt>
 <dd><p>logical. If <code>length(v) == 1L</code>, setting <code>vind1 = TRUE</code> will interpret <code>v</code> as an index of <code>X</code> and <code>R</code>, rather than a value to search and replace.</p></dd>
 <dt>op</dt>
-<dd><p>an integer or character string indicating the operation to perform.</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td><code>"+"</code></td><td></td><td>add <code>v</code></td></tr><tr><td>2</td><td></td><td><code>"-"</code></td><td></td><td>subtract <code>v</code></td></tr><tr><td>3</td><td></td><td><code>"*"</code></td><td></td><td>multiply by <code>v</code></td></tr><tr><td>4</td><td></td><td><code>"/"</code></td><td></td><td>divide by <code>v</code></td></tr></table><p></p></dd>
+<dd><p>an integer or character string indicating the operation to perform.</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td><code>"+"</code></td><td></td><td>add <code>V</code></td></tr><tr><td>2</td><td></td><td><code>"-"</code></td><td></td><td>subtract <code>V</code></td></tr><tr><td>3</td><td></td><td><code>"*"</code></td><td></td><td>multiply by <code>V</code></td></tr><tr><td>4</td><td></td><td><code>"/"</code></td><td></td><td>divide by <code>V</code></td></tr></table><p></p></dd>
 <dt>rowwise</dt>
 <dd><p>logical. <code>TRUE</code> performs the operation between <code>v</code> and each row of <code>x</code>. Only applicable if <code>x</code> is a matrix and <code>v</code> a vector such that <code>length(v) == ncol(x)</code>.</p></dd>
 <dt>cols</dt>
@@ -158,28 +158,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [37]  37  38  39  40  41  42  61  62  63  64  65  66  67  68  69  70  71  72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [55]  73  74  75  76  77  78  79  80  81 122 183 184 185 186 187 188 189 190</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [73] 191 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207 208</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225 243</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [109] 244 245 246 247 248 249 250 251 252 253 254 305 306 307 308 309 310 311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [127] 312 313 314 315 316 317 318 319 320 321 322 323 324 325 366 367 368 369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145] 370 371 372 373 374 375 376 377 378 379 380 381 382 383 427 488 489 490</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [163] 491 492 493 494 495 496 497 498 499 500 501 502 503 504 505 506 507 508</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181] 509 510 511 512 513 514 515 516 517 518 549 550 551 552 553 554 555 556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [199] 557 558</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3506 entries ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] 209 210 211 212 213 214 215 216 217 218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3606 entries ]</span>
 <span class="r-in"><span class="fu">whichNA</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, invert <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Same as which(!is.na(wlddev$PCGDP))</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1]  43  44  45  46  47  48  49  50  51  52  53  54  55  56  57  58  59  60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [19]  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [37] 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [55] 118 119 120 121 123 124 125 126 127 128 129 130 131 132 133 134 135 136</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [73] 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [109] 173 174 175 176 177 178 179 180 181 182 226 227 228 229 230 231 232 233</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [127] 234 235 236 237 238 239 240 241 242 255 256 257 258 259 260 261 262 263</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145] 264 265 266 267 268 269 270 271 272 273 274 275 276 277 278 279 280 281</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [163] 282 283 284 285 286 287 288 289 290 291 292 293 294 295 296 297 298 299</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181] 300 301 302 303 304 326 327 328 329 330 331 332 333 334 335 336 337 338</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [199] 339 340</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 9270 entries ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] 155 156 157 158 159 160 161 162 163 164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 9370 entries ]</span>
 <span class="r-in"><span class="fu">whichv</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, <span class="st">"Chad"</span><span class="op">)</span>       <span class="co"># Same as which(wlddev$county == "Chad")</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 2319 2320 2321 2322 2323 2324 2325 2326 2327 2328 2329 2330 2331 2332 2333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [16] 2334 2335 2336 2337 2338 2339 2340 2341 2342 2343 2344 2345 2346 2347 2348</span>
@@ -198,28 +186,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [37]  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [55]  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91]  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 106 107 108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [109] 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [127] 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145] 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [163] 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181] 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [199] 199 200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 12915 entries ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91]  91  92  93  94  95  96  97  98  99 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 13015 entries ]</span>
 <span class="r-in"><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span> <span class="op">%!=%</span> <span class="st">"Chad"</span>           <span class="co"># Same thing</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [19]  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [37]  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [55]  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91]  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 106 107 108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [109] 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [127] 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145] 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [163] 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181] 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [199] 199 200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 12915 entries ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91]  91  92  93  94  95  96  97  98  99 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 13015 entries ]</span>
 <span class="r-in"><span class="va">lvec</span> <span class="op">&lt;-</span> <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span> <span class="op">==</span> <span class="st">"Chad"</span>     <span class="co"># If we already have a logical vector...</span></span>
 <span class="r-in"><span class="fu">whichv</span><span class="op">(</span><span class="va">lvec</span>, <span class="cn">FALSE</span><span class="op">)</span>                  <span class="co"># is fastver than which(!lvec)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18</span>
@@ -227,144 +203,138 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [37]  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [55]  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91]  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 106 107 108</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [109] 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [127] 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145] 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [163] 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181] 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [199] 199 200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 12915 entries ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91]  91  92  93  94  95  96  97  98  99 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 13015 entries ]</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">lvec</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Using the %==% operator can yield tangible performance gains</span></span>
 <span class="r-in"><span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span> <span class="op">%==%</span> <span class="st">"DEU"</span><span class="op">)</span> <span class="co"># 3x faster than:</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    country iso3c       date year decade                region      income OECD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Germany   DEU 1961-01-01 1960   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Germany   DEU 1962-01-01 1961   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  Germany   DEU 1963-01-01 1962   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Germany   DEU 1964-01-01 1963   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Germany   DEU 1965-01-01 1964   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Germany   DEU 1966-01-01 1965   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Germany   DEU 1967-01-01 1966   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Germany   DEU 1968-01-01 1967   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Germany   DEU 1969-01-01 1968   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Germany   DEU 1970-01-01 1969   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Germany   DEU 1971-01-01 1970   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Germany   DEU 1972-01-01 1971   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Germany   DEU 1973-01-01 1972   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Germany   DEU 1974-01-01 1973   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Germany   DEU 1975-01-01 1974   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       PCGDP   LIFEEX GINI ODA      POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA 69.31002   NA  NA 72814900</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        NA 69.50800   NA  NA 73377632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        NA 69.69154   NA  NA 74025784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        NA 69.85961   NA  NA 74714353</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        NA 70.01371   NA  NA 75318337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        NA 70.15183   NA  NA 75963695</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7        NA 70.27141   NA  NA 76600311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        NA 70.37400   NA  NA 76951336</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        NA 70.46510   NA  NA 77294314</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10       NA 70.55068   NA  NA 77909682</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 19681.32 70.63978   NA  NA 78169289</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 20260.67 70.74288   NA  NA 78312842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 21031.08 70.86700   NA  NA 78688452</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 21966.55 71.01668   NA  NA 78936666</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 22153.43 71.19541   NA  NA 78967433</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 46 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   country iso3c       date year decade                region      income OECD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Germany   DEU 1961-01-01 1960   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Germany   DEU 1962-01-01 1961   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Germany   DEU 1963-01-01 1962   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Germany   DEU 1964-01-01 1963   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Germany   DEU 1965-01-01 1964   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Germany   DEU 1966-01-01 1965   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 Germany   DEU 1967-01-01 1966   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP   LIFEEX GINI ODA      POP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA 69.31002   NA  NA 72814900</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA 69.50800   NA  NA 73377632</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    NA 69.69154   NA  NA 74025784</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    NA 69.85961   NA  NA 74714353</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA 70.01371   NA  NA 75318337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    NA 70.15183   NA  NA 75963695</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    NA 70.27141   NA  NA 76600311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 54 rows ]</span>
 <span class="r-in"><span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span> <span class="op">==</span> <span class="st">"DEU"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    country iso3c       date year decade                region      income OECD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  Germany   DEU 1961-01-01 1960   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Germany   DEU 1962-01-01 1961   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  Germany   DEU 1963-01-01 1962   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Germany   DEU 1964-01-01 1963   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Germany   DEU 1965-01-01 1964   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  Germany   DEU 1966-01-01 1965   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  Germany   DEU 1967-01-01 1966   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Germany   DEU 1968-01-01 1967   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Germany   DEU 1969-01-01 1968   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Germany   DEU 1970-01-01 1969   1960 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 Germany   DEU 1971-01-01 1970   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Germany   DEU 1972-01-01 1971   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Germany   DEU 1973-01-01 1972   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Germany   DEU 1974-01-01 1973   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Germany   DEU 1975-01-01 1974   1970 Europe &amp; Central Asia High income TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       PCGDP   LIFEEX GINI ODA      POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA 69.31002   NA  NA 72814900</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        NA 69.50800   NA  NA 73377632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        NA 69.69154   NA  NA 74025784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        NA 69.85961   NA  NA 74714353</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        NA 70.01371   NA  NA 75318337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        NA 70.15183   NA  NA 75963695</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7        NA 70.27141   NA  NA 76600311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        NA 70.37400   NA  NA 76951336</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        NA 70.46510   NA  NA 77294314</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10       NA 70.55068   NA  NA 77909682</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 19681.32 70.63978   NA  NA 78169289</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 20260.67 70.74288   NA  NA 78312842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 21031.08 70.86700   NA  NA 78688452</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 21966.55 71.01668   NA  NA 78936666</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 22153.43 71.19541   NA  NA 78967433</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 46 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   country iso3c       date year decade                region      income OECD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Germany   DEU 1961-01-01 1960   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Germany   DEU 1962-01-01 1961   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Germany   DEU 1963-01-01 1962   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Germany   DEU 1964-01-01 1963   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Germany   DEU 1965-01-01 1964   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Germany   DEU 1966-01-01 1965   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 Germany   DEU 1967-01-01 1966   1960 Europe &amp; Central Asia High income TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP   LIFEEX GINI ODA      POP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA 69.31002   NA  NA 72814900</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA 69.50800   NA  NA 73377632</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    NA 69.69154   NA  NA 74025784</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    NA 69.85961   NA  NA 74714353</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA 70.01371   NA  NA 75318337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    NA 70.15183   NA  NA 75963695</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    NA 70.27141   NA  NA 76600311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 54 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Missing values</span></span>
 <span class="r-in"><span class="va">mtc_na</span> <span class="op">&lt;-</span> <span class="fu">na_insert</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">0.15</span><span class="op">)</span>    <span class="co"># Set 15% of values missing at random</span></span>
 <span class="r-in"><span class="fu"><a href="fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                        <span class="co"># See observation count</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   28   28   28   28   28   28   28   28   28   28   28 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb    X </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   28   28   28   28   28   28   28   28   28   28   28   28 </span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                      <span class="co"># 12x faster than na.omit(mtc_na)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla     33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin        15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino       19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              0.29165057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            -0.97389777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          -1.96684935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128             0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona       -0.90357957</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># Adds attribute with removed cases, like na.omit</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla     33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin        15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino       19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              0.29165057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            -0.97389777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          -1.96684935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128             0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona       -0.90357957</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vs"</span>,<span class="st">"am"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Removes only cases missing vs or am</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          21.0   6    NA 110 3.90 2.620 16.46  0  1    4   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      21.0   6 160.0  NA   NA    NA 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         22.8   4 108.0  93 3.85    NA 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           NA   8 360.0 245 3.21 3.570 15.84  0  0    3   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            NA   4 146.7  62 3.69 3.190 20.00  1  0   NA    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230           22.8   4 140.8  95 3.92 3.150    NA  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280           19.2   6 167.6 123 3.92 3.440    NA  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C          17.8   6    NA 123 3.92 3.440 18.90  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE         16.4  NA 275.8 180 3.07 4.070 17.40  0  0    3    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC        15.2   8 275.8 180   NA 3.780    NA  0  0   NA    3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128           32.4  NA  78.7  66 4.08 2.200 19.47  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic        30.4  NA  75.7  52 4.93 1.615 18.52  1  1    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla     33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin        15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28         13.3   8 350.0 245 3.73 3.840 15.41  0  0   NA    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 6 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1   NA    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8 360.0 175   NA 3.440 17.02  0  0    3    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          NA   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         24.4   4 146.7  62 3.69    NA 20.00  1  0    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230          22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4                  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.08641398</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.26870764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            0.29165057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        -0.86896897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D          0.22512721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230          -0.97389777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 17 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span><span class="op">)</span>                  <span class="co"># Also works for matrices</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood 10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla     33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin        15.2   8 304.0 150 3.15 3.435 17.30  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino       19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            22.8   4 140.8  95 3.92 3.150 22.90  1  0    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          17.3   8 275.8 180 3.07 3.730 17.60  0  0    3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona       21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           1.38728007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              0.29165057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            -0.97389777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          -1.96684935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -0.07331864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  0.14952405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128             0.54689909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona       -0.90357957</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">$</span><span class="va">vs</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># Also works with vectors</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 0 1 0 1 1 1 1 0 0 0 0 0 1 1 1 0 0 0 0 1 0 0 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 0 1 0 1 1 1 1 0 0 0 0 0 1 1 1 0 0 0 0 1 0 1 0 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"na.action")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 17 21 22 26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  4 14 20 30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "omit"</span>
 <span class="r-in"><span class="fu">na_rm</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>                     <span class="co"># For vectors na_rm is faster ...</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 0 1 0 1 1 1 1 0 0 0 0 0 1 1 1 0 0 0 0 1 0 0 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 0 1 0 1 1 1 1 0 0 0 0 0 1 1 1 0 0 0 0 1 0 1 0 0 1</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span></span>
 <span class="r-in"></span>
 </code></pre></div>

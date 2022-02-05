@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -224,25 +224,17 @@
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">psml</span>, <span class="st">"Variable"</span>, <span class="st">"Country"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,<span class="fl">2</span><span class="op">)</span> <span class="co"># Using unlist2d, can generate DF</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variable Country 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 1971</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    PCGDP     ABW   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    PCGDP     AFG   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1972 1973 1974 1975 1976 1977 1978 1979 1980 1981 1982 1983 1984 1985</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       1986     1987     1988     1989     1990     1991     1992     1993</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 15669.62 18427.61 22134.02 24837.95 25357.79 26329.31 26401.97 26663.21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       NA       NA       NA       NA       NA       NA       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       1994     1995     1996    1997     1998    1999     2000     2001</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 27272.31 26705.18 26087.78 27190.5 27151.92 26954.4 28417.38 26966.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2       NA       NA       NA      NA       NA      NA       NA       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         2002       2003       2004       2005       2006      2007       2008</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 25508.3027 25469.2876 27005.5294 26979.8854 27046.2242 27427.579 27365.9312</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   330.3036   343.0809   333.2167   357.2347   365.2845   405.549   412.0143</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         2009      2010       2011       2012       2013       2014       2015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 24463.6922 23512.603 24233.0011 23781.2573 24635.7649 24563.2343 25822.2514</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   488.3003   543.303   528.7366   576.1901   587.5651   583.6562   574.1841</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         2016       2017   2018     2019 2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 26231.0267 26630.2053     NA       NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   571.0738   571.4407 564.61 573.2876   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       1994     1995     1996    1997     1998    1999     2000     2001    2002</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 27272.31 26705.18 26087.78 27190.5 27151.92 26954.4 28417.38 26966.05 25508.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       2003     2004     2005     2006     2007     2008     2009    2010  2011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 25469.29 27005.53 26979.89 27046.22 27427.58 27365.93 24463.69 23512.6 24233</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       2012     2013     2014     2015     2016     2017 2018 2019 2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 23781.26 24635.76 24563.23 25822.25 26231.03 26630.21   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
 <span class="r-in"> </span>
 <span class="r-in"><span class="co">## Using plm simplifies things</span></span>
 <span class="r-in"><span class="va">pwlddev</span> <span class="op">&lt;-</span> <span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/pdata.frame.html" class="external-link">pdata.frame</a></span><span class="op">(</span><span class="va">wlddev</span>, index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3c"</span>,<span class="st">"year"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Creating a Panel Data Frame</span></span>
@@ -250,19 +242,15 @@
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">psmat</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>                                           <span class="co"># Same as above, more parsimonious</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 1970 1971 1972 1973 1974</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AFG   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     1975 1976 1977 1978 1979 1980 1981 1982 1983 1984 1985  1986  1987  1988</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA 15670 18428 22134</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AFG   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    NA    NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      1989  1990  1991  1992  1993  1994  1995  1996  1997  1998  1999  2000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW 24838 25358 26329 26402 26663 27272 26705 26088 27191 27152 26954 28417</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AFG    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      2001  2002  2003  2004  2005  2006  2007  2008  2009  2010  2011  2012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW 26966 25508 25469 27006 26980 27046 27428 27366 24464 23513 24233 23781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AFG    NA   330   343   333   357   365   406   412   488   543   529   576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      2013  2014  2015  2016  2017 2018 2019 2020</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW 24636 24563 25822 26231 26630   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AFG   588   584   574   571   571  565  573   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">psmat</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-plt img"><img src="psmat-5.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">psmat</span><span class="op">(</span><span class="va">pwlddev</span><span class="op">[</span><span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>

@@ -1,6 +1,6 @@
 # collapse 1.7.5
 
-* Also ensuring tidyverse tests are in `\donttest{}` and building without the *dplyr* testing file to avoid issues with static code analysis on CRAN.
+* Also ensuring tidyverse examples are in `\donttest{}` and building without the *dplyr* testing file to avoid issues with static code analysis on CRAN.
 
 * 20-50% Speed improvement in `gsplit` (and therefore in `fsummarise`, `fmutate`, `collap` and `BY` *when invoked with base R functions*) when grouping with `GRP(..., sort = TRUE, return.order = TRUE)`. To enable this by default, the default for argument `return.order` in `GRP` was set to `sort`, which retains the ordering vector (needed for the optimization). Retaining the ordering vector uses up some memory which can possibly adversely affect computations with big data, but with big data `sort = FALSE` usually gives faster results anyway, and you can also always set `return.order = FALSE` (also in `fgroup_by`, `collap`), so this default gives the best of both worlds. 
 

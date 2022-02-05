@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -66,17 +66,17 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fsubset</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-<span class="fu">sbt</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>     <span class="co"># Shortcut for fsubset</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fsubset</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span>
+<span class="fu">sbt</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span>     <span class="co"># Shortcut for fsubset</span>
 
 <span class="co"># S3 method for default</span>
-<span class="fu">fsubset</span><span class="op">(</span><span class="va">x</span>, <span class="va">subset</span>, <span class="va">...</span><span class="op">)</span>
+<span class="fu">fsubset</span><span class="op">(</span><span class="va">.x</span>, <span class="va">subset</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for matrix</span>
-<span class="fu">fsubset</span><span class="op">(</span><span class="va">x</span>, <span class="va">subset</span>, <span class="va">...</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu">fsubset</span><span class="op">(</span><span class="va">.x</span>, <span class="va">subset</span>, <span class="va">...</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="co"># S3 method for data.frame</span>
-<span class="fu">fsubset</span><span class="op">(</span><span class="va">x</span>, <span class="va">subset</span>, <span class="va">...</span><span class="op">)</span>
+<span class="fu">fsubset</span><span class="op">(</span><span class="va">.x</span>, <span class="va">subset</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># Fast subsetting (replaces `[` with drop = FALSE, programmers choice)</span>
 <span class="fu">ss</span><span class="op">(</span><span class="va">x</span>, <span class="va">i</span>, <span class="va">j</span><span class="op">)</span></code></pre></div>
@@ -84,8 +84,10 @@
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>x</dt>
-<dd><p>object to be subsetted.</p></dd>
+    <dl><dt>.x</dt>
+<dd><p>object to be subsetted according to different methods.</p></dd>
+<dt>x</dt>
+<dd><p>a data frame / list, matrix or vector/array (only <code>i</code>).</p></dd>
 <dt>subset</dt>
 <dd><p>logical expression indicating elements or rows to keep:
     missing values are taken as <code>FALSE</code>. The default and matrix methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data frame method also supports logical vectors or row-indices).</p></dd>
@@ -102,15 +104,15 @@
     <h2>Details</h2>
     <p><code>fsubset</code> is a generic function, with methods supplied for vectors, matrices, and data
   frames (including lists). It represents an improvement in both speed and functionality over <code><a href="https://Rdatatable.gitlab.io/data.table/reference/subset.data.table.html" class="external-link">subset</a></code>. The function <code>ss</code> is an improvement of <code>[</code> to subset (vectors) matrices and data frames without dropping dimensions. It is significantly faster than <code>[.data.frame</code>. For subsetting columns alone, please see <a href="select_replace_vars.html">selecting and replacing columns</a>.</p>
-<p>For ordinary vectors, the result is <code>.Call(C_subsetVector, x, subset)</code>, where <code>C_subsetVector</code> is an internal function in the <em>data.table</em> package. The <code>subset</code> can be integer or logical. Appropriate errors are delivered for wrong use.</p>
+<p>For ordinary vectors, <code>subset</code> can be integer or logical, subsetting is done in C and more efficient than <code>[</code> for large vectors.</p>
 <p>For matrices the implementation is all base-R but slightly more efficient and more versatile than <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset.matrix</a></code>. Thus it is possible to <code>subset</code> matrix rows using logical or integer vectors, or character vectors matching rownames. The <code>drop</code> argument is passed on to the indexing method for matrices.</p>
 <p>For both matrices and data frames, the <code>...</code> argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. <code>col1:coln</code>, and new column names may be assigned e.g. <code>fsubset(data, col1 &gt; 20, newname =  col2, col3:col6)</code> (see examples).</p>
-<p>For data frames, the <code>subset</code> argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form <code>col2 &gt; 5 &amp; col2 &lt; col3</code> etc. (see examples). The data frame method uses <code>C_subsetDT</code>, an internal C function from the <em>data.table</em> package to subset data frames, hence it is significantly faster than <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset.data.frame</a></code>. If fast data frame subsetting is required but no non-standard evaluation, the function <code>ss</code> is slightly simpler and faster.</p>
-<p>Factors may have empty levels after subsetting; unused levels are not automatically removed.  See <code><a href="fdroplevels.html">fdroplevels</a></code> for a way to drop all unused levels from a data frame.</p>
+<p>For data frames, the <code>subset</code> argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form <code>col2 &gt; 5 &amp; col2 &lt; col3</code> etc. (see examples). The data frame method is implemented in C, hence it is significantly faster than <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset.data.frame</a></code>. Note that the use of <code><a href="programming.html">%==%</a></code> to compare a single column to a single value can yield significant performance gains on large data. If fast data frame subsetting is required but no non-standard evaluation, the function <code>ss</code> is slightly simpler and faster.</p>
+<p>Factors may have empty levels after subsetting; unused levels are not automatically removed.  See <code><a href="fdroplevels.html">fdroplevels</a></code> to drop all unused levels from a data frame.</p>
     </div>
     <div id="value">
     <h2>Value</h2>
-    <p>An object similar to <code>x</code> containing just the selected elements (for
+    <p>An object similar to <code>.x/x</code> containing just the selected elements (for
   a vector), rows and columns (for a matrix or data frame).</p>
     </div>
     <div id="note">
@@ -186,6 +188,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   135     269  4.1     7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    39      83  6.9     8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    96     167  6.9     9</span>
+<span class="r-in"><span class="fu">fsubset</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">Day</span> <span class="op"><a href="programming.html">%==%</a></span> <span class="fl">1</span>, <span class="op">-</span><span class="va">Temp</span><span class="op">)</span>  <span class="co"># Faster for big data, as %==% directly returns indices</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Month Day</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4     5   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA     286  8.6     6   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   135     269  4.1     7   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    39      83  6.9     8   1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    96     167  6.9     9   1</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">ss</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>         <span class="co"># Significantly faster than airquality[1:10, 2:3]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Solar.R Wind</span>

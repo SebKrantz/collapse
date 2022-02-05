@@ -35,10 +35,10 @@ Efficiently select and replace (or add) a subset of columns from (to) a data fra
 }
 \usage{
 ## Select and replace variables, analgous to dplyr::select but significantly faster
-fselect(x, \dots, return = "data")
+fselect(.x, \dots, return = "data")
 fselect(x, \dots) <- value
-slt(x, \dots, return = "data")   # Shortcut for fselect
-slt(x, \dots) <- value           # Shortcut for fselect<-
+slt(.x, \dots, return = "data")   # Shortcut for fselect
+slt(x, \dots) <- value            # Shortcut for fselect<-
 
 ## Select and replace columns by names, indices, logical vectors,
 ## regular expressions or using functions to identify columns
@@ -77,7 +77,7 @@ date_vars(x) <- value
 }
 
 \arguments{
-  \item{x}{a data frame.}
+  \item{x, .x}{a data frame or list.}
   \item{value}{a data frame or list of columns whose dimensions exactly match those of the extracted subset of \code{x}. If only 1 variable is in the subset of \code{x}, \code{value} can also be an atomic vector or matrix, provided that \code{NROW(value) == nrow(x)}.}
   \item{vars}{a vector of column names, indices (can be negative), a suitable logical vector, or a vector of regular expressions matching column names (if \code{regex = TRUE}). It is also possible to pass a function returning \code{TRUE} or \code{FALSE} when applied to the columns of \code{x}.}
   \item{return}{an integer or string specifying what the selector function should return. The options are:

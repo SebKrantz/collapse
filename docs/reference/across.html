@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -94,7 +94,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="fsummarise.html">fsummarise</a></code>, <code><a href="ftransform.html">fmutate</a></code>, <a href="fast-data-manipulation.html">Fast Data Manipulation</a>, <a href="index.html">Collapse Overview</a></p></div>
+    <div class="dont-index"><p><code><a href="fsummarise.html">fsummarise</a></code>, <code><a href="ftransform.html">fmutate</a></code>, <a href="fast-data-manipulation.html">Fast Data Manipulation</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
 
     <div id="ref-examples">
@@ -128,9 +128,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18                 South Asia Lower middle income   882.7061 60.19159 33.04111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19                 South Asia Upper middle income  1830.8876 70.30871 36.97996</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20         Sub-Saharan Africa         High income  8253.2074 71.79170 39.18180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21         Sub-Saharan Africa          Low income   518.5847 52.03107 40.26600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22         Sub-Saharan Africa Lower middle income  1587.8770 52.07344 42.87172</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23         Sub-Saharan Africa Upper middle income  6528.2845 58.35122 61.30462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Note that for these we don't actually need across...</span></span>
 <span class="r-in"><span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">GINI</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span>w <span class="op">=</span> <span class="va">wlddev</span><span class="op">$</span><span class="va">POP</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -159,9 +157,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18                 South Asia Lower middle income   882.7061 60.19159 33.04111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19                 South Asia Upper middle income  1830.8876 70.30871 36.97996</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20         Sub-Saharan Africa         High income  8253.2074 71.79170 39.18180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21         Sub-Saharan Africa          Low income   518.5847 52.03107 40.26600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22         Sub-Saharan Africa Lower middle income  1587.8770 52.07344 42.87172</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23         Sub-Saharan Africa Upper middle income  6528.2845 58.35122 61.30462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"><span class="fu"><a href="collap.html">collap</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">+</span> <span class="va">GINI</span> <span class="op">~</span> <span class="va">region</span> <span class="op">+</span> <span class="va">income</span>, w <span class="op">=</span> <span class="op">~</span> <span class="va">POP</span>, keep.w <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        region              income      PCGDP   LIFEEX     GINI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1         East Asia &amp; Pacific         High income 29172.7552 76.83283 32.79182</span>
@@ -184,9 +180,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18                 South Asia Lower middle income   882.7061 60.19159 33.04111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19                 South Asia Upper middle income  1830.8876 70.30871 36.97996</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20         Sub-Saharan Africa         High income  8253.2074 71.79170 39.18180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21         Sub-Saharan Africa          Low income   518.5847 52.03107 40.26600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22         Sub-Saharan Africa Lower middle income  1587.8770 52.07344 42.87172</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23         Sub-Saharan Africa Upper middle income  6528.2845 58.35122 61.30462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># But if we want to use some base R function that reguires argument splitting...</span></span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="programming.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="st">"POP"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -212,35 +206,23 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 18                 South Asia Lower middle income   882.7061 60.19159 33.04111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 19                 South Asia Upper middle income  1830.8876 70.30871 36.97996</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 20         Sub-Saharan Africa         High income  8253.2074 71.79170 39.18180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21         Sub-Saharan Africa          Low income   518.5847 52.03107 40.26600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22         Sub-Saharan Africa Lower middle income  1587.8770 52.07344 42.87172</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23         Sub-Saharan Africa Upper middle income  6528.2845 58.35122 61.30462</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Or if we want to apply different functions...</span></span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">    <span class="fu"><a href="fsummarise.html">fsummarise</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">GINI</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">fmean</span>, sd <span class="op">=</span> <span class="va">fsd</span><span class="op">)</span>, w <span class="op">=</span> <span class="va">POP</span><span class="op">)</span>,</span>
 <span class="r-in">               POP_sum <span class="op">=</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span>, OECD <span class="op">=</span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">OECD</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        region              income   PCGDP_mu   PCGDP_sd</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         East Asia &amp; Pacific         High income 29172.7552 14714.1754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         East Asia &amp; Pacific Lower middle income  1756.6480  1064.2676</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         East Asia &amp; Pacific Upper middle income  2357.6168  2457.9024</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       Europe &amp; Central Asia         High income 29335.5511 13038.1111</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       Europe &amp; Central Asia          Low income   803.2234   307.7395</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6       Europe &amp; Central Asia Lower middle income  2256.9684   970.2648</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7       Europe &amp; Central Asia Upper middle income  7772.5035  3184.4987</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   Latin America &amp; Caribbean         High income 10217.0626  6308.4328</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   Latin America &amp; Caribbean          Low income  1317.9024   188.7423</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  Latin America &amp; Caribbean Lower middle income  1913.8993   572.2573</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  Latin America &amp; Caribbean Upper middle income  7564.8294  2886.5643</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 Middle East &amp; North Africa         High income 25889.0715 13257.5670</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13 Middle East &amp; North Africa          Low income  1049.8255   219.7597</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14 Middle East &amp; North Africa Lower middle income  2015.0739   821.3572</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15 Middle East &amp; North Africa Upper middle income  4861.2074  1678.3916</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16              North America         High income 37840.9568 11175.2360</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17                 South Asia          Low income   471.7241   151.0099</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18                 South Asia Lower middle income   882.7061   505.2450</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19                 South Asia Upper middle income  1830.8876  1162.6927</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20         Sub-Saharan Africa         High income  8253.2074  3438.2650</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       region              income   PCGDP_mu   PCGDP_sd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        East Asia &amp; Pacific         High income 29172.7552 14714.1754</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        East Asia &amp; Pacific Lower middle income  1756.6480  1064.2676</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        East Asia &amp; Pacific Upper middle income  2357.6168  2457.9024</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      Europe &amp; Central Asia         High income 29335.5511 13038.1111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      Europe &amp; Central Asia          Low income   803.2234   307.7395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      Europe &amp; Central Asia Lower middle income  2256.9684   970.2648</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      Europe &amp; Central Asia Upper middle income  7772.5035  3184.4987</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Latin America &amp; Caribbean         High income 10217.0626  6308.4328</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Latin America &amp; Caribbean          Low income  1317.9024   188.7423</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Latin America &amp; Caribbean Lower middle income  1913.8993   572.2573</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    LIFEEX_mu LIFEEX_sd  GINI_mu  GINI_sd     POP_sum       OECD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   76.83283  5.964994 32.79182 1.230489 11407808149 0.30769231</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   64.25623  7.536813 36.07647 4.358228 22174820629 0.00000000</span>
@@ -252,17 +234,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8   73.04484  5.631891 49.41109 5.498704  1466292826 0.05882353</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   55.45075  5.956741 41.10000 0.000000   429756890 0.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10  63.86360  8.716692 50.65115 5.727519  1290800630 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  69.46947  5.939577 52.90072 5.138613 22949003780 0.05000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  72.38335  6.778720 36.93006 5.098584  1796139242 0.12500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13  63.62748  9.766669 35.89218 1.081612  1571055812 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14  65.55189  7.715447 33.21199 3.934025  5512454283 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15  66.74364  8.490558 40.19273 4.618803  6518561594 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16  75.54352  3.025456 39.73948 2.223128 16881058226 0.66666667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17  55.56794 10.439840 37.24783 4.806039  2252259680 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18  60.19159  7.592146 33.04111 2.115510 65947845945 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19  70.30871  4.941068 36.97996 2.898618  1006497506 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20  71.79170  1.848002 39.18180 7.345125     4222055 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13 rows ]</span>
 <span class="r-in"><span class="co"># Note that the above still detects fmean as a fast function, the names of the list</span></span>
 <span class="r-in"><span class="co"># are irrelevant, but the function name must be typed or passed as a character vector,</span></span>
 <span class="r-in"><span class="co"># Otherwise functions will be executed by groups e.g. function(x) fmean(x) won't vectorize</span></span>

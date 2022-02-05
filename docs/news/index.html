@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -59,6 +59,18 @@
       <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.7.5" id="collapse-175">collapse 1.7.5<small>2022-02-03</small><a class="anchor" aria-label="anchor" href="#collapse-175"></a></h2>
+<ul><li><p>Also ensuring tidyverse examples are in <code>\donttest{}</code> and building without the <em>dplyr</em> testing file to avoid issues with static code analysis on CRAN.</p></li>
+<li><p>20-50% Speed improvement in <code>gsplit</code> (and therefore in <code>fsummarise</code>, <code>fmutate</code>, <code>collap</code> and <code>BY</code> <em>when invoked with base R functions</em>) when grouping with <code>GRP(..., sort = TRUE, return.order = TRUE)</code>. To enable this by default, the default for argument <code>return.order</code> in <code>GRP</code> was set to <code>sort</code>, which retains the ordering vector (needed for the optimization). Retaining the ordering vector uses up some memory which can possibly adversely affect computations with big data, but with big data <code>sort = FALSE</code> usually gives faster results anyway, and you can also always set <code>return.order = FALSE</code> (also in <code>fgroup_by</code>, <code>collap</code>), so this default gives the best of both worlds.</p></li>
+</ul><!-- also considering that including more information in the grouping object can (and will) lead to further optimizations in the future.  --><ul><li>An ancient depreciated argument <code>sort.row</code> (replaced by <code>sort</code> in 2020) is now removed from <code>collap</code>. Also arguments <code>return.order</code> and <code>method</code> were added to <code>collap</code> providing full control of the grouping that happens internally.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.7.4" id="collapse-174">collapse 1.7.4<a class="anchor" aria-label="anchor" href="#collapse-174"></a></h2>
+<ul><li><p>Tests needed to be adjusted for the upcoming release of <em>dplyr</em> 1.0.8 which involves an API change in <code>mutate</code>. <code>fmutate</code> will not take over these changes i.e. <code>fmutate(..., .keep = "none")</code> will continue to work like <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::transmute</a></code>. Furthermore, no more tests involving <em>dplyr</em> are run on CRAN, and I will also not follow along with any future <em>dplyr</em> API changes.</p></li>
+<li><p>The C-API macro <code>installTrChar</code> (used in the new <code>massign</code> function) was replaced with <code>installChar</code> to maintain backwards compatibility with R versions prior to 3.6.0. Thanks <a href="https://github.com/tedmoorman" class="external-link">@tedmoorman</a> <a href="https://github.com/SebKrantz/collapse/issues/213" class="external-link">#213</a>.</p></li>
+<li><p>Minor improvements to <code><a href="../reference/group.html">group()</a></code>, providing increased performance for doubles and also increased performance when the second grouping variable is integer, which turned out to be very slow in some instances.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.7.3" id="collapse-173">collapse 1.7.3<small>2022-01-26</small><a class="anchor" aria-label="anchor" href="#collapse-173"></a></h2>
 <ul><li><p>Removed tests involving the <em>weights</em> package (which is not available on R-devel CRAN checks).</p></li>

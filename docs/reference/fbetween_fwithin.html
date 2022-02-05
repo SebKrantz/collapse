@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -190,7 +190,7 @@
     </div>
     <div id="see-also">
     <h2>See also</h2>
-    <div class="dont-index"><p><code><a href="fhdbetween_fhdwithin.html">fhdbetween/HDB and fhdwithin/HDW</a></code>, <code><a href="fscale.html">fscale/STD</a></code>, <code><a href="TRA.html">TRA</a></code>, <a href="data-transformations.html">Data Transformations</a>, <a href="index.html">Collapse Overview</a></p></div>
+    <div class="dont-index"><p><code><a href="fhdbetween_fhdwithin.html">fhdbetween/HDB and fhdwithin/HDW</a></code>, <code><a href="fscale.html">fscale/STD</a></code>, <code><a href="TRA.html">TRA</a></code>, <a href="data-transformations.html">Data Transformations</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
 
     <div id="ref-examples">
@@ -204,13 +204,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       vs      am   gear   carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.4375 0.40625 3.6875 2.8125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       vs      am   gear   carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">B</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      B.mpg  B.cyl   B.disp     B.hp   B.drat    B.wt   B.qsec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
@@ -219,13 +219,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     B.vs    B.am B.gear B.carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.4375 0.40625 3.6875 2.8125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     B.vs    B.am B.gear B.carb        B.X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.4375 0.40625 3.6875 2.8125 -0.1307565</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         mpg     cyl        disp       hp       drat       wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          0.909375 -0.1875  -70.721875 -36.6875  0.3034375 -0.59725</span>
@@ -234,13 +234,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.309375 -0.1875   27.278125 -36.6875 -0.5165625 -0.00225</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -1.390625  1.8125  129.278125  28.3125 -0.4465625  0.22275</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -1.990625 -0.1875   -5.721875 -41.6875 -0.8365625  0.24275</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       qsec      vs       am    gear    carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -1.38875 -0.4375  0.59375  0.3125  1.1875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.82875 -0.4375  0.59375  0.3125  1.1875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         0.76125  0.5625  0.59375  0.3125 -1.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.59125  0.5625 -0.40625 -0.6875 -1.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.82875 -0.4375 -0.40625 -0.6875 -0.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.37125  0.5625 -0.40625 -0.6875 -1.8125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       qsec      vs       am    gear    carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -1.38875 -0.4375  0.59375  0.3125  1.1875 -0.63196403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.82875 -0.4375  0.59375  0.3125  1.1875  0.04434249</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         0.76125  0.5625  0.59375  0.3125 -1.8125  1.51803653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.59125  0.5625 -0.40625 -0.6875 -1.8125 -0.52285947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.82875 -0.4375 -0.40625 -0.6875 -0.8125 -0.13795118</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.37125  0.5625 -0.40625 -0.6875 -1.8125  0.42240704</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       W.mpg   W.cyl      W.disp     W.hp     W.drat     W.wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          0.909375 -0.1875  -70.721875 -36.6875  0.3034375 -0.59725</span>
@@ -249,13 +249,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.309375 -0.1875   27.278125 -36.6875 -0.5165625 -0.00225</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -1.390625  1.8125  129.278125  28.3125 -0.4465625  0.22275</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -1.990625 -0.1875   -5.721875 -41.6875 -0.8365625  0.24275</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     W.qsec    W.vs     W.am  W.gear  W.carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -1.38875 -0.4375  0.59375  0.3125  1.1875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.82875 -0.4375  0.59375  0.3125  1.1875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         0.76125  0.5625  0.59375  0.3125 -1.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.59125  0.5625 -0.40625 -0.6875 -1.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.82875 -0.4375 -0.40625 -0.6875 -0.8125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.37125  0.5625 -0.40625 -0.6875 -1.8125</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     W.qsec    W.vs     W.am  W.gear  W.carb         W.X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -1.38875 -0.4375  0.59375  0.3125  1.1875 -0.63196403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.82875 -0.4375  0.59375  0.3125  1.1875  0.04434249</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         0.76125  0.5625  0.59375  0.3125 -1.8125  1.51803653</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.59125  0.5625 -0.40625 -0.6875 -1.8125 -0.52285947</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.82875 -0.4375 -0.40625 -0.6875 -0.8125 -0.13795118</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.37125  0.5625 -0.40625 -0.6875 -1.8125  0.42240704</span>
 <span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span> <span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"></span>
@@ -268,13 +268,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    19.74286   6 183.3143 122.28571 3.585714 3.117143 17.97714</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 15.10000   8 353.1000 209.21429 3.229286 3.999214 16.77214</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           19.74286   6 183.3143 122.28571 3.585714 3.117143 17.97714</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                          vs        am     gear     carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         0.5714286 0.4285714 3.857143 3.428571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     0.5714286 0.4285714 3.857143 3.428571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        0.9090909 0.7272727 4.090909 1.545455</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.5714286 0.4285714 3.857143 3.428571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.0000000 0.1428571 3.285714 3.500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.5714286 0.4285714 3.857143 3.428571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                          vs        am     gear     carb          X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         0.5714286 0.4285714 3.857143 3.428571 -0.4441250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     0.5714286 0.4285714 3.857143 3.428571 -0.4441250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        0.9090909 0.7272727 4.090909 1.545455  0.2525254</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.5714286 0.4285714 3.857143 3.428571 -0.4441250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.0000000 0.1428571 3.285714 3.500000 -0.2752222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.5714286 0.4285714 3.857143 3.428571 -0.4441250</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         mpg cyl       disp        hp        drat          wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          1.257143   0 -23.314286 -12.28571  0.31428571 -0.49714286</span>
@@ -290,6 +290,13 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.4628571  0.42857143 -0.4285714 -0.85714286 -2.4285714</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  0.2478571  0.00000000 -0.1428571 -0.28571429 -1.5000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.2428571  0.42857143 -0.4285714 -0.85714286 -2.4285714</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -0.318595476</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      0.357711040</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         1.134754656</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -0.209490914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  0.006514591</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            0.735775591</span>
 <span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"></span>
@@ -357,7 +364,7 @@
 <span class="r-in"><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"within"</span><span class="op">)</span>   <span class="co"># "Proof"..</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x16f644360&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x1450ac9f0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     carb </span>
@@ -447,7 +454,7 @@
 <span class="r-in"><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x16f644360&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x1450ac9f0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)        carb </span>

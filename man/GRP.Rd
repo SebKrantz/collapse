@@ -58,10 +58,10 @@ as_factor_GRP(x, ordered = FALSE)
 gsplit(x, g, use.g.names = FALSE, ...)
 
 # Fast, class-agnostic version of dplyr::group_by for use with fast functions, see details
-fgroup_by(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
+fgroup_by(.X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
           return.order = sort, method = "auto")
 # Shortcut for fgroup_by
-      gby(X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
+      gby(.X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
           return.order = sort, method = "auto")
 
 # Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by
@@ -76,6 +76,8 @@ fungroup(X, \dots)
 }
 \arguments{
   \item{X}{a vector, list of columns or data frame (default method), or a classed object (conversion / extractor methods).}
+
+  \item{.X}{a data frame or list.}
 
   \item{x, g}{a 'GRP' object. For \code{gsplit}, \code{x} can be a vector of any type, or \code{NULL} to return the integer indices of the groups.}
 
@@ -162,7 +164,7 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped dat
                  [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr
                  [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted \cr
 
-                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{integer(0)}, with attributes, or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} or \code{group} (with \code{"starts"} attribute) or \code{NULL} if \code{return.order = FALSE} \cr
+                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{integer(0)} (with attributes), or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} or \code{group} (with \code{"starts"} attribute) or \code{NULL} if \code{return.order = FALSE} \cr
 
                  [[8]] \tab\tab call \tab\tab \code{match.call()} or \code{NULL} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}, or \code{NULL} if \code{call = FALSE}
                  }

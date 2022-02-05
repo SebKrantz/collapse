@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
       </span>
     </div>
 
@@ -118,194 +118,131 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Using data frame's / lists</span></span>
 <span class="r-in"><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span></span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op">%cr%</span> <span class="va">v</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl disp hp drat wt qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4             6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag         6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710            4   4    4  4    4  4    4  4  4    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive        6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360            8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D             4   4    4  4    4  4    4  4  4    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230              4   4    4  4    4  4    4  4  4    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280              6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C             6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE            8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL            8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC           8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood    8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental   8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial     8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128              4   4    4  4    4  4    4  4  4    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   mpg cyl disp hp drat wt qsec vs am gear carb X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           6   6    6  6    6  6    6  6  6    6    6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       6   6    6  6    6  6    6  6  6    6    6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          4   4    4  4    4  4    4  4  4    4    4 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      6   6    6  6    6  6    6  6  6    6    6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   8   8    8  8    8  8    8  8  8    8    8 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             6   6    6  6    6  6    6  6  6    6    6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          8   8    8  8    8  8    8  8  8    8    8 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           4   4    4  4    4  4    4  4  4    4    4 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op">%c-%</span> <span class="va">v</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp  drat     wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           15.0   0 154.0 104 -2.10 -3.380 10.46 -6 -5   -2   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       15.0   0 154.0 104 -2.10 -3.125 11.02 -6 -5   -2   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          18.8   0 104.0  89 -0.15 -1.680 14.61 -3 -3    0   -3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      15.4   0 252.0 104 -2.92 -2.785 13.44 -5 -6   -3   -5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   10.7   0 352.0 167 -4.85 -4.560  9.02 -8 -8   -5   -6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             12.1   0 219.0  99 -3.24 -2.540 14.22 -5 -6   -3   -5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           6.3   0 352.0 237 -4.79 -4.430  7.84 -8 -8   -5   -4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           20.4   0 142.7  58 -0.31 -0.810 16.00 -3 -4    0   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            18.8   0 136.8  91 -0.08 -0.850 18.90 -3 -4    0   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            13.2   0 161.6 117 -2.08 -2.560 12.30 -5 -6   -2   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C           11.8   0 161.6 117 -2.08 -2.560 12.90 -5 -6   -2   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE           8.4   0 267.8 172 -4.93 -3.930  9.40 -8 -8   -5   -5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL           9.3   0 267.8 172 -4.93 -4.270  9.60 -8 -8   -5   -5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC          7.2   0 267.8 172 -4.93 -4.220 10.00 -8 -8   -5   -5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood   2.4   0 464.0 197 -5.07 -2.750  9.98 -8 -8   -5   -4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  2.4   0 452.0 207 -5.00 -2.576  9.82 -8 -8   -5   -4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    6.7   0 432.0 222 -4.77 -2.655  9.42 -8 -8   -5   -4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            28.4   0  74.7  62  0.08 -1.800 15.47 -3 -3    0   -3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp  drat     wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         15.0   0 154.0 104 -2.10 -3.380 10.46 -6 -5   -2   -2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     15.0   0 154.0 104 -2.10 -3.125 11.02 -6 -5   -2   -2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        18.8   0 104.0  89 -0.15 -1.680 14.61 -3 -3    0   -3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    15.4   0 252.0 104 -2.92 -2.785 13.44 -5 -6   -3   -5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 10.7   0 352.0 167 -4.85 -4.560  9.02 -8 -8   -5   -6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           12.1   0 219.0  99 -3.24 -2.540 14.22 -5 -6   -3   -5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360         6.3   0 352.0 237 -4.79 -4.430  7.84 -8 -8   -5   -4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         20.4   0 142.7  58 -0.31 -0.810 16.00 -3 -4    0   -2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -6.762720</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -6.086414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        -2.612720</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -6.653616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -8.268708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -5.708349</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        -8.868969</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         -3.774873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op">%r-%</span> <span class="fu"><a href="programming.html">seq_col</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp  drat     wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           20.0   4 157.0 106 -1.10 -3.380  9.46 -8 -8   -6   -7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       20.0   4 157.0 106 -1.10 -3.125 10.02 -8 -8   -6   -7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          21.8   2 105.0  89 -1.15 -3.680 11.61 -7 -8   -6  -10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      20.4   4 255.0 106 -1.92 -2.785 12.44 -7 -9   -7  -10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   17.7   6 357.0 171 -1.85 -2.560 10.02 -8 -9   -7   -9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             17.1   4 222.0 101 -2.24 -2.540 13.22 -7 -9   -7  -10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          13.3   6 357.0 241 -1.79 -2.430  8.84 -8 -9   -7   -7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           23.4   2 143.7  58 -1.31 -2.810 13.00 -7 -9   -6   -9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            21.8   2 137.8  91 -1.08 -2.850 15.90 -7 -9   -6   -9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            18.2   4 164.6 119 -1.08 -2.560 11.30 -7 -9   -6   -7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C           16.8   4 164.6 119 -1.08 -2.560 11.90 -7 -9   -6   -7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          15.4   6 272.8 176 -1.93 -1.930 10.40 -8 -9   -7   -8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          16.3   6 272.8 176 -1.93 -2.270 10.60 -8 -9   -7   -8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         14.2   6 272.8 176 -1.93 -2.220 11.00 -8 -9   -7   -8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood   9.4   6 469.0 201 -2.07 -0.750 10.98 -8 -9   -7   -7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  9.4   6 457.0 211 -2.00 -0.576 10.82 -8 -9   -7   -7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   13.7   6 437.0 226 -1.77 -0.655 10.42 -8 -9   -7   -7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            31.4   2  75.7  62 -0.92 -3.800 12.47 -7 -8   -6  -10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp  drat     wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         20.0   4 157.0 106 -1.10 -3.380  9.46 -8 -8   -6   -7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     20.0   4 157.0 106 -1.10 -3.125 10.02 -8 -8   -6   -7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        21.8   2 105.0  89 -1.15 -3.680 11.61 -7 -8   -6  -10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    20.4   4 255.0 106 -1.92 -2.785 12.44 -7 -9   -7  -10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 17.7   6 357.0 171 -1.85 -2.560 10.02 -8 -9   -7   -9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           17.1   4 222.0 101 -2.24 -2.540 13.22 -7 -9   -7  -10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        13.3   6 357.0 241 -1.79 -2.430  8.84 -8 -9   -7   -7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         23.4   2 143.7  58 -1.31 -2.810 13.00 -7 -9   -6   -9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -12.76272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -12.08641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        -10.61272</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -12.65362</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -12.26871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           -11.70835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        -12.86897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         -11.77487</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op">%r-%</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">quantile</span>, <span class="fl">0.28</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg cyl    disp     hp    drat     wt    qsec vs am gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            5.296   2  25.536   7.56  0.7724 -0.102 -0.5216  0  1    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        5.296   2  25.536   7.56  0.7724  0.153  0.0384  0  1    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           7.096   0 -26.464  -9.44  0.7224 -0.402  1.6284  1  1    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       5.696   2 123.536   7.56 -0.0476  0.493  2.4584  1  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    2.996   4 225.536  72.56  0.0224  0.718  0.0384  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              2.396   2  90.536   2.56 -0.3676  0.738  3.2384  1  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          -1.404   4 225.536 142.56  0.0824  0.848 -1.1416  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            8.696   0  12.236 -40.44  0.5624  0.468  3.0184  1  0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230             7.096   0   6.336  -7.44  0.7924  0.428  5.9184  1  0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280             3.496   2  33.136  20.56  0.7924  0.718  1.3184  1  0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C            2.096   2  33.136  20.56  0.7924  0.718  1.9184  1  0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE           0.696   4 141.336  77.56 -0.0576  1.348  0.4184  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL           1.596   4 141.336  77.56 -0.0576  1.008  0.6184  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         -0.504   4 141.336  77.56 -0.0576  1.058  1.0184  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -5.304   4 337.536 102.56 -0.1976  2.528  0.9984  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental -5.304   4 325.536 112.56 -0.1276  2.702  0.8384  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   -1.004   4 305.536 127.56  0.1024  2.623  0.4384  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            16.696   0 -55.764 -36.44  0.9524 -0.522  2.4884  1  1    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4              2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag          2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710            -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive        -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360             2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D              0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230               0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280               2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C              2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE             1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL             1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128              -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl    disp     hp    drat     wt    qsec vs am gear</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          5.296   2  25.536   7.56  0.7724 -0.102 -0.5216  0  1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      5.296   2  25.536   7.56  0.7724  0.153  0.0384  0  1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         7.096   0 -26.464  -9.44  0.7224 -0.402  1.6284  1  1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     5.696   2 123.536   7.56 -0.0476  0.493  2.4584  1  0    0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  2.996   4 225.536  72.56  0.0224  0.718  0.0384  0  0    0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.396   2  90.536   2.56 -0.3676  0.738  3.2384  1  0    0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        -1.404   4 225.536 142.56  0.0824  0.848 -1.1416  0  0    0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D          8.696   0  12.236 -40.44  0.5624  0.468  3.0184  1  0    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            2 -0.02513553</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        2  0.65117099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          -1  2.12486504</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      -1  0.08396903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    0  0.46887732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             -1  1.02923554</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           2 -0.13138400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            0  0.96271217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op">%c*%</span> <span class="fl">5</span>       <span class="co"># Significantly faster than mtcars * 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           105.0  30  800.0  550 19.50 13.100  82.30  0  5   20   20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       105.0  30  800.0  550 19.50 14.375  85.10  0  5   20   20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          114.0  20  540.0  465 19.25 11.600  93.05  5  5   20    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      107.0  30 1290.0  550 15.40 16.075  97.20  5  0   15    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    93.5  40 1800.0  875 15.75 17.200  85.10  0  0   15   10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              90.5  30 1125.0  525 13.80 17.300 101.10  5  0   15    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           71.5  40 1800.0 1225 16.05 17.850  79.20  0  0   15   20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           122.0  20  733.5  310 18.45 15.950 100.00  5  0   20   10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            114.0  20  704.0  475 19.60 15.750 114.50  5  0   20   10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280             96.0  30  838.0  615 19.60 17.200  91.50  5  0   20   20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C            89.0  30  838.0  615 19.60 17.200  94.50  5  0   20   20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE           82.0  40 1379.0  900 15.35 20.350  87.00  0  0   15   15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL           86.5  40 1379.0  900 15.35 18.650  88.00  0  0   15   15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC          76.0  40 1379.0  900 15.35 18.900  90.00  0  0   15   15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood   52.0  40 2360.0 1025 14.65 26.250  89.90  0  0   15   20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  52.0  40 2300.0 1075 15.00 27.120  89.10  0  0   15   20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    73.5  40 2200.0 1150 16.15 26.725  87.10  0  0   15   20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            162.0  20  393.5  330 20.40 11.000  97.35  5  5   20    5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         105.0  30  800.0  550 19.50 13.100  82.30  0  5   20   20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     105.0  30  800.0  550 19.50 14.375  85.10  0  5   20   20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        114.0  20  540.0  465 19.25 11.600  93.05  5  5   20    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    107.0  30 1290.0  550 15.40 16.075  97.20  5  0   15    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  93.5  40 1800.0  875 15.75 17.200  85.10  0  0   15   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            90.5  30 1125.0  525 13.80 17.300 101.10  5  0   15    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360         71.5  40 1800.0 1225 16.05 17.850  79.20  0  0   15   20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         122.0  20  733.5  310 18.45 15.950 100.00  5  0   20   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -3.8136025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -0.4320699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710         6.9364004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    -3.2680797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -1.3435382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            1.4582529</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        -4.3448448</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D          1.1256360</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op">%c*%</span> <span class="va">mtcars</span>  <span class="co"># Significantly faster than mtcars * mtcars</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         mpg cyl      disp    hp    drat        wt     qsec vs</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            441.00  36  25600.00 12100 15.2100  6.864400 270.9316  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        441.00  36  25600.00 12100 15.2100  8.265625 289.6804  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           519.84  16  11664.00  8649 14.8225  5.382400 346.3321  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       457.96  36  66564.00 12100  9.4864 10.336225 377.9136  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    349.69  64 129600.00 30625  9.9225 11.833600 289.6804  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              327.61  36  50625.00 11025  7.6176 11.971600 408.8484  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           204.49  64 129600.00 60025 10.3041 12.744900 250.9056  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            595.36  16  21520.89  3844 13.6161 10.176100 400.0000  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230             519.84  16  19824.64  9025 15.3664  9.922500 524.4100  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280             368.64  36  28089.76 15129 15.3664 11.833600 334.8900  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C            316.84  36  28089.76 15129 15.3664 11.833600 357.2100  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE           268.96  64  76065.64 32400  9.4249 16.564900 302.7600  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL           299.29  64  76065.64 32400  9.4249 13.912900 309.7600  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC          231.04  64  76065.64 32400  9.4249 14.288400 324.0000  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood   108.16  64 222784.00 42025  8.5849 27.562500 323.2804  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  108.16  64 211600.00 46225  9.0000 29.419776 317.5524  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    216.09  64 193600.00 52900 10.4329 28.569025 303.4564  0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            1049.76  16   6193.69  4356 16.6464  4.840000 379.0809  1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            1   16   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        1   16   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           1   16    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       0    9    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    0    9    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              0    9    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           0    9   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            0   16    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230             0   16    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280             0   16   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C            0   16   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE           0    9    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL           0    9    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC          0    9    9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood   0    9   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  0    9   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    0    9   16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128             1   16    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl      disp    hp    drat        wt     qsec vs am</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         441.00  36  25600.00 12100 15.2100  6.864400 270.9316  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     441.00  36  25600.00 12100 15.2100  8.265625 289.6804  0  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        519.84  16  11664.00  8649 14.8225  5.382400 346.3321  1  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    457.96  36  66564.00 12100  9.4864 10.336225 377.9136  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 349.69  64 129600.00 30625  9.9225 11.833600 289.6804  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           327.61  36  50625.00 11025  7.6176 11.971600 408.8484  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        204.49  64 129600.00 60025 10.3041 12.744900 250.9056  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         595.36  16  21520.89  3844 13.6161 10.176100 400.0000  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   gear carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           16   16 0.581742550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       16   16 0.007467375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          16    1 1.924545996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       9    1 0.427213785</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    9    4 0.072203796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              9    1 0.085060057</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           9   16 0.755107064</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           16    4 0.050682259</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Using matrices</span></span>
 <span class="r-in"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">X</span> <span class="op">%cr%</span> <span class="va">v</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl disp hp drat wt qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4             6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag         6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710            4   4    4  4    4  4    4  4  4    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive        6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360            8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D             4   4    4  4    4  4    4  4  4    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230              4   4    4  4    4  4    4  4  4    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280              6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C             6   6    6  6    6  6    6  6  6    6    6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE            8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL            8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC           8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood    8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental   8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial     8   8    8  8    8  8    8  8  8    8    8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128              4   4    4  4    4  4    4  4  4    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl disp hp drat wt qsec vs am gear carb X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4             6   6    6  6    6  6    6  6  6    6    6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag         6   6    6  6    6  6    6  6  6    6    6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710            4   4    4  4    4  4    4  4  4    4    4 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive        6   6    6  6    6  6    6  6  6    6    6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     8   8    8  8    8  8    8  8  8    8    8 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               6   6    6  6    6  6    6  6  6    6    6 6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360            8   8    8  8    8  8    8  8  8    8    8 8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D             4   4    4  4    4  4    4  4  4    4    4 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"><span class="va">X</span> <span class="op">%c-%</span> <span class="va">v</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp  drat     wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           15.0   0 154.0 104 -2.10 -3.380 10.46 -6 -5   -2   -2</span>
@@ -316,17 +253,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             12.1   0 219.0  99 -3.24 -2.540 14.22 -5 -6   -3   -5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           6.3   0 352.0 237 -4.79 -4.430  7.84 -8 -8   -5   -4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           20.4   0 142.7  58 -0.31 -0.810 16.00 -3 -4    0   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230            18.8   0 136.8  91 -0.08 -0.850 18.90 -3 -4    0   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            13.2   0 161.6 117 -2.08 -2.560 12.30 -5 -6   -2   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C           11.8   0 161.6 117 -2.08 -2.560 12.90 -5 -6   -2   -2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE           8.4   0 267.8 172 -4.93 -3.930  9.40 -8 -8   -5   -5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL           9.3   0 267.8 172 -4.93 -4.270  9.60 -8 -8   -5   -5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC          7.2   0 267.8 172 -4.93 -4.220 10.00 -8 -8   -5   -5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood   2.4   0 464.0 197 -5.07 -2.750  9.98 -8 -8   -5   -4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental  2.4   0 452.0 207 -5.00 -2.576  9.82 -8 -8   -5   -4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial    6.7   0 432.0 222 -4.77 -2.655  9.42 -8 -8   -5   -4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            28.4   0  74.7  62  0.08 -1.800 15.47 -3 -3    0   -3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 14 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            -6.762720</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        -6.086414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           -2.612720</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       -6.653616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    -8.268708</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              -5.708349</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360           -8.868969</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            -3.774873</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 24 rows ]</span>
 <span class="r-in"><span class="va">X</span> <span class="op">%r-%</span> <span class="fu"><a href="dapply.html">dapply</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">quantile</span>, <span class="fl">0.28</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg cyl    disp     hp    drat     wt    qsec vs am gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            5.296   2  25.536   7.56  0.7724 -0.102 -0.5216  0  1    1</span>
@@ -337,54 +273,23 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              2.396   2  90.536   2.56 -0.3676  0.738  3.2384  1  0    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          -1.404   4 225.536 142.56  0.0824  0.848 -1.1416  0  0    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            8.696   0  12.236 -40.44  0.5624  0.468  3.0184  1  0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230             7.096   0   6.336  -7.44  0.7924  0.428  5.9184  1  0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280             3.496   2  33.136  20.56  0.7924  0.718  1.3184  1  0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C            2.096   2  33.136  20.56  0.7924  0.718  1.9184  1  0    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE           0.696   4 141.336  77.56 -0.0576  1.348  0.4184  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL           1.596   4 141.336  77.56 -0.0576  1.008  0.6184  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         -0.504   4 141.336  77.56 -0.0576  1.058  1.0184  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  -5.304   4 337.536 102.56 -0.1976  2.528  0.9984  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental -5.304   4 325.536 112.56 -0.1276  2.702  0.8384  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   -1.004   4 305.536 127.56  0.1024  2.623  0.4384  0  0    0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128            16.696   0 -55.764 -36.44  0.9524 -0.522  2.4884  1  1    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4              2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag          2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710            -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive        -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout      0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360             2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D              0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230               0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280               2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C              2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE             1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL             1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128              -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 14 rows ]</span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     carb           X</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4              2 -0.02513553</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag          2  0.65117099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710            -1  2.12486504</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive        -1  0.08396903</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout      0  0.46887732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               -1  1.02923554</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360             2 -0.13138400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D              0  0.96271217</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 24 rows ]</span>
+<span class="r-in"><span class="co"># \donttest{</span></span>
 <span class="r-in"><span class="co">## Chained Operations</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%r-%</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span> <span class="op">%c*%</span> <span class="fl">5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">    <span class="fu"><a href="ftransform.html">tfm</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        N     Mean        SD        Min        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   32  61.1666         0    61.1666    61.1666</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   32  -3.6557    8.9296   -14.5932     5.4068</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  32   4.5329  619.6935  -793.5765  1210.9235</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    32  -2.7058  342.8143  -476.1433   938.8567</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  32  11.4505    2.6734     7.2677    18.1177</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    32   4.4104    4.8923    -4.1108    15.4442</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> qsec  32  -7.8889    8.9347   -24.6326    17.3674</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> vs    32   4.8299    2.5201     2.6424     7.6424</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> am    32   1.9248     2.495    -0.1065     4.8935</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gear  32   1.6345     3.689     -1.803      8.197</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> carb  32  -3.1903     8.076   -12.2528    22.7472</span>
-<span class="r-in"></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in TRA.data.frame(X, v, "-"):</span> NCOL(x) must match NCOL(STATS)</span>
+<span class="r-in"><span class="co"># }</span></span>
 </code></pre></div>
     </div>
   </div>
