@@ -206,14 +206,14 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       }
     }
   } else if(length(order) == l) { // Grouping not sorted but we have the ordering..
-
-    const SEXP starts = getAttrib(order, install("starts"));
+    SEXP sym_starts = PROTECT(install("starts"));
+    const SEXP starts = getAttrib(order, sym_starts);
     if(length(starts) != ng) goto unsno;
     const int *po = INTEGER(order), *ps = INTEGER(starts);
 
     if(asLogical(toint)) {
-      for(int i = 0, *pri; i != ng; ++i) {
-        pri = INTEGER(pres[i]);
+      for(int i = 0; i != ng; ++i) {
+        int *pri = INTEGER(pres[i]);
         for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; j++) pri[k++] = po[j];
       }
     } else {
@@ -222,8 +222,8 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       case INTSXP:
       case LGLSXP: {
         const int *px = INTEGER(x);
-        for(int i = 0, *pri; i != ng; ++i) {
-          pri = INTEGER(pres[i]);
+        for(int i = 0; i != ng; ++i) {
+          int *pri = INTEGER(pres[i]);
           for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; ++j) pri[k++] = px[po[j]-1];
         }
         break;
@@ -271,6 +271,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       default: error("Unsupported type '%s' passed to gsplit", type2char(tx));
       }
     }
+    UNPROTECT(1);
   } else { // Unsorted, without ordering
     unsno:;
     int *count = (int*)Calloc(ng, int);
