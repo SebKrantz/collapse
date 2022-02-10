@@ -120,6 +120,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
     SEXP x1 = PROTECT(allocVector(tx, 1));
     copyMostAttrib(x, x1);
     SEXP ax = ATTRIB(x1);
+    if(length(ax) == 1 && TAG(ax) == install("label")) ax = R_NilValue;
     UNPROTECT(1);
     int ox = OBJECT(x);
     // FAZIT: Need to use SET_VECTOR_ELT!! pres[i] = allocVector() doesn't work!!
