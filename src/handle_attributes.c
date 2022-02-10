@@ -2,7 +2,7 @@
 #include <Rinternals.h>
 
 // See https://github.com/wch/r-source/blob/079f863446b5414dd96f3c29d519e4a654146364/src/main/memory.c
-// and https://github.com/wch/r-source/search?q=copyMostAttrib
+// and https://github.com/wch/r-source/blob/80e410a786324e0e472a25481d5dd28db8285330/src/main/attrib.c
 // https://github.com/wch/r-source/blob/b6f046826c87fc10ad08acd8858921fa1a58e488/doc/manual/R-ints.texi
 
 
