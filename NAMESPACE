@@ -184,6 +184,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(fgroup_vars)
  export(fungroup)
  export(GRPnames)
+ export(GRPN)
  # export(group_names.GRP)
  export(has_elem)
  export(flm)

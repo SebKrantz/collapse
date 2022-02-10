@@ -98,7 +98,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
                         groups = groups,
                         group.vars = namby,
                         ordered = c(GRP.sort = sort, initially.ordered = sorted),
-                        order = if(!return.order) NULL else if(use.group) `attr<-`(integer(0L), "starts", st) else .Call(C_setAttributes, o, attributes(o)[-2L]), # `attr<-`(o, "group.sizes", NULL): This deep-copies it..
+                        order = if(!return.order) NULL else if(use.group) `attr<-`(integer(0L), "starts", st) else .Call(C_setAttributes, o, attributes(o)[-2L]), # `attributes<-`(o, attributes(o)[-2L]) This does a shallow copy on newer R versions # `attr<-`(o, "group.sizes", NULL): This deep-copies it..
                         # starts = ust, Does not need to be computed by group()
                         # maxgrpn = attr(o, "maxgrpn"),
                         call = if(call) match.call() else NULL), "GRP"))
@@ -119,6 +119,10 @@ GRPnames <- function(x, force.char = TRUE) { # , ...
   if(force.char) tochar(.subset2(groups, 1L)) else .subset2(groups, 1L) # paste0(groups[[1L]]) prints "NA" but is slow, if assign with rownames<-, cannot have duplicate row names. But, attr<- "row.names" is fine !!
 }
 
+GRPN <- function(x, expand = TRUE, ...) {
+  g <- GRP(x, sort = FALSE, return.groups = FALSE, return.order = FALSE, call = FALSE, ...)
+  if(expand) .Call(C_subsetVector, g$group.sizes, g$group.id, FALSE) else g$group.sizes
+}
 # group_names.GRP <- function(x, force.char = TRUE) {
 #   .Deprecated("GRPnames")
 #   GRPnames(x, force.char)
