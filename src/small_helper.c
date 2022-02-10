@@ -115,18 +115,24 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
   if(asLogical(toint)) {
     for(int i = 0; i != ng; ++i) pres[i] = allocVector(INTSXP, pgs[i]);
   } else { // Allocate split vectors and copy attributes and object bits
-    copyMostAttrib(x, res);
-    SEXP ax = ATTRIB(res);
-    SET_ATTRIB(res, R_NilValue);
-    if(TYPEOF(ax) != NILSXP && OBJECT(x) != 0) {
-      for(int i = 0, ox = OBJECT(x); i != ng; ++i) {
+    SEXP x1 = PROTECT(allocVector(tx, 1));
+    copyMostAttrib(x, x1);
+    SEXP ax = ATTRIB(x1);
+    UNPROTECT(1);
+    int ox = OBJECT(x);
+    if(TYPEOF(ax) != NILSXP && ox != 0) {
+      for(int i = 0, s4o = IS_S4_OBJECT(x); i != ng; ++i) {
         SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
         SET_OBJECT(pres[i], ox);
+        if(s4o) SET_S4_OBJECT(pres[i]);
       }
     } else if(TYPEOF(ax) != NILSXP) {
       for(int i = 0; i != ng; ++i) SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
-    } else if(OBJECT(x) != 0) { // Is this even possible? Object bits but no attributes?
-      for(int i = 0, ox = OBJECT(x); i != ng; ++i) SET_OBJECT(pres[i] = allocVector(tx, pgs[i]), ox);
+    } else if(ox != 0) { // Is this even possible? Object bits but no attributes?
+      for(int i = 0, s4o = IS_S4_OBJECT(x); i != ng; ++i) {
+        SET_OBJECT(pres[i] = allocVector(tx, pgs[i]), ox);
+        if(s4o) SET_S4_OBJECT(pres[i]);
+      }
     } else {
       for(int i = 0; i != ng; ++i) pres[i] = allocVector(tx, pgs[i]);
     }
