@@ -1,5 +1,8 @@
 #include "collapse_c.h"
 // #include "data.table.h"
+// #ifndef USE_RINTERNALS
+// #define USE_RINTERNALS
+// #endif
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
   SEXP dn = getAttrib(x, R_DimNamesSymbol);
@@ -110,33 +113,43 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
   const int ng = length(gs), *pgs = INTEGER(gs), tx = TYPEOF(x), l = length(g);
   if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
   SEXP res = PROTECT(allocVector(VECSXP, ng));
-  SEXP *pres = SEXPPTR(res);
   // Output as integer or not
   if(asLogical(toint)) {
-    for(int i = 0; i != ng; ++i) pres[i] = allocVector(INTSXP, pgs[i]);
+    for(int i = 0; i != ng; ++i) SET_VECTOR_ELT(res, i, allocVector(INTSXP, pgs[i]));
   } else { // Allocate split vectors and copy attributes and object bits
     SEXP x1 = PROTECT(allocVector(tx, 1));
     copyMostAttrib(x, x1);
     SEXP ax = ATTRIB(x1);
     UNPROTECT(1);
     int ox = OBJECT(x);
+    // FAZIT: Need to use SET_VECTOR_ELT!! pres[i] = allocVector() doesn't work!!
     if(TYPEOF(ax) != NILSXP && ox != 0) {
       for(int i = 0, s4o = IS_S4_OBJECT(x); i != ng; ++i) {
-        SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
-        SET_OBJECT(pres[i], ox);
-        if(s4o) SET_S4_OBJECT(pres[i]);
+        SEXP resi;
+        SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
+        SET_ATTRIB(resi, ax);
+        SET_OBJECT(resi, ox);
+        if(s4o) SET_S4_OBJECT(resi);
       }
     } else if(TYPEOF(ax) != NILSXP) {
-      for(int i = 0; i != ng; ++i) SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
+      for(int i = 0; i != ng; ++i) {
+        SEXP resi;
+        SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i])); // SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
+        SET_ATTRIB(resi, ax);
+      }
     } else if(ox != 0) { // Is this even possible? Object bits but no attributes?
       for(int i = 0, s4o = IS_S4_OBJECT(x); i != ng; ++i) {
-        SET_OBJECT(pres[i] = allocVector(tx, pgs[i]), ox);
-        if(s4o) SET_S4_OBJECT(pres[i]);
+        SEXP resi;
+        SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
+        SET_OBJECT(resi, ox);
+        if(s4o) SET_S4_OBJECT(resi);
       }
     } else {
-      for(int i = 0; i != ng; ++i) pres[i] = allocVector(tx, pgs[i]);
+      for(int i = 0; i != ng; ++i) SET_VECTOR_ELT(res, i, allocVector(tx, pgs[i]));
     }
   }
+
+  SEXP *pres = SEXPPTR(res);
   // If grouping is sorted
   if(LOGICAL(ord)[1] == 1) { // This only works if data is already ordered in order of the groups
     int count = 0;
