@@ -206,12 +206,12 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE,
 BY.grouped_df <- function(x, FUN, ..., keep.group_vars = TRUE, use.g.names = FALSE) {
   g <- GRP.grouped_df(x, call = FALSE)
   gn <- which(attr(x, "names") %in% g[[5L]])
-  if(!length(gn)) {
-   if(!isTRUE(g$ordered[2L])) return(BY.data.frame(fungroup(x), g, FUN, ..., use.g.names = use.g.names))
-    res <- BY.data.frame(x, g, FUN, ..., use.g.names = use.g.names)
-    if(!is.data.frame(res) || fnrow2(res) == fnrow2(x)) return(res) else return(fungroup(res))
-  }
-  res <- BY.data.frame(fcolsubset(x, -gn), g, FUN, ..., use.g.names = use.g.names)
+  # if(!length(gn)) {
+  #  if(!isTRUE(g$ordered[2L])) return(BY.data.frame(fungroup(x), g, FUN, ..., use.g.names = use.g.names))
+  #   res <- BY.data.frame(x, g, FUN, ..., use.g.names = use.g.names)
+  #   if(!is.data.frame(res) || fnrow2(res) == fnrow2(x)) return(res) else return(fungroup(res))
+  # }
+  res <- BY.data.frame(if(length(gn)) fcolsubset(x, -gn) else x, g, FUN, ..., use.g.names = use.g.names)
   if(!is.data.frame(res)) return(res)
   nrr <- fnrow2(res)
   same_size <- nrr == fnrow2(x)
@@ -222,7 +222,7 @@ BY.grouped_df <- function(x, FUN, ..., keep.group_vars = TRUE, use.g.names = FAL
     ar[["names"]] <- c(g[[5L]], ar[["names"]])
     return(condalcSA(c(.subset(x, gn), res), ar, any(ar$class == "data.table")))
   }
-  ar <- attributes(fungroup(res))
+  ar <- attributes(fungroup2(res, oldClass(res)))
   attributes(res) <- NULL
   ar[["names"]] <- c(g[[5L]], ar[["names"]])
   condalcSA(c(g[[4L]], res), ar, any(ar$class == "data.table"))

@@ -128,6 +128,7 @@ test_that("Testing grouped_df methods", {
   expect_visible(gdf %>% fgrowth(-2:2, 1:2, logdiff = TRUE))
   expect_visible(gdf %>% fgrowth(logdiff = TRUE, scale = 1))
   expect_visible(gdf %>% fgrowth(-2:2, 1:2, logdiff = TRUE, scale = 1))
+  expect_equal(BY(gby(iris,Species), sum), BY(nv(gby(iris,Species)), sum))
 })
 
 

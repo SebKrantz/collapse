@@ -264,6 +264,10 @@ print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
   invisible(x)
 } #print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE, ...) # print.table(, right = TRUE)
 
-
 # print.pwcov <- function(x, digits = 2, ...) print.default(formatC(round(x, digits), format = "g",
 #                         digits = 9, big.mark = "'", big.interval = 6), quote = FALSE, right = TRUE, ...)
+
+
+`[.pwcor` <- `[.pwcov` <- function(x, i, j, ..., drop = TRUE) `oldClass<-`(NextMethod(), oldClass(x))
+
+

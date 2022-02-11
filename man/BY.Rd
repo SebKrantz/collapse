@@ -46,11 +46,12 @@ BY(x, \dots)
 
 %I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution.
 
-It is principally a wrapper around \code{lapply(gsplit(x, g), FUN, \dots)}, that uses \code{\link{gsplit}} for optimized splitting and also strongly optimizes on the internal code compared to \emph{base} R functions. For more details look at the documentation for \code{\link{dapply}} which works very similar (apart from the splitting performed in \code{BY}). The function is intended for simple usage involving data aggregation or flexible computation of summary statistics across groups.
-For larger tasks requiring split-apply-combine computing on data frames, the \link[=fast-statistical-functions]{Fast Statistical Functions} and the \emph{data.table} package are more appropriate tools.
+It is principally a wrapper around \code{lapply(gsplit(x, g), FUN, \dots)}, that uses \code{\link{gsplit}} for optimized splitting and also strongly optimizes on the internal code compared to \emph{base} R functions. For more details look at the documentation for \code{\link{dapply}} which works very similar (apart from the splitting performed in \code{BY}). The function is intended for simple cases involving data aggregation or flexible computation of summary statistics across groups using a single function e.g. \code{iris |> gby(Species) |> BY(IQR)} is simpler than \code{iris |> gby(Species) |> smr(acr(.fns = IQR))} etc..
+
+For larger tasks, the \link[=fast-statistical-functions]{Fast Statistical Functions} or the \emph{data.table} package are more appropriate tools.
 }
 \note{
-\code{BY} can be used with vector-valued functions preserving the length of the data, note however that data are recombined in the order of the groups, not in the order of the original data. It is thus advisable to sort the data by the grouping variable before using \code{BY} with such a function.
+\code{BY} can be used with vector-valued functions preserving the length of the data, note however that, unlike \code{\link{fmutate}}, data is recombined in the order of the groups, not in the order of the original data. It is thus advisable to sort the data by the grouping variable before using \code{BY} with such a function. In particular, in such cases the 'grouped_df' method only keeps grouping columns if data was grouped with \code{fgroup_by(data, ..., sort = TRUE)}, and the grouping algorithm detected that the data is already sorted in the order of the groups (i.e. if \code{attr(with(data, radixorder(...)), "sorted")} is \code{TRUE}), even if \code{keep.group_vars = TRUE}. The same holds for preservation names / rownames in the default, matrix or data frame methods. Basically, \code{BY} is kept as simple as possible without running danger of returning something wrong.
 }
 \value{
 \code{X} where \code{FUN} was applied to every column split by \code{g}.

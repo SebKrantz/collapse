@@ -122,7 +122,7 @@ gl <- list(g, g2)
 if(identical(Sys.getenv("LOCAL"), "TRUE"))
   demeanlist <- eval(parse(text = paste0("lfe", ":", ":", "demeanlist")))
 
-tol <- if(identical(Sys.getenv("LOCAL"), "TRUE")) 1e-6 else 1e-4
+tol <- if(identical(Sys.getenv("LOCAL"), "TRUE")) 1e-5 else 1e-4
 
 demean <- fixest::demean # eval(parse(text = paste0("fixest", ":", ":", "demean")))
 
