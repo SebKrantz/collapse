@@ -17,6 +17,7 @@
 \alias{print.GRP}
 \alias{plot.GRP}
 \alias{GRPnames}
+\alias{GRPN}
 \alias{as_factor_GRP}
 \title{Fast Grouping / \emph{collapse} Grouping Objects}
 \description{
