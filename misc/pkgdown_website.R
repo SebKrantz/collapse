@@ -31,6 +31,8 @@ build_news()
 # replace <head> by <head><link rel="shortcut icon" href="https://sebkrantz.github.io/collapse/favicon.ico" type="image/x-icon">
 # or <head><meta
 
+#     <a href = "collapse1.7.digest.html"><strong><em>collapse</em> 1.7 NEWS Digest</strong></a>
+
 # replace "https://twitter.com/collapse_R" target="_blank",
 # href="https://github.com/SebKrantz/collapse" target="_blank" and
 # href="https://sebkrantz.github.io/Rblog/" target="_blank"  (target = "_blank")
