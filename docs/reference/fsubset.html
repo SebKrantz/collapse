@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.7.6</span>
       </span>
     </div>
 
@@ -62,7 +62,7 @@
     </div>
 
     <div class="ref-description">
-    <p><code>fsubset</code> returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the <em>data.table</em> package. Especially for data frames it is significantly (4-5 times) faster than <code><a href="https://Rdatatable.gitlab.io/data.table/reference/subset.data.table.html" class="external-link">subset</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>. The methods also provide enhanced functionality compared to <code><a href="https://Rdatatable.gitlab.io/data.table/reference/subset.data.table.html" class="external-link">subset</a></code>. The function <code>ss</code> provides an (internal generic) programmers alternative to <code>[</code> that does not drop dimensions and is significantly faster than <code>[</code> for data frames.</p>
+    <p><code>fsubset</code> returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the <em>data.table</em> package. Especially for data frames it is significantly (4-5 times) faster than <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>. The methods also provide enhanced functionality compared to <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></code>. The function <code>ss</code> provides an (internal generic) programmers alternative to <code>[</code> that does not drop dimensions and is significantly faster than <code>[</code> for data frames.</p>
     </div>
 
     <div id="ref-usage">
@@ -103,7 +103,7 @@
     <div id="details">
     <h2>Details</h2>
     <p><code>fsubset</code> is a generic function, with methods supplied for vectors, matrices, and data
-  frames (including lists). It represents an improvement in both speed and functionality over <code><a href="https://Rdatatable.gitlab.io/data.table/reference/subset.data.table.html" class="external-link">subset</a></code>. The function <code>ss</code> is an improvement of <code>[</code> to subset (vectors) matrices and data frames without dropping dimensions. It is significantly faster than <code>[.data.frame</code>. For subsetting columns alone, please see <a href="select_replace_vars.html">selecting and replacing columns</a>.</p>
+  frames (including lists). It represents an improvement in both speed and functionality over <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></code>. The function <code>ss</code> is an improvement of <code>[</code> to subset (vectors) matrices and data frames without dropping dimensions. It is significantly faster than <code>[.data.frame</code>. For subsetting columns alone, please see <a href="select_replace_vars.html">selecting and replacing columns</a>.</p>
 <p>For ordinary vectors, <code>subset</code> can be integer or logical, subsetting is done in C and more efficient than <code>[</code> for large vectors.</p>
 <p>For matrices the implementation is all base-R but slightly more efficient and more versatile than <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset.matrix</a></code>. Thus it is possible to <code>subset</code> matrix rows using logical or integer vectors, or character vectors matching rownames. The <code>drop</code> argument is passed on to the indexing method for matrices.</p>
 <p>For both matrices and data frames, the <code>...</code> argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. <code>col1:coln</code>, and new column names may be assigned e.g. <code>fsubset(data, col1 &gt; 20, newname =  col2, col3:col6)</code> (see examples).</p>
