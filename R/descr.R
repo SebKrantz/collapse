@@ -14,7 +14,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
   numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fndistinctCpp(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
 
   descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
-                                                          Quant = quantile(x, probs = Qprobs, na.rm = TRUE)) else
+                                                           Quant = quantile(na_rm(x), probs = Qprobs)) else
                                          function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
   # Could make this more efficient ?
   descrcat <- function(x, tab = table) if(tab) list(Class = class(x), Label = attr(x, label.attr),
