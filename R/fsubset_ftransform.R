@@ -188,8 +188,8 @@ settransform <- function(.data, ...)
 
 settfm <- settransform
 
-settransformv <- function(.data, vars, FUN, ..., apply = TRUE)
-  assign(as.character(substitute(.data)), ftransformv(.data, vars, FUN, ..., apply = apply), envir = parent.frame())
+settransformv <- function(.data, ...)
+  assign(as.character(substitute(.data)), ftransformv(.data, ...), envir = parent.frame())
 # eval.parent(substitute(.data <- get0("ftransformv", envir = getNamespace("collapse"))(.data, vars, FUN, ..., apply = apply)))
 
 settfmv <- settransformv
