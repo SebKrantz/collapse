@@ -89,7 +89,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
                  4 \tab\tab \code{"/"}  \tab\tab divide by \code{V} \cr
     }
   }
-  \item{rowwise}{logical. \code{TRUE} performs the operation between \code{v} and each row of \code{x}. Only applicable if \code{x} is a matrix and \code{v} a vector such that \code{length(v) == ncol(x)}.}
+  \item{rowwise}{logical. \code{TRUE} performs the operation between \code{V} and each row of \code{X}.}
    \item{cols}{select columns to check for missing values using column names, indices, a logical vector or a function (e.g. \code{is.numeric}). The default is to check all columns, which could be inefficient.}
   \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}

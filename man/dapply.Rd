@@ -28,7 +28,7 @@ dapply(X, FUN, \dots, MARGIN = 2, parallel = FALSE, mc.cores = 1L,
 \itemize{
 \item Save the attributes of \code{X}.
 \item If \code{MARGIN = 2} (columns), convert matrices to plain lists of columns using \code{\link{mctl}} and remove all attributes from data frames.
-\item If \code{MARGIN = 1} (rows), convert matrices to plain lists of rows using \code{\link{mrtl}}. For data frames remove all attributes, efficiently convert to matrix using \code{do.call(rbind, X)} and also convert to list of rows using \code{\link{mrtl}}.
+\item If \code{MARGIN = 1} (rows), convert matrices to plain lists of rows using \code{\link{mrtl}}. For data frames remove all attributes, efficiently convert to matrix using \code{do.call(cbind, X)} and also convert to list of rows using \code{\link{mrtl}}.
 \item Call \code{\link{lapply}} or \code{\link{mclapply}} on these plain lists (which is faster than calling \code{lapply} on an object with attributes).
 
 \item depending on the requested output type, use \code{\link{matrix}}, \code{\link{unlist}} or \code{\link[=do.call]{do.call(cbind, ...)}} to convert the result back to a matrix or list of columns.
