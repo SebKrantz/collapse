@@ -21,21 +21,23 @@ void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
       SET_VECTOR_ELT(dn, 1, cn);
       dimnamesgets(out, dn);
     }
-    if(!isObject(x)) copyMostAttrib(x, out);
+    if(OBJECT(x) == 0) copyMostAttrib(x, out);
     UNPROTECT(nprotect);
   }
 }
 
 void DFcopyAttr(SEXP out, SEXP x, int ng) {
   SHALLOW_DUPLICATE_ATTRIB(out, x);
-  if(ng == 0) {
-    setAttrib(out, R_RowNamesSymbol, ScalarInteger(1));
-  } else {
-    SEXP rn = PROTECT(allocVector(INTSXP, 2)); // Needed here, now unsafe to pass uninitialized vectors to R_RowNamesSymbol.
-    INTEGER(rn)[0] = NA_INTEGER;
-    INTEGER(rn)[1] = -ng;
-    setAttrib(out, R_RowNamesSymbol, rn);
-    UNPROTECT(1);
+  if(OBJECT(x) != 0) { // No attributes for plain lists
+    if(ng == 0) {
+      setAttrib(out, R_RowNamesSymbol, ScalarInteger(1));
+    } else {
+      SEXP rn = PROTECT(allocVector(INTSXP, 2)); // Needed here, now unsafe to pass uninitialized vectors to R_RowNamesSymbol.
+      INTEGER(rn)[0] = NA_INTEGER;
+      INTEGER(rn)[1] = -ng;
+      setAttrib(out, R_RowNamesSymbol, rn);
+      UNPROTECT(1);
+    }
   }
 }
 
