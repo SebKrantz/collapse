@@ -8,7 +8,7 @@
 \emph{collapse} provides an ensemble of functions to perform common data transformations efficiently and user friendly:
 \itemize{
 \item \code{\link{dapply}} \bold{applies functions to rows or columns} of matrices and data frames, preserving the data format.
-\item \code{\link{BY}} is an S3 generic for \bold{Split-Apply-Combine computing} and can perform aggregation as well as grouped transformations (for aggregation please also see \code{\link{collap}} and the \link[=fast-statistical-functions]{Fast Statistical Functions}).
+\item \code{\link{BY}} is an S3 generic for efficient \bold{Split-Apply-Combine computing}, similar to \code{\link{dapply}}.
 
 \item A set of arithmetic operators facilitates \bold{row-wise} \code{\link{\%rr\%}}, \code{\link{\%r+\%}}, \code{\link{\%r-\%}}, \code{\link{\%r*\%}}, \code{\link{\%r/\%}} and
 \bold{column-wise} \code{\link{\%cr\%}}, \code{\link{\%c+\%}}, \code{\link{\%c-\%}}, \code{\link{\%c*\%}}, \code{\link{\%c/\%}} \bold{replacing and sweeping operations} involving a vector and a matrix or data frame / list. Since v1.7, the operators \code{\link{\%+=\%}}, \code{\link{\%-=\%}}, \code{\link{\%*=\%}} and \code{\link{\%/=\%}} do column- and element- wise math by reference, and the function \code{\link{setop}} can also perform sweeping out rows by reference.

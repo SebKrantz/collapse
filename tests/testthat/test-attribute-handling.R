@@ -14,7 +14,7 @@ set.seed(101)
 f1 <- sample.int(5, length(AirPassengers), replace = TRUE)
 f2 <- sample.int(5, nrow(EuStockMarkets), replace = TRUE)
 
-numFUN <- setdiff(.FAST_STAT_FUN, c("fnth", "fmode", "ffirst", "flast"))
+numFUN <- setdiff(.FAST_STAT_FUN, c("fnth", "fmode", "ffirst", "flast", "fmin", "fmax"))
 countFUN <- c("fnobs", "fndistinct")
 
 test_that("statistical functions handle attributes properly", {
@@ -97,6 +97,45 @@ test_that("statistical functions handle attributes properly", {
     if(Sys.getenv("NCRAN") == "TRUE") {
     expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), g2, use.g.names = FALSE)),  `[[<-`(`[[<-`(attributes(gmtc), "row.names", value = seq_len(g2[[1L]])), "class", "data.frame"))
     expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), g2)), `[[<-`(`[[<-`(attributes(gmtc), "row.names", GRPnames(g2)), "class", "data.frame"))
+    }
+    expect_identical(attributes(FUN(gmtc)), list(names = c(fgroup_vars(gmtc, "names"), names(mtcars)[-c(2,8:9)]), row.names = seq_len(g2[[1L]]), class = "data.frame"))
+    expect_identical(attributes(FUN(gmtc, use.g.names = TRUE)), list(names = c(fgroup_vars(gmtc, "names"), names(mtcars)[-c(2,8:9)]), row.names = GRPnames(g2), class = "data.frame"))
+    expect_identical(attributes(FUN(gmtc, keep.group_vars = FALSE)), list(names = names(mtcars)[-c(2,8:9)], row.names = seq_len(g2[[1L]]), class = "data.frame"))
+    expect_identical(attributes(FUN(gmtc, keep.group_vars = FALSE, use.g.names = TRUE)), list(names = names(mtcars)[-c(2,8:9)], row.names = GRPnames(g2), class = "data.frame"))
+  }
+
+  for(i in c("fmin", "fmax")) {
+    # print(i)
+    FUN <- match.fun(i)
+    for(k in num_vars(wlddev, "names")) expect_identical(attributes(FUN(wlddev[[k]])), attributes(wlddev[[k]]))
+    expect_identical(attributes(FUN(AirPassengers)), attributes(AirPassengers)) # This is problematic!!
+    expect_identical(attributes(FUN(EuStockMarkets)), list(names = colnames(EuStockMarkets)))
+    expect_identical(attributes(FUN(EuStockMarkets, drop = FALSE)), list(dim = c(1L, 4L), dimnames = list(NULL, colnames(EuStockMarkets))))
+    expect_identical(attributes(FUN(m)), list(names = colnames(m)))
+    expect_identical(attributes(FUN(m, drop = FALSE)), list(dim = c(1L, 11L), dimnames = list(NULL, colnames(m))))
+    expect_identical(attributes(FUN(gm)), list(names = colnames(m)))
+    expect_identical(attributes(FUN(gm, drop = FALSE)), list(dim = c(1L, 11L), dimnames = list(NULL, colnames(m)), groups = attr(gm, "groups")))
+    expect_identical(attributes(FUN(nv(wlddev))), list(names = nv(wlddev, "names")))
+    expect_identical(attributes(FUN(nv(wlddev), drop = FALSE)), `[[<-`(attributes(nv(wlddev)), "row.names", 1L))
+    expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"))), list(names = names(mtcars)))
+    expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), drop = FALSE)), `[[<-`(`[[<-`(attributes(gmtc), "row.names", 1L), "class", "data.frame"))
+
+    # Grouped
+    for(k in num_vars(wlddev, "names")) expect_identical(attributes(FUN(wlddev[[k]], g1, use.g.names = FALSE)), attributes(wlddev[[k]]))
+    for(k in num_vars(wlddev, "names")) expect_identical(attributes(FUN(wlddev[[k]], g1)), c(attributes(wlddev[[k]]), list(names = unattrib(GRPnames(g1)))))
+    expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), attributes(AirPassengers)) # This is problematic!!
+    expect_identical(attributes(FUN(AirPassengers, f1)), c(attributes(AirPassengers), list(names = as.character(1:5)))) # This is problematic!!
+    expect_identical(attributes(FUN(EuStockMarkets, f2, use.g.names = FALSE)), list(dim = c(5L, 4L), dimnames = dimnames(EuStockMarkets)))
+    expect_identical(attributes(FUN(EuStockMarkets, f2)), list(dim = c(5L, 4L), dimnames = list(as.character(1:5), colnames(EuStockMarkets))))
+    expect_identical(attributes(FUN(m, g2, use.g.names = FALSE)), list(dim = c(7L, 11L), dimnames = list(NULL, colnames(m))))
+    expect_identical(attributes(FUN(m, g2)), list(dim = c(7L, 11L), dimnames = list(GRPnames(g2), colnames(m))))
+    expect_identical(attributes(FUN(gm, attr(gm, "groups"), use.g.names = FALSE)), list(dim = c(7L, 11L), dimnames = list(NULL, colnames(m)), groups = attr(gm, "groups")))
+    expect_identical(attributes(FUN(gm, attr(gm, "groups"))), list(dim = c(7L, 11L), dimnames = list(GRPnames(g2), colnames(m)), groups = attr(gm, "groups")))
+    expect_identical(attributes(FUN(nv(wlddev), g1, use.g.names = FALSE)), `[[<-`(attributes(nv(wlddev)), "row.names", value = seq_len(g1[[1L]])))
+    expect_identical(attributes(FUN(nv(wlddev), g1)), `[[<-`(attributes(nv(wlddev)), "row.names", value = GRPnames(g1)))
+    if(Sys.getenv("NCRAN") == "TRUE") {
+      expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), g2, use.g.names = FALSE)),  `[[<-`(`[[<-`(attributes(gmtc), "row.names", value = seq_len(g2[[1L]])), "class", "data.frame"))
+      expect_identical(attributes(FUN(`oldClass<-`(gmtc, "data.frame"), g2)), `[[<-`(`[[<-`(attributes(gmtc), "row.names", GRPnames(g2)), "class", "data.frame"))
     }
     expect_identical(attributes(FUN(gmtc)), list(names = c(fgroup_vars(gmtc, "names"), names(mtcars)[-c(2,8:9)]), row.names = seq_len(g2[[1L]]), class = "data.frame"))
     expect_identical(attributes(FUN(gmtc, use.g.names = TRUE)), list(names = c(fgroup_vars(gmtc, "names"), names(mtcars)[-c(2,8:9)]), row.names = GRPnames(g2), class = "data.frame"))

@@ -29,9 +29,9 @@ tfmv(.data, vars, FUN, \dots, apply = TRUE)
 
 # Modify data frame by reference
 settransform(.data, \dots)
-settransformv(.data, vars, FUN, \dots, apply = TRUE)
+settransformv(.data, \dots)     # Same arguments as ftransformv
 settfm(.data, \dots)            # Shortcut for settransform
-settfmv(.data, vars, FUN, \dots, apply = TRUE)
+settfmv(.data, \dots)
 
 # Replace/add modified columns in/to a data frame
 ftransform(.data) <- value

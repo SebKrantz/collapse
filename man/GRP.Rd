@@ -49,7 +49,7 @@ GRP(X, \dots)
 
 \method{GRP}{grouped_df}(X, \dots, return.groups = TRUE, call = TRUE)
 
-# Identify, get length, group names, and convert GRP object to factor
+# Identify, get length, group sizes and names, and convert GRP object to factor
 is_GRP(x)
 \method{length}{GRP}(x)
 GRPN(x, expand = TRUE, ...)

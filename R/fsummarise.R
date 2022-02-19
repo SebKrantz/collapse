@@ -32,13 +32,14 @@ fFUN_smr_add_groups <- function(z) {
 smr_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) {
   # return(list(i = i, data = data, .data_ = .data_, funs = funs, aplvec = aplvec, ce = ce))
   .FUN_ <- funs[[i]]
+  nami <- names(funs)[i]
   if(aplvec[i]) {
     value <- if(missing(...)) lapply(unattrib(.data_), .FUN_) else
       do.call(lapply, c(list(unattrib(.data_), .FUN_), eval(substitute(list(...)), data, ce)), envir = ce)
     names(value) <- names(.data_)
-  } else if(any(i == .FAST_STAT_FUN_POLD)) {
+  } else if(any(nami == .FAST_STAT_FUN_POLD)) {
     if(missing(...)) return(unclass(.FUN_(.data_, drop = FALSE)))
-    fcal <- as.call(c(list(as.name(i), quote(.data_)), as.list(substitute(list(...))[-1L])))
+    fcal <- as.call(c(list(as.name(nami), quote(.data_)), as.list(substitute(list(...))[-1L])))
     fcal$drop <- FALSE
     return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
   } else {
@@ -54,13 +55,14 @@ smr_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) {
 smr_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
   g <- data[[".g_"]]
   .FUN_ <- funs[[i]]
+  nami <- names(funs)[i]
   if(aplvec[i]) {
     value <- if(missing(...)) lapply(unattrib(.data_), copysplaplfun, g, .FUN_) else
       dots_apply_grouped(.data_, g, .FUN_, eval(substitute(list(...)), data, ce))
     names(value) <- names(.data_)
-  } else if(any(i == .FAST_STAT_FUN_POLD)) {
+  } else if(any(nami == .FAST_STAT_FUN_POLD)) {
     if(missing(...)) return(unclass(.FUN_(.data_, g = g, use.g.names = FALSE)))
-    fcal <- as.call(c(list(as.name(i), quote(.data_), g = quote(.g_)), as.list(substitute(list(...))[-1L])))
+    fcal <- as.call(c(list(as.name(nami), quote(.data_), g = quote(.g_)), as.list(substitute(list(...))[-1L])))
     fcal$use.g.names <- FALSE
     return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
   } else {

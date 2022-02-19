@@ -188,8 +188,8 @@ settransform <- function(.data, ...)
 
 settfm <- settransform
 
-settransformv <- function(.data, vars, FUN, ..., apply = TRUE)
-  assign(as.character(substitute(.data)), ftransformv(.data, vars, FUN, ..., apply = apply), envir = parent.frame())
+settransformv <- function(.data, ...)
+  assign(as.character(substitute(.data)), ftransformv(.data, ...), envir = parent.frame())
 # eval.parent(substitute(.data <- get0("ftransformv", envir = getNamespace("collapse"))(.data, vars, FUN, ..., apply = apply)))
 
 settfmv <- settransformv
@@ -382,7 +382,7 @@ setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN
   list(data = d,
        .data_ = .data_, # cols = cols,
        funs = fun,
-       aplvec = `names<-`(aplvec, names(fun)),
+       aplvec = aplvec,
        ce = ce,
        names = names)
 }
@@ -395,16 +395,16 @@ do_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .
   # nodots <- missing(...)
   # return(setup_across(substitute(.cols), substitute(.fns), .fns, .names, .apply, .FAST_FUN_MOPS))
   setup <- setup_across(substitute(.cols), substitute(.fns), .fns, .names, .apply, .transpose, .FAST_FUN_MOPS)
-  nf <- names(setup$funs)
+  seqf <- seq_along(setup$funs)
   names <- setup$names
-  # return(eval_funi(nf, ...))
-  # return(lapply(nf, eval_funi, ...))
-  if(length(nf) == 1L) {
-    res <- .eval_funi(nf, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...)  # eval_funi(nf, aplvec, funs, nodots, .data_, data, ce, ...)
+  # return(eval_funi(seqf, ...))
+  # return(lapply(seqf, eval_funi, ...))
+  if(length(seqf) == 1L) {
+    res <- .eval_funi(seqf, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...)  # eval_funi(seqf, aplvec, funs, nodots, .data_, data, ce, ...)
     # return(res)
   } else {
     # motivated by: fmutate(mtcars, across(cyl:vs, list(L, D, G), n = 1:3))
-    r <- lapply(nf, .eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...) # do.call(lapply, c(list(nf, eval_funi), setup[1:5], list(...))) # lapply(nf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
+    r <- lapply(seqf, .eval_funi, setup[[1L]], setup[[2L]], setup[[3L]], setup[[4L]], setup[[5L]], ...) # do.call(lapply, c(list(seqf, eval_funi), setup[1:5], list(...))) # lapply(seqf, eval_funi, aplvec, funs, nodots, .data_, data, ce, ...)
     # return(r)
     if(isFALSE(.transpose) || (is.character(.transpose) && !all_eq(vlengths(r, FALSE)))) {
       # stop("reached here")
@@ -422,32 +422,33 @@ do_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .
 
 mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is unused here...
   .FUN_ <- funs[[i]]
+  nami <- names(funs)[i]
   if(aplvec[i]) {
     value <- if(missing(...)) lapply(unattrib(.data_), .FUN_) else
       do.call(lapply, c(list(unattrib(.data_), .FUN_), eval(substitute(list(...)), data, ce)), envir = ce) # eval(substitute(lapply(unattrib(.data_), .FUN_, ...)), c(list(.data_ = .data_), data), ce)
     names(value) <- names(.data_)
-  } else if(any(i == .FAST_STAT_FUN_POLD)) {
-    if(missing(...)) return(unclass(.FUN_(.data_, TRA = 1L))) # Old way: Not necessary to construct call.. return(unclass(eval(as.call(list(as.name(i), quote(.data_), TRA = 1L))))) # faster than substitute(.FUN_(.data_, TRA = 1L), list(.FUN_ = as.name(i)))
+  } else if(any(nami == .FAST_STAT_FUN_POLD)) {
+    if(missing(...)) return(unclass(.FUN_(.data_, TRA = 1L))) # Old way: Not necessary to construct call.. return(unclass(eval(as.call(list(as.name(nami), quote(.data_), TRA = 1L))))) # faster than substitute(.FUN_(.data_, TRA = 1L), list(.FUN_ = as.name(nami)))
     # if(any(...names() == "TRA")) # This down not work because it substitutes setup[[]] from mutate_across !!!
     #   return(unclass(eval(substitute(.FUN_(.data_, ...)), c(list(.data_ = .data_), data), ce)))
     # return(unclass(eval(substitute(.FUN_(.data_, ..., TRA = 1L)), c(list(.data_ = .data_), data), ce)))
-    fcal <- as.call(c(list(as.name(i), quote(.data_)), as.list(substitute(list(...))[-1L])))
+    fcal <- as.call(c(list(as.name(nami), quote(.data_)), as.list(substitute(list(...))[-1L])))
     if(is.null(fcal$TRA)) fcal$TRA <- 1L
     return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
   } else {
     value <- if(missing(...)) .FUN_(.data_) else
       do.call(.FUN_, c(list(.data_), eval(substitute(list(...)), data, ce)), envir = ce) # Object setup not found: eval(substitute(.FUN_(.data_, ...)), c(list(.data_ = .data_), data), ce)
     oldClass(value) <- NULL
-    if(any(i == .FAST_FUN_MOPS)) return(value) # small improvement for fast funs...
+    if(any(nami == .FAST_FUN_MOPS)) return(value) # small improvement for fast funs...
   }
   # return(unclass(r))
-  # fcal <- if(missing(...)) as.call(list(funs[[i]], quote(.data_))) else
-  #         as.call(c(list(funs[[i]], quote(.data_)), as.list(substitute(list(...))[-1L]))) # , parent.frame()
+  # fcal <- if(missing(...)) as.call(list(funs[[nami]], quote(.data_))) else
+  #         as.call(c(list(funs[[nami]], quote(.data_)), as.list(substitute(list(...))[-1L]))) # , parent.frame()
   #   # substitute(list(...), parent.frame())
-  #   # substitute(FUN(.data_, ...), list(FUN = funs[[i]], ...))
-  #   # as.call(substitute(list(funs[[i]], quote(.data_), ...)))
-  #   # substitute(FUN(.data_, ...), list(FUN = funs[[i]]))  #
-  # if(any(i == .FAST_STAT_FUN_POLD) && is.null(fcal$TRA)) fcal$TRA <- 1L
+  #   # substitute(FUN(.data_, ...), list(FUN = funs[[nami]], ...))
+  #   # as.call(substitute(list(funs[[nami]], quote(.data_), ...)))
+  #   # substitute(FUN(.data_, ...), list(FUN = funs[[nami]]))  #
+  # if(any(nami == .FAST_STAT_FUN_POLD) && is.null(fcal$TRA)) fcal$TRA <- 1L
   # fast functions have a data.frame method, thus can be applied simultaneously to all columns
   # return(fcal)
   # return(eval(fcal, c(list(.data_ = .data_), data), setup$ce))
@@ -517,17 +518,18 @@ dots_apply_grouped_bulk <- function(d, g, f, dots) {
 mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
   g <- data[[".g_"]]
   .FUN_ <- funs[[i]]
+  nami <- names(funs)[i]
   apli <- aplvec[i]
   if(apli) {
     value <- if(missing(...)) lapply(unattrib(.data_), copysplaplfun, g, .FUN_) else
              dots_apply_grouped(.data_, g, .FUN_, eval(substitute(list(...)), data, ce)) # Before: do.call(lapply, c(list(unattrib(.data_), copysplaplfun, g, .FUN_), eval(substitute(list(...)), data, ce)), envir = ce)
-  } else if(any(i == .FAST_STAT_FUN_POLD)) {
+  } else if(any(nami == .FAST_STAT_FUN_POLD)) {
     if(missing(...)) return(unclass(.FUN_(.data_, g = g, TRA = 1L)))
-    fcal <- as.call(c(list(as.name(i), quote(.data_), g = quote(.g_)), as.list(substitute(list(...))[-1L])))
+    fcal <- as.call(c(list(as.name(nami), quote(.data_), g = quote(.g_)), as.list(substitute(list(...))[-1L])))
     if(is.null(fcal$TRA)) fcal$TRA <- 1L
     return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
-  } else if(any(i == .FAST_FUN_MOPS)) {
-    if(any(i == .OPERATOR_FUN)) {
+  } else if(any(nami == .FAST_FUN_MOPS)) {
+    if(any(nami == .OPERATOR_FUN)) {
       value <- if(missing(...)) .FUN_(.data_, by = g) else
         do.call(.FUN_, c(list(.data_, by = g), eval(substitute(list(...)), data, ce)), envir = ce)
     } else {
