@@ -187,7 +187,8 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
     } else px = REAL(x);
     fsum_weights_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
-  if(ng && !isObject(x)) copyMostAttrib(x, out);
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+    copyMostAttrib(x, out); // For example "Units" objects...
   UNPROTECT(nprotect);
   return out;
 }
@@ -270,7 +271,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
   }
   SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
   for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm);
-  if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
+  // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
   DFcopyAttr(out, x, ng);
   UNPROTECT(1);
   return out;

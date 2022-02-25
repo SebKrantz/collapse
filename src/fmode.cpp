@@ -130,8 +130,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         // }
       }
       Vector<RTYPE> out(1, mode);
-      SHALLOW_DUPLICATE_ATTRIB(out, x); // could add right name for named vectors
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
@@ -272,8 +272,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           // }
         }
       }
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     }
   } else { // With Weights
@@ -385,8 +385,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         }
       }
       Vector<RTYPE> out(1, mode);
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
@@ -534,8 +534,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           }
         }
       }
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     }
   }
@@ -592,8 +592,8 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
         if(mode == 0) mode = NA_INTEGER;
       }
       IntegerVector out(1, mode);
-      SHALLOW_DUPLICATE_ATTRIB(out, x); // could add right name for names vectors
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
@@ -669,8 +669,8 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           if(out[gr] == 0) out[gr] = NA_INTEGER;
         }
       }
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     }
   } else { // With Weights
@@ -725,8 +725,8 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
         if(mode == 0) mode = NA_INTEGER;
       }
       IntegerVector out(1, mode);
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
@@ -816,8 +816,8 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           if(out[gr] == 0) out[gr] = NA_INTEGER;
         }
       }
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     }
   }
@@ -851,8 +851,8 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
         }
         out[0] = (NNA > Ntrue && NNA > Nfalse) ? NA_LOGICAL : (maxm || Ntrue != Nfalse) ? Ntrue >= Nfalse : false;
       }
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
@@ -868,8 +868,8 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
           }
         }
         if(!maxm) for(int i = ng; i--; ) if(truefalse[i] == 0 && out[i] != NA_LOGICAL) out[i] = false;
-        SHALLOW_DUPLICATE_ATTRIB(out, x);
-        if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          Rf_copyMostAttrib(x, out); // could add right name for named vectors
         return out;
       } else {
         IntegerVector Ntrue(ng), Nfalse(ng), NNA(ng); // better way ?
@@ -890,8 +890,8 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
             else out[i] = Ntrue[i] > Nfalse[i];
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(out, x);
-        if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          Rf_copyMostAttrib(x, out); // could add right name for named vectors
         return out;
       }
     }
@@ -919,8 +919,8 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
         }         // important as w could be NA as well..
         out[0] = ((sumwNA > sumwtrue && sumwNA > sumwfalse) || (sumwtrue == 0 && sumwfalse == 0)) ? NA_LOGICAL : (maxm || sumwtrue != sumwfalse) ? sumwtrue >= sumwfalse : false;
       }
-      SHALLOW_DUPLICATE_ATTRIB(out, x);
-      if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out); // could add right name for named vectors
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
@@ -938,8 +938,8 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
           }
         }
         if(!maxm) for(int i = ng; i--; ) if(sumwtruefalse[i] == 0 && out[i] != NA_LOGICAL) out[i] = false;
-        SHALLOW_DUPLICATE_ATTRIB(out, x);
-        if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          Rf_copyMostAttrib(x, out); // could add right name for named vectors
         return out;
       } else {
         NumericVector sumwtrue(ng), sumwfalse(ng), sumwNA(ng); // better way ?
@@ -963,8 +963,8 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
             else out[i] = sumwtrue[i] > sumwfalse[i];
           }
         }
-        SHALLOW_DUPLICATE_ATTRIB(out, x);
-        if(Rf_getAttrib(x, R_NamesSymbol) != R_NilValue) Rf_setAttrib(out, R_NamesSymbol, R_NilValue);
+        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          Rf_copyMostAttrib(x, out); // could add right name for named vectors
         return out;
       }
     }

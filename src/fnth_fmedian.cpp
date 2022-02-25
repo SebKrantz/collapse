@@ -53,6 +53,8 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
         std::nth_element(xd.begin(), xd.begin()+nth, xd.end());
         out = (tiesmean && l%2 == 0) ? (xd[nth] + *(std::min_element(xd.begin()+nth+1, xd.end())))*0.5 : xd[nth];
       }
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out);
       return out;
     } else { // with groups
       if(l != g.size()) stop("length(g) must match length(x)");
@@ -86,7 +88,8 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
             out[i-1] = (tiesmean && n%2 == 0) ? (*(mid) + *(std::min_element(mid+1, end)))*0.5 : *(mid);
           }
         }
-        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
+        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          Rf_copyMostAttrib(x, out);
         return out;
       } else {
         NumericVector out(ng);
@@ -109,7 +112,8 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
           std::nth_element(begin, mid, end);
           out[i] = (tiesmean && n%2 == 0) ? (*(mid) + *(std::min_element(mid+1, end)))*0.5 : *(mid);
         }
-        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
+        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          Rf_copyMostAttrib(x, out);
         return out;
       }
     }
@@ -206,7 +210,8 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
           }
         }
       }
-      if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+        Rf_copyMostAttrib(x, out);
       return out;
     }
   }
