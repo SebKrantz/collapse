@@ -337,56 +337,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fmeanCpp
-NumericVector fmeanCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm);
-RcppExport SEXP _collapse_fmeanCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    rcpp_result_gen = Rcpp::wrap(fmeanCpp(x, ng, g, gs, w, narm));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fmeanmCpp
-SEXP fmeanmCpp(const NumericMatrix& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop);
-RcppExport SEXP _collapse_fmeanmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fmeanmCpp(x, ng, g, gs, w, narm, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fmeanlCpp
-SEXP fmeanlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop);
-RcppExport SEXP _collapse_fmeanlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP dropSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fmeanlCpp(x, ng, g, gs, w, narm, drop));
-    return rcpp_result_gen;
-END_RCPP
-}
 // fmodeCpp
 SEXP fmodeCpp(const SEXP& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret);
 RcppExport SEXP _collapse_fmodeCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP retSEXP) {
