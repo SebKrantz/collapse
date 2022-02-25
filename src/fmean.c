@@ -289,7 +289,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop) 
   if(ng == 0 && asLogical(Rdrop)) {
     SEXP out = PROTECT(allocVector(REALSXP, l)), *px = SEXPPTR(x);
     double *pout = REAL(out);
-    for(int j = 0; j != l; ++j) pout[j] = REAL(fmeanC(px[j], Rng, g, gs, w, Rnarm))[0];
+    for(int j = 0; j != l; ++j) pout[j] = asReal(fmeanC(px[j], Rng, g, gs, w, Rnarm));
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
     UNPROTECT(1);
     return out;
