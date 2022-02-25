@@ -92,7 +92,7 @@ fprod.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
     if(any(gn == wn)) stop("Weights coincide with grouping variables!")
     gn <- c(gn, wn)
     if(keep.w) {
-      if(nTRAl) prodw <- `names<-`(list(fprodCpp(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("prod.", wsym)) else if(keep.group_vars)
+      if(nTRAl) prodw <- `names<-`(list(.Call(C_fprod,w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("prod.", wsym)) else if(keep.group_vars)
         gn2 <- gn else prodw <- gn2 <- wn
     }
   }

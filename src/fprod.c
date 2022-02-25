@@ -121,7 +121,7 @@ void fprod_int_g_impl(double *pout, int *px, int ng, int *pg, int narm, int l) {
 SEXP fprodC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
     narm = asLogical(Rnarm), nprotect = 1;
-  if (l < 1) return x; // Prevents seqfault for numeric(0) #101
+  if (l < 1) return tx == REALSXP ? x : ScalarReal(asReal(x)); // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(REALSXP, ng == 0 ? 1 : ng));

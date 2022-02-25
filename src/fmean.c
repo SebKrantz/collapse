@@ -172,7 +172,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm) {
   // default: error("ALTREP object must be integer or real typed");
   // }
   // }
-  if (l < 1) return x; // Prevents seqfault for numeric(0) #101
+  if (l < 1) return tx == REALSXP ? x : ScalarReal(asReal(x)); // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(REALSXP, ng == 0 ? 1 : ng));
@@ -289,7 +289,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop) 
   if(ng == 0 && asLogical(Rdrop)) {
     SEXP out = PROTECT(allocVector(REALSXP, l)), *px = SEXPPTR(x);
     double *pout = REAL(out);
-    for(int j = 0; j != l; ++j) pout[j] = asReal(fmeanC(px[j], Rng, g, gs, w, Rnarm));
+    for(int j = 0; j != l; ++j) pout[j] = REAL(fmeanC(px[j], Rng, g, gs, w, Rnarm))[0];
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
     UNPROTECT(1);
     return out;
