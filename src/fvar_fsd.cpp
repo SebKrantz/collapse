@@ -83,7 +83,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
+          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+            Rf_copyMostAttrib(x, M2);
           return M2;
         } else {
           NumericVector M2(ng), mean(ng), n(ng);
@@ -117,7 +118,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
+          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+            Rf_copyMostAttrib(x, M2);
           return M2;
         }
       }
@@ -199,7 +201,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
+          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+            Rf_copyMostAttrib(x, M2);
           return M2;
         } else {
           NumericVector M2(ng), sumw(ng), mean(ng);
@@ -235,7 +238,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, M2);
+          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+            Rf_copyMostAttrib(x, M2);
           return M2;
         }
       }
@@ -306,7 +310,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
+          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+            Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         } else {
           NumericVector sq_sum(ng), sum(ng);
@@ -357,7 +362,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
+          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+            Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         }
       }
@@ -427,7 +433,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
+          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+            Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         } else {
           NumericVector sq_sum(ng), sumw(ng), sum(ng);
@@ -457,7 +464,8 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, sq_sum);
+          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+            Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         }
       }

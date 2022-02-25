@@ -99,17 +99,17 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(Cpp_flagleadl, x, n, fill, ng, g, t, names)
 }
 
-fmeanCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
-    .Call(Cpp_fmean, x, ng, g, gs, w, narm)
-}
-
-fmeanmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fmeanm, x, ng, g, gs, w, narm, drop)
-}
-
-fmeanlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fmeanl, x, ng, g, gs, w, narm, drop)
-}
+# fmeanCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
+#     .Call(Cpp_fmean, x, ng, g, gs, w, narm)
+# }
+#
+# fmeanmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
+#     .Call(Cpp_fmeanm, x, ng, g, gs, w, narm, drop)
+# }
+#
+# fmeanlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
+#     .Call(Cpp_fmeanl, x, ng, g, gs, w, narm, drop)
+# }
 
 fnthCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L) {
   .Call(Cpp_fnth, x, n, ng, g, gs, w, narm, ret)
@@ -135,17 +135,17 @@ fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop
     .Call(Cpp_fmodem, x, ng, g, gs, w, narm, drop, ret)
 }
 
-fprodCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
-    .Call(Cpp_fprod, x, ng, g, w, narm)
-}
-
-fprodmCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fprodm, x, ng, g, w, narm, drop)
-}
-
-fprodlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fprodl, x, ng, g, w, narm, drop)
-}
+# fprodCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
+#     .Call(Cpp_fprod, x, ng, g, w, narm)
+# }
+#
+# fprodmCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+#     .Call(Cpp_fprodm, x, ng, g, w, narm, drop)
+# }
+#
+# fprodlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
+#     .Call(Cpp_fprodl, x, ng, g, w, narm, drop)
+# }
 
 fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
     .Call(Cpp_fscale, x, ng, g, w, narm, set_mean, set_sd)

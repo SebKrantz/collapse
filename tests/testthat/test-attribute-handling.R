@@ -14,17 +14,19 @@ set.seed(101)
 f1 <- sample.int(5, length(AirPassengers), replace = TRUE)
 f2 <- sample.int(5, nrow(EuStockMarkets), replace = TRUE)
 
-numFUN <- setdiff(.FAST_STAT_FUN, c("fnth", "fmode", "ffirst", "flast", "fmin", "fmax"))
+# numFUN <- setdiff(.FAST_STAT_FUN, c("fnth", "fmode", "ffirst", "flast", "fmin", "fmax"))
 countFUN <- c("fnobs", "fndistinct")
 
 test_that("statistical functions handle attributes properly", {
 
-  for(i in numFUN) {
+  for(i in setdiff(.FAST_STAT_FUN, "fnth")) {
     # print(i)
     FUN <- match.fun(i)
-    expect_true(is.null(attributes(FUN(v))))
-    expect_true(is.null(attributes(FUN(date))))
-    expect_true(is.null(attributes(FUN(fac))))
+    if(i %!in% c("fvar", "fsd", countFUN)) {
+      expect_identical(attributes(FUN(v)), attributes(v))
+      expect_identical(attributes(FUN(date)), attributes(date))
+    }
+    if(i %!in% c("fsum", "fvar", "fsd", countFUN)) expect_identical(attributes(FUN(fac)), attributes(fac))
     expect_true(is.null(attributes(FUN(AirPassengers))))
     expect_identical(attributes(FUN(EuStockMarkets)), list(names = colnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, drop = FALSE)), list(dim = c(1L, 4L), dimnames = list(NULL, colnames(EuStockMarkets))))
@@ -40,10 +42,10 @@ test_that("statistical functions handle attributes properly", {
     # Grouped
     expect_identical(attributes(FUN(v, g1, use.g.names = FALSE)), attributes(v))
     expect_identical(attributes(FUN(v, g1)), c(attributes(v), list(names = unattrib(GRPnames(g1)))))
-    expect_identical(attributes(FUN(date, g1, use.g.names = FALSE)), if(i %!in% countFUN) NULL else list(label = vlabels(date)))
-    expect_identical(attributes(FUN(date, g1)), if(i %!in% countFUN) list(names = unattrib(GRPnames(g1))) else list(label = vlabels(date), names = unattrib(GRPnames(g1))))
-    expect_identical(attributes(FUN(fac, g1, use.g.names = FALSE)), if(i %!in% countFUN) NULL else list(label = vlabels(fac)))
-    expect_identical(attributes(FUN(fac, g1)), if(i %!in% countFUN) list(names = unattrib(GRPnames(g1))) else list(label = vlabels(fac), names = unattrib(GRPnames(g1))))
+    expect_identical(attributes(FUN(date, g1, use.g.names = FALSE)), if(i %!in% countFUN) attributes(date) else list(label = vlabels(date)))
+    expect_identical(attributes(FUN(date, g1)), if(i %!in% countFUN) c(attributes(date), list(names = unattrib(GRPnames(g1)))) else list(label = vlabels(date), names = unattrib(GRPnames(g1))))
+    expect_identical(attributes(FUN(fac, g1, use.g.names = FALSE)), if(i %!in% countFUN) attributes(fac) else list(label = vlabels(fac)))
+    expect_identical(attributes(FUN(fac, g1)), if(i %!in% countFUN) c(attributes(fac), list(names = unattrib(GRPnames(g1)))) else list(label = vlabels(fac), names = unattrib(GRPnames(g1))))
     expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), NULL)
     expect_identical(attributes(FUN(AirPassengers, f1)), list(names = as.character(1:5)))
     expect_identical(attributes(FUN(EuStockMarkets, f2, use.g.names = FALSE)), list(dim = c(5L, 4L), dimnames = dimnames(EuStockMarkets)))
@@ -64,12 +66,11 @@ test_that("statistical functions handle attributes properly", {
     expect_identical(attributes(FUN(gmtc, keep.group_vars = FALSE, use.g.names = TRUE)), list(names = names(mtcars)[-c(2,8:9)], row.names = GRPnames(g2), class = "data.frame"))
   }
 
-
   for(i in c("fmode", "ffirst", "flast")) {
     # print(i)
     FUN <- match.fun(i)
     for(k in names(wlddev)) expect_identical(attributes(FUN(wlddev[[k]])), attributes(wlddev[[k]]))
-    expect_identical(attributes(FUN(AirPassengers)), attributes(AirPassengers)) # This is problematic!!
+    expect_identical(attributes(FUN(AirPassengers)), NULL)
     expect_identical(attributes(FUN(EuStockMarkets)), list(names = colnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, drop = FALSE)), list(dim = c(1L, 4L), dimnames = list(NULL, colnames(EuStockMarkets))))
     expect_identical(attributes(FUN(m)), list(names = colnames(m)))
@@ -84,8 +85,8 @@ test_that("statistical functions handle attributes properly", {
     # Grouped
     for(k in names(wlddev)) expect_identical(attributes(FUN(wlddev[[k]], g1, use.g.names = FALSE)), attributes(wlddev[[k]]))
     for(k in names(wlddev)) expect_identical(attributes(FUN(wlddev[[k]], g1)), c(attributes(wlddev[[k]]), list(names = unattrib(GRPnames(g1)))))
-    expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), attributes(AirPassengers)) # This is problematic!!
-    expect_identical(attributes(FUN(AirPassengers, f1)), c(attributes(AirPassengers), list(names = as.character(1:5)))) # This is problematic!!
+    expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), NULL)
+    expect_identical(attributes(FUN(AirPassengers, f1)), list(names = as.character(1:5)))
     expect_identical(attributes(FUN(EuStockMarkets, f2, use.g.names = FALSE)), list(dim = c(5L, 4L), dimnames = dimnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, f2)), list(dim = c(5L, 4L), dimnames = list(as.character(1:5), colnames(EuStockMarkets))))
     expect_identical(attributes(FUN(m, g2, use.g.names = FALSE)), list(dim = c(7L, 11L), dimnames = list(NULL, colnames(m))))
@@ -108,7 +109,7 @@ test_that("statistical functions handle attributes properly", {
     # print(i)
     FUN <- match.fun(i)
     for(k in num_vars(wlddev, "names")) expect_identical(attributes(FUN(wlddev[[k]])), attributes(wlddev[[k]]))
-    expect_identical(attributes(FUN(AirPassengers)), attributes(AirPassengers)) # This is problematic!!
+    expect_identical(attributes(FUN(AirPassengers)), NULL)
     expect_identical(attributes(FUN(EuStockMarkets)), list(names = colnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, drop = FALSE)), list(dim = c(1L, 4L), dimnames = list(NULL, colnames(EuStockMarkets))))
     expect_identical(attributes(FUN(m)), list(names = colnames(m)))
@@ -123,8 +124,8 @@ test_that("statistical functions handle attributes properly", {
     # Grouped
     for(k in num_vars(wlddev, "names")) expect_identical(attributes(FUN(wlddev[[k]], g1, use.g.names = FALSE)), attributes(wlddev[[k]]))
     for(k in num_vars(wlddev, "names")) expect_identical(attributes(FUN(wlddev[[k]], g1)), c(attributes(wlddev[[k]]), list(names = unattrib(GRPnames(g1)))))
-    expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), attributes(AirPassengers)) # This is problematic!!
-    expect_identical(attributes(FUN(AirPassengers, f1)), c(attributes(AirPassengers), list(names = as.character(1:5)))) # This is problematic!!
+    expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), NULL)
+    expect_identical(attributes(FUN(AirPassengers, f1)), list(names = as.character(1:5)))
     expect_identical(attributes(FUN(EuStockMarkets, f2, use.g.names = FALSE)), list(dim = c(5L, 4L), dimnames = dimnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, f2)), list(dim = c(5L, 4L), dimnames = list(as.character(1:5), colnames(EuStockMarkets))))
     expect_identical(attributes(FUN(m, g2, use.g.names = FALSE)), list(dim = c(7L, 11L), dimnames = list(NULL, colnames(m))))

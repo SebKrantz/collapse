@@ -59,7 +59,8 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
       default: error("Unsupported SEXP type!");
       }
     }
-    copyMostAttrib(x, out);
+    if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+       copyMostAttrib(x, out);
     if(!isNull(getAttrib(x, R_NamesSymbol)))
       namesgets(out, ScalarString(STRING_ELT(getAttrib(x, R_NamesSymbol), j)));
     UNPROTECT(1);
@@ -162,7 +163,8 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
       default: error("Unsupported SEXP type!");
       }
     }
-    copyMostAttrib(x, out); // SHALLOW_DUPLICATE_ATTRIB(out, x);
+    if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+       copyMostAttrib(x, out); // SHALLOW_DUPLICATE_ATTRIB(out, x);
     UNPROTECT(1);
     return out;
   }

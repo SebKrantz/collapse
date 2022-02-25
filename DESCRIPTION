@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.7.6
-Date: 2022-02-11
+Version: 1.7.7.9000
+Date: 2022-02-25
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -52,7 +52,7 @@ BugReports: https://github.com/SebKrantz/collapse/issues
 License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Depends: R (>= 2.10)
+Depends: R (>= 3.3.0)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
 Suggests: fastverse, data.table, magrittr, kit, sf, plm, fixest, vars, 

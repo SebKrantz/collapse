@@ -73,18 +73,6 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(`_collapse_flagleadlCpp`, x, n, fill, ng, g, t, names)
 }
 
-fmeanCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE) {
-    .Call(`_collapse_fmeanCpp`, x, ng, g, gs, w, narm)
-}
-
-fmeanmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fmeanmCpp`, x, ng, g, gs, w, narm, drop)
-}
-
-fmeanlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fmeanlCpp`, x, ng, g, gs, w, narm, drop)
-}
-
 fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
     .Call(`_collapse_fmodeCpp`, x, ng, g, gs, w, narm, ret)
 }
@@ -107,18 +95,6 @@ fnthmCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TR
 
 fnthlCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L) {
     .Call(`_collapse_fnthlCpp`, x, Q, ng, g, gs, w, narm, drop, ret)
-}
-
-fprodCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
-    .Call(`_collapse_fprodCpp`, x, ng, g, w, narm)
-}
-
-fprodmCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fprodmCpp`, x, ng, g, w, narm, drop)
-}
-
-fprodlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fprodlCpp`, x, ng, g, w, narm, drop)
 }
 
 fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {

@@ -7,71 +7,71 @@ fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
   if(is.matrix(x) && !inherits(x, "matrix")) return(fmean.matrix(x, g, w, TRA, na.rm, use.g.names, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
-    if(is.null(g)) return(.Call(Cpp_fmean,x,0L,0L,NULL,w,na.rm))
+    if(is.null(g)) return(.Call(C_fmean,x,0L,0L,NULL,w,na.rm))
     if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
-        return(`names<-`(.Call(Cpp_fmean,x,length(lev),g,NULL,w,na.rm), lev))
+        return(`names<-`(.Call(C_fmean,x,length(lev),g,NULL,w,na.rm), lev))
       }
-      if(is.nmfactor(g)) return(.Call(Cpp_fmean,x,fnlevels(g),g,NULL,w,na.rm))
+      if(is.nmfactor(g)) return(.Call(C_fmean,x,fnlevels(g),g,NULL,w,na.rm))
       g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fmean,x,attr(g,"N.groups"),g,NULL,w,na.rm))
+      return(.Call(C_fmean,x,attr(g,"N.groups"),g,NULL,w,na.rm))
     }
     if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names) return(`names<-`(.Call(Cpp_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm), GRPnames(g)))
-    return(.Call(Cpp_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm))
+    if(use.g.names) return(`names<-`(.Call(C_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm), GRPnames(g)))
+    return(.Call(C_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm))
   }
-  if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fmean,x,0L,0L,NULL,w,na.rm),0L,TtI(TRA)))
+  if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(C_fmean,x,0L,0L,NULL,w,na.rm),0L,TtI(TRA)))
   g <- G_guo(g)
-  .Call(Cpp_TRA,x,.Call(Cpp_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA))
+  .Call(Cpp_TRA,x,.Call(C_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm),g[[2L]],TtI(TRA))
 }
 
 fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
-    if(is.null(g)) return(.Call(Cpp_fmeanm,x,0L,0L,NULL,w,na.rm,drop))
+    if(is.null(g)) return(.Call(C_fmeanm,x,0L,0L,NULL,w,na.rm,drop))
     if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
-        return(`dimnames<-`(.Call(Cpp_fmeanm,x,length(lev),g,NULL,w,na.rm,drop), list(lev, dimnames(x)[[2L]])))
+        return(`dimnames<-`(.Call(C_fmeanm,x,length(lev),g,NULL,w,na.rm,drop), list(lev, dimnames(x)[[2L]])))
       }
-      if(is.nmfactor(g)) return(.Call(Cpp_fmeanm,x,fnlevels(g),g,NULL,w,na.rm,drop))
+      if(is.nmfactor(g)) return(.Call(C_fmeanm,x,fnlevels(g),g,NULL,w,na.rm,drop))
       g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fmeanm,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop))
+      return(.Call(C_fmeanm,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop))
     }
     if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names) return(`dimnames<-`(.Call(Cpp_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop), list(GRPnames(g), dimnames(x)[[2L]])))
-    return(.Call(Cpp_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop))
+    if(use.g.names) return(`dimnames<-`(.Call(C_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop), list(GRPnames(g), dimnames(x)[[2L]])))
+    return(.Call(C_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop))
   }
-  if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,0L,0L,NULL,w,na.rm,TRUE),0L,TtI(TRA)))
+  if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(C_fmeanm,x,0L,0L,NULL,w,na.rm,TRUE),0L,TtI(TRA)))
   g <- G_guo(g)
-  .Call(Cpp_TRAm,x,.Call(Cpp_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TtI(TRA))
+  .Call(Cpp_TRAm,x,.Call(C_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TtI(TRA))
 }
 
 fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
-    if(is.null(g)) return(.Call(Cpp_fmeanl,x,0L,0L,NULL,w,na.rm,drop))
+    if(is.null(g)) return(.Call(C_fmeanl,x,0L,0L,NULL,w,na.rm,drop))
     if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
-        return(setRnDF(.Call(Cpp_fmeanl,x,length(lev),g,NULL,w,na.rm,drop), lev))
+        return(setRnDF(.Call(C_fmeanl,x,length(lev),g,NULL,w,na.rm,drop), lev))
       }
-      if(is.nmfactor(g)) return(.Call(Cpp_fmeanl,x,fnlevels(g),g,NULL,w,na.rm,drop))
+      if(is.nmfactor(g)) return(.Call(C_fmeanl,x,fnlevels(g),g,NULL,w,na.rm,drop))
       g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fmeanl,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop))
+      return(.Call(C_fmeanl,x,attr(g,"N.groups"),g,NULL,w,na.rm,drop))
     }
     if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
-    return(setRnDF(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop), groups))
-    return(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop))
+    return(setRnDF(.Call(C_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop), groups))
+    return(.Call(C_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop))
   }
-  if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,0L,0L,NULL,w,na.rm,TRUE),0L,TtI(TRA)))
+  if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(C_fmeanl,x,0L,0L,NULL,w,na.rm,TRUE),0L,TtI(TRA)))
   g <- G_guo(g)
-  .Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TtI(TRA))
+  .Call(Cpp_TRAl,x,.Call(C_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop),g[[2L]],TtI(TRA))
 }
 
 fmean.list <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
@@ -109,21 +109,21 @@ fmean.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
       if(gl) {
         if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], names(sumw), nam[-gn])
-          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
+          return(setAttributes(c(g[[4L]], sumw, .Call(C_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
         }
         ax[["names"]] <- c(names(sumw), nam[-gn])
-        return(setAttributes(c(sumw, .Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
+        return(setAttributes(c(sumw, .Call(C_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
       } else if(keep.group_vars) {
         ax[["names"]] <- c(g[[5L]], nam)
-        return(setAttributes(c(g[[4L]], .Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
-      } else return(setAttributes(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE), ax))
+        return(setAttributes(c(g[[4L]], .Call(C_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
+      } else return(setAttributes(.Call(C_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))), ax))
+      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(C_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)), ax))
-  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)))
+    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(C_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)), ax))
+  } else return(.Call(Cpp_TRAl,x,.Call(C_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)))
 }
 
 # Previous Version: With deparse(substitute(w)) and only keeping grouping columns if found in x.
@@ -160,18 +160,18 @@ fmean.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
 #       if(gl) {
 #         if(keep.group_vars && !onlyw) {
 #           ax[["names"]] <- c(g[[5L]], names(sumw), ax[["names"]][-gn])
-#           return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
+#           return(setAttributes(c(g[[4L]], sumw, .Call(C_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
 #         } else {
 #           ax[["names"]] <- c(names(sumw), ax[["names"]][-gn])
-#           return(setAttributes(c(sumw, .Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
+#           return(setAttributes(c(sumw, .Call(C_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE)), ax))
 #         }
-#       } else return(setAttributes(.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE), ax))
+#       } else return(setAttributes(.Call(C_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE), ax))
 #     } else if(keep.group_vars || (keep.w && length(sumw))) {
 #       ax[["names"]] <- c(ax[["names"]][gn2], ax[["names"]][-gn])
-#       return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))), ax))
+#       return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(C_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA))), ax))
 #     } else {
 #       ax[["names"]] <- ax[["names"]][-gn]
-#       return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)), ax))
+#       return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(C_fmeanl,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)), ax))
 #     }
-#   } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)))
+#   } else return(.Call(Cpp_TRAl,x,.Call(C_fmeanl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE),g[[2L]],TtI(TRA)))
 # }
