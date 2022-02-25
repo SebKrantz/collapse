@@ -1,12 +1,12 @@
 # Need generic version for column-parallel apply and aggregating weights..
 fsum_uw <- function(x, g, w, ...) fsum(x, g, ...)
-fprod_uw <- function(x, g, w, ...) fsum(x, g, ...)
+fprod_uw <- function(x, g, w, ...) fprod(x, g, ...)
 fmean_uw <- function(x, g, w, ...) fmean(x, g, ...)
 fmedian_uw <- function(x, g, w, ...) fmedian(x, g, ...)
 fvar_uw <- function(x, g, w, ...) fvar(x, g, ...)
 fsd_uw <- function(x, g, w, ...) fsd(x, g, ...)
 fmode_uw <- function(x, g, w, ...) fmode(x, g, ...)
-fnth_uw <- function(x, n, g, w, ...) fmode(x, n, g, ...)
+fnth_uw <- function(x, n, g, w, ...) fnth(x, n, g, ...)
 
 fmin_uw <- function(x, g, w, ...) fmin(x, g, ...)
 fmax_uw <- function(x, g, w, ...) fmax(x, g, ...)

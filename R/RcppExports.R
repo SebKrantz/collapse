@@ -97,18 +97,6 @@ fnthlCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TR
     .Call(`_collapse_fnthlCpp`, x, Q, ng, g, gs, w, narm, drop, ret)
 }
 
-fprodCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE) {
-    .Call(`_collapse_fprodCpp`, x, ng, g, w, narm)
-}
-
-fprodmCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fprodmCpp`, x, ng, g, w, narm, drop)
-}
-
-fprodlCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, drop = TRUE) {
-    .Call(`_collapse_fprodlCpp`, x, ng, g, w, narm, drop)
-}
-
 fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
     .Call(`_collapse_fscaleCpp`, x, ng, g, w, narm, set_mean, set_sd)
 }

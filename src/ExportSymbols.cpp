@@ -62,6 +62,10 @@ RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm);
 RcppExport SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
+// fprod rewritten in C:
+RcppExport SEXP fprodC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm);
+RcppExport SEXP fprodmC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fprodlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
 // fmean rewritten in C:
 RcppExport SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm);
 RcppExport SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop);
@@ -130,9 +134,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fmode", (DL_FUNC) &_collapse_fmodeCpp, 7},
   {"Cpp_fmodel", (DL_FUNC) &_collapse_fmodelCpp, 7},
   {"Cpp_fmodem", (DL_FUNC) &_collapse_fmodemCpp, 8},
-  {"Cpp_fprod", (DL_FUNC) &_collapse_fprodCpp, 5},
-  {"Cpp_fprodm", (DL_FUNC) &_collapse_fprodmCpp, 6},
-  {"Cpp_fprodl", (DL_FUNC) &_collapse_fprodlCpp, 6},
+  {"C_fprod", (DL_FUNC) &fprodC, 5},
+  {"C_fprodm", (DL_FUNC) &fprodmC, 6},
+  {"C_fprodl", (DL_FUNC) &fprodlC, 6},
   {"Cpp_fscale", (DL_FUNC) &_collapse_fscaleCpp, 7},
   {"Cpp_fscalem", (DL_FUNC) &_collapse_fscalemCpp, 7},
   {"Cpp_fscalel", (DL_FUNC) &_collapse_fscalelCpp, 7},
