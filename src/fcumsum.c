@@ -16,8 +16,7 @@ void fcumsum_double_impl(double *pout, double *px, int ng, int *pg, int narm, in
       }
     }
   } else {
-    double last[ng+1]; // Also pass pointer to function ??
-    memset(last, 0.0, sizeof(double) * (ng+1));
+    double *last = (double*)Calloc(ng+1, double); // Also pass pointer to function ??
     if(narm <= 0) {
       for(int i = 0; i != l; ++i) last[pg[i]] = pout[i] = last[pg[i]] + px[i];
     } else if(fill) {
@@ -28,6 +27,7 @@ void fcumsum_double_impl(double *pout, double *px, int ng, int *pg, int narm, in
         else last[pg[i]] = pout[i] = last[pg[i]] + px[i];
       }
     }
+    Free(last);
   }
 }
 
@@ -50,8 +50,7 @@ void fcumsum_double_impl_order(double *pout, double *px, int ng, int *pg, int *p
       }
     }
   } else {
-    double last[ng+1]; // Also pass pointer to function ??
-    memset(last, 0.0, sizeof(double) * (ng+1));
+    double *last = (double*)Calloc(ng+1, double); // Also pass pointer to function ??
     if(narm <= 0) {
       for(int i = 0, poi; i != l; ++i) {
         poi = po[i]-1;
@@ -69,6 +68,7 @@ void fcumsum_double_impl_order(double *pout, double *px, int ng, int *pg, int *p
         else last[pg[poi]] = pout[poi] = last[pg[poi]] + px[poi];
       }
     }
+    Free(last);
   }
 }
 
@@ -105,8 +105,7 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
     if(ckof > INT_MAX || ckof <= INT_MIN)
       error("Integer overflow. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. Use fcumsum(as.numeric(x)).");
   } else {
-    int last[ng+1]; // Also pass pointer to function ??
-    memset(last, 0, sizeof(int) * (ng+1));
+    int *last = (int*)Calloc(ng+1, int); // Also pass pointer to function ??
     if(narm <= 0) {
       for(int i = 0, lsi; i != l; ++i) {
         if(px[i] == NA_INTEGER) {
@@ -140,6 +139,7 @@ void fcumsum_int_impl(int *pout, int *px, int ng, int *pg, int narm, int fill, i
         }
       }
     }
+    Free(last);
   }
 }
 
@@ -178,8 +178,7 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
     if(ckof > INT_MAX || ckof <= INT_MIN)
       error("Integer overflow. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. Use fcumsum(as.numeric(x)).");
   } else {
-    int last[ng+1]; // Also pass pointer to function ??
-    memset(last, 0, sizeof(int) * (ng+1));
+    int *last = (int*)Calloc(ng+1, int); // Also pass pointer to function ??
     if(narm <= 0) {
       for(int i = 0, poi, lsi; i != l; ++i) {
         poi = po[i]-1;
@@ -216,6 +215,7 @@ void fcumsum_int_impl_order(int *pout, int *px, int ng, int *pg, int *po, int na
         }
       }
     }
+    Free(last);
   }
 }
 
