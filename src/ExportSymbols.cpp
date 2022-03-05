@@ -52,9 +52,9 @@ RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
 RcppExport SEXP fnobslC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
 // ffirst and flast rewritten in C:
-RcppExport SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
-RcppExport SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
-RcppExport SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
+RcppExport SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm);
+RcppExport SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm);
 RcppExport SEXP flastC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
@@ -107,9 +107,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fbstats", (DL_FUNC) &_collapse_fbstatsCpp, 11},
   {"Cpp_fbstatsm", (DL_FUNC) &_collapse_fbstatsmCpp, 10},
   {"Cpp_fbstatsl", (DL_FUNC) &_collapse_fbstatslCpp, 10},
-  {"C_ffirst", (DL_FUNC) &ffirstC, 4},
-  {"C_ffirstm", (DL_FUNC) &ffirstmC, 5},
-  {"C_ffirstl", (DL_FUNC) &ffirstlC, 4},
+  {"C_ffirst", (DL_FUNC) &ffirstC, 5},
+  {"C_ffirstm", (DL_FUNC) &ffirstmC, 6},
+  {"C_ffirstl", (DL_FUNC) &ffirstlC, 5},
   {"Cpp_fdiffgrowth", (DL_FUNC) &_collapse_fdiffgrowthCpp, 12},
   {"Cpp_fdiffgrowthm", (DL_FUNC) &_collapse_fdiffgrowthmCpp, 12},
   {"Cpp_fdiffgrowthl", (DL_FUNC) &_collapse_fdiffgrowthlCpp, 12},
