@@ -138,13 +138,13 @@ SEXP Calloccol(SEXP dt) // , SEXP Rn
 {
   R_len_t tl, n, l;
   l = LENGTH(dt);
-  n = l + asInteger(GetOption1(sym_collapse_DT_alloccol));  // asInteger(Rn);
+  n = l + 100; // asInteger(GetOption1(sym_collapse_DT_alloccol));  // asInteger(Rn);
   tl = TRUELENGTH(dt);
   // R <= 2.13.2 and we didn't catch uninitialized tl somehow
   if (tl < 0) error("Internal error, tl of class is marked but tl<0."); // # nocov
   // better disable these...
-  if (tl > 0 && tl < l) error("Internal error, please report (including result of sessionInfo()) to collapse issue tracker: tl (%d) < l (%d) but tl of class is marked.", tl, l); // # nocov
-  if (tl > l+10000) warning("tl (%d) is greater than 10,000 items over-allocated (l = %d). If you didn't set the collapse_DT_alloccol option to be very large, please report to collapse issue tracker including the result of sessionInfo().",tl,l);
+  // if (tl > 0 && tl < l) error("Internal error, please report (including result of sessionInfo()) to collapse issue tracker: tl (%d) < l (%d) but tl of class is marked.", tl, l); // # nocov
+  // if (tl > l+10000) warning("tl (%d) is greater than 10,000 items over-allocated (l = %d). If you didn't set the collapse_DT_alloccol option to be very large, please report to collapse issue tracker including the result of sessionInfo().",tl,l);
 
 // TODO:  MAKE THIS WORK WITHOUT SHALLOW COPYING EVERY TIME !!!
 
@@ -448,9 +448,9 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
 
   if(oxl && INHERITS(x, char_datatable)) {
     setAttrib(ans, sym_datatable_locked, R_NilValue);
-    int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
+    // int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
     UNPROTECT(nprotect); // This needs to be here !! (asInteger and GetOption1 are allocating functions)
-    return shallow(ans, R_NilValue, ncol + n); // 1024 is data.table default..
+    return shallow(ans, R_NilValue, ncol + 100); // n // 1024 is data.table default..
     // setselfref(ans); // done by shallow
   }
   UNPROTECT(nprotect);
@@ -570,9 +570,9 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
   if(oxl && INHERITS(x, char_datatable)) {
     setAttrib(ans, sym_sorted, R_NilValue);
     setAttrib(ans, sym_datatable_locked, R_NilValue);
-    int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
+    // int n = asInteger(GetOption1(sym_collapse_DT_alloccol));
     UNPROTECT(nprotect); // This needs to be here !! (asInteger and GetOption1 are allocating functions)
-    return shallow(ans, R_NilValue, ncol + n); // 1024 is data.table default..
+    return shallow(ans, R_NilValue, ncol + 100); // n // 1024 is data.table default..
     // setselfref(ans); // done by shallow
   }
   UNPROTECT(nprotect);

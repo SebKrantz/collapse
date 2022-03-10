@@ -68,7 +68,7 @@ Data and Global Macros \tab\tab Groningen Growth and Development Centre 10-Secto
 
 \item \code{options("collapse_F_to_FALSE")} can also be called before loading the package to set the lead operator \code{F} in the package to \code{FALSE}, to avoid problems with \code{base::F}.
 
-\item When manipulating \emph{data.table}'s, you can set how many columns \emph{collapse} functions overallocate with \code{option("collapse_DT_alloccol")}. The default is \code{100L}.
+% \item When manipulating \emph{data.table}'s, you can set how many columns \emph{collapse} functions overallocate with \code{option("collapse_DT_alloccol")}. The default is \code{100L}.
 }
 
 }
