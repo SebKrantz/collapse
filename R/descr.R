@@ -44,7 +44,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
                                          Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = length(tab)) else `names<-`(fnobsC(x), 'Nobs'),
                                          Table = tab) # natrm(fnobs.default(x, x)) # table(x). fnobs is a lot Faster, but includes NA as level !
                         } else
-                       bfunction(x) list(Class = class(x), Label = attr(x, label.attr),
+                        function(x) list(Class = class(x), Label = attr(x, label.attr),
                                          Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'))
 
   descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
