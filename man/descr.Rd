@@ -11,7 +11,7 @@ Detailed Statistical Description of Data Frame
 
 }
 \usage{
-descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE,
+descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
       Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99),
       cols = NULL, label.attr = "label", \dots)
 
@@ -31,8 +31,17 @@ logical. \code{TRUE} (default) computes the number of distinct values on all var
 logical. Argument is passed down to \code{\link{qsu}}: \code{TRUE} (default) computes the skewness and the kurtosis.
 }
   \item{table}{
-logical. \code{TRUE} (default) calls \code{\link{table}} on all categorical variables (excluding \link[=is_date]{Date} variables).
+logical. \code{TRUE} (default) computes a (sorted) frequency table for all categorical variables (excluding \link[=is_date]{Date} variables).
 }
+
+\item{sort.table}{an integer or character string specifying how the frequency table should be presented:
+        \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
+                 1 \tab\tab "value"   \tab\tab sort table by values. \cr
+                 2 \tab\tab "freq" \tab\tab sort table by frequencies. \cr
+                 3 \tab\tab "none"   \tab\tab return table in first-appearance order of values, or levels for factors (most efficient). \cr
+  }
+  }
+
   \item{Qprobs}{
 double. Probabilities for quantiles to compute on numeric variables, passed down to \code{\link{quantile}}. If something non-numeric is passed (i.e. \code{NULL}, \code{FALSE}, \code{NA}, \code{""} etc.), no quantiles are computed.
 }
@@ -46,11 +55,11 @@ character. The name of a label attribute to display for each variable (if variab
 other arguments passed to \code{\link{qsu.default}}.
 }
 \item{x}{an object of class 'descr'.}
-\item{n}{integer. The number of first and last entries to display of the table computed for categorical variables. If the number of distinct elements is \code{< 2*n}, the whole table is printed.}
+\item{n}{integer. The maxiumum number of table elements to print for categorical variables. If the number of distinct elements is \code{<= n}, the whole table is printed.}
 \item{perc}{logical. \code{TRUE} (default) adds percentages to the frequencies in the table for categorical variables.}
 \item{digits}{integer. The number of decimals to print in statistics and percentage tables.}
 \item{t.table}{logical. \code{TRUE} (default) prints a transposed table.}
-\item{summary}{logical. \code{TRUE} (default) computes and displays a summary of the frequencies if the size of the table for a categorical variables exceeds \code{2*n}.}
+\item{summary}{logical. \code{TRUE} (default) computes and displays a summary of the frequencies if the size of the table for a categorical variables exceeds \code{n}.}
 }
 \details{
 \code{descr} was heavily inspired by \code{Hmisc::describe}, but computes about 10x faster. The performance is comparable to \code{\link{summary}}. \code{descr} was built as a wrapper around \code{\link{qsu}}, to enrich the set of statistics computed by \code{\link{qsu}} for both numeric and categorical variables.
