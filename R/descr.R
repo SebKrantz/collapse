@@ -1,4 +1,4 @@
-
+# TODO: Export? sorttable? qtable? -> better wait until full qtable implementation..
 fsorttable <- function(x, srt) {
   if(is.factor(x)) {
     lev <- attr(x, "levels")
@@ -96,14 +96,15 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
           t1 <- t[seq_len(n)]
           if(perc) {
             st <- bsum(t)
-            print.default(cb(Freq = t1, Perc = round(t1/st*100, digits)), right = TRUE, print.gap = 2, quote = FALSE)
-            cat("...\n")
+            pct <- unattrib(t1)/st*100
+            print.default(cb(Freq = c(t1, SUM = bsum(t1)), Perc = round(c(pct, bsum(pct)), digits)), right = TRUE, print.gap = 2, quote = FALSE)
+            # cat("...\n")
           } else {
-            print.table(ct(t1))
-            cat("...\n")
+            print.table(ct(c(t1, SUM = bsum(t1))))
+            # cat("...\n")
           }
           if(summary) {
-            cat("\nSummary of Table: \n")
+            cat("\nSummary of Table Frequencies: \n")
             print.summaryDefault(summary.default(t), digits)
           }
         }
@@ -114,7 +115,6 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
   }
   invisible(x)
 }
-# Not pasteclass !!
 
 # Note: This does not work for array stats (using g or pid.. )
 as.data.frame.descr <- function(x, ...) {
