@@ -357,7 +357,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
       narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
       nth = asInteger(Rnth); // , cmth = nth > 1 && col >= nth;
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
-  if(nth < 100000) nth = 1; // No gains from multithreading on small data
+  if(l*col < 100000) nth = 1; // No gains from multithreading on small data
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector((nwl && ng > 0) ? tx : REALSXP, ng == 0 ? col : col * ng));
@@ -378,7 +378,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
           if(nth <= 1 || col == 1) {
             for(int j = 0; j != col; ++j) fsum_double_g_impl(pout + j*ng, px + j*l, ng, pg, narm, l);
           } else {
-            if(col > nth) nth = col;
+            if(nth > col) nth = col;
             #pragma omp parallel for num_threads(nth)
             for(int j = 0; j < col; ++j) fsum_double_g_impl(pout + j*ng, px + j*l, ng, pg, narm, l);
           }
@@ -392,7 +392,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
           if(nth <= 1 || col == 1) {
             for(int j = 0; j != col; ++j) fsum_int_g_impl(pout + j*ng, px + j*l, ng, pg, narm, l);
           } else {
-            if(col > nth) nth = col;
+            if(nth > col) nth = col;
             #pragma omp parallel for num_threads(nth)
             for(int j = 0; j < col; ++j) fsum_int_g_impl(pout + j*ng, px + j*l, ng, pg, narm, l);
           }
@@ -460,7 +460,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
       if(nth <= 1 || col == 1) {
         for(int j = 0; j != col; ++j) fsum_weights_g_impl(pout + j*ng, px + j*l, ng, pg, pw, narm, l);
       } else {
-        if(col > nth) nth = col;
+        if(nth > col) nth = col;
         #pragma omp parallel for num_threads(nth)
         for(int j = 0; j < col; ++j) fsum_weights_g_impl(pout + j*ng, px + j*l, ng, pg, pw, narm, l);
       }
