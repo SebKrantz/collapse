@@ -44,7 +44,7 @@ void fsum_double_g_impl(double *pout, double *px, int ng, int *pg, int narm, int
   }
 }
 
-void fsum_double_impl_omp(double *pout, double *px, int narm, int l, int nth) {
+void fsum_double_omp_impl(double *pout, double *px, int narm, int l, int nth) {
   double sum;
   if(narm) {
     int j = 1;
@@ -63,7 +63,7 @@ void fsum_double_impl_omp(double *pout, double *px, int narm, int l, int nth) {
 }
 
 // This is unsafe...
-// void fsum_double_g_impl_omp(double *pout, double *px, int ng, int *pg, int narm, int l, int nth) {
+// void fsum_double_g_omp_impl(double *pout, double *px, int ng, int *pg, int narm, int l, int nth) {
 //   if(narm) {
 //     for(int i = ng; i--; ) pout[i] = NA_REAL;
 //     #pragma omp parallel for num_threads(nth) reduction(+:pout[:ng])
@@ -124,7 +124,7 @@ void fsum_weights_g_impl(double *pout, double *px, int ng, int *pg, double *pw, 
 }
 
 
-void fsum_weights_impl_omp(double *pout, double *px, double *pw, int narm, int l, int nth) {
+void fsum_weights_omp_impl(double *pout, double *px, double *pw, int narm, int l, int nth) {
   double sum;
   if(narm) {
     int j = 0;
@@ -146,7 +146,7 @@ void fsum_weights_impl_omp(double *pout, double *px, double *pw, int narm, int l
 }
 
 // This is unsafe...
-// void fsum_weights_g_impl_omp(double *pout, double *px, int ng, int *pg, double *pw, int narm, int l, int nth) {
+// void fsum_weights_g_omp_impl(double *pout, double *px, int ng, int *pg, double *pw, int narm, int l, int nth) {
 //   if(narm) {
 //     for(int i = ng; i--; ) pout[i] = NA_REAL;
 //     #pragma omp parallel for num_threads(nth) reduction(+:pout[:ng])
@@ -216,7 +216,7 @@ void fsum_int_g_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
   }
 }
 
-double fsum_int_impl_omp(int *px, int narm, int l, int nth) {
+double fsum_int_omp_impl(int *px, int narm, int l, int nth) {
   long long sum;
   if(narm) {
     int j = 0;
@@ -234,7 +234,7 @@ double fsum_int_impl_omp(int *px, int narm, int l, int nth) {
 }
 
 // This is unsafe...
-// void fsum_int_g_impl_omp(int *pout, int *px, int ng, int *pg, int narm, int l, int nth) {
+// void fsum_int_g_omp_impl(int *pout, int *px, int ng, int *pg, int narm, int l, int nth) {
 //   long long ckof;
 //   if(narm) {
 //     for(int i = ng; i--; ) pout[i] = NA_INTEGER;
@@ -295,15 +295,15 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
       case REALSXP:
         if(ng == 0) {
           if(nth <= 1) fsum_double_impl(REAL(out), REAL(x), narm, l);
-          else fsum_double_impl_omp(REAL(out), REAL(x), narm, l, nth);
+          else fsum_double_omp_impl(REAL(out), REAL(x), narm, l, nth);
         } else fsum_double_g_impl(REAL(out), REAL(x), ng, INTEGER(g), narm, l);
         // If safe sub-column-level mutithreading can be developed...
         // if(nth <= 1) {
         //   if(ng == 0) fsum_double_impl(REAL(out), REAL(x), narm, l);
         //   else fsum_double_g_impl(REAL(out), REAL(x), ng, INTEGER(g), narm, l);
         // } else {
-        //   if(ng == 0) fsum_double_impl_omp(REAL(out), REAL(x), narm, l, nth);
-        //   else fsum_double_g_impl_omp(REAL(out), REAL(x), ng, INTEGER(g), narm, l, nth);
+        //   if(ng == 0) fsum_double_omp_impl(REAL(out), REAL(x), narm, l, nth);
+        //   else fsum_double_g_omp_impl(REAL(out), REAL(x), ng, INTEGER(g), narm, l, nth);
         // }
         break;
       case INTSXP: {
@@ -311,9 +311,9 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
           fsum_int_g_impl(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l);
           // If safe sub-column-level mutithreading can be developed...
           // if(nth <= 1) fsum_int_g_impl(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l);
-          // else fsum_int_g_impl_omp(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l, nth);
+          // else fsum_int_g_omp_impl(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l, nth);
         } else {
-          double sum = nth <= 1 ? fsum_int_impl(INTEGER(x), narm, l) : fsum_int_impl_omp(INTEGER(x), narm, l, nth);
+          double sum = nth <= 1 ? fsum_int_impl(INTEGER(x), narm, l) : fsum_int_omp_impl(INTEGER(x), narm, l, nth);
           if(sum > INT_MAX || sum <= INT_MIN) return ScalarReal(sum); // INT_MIN is NA_INTEGER
           return ScalarInteger(ISNAN(sum) ? NA_INTEGER : (int)sum);
         }
@@ -340,7 +340,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
     } else px = REAL(x);
     if(ng == 0) {
       if(nth <= 1) fsum_weights_impl(REAL(out), px, pw, narm, l);
-      else fsum_weights_impl_omp(REAL(out), px, pw, narm, l, nth);
+      else fsum_weights_omp_impl(REAL(out), px, pw, narm, l, nth);
     } else fsum_weights_g_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
   if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
@@ -372,7 +372,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
             #pragma omp parallel for num_threads(nth)
             for(int j = 0; j < col; ++j) fsum_double_impl(pout + j, px + j*l, narm, l);
           } else {
-            for(int j = 0; j != col; ++j) fsum_double_impl_omp(pout + j, px + j*l, narm, l, nth);
+            for(int j = 0; j != col; ++j) fsum_double_omp_impl(pout + j, px + j*l, narm, l, nth);
           }
         } else {
           if(nth <= 1 || col == 1) {
@@ -414,7 +414,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
             }
           } else {
             for(int j = 0; j != col; ++j) {
-              double sumj = fsum_int_impl_omp(px + j*l, narm, l, nth);
+              double sumj = fsum_int_omp_impl(px + j*l, narm, l, nth);
               if(sumj > INT_MAX || sumj <= INT_MIN) anyoutl = 1;
               pout[j] = sumj;
             }
@@ -454,7 +454,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
         #pragma omp parallel for num_threads(nth)
         for(int j = 0; j < col; ++j) fsum_weights_impl(pout + j, px + j*l, pw, narm, l);
       } else {
-        for(int j = 0; j != col; ++j) fsum_weights_impl_omp(pout + j, px + j*l, pw, narm, l, nth);
+        for(int j = 0; j != col; ++j) fsum_weights_omp_impl(pout + j, px + j*l, pw, narm, l, nth);
       }
     } else {
       if(nth <= 1 || col == 1) {
@@ -530,14 +530,14 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
 // #pragma omp parallel for num_threads(nth)
 //             for(int j = 0; j < col; ++j) fsum_double_impl(pout + j, px + j*l, narm, l);
 //           } else {
-//             for(int j = 0; j != col; ++j) fsum_double_impl_omp(pout + j, px + j*l, narm, l, nth);
+//             for(int j = 0; j != col; ++j) fsum_double_omp_impl(pout + j, px + j*l, narm, l, nth);
 //           }
 //         } else {
 //           if(cmth) { // If high-dimensional: column-level parallelism
 // #pragma omp parallel for num_threads(nth)
 //             for(int j = 0; j < col; ++j) fsum_double_g_impl(pout + j*ng, px + j*l, ng, pg, narm, l);
 //           } else {
-//             for(int j = 0; j != col; ++j) fsum_double_g_impl_omp(pout + j*ng, px + j*l, ng, pg, narm, l, nth);
+//             for(int j = 0; j != col; ++j) fsum_double_g_omp_impl(pout + j*ng, px + j*l, ng, pg, narm, l, nth);
 //           }
 //         }
 //       }
@@ -553,7 +553,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
 // #pragma omp parallel for num_threads(nth)
 //           for(int j = 0; j < col; ++j) fsum_int_g_impl(pout + j*ng, px + j*l, ng, pg, narm, l);
 //         } else {
-//           for(int j = 0; j != col; ++j) fsum_int_g_impl_omp(pout + j*ng, px + j*l, ng, pg, narm, l, nth);
+//           for(int j = 0; j != col; ++j) fsum_int_g_omp_impl(pout + j*ng, px + j*l, ng, pg, narm, l, nth);
 //         }
 //       } else {
 //         double *pout = REAL(out);
@@ -573,7 +573,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
 //           }
 //         } else {
 //           for(int j = 0; j != col; ++j) {
-//             double sumj = fsum_int_impl_omp(px + j*l, narm, l, nth);
+//             double sumj = fsum_int_omp_impl(px + j*l, narm, l, nth);
 //             if(sumj > INT_MAX || sumj <= INT_MIN) anyoutl = 1;
 //             pout[j] = sumj;
 //           }
@@ -612,7 +612,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
 // #pragma omp parallel for num_threads(nth)
 //       for(int j = 0; j < col; ++j) fsum_weights_impl(pout + j*ng, px + j*l, ng, pg, pw, narm, l);
 //     } else {
-//       for(int j = 0; j != col; ++j) fsum_weights_impl_omp(pout + j*ng, px + j*l, ng, pg, pw, narm, l, nth);
+//       for(int j = 0; j != col; ++j) fsum_weights_omp_impl(pout + j*ng, px + j*l, ng, pg, pw, narm, l, nth);
 //     }
 //   }
 //   matCopyAttr(out, x, Rdrop, ng);
