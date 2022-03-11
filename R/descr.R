@@ -38,10 +38,13 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
                                                            Quant = quantile(na_rm(x), probs = Qprobs)) else
                                      function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
 
-  descrcat <- if(table) function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                         Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'),
-                                         Table = fsorttable(x, sort.table)) else # natrm(fnobs.default(x, x)) # table(x). fnobs is a lot Faster, but includes NA as level !
-                        function(x) list(Class = class(x), Label = attr(x, label.attr),
+  descrcat <- if(table) function(x) {
+                                    tab <- fsorttable(x, sort.table)
+                                    list(Class = class(x), Label = attr(x, label.attr),
+                                         Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = length(tab)) else `names<-`(fnobsC(x), 'Nobs'),
+                                         Table = tab) # natrm(fnobs.default(x, x)) # table(x). fnobs is a lot Faster, but includes NA as level !
+                        } else
+                       bfunction(x) list(Class = class(x), Label = attr(x, label.attr),
                                          Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'))
 
   descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
