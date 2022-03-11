@@ -30,7 +30,8 @@ SEXP dupVecIndex(SEXP x) {
       tx = 1000;
       M = (size_t)nlevels(x) + 2;
     } else {
-      if(n > 10 && (INTEGER(x)[0] >= n || INTEGER(x)[n/2] >= n || INTEGER(x)[n-1] >= n)) goto bigint;
+      int *p = INTEGER(x);
+      if(n > 10 && (NOGE(p[0], n) || NOGE(p[n/2], n) || NOGE(p[n-1], n))) goto bigint;
       M = (size_t)n;
     }
   } else if (tx == LGLSXP) {
@@ -179,7 +180,8 @@ SEXP dupVecIndexKeepNA(SEXP x) {
       tx = 1000;
       M = (size_t)nlevels(x) + 2;
     } else {
-      if(n > 10 && (INTEGER(x)[0] >= n || INTEGER(x)[n/2] >= n || INTEGER(x)[n-1] >= n)) goto bigint;
+      int *p = INTEGER(x);
+      if(n > 10 && (NOGE(p[0], n) || NOGE(p[n/2], n) || NOGE(p[n-1], n))) goto bigint;
       M = (size_t)n;
     }
   } else if (tx == LGLSXP) {
