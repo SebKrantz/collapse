@@ -493,8 +493,10 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
   SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
   if((ng > 0 && nth > 1 && l > 1) || (ng == 0 && nth > 1 && nth >= l)) {
     if(nth > l) nth = l;
+    SEXP Rnth1 = PROTECT(ScalarInteger(1)); // Needed if ng == 0, otherwise double multithreading
     #pragma omp parallel for num_threads(nth)
-    for(int j = 0; j < l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth);
+    for(int j = 0; j < l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth1);
+    UNPROTECT(1);
   } else {
     for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth);
   }

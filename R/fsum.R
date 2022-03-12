@@ -3,7 +3,7 @@
 fsum <- function(x, ...) UseMethod("fsum") # , x
 
 fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, nthreads = 1L, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fsum.matrix(x, g, w, TRA, na.rm, use.g.names, nthreads, ...))
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fsum.matrix(x, g, w, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
     if(is.null(g)) return(.Call(C_fsum,x,0L,0L,w,na.rm,nthreads))
