@@ -101,12 +101,12 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   SEXP names = PROTECT(getAttrib(dt, R_NamesSymbol)); protecti++;
   SEXP newnames = PROTECT(allocVector(STRSXP, n)); protecti++;
 
-  SEXP *pdt = SEXPPTR(dt), // *pnewdt = SEXPPTR(newdt),
+  SEXP *pdt = SEXPPTR(dt), *pnewdt = SEXPPTR(newdt),
     *pnam = STRING_PTR(names), *pnnam = STRING_PTR(newnames);
 
   const int l = isNull(cols) ? LENGTH(dt) : length(cols);
   if (isNull(cols)) {
-    for (int i=0; i != l; ++i) SET_VECTOR_ELT(newdt, i, pdt[i]);
+    for (int i=0; i != l; ++i) pnewdt[i] = pdt[i];
     if (length(names)) {
       if (length(names) < l) error("Internal error: length(names)>0 but <length(dt)"); // # nocov
       for (int i=0; i != l; ++i) pnnam[i] = pnam[i];
@@ -114,7 +114,7 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
     // else an unnamed data.table is valid e.g. unname(DT) done by ggplot2, and .SD may have its names cleared in dogroups, but shallow will always create names for data.table(NULL) which has 100 slots all empty so you can add to an empty data.table by reference ok.
   } else {
     int *pcols = INTEGER(cols);
-    for (int i=0; i != l; ++i) SET_VECTOR_ELT(newdt, i, pdt[pcols[i]-1]);
+    for (int i=0; i != l; ++i) pnewdt[i] = pdt[pcols[i]-1];
     if (length(names)) {
       // no need to check length(names) < l here. R-level checks if all value
       // in 'cols' are valid - in the range of 1:length(names(x))
