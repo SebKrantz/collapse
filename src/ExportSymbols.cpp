@@ -67,9 +67,9 @@ RcppExport SEXP fprodC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm);
 RcppExport SEXP fprodmC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP fprodlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop);
 // fmean rewritten in C:
-RcppExport SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm);
-RcppExport SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop);
-RcppExport SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop);
+RcppExport SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth);
+RcppExport SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth);
+RcppExport SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth);
 // fmin and fmax rewritten in C:
 RcppExport SEXP fminC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm);
 RcppExport SEXP fminmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
@@ -125,9 +125,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_fmax", (DL_FUNC) &fmaxC, 4},
   {"C_fmaxm", (DL_FUNC) &fmaxmC, 5},
   {"C_fmaxl", (DL_FUNC) &fmaxlC, 5},
-  {"C_fmean", (DL_FUNC) &fmeanC, 6},
-  {"C_fmeanm", (DL_FUNC) &fmeanmC, 7},
-  {"C_fmeanl", (DL_FUNC) &fmeanlC, 7},
+  {"C_fmean", (DL_FUNC) &fmeanC, 7},
+  {"C_fmeanm", (DL_FUNC) &fmeanmC, 8},
+  {"C_fmeanl", (DL_FUNC) &fmeanlC, 8},
   {"Cpp_fnth", (DL_FUNC) &_collapse_fnthCpp, 8},
   {"Cpp_fnthm", (DL_FUNC) &_collapse_fnthmCpp, 9},
   {"Cpp_fnthl", (DL_FUNC) &_collapse_fnthlCpp, 9},
