@@ -13,19 +13,20 @@ FUN(x, ...)
 
 ## Default S3 method:
 FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
-    use.g.names = TRUE, ...)
+    use.g.names = TRUE, [nthreads = 1L,] ...)
 
 ## S3 method for class 'matrix'
 FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
-    use.g.names = TRUE, drop = TRUE, ...)
+    use.g.names = TRUE, drop = TRUE, [nthreads = 1L,] ...)
 
 ## S3 method for class 'data.frame'
 FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
-    use.g.names = TRUE, drop = TRUE, ...)
+    use.g.names = TRUE, drop = TRUE, [nthreads = 1L,] ...)
 
 ## S3 method for class 'grouped_df'
 FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
-    use.g.names = FALSE, keep.group_vars = TRUE, [keep.w = TRUE,] ...)
+    use.g.names = FALSE, keep.group_vars = TRUE,
+    [keep.w = TRUE,] [nthreads = 1L,] ...)
 }
 }
 \section{Arguments}{
@@ -42,6 +43,8 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 \code{na.rm} \tab \tab logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fnobs}}. \cr
 
 \code{use.g.names} \tab \tab logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s. \cr
+
+\code{nthreads} \tab \tab integer. The number of threads to utilize. \cr
 
 \code{drop} \tab \tab \emph{matrix and data.frame methods:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}. \cr
 
