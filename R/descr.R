@@ -97,13 +97,14 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
             print.table(ct(t))
         } else {
           t1 <- t[seq_len(n)]
+          st <- bsum(t)
+          rem <- `names<-`(st-bsum(t1), sprintf("... %s Others", length(t)-n))
           if(perc) {
-            st <- bsum(t)
             pct <- unattrib(t1)/st*100
-            print.default(cb(Freq = c(t1, SUM = bsum(t1)), Perc = round(c(pct, bsum(pct)), digits)), right = TRUE, print.gap = 2, quote = FALSE)
+            print.default(cb(Freq = c(t1, rem), Perc = round(c(pct, 100-bsum(pct)), digits)), right = TRUE, print.gap = 2, quote = FALSE)
             # cat("...\n")
           } else {
-            print.table(ct(c(t1, SUM = bsum(t1))))
+            print.table(ct(c(t1, rem)))
             # cat("...\n")
           }
           if(summary) {
