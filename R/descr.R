@@ -73,14 +73,18 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
   res
 }
 
-print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, ...) {
+print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, reverse = FALSE, ...) {
   w <- paste(rep("-", .Options$width), collapse = "")
   nam <- names(x)
   arstat <- attr(x, "arstat")
+  DSname <- attr(x, "name")
+  DSN <- attr(x, "N")
   cb <- function(...) if(t.table) cbind(...) else formatC(rbind(...), drop0trailing = TRUE)
   ct <- function(z) if(t.table) cbind(Freq = z) else z
-  cat('Dataset: ', attr(x,"name"),', ',length(x), ' Variables, N = ', attr(x, "N"), "\n", sep = "")
-  cat(w, "\n", sep = "")
+  if(reverse) x <- rev.default(x) else {
+    cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
+    cat(w, "\n", sep = "")
+  }
   for(i in seq_along(x)) {
     xi <- x[[i]]
     namxi <- names(xi)
@@ -117,6 +121,7 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
     cat(w, "\n", sep = "") # More compressed -> better !
     # cat("\n", w, "\n", sep = "")
   }
+  if(reverse) cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
   invisible(x)
 }
 
