@@ -53,6 +53,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
 
   if(is.list(X)) {
     is_sf <- inherits(X, "sf")
+    if(inherits(X, "POSIXlt")) X <- list(X = as.POSIXct(X))
     class(X) <- NULL
     if(is_sf) X[[attr(X, "sf_column")]] <- NULL
   } else X <- unclass(qDF(X))
@@ -87,14 +88,18 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
   nam <- names(x) # Needs to be here
   for(i in seq_along(x)) {
     xi <- x[[i]]
-    namxi <- names(xi)
     cat(nam[i]," (",strclp(xi[[1L]]),"): ",xi[[2L]], "\n", sep = "")
-    cat(namxi[3L], ": \n", sep = "")
-    print.qsu(xi[[3L]], digits)
+    stat <- xi[[3L]]
+    if(stat[[1L]] != DSN) cat("Statistics (", round((1-stat[[1L]]/DSN)*100, 2), "% NA's)\n", sep = "")
+    else cat("Statistics\n")
+    if(any(xi[[1L]] %in% c("Date", "POSIXct")))
+      print.default(c(stat[1:2], as.character(`oldClass<-`(stat[3:4], xi[[1L]]))),
+                     quote = FALSE, right = TRUE, print.gap = 2)
+    else print.qsu(stat, digits)
     if(length(xi) > 3L) {
       if(arstat) cat("\n")
-      cat(namxi[4L], ": \n", sep = "")
-      if(namxi[4L] == "Table") {
+      if(names(xi)[4L] == "Table") {
+        cat("Table\n")
         t <- unclass(xi[[4L]])
         if(length(t) <= n) {
           if(perc) print.default(cb(Freq = t, Perc = round(t/bsum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
@@ -112,11 +117,14 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
             # cat("...\n")
           }
           if(summary) {
-            cat("\nSummary of Table Frequencies: \n")
+            cat("\nSummary of Table Frequencies\n")
             print.summaryDefault(summary.default(t), digits)
           }
         }
-      } else print.qsu(xi[[4L]], digits)
+      } else {
+        cat("Quantiles\n")
+        print.qsu(xi[[4L]], digits)
+      }
     }
     cat(w, "\n", sep = "") # More compressed -> better !
     # cat("\n", w, "\n", sep = "")
