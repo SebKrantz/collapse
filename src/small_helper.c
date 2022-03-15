@@ -212,7 +212,6 @@ int fchmatch(SEXP x, SEXP val, int nomatch) {
 SEXP whichv(SEXP x, SEXP val, SEXP Rinvert) {
 
   int j = 0, n = length(x), invert = asLogical(Rinvert);
-  if(length(val) != 1) error("value needs to be length 1");
   int *buf = (int *) R_alloc(n, sizeof(int));
   SEXP ans;
 
@@ -223,49 +222,93 @@ SEXP whichv(SEXP x, SEXP val, SEXP Rinvert) {
     for(int i = 0; i != n; ++i) if(px[i] == v) buf[j++] = i+1;   \
   }
 
-  switch(TYPEOF(x)) {
-    case INTSXP:
-    case LGLSXP:
-    {
-      const int *px = INTEGER(x);
-      int v;
-      if(TYPEOF(val) == STRSXP) {
-        if(!isFactor(x)) error("Type mismatch: if value is character, x must be character or factor.");
-        v = fchmatch(getAttrib(x, R_LevelsSymbol), val, 0);
-      } else v = asInteger(val);
-      WHICHVLOOP
-      break;
-    }
-    case REALSXP:
-    {
-      const double *px = REAL(x);
-      const double v = asReal(val);
-      if(ISNAN(v)) {
-        if(invert) {
-          for(int i = 0; i != n; ++i) if(NISNAN(px[i])) buf[j++] = i+1;
-        } else {
-          for(int i = 0; i != n; ++i) if(ISNAN(px[i])) buf[j++] = i+1;
-        }
-      } else {
-        WHICHVLOOP
+  #define WHICHVLOOPLX                                               \
+  if(invert) {                                                       \
+    for(int i = 0; i != n; ++i) if(px[i] != pv[i]) buf[j++] = i+1;   \
+  } else {                                                           \
+    for(int i = 0; i != n; ++i) if(px[i] == pv[i]) buf[j++] = i+1;   \
+  }
+
+  if(length(val) == n && n > 1) {
+    if(TYPEOF(val) != TYPEOF(x)) error("data types of x and value must be the same");
+    switch(TYPEOF(x)) {
+      case INTSXP:
+      case LGLSXP:
+      {
+        const int *px = INTEGER(x);
+        const int *pv = INTEGER(val);
+        WHICHVLOOPLX
+        break;
       }
-      break;
+      case REALSXP:
+      {
+        const double *px = REAL(x);
+        const double *pv = REAL(val);
+        WHICHVLOOPLX
+        break;
+      }
+      case STRSXP:
+      {
+        const SEXP *px = STRING_PTR(x);
+        const SEXP *pv = STRING_PTR(val);
+        WHICHVLOOPLX
+        break;
+      }
+      case RAWSXP :
+      {
+        const Rbyte *px = RAW(x);
+        const Rbyte *pv = RAW(val);
+        WHICHVLOOPLX
+        break;
+      }
+      default: error("Unsupported type '%s' passed to whichv()", type2char(TYPEOF(x)));
     }
-    case STRSXP:
-    {
-      const SEXP *px = STRING_PTR(x);
-      const SEXP v = asChar(val);
-      WHICHVLOOP
-      break;
+  } else {
+    if(length(val) != 1) error("length(value) needs to be length(x) or 1");
+    switch(TYPEOF(x)) {
+      case INTSXP:
+      case LGLSXP:
+      {
+        const int *px = INTEGER(x);
+        int v;
+        if(TYPEOF(val) == STRSXP) {
+          if(!isFactor(x)) error("Type mismatch: if value is character, x must be character or factor.");
+          v = fchmatch(getAttrib(x, R_LevelsSymbol), val, 0);
+        } else v = asInteger(val);
+        WHICHVLOOP
+        break;
+      }
+      case REALSXP:
+      {
+        const double *px = REAL(x);
+        const double v = asReal(val);
+        if(ISNAN(v)) {
+          if(invert) {
+            for(int i = 0; i != n; ++i) if(NISNAN(px[i])) buf[j++] = i+1;
+          } else {
+            for(int i = 0; i != n; ++i) if(ISNAN(px[i])) buf[j++] = i+1;
+          }
+        } else {
+          WHICHVLOOP
+        }
+        break;
+      }
+      case STRSXP:
+      {
+        const SEXP *px = STRING_PTR(x);
+        const SEXP v = asChar(val);
+        WHICHVLOOP
+        break;
+      }
+      case RAWSXP :
+      {
+        const Rbyte *px = RAW(x);
+        const Rbyte v = RAW(val)[0];
+        WHICHVLOOP
+        break;
+      }
+      default: error("Unsupported type '%s' passed to whichv()", type2char(TYPEOF(x)));
     }
-    case RAWSXP :
-    {
-      const Rbyte *px = RAW(x);
-      const Rbyte v = RAW(val)[0];
-      WHICHVLOOP
-      break;
-    }
-    default: error("Unsupported type '%s' passed to whichv()", type2char(TYPEOF(x)));
   }
   PROTECT(ans = allocVector(INTSXP, j));
   if(j) memcpy(INTEGER(ans), buf, sizeof(int) * j);
