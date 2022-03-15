@@ -15,7 +15,8 @@ descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
       Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99),
       cols = NULL, label.attr = "label", \dots)
 
-\method{print}{descr}(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, \dots)
+\method{print}{descr}(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
+      summary = TRUE, reverse = FALSE, \dots)
 
 \method{as.data.frame}{descr}(x, \dots)
 }
@@ -59,7 +60,8 @@ other arguments passed to \code{\link{qsu.default}}.
 \item{perc}{logical. \code{TRUE} (default) adds percentages to the frequencies in the table for categorical variables.}
 \item{digits}{integer. The number of decimals to print in statistics and percentage tables.}
 \item{t.table}{logical. \code{TRUE} (default) prints a transposed table.}
-\item{summary}{logical. \code{TRUE} (default) computes and displays a summary of the frequencies if the size of the table for a categorical variables exceeds \code{n}.}
+\item{summary}{logical. \code{TRUE} (default) computes and displays a summary of the frequencies, if the size of the table for a categorical variable exceeds \code{n}.}
+\item{reverse}{logical. \code{TRUE} prints contents in reverse order, starting with the last column, so that the dataset can be analyzed by scrolling up the console after calling \code{descr}.}
 }
 \details{
 \code{descr} was heavily inspired by \code{Hmisc::describe}, but computes about 10x faster. The performance is comparable to \code{\link{summary}}. \code{descr} was built as a wrapper around \code{\link{qsu}}, to enrich the set of statistics computed by \code{\link{qsu}} for both numeric and categorical variables.
@@ -81,7 +83,11 @@ descr(iris)
 descr(wlddev)
 descr(GGDC10S)
 
-as.data.frame(descr(wlddev))
+# Some useful print options
+print(descr(GGDC10S), reverse = TRUE, t.table = FALSE)
+
+# Generating a data frame
+as.data.frame(descr(wlddev, table = FALSE))
 
 ## Passing Arguments down to qsu: For Panel Data Statistics
 descr(iris, pid = iris$Species)
