@@ -84,7 +84,7 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
     cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
     cat(w, "\n", sep = "")
   }
-  nam <- names(x)
+  nam <- names(x) # Needs to be here
   for(i in seq_along(x)) {
     xi <- x[[i]]
     namxi <- names(xi)
