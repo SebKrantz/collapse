@@ -301,8 +301,12 @@ all_obj_equal <- function(...) {
 }
 
 cinv <- function(x) chol2inv(chol(x))
-# TODO: Use outer here for simple case...
-interact_names <- function(l) do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
+
+interact_names <- function(l) {
+  oldClass(l) <- NULL
+  if(length(l) == 2L) return(`dim<-`(outer(l[[1L]], l[[2L]], paste, sep = "."), NULL))
+  do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
+}
 
 # set over-allocation for data.table's
 alc <- function(x) .Call(C_alloccol, x)
