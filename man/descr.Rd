@@ -7,7 +7,7 @@
 Detailed Statistical Description of Data Frame
 }
 \description{
-\code{descr} offers a concise description of each variable in a data frame. It is built as a wrapper around \code{\link{qsu}}, but by default also computes frequency tables with percentages for categorical variables, and quantiles and the number of distinct values for numeric variables (next to the mean, sd, min, max, skewness and kurtosis computed by \code{qsu}).
+\code{descr} offers a concise description of each variable in a data frame. It is built as a wrapper around \code{\link{qsu}}, but also computes frequency tables for categorical variables, and quantiles and the number of distinct values for numeric variables.
 
 }
 \usage{
@@ -56,7 +56,7 @@ character. The name of a label attribute to display for each variable (if variab
 other arguments passed to \code{\link{qsu.default}}.
 }
 \item{x}{an object of class 'descr'.}
-\item{n}{integer. The maxiumum number of table elements to print for categorical variables. If the number of distinct elements is \code{<= n}, the whole table is printed.}
+\item{n}{integer. The maxiumum number of table elements to print for categorical variables. If the number of distinct elements is \code{<= n}, the whole table is printed. Otherwise the remaining items are grouped into an '... \%s Others' category.}
 \item{perc}{logical. \code{TRUE} (default) adds percentages to the frequencies in the table for categorical variables.}
 \item{digits}{integer. The number of decimals to print in statistics and percentage tables.}
 \item{t.table}{logical. \code{TRUE} (default) prints a transposed table.}
