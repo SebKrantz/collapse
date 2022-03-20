@@ -57,7 +57,7 @@ qsu(x, \dots)
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
   \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) output to array, else output (nested) list of matrices.}
   \item{stable.algo}{logical. \code{FALSE} uses a faster but less stable method to calculate the standard deviation (see Details of \code{\link{fsd}}). Only available if \code{w = NULL} and \code{higher = FALSE}.}
-  \item{vlabels}{logical. Use variable labels in the summary. See \code{\link{vlabels}}.}
+  \item{vlabels}{logical \code{TRUE} or a function: to display variable labels in the summary. See Details.}
   \item{effect}{\emph{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L takes the first variable in the \code{plm::index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
   \item{\dots}{arguments to be passed to or from other methods.}
   \item{digits}{the number of digits to print after the comma/dot.}
@@ -78,6 +78,8 @@ More formally, let \bold{\code{x}} (bold) be a panel vector of data for \code{N}
 'Within' statistics are always computed on the vector \bold{\code{x - xi. + x..}}, where \bold{\code{x..}} is simply the 'Overall' mean computed from \bold{\code{x}}, which is added back to preserve the level of the data. The 'Within' mean computed on this data will always be identical to the 'Overall' mean. In the summary output, \code{qsu} reports not 'N', which would be identical to the 'Overall-N', but 'T', the average number of time-periods of data available for each individual obtained as 'T' = 'Overall-N / 'Between-N'. See Examples.
 
 Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- transformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable(s) 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'. See Examples.
+
+For data frame methods, if \code{vlabels = TRUE}, \code{qsu} uses \code{function(x) paste(names(x), setv(vlabels(x), NA, ""), sep = ": ")} to combine variable names and labels for display. Alternatively, the user can pass a custom function which will be applied to the data frame, e.g. using \code{vlabels = vlabels} just displays the labels. See also \code{\link{vlabels}}.
 
 \code{qsu} comes with it's own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, an apostrophe (') is placed after the 6th digit to designate the millions. Missing values are printed using '-'.
 
