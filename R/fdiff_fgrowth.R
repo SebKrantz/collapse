@@ -81,8 +81,7 @@ fdiff.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, 
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),1L+log,rho,stubs,1)
 }
 
-fdiff.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...)
-  fdiff.data.frame(x, n, diff, g, t, fill, log, rho, stubs, ...)
+fdiff.list <- function(x, ...) fdiff.data.frame(x, ...)
 
 fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
@@ -171,8 +170,7 @@ fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
 }
 
-fgrowth.list <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, ...)
-  fgrowth.data.frame(x, n, diff, g, t, fill, logdiff, scale, power, stubs, ...)
+fgrowth.list <- function(x, ...) fgrowth.data.frame(x, ...)
 
 fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -314,7 +312,7 @@ D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
                          fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...)
   DG_data_frame_template(x, n, diff, by, t, cols, fill, 1L, rho, stubs, keep.ids, ...)
 
-D.list <- D.data.frame
+D.list <- function(x, ...) D.data.frame(x, ...)
 
 D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE,
                           keep.ids = TRUE, ...)
@@ -344,7 +342,7 @@ Dlog.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.n
                          fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...)
   DG_data_frame_template(x, n, diff, by, t, cols, fill, 2L, rho, stubs, keep.ids, ...)
 
-Dlog.list <- Dlog.data.frame
+Dlog.list <- function(x, ...) Dlog.data.frame(x, ...)
 
 Dlog.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE,
                           keep.ids = TRUE, ...)
@@ -375,7 +373,7 @@ G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.nume
                          fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, ...)
   DG_data_frame_template(x, n, diff, by, t, cols, fill, 4L-logdiff, scale, stubs, keep.ids, power, ...)
 
-G.list <- G.data.frame
+G.list <- function(x, ...) G.data.frame(x, ...)
 
 G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, ...)
   DG_pdata_frame_template(x, n, diff, cols, fill, 4L-logdiff, scale, stubs, keep.ids, power, ...)

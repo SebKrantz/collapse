@@ -58,8 +58,7 @@ fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd 
   .Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
-fscale.list <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...)
-  fscale.data.frame(x, g, w, na.rm, mean, sd, ...)
+fscale.list <- function(x, ...) fscale.data.frame(x, ...)
 
 fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -199,6 +198,5 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
   .Call(Cpp_fscalel,x,by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
-STD.list <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.by = TRUE, keep.w = TRUE, ...)
-  STD.data.frame(x, by, w, cols, na.rm, mean, sd, stub, keep.by, keep.w, ...)
+STD.list <- function(x, ...) STD.data.frame(x, ...)
 

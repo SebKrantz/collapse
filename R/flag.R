@@ -65,8 +65,7 @@ flag.data.frame <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = len
   .Call(Cpp_flagleadl,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
 
-flag.list <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, ...)
-  flag.data.frame(x, n, g, t, fill, stubs, ...)
+flag.list <- function(x, ...) flag.data.frame(x, ...)
 
 flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = length(n) > 1L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -150,8 +149,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
   .Call(Cpp_flagleadl,x,n,fill,by[[1L]],by[[2L]],G_t(t),stubs)
 }
 
-L.list <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
-  L.data.frame(x, n, by, t, cols, fill, stubs, keep.ids, ...)
+L.list <- function(x, ...) L.data.frame(x, ...)
 
 L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
