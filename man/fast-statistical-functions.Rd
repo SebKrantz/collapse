@@ -38,7 +38,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 \code{w} \tab \tab a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fnth}}, \code{\link{fvar}}, \code{\link{fsd}} and \code{\link{fmode}}. \cr
 
 \code{TRA} \tab \tab an integer or quoted operator indicating the transformation to perform:
-1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}. \cr
+0 - "replace_NA"     |     1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}. \cr
 
 \code{na.rm} \tab \tab logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fnobs}}. \cr
 
@@ -52,7 +52,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 \code{keep.w} \tab \tab \emph{grouped_df method:} Logical. \code{TRUE} (default) also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}). \cr
 
-\code{\dots} \tab \tab arguments to be passed to or from other methods, and extra arguments to some functions, i.e. the algorithm used to compute variances etc. \cr
+\code{\dots} \tab \tab arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly. \cr
 }
 }
 \section{Details}{

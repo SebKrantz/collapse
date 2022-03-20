@@ -32,7 +32,7 @@ fmedian(x, \dots)
 \item{w}{a numeric vector of (non-negative) weights, may contain missing values, but only if \code{x} is also missing. }
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
-1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
+0 - "replace_NA"     |     1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
@@ -44,7 +44,7 @@ fmedian(x, \dots)
 
 \item{keep.w}{\emph{grouped_df method:} Logical. Retain summed weighting variable after computation (if contained in \code{grouped_df}).}
 
-\item{\dots}{arguments to be passed to or from other methods.}
+\item{\dots}{arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly.}
 }
 \details{
 Median value estimation is done using \code{std::nth_element} in C++, which is an efficient partial sorting algorithm. A downside of this is that vectors need to be copied first and then partially sorted, thus \code{fmedian} currently requires additional memory equal to the size of the vector (\code{x} or a column of \code{x}).

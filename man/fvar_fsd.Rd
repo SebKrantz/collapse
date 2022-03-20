@@ -47,7 +47,7 @@ fsd(x, \dots)
 \item{w}{a numeric vector of (non-negative) weights, may contain missing values.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
-1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
+0 - "replace_NA"     |     1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
@@ -61,7 +61,7 @@ fsd(x, \dots)
 
 \item{stable.algo}{logical. \code{TRUE} (default) use Welford's numerically stable online algorithm. \code{FALSE} implements a faster but numerically unstable one-pass method. See Details. }
 
-\item{\dots}{arguments to be passed to or from other methods.}
+\item{\dots}{arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly.}
 
 }
 \details{

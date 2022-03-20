@@ -13,7 +13,7 @@
 \item A set of arithmetic operators facilitates \bold{row-wise} \code{\link{\%rr\%}}, \code{\link{\%r+\%}}, \code{\link{\%r-\%}}, \code{\link{\%r*\%}}, \code{\link{\%r/\%}} and
 \bold{column-wise} \code{\link{\%cr\%}}, \code{\link{\%c+\%}}, \code{\link{\%c-\%}}, \code{\link{\%c*\%}}, \code{\link{\%c/\%}} \bold{replacing and sweeping operations} involving a vector and a matrix or data frame / list. Since v1.7, the operators \code{\link{\%+=\%}}, \code{\link{\%-=\%}}, \code{\link{\%*=\%}} and \code{\link{\%/=\%}} do column- and element- wise math by reference, and the function \code{\link{setop}} can also perform sweeping out rows by reference.
 
-\item \code{\link{TRA}} is a more advanced S3 generic to efficiently perform \bold{(groupwise) replacing and sweeping out of statistics}. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
+\item \code{\link[=TRA]{(set)TRA}} is a more advanced S3 generic to efficiently perform \bold{(groupwise) replacing and sweeping out of statistics}, either by creating a copy of the data or by reference. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
 Supported operations are:
   \tabular{lllll}{\emph{ Integer-id }  \tab\tab \emph{ String-id }  \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
                  0 \tab\tab "replace_NA"   \tab\tab replace missing values \cr
@@ -49,7 +49,7 @@ All of \emph{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Fun
   \code{\link{dapply}} \tab\tab No methods, works with matrices and data frames \tab\tab Apply functions to rows or columns \cr
   \code{\link{BY}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Split-Apply-Combine computing \cr
   \code{\link[=arithmetic]{\%(r/c)(r/+/-/*//)\%}} \tab\tab No methods, works with matrices and data frames / lists \tab\tab Row- and column-arithmetic \cr
-  \code{\link{TRA}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Replace and sweep out statistics \cr
+  \code{\link[=TRA]{(set)TRA}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Replace and sweep out statistics (by reference) \cr
   \code{\link[=fscale]{fscale/STD}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab\tab Scale / standardize data \cr
   \code{\link[=fwithin]{fwithin/W}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Demean / center data \cr
   \code{\link[=fbetween]{fbetween/B}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Compute means / average data \cr
