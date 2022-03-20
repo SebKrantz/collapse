@@ -206,15 +206,16 @@ GRP.qG <- function(X, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE
     if(grl) groups <- c(groups, NA)
   }
   ordered <- if(is.ordered(X)) c(TRUE, NA) else c(FALSE, NA)
+  st <- attr(X, "starts")
   attributes(X) <- NULL
   return(`oldClass<-`(list(N.groups = ng,
                         group.id = X,
-                        group.sizes = if(group.sizes) tabulate(X, ng) else NULL, # .Internal(tabulate(X, ng))
+                        group.sizes = if(group.sizes) .Call(C_fwtabulate, X, NULL, ng, FALSE) else NULL, # tabulate(X, ng)  # .Internal(tabulate(X, ng))
                         groups = if(grl) `names<-`(list(groups), gvars) else NULL,
                         group.vars = gvars,
                         ordered = ordered,
                         order = NULL, # starts = NULL, maxgrpn = NULL,
-                        group.starts = attr(X, "starts"),
+                        group.starts = st,
                         call = if(call) match.call() else NULL), "GRP"))
 }
 
@@ -229,7 +230,7 @@ GRP.factor <- function(X, ..., group.sizes = TRUE, drop = FALSE, return.groups =
   attributes(X) <- NULL
   return(`oldClass<-`(list(N.groups = nl,
                         group.id = X,
-                        group.sizes = if(group.sizes) tabulate(X, nl) else NULL, # .Internal(tabulate(X, nl))
+                        group.sizes = if(group.sizes) .Call(C_fwtabulate, X, NULL, nl, FALSE) else NULL, # tabulate(X, nl) # .Internal(tabulate(X, nl))
                         groups = if(return.groups) `names<-`(list(lev), nam) else NULL,
                         group.vars = nam,
                         ordered = ordered,
@@ -256,7 +257,7 @@ GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups =
   attributes(g) <- NULL
   return(`oldClass<-`(list(N.groups = nl,
                         group.id = g,
-                        group.sizes = if(group.sizes) tabulate(g, nl) else NULL, # .Internal(tabulate(g, nl))
+                        group.sizes = if(group.sizes) .Call(C_fwtabulate, g, NULL, nl, FALSE) else NULL, # tabulate(g, nl) # .Internal(tabulate(g, nl))
                         groups = if(return.groups) `names<-`(list(lev), nam) else NULL,
                         group.vars = nam,
                         ordered = ordered,

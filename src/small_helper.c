@@ -874,3 +874,73 @@ SEXP setnames(SEXP x, SEXP nam) {
   return x;
 }
 
+SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna) {
+  int l = length(x), narm = asLogical(ckna);
+  if(l != length(y)) error("length mismatch");
+  if(TYPEOF(x) != INTSXP) error("x needs to be integer");
+  if(TYPEOF(y) != INTSXP) error("y needs to be integer");
+  int ng = asInteger(ngp), *px = INTEGER(x), *py = INTEGER(y);
+  if(ng > INT_MAX / 2) error("Table larger than INT_MAX/2");
+
+  if(narm) {
+    for(int i = 0; i != l; ++i) {
+      if(px[i] != NA_INTEGER) {
+        if(py[i] == NA_INTEGER) px[i] = NA_INTEGER;
+        else px[i] += (py[i] - 1) * ng;
+      }
+    }
+  } else {
+    for(int i = 0; i != l; ++i) px[i] += (py[i] - 1) * ng;
+  }
+
+  return R_NilValue;
+}
+
+SEXP fwtabulate(SEXP x, SEXP w, SEXP ngp, SEXP ckna) {
+  int l = length(x), narm = asLogical(ckna), ng = asInteger(ngp), nwl = isNull(w);
+  if(TYPEOF(x) != INTSXP) error("x needs to be integer");
+  // if(ng > INT_MAX/2) error("Table larger than INT_MAX/2");
+
+  SEXP tab = PROTECT(allocVector(nwl ? INTSXP : REALSXP, ng));
+  int *px = INTEGER(x);
+
+  if(nwl) {
+    int *ptab = INTEGER(tab);
+    memset(ptab, 0, sizeof(int) * ng); --ptab;
+    if(narm) {
+      for(int i = 0; i != l; ++i) if(px[i] != NA_INTEGER) ++ptab[px[i]];
+    } else {
+      for(int i = 0; i != l; ++i) ++ptab[px[i]];
+    }
+  } else {
+    if(length(w) != l) error("length(w) must be equal to length(x)");
+    double *ptab = REAL(tab);
+    memset(ptab, 0.0, sizeof(double) * ng); --ptab;
+    switch(TYPEOF(w)) {
+      case REALSXP: {
+        double *pw = REAL(w);
+        if(narm) {
+          for(int i = 0; i != l; ++i) if(px[i] != NA_INTEGER && NISNAN(pw[i])) ptab[px[i]] += pw[i];
+        } else {
+          for(int i = 0; i != l; ++i) if(NISNAN(pw[i])) ptab[px[i]] += pw[i];
+        }
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: {
+        int *pw = INTEGER(w);
+        if(narm) {
+          for(int i = 0; i != l; ++i) if(px[i] != NA_INTEGER && pw[i] != NA_INTEGER) ptab[px[i]] += pw[i];
+        } else {
+          for(int i = 0; i != l; ++i) if(pw[i] != NA_INTEGER) ptab[px[i]] += pw[i];
+        }
+        break;
+      }
+      default: error("Unsupported weights type!");
+    }
+  }
+
+  UNPROTECT(1);
+  return tab;
+}
+

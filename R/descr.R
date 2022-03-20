@@ -1,8 +1,8 @@
-# TODO: Export? sorttable? qtable? -> better wait until full qtable implementation..
+
 fsorttable <- function(x, srt) {
   if(is.factor(x)) {
     lev <- attr(x, "levels")
-    t <- tabulate(x, nbins = length(lev)) # skips missing values !!
+    t <- .Call(C_fwtabulate, x, NULL, length(lev), TRUE) # tabulate(x, nbins = length(lev)) # skips missing values !!
     names(t) <- lev
     sorted <- TRUE
   } else {
@@ -21,7 +21,7 @@ fsorttable <- function(x, srt) {
     stop("sort.table must be one of 'value', 'freq' or 'none'"))
 }
 
-# Could make label attribute optional !
+
 descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
                   Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99), cols = NULL,
                   label.attr = 'label', ...) {
@@ -53,7 +53,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
 
   if(is.list(X)) {
     is_sf <- inherits(X, "sf")
-    if(inherits(X, "POSIXlt")) X <- list(X = as.POSIXct(X))
+    # if(inherits(X, "POSIXlt")) X <- list(X = as.POSIXct(X))
     class(X) <- NULL
     if(is_sf) X[[attr(X, "sf_column")]] <- NULL
   } else X <- unclass(qDF(X))
@@ -90,7 +90,7 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
     xi <- x[[i]]
     cat(nam[i]," (",strclp(xi[[1L]]),"): ",xi[[2L]], "\n", sep = "")
     stat <- xi[[3L]]
-    if(stat[[1L]] != DSN) cat("Statistics (", round((1-stat[[1L]]/DSN)*100, 2), "% NA's)\n", sep = "")
+    if(stat[[1L]] != DSN) cat("Statistics: ", round((1-stat[[1L]]/DSN)*100, 2), "% NA's removed\n", sep = "")
     else cat("Statistics\n")
     if(any(xi[[1L]] %in% c("Date", "POSIXct")))
       print.default(c(stat[1:2], as.character(`oldClass<-`(stat[3:4], xi[[1L]]))),
