@@ -4,8 +4,8 @@ fsum <- function(x, ...) UseMethod("fsum") # , x
 
 fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, nthreads = 1L, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fsum.matrix(x, g, w, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fsum,x,0L,0L,w,na.rm,nthreads))
     if(is.atomic(g)) {
       if(use.g.names) {
@@ -21,14 +21,14 @@ fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
     if(use.g.names) return(`names<-`(.Call(C_fsum,x,g[[1L]],g[[2L]],w,na.rm,nthreads), GRPnames(g)))
     return(.Call(C_fsum,x,g[[1L]],g[[2L]],w,na.rm,nthreads))
   }
-  if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(C_fsum,x,0L,0L,w,na.rm,nthreads),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAC(x,.Call(C_fsum,x,0L,0L,w,na.rm,nthreads),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRA,x,.Call(C_fsum,x,g[[1L]],g[[2L]],w,na.rm,nthreads),g[[2L]],TtI(TRA))
+  TRAC(x,.Call(C_fsum,x,g[[1L]],g[[2L]],w,na.rm,nthreads),g[[2L]],TRA, ...)
 }
 
 fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fsumm,x,0L,0L,w,na.rm,drop,nthreads))
     if(is.atomic(g)) {
       if(use.g.names) {
@@ -44,14 +44,14 @@ fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.n
     if(use.g.names) return(`dimnames<-`(.Call(C_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(C_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads))
   }
-  if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(C_fsumm,x,0L,0L,w,na.rm,TRUE,nthreads),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAmC(x,.Call(C_fsumm,x,0L,0L,w,na.rm,TRUE,nthreads),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRAm,x,.Call(C_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TtI(TRA))
+  TRAmC(x,.Call(C_fsumm,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TRA, ...)
 }
 
 fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fsuml,x,0L,0L,w,na.rm,drop,nthreads))
     if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -68,17 +68,15 @@ fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
       return(setRnDF(.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads), groups))
     return(.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads))
   }
-  if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(C_fsuml,x,0L,0L,w,na.rm,TRUE,nthreads),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAlC(x,.Call(C_fsuml,x,0L,0L,w,na.rm,TRUE,nthreads),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRAl,x,.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TtI(TRA))
+  TRAlC(x,.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TRA, ...)
 }
 
-fsum.list <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...)
-  fsum.data.frame(x, g, w, TRA, na.rm, use.g.names, drop, nthreads, ...)
+fsum.list <- function(x, ...) fsum.data.frame(x, ...)
 
 fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                              keep.group_vars = TRUE, keep.w = TRUE, nthreads = 1L, ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
@@ -102,6 +100,7 @@ fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
     ax <- attributes(x)
     attributes(x) <- NULL
     if(nTRAl) {
+      if(!missing(...)) unused_arg_action(match.call(), ...)
       ax[["groups"]] <- NULL
       ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
@@ -118,9 +117,9 @@ fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
       } else return(setAttributes(.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(C_fsuml,x[-gn],g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TtI(TRA))), ax))
+      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(C_fsuml,x[-gn],g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TRA, ...)), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(C_fsuml,x[-gn],g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TtI(TRA)), ax))
-  } else return(.Call(Cpp_TRAl,x,.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TtI(TRA)))
+    return(setAttributes(TRAlC(x[-gn],.Call(C_fsuml,x[-gn],g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TRA, ...), ax))
+  } else return(TRAlC(x,.Call(C_fsuml,x,g[[1L]],g[[2L]],w,na.rm,FALSE,nthreads),g[[2L]],TRA, ...))
 }

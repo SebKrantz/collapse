@@ -47,6 +47,8 @@ RcppExport SEXP setnames(SEXP x, SEXP nam);
 RcppExport SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 RcppExport SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
 RcppExport SEXP geteptr(SEXP x);
+RcppExport SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna);
+RcppExport SEXP fwtabulate(SEXP x, SEXP w, SEXP ngp, SEXP ckna);
 // fnobs rewritten in C:
 RcppExport SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 RcppExport SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
@@ -81,6 +83,10 @@ RcppExport SEXP fmaxlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop);
 RcppExport SEXP fcumsumC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
 RcppExport SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
 RcppExport SEXP fcumsumlC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
+// TRA, rewritten in C and extended:
+RcppExport SEXP TRAC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
+RcppExport SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
+RcppExport SEXP TRAlC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
 
 static const R_CMethodDef CEntries[]  = {
   {"C_multi_yw", (DL_FUNC) &multi_yw, 10},
@@ -91,9 +97,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_BW", (DL_FUNC) &_collapse_BWCpp, 10},
   {"Cpp_BWm", (DL_FUNC) &_collapse_BWmCpp, 10},
   {"Cpp_BWl", (DL_FUNC) &_collapse_BWlCpp, 10},
-  {"Cpp_TRA", (DL_FUNC) &_collapse_TRACpp, 4},
-  {"Cpp_TRAm", (DL_FUNC) &_collapse_TRAmCpp, 4},
-  {"Cpp_TRAl", (DL_FUNC) &_collapse_TRAlCpp, 4},
+  {"C_TRA", (DL_FUNC) &TRAC, 5},
+  {"C_TRAm", (DL_FUNC) &TRAmC, 5},
+  {"C_TRAl", (DL_FUNC) &TRAlC, 5},
   {"Cpp_fndistinct", (DL_FUNC) &_collapse_fndistinctCpp, 5},
   {"Cpp_fndistinctl", (DL_FUNC) &_collapse_fndistinctlCpp, 6},
   {"Cpp_fndistinctm", (DL_FUNC) &_collapse_fndistinctmCpp, 6},
@@ -195,6 +201,8 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_subsetCols",    (DL_FUNC) &subsetCols,    3},
   {"C_alloc",         (DL_FUNC) &falloc,        2},
   {"C_geteptr",       (DL_FUNC) &geteptr,       1},
+  {"C_fcrosscolon",   (DL_FUNC) &fcrosscolon,   4},
+  {"C_fwtabulate",    (DL_FUNC) &fwtabulate,    4},
   // {"C_aschar",        (DL_FUNC) &CasChar,       1},
   {"C_subsetDT",      (DL_FUNC) &subsetDT,      4},
   {"C_subsetVector",  (DL_FUNC) &subsetVector,  3},

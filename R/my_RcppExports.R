@@ -11,16 +11,22 @@ BWlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, theta =
     .Call(Cpp_BWl, x, ng, g, gs, w, narm, theta, set_mean, B, fill)
 }
 
-TRACpp <- function(x, xAG, g = 0L, ret = 1L) {
-    .Call(Cpp_TRA, x, xAG, g, ret)
+TRAC <- function(x, xAG, g = 0L, ret = 1L, set = FALSE, ...) {
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  if(set) return(invisible(.Call(C_TRA, x, xAG, g, ret, set)))
+  .Call(C_TRA, x, xAG, g, ret, set)
 }
 
-TRAmCpp <- function(x, xAG, g = 0L, ret = 1L) {
-    .Call(Cpp_TRAm, x, xAG, g, ret)
+TRAmC <- function(x, xAG, g = 0L, ret = 1L, set = FALSE, ...) {
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  if(set) return(invisible(.Call(C_TRAm, x, xAG, g, ret, set)))
+  .Call(C_TRAm, x, xAG, g, ret, set)
 }
 
-TRAlCpp <- function(x, xAG, g = 0L, ret = 1L) {
-    .Call(Cpp_TRAl, x, xAG, g, ret)
+TRAlC <- function(x, xAG, g = 0L, ret = 1L, set = FALSE, ...) {
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  if(set) return(invisible(.Call(C_TRAl, x, xAG, g, ret, set)))
+  .Call(C_TRAl, x, xAG, g, ret, set)
 }
 
 fndistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {

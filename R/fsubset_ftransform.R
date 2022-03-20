@@ -609,7 +609,7 @@ fmutate <- function(.data, ..., .keep = "all") {
         } else {
           r <- do_grouped_expr(ei, eiv, .data, g, pe)
           .data[[nam[i]]] <- if(length(r) == g[[1L]])
-               .Call(C_subsetVector, r, g[[2L]], FALSE) else # .Call(Cpp_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
+               .Call(C_subsetVector, r, g[[2L]], FALSE) else # .Call(C_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
                greorder(r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
         }
       }

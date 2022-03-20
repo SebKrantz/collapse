@@ -10,48 +10,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// TRACpp
-SEXP TRACpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g, int ret);
-RcppExport SEXP _collapse_TRACpp(SEXP xSEXP, SEXP xAGSEXP, SEXP gSEXP, SEXP retSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type xAG(xAGSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    rcpp_result_gen = Rcpp::wrap(TRACpp(x, xAG, g, ret));
-    return rcpp_result_gen;
-END_RCPP
-}
-// TRAlCpp
-List TRAlCpp(const List& x, const SEXP& xAG, const IntegerVector& g, int ret);
-RcppExport SEXP _collapse_TRAlCpp(SEXP xSEXP, SEXP xAGSEXP, SEXP gSEXP, SEXP retSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type xAG(xAGSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    rcpp_result_gen = Rcpp::wrap(TRAlCpp(x, xAG, g, ret));
-    return rcpp_result_gen;
-END_RCPP
-}
-// TRAmCpp
-SEXP TRAmCpp(const SEXP& x, const SEXP& xAG, const IntegerVector& g, int ret);
-RcppExport SEXP _collapse_TRAmCpp(SEXP xSEXP, SEXP xAGSEXP, SEXP gSEXP, SEXP retSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type xAG(xAGSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    rcpp_result_gen = Rcpp::wrap(TRAmCpp(x, xAG, g, ret));
-    return rcpp_result_gen;
-END_RCPP
-}
 // fndistinctCpp
 SEXP fndistinctCpp(const SEXP& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm);
 RcppExport SEXP _collapse_fndistinctCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP) {
