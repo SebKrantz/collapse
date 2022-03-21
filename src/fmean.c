@@ -2,17 +2,18 @@
 // #include <R_ext/Altrep.h>
 
 void fmean_double_impl(double *pout, double *px, int narm, int l) {
-  double mean = 0;
   if(narm) {
-    int n = 0;
-    for(int i = 0; i != l; ++i) {
-      if(NISNAN(px[i])) {
-        mean += px[i]; // Fastest ?
-        ++n;
-      }
+    int j = l-1, n = 1;
+    double mean = px[j];
+    while(ISNAN(mean) && j!=0) mean = px[--j];
+    if(j != 0) for(int i = j; i--; ) {
+      if(ISNAN(px[i])) continue;
+      mean += px[i];
+      ++n;
     }
-    pout[0] = n == 0 ? NA_REAL : mean / n;
+    pout[0] = mean / n;
   } else {
+    double mean = 0;
     for(int i = 0; i != l; ++i) {
       if(ISNAN(px[i])) {
         mean = px[i];
