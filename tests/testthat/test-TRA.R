@@ -10,6 +10,7 @@ m <- as.matrix(d)
 f <- iris$Species
 
 # For sweep
+replace_NA <- function(x, y) `[<-`(x, is.na(x), value = y[is.na(x)])
 replace <- function(x, y) `[<-`(y, is.na(x), value = NA)          # `[<-`(x, !is.na(x), value = y)
 replace_fill <- function(x, y) y                                  # rep(y, length(x))
 "%" <- function(x, y) x * (100 / y)
@@ -18,7 +19,7 @@ replace_fill <- function(x, y) y                                  # rep(y, lengt
 
 
 test_that("TRA performs like sweep", {
-  ops <- c("replace_fill", "replace", "-", "+", "*", "/", "%", "%%", "-%%")
+  ops <- c("replace_NA","replace_fill", "replace", "-", "+", "*", "/", "%", "%%", "-%%")
   for(i in ops) {
     expect_equal(drop(sweep(qM(v), 2L, bmean(v, na.rm = TRUE), i)), TRA(v, bmean(v, na.rm = TRUE), i))
     expect_equal(`attributes<-`(sweep(qM(m), 2L, colMeans(m, na.rm = TRUE), i), attributes(m)), TRA(m, colMeans(m, na.rm = TRUE), i))
@@ -35,12 +36,12 @@ test_that("TRA performs like sweep", {
 })
 
 test_that("TRA performs like built-in version", {
-  for(i in seq_len(10)[-4]) {
+  for(i in c(0L, seq_len(10)[-4])) {
    expect_equal(TRA(v, fmean(v), i), fmean(v, TRA = i))
    expect_equal(TRA(m, fmean(m), i), fmean(m, TRA = i))
    expect_equal(TRA(d, fmean(d), i), fmean(d, TRA = i))
   }
- for(i in seq_len(10)) {
+ for(i in c(0L, seq_len(10))) {
    expect_equal(TRA(v, fmean(v, f), i, f), fmean(v, f, TRA = i))
    expect_equal(TRA(m, fmean(m, f), i, f), fmean(m, f, TRA = i))
    expect_equal(TRA(d, fmean(d, f), i, f), fmean(d, f, TRA = i))
@@ -96,30 +97,40 @@ test_that("TRA gives errors for wrong input", {
 
 test_that("TRA handles different data types as intended", {
   # Vector & Matrix: Simple
+  expect_true(is.character(fnobs(na_insert(letters), TRA = "replace_NA")))
   expect_true(is.integer(fnobs(letters, TRA = "replace_fill")))
-  expect_true(is.integer(fnobs(letters, TRA = "replace")))
+  expect_true(is.integer(fnobs(na_insert(letters), TRA = "replace")))
   for(i in c("-", "+", "*", "/", "%", "%%", "-%%"))  expect_error(fnobs(letters, TRA = i))
+  expect_true(is.double(fnobs(na_insert(AirPassengers), TRA = "replace_NA")))
   expect_true(is.integer(fnobs(AirPassengers, TRA = "replace_fill")))
   expect_true(is.integer(fnobs(AirPassengers, TRA = "replace")))
   for(i in c("-", "+", "*", "/", "%", "%%", "-%%"))  expect_true(is.numeric(fnobs(AirPassengers, TRA = i)))
+  expect_true(is.double(fnobs(na_insert(EuStockMarkets), TRA = "replace_NA")))
   expect_true(is.integer(fnobs(EuStockMarkets, TRA = "replace_fill")))
   expect_true(is.integer(fnobs(EuStockMarkets, TRA = "replace")))
   for(i in c("-", "+", "*", "/", "%", "%%", "-%%"))  expect_true(is.numeric(fnobs(EuStockMarkets, TRA = i)))
   # Vector & Matrix: Grouped
   set.seed(101)
+  expect_error(fnobs(letters, sample.int(3, length(letters), TRUE), TRA = "replace_NA"))
   expect_true(is.integer(fnobs(letters, sample.int(3, length(letters), TRUE), TRA = "replace_fill")))
   expect_true(is.integer(fnobs(letters, sample.int(3, length(letters), TRUE), TRA = "replace")))
   for(i in c("-", "-+", "+", "*", "/", "%", "%%", "-%%"))  expect_error(fnobs(letters, sample.int(3, length(letters), TRUE), TRA = i))
+  expect_true(is.double(fnobs(AirPassengers, sample.int(3, length(AirPassengers), TRUE), TRA = "replace_NA")))
   expect_true(is.integer(fnobs(AirPassengers, sample.int(3, length(AirPassengers), TRUE), TRA = "replace_fill")))
   expect_true(is.integer(fnobs(AirPassengers, sample.int(3, length(AirPassengers), TRUE), TRA = "replace")))
   for(i in c("-", "-+", "+", "*", "/", "%", "%%", "-%%"))  expect_true(is.numeric(fnobs(AirPassengers, sample.int(3, length(AirPassengers), TRUE), TRA = i)))
+  expect_true(is.double(fnobs(EuStockMarkets, sample.int(3, nrow(EuStockMarkets), TRUE), TRA = "replace_NA")))
   expect_true(is.integer(fnobs(EuStockMarkets, sample.int(3, nrow(EuStockMarkets), TRUE), TRA = "replace_fill")))
   expect_true(is.integer(fnobs(EuStockMarkets, sample.int(3, nrow(EuStockMarkets), TRUE), TRA = "replace")))
   for(i in c("-", "-+", "+", "*", "/", "%", "%%", "-%%"))  expect_true(is.numeric(fnobs(EuStockMarkets, sample.int(3, nrow(EuStockMarkets), TRUE),  TRA = i)))
 
   # Date Frame: Simple
+  expect_equal(vtypes(fndistinct(wlddev, TRA = "replace_NA")), vtypes(wlddev))
   expect_equal(unname(vtypes(fndistinct(wlddev, TRA = "replace"))), rep("integer", 13))
   expect_equal(unname(vtypes(fndistinct(wlddev, TRA = "replace_fill"))), rep("integer", 13))
+  expect_equal(vtypes(fmode(wlddev, TRA = "replace_NA")), vtypes(wlddev))
+  expect_equal(vtypes(ffirst(wlddev, TRA = "replace_NA")), vtypes(wlddev))
+  expect_equal(vtypes(flast(wlddev, TRA = "replace_NA")), vtypes(wlddev))
   expect_equal(vtypes(fmode(wlddev, TRA = "replace_fill")), vtypes(wlddev))
   expect_equal(vtypes(ffirst(wlddev, TRA = "replace_fill")), vtypes(wlddev))
   expect_equal(vtypes(flast(wlddev, TRA = "replace_fill")), vtypes(wlddev))
@@ -131,6 +142,10 @@ test_that("TRA handles different data types as intended", {
   # Date Frame: Grouped
   expect_equal(unname(vtypes(fndistinct(wlddev, wlddev$iso3c, TRA = "replace"))), rep("integer", 13))
   expect_equal(unname(vtypes(fndistinct(wlddev, wlddev$iso3c, TRA = "replace_fill"))), rep("integer", 13))
+  expect_error(fndistinct(wlddev, wlddev$iso3c, TRA = "replace_NA"))
+  expect_equal(vtypes(fmode(wlddev, wlddev$iso3c, TRA = "replace_NA")), vtypes(wlddev))
+  expect_equal(vtypes(ffirst(wlddev, wlddev$iso3c, TRA = "replace_NA")), vtypes(wlddev))
+  expect_equal(vtypes(flast(wlddev, wlddev$iso3c, TRA = "replace_NA")), vtypes(wlddev))
   expect_equal(vtypes(fmode(wlddev, wlddev$iso3c, TRA = "replace_fill")), vtypes(wlddev))
   expect_equal(vtypes(ffirst(wlddev, wlddev$iso3c, TRA = "replace_fill")), vtypes(wlddev))
   expect_equal(vtypes(flast(wlddev, wlddev$iso3c, TRA = "replace_fill")), vtypes(wlddev))

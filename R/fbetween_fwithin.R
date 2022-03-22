@@ -33,8 +33,7 @@ fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, th
   .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
-fwithin.list <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...)
-  fwithin.data.frame(x, g, w, na.rm, mean, theta, ...)
+fwithin.list <- function(x, ...) fwithin.data.frame(x, ...)
 
 fwithin.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -191,9 +190,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
   .Call(Cpp_BWl,x,by[[1L]],by[[2L]],by[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
-W.list <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-                         mean = 0, theta = 1, stub = "W.", keep.by = TRUE, keep.w = TRUE, ...)
-  W.data.frame(x, by, w, cols, na.rm, mean, theta, stub, keep.by, keep.w, ...)
+W.list <- function(x, ...) W.data.frame(x, ...)
 
 
 
@@ -228,8 +225,7 @@ fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALS
   .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
-fbetween.list <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...)
-  fbetween.data.frame(x, g, w, na.rm, fill, ...)
+fbetween.list <- function(x, ...) fbetween.data.frame(x, ...)
 
 fbetween.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -385,6 +381,4 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
   .Call(Cpp_BWl,x,by[[1L]],by[[2L]],by[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
-B.list <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
-                         fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, ...)
-  B.data.frame(x, by, w, cols, na.rm, fill, stub, keep.by, keep.w, ...)
+B.list <- function(x, ...) B.data.frame(x, ...)

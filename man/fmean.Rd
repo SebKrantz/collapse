@@ -13,16 +13,17 @@ The \code{\link{TRA}} argument can further be used to transform \code{x} using i
 fmean(x, \dots)
 
 \method{fmean}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, \dots)
+      use.g.names = TRUE, nthreads = 1L, \dots)
 
 \method{fmean}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, \dots)
+      use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
 
 \method{fmean}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, \dots)
+      use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
 
 \method{fmean}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
+      use.g.names = FALSE, keep.group_vars = TRUE,
+      keep.w = TRUE, nthreads = 1L, \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
@@ -32,12 +33,14 @@ fmean(x, \dots)
 \item{w}{a numeric vector of (non-negative) weights, may contain missing values.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
-1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
+0 - "replace_NA"     |     1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
 
 
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
 \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
+
+\item{nthreads}{integer. The number of threads to utilize. See Details of \code{\link{fsum}}. }
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -45,7 +48,7 @@ fmean(x, \dots)
 
 \item{keep.w}{\emph{grouped_df method:} Logical. Retain summed weighting variable after computation (if contained in \code{grouped_df}).}
 
-\item{\dots}{arguments to be passed to or from other methods.}
+\item{\dots}{arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly.}
 
 }
 \details{

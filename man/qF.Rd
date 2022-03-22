@@ -31,7 +31,7 @@ finteraction(\dots, ordered = FALSE, sort = TRUE, method = "auto")
   \item{x}{a atomic vector, factor or quick-group.}
   \item{ordered}{logical. Adds a class 'ordered'.}
   \item{na.exclude}{logical. \code{TRUE} preserves missing values (i.e. no level is generated for \code{NA}).}
-  \item{sort}{logical. \code{TRUE} sorts the levels in ascending order (like \code{\link{factor}}); \code{FALSE} provides the levels in order of first appearance, which can be significantly faster. Note that if a factor is passed, only \code{sort = FALSE} takes effect (as factors usually have sorted levels and checking sortedness can be expensive). }
+  \item{sort}{logical. \code{TRUE} sorts the levels in ascending order (like \code{\link{factor}}); \code{FALSE} provides the levels in order of first appearance, which can be significantly faster. Note that if a factor is passed, only \code{sort = FALSE} takes effect (as factors usually have sorted levels and checking sortedness can be expensive), and unused levels will be dropped.}
   \item{drop}{logical. If \code{x} is a factor, \code{TRUE} efficiently drops unused factor levels beforehand using \code{\link{fdroplevels}}.}
   \item{keep.attr}{logical. If \code{TRUE} and \code{x} has additional attributes apart from 'levels' and 'class', these are preserved in the conversion to factor.}
   \item{method}{an integer or character string specifying the method of computation:

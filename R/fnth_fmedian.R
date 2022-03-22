@@ -5,8 +5,8 @@ fnth <- function(x, n = 0.5, ...) UseMethod("fnth") # , x
 fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "mean", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fnth.matrix(x, n, g, w, TRA, na.rm, use.g.names, ties = ties, ...))
   ret <- switch(ties, mean = 1L, min = 2L, max = 3L, stop("ties must be 'mean', 'min' or 'max'"))
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(Cpp_fnth,x,n,0L,0L,NULL,w,na.rm,ret))
     if(is.atomic(g)) {
       if(use.g.names) {
@@ -22,15 +22,15 @@ fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRU
     if(use.g.names) return(`names<-`(.Call(Cpp_fnth,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret), GRPnames(g)))
     return(.Call(Cpp_fnth,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
   }
-  if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fnth,x,n,0L,0L,NULL,w,na.rm,ret),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAC(x,.Call(Cpp_fnth,x,n,0L,0L,NULL,w,na.rm,ret),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRA,x,.Call(Cpp_fnth,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TtI(TRA))
+  TRAC(x,.Call(Cpp_fnth,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TRA, ...)
 }
 
 fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "mean", ...) {
   ret <- switch(ties, mean = 1L, min = 2L, max = 3L, stop("ties must be 'mean', 'min' or 'max'"))
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(Cpp_fnthm,x,n,0L,0L,NULL,w,na.rm,drop,ret))
     if(is.atomic(g)) {
       if(use.g.names) {
@@ -46,15 +46,15 @@ fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fnthm,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fnthm,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret))
   }
-  if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fnthm,x,n,0L,0L,NULL,w,na.rm,TRUE,ret),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAmC(x,.Call(Cpp_fnthm,x,n,0L,0L,NULL,w,na.rm,TRUE,ret),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRAm,x,.Call(Cpp_fnthm,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))
+  TRAmC(x,.Call(Cpp_fnthm,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TRA, ...)
 }
 
 fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "mean", ...) {
   ret <- switch(ties, mean = 1L, min = 2L, max = 3L, stop("ties must be 'mean', 'min' or 'max'"))
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(Cpp_fnthl,x,n,0L,0L,NULL,w,na.rm,drop,ret))
     if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -71,17 +71,15 @@ fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = 
       return(setRnDF(.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), groups))
     return(.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret))
   }
-  if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,n,0L,0L,NULL,w,na.rm,TRUE,ret),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAlC(x,.Call(Cpp_fnthl,x,n,0L,0L,NULL,w,na.rm,TRUE,ret),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))
+  TRAlC(x,.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TRA, ...)
 }
 
-fnth.list <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "mean", ...)
-  fnth.data.frame(x, n, g, w, TRA, na.rm, use.g.names, drop, ties, ...)
+fnth.list <- function(x, ...) fnth.data.frame(x, ...)
 
 fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                              keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   ret <- switch(ties, mean = 1L, min = 2L, max = 3L, stop("ties must be 'mean', 'min' or 'max'"))
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- l1orn(as.character(substitute(w)), NULL)
@@ -106,6 +104,7 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
     ax <- attributes(x)
     attributes(x) <- NULL
     if(nTRAl) {
+      if(!missing(...)) unused_arg_action(match.call(), ...)
       ax[["groups"]] <- NULL
       ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
@@ -122,11 +121,11 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
       } else return(setAttributes(.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x[-gn],n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA))), ax))
+      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(Cpp_fnthl,x[-gn],n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TRA, ...)), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x[-gn],n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA)), ax))
-  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TtI(TRA)))
+    return(setAttributes(TRAlC(x[-gn],.Call(Cpp_fnthl,x[-gn],n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TRA, ...), ax))
+  } else return(TRAlC(x,.Call(Cpp_fnthl,x,n,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TRA, ...))
 }
 
 
@@ -136,8 +135,8 @@ fmedian <- function(x, ...) UseMethod("fmedian") # , x
 
 fmedian.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fmedian.matrix(x, g, w, TRA, na.rm, use.g.names, ...))
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(Cpp_fnth,x,0.5,0L,0L,NULL,w,na.rm,1L))
     if(is.atomic(g)) {
       if(use.g.names) {
@@ -153,14 +152,14 @@ fmedian.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
     if(use.g.names) return(`names<-`(.Call(Cpp_fnth,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1L), GRPnames(g)))
     return(.Call(Cpp_fnth,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1L))
   }
-  if(is.null(g)) return(.Call(Cpp_TRA,x,.Call(Cpp_fnth,x,0.5,0L,0L,NULL,w,na.rm,1L),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAC(x,.Call(Cpp_fnth,x,0.5,0L,0L,NULL,w,na.rm,1L),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRA,x,.Call(Cpp_fnth,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1L),g[[2L]],TtI(TRA))
+  TRAC(x,.Call(Cpp_fnth,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1L),g[[2L]],TRA, ...)
 }
 
 fmedian.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(Cpp_fnthm,x,0.5,0L,0L,NULL,w,na.rm,drop,1L))
     if(is.atomic(g)) {
       if(use.g.names) {
@@ -176,14 +175,14 @@ fmedian.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.
     if(use.g.names) return(`dimnames<-`(.Call(Cpp_fnthm,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L), list(GRPnames(g), dimnames(x)[[2L]])))
     return(.Call(Cpp_fnthm,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L))
   }
-  if(is.null(g)) return(.Call(Cpp_TRAm,x,.Call(Cpp_fnthm,x,0.5,0L,0L,NULL,w,na.rm,TRUE,1L),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAmC(x,.Call(Cpp_fnthm,x,0.5,0L,0L,NULL,w,na.rm,TRUE,1L),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRAm,x,.Call(Cpp_fnthm,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA))
+  TRAmC(x,.Call(Cpp_fnthm,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TRA, ...)
 }
 
 fmedian.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(TRA)) {
+    if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(Cpp_fnthl,x,0.5,0L,0L,NULL,w,na.rm,drop,1L))
     if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
@@ -200,17 +199,15 @@ fmedian.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, 
       return(setRnDF(.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L), groups))
     return(.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L))
   }
-  if(is.null(g)) return(.Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,0.5,0L,0L,NULL,w,na.rm,TRUE,1L),0L,TtI(TRA)))
+  if(is.null(g)) return(TRAlC(x,.Call(Cpp_fnthl,x,0.5,0L,0L,NULL,w,na.rm,TRUE,1L),0L,TRA, ...))
   g <- G_guo(g)
-  .Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA))
+  TRAlC(x,.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TRA, ...)
 }
 
-fmedian.list <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...)
-  fmedian.data.frame(x, g, w, TRA, na.rm, use.g.names, drop, ...)
+fmedian.list <- function(x, ...) fmedian.data.frame(x, ...)
 
 fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                             keep.group_vars = TRUE, keep.w = TRUE, ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- l1orn(as.character(substitute(w)), NULL)
   nam <- attr(x, "names")
@@ -234,6 +231,7 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
     ax <- attributes(x)
     attributes(x) <- NULL
     if(nTRAl) {
+      if(!missing(...)) unused_arg_action(match.call(), ...)
       ax[["groups"]] <- NULL
       ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))
       ax[["row.names"]] <- if(use.g.names) GRPnames(g) else .set_row_names(g[[1L]])
@@ -250,9 +248,9 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
       } else return(setAttributes(.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x[-gn],0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA))), ax))
+      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(Cpp_fnthl,x[-gn],0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TRA, ...)), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(.Call(Cpp_TRAl,x[-gn],.Call(Cpp_fnthl,x[-gn],0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA)), ax))
-  } else return(.Call(Cpp_TRAl,x,.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TtI(TRA)))
+    return(setAttributes(TRAlC(x[-gn],.Call(Cpp_fnthl,x[-gn],0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TRA, ...), ax))
+  } else return(TRAlC(x,.Call(Cpp_fnthl,x,0.5,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,1L),g[[2L]],TRA, ...))
 }

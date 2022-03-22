@@ -78,7 +78,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
 \arguments{
   \item{X, V, R}{a vector, matrix or data frame.}
   \item{x, v}{a (atomic) vector or matrix (\code{na_rm} also supports lists).}
-  \item{value}{a single value of any (atomic) vector type. }
+  \item{value}{a single value of any (atomic) vector type. For \code{whichv} it can also be a \code{length(x)} vector.}
   \item{invert}{logical. \code{TRUE} considers elements \code{x != value}.}
   \item{vind1}{logical. If \code{length(v) == 1L}, setting \code{vind1 = TRUE} will interpret \code{v} as an index of \code{X} and \code{R}, rather than a value to search and replace.}
   \item{op}{an integer or character string indicating the operation to perform.

@@ -520,6 +520,8 @@ fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
   }
 }
 
+fhdwithin.list <- function(x, ...) fhdwithin.data.frame(x, ...)
+
 
 # Note: could also do Mudlack and add means to second regression -> better than two-times centering ??
 HDW <- function(x, ...) UseMethod("HDW") # , x
@@ -602,6 +604,7 @@ HDW.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.r
                             variable.wise = TRUE, stub = "HDW.", ...)
 add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ...), stub)
 
+HDW.list <- function(x, ...) HDW.data.frame(x, ...)
 
 # Theory: y = ?1 x1 + ?2 x2 + e
 # FWT: M2 y = ?1 M2 x1 + e so residuals: e = M2 y - ?1 M2 x1 and fitted:
@@ -818,6 +821,8 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
   }
 }
 
+fhdbetween.list <- function(x, ...) fhdbetween.data.frame(x, ...)
+
 
 HDB <- function(x, ...) UseMethod("HDB") # , x
 
@@ -906,6 +911,7 @@ HDB.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.r
                             variable.wise = TRUE, stub = "HDB.", ...)
   add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 
+HDB.list <- function(x, ...) HDB.data.frame(x, ...)
 
 fHDbetween <- function(x, ...) {
   message("Note that 'fHDbetween' was renamed to 'fhdbetween'. The S3 generic will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")

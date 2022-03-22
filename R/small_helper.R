@@ -301,8 +301,12 @@ all_obj_equal <- function(...) {
 }
 
 cinv <- function(x) chol2inv(chol(x))
-# TODO: Use outer here for simple case...
-interact_names <- function(l) do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
+
+interact_names <- function(l) {
+  oldClass(l) <- NULL
+  if(length(l) == 2L) return(`dim<-`(outer(l[[1L]], l[[2L]], paste, sep = "."), NULL))
+  do.call(paste, c(expand.grid(l, KEEP.OUT.ATTRS = FALSE, stringsAsFactors = FALSE), list(sep = ".")))
+}
 
 # set over-allocation for data.table's
 alc <- function(x) .Call(C_alloccol, x)
@@ -528,9 +532,9 @@ as.character_factor <- function(X, keep.attr = TRUE) {
 
 setRnDF <- function(df, nm) `attr<-`(df, "row.names", nm)
 
-TtI <- function(x)
-  switch(x, replace_fill = 1L, replace = 2L, `-` = 3L, `-+` = 4L, `/` = 5L, `%` = 6L, `+` = 7L, `*` = 8L, `%%` = 9L, `-%%` = 10L,
-            stop("Unknown transformation!"))
+# TtI <- function(x)
+#   switch(x, replace_fill = 1L, replace = 2L, `-` = 3L, `-+` = 4L, `/` = 5L, `%` = 6L, `+` = 7L, `*` = 8L, `%%` = 9L, `-%%` = 10L,
+#             stop("Unknown transformation!"))
 
 condsetn <- function(x, value, cond) {
   if(cond) attr(x, "names") <- value

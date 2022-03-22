@@ -144,19 +144,19 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
       //        }
       switch(tx) {
       case REALSXP: {
-        double *px = REAL(x), *pout = REAL(out);
+        double *px = REAL(x)-1, *pout = REAL(out);
         for(int i = ng; i--; ) pout[i] = px[gl[i]];
         break;
       }
       case INTSXP:
       case LGLSXP: {
-        int *px = INTEGER(x), *pout = INTEGER(out);
+        int *px = INTEGER(x)-1, *pout = INTEGER(out);
         for(int i = ng; i--; ) pout[i] = px[gl[i]];
         break;
       }
       case STRSXP:
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        SEXP *px = SEXPPTR(x)-1, *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = px[gl[i]];
         break;
       }
@@ -170,13 +170,13 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
   }
 }
 
-SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
+SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm) {
   int *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm);
   if(ng == 0 || narm) {
     pgl = &ng; // TO avoid Wmaybe uninitialized
     return ffirst_impl(x, ng, g, narm, pgl);
   }
-
+  if(length(gst) != ng) {
   // Using C-Array -> Not a good idea, variable length arrays give note on gcc11
   SEXP gl = PROTECT(allocVector(INTSXP, ng));
   int *pg = INTEGER(g), lg = length(g);
@@ -184,7 +184,7 @@ SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
   for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
   --pgl; // &gl[0]-1 Or gl-1; // Pointer to -1 array element (since g starts from 1): https://beginnersbook.com/2014/01/c-pointer-to-array-example/
          // Above gives gcc11 issue !! (works with R INTEGER() pointer, not plain C array)
-  for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
+  for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i+1;
 
   //  SEXP gl = PROTECT(allocVector(INTSXP, ng));
   //  memset(gl, 0, sizeof(int)*ng); //
@@ -202,19 +202,22 @@ SEXP ffirstC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
   SEXP res = ffirst_impl(x, ng, g, narm, ++pgl);
   UNPROTECT(1);
   return res;
+  } else return ffirst_impl(x, ng, g, narm, INTEGER(gst));
 }
 
-SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
+SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm) {
   int l = length(x), *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm), nprotect = 1;
   if(ng > 0 && !narm) {
+    if(length(gst) != ng) {
     // Cant use integer array here because apparently it is removed by the garbage collector when passed to a new function
     SEXP gl = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
     int *pg = INTEGER(g), lg = length(g); // gl[ng],
     pgl = INTEGER(gl); // pgl = &gl[0];
     for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
     --pgl;
-    for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
+    for(int i = 0; i != lg; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i+1;
     ++pgl;
+    } else pgl = INTEGER(gst);
   } else pgl = &l; // To avoid Wmaybe uninitialized..
   // return ffirst_impl(VECTOR_ELT(x, 0), ng, g, narm, pgl);
   SEXP out = PROTECT(allocVector(VECSXP, l));
@@ -226,7 +229,7 @@ SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
 }
 
 // For matrix writing a separate function to increase efficiency.
-SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
+SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), ng = asInteger(Rng), narm = asLogical(Rnarm),
@@ -297,6 +300,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
     UNPROTECT(1);
     return out;
   } else { // with groups
+    int nprotect = 1;
     if(length(g) != l) error("length(g) must match nrow(X)");
     SEXP out = PROTECT(allocVector(tx, ng * col));
     int *pg = INTEGER(g);
@@ -346,16 +350,19 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       default: error("Unsupported SEXP type!");
       }
     } else {
-      SEXP gl = PROTECT(allocVector(INTSXP, ng));
+      int *pgl;
+      if(length(gst) != ng) {
+      SEXP gl = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
       // int gl[ng], *pgl; pgl = &gl[0];
-      int *pgl = INTEGER(gl);
+      pgl = INTEGER(gl);
       for(int i = ng; i--; ) pgl[i] = NA_INTEGER;
       --pgl; // gcc11 issue with plain array
-      for(int i = 0; i != l; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i;
+      for(int i = 0; i != l; ++i) if(pgl[pg[i]] == NA_INTEGER) pgl[pg[i]] = i+1;
       ++pgl;
+      } else pgl = INTEGER(gst);
       switch(tx) {
       case REALSXP: {
-        double *px = REAL(x), *pout = REAL(out);
+        double *px = REAL(x)-1, *pout = REAL(out);
         for(int j = 0; j != col; ++j) {
           for(int i = ng; i--; ) pout[i] = px[pgl[i]];
           px += l; pout += ng;
@@ -364,7 +371,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       }
       case INTSXP:
       case LGLSXP: {
-        int *px = INTEGER(x), *pout = INTEGER(out);
+        int *px = INTEGER(x)-1, *pout = INTEGER(out);
         for(int j = 0; j != col; ++j) {
           for(int i = ng; i--; ) pout[i] = px[pgl[i]];
           px += l; pout += ng;
@@ -373,7 +380,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       }
       case STRSXP:
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        SEXP *px = SEXPPTR(x)-1, *pout = SEXPPTR(out);
         for(int j = 0; j != col; ++j) {
           for(int i = ng; i--; ) pout[i] = px[pgl[i]];
           px += l; pout += ng;
@@ -382,10 +389,9 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       }
       default: error("Unsupported SEXP type!");
       }
-      UNPROTECT(1);
     }
     matCopyAttr(out, x, Rdrop, ng);
-    UNPROTECT(1);
+    UNPROTECT(nprotect);
     return out;
   }
 }

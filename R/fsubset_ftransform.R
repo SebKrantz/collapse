@@ -293,7 +293,8 @@ acr_get_cols <- function(.cols, d, nam, ce) {
   cols <- eval(.cols, nl, ce)
   # Needed for programming usage, because you can pass a variable that is null
   if(is.null(cols)) return(if(is.null(d[[".g_"]])) seq_along(nam) else seq_along(nam)[nam %!in% c(".g_", ".gsplit_", d[[".g_"]]$group.vars)])
-  return(cols2int(cols, d, nam)) # if(is.integer(cols)) cols else (you are checking against length(cols) in setup_across)
+  return(if(is.logical(cols)) which(cols) else cols2int(cols, d, nam)) # if .g_ etc. is added to data, length check for logical vectors will fail.
+  # if(is.integer(cols)) cols else (you are checking against length(cols) in setup_across)
 }
 
 # TODO: Implement for collap() ??
@@ -608,7 +609,7 @@ fmutate <- function(.data, ..., .keep = "all") {
         } else {
           r <- do_grouped_expr(ei, eiv, .data, g, pe)
           .data[[nam[i]]] <- if(length(r) == g[[1L]])
-               .Call(C_subsetVector, r, g[[2L]], FALSE) else # .Call(Cpp_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
+               .Call(C_subsetVector, r, g[[2L]], FALSE) else # .Call(C_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
                greorder(r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
         }
       }

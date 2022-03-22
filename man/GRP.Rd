@@ -155,22 +155,23 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped dat
 }
 \value{
   A list-like object of class `GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered or not and the ordering vector used to perform the ordering. The object is structured as follows:
-  \tabular{lllllll}{\emph{ List-index }  \tab\tab \emph{ Element-name }   \tab\tab \emph{ Content type } \tab\tab \emph{ Content description} \cr
+  \tabular{lllllll}{\emph{ List-index }  \tab\tab \emph{ Element-name }   \tab\tab \emph{ Content type } \tab\tab \emph{ Content description} \cr\cr
 
-                 [[1]] \tab\tab N.groups   \tab\tab \code{integer(1)} \tab\tab Number of Groups \cr
+                 [[1]] \tab\tab N.groups   \tab\tab \code{integer(1)} \tab\tab Number of Groups \cr\cr
 
-                 [[2]] \tab\tab group.id \tab\tab \code{integer(NROW(X))} \tab\tab An integer group-identifier \cr
+                 [[2]] \tab\tab group.id \tab\tab \code{integer(NROW(X))} \tab\tab An integer group-identifier \cr\cr
 
-                 [[3]] \tab\tab group.sizes    \tab\tab \code{integer(N.groups)} \tab\tab Vector of group sizes \cr
+                 [[3]] \tab\tab group.sizes    \tab\tab \code{integer(N.groups)} \tab\tab Vector of group sizes \cr\cr
 
-                 [[4]] \tab\tab groups    \tab\tab \code{unique(X)} or \code{NULL} \tab\tab Unique groups (same format as input, except for \code{fgroup_by} which uses a plain list, sorted if \code{sort = TRUE}), or \code{NULL} if \code{return.groups = FALSE} \cr
+                 [[4]] \tab\tab groups    \tab\tab \code{unique(X)} or \code{NULL} \tab\tab Unique groups (same format as input, except for \code{fgroup_by} which uses a plain list, sorted if \code{sort = TRUE}), or \code{NULL} if \code{return.groups = FALSE} \cr\cr
 
-                 [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr
-                 [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted \cr
+                 [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr\cr
+                 [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted. If \code{sort = FALSE} the second entry is \code{NA}. \cr\cr
 
-                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{integer(0)} (with attributes), or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} or \code{group} (with \code{"starts"} attribute) or \code{NULL} if \code{return.order = FALSE} \cr
+                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} (with \code{"starts"} attribute), or \code{NULL} if \code{return.order = FALSE} \cr\cr
+                 [[8]] \tab\tab group.starts \tab\tab \code{integer(N.groups)} or \code{NULL} \tab\tab The first-occurrence positions/rows of the groups. Useful e.g. with \code{ffirst(x, g, na.rm = FALSE)}. \code{NULL} if \code{return.groups = FALSE}. \cr\cr
 
-                 [[8]] \tab\tab call \tab\tab \code{match.call()} or \code{NULL} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}, or \code{NULL} if \code{call = FALSE}
+                 [[9]] \tab\tab call \tab\tab \code{match.call()} or \code{NULL} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}, or \code{NULL} if \code{call = FALSE}
                  }
 }
 \seealso{

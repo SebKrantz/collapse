@@ -1,3 +1,42 @@
+# collapse 1.8.0.9000
+
+*collapse* 1.8.0, to be released end of March / early April 2022, sets a modest start to OpenMP multithreading, brings increased support for data transformation by reference, and enhances the packages descriptive statistics toolset. 
+
+### Changes to functionality
+
+* *Fast Sttatistical Functions* operating on numeric data (such as `fmean`, `fmedian`, `fsum`, `fmin`, `fmax`, ...) now preserve attributes in more cases. Previously these functions did not preserve attributes for simple computations using the default method, and only preserved attributes in grouped computations if `!is.object(x)` (see NEWS section for collapse 1.4.0). This meant that `fmin` and `fmax` did not preserve the attributes of Date or POSIXct objects, and none of these function preserved 'units' objects (used a lot by the *sf* package). Now, attributes are preserved if `!inherits(x, "ts")`, that is the new default of these functions is to generally keep attributes, except for 'ts' objects where doing so obviously causes an unwanted error (note that 'xts' and others are handled by the matrix or data.frame method where other principles apply, see NEWS for 1.4.0). An exception are the functions `fnobs` and `fndistinct` where the previous default is kept. 
+
+### Bug Fixes
+
+* Fixed a bug in `fcumsum` that caused a segfault during grouped operations on larger data, due to flawed internal memory allocation. Thanks @Gulde91 for reporting #237. 
+
+* Fixed a bug in `across` caused by two `function(x)` statements being passed in a list e.g. `mtcars |> fsummarise(acr(mpg, list(ssdd = function(x) sd(x), mu = function(x) mean(x))))`. Thanks @trang1618 for reporting #233. 
+
+* Fixed an issue in `across()` when locial vectors were used to select column on grouped data e.g. `mtcars %>% gby(vs, am) %>% smr(acr(startsWith(names(.), "c"), fmean))` now works without error. 
+
+### Additions
+
+* Added function `qtable`: A versatile and computationally more efficient alternative to `base::table`. Notably, it also supports tabulations with frequency weights, and computation of a statistic over combinations of variables. Objects are of class 'qtable' that inherits from 'table'. Thus all 'table' methods apply to it.
+
+* `TRA` was rewritten in C, and now has an additional argument `set = TRUE` which toggles data transformation by reference. The function `setTRA` was added as a shortcut which additionally returns the result invisibly. Since `TRA` is usually accessed internally through the like-named argument to *Fast Statistical Functions*, passing `set = TRUE` to those functions yields an internal call to `setTRA`. For example `fmedian(num_vars(iris), g = iris$Species, TRA = "-", set = TRUE)` subtracts the species-wise median from the numeric variables in the iris dataset, modifying the data in place and returning the result invisibly. Similarly the argument can be added in other workflows such as `iris |> fgroup_by(Species) |> fmutate(across(1:2, fmedian, set = TRUE))` or  `mtcars |> ftransform(mpg = mpg %+=% hp, wt = fsd(wt, cyl, TRA = "replace_fill", set = TRUE))`.
+
+### Improvements
+
+* OpenMP multithreading in `fsum` and `fmean`, implemented via an additional `nthreads` argument. The default is to use 1 thread, which internally calls a serial version of the code (thus no change in the default behavior. The plan is to slowly roll this out over all statistical functions and then introduce options to set alternative global defaults. See `?fsum` for details).
+
+* `TRA` has an additional option `"replace_NA"`, e.g. `wlddev |> fgroup_by(iso3c) |> fmutate(across(PCGDP:POP, fmedian, TRA = "replace_NA"))` performs median value imputation of missing values. Similarly for a matrix `X <- matrix(na_insert(rnorm(1e7)), ncol = 100)`, `fmean(X, TRA = "replace_NA", set = TRUE, nthreads = 4)` (column-wise multi-threaded mean imputation by reference).
+
+* `fprod` was rewritten in C, providing a slightly faster internal method for integers. 
+
+* 'GRP' objects now also contain a 'group.starts' item in the 8'th slot that gives the first positions of the unique groups, and is returned alongside the groups whenever `return.groups = TRUE`. This now benefits `ffirst` when invoked with `na.rm = FALSE`, e.g. `wlddev %>% fgroup_by(country) %>% ffirst(na.rm = FALSE)` is now just as efficient as `funique(wlddev, cols = "country")`. Note that no additional computing cost is incurred by preserving the 'group.starts' information. 
+
+* `descr()` received some performance improvements (up to 2x for categorical data), and has an additional argument `sort.table`, allowing frequency tables for categorical variables to be sorted by frequency (`"freq"`) or by table values (`"value"`). The new default is (`"freq"`), which presents tables in decreading order of frequency. The print method was also enhanced, and by default now prints 14 values with the highest frequency and groups the remaining values into a single `... %s Others` category. Furthermore, if there are any missing values in the column, the percentage of values missing is now printed behind `Statistics: `. An additional `reverse` argument to the print method allows for reverse printing of `descr()` output.  
+
+* `whichv` (and operators `%==%`, `%!=%`) now also support comparisons of equal-length arguments e.g. `1:3 %==% 1:3`. Note that this should not be used to compare 2 factors. 
+
+* Small improvements to `group()` algorithm, avoiding some cases where the hash function performed badly, particularly with integers. 
+
+
 # collapse 1.7.6
 
 * Corrected a C-level bug in `gsplit` that could lead R to crash in some instances (`gsplit` is used internally in `fsummarise`, `fmutate`, `BY` and `collap` to perform computations with base R (non-optimized) functions). 

@@ -17,6 +17,7 @@ SEXP dupVecIndex(SEXP x) {
   size_t M;
   if(n >= INT_MAX) error("Length of 'x' is too large. (Long vector not supported yet)"); // 1073741824
   if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP ) {
+    bigint:;
     const size_t n2 = 2U * (size_t) n;
     M = 256;
     K = 8;
@@ -28,7 +29,11 @@ SEXP dupVecIndex(SEXP x) {
     if(isFactor(x)) {
       tx = 1000;
       M = (size_t)nlevels(x) + 2;
-    } else M = (size_t)n;
+    } else {
+      int *p = INTEGER(x);
+      if(n > 10 && (NOGE(p[0], n) || NOGE(p[n/2], n) || NOGE(p[n-1], n))) goto bigint;
+      M = (size_t)n;
+    }
   } else if (tx == LGLSXP) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
@@ -48,24 +53,40 @@ SEXP dupVecIndex(SEXP x) {
       else pans_i[i] = h[j] = ++g;
     }
   } break;
-  case INTSXP: { // Faster version based on division hash...
+  case INTSXP: {
     const int *px = INTEGER(x);
-    unsigned int iid = 0, nu = (unsigned)n;
-    for (int i = 0; i != n; ++i) {
-      iid = (unsigned)px[i];
-      if(iid >= nu) iid %= nu;
-      // iid = (xi < nu) ? xi : xi % nu; // HASH(px[i], K); // get the hash value of x[i]
-      while(h[iid]) { // Check if this hash value has been seen before
-        if(px[h[iid]-1] == px[i]) { // Get the element of x that produced his value. if x[i] is the same, assign it the same index.
-          pans_i[i] = pans_i[h[iid]-1]; // h[id];
-          goto ibl;
-        } // else, we move forward to the next slot, until we find an empty one... We need to keep checking against the values,
-          // because if we found the same value before, we would also have put it in another slot after the initial one with the same hash value.
-        if(++iid >= nu) iid %= nu; // # nocov
-      } // We put the index into the empty slot.
-      h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
-      pans_i[i] = ++g; // h[id];
-      ibl:;
+    if(M == (size_t)n) { // Faster version based on division hash...
+      unsigned int iid = 0, nu = (unsigned)n;
+      for (int i = 0; i != n; ++i) {
+        iid = (unsigned)px[i];
+        if(iid >= nu) iid %= nu;
+        // iid = (xi < nu) ? xi : xi % nu; // HASH(px[i], K); // get the hash value of x[i]
+        while(h[iid]) { // Check if this hash value has been seen before
+          if(px[h[iid]-1] == px[i]) { // Get the element of x that produced his value. if x[i] is the same, assign it the same index.
+            pans_i[i] = pans_i[h[iid]-1]; // h[id];
+            goto ibl;
+          } // else, we move forward to the next slot, until we find an empty one... We need to keep checking against the values,
+            // because if we found the same value before, we would also have put it in another slot after the initial one with the same hash value.
+          if(++iid >= nu) iid %= nu; // # nocov
+        } // We put the index into the empty slot.
+        h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
+        pans_i[i] = ++g; // h[id];
+        ibl:;
+      }
+    } else {
+      for (int i = 0; i != n; ++i) {
+        id = HASH(px[i], K);
+        while(h[id]) {
+          if(px[h[id]-1] == px[i]) {
+            pans_i[i] = pans_i[h[id]-1]; // h[id];
+            goto ibbl;
+          }
+          if(++id >= M) id %= M;
+        }
+        h[id] = i + 1;
+        pans_i[i] = ++g; // h[id];
+        ibbl:;
+      }
     }
   } break;
   case REALSXP: {
@@ -146,6 +167,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
   size_t M;
   if(n >= INT_MAX) error("Length of 'x' is too large. (Long vector not supported yet)"); // 1073741824
   if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP ) {
+    bigint:;
     const size_t n2 = 2U * (size_t) n;
     M = 256;
     K = 8;
@@ -157,7 +179,11 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     if(isFactor(x)) {
       tx = 1000;
       M = (size_t)nlevels(x) + 2;
-    } else M = (size_t)n;
+    } else {
+      int *p = INTEGER(x);
+      if(n > 10 && (NOGE(p[0], n) || NOGE(p[n/2], n) || NOGE(p[n-1], n))) goto bigint;
+      M = (size_t)n;
+    }
   } else if (tx == LGLSXP) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
@@ -181,27 +207,47 @@ SEXP dupVecIndexKeepNA(SEXP x) {
       else pans_i[i] = h[j] = ++g;
     }
   } break;
-  case INTSXP: { // Faster version based on division hash...
+  case INTSXP: {
     const int *px = INTEGER(x);
-    unsigned int iid = 0, nu = (unsigned)n;
-    for (int i = 0; i != n; ++i) {
-      if(px[i] == NA_INTEGER) {
-        pans_i[i] = NA_INTEGER;
-        continue;
+    if(M == (size_t)n) { // Faster version based on division hash...
+      unsigned int iid = 0, nu = (unsigned)n;
+      for (int i = 0; i != n; ++i) {
+        if(px[i] == NA_INTEGER) {
+          pans_i[i] = NA_INTEGER;
+          continue;
+        }
+        iid = (unsigned)px[i];
+        if(iid >= nu) iid %= nu; // iid = (px[i] < n) ? px[i] : px[i] % n; // HASH(px[i], K); // get the hash value of x[i]
+        while(h[iid]) { // Check if this hash value has been seen before
+          if(px[h[iid]-1] == px[i]) { // Get the element of x that produced his value. if x[i] is the same, assign it the same index.
+            pans_i[i] = pans_i[h[iid]-1]; // h[id];
+            goto ibl;
+          } // else, we move forward to the next slot, until we find an empty one... We need to keep checking against the values,
+          // because if we found the same value before, we would also have put it in another slot after the initial one with the same hash value.
+          if(++id >= nu) id %= nu; // ++iid; iid %= nu; // # nocov
+        } // We put the index into the empty slot.
+        h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
+        pans_i[i] = ++g; // h[id];
+        ibl:;
       }
-      iid = (unsigned)px[i];
-      if(iid >= nu) iid %= nu; // iid = (px[i] < n) ? px[i] : px[i] % n; // HASH(px[i], K); // get the hash value of x[i]
-      while(h[iid]) { // Check if this hash value has been seen before
-        if(px[h[iid]-1] == px[i]) { // Get the element of x that produced his value. if x[i] is the same, assign it the same index.
-          pans_i[i] = pans_i[h[iid]-1]; // h[id];
-          goto ibl;
-        } // else, we move forward to the next slot, until we find an empty one... We need to keep checking against the values,
-        // because if we found the same value before, we would also have put it in another slot after the initial one with the same hash value.
-        if(++id >= nu) id %= nu; // ++iid; iid %= nu; // # nocov
-      } // We put the index into the empty slot.
-      h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
-      pans_i[i] = ++g; // h[id];
-      ibl:;
+    } else {
+      for (int i = 0; i != n; ++i) {
+        if(px[i] == NA_INTEGER) {
+          pans_i[i] = NA_INTEGER;
+          continue;
+        }
+        id = HASH(px[i], K);
+        while(h[id]) {
+          if(px[h[id]-1] == px[i]) {
+            pans_i[i] = pans_i[h[id]-1]; // h[id];
+            goto ibbl;
+          }
+          if(++id >= M) id %= M; // ++id; id %= M;
+        }
+        h[id] = i + 1;
+        pans_i[i] = ++g; // h[id];
+        ibbl:;
+      }
     }
   } break;
   case REALSXP: {

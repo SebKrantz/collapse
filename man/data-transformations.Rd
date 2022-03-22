@@ -13,11 +13,12 @@
 \item A set of arithmetic operators facilitates \bold{row-wise} \code{\link{\%rr\%}}, \code{\link{\%r+\%}}, \code{\link{\%r-\%}}, \code{\link{\%r*\%}}, \code{\link{\%r/\%}} and
 \bold{column-wise} \code{\link{\%cr\%}}, \code{\link{\%c+\%}}, \code{\link{\%c-\%}}, \code{\link{\%c*\%}}, \code{\link{\%c/\%}} \bold{replacing and sweeping operations} involving a vector and a matrix or data frame / list. Since v1.7, the operators \code{\link{\%+=\%}}, \code{\link{\%-=\%}}, \code{\link{\%*=\%}} and \code{\link{\%/=\%}} do column- and element- wise math by reference, and the function \code{\link{setop}} can also perform sweeping out rows by reference.
 
-\item \code{\link{TRA}} is a more advanced S3 generic to efficiently perform \bold{(groupwise) replacing and sweeping out of statistics}. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
+\item \code{\link[=TRA]{(set)TRA}} is a more advanced S3 generic to efficiently perform \bold{(groupwise) replacing and sweeping out of statistics}, either by creating a copy of the data or by reference. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
 Supported operations are:
   \tabular{lllll}{\emph{ Integer-id }  \tab\tab \emph{ String-id }  \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
-                 1 \tab\tab "replace_fill"   \tab\tab replace and overwrite missing values \cr
-                 2 \tab\tab "replace" \tab\tab replace but preserve missing values \cr
+                 0 \tab\tab "replace_NA"   \tab\tab replace missing values \cr
+                 1 \tab\tab "replace_fill"   \tab\tab replace everything \cr
+                 2 \tab\tab "replace" \tab\tab replace data but preserve missing values \cr
                  3 \tab\tab "-"   \tab\tab subtract \cr
                  4 \tab\tab "-+"  \tab\tab subtract group-statistics but add group-frequency weighted average of group statistics \cr
                  5 \tab\tab "/"   \tab\tab divide \cr
@@ -34,11 +35,11 @@ All of \emph{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Fun
 
 \item \code{\link[=fwithin]{fwithin/W}} is an S3 generic to efficiently perform (groupwise and / or weighted) \bold{within-transformations / demeaning / centering} of data. Similarly \code{\link[=fbetween]{fbetween/B}} computes (groupwise and / or weighted) \bold{between-transformations / averages} (also a lot faster than \code{\link{ave}}).
 
-\item \code{\link[=HDW]{fhdwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups and partial-out linear models} (possibly involving many levels of fixed effects). In other words, \code{\link[=HDW]{fhdwithin/HDW}} efficiently computes \bold{residuals} from (potentially complex) linear models. Similarly \code{\link[=HDB]{fhdbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
+\item \code{\link[=HDW]{fhdwithin/HDW}}, shorthand for 'higher-dimensional within transform', is an S3 generic to efficiently \bold{center data on multiple groups and partial-out linear models} (possibly involving many levels of fixed effects and interactions). In other words, \code{\link[=HDW]{fhdwithin/HDW}} efficiently computes \bold{residuals} from linear models. Similarly \code{\link[=HDB]{fhdbetween/HDB}}, shorthand for 'higher-dimensional between transformation', computes the corresponding means or \bold{fitted values}.
 
 %\item \code{flm} is an efficient function for bare-bones (weighted) \bold{linear model fitting}. It supports 6 different fitting methods, 4 from base R, and 2 utilizing the \emph{RcppArmadillo} or \emph{RcppEigen} packages.
 
-\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated (quasi-, log-) \bold{differences} and \bold{growth rates} on time series and panel data. \code{\link{fcumsum}} flexibly computes cumulative sums. More in \link[=time-series-panel-series]{Time Series and Panel Series}.
+\item \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are S3 generics to compute sequences of \bold{lags / leads} and suitably lagged and iterated (quasi-, log-) \bold{differences} and \bold{growth rates} on time series and panel data. \code{\link{fcumsum}} flexibly computes (grouped, ordered) cumulative sums. More in \link[=time-series-panel-series]{Time Series and Panel Series}.
 
 \item \code{STD, W, B, HDW, HDB, L, D, Dlog} and \code{G} are parsimonious wrappers around the \code{f-} functions above representing the corresponding transformation 'operators'. They have additional capabilities when applied to data-frames (i.e. variable selection, formula input, auto-renaming and id-variable preservation), and are easier to employ in regression formulas, but are otherwise identical in functionality.
 }
@@ -48,7 +49,7 @@ All of \emph{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Fun
   \code{\link{dapply}} \tab\tab No methods, works with matrices and data frames \tab\tab Apply functions to rows or columns \cr
   \code{\link{BY}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Split-Apply-Combine computing \cr
   \code{\link[=arithmetic]{\%(r/c)(r/+/-/*//)\%}} \tab\tab No methods, works with matrices and data frames / lists \tab\tab Row- and column-arithmetic \cr
-  \code{\link{TRA}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Replace and sweep out statistics \cr
+  \code{\link[=TRA]{(set)TRA}} \tab\tab \code{default, matrix, data.frame, grouped_df} \tab\tab Replace and sweep out statistics (by reference) \cr
   \code{\link[=fscale]{fscale/STD}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab\tab Scale / standardize data \cr
   \code{\link[=fwithin]{fwithin/W}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Demean / center data \cr
   \code{\link[=fbetween]{fbetween/B}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Compute means / average data \cr

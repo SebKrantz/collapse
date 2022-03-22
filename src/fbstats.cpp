@@ -16,6 +16,14 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
 
    if(!ext) {
     if(ng == 0) { // No groups
+      if(l == 1) { // need this so that qsu(1) works properly
+        NumericVector result = NumericVector::create(1,x[0],NA_REAL,x[0],x[0]);
+        if(setn) {
+          Rf_namesgets(result, CharacterVector::create("N","Mean","SD","Min","Max"));
+          Rf_classgets(result, CharacterVector::create("qsu","table"));
+        }
+        return result;
+      }
       int j = l-1;
       // double n = 0, min = R_PosInf, max = R_NegInf;
       // long double mean = 0, d1 = 0, M2 = 0;

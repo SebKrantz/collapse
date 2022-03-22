@@ -1,0 +1,130 @@
+context("qtable")
+
+set.seed(101)
+wldNA <- na_insert(wlddev)
+
+qtab <- function(...) {
+  r <- qtable(...)
+  oldClass(r) <- "table"
+  attr(r, "sorted") <- NULL
+  attr(r, "weighted") <- NULL
+  r
+}
+
+ones <- alloc(1L, fnrow(wlddev))
+
+attach(wlddev)
+
+expect_equal(table(region, income), qtab(region, income))
+expect_equal(table(income, region), qtab(income, region))
+expect_equal(table(region, income, OECD), qtab(region, income, OECD))
+expect_equal(table(decade, region, income, OECD), qtab(decade, region, income, OECD))
+expect_equal(table(decade, country), qtab(decade, country))
+expect_equal(table(iso3c, country), qtab(iso3c, country))
+expect_equal(table(iso3c, decade), qtab(iso3c, decade))
+expect_equal(table(iso3c, OECD), qtab(iso3c, OECD))
+
+expect_equal(table(region, income), qtab(region, income, w = ones))
+expect_equal(table(income, region), qtab(income, region, w = ones))
+expect_equal(table(region, income, OECD), qtab(region, income, OECD, w = ones))
+expect_equal(table(decade, region, income, OECD), qtab(decade, region, income, OECD, w = ones))
+expect_equal(table(decade, country), qtab(decade, country, w = ones))
+expect_equal(table(iso3c, country), qtab(iso3c, country, w = ones))
+expect_equal(table(iso3c, decade), qtab(iso3c, decade, w = ones))
+expect_equal(table(iso3c, OECD), qtab(iso3c, OECD, w = ones))
+
+expect_equal(qtab(region, income, w = ones), qtab(region, income, w = ones, wFUN = sum))
+expect_equal(qtab(income, region, w = ones), qtab(income, region, w = ones, wFUN = sum))
+expect_equal(qtab(region, income, OECD, w = ones), qtab(region, income, OECD, w = ones, wFUN = sum))
+expect_equal(qtab(decade, region, income, OECD, w = ones), qtab(decade, region, income, OECD, w = ones, wFUN = sum))
+expect_equal(qtab(decade, country, w = ones), qtab(decade, country, w = ones, wFUN = sum))
+expect_equal(qtab(iso3c, country, w = ones), qtab(iso3c, country, w = ones, wFUN = sum))
+expect_equal(qtab(iso3c, decade, w = ones), qtab(iso3c, decade, w = ones, wFUN = sum))
+expect_equal(qtab(iso3c, OECD, w = ones), qtab(iso3c, OECD, w = ones, wFUN = sum))
+
+expect_equal(qtab(region, income, w = ones),  replace_NA(qtab(region, income, w = ones, wFUN = fsum)))
+expect_equal(qtab(income, region, w = ones), replace_NA(qtab(income, region, w = ones, wFUN = fsum)))
+expect_equal(qtab(region, income, OECD, w = ones), replace_NA(qtab(region, income, OECD, w = ones, wFUN = fsum)))
+expect_equal(qtab(decade, region, income, OECD, w = ones), replace_NA(qtab(decade, region, income, OECD, w = ones, wFUN = fsum)))
+expect_equal(qtab(decade, country, w = ones), replace_NA(qtab(decade, country, w = ones, wFUN = fsum)))
+expect_equal(qtab(iso3c, country, w = ones), replace_NA(qtab(iso3c, country, w = ones, wFUN = fsum)))
+expect_equal(qtab(iso3c, decade, w = ones), replace_NA(qtab(iso3c, decade, w = ones, wFUN = fsum)))
+expect_equal(qtab(iso3c, OECD, w = ones), replace_NA(qtab(iso3c, OECD, w = ones, wFUN = fsum)))
+
+detach(wlddev)
+
+attach(wldNA)
+
+expect_equal(table(region, income), qtab(region, income))
+expect_equal(table(income, region), qtab(income, region))
+expect_equal(table(region, income, OECD), qtab(region, income, OECD))
+expect_equal(table(decade, region, income, OECD), qtab(decade, region, income, OECD))
+expect_equal(table(decade, country), qtab(decade, country))
+expect_equal(table(iso3c, country), qtab(iso3c, country))
+expect_equal(table(iso3c, decade), qtab(iso3c, decade))
+expect_equal(table(iso3c, OECD), qtab(iso3c, OECD))
+
+expect_equal(table(region, income), qtab(region, income, w = ones))
+expect_equal(table(income, region), qtab(income, region, w = ones))
+expect_equal(table(region, income, OECD), qtab(region, income, OECD, w = ones))
+expect_equal(table(decade, region, income, OECD), qtab(decade, region, income, OECD, w = ones))
+expect_equal(table(decade, country), qtab(decade, country, w = ones))
+expect_equal(table(iso3c, country), qtab(iso3c, country, w = ones))
+expect_equal(table(iso3c, decade), qtab(iso3c, decade, w = ones))
+expect_equal(table(iso3c, OECD), qtab(iso3c, OECD, w = ones))
+
+expect_equal(qtab(region, income, w = ones), qtab(region, income, w = ones, wFUN = sum))
+expect_equal(qtab(income, region, w = ones), qtab(income, region, w = ones, wFUN = sum))
+expect_equal(qtab(region, income, OECD, w = ones), qtab(region, income, OECD, w = ones, wFUN = sum))
+expect_equal(qtab(decade, region, income, OECD, w = ones), qtab(decade, region, income, OECD, w = ones, wFUN = sum))
+expect_equal(qtab(decade, country, w = ones), qtab(decade, country, w = ones, wFUN = sum))
+expect_equal(qtab(iso3c, country, w = ones), qtab(iso3c, country, w = ones, wFUN = sum))
+expect_equal(qtab(iso3c, decade, w = ones), qtab(iso3c, decade, w = ones, wFUN = sum))
+expect_equal(qtab(iso3c, OECD, w = ones), qtab(iso3c, OECD, w = ones, wFUN = sum))
+
+expect_equal(qtab(region, income, w = ones),  replace_NA(qtab(region, income, w = ones, wFUN = fsum)))
+expect_equal(qtab(income, region, w = ones), replace_NA(qtab(income, region, w = ones, wFUN = fsum)))
+expect_equal(qtab(region, income, OECD, w = ones), replace_NA(qtab(region, income, OECD, w = ones, wFUN = fsum)))
+expect_equal(qtab(decade, region, income, OECD, w = ones), replace_NA(qtab(decade, region, income, OECD, w = ones, wFUN = fsum)))
+expect_equal(qtab(decade, country, w = ones), replace_NA(qtab(decade, country, w = ones, wFUN = fsum)))
+expect_equal(qtab(iso3c, country, w = ones), replace_NA(qtab(iso3c, country, w = ones, wFUN = fsum)))
+expect_equal(qtab(iso3c, decade, w = ones), replace_NA(qtab(iso3c, decade, w = ones, wFUN = fsum)))
+expect_equal(qtab(iso3c, OECD, w = ones), replace_NA(qtab(iso3c, OECD, w = ones, wFUN = fsum)))
+
+expect_equal(table(region, income, useNA = "ifany"), qtab(region, income, na.exclude = FALSE))
+expect_equal(table(income, region, useNA = "ifany"), qtab(income, region, na.exclude = FALSE))
+expect_equal(table(region, income, OECD, useNA = "ifany"), qtab(region, income, OECD, na.exclude = FALSE))
+expect_equal(table(decade, region, income, OECD, useNA = "ifany"), qtab(decade, region, income, OECD, na.exclude = FALSE))
+expect_equal(table(decade, country, useNA = "ifany"), qtab(decade, country, na.exclude = FALSE))
+expect_equal(table(iso3c, country, useNA = "ifany"), qtab(iso3c, country, na.exclude = FALSE))
+expect_equal(table(iso3c, decade, useNA = "ifany"), qtab(iso3c, decade, na.exclude = FALSE))
+expect_equal(table(iso3c, OECD, useNA = "ifany"), qtab(iso3c, OECD, na.exclude = FALSE))
+
+expect_equal(table(region, income, useNA = "ifany"), qtab(region, income, w = ones, na.exclude = FALSE))
+expect_equal(table(income, region, useNA = "ifany"), qtab(income, region, w = ones, na.exclude = FALSE))
+expect_equal(table(region, income, OECD, useNA = "ifany"), qtab(region, income, OECD, w = ones, na.exclude = FALSE))
+expect_equal(table(decade, region, income, OECD, useNA = "ifany"), qtab(decade, region, income, OECD, w = ones, na.exclude = FALSE))
+expect_equal(table(decade, country, useNA = "ifany"), qtab(decade, country, w = ones, na.exclude = FALSE))
+expect_equal(table(iso3c, country, useNA = "ifany"), qtab(iso3c, country, w = ones, na.exclude = FALSE))
+expect_equal(table(iso3c, decade, useNA = "ifany"), qtab(iso3c, decade, w = ones, na.exclude = FALSE))
+expect_equal(table(iso3c, OECD, useNA = "ifany"), qtab(iso3c, OECD, w = ones, na.exclude = FALSE))
+
+expect_equal(table(region, income, useNA = "ifany"), qtab(region, income, w = ones, wFUN = sum, na.exclude = FALSE))
+expect_equal(table(income, region, useNA = "ifany"), qtab(income, region, w = ones, wFUN = sum, na.exclude = FALSE))
+expect_equal(table(region, income, OECD, useNA = "ifany"), qtab(region, income, OECD, w = ones, wFUN = sum, na.exclude = FALSE))
+expect_equal(table(decade, region, income, OECD, useNA = "ifany"), qtab(decade, region, income, OECD, w = ones, wFUN = sum, na.exclude = FALSE))
+expect_equal(table(decade, country, useNA = "ifany"), qtab(decade, country, w = ones, wFUN = sum, na.exclude = FALSE))
+expect_equal(table(iso3c, country, useNA = "ifany"), qtab(iso3c, country, w = ones, wFUN = sum, na.exclude = FALSE))
+expect_equal(table(iso3c, decade, useNA = "ifany"), qtab(iso3c, decade, w = ones, wFUN = sum, na.exclude = FALSE))
+expect_equal(table(iso3c, OECD, useNA = "ifany"), qtab(iso3c, OECD, w = ones, wFUN = sum, na.exclude = FALSE))
+
+expect_equal(table(region, income, useNA = "ifany"), replace_NA(qtab(region, income, w = ones, wFUN = fsum, na.exclude = FALSE)))
+expect_equal(table(income, region, useNA = "ifany"), replace_NA(qtab(income, region, w = ones, wFUN = fsum, na.exclude = FALSE)))
+expect_equal(table(region, income, OECD, useNA = "ifany"), replace_NA(qtab(region, income, OECD, w = ones, wFUN = fsum, na.exclude = FALSE)))
+expect_equal(table(decade, region, income, OECD, useNA = "ifany"), replace_NA(qtab(decade, region, income, OECD, w = ones, wFUN = fsum, na.exclude = FALSE)))
+expect_equal(table(decade, country, useNA = "ifany"), replace_NA(qtab(decade, country, w = ones, wFUN = fsum, na.exclude = FALSE)))
+expect_equal(table(iso3c, country, useNA = "ifany"), replace_NA(qtab(iso3c, country, w = ones, wFUN = fsum, na.exclude = FALSE)))
+expect_equal(table(iso3c, decade, useNA = "ifany"), replace_NA(qtab(iso3c, decade, w = ones, wFUN = fsum, na.exclude = FALSE)))
+expect_equal(table(iso3c, OECD, useNA = "ifany"), replace_NA(qtab(iso3c, OECD, w = ones, wFUN = fsum, na.exclude = FALSE)))
+
+detach(wldNA)

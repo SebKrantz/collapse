@@ -30,7 +30,7 @@ The following table fully summarizes the contents of \emph{\link{collapse}}. The
 
 \link[=advanced-aggregation]{Advanced Data Aggregation} \tab\tab Fast and easy (weighted and parallelized) aggregation of multi-type data, with (multiple) functions applied to numeric and categorical columns. Also supports fully customized aggregation tasks mapping functions to columns + renaming. \tab\tab \code{collap(v/g)} \cr \cr \cr
 
-\link[=data-transformations]{Data Transformations} \tab\tab Fast row- and column- arithmetic and (object preserving) apply functionality for vectors, matrices and data frames. Fast (grouped) replacing and sweeping of statistics and (grouped and weighted) scaling / standardizing, (higher-dimensional) within- and between-transformations (i.e. centering and averaging), linear prediction and partialling out. Additional methods for grouped_df (\emph{dplyr}) and pseries, pdata.frame (\emph{plm}). \tab\tab \code{\link[=arithmetic]{\%(r/c)r\%}}, \code{\link[=arithmetic]{\%(r/c)(+/-/*//)\%}}, \code{\link{dapply}}, \code{\link{BY}}, \code{\link{TRA}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=HDB]{fhdbetween/HDB}}, \code{\link[=HDW]{fhdwithin/HDW}} \cr \cr \cr
+\link[=data-transformations]{Data Transformations} \tab\tab Fast row- and column- arithmetic and (object preserving) apply functionality for vectors, matrices and data frames. Fast (grouped) replacing and sweeping of statistics (by reference) and (grouped and weighted) scaling / standardizing, (higher-dimensional) within- and between-transformations (i.e. centering and averaging), linear prediction and partialling out. Additional methods for grouped_df (\emph{dplyr}) and pseries, pdata.frame (\emph{plm}). \tab\tab \code{\link[=arithmetic]{\%(r/c)r\%}}, \code{\link[=arithmetic]{\%(r/c)(+/-/*//)\%}}, \code{\link{dapply}}, \code{\link{BY}}, \code{\link[=TRA]{(set)TRA}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=HDB]{fhdbetween/HDB}}, \code{\link[=HDW]{fhdwithin/HDW}} \cr \cr \cr
 
 Linear Models \tab\tab Fast (weighted) linear model fitting with 6 different solvers and a fast F-test to test exclusion restrictions on linear models with (large) factors. \tab\tab \code{\link{flm}}, \code{\link{fFtest}} \cr \cr \cr
 
@@ -38,7 +38,7 @@ Linear Models \tab\tab Fast (weighted) linear model fitting with 6 different sol
 
 \link[=list-processing]{List Processing} \tab\tab (Recursive) list search and identification, search and extract list-elements / list-subsetting, splitting, list-transpose, apply functions to lists of data frames / data objects, and (fast) generalized recursive row-binding / unlisting in 2-dimensions / to data frame.  \tab\tab \code{\link{is_unlistable}}, \code{\link{ldepth}}, \code{\link{has_elem}}, \code{\link{get_elem}}, \code{\link[=atomic_elem]{atomic_elem(<-)}}, \code{\link[=list_elem]{list_elem(<-)}}, \code{\link{reg_elem}}, \code{\link{irreg_elem}}, \code{\link{rsplit}}, \code{\link{t_list}}, \code{\link{rapply2d}}, \code{\link{unlist2d}} \cr
 
-\link[=summary-statistics]{Summary Statistics} \tab\tab Fast (grouped and weighted), summary statistics for cross-sectional and complex multilevel / panel data. Efficient detailed description of data frame. Fast check of variation in data (within groups / dimensions). (Weighted) pairwise correlations and covariances (with observation count, p-value and pretty printing), pairwise observation count. Some additional methods for grouped_df (\emph{dplyr}) pseries and pdata.frame (\emph{plm}). \tab\tab \code{\link{qsu}}, \code{\link{descr}}, \code{\link{varying}}, \code{\link{pwcor}}, \code{\link{pwcov}}, \code{\link{pwnobs}} \cr \cr \cr \cr
+\link[=summary-statistics]{Summary Statistics} \tab\tab Fast (grouped and weighted), summary statistics for cross-sectional and panel data. Fast (weighted) cross tabulation. Efficient detailed description of data frame. Fast check of variation in data (within groups / dimensions). (Weighted) pairwise correlations and covariances (with obs. and p-value), pairwise observation count. Some additional methods for grouped_df (\emph{dplyr}) pseries and pdata.frame (\emph{plm}). \tab\tab \code{\link{qsu}}, \code{\link{qtable}}, \code{\link{descr}}, \code{\link{varying}}, \code{\link{pwcor}}, \code{\link{pwcov}}, \code{\link{pwnobs}} \cr \cr \cr \cr
 
 %  (within- and between-groups) ww
 
@@ -68,7 +68,7 @@ Data and Global Macros \tab\tab Groningen Growth and Development Centre 10-Secto
 
 \item \code{options("collapse_F_to_FALSE")} can also be called before loading the package to set the lead operator \code{F} in the package to \code{FALSE}, to avoid problems with \code{base::F}.
 
-\item When manipulating \emph{data.table}'s, you can set how many columns \emph{collapse} functions overallocate with \code{option("collapse_DT_alloccol")}. The default is \code{100L}.
+% \item When manipulating \emph{data.table}'s, you can set how many columns \emph{collapse} functions overallocate with \code{option("collapse_DT_alloccol")}. The default is \code{100L}.
 }
 
 }

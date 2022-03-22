@@ -44,7 +44,7 @@ flast(x, \dots)
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
 
 \item{TRA}{an integer or quoted operator indicating the transformation to perform:
-1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
+0 - "replace_NA"     |     1 - "replace_fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}.}
 
 
 \item{na.rm}{logical. \code{TRUE} skips missing values and returns the first / last non-missing value i.e. if the first (1) / last (n) value is \code{NA}, take the second (2) / second-to-last (n-1) value etc..}
@@ -55,11 +55,14 @@ flast(x, \dots)
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
-\item{\dots}{arguments to be passed to or from other methods.}
+\item{\dots}{arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly.}
 
 }
 \value{
 \code{ffirst} returns the first value in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its first value, grouped by \code{g}. Similarly \code{flast} returns the last value in \code{x}, \dots
+}
+\note{
+Both functions are significantly faster if \code{na.rm = FALSE}.
 }
 \seealso{
 \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}

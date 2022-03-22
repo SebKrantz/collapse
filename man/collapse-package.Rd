@@ -98,7 +98,7 @@ To facilitate efficient programming, core S3 methods, grouping and ordering func
 % The package largely avoids non-standard evaluation and exports core methods for maximum programmability.  % Most are S3 generic with methods for common \code{R} objects (vectors, matrices, data frames, \dots) % high computation  %(aggregation and transformations ~10x \emph{data.table} on data <1 Mio obs.).
 
 % Beyond speed, flexibility and parsimony in coding, a central objective of \emph{collapse} is to facilitate advanced / complex operations on data.
-The package is coded both in C and C++ and built with \emph{Rcpp}, but also uses C/C++ functions from \emph{data.table} (grouping, ordering, subsetting, row-binding), \emph{kit} (hash-based grouping), \emph{fixest} (centering on multiple factors), \emph{weights} (weighted pairwise correlations), \emph{stats} (ACF and PACF) and \emph{RcppArmadillo / RcppEigen} (fast linear fitting methods). For the moment \emph{collapse} does not utilize low-level parallelism (such as OpenMP).
+The package is coded both in C and C++ and built with \emph{Rcpp}, but also uses C/C++ functions from \emph{data.table} (grouping, ordering, subsetting, row-binding), \emph{kit} (hash-based grouping), \emph{fixest} (centering on multiple factors), \emph{weights} (weighted pairwise correlations), \emph{stats} (ACF and PACF) and \emph{RcppArmadillo / RcppEigen} (fast linear fitting methods). % For the moment \emph{collapse} does not utilize low-level parallelism (such as OpenMP).
 % \emph{collapse} is built with \code{Rcpp} and imports \code{C} functions from \emph{data.table}, \emph{lfe} and \emph{stats}. %, and uses \code{ggplot2} visualizations.
 
 

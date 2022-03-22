@@ -62,8 +62,7 @@ fcumsum.data.frame <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE
   .Call(C_fcumsuml,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
-fcumsum.list <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...)
-  fcumsum.data.frame(x, g, o, na.rm, fill, check.o, ...)
+fcumsum.list <- function(x, ...) fcumsum.data.frame(x, ...)
 
 fcumsum.pdata.frame <- function(x, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
