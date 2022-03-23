@@ -5,8 +5,6 @@
 
 #include "kit.h"
 
-// TODO: Check if division hash is not faster, or use Rcpp IndexHash
-// TODO: Option to Preserva NA's ?
 
 // ****************************************
 // This function groups a single vector
@@ -38,7 +36,6 @@ SEXP dupVecIndex(SEXP x) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
   int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
-  // memset(h, 0, M * sizeof(int)); // not needed??
   SEXP ans_i = PROTECT(allocVector(INTSXP, n));
   int *pans_i = INTEGER(ans_i);
   size_t id = 0, g = 0;
@@ -188,7 +185,6 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
   int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
-  // memset(h, 0, M * sizeof(int)); // not needed??
   SEXP ans_i = PROTECT(allocVector(INTSXP, n));
   int *pans_i = INTEGER(ans_i);
   size_t id = 0, g = 0;
@@ -328,10 +324,8 @@ SEXP dupVecIndexKeepNA(SEXP x) {
   return ans_i;
 }
 
-// TODO: Only one M calculation
+// TODO: Only one M calculation ?
 // Think: If in the second grouping variable all entries are the same, you loop through the whole table for each value..
-// TODO: Speed up for real values, i.e. system.time(group(DHSBR[1:2])) and system.time(group(wlddev)) (date), especially repeated real values appear slow !!
-// --> But also integers is slow, i.e. system.time(group(DHSBR[1:2])) when DHSBR[2] is integer.
 
 // **************************************************
 // This function adds a second vector to the grouping
@@ -469,9 +463,6 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
   } break;
   }
   Free(h);
-  // setAttrib(ans_i, sym_ng, ScalarInteger(g));
-  // UNPROTECT(1);
-  // return ans_i;
   return g;
 }
 
