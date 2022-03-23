@@ -57,7 +57,7 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
   int tx = TYPEOF(x), txAG = TYPEOF(xAG), l = length(x), gs = length(g);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg, nog = gs == 1;
+  int *pg = &l, nog = gs == 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
@@ -171,7 +171,7 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
 
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg, nog = gs == 1;
+  int *pg = &l, nog = gs == 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
@@ -336,7 +336,7 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
   int l = length(x), gs = length(g), tx = TYPEOF(x), txAG = TYPEOF(xAG);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg, nog = gs == 1;
+  int *pg = &l, nog = gs == 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
@@ -528,7 +528,7 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
           for(int i = 0; i != l; ++i) pout[i] = px[i] / pAG[pg[i]];           \
           break;                                                              \
         case 6:                                                               \
-          for(int i = 0; i != l; ++i) pout[i] = px[i] * (100 / pAG[pg[i]]);   \
+          for(int i = 0; i != l; ++i) pout[i] = px[i] / pAG[pg[i]] * 100;     \
           break;                                                              \
         case 7:                                                               \
           for(int i = 0; i != l; ++i) pout[i] = px[i] + pAG[pg[i]];           \
