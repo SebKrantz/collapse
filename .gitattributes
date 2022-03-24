@@ -1,3 +1,4 @@
+man/* linguist-vendored
 tests/* linguist-vendored
 vignettes/* linguist-vendored
 misc/* linguist-vendored
