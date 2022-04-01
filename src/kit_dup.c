@@ -37,8 +37,8 @@ SEXP dupVecIndex(SEXP x) {
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
   int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   SEXP ans_i = PROTECT(allocVector(INTSXP, n));
-  int *pans_i = INTEGER(ans_i);
-  size_t id = 0, g = 0;
+  int *pans_i = INTEGER(ans_i), g = 0;
+  size_t id = 0;
   switch (tx) {
   case LGLSXP:
   case 1000: // This is for factors or logical vectors where the size of the table is known
@@ -186,8 +186,8 @@ SEXP dupVecIndexKeepNA(SEXP x) {
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
   int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   SEXP ans_i = PROTECT(allocVector(INTSXP, n));
-  int *pans_i = INTEGER(ans_i);
-  size_t id = 0, g = 0;
+  int *pans_i = INTEGER(ans_i), g = 0;
+  size_t id = 0;
   switch (tx) {
   case LGLSXP:
   case 1000: // This is for factors or logical vectors where the size of the table is known
@@ -352,25 +352,25 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
   } else if (tx == LGLSXP) {
     M = (size_t)ng * 3 + 1;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
-  size_t id = 0, g = 0, hid = 0;
+  int *h = (int*)Calloc(M, int), g = 0, hid = 0; // Table to save the hash values, table has size M
+  size_t id = 0;
   switch (tx) {
   case LGLSXP:
   {
     const int *px = LOGICAL(x);
-    for (int i = 0, j; i != n; ++i) {
-      j = (px[i] == NA_LOGICAL) ? pidx[i] : pidx[i] + (px[i] + 1) * ng;
-      if(h[j]) pans_i[i] = h[j];
-      else pans_i[i] = h[j] = ++g;
+    for (int i = 0; i != n; ++i) {
+      id = (px[i] == NA_LOGICAL) ? pidx[i] : pidx[i] + (px[i] + 1) * ng;
+      if(h[id]) pans_i[i] = h[id];
+      else pans_i[i] = h[id] = ++g;
     }
   } break;
   case 1000: // This is for factors if feasible...
   {
     const int *px = INTEGER(x);
-    for (int i = 0, j; i != n; ++i) {
-      j = (px[i] == NA_INTEGER) ? pidx[i] : pidx[i] + px[i] * ng;
-      if(h[j]) pans_i[i] = h[j];
-      else pans_i[i] = h[j] = ++g;
+    for (int i = 0; i != n; ++i) {
+      id = (px[i] == NA_INTEGER) ? pidx[i] : pidx[i] + px[i] * ng;
+      if(h[id]) pans_i[i] = h[id];
+      else pans_i[i] = h[id] = ++g;
     }
   } break;
   // TODO: Think further about this! Perhaps you can also do this totally differently with a second vector capturing the unique values of idx!
