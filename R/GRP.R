@@ -686,7 +686,6 @@ fdroplevels.default <- function(x, ...) {
   x
 }
 
-
 fdroplevels.factor <- function(x, ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   clx <- class(x)
@@ -703,11 +702,8 @@ fdroplevels.data.frame <- function(x, ...) {
 }
 
 fdroplevels.list <- function(x, ...) {
-  # if(!missing(...)) unused_arg_action(match.call(), ...)
-  res <- duplAttributes(lapply(unattrib(x), function(y)
+  duplAttributes(lapply(unattrib(x), function(y)
     if(is.factor(y)) .Call(Cpp_fdroplevels, y, !inherits(y, "na.included")) else y), x)
-  if(inherits(x, "data.table")) return(alc(res))
-  res
 }
 
 # Old R-based trial
