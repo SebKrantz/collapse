@@ -44,10 +44,6 @@ atomic_elem <- function(l, return = "sublist", keep.class = FALSE)
 }
 
 is_regular <- function(x) is.list(x) || is.atomic(x) # fastest way?
-is.regular <- function(x) {
-  .Deprecated(msg = "is.regular is depreciated, see help('collapse-depreciated')")
-  is.list(x) || is.atomic(x)
-}
 
 is_unlistable <- function(l, DF.as.list = FALSE) if(DF.as.list) all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)) else
   all(unlist(rapply2d(l, is_regular), use.names = FALSE)) # fastest way?

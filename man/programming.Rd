@@ -6,6 +6,7 @@
 \alias{allNA}
 \alias{whichv}
 \alias{whichNA}
+\alias{frange}
 \alias{alloc}
 \alias{copyv}
 \alias{setv}
@@ -19,6 +20,7 @@
 \alias{cinv}
 \alias{vlengths}
 \alias{vtypes}
+\alias{vgcd}
 \alias{fnlevels}
 \alias{fnrow}
 \alias{fncol}
@@ -66,6 +68,8 @@ missing_cases(X,            # The oposite of complete.cases(), faster for
               cols = NULL)  # data frames
 vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
+vgcd(x)                     # Greatest common divisor of positive integers or doubles
+frange(x, na.rm = TRUE)     # Much faster base::range, for integers and doubles
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
 fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
 fncol(X)                    # Faster ncol for data frames (not faster for matrices)
