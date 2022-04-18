@@ -12,6 +12,7 @@
 \alias{fgroup_vars}
 \alias{fungroup}
 \alias{gsplit}
+\alias{greorder}
 \alias{is_GRP}
 \alias{length.GRP}
 \alias{print.GRP}
@@ -52,17 +53,20 @@ GRP(X, \dots)
 # Identify, get length, group sizes and names, and convert GRP object to factor
 is_GRP(x)
 \method{length}{GRP}(x)
-GRPN(x, expand = TRUE, ...)
+GRPN(x, expand = TRUE, \dots)
 GRPnames(x, force.char = TRUE)
 as_factor_GRP(x, ordered = FALSE)
 
 # Efficiently split a vector using a grouping object
-gsplit(x, g, use.g.names = FALSE, ...)
+gsplit(x, g, use.g.names = FALSE, \dots)
+
+# Efficiently reorder y = unlist(gsplit(x, g)) such that identical(greorder(y, g), x)
+greorder(x, g, \dots)
 
 # Fast, class-agnostic version of dplyr::group_by for use with fast functions, see details
 fgroup_by(.X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
           return.order = sort, method = "auto")
-# Shortcut for fgroup_by
+# Shorthand for fgroup_by
       gby(.X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
           return.order = sort, method = "auto")
 
@@ -134,7 +138,7 @@ fungroup(X, \dots)
 
   \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other.}
 
-  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{gsplit} and \code{GRPN}: further arguments passed to \code{GRP} (if \code{g/x} is not already a 'GRP' object). For example the \code{by} argument could be used if a data frame is passed.}
+  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{gsplit}, \code{greorder} and \code{GRPN}: further arguments passed to \code{GRP} (if \code{g/x} is not already a 'GRP' object). For example the \code{by} argument could be used if a data frame is passed.}
 }
 \details{
 \code{GRP} is a central function in the \emph{collapse} package because it provides the key inputs to facilitate easy and efficient groupwise-programming at the \code{C/C++} level: Information about (1) the number of groups (2) an integer group-id indicating which values / rows belong to which group and (3) information about the size of each group. Provided with these informations, \emph{collapse}'s \link[=fast-statistical-functions]{Fast Statistical Functions} pre-allocate intermediate and result vectors of the right sizes and (in most cases) perform grouped statistical computations in a single pass through the data.
@@ -188,6 +192,8 @@ GRPnames(g)                        # Retain group names
 fsum(mtcars, g)                    # Compute the sum of mtcars, grouped by variables cyl, vs and am
 gsplit(mtcars$mpg, g)              # Use the object to split a vector
 gsplit(NULL, g)                    # The indices of the groups
+identical(mtcars$mpg,              # greorder and unlist undo the effect of gsplit
+          greorder(unlist(gsplit(mtcars$mpg, g)), g))
 
 ## Convert factor to GRP object and vice-versa
 GRP(iris$Species)
