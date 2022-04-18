@@ -22,7 +22,7 @@ varying.default <- function(x, g = NULL, any_group = TRUE, use.g.names = TRUE, .
 
 varying.pseries <- function(x, effect = 1L, any_group = TRUE, use.g.names = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- if(length(effect) == 1L) .subset2(findex(x), effect) else finteraction(.subset(findex(x), effect))
   if(!any_group && use.g.names) {
     lev <- attr(g, "levels")
     return(`names<-`(.Call(Cpp_varying,x,length(lev),g,any_group), lev))
@@ -85,7 +85,7 @@ varying.list <- function(x, ...) varying.data.frame(x, ...)
 
 varying.pdata.frame <- function(x, effect = 1L, cols = NULL, any_group = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  index <- unclass(getpix(attr(x, "index")))
+  index <- unclass(findex(x))
   g <- if(length(effect) == 1L) index[[effect]] else finteraction(index[effect])
   x <- if(is.null(cols)) fcolsubset(x, attr(x, "names") %!in% names(index[effect])) else colsubset(x, cols)
   if(!any_group && use.g.names) {

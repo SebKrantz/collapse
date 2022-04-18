@@ -225,6 +225,24 @@ test_that("fast functions give appropriate warnings", {
 })
 
 test_that("fselect and fsubset cannot easily be confuesed", {
-  expect_warning(fsubset(mtcars, mpg:vs, wt))
+  expect_error(suppressWarnings(fsubset(mtcars, mpg:vs, wt)))
   expect_error(fselect(mtcars, mpg == 1))
+})
+
+test_that("frange works well", {
+  xd <- rnorm(1e5)
+  xdNA <- na_insert(xd)
+  xi <- as.integer(xd*1000)
+  xiNA <- na_insert(xi)
+
+  expect_equal(frange(xd, na.rm = FALSE), range(xd))
+  expect_equal(frange(xd), range(xd, na.rm = TRUE))
+  expect_equal(frange(xdNA, na.rm = FALSE), range(xdNA))
+  expect_equal(frange(xdNA), range(xdNA, na.rm = TRUE))
+
+  expect_equal(frange(xi, na.rm = FALSE), range(xi))
+  expect_equal(frange(xi), range(xi, na.rm = TRUE))
+  expect_equal(frange(xiNA, na.rm = FALSE), range(xiNA))
+  expect_equal(frange(xiNA), range(xiNA, na.rm = TRUE))
+
 })

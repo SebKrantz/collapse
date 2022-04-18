@@ -5,19 +5,28 @@
 \alias{fsubset.default}
 \alias{fsubset.matrix}
 \alias{fsubset.data.frame}
+\alias{fsubset.pseries}
+\alias{fsubset.pdata.frame}
 \title{Fast Subsetting Matrix-Like Objects}
 \description{
  \code{fsubset} returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the \emph{data.table} package. Especially for data frames it is significantly (4-5 times) faster than \code{\link{subset}} or \code{dplyr::filter}. The methods also provide enhanced functionality compared to \code{\link{subset}}. The function \code{ss} provides an (internal generic) programmers alternative to \code{[} that does not drop dimensions and is significantly faster than \code{[} for data frames.
 }
 \usage{
 fsubset(.x, \dots)
-sbt(.x, \dots)     # Shortcut for fsubset
+sbt(.x, \dots)     # Shorthand for fsubset
 
 \method{fsubset}{default}(.x, subset, \dots)
 
 \method{fsubset}{matrix}(.x, subset, \dots, drop = FALSE)
 
 \method{fsubset}{data.frame}(.x, subset, \dots)
+
+# Methods for indexed data / compatibility with plm:
+
+\method{fsubset}{pseries}(.x, subset, \dots, drop.index.levels = "id")
+
+\method{fsubset}{pdata.frame}(.x, subset, \dots, drop.index.levels = "id")
+
 
 # Fast subsetting (replaces `[` with drop = FALSE, programmers choice)
 ss(x, i, j)
@@ -27,11 +36,12 @@ ss(x, i, j)
   \item{.x}{object to be subsetted according to different methods.}
   \item{x}{a data frame / list, matrix or vector/array (only \code{i}).}
   \item{subset}{logical expression indicating elements or rows to keep:
-    missing values are taken as \code{FALSE}. The default and matrix methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data frame method also supports logical vectors or row-indices). }
+    missing values are taken as \code{FALSE}. The default, matrix and pseries methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data frame method also supports logical vectors or row-indices). }
   \item{\dots}{For the matrix or data frame method: multiple comma-separated expressions indicating columns to select. Otherwise: further arguments to be passed to or from other methods.}
   \item{drop}{passed on to \code{[} indexing operator. Only available for the matrix method.}
   \item{i}{positive or negative row-indices or a logical vector to subset the rows of \code{x}.}
   \item{j}{a vector of column names, positive or negative indices or a suitable logical vector to subset the columns of \code{x}. \emph{Note:} Negative indices are converted to positive ones using \code{j <- seq_along(x)[j]}.}
+ \item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
 }
 \details{
   \code{fsubset} is a generic function, with methods supplied for vectors, matrices, and data
@@ -53,6 +63,8 @@ Factors may have empty levels after subsetting; unused levels are not automatica
   a vector), rows and columns (for a matrix or data frame).
 }
 \note{
+\code{ss} offers no support for indexed data. Use \code{fsubset} with indices instead.
+
 No replacement method \code{fsubset<-} or \code{ss<-} is offered in \emph{collapse}. For efficient subset replacement (without copying) use \code{data.table::set}, which can also be used with data frames and tibbles. To search and replace certain elements without copying, and to efficiently copy elements / rows from an equally sized vector / data frame, see \code{\link{setv}}.
 }
 \seealso{

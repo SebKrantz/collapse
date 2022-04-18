@@ -3,6 +3,8 @@
 \alias{funique.default}
 \alias{funique.data.frame}
 \alias{funique.sf}
+\alias{funique.pseries}
+\alias{funique.pdata.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Unique Elements / Rows
@@ -19,6 +21,12 @@ funique(x, \dots)
 
 \method{funique}{sf}(x, cols = NULL, sort = FALSE, method = "auto", \dots)
 
+# Methods for indexed data / compatibility with plm:
+
+\method{funique}{pseries}(x, sort = FALSE, method = "auto", drop.index.levels = "id", \dots)
+
+\method{funique}{pdata.frame}(x, cols = NULL, sort = FALSE, method = "auto", drop.index.levels = "id", \dots)
+
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -33,6 +41,7 @@ funique(x, \dots)
   }
 \item{cols}{compute unique rows according to a subset of columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. \code{is.character}). \emph{Note:} All columns are returned. }
 \item{\dots}{arguments passed to \code{\link{radixorderv}}, e.g. \code{decreasing} or \code{na.last}. Only applicable if \code{method = "radix"}.}
+\item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
 }
 \details{
 If \code{x} is a data frame / list and all rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{group}} for some additional computational details.

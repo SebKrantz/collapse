@@ -2,17 +2,21 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Note: Now taking logs in R -> Faster and smaller compiled code !!
-/* some systems get this wrong, possibly depend on what libs are loaded */
+// Return Options:
+// ret = 1 - differences
+// ret = 2 - log differences
+// ret = 3 - log-difference growth rates
+// ret = 4 - exact growth rates
+// Also: if rho != 1, quasi-differencing and log differencing with rho... i.e. for Cochrane-Orcutt regression
+
+// This Approach: currently does not support iterated differences on irregular time-series and panel data !
+// TODO: Make comprehensive...
+
+// Note: Now taking logs in R -> Faster and smaller compiled code !
+// ... some systems get this wrong, possibly depends on what libs are loaded //
 // static inline double R_log(double x) {
 //   return x > 0 ? log(x) : x == 0 ? R_NegInf : R_NaN;
 // }
-
-// new setup: ret = 1L - differences, ret = 2L - log differences, ret = 3L - exact growth rates, ret = 4L - log-difference growth
-// also: if rho != 1, quasi-differencing and log differencing with rho... i.e. for cochrane-orcutt regression
-
-// This Approach: Hybrid: Currently does not support iterated differences on irregular time-series and panel data !!
-// TODO: Make comprehensive...
 
 template <typename F>
 NumericVector fdiffgrowthCppImpl(const NumericVector& x, const IntegerVector& n = 1, const IntegerVector& diff = 1,

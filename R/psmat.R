@@ -11,13 +11,13 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
     dimnames = list(paste0("GRP.",seq_len(g)), seq_len(length(x)/round(g))))
   } else {
   if(!is.nmfactor(g)) if(is.atomic(g)) g <- qF(g, na.exclude = FALSE) else if(is_GRP(g))
-                    g <- as_factor_GRP(g) else g <- as_factor_GRP(GRP.default(g, call = FALSE))
+                    g <- as_factor_GRP(g) else g <- as_factor_GRP(GRP.default(g, return.order = FALSE, call = FALSE))
   if(is.null(t)) {
     # message("No timevar provided: Assuming Balanced Panel")
     return(.Call(Cpp_psmat,x, g, NULL, transpose))
   } else {
     if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
-                      t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, call = FALSE))
+                      t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, return.order = FALSE, call = FALSE))
     return(.Call(Cpp_psmat,x, g, t, transpose))
     }
   }
@@ -47,23 +47,23 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
         by <- ckmatch(all.vars(by), nam)
         v <- if(is.null(cols)) seq_along(x)[-by] else fsetdiff(cols2int(cols, x, nam), by)
       }
-      by <- if(length(by) == 1L) x[[by]] else GRP.default(x, by, call = FALSE)
+      by <- if(length(by) == 1L) x[[by]] else GRP.default(x, by, return.order = FALSE, call = FALSE)
       if(is.call(t)) { # If time-variable supplied !
-        t <- ckmatch(all.vars(t), nam)
-        v <- fsetdiff(v, t)
-        t <- if(length(t) == 1L) x[[t]] else GRP.default(x, t, call = FALSE)
+        tv <- ckmatch(all.vars(t), nam, "Unknown time variable:")
+        v <- fsetdiff(v, tv)
+        t <- eval(if(length(tv) == 1L) t[[2L]] else attr(terms.formula(t), "variables"), x, attr(t, ".Environment")) # if(length(t) == 1L) x[[t]] else GRP.default(x, t, call = FALSE)
       }
       x <- x[v]
     } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
 
     if(!is.nmfactor(by)) if(is.atomic(by)) by <- qF(by, na.exclude = FALSE) else if(is_GRP(by))
-                         by <- as_factor_GRP(by) else by <- as_factor_GRP(GRP.default(by, call = FALSE))
+                         by <- as_factor_GRP(by) else by <- as_factor_GRP(GRP.default(by, return.order = FALSE, call = FALSE))
       if(is.null(t)) {
         # message("No timevar provided: Assuming Balanced Panel")
         res <- lapply(x, psmatCpp, by, NULL, transpose)
       } else {
         if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
-                  t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, call = FALSE))
+                  t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, return.order = FALSE, call = FALSE))
         res <- lapply(x, psmatCpp, by, t, transpose)
       }
   }
@@ -73,19 +73,17 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
   } else return(res)
 }
 
-psmat.pseries <- function(x, transpose = FALSE, ...) {
+psmat.pseries <- function(x, transpose = FALSE, drop.index.levels = "none", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  index <- unclass(getpix(attr(x, "index")))
+  index <- droplevels_index(uncl2pix(x, interact = TRUE), drop.index.levels)
   if(is.matrix(x)) stop("x is already a matrix")
-  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   .Call(Cpp_psmat, x, index[[1L]], index[[2L]], transpose)
 }
 
-psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, ...) {
+psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, drop.index.levels = "none", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
+  index <- droplevels_index(uncl2pix(x, interact = TRUE), drop.index.levels)
   oldClass(x) <- NULL
-  index <- unclass(getpix(attr(x, "index")))
-  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   res <- lapply(if(is.null(cols)) x else x[cols2int(cols, x, names(x), FALSE)], psmatCpp, index[[1L]], index[[2L]], transpose)
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else

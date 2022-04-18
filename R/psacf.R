@@ -46,9 +46,9 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
     }
     by <- if(length(by) == 1L) x[[by]] else x[by]
     if(is.call(t)) { # If time-variable supplied
-      t <- ckmatch(all.vars(t), nam, "Unknown time variable:")
-      v <- fsetdiff(v, t)
-      t <- if(length(t) == 1L) x[[t]] else x[t]
+      tv <- ckmatch(all.vars(t), nam, "Unknown time variable:")
+      v <- fsetdiff(v, tv)
+      t <- eval(if(length(tv) == 1L) t[[2L]] else attr(terms.formula(t), "variables"), x, attr(t, ".Environment")) # if(length(t) == 1L) x[[t]] else x[t]
     }
     x <- x[v]
   } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
@@ -93,14 +93,10 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
 
 psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   if(!is.numeric(x)) stop("'x' must be a numeric pseries ")
-  index <- unclass(getpix(attr(x, "index")))
-  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
+  index <- uncl2pix(x)
   g <- index[[1L]]
   t <- index[[2L]]
-  tlev <- attr(t, "levels")
-  oldopts <- options(warn = -1L)
-  on.exit(options(oldopts))
-  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  if(length(t) && !inherits(x, "indexed_series")) t <- plm_check_time(t)
   ng <- fnlevels(g)
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   series <- l1orlst(as.character(substitute(x))) # faster ?
@@ -130,19 +126,16 @@ psacf.pseries <- function(x, lag.max = NULL, type = c("correlation", "covariance
 psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, ...) {
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   series <- l1orlst(as.character(substitute(x))) # faster solution ?
-  index <- unclass(getpix(attr(x, "index")))
+  index <- uncl2pix(x)
+  clx <- oldClass(x)
   oldClass(x) <- NULL
   nrx <- length(x[[1L]])
   if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
   lx <- length(x)
   snames <- names(x)
-  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
   g <- index[[1L]]
   t <- index[[2L]]
-  tlev <- attr(t, "levels")
-  oldopts <- options(warn = -1L)
-  on.exit(options(oldopts))
-  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  if(length(t) && !any(clx == "indexed_frame")) t <- plm_check_time(t)
   ng <- fnlevels(g)
   attributes(x) <- NULL # necessary after unclass above ?
     if(is.null(lag.max)) lag.max <- round(2*sqrt(nrx/ng))
@@ -236,16 +229,11 @@ psccf.pseries <- function(x, y, lag.max = NULL, type = c("correlation", "covaria
   if(!is.numeric(y) || !inherits(y, "pseries")) stop("'y' must be a numeric pseries")
   lx <- length(x)
   if(lx != length(y)) stop("length(x) must be equal to length(y)")
-  index <- getpix(attr(x, "index"))
-  if(!identical(index, getpix(attr(y, "index")))) stop("index of x and y differs")
-  oldClass(index) <- NULL
-  if(length(index) > 2L) index <- list(finteraction(index[-length(index)]), index[[length(index)]])
+  if(!identical(findex(x), findex(y))) stop("index of x and y differs")
+  index <- uncl2pix(x)
   g <- index[[1L]]
   t <- index[[2L]]
-  tlev <- attr(t, "levels")
-  oldopts <- options(warn = -1L)
-  on.exit(options(oldopts))
-  if(is.finite(as.integer(tlev[1L]))) t <- as.integer(tlev)[t]
+  if(length(t) && !inherits(x, "indexed_series")) t <- plm_check_time(t)
   ng <- fnlevels(g)
   typei <- switch(type[1L], correlation = 1L, covariance = 2L, partial = 3L, stop("Unknown type!"))
   snames <- paste(c(l1orlst(as.character(substitute(x))), l1orlst(as.character(substitute(x)))), collapse = " & ")

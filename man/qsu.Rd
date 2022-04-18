@@ -143,17 +143,16 @@ r[3, 1] <- r[1, 1] / r[2, 1]
 print.qsu(r)
 # Proof:
 qsu(x, pid = g)
-\donttest{ % No code relying on suggested package
-# Using plm:
-pwlddev <- plm::pdata.frame(wlddev,         # Creating a Panel Data Frame frame from this data
-                  index = c("iso3c","year"))
-qsu(pwlddev)                                # Summary for pdata.frame -> qsu(wlddev, pid = ~ iso3c)
-qsu(pwlddev$PCGDP)                          # Default summary for Panel Series  (class pseries)
-qsu(G(pwlddev$PCGDP))                       # Summarizing GDP growth, see also ?G
+
+# Using indexed data:
+wldi <- findex_by(wlddev, iso3c, year)   # Creating a Indexed Data Frame frame from this data
+qsu(wldi)                                # Summary for pdata.frame -> qsu(wlddev, pid = ~ iso3c)
+qsu(wldi$PCGDP)                          # Default summary for Panel Series
+qsu(G(wldi$PCGDP))                       # Summarizing GDP growth, see also ?G
 
 # Grouped Panel Data Summaries -------------
 qsu(wlddev, ~ region, ~ iso3c, cols = 9:12) # Panel-Statistics by region
-psr <- qsu(pwlddev, ~ region, cols = 9:12)  # Same on plm pdata.frame
+psr <- qsu(wldi, ~ region, cols = 9:12)     # Same on indexed data
 psr                                         # -> Gives a 4D array
 psr[,"N/T",,]                               # Checking out the number of observations:
 # In North america we only have 3 countries, for the GINI we only have 3.91 observations on average
@@ -162,7 +161,7 @@ psr[,"SD",,]                                # Considering only standard deviatio
 # -> In all regions variations in inequality (GINI) between countries are greater than variations
 # in inequality within countries. The opposite is true for Life-Expectancy in all regions apart
 # from Europe, etc..
-}
+
 # Again let's do this manually for PDGCP:
 d <- cbind(Overall = x,
            Between = fbetween(x, g),

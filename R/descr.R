@@ -11,12 +11,12 @@ fsorttable <- function(x, srt) {
     t <- attr(g, "group.sizes")
     nam <- Csv(x, attr(g, "starts"))
     names(t) <- nam
-    if(anyNA(nam)) t <- t[-whichNA(nam)]
+    if(anyNA(nam)) t <- t[-whichNA(nam)] # TODO: speef up using fwtabulate and groupat?
   }
   switch(srt,
     value = if(sorted) t else t[forder.int(names(t))],
     # "quick" sort seems best, based on multiple datasets, but "radix" (second best) keeps ties in order...
-    freq = sort.int(t, method = "radix", decreasing = TRUE, na.last = TRUE),
+    freq = sort.int(t, method = "radix", decreasing = TRUE, na.last = TRUE), # t[forder.int(t)]
     none = t,
     stop("sort.table must be one of 'value', 'freq' or 'none'"))
 }
@@ -49,11 +49,12 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
 
   descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
                                 Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'),
-                                          `names<-`(range(x, na.rm = TRUE), c("Min", "Max"))))
+                                          `names<-`(frange(x), c("Min", "Max"))))
 
   if(is.list(X)) {
     is_sf <- inherits(X, "sf")
     # if(inherits(X, "POSIXlt")) X <- list(X = as.POSIXct(X))
+    if(inherits(X, "indexed_frame")) X <- unindex(X)
     class(X) <- NULL
     if(is_sf) X[[attr(X, "sf_column")]] <- NULL
   } else X <- unclass(qDF(X))
@@ -90,7 +91,7 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
     xi <- x[[i]]
     cat(nam[i]," (",strclp(xi[[1L]]),"): ",xi[[2L]], "\n", sep = "")
     stat <- xi[[3L]]
-    if(stat[[1L]] != DSN) cat("Statistics: ", round((1-stat[[1L]]/DSN)*100, 2), "% NA's removed\n", sep = "")
+    if(stat[[1L]] != DSN) cat("Statistics (", round((1-stat[[1L]]/DSN)*100, 2), "% NAs)\n", sep = "")
     else cat("Statistics\n")
     if(any(xi[[1L]] %in% c("Date", "POSIXct")))
       print.default(c(stat[1:2], as.character(`oldClass<-`(stat[3:4], xi[[1L]]))),

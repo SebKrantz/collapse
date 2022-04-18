@@ -76,7 +76,7 @@ An object of class 'acf', see \code{\link{acf}}. The result is returned invisibl
 \note{
 % \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{\link{cor} to correlate \code{x} with it's lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and it's lag).
 
-For \code{plm::pseries} and \code{plm::pdata.frame}, the first index variable is assumed to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
+% For \code{plm::pseries} and \code{plm::pdata.frame}, the first index variable is assumed to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
 
 The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' will not work.
 }
@@ -98,17 +98,17 @@ psccf(wlddev$PCGDP, wlddev$LIFEEX, wlddev$country)              # CCF with Life-
 psacf(wlddev, PCGDP + LIFEEX + ODA ~ country, ~year)            # ACF and CCF of GDP, LIFEEX and ODA
 psacf(wlddev, ~ country, ~year, c(9:10,12))                     # Same, using cols argument
 pspacf(wlddev, ~ country, ~year, c(9:10,12))                    # Partial ACF
-\donttest{ % No code relying on suggested package
-## Using plm:
-pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))# Creating a Panel Data Frame
-PCGDP <- pwlddev$PCGDP                                          # Panel Series  of GDP per Capita
-LIFEEX <- pwlddev$LIFEEX                                        # Panel Series  of Life Expectancy
-psacf(PCGDP)                                                    # Same as above, more parsimonious
+
+## Using indexed data:
+wldi <- findex_by(wlddev, iso3c, year)  # Creating a indexed frame
+PCGDP <- wldi$PCGDP                     # Indexed Series of GDP per Capita
+LIFEEX <- wldi$LIFEEX                   # Indexed Series of Life Expectancy
+psacf(PCGDP)                            # Same as above, more parsimonious
 pspacf(PCGDP)
 psccf(PCGDP, LIFEEX)
-psacf(pwlddev[c(9:10,12)])
-pspacf(pwlddev[c(9:10,12)])
-}
+psacf(wldi[c(9:10,12)])
+pspacf(wldi[c(9:10,12)])
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

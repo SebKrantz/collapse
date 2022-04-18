@@ -24,6 +24,7 @@ SEXP subsetCols(SEXP, SEXP, SEXP);
 SEXP subsetVector(SEXP, SEXP, SEXP);
 SEXP Calloccol(SEXP dt); // , SEXP Rn
 SEXP falloc(SEXP, SEXP);
+SEXP frange(SEXP x, SEXP Rnarm);
 // SEXP CasChar(SEXP x);
 SEXP setAttributes(SEXP x, SEXP a);
 void setattributes(SEXP x, SEXP a);
@@ -53,9 +54,11 @@ SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind);
 SEXP setnames(SEXP x, SEXP nam);
 SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
+SEXP createeptr(SEXP x);
 SEXP geteptr(SEXP x);
 SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna);
 SEXP fwtabulate(SEXP x, SEXP w, SEXP ngp, SEXP ckna);
+SEXP vecgcd(SEXP x);
 // fnobs rewritten in C:
 SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);

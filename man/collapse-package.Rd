@@ -16,7 +16,7 @@ It is made compatible with \emph{dplyr}, \emph{data.table}, \emph{sf} and the \e
 
 }
 \section{Getting Started}{
-See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most up-to-date documentation for \emph{collapse} 1.7), or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available at \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
+See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most up-to-date documentation for \emph{collapse} 1.7), or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
 }
 
 
@@ -448,22 +448,24 @@ lm(LIFEEX ~ log(PCGDP) + OECD + B(log(PCGDP), country),
 lm(LIFEEX ~ L(LIFEEX, 10, country) + log(PCGDP) + OECD + B(log(PCGDP), country),
    wlddev \%>\% fselect(country, OECD, PCGDP, LIFEEX) \%>\% na_omit)
 
-# Tranformation functions and operators also support plm panel data classes:
-library(plm)
-pwlddev <- pdata.frame(wlddev, index = c("country","year"))
-head(W(pwlddev$PCGDP))                      # Country-demeaning
-head(W(pwlddev, cols = 9:12))
-head(W(pwlddev$PCGDP, effect = 2))          # Time-demeaning
-head(W(pwlddev, effect = 2, cols = 9:12))
-head(HDW(pwlddev$PCGDP))                    # Country- and time-demeaning
-head(HDW(pwlddev, cols = 9:12))
-head(STD(pwlddev$PCGDP))                    # Standardizing by country
-head(STD(pwlddev, cols = 9:12))
-head(L(pwlddev$PCGDP, -1:3))                # Panel-lags
-head(L(pwlddev, -1:3, 9:12))
-head(G(pwlddev$PCGDP))                      # Panel-Growth rates
-head(G(pwlddev, 1, 1, 9:12))
-rm(pwlddev)
+# Tranformation functions and operators also indexed data classes:
+wldi <- findex_by(wlddev, country, year)
+head(W(wldi$PCGDP))                      # Country-demeaning
+head(W(wldi, cols = 9:12))
+head(W(wldi$PCGDP, effect = 2))          # Time-demeaning
+head(W(wldi, effect = 2, cols = 9:12))
+head(HDW(wldi$PCGDP))                    # Country- and time-demeaning
+head(HDW(wldi, cols = 9:12))
+head(STD(wldi$PCGDP))                    # Standardizing by country
+head(STD(wldi, cols = 9:12))
+head(L(wldi$PCGDP, -1:3))                # Panel-lags
+head(L(wldi, -1:3, 9:12))
+head(G(wldi$PCGDP))                      # Panel-Growth rates
+head(G(wldi, 1, 1, 9:12))
+
+lm(Dlog(PCGDP) ~ L(Dlog(LIFEEX), 0:3), wldi)   # Panel data regression
+
+rm(wldi)
 }
 # Remove all objects used in this example section
 rm(v, d, w, f, f1, f2, g, mtcarsM, sds, series, wlddev)

@@ -24,6 +24,59 @@ switchGRP <- function(x, na.last = TRUE, decreasing = FALSE, starts = FALSE,
   .Call(C_radixsort, na.last, decreasing, starts, group.sizes, sort, z)
 }
 
+group <- function(x, starts = FALSE, group.sizes = FALSE) `oldClass<-`(.Call(C_group, x, starts, group.sizes), c("qG", "na.included"))
+
+gsplit <- function(x = NULL, g, use.g.names = FALSE, ...) {
+  if(!(is.list(g) && inherits(g, "GRP"))) g <- GRP(g, return.groups = use.g.names, call = FALSE, ...)
+  res <- if(is.null(x)) .Call(C_gsplit, 1L, g, TRUE) else if(length(unclass(x)) == length(g[[2L]]))
+    .Call(C_gsplit, x, g, FALSE) else if(is.object(x))
+      lapply(.Call(C_gsplit, 1L, g, TRUE), function(i) x[i]) else
+        stop("length(x) must match length(g)")
+  if(use.g.names) names(res) <- GRPnames(g, FALSE)
+  res
+}
+
+greorder <- function(x, g, ...) {
+  if(!(is.list(g) && inherits(g, "GRP"))) g <- GRP(g, return.groups = FALSE, call = FALSE, ...)
+  .Call(C_greorder, x, g)
+}
+
+G_guo <- function(g) {
+  if(is.atomic(g)) {
+    if(inherits(g, c("factor", "qG"))) {
+      if(inherits(g, "na.included") || !anyNA(unclass(g)))
+        return(list(if(is.factor(g)) fnlevels(g) else attr(g, "N.groups"), unattrib(g), NULL))
+      if(is.factor(g)) {
+        ng <- if(anyNA(lev <- attr(g, "levels"))) length(lev) else length(lev) + 1L
+      } else ng <- attr(g, "N.groups") + 1L
+      return(list(ng, copyv(unattrib(g), NA_integer_, ng), NULL))
+    }
+    g <- .Call(C_group, g, FALSE, FALSE)
+    return(list(attr(g,"N.groups"), g, NULL))
+  }
+  if(inherits(g, "GRP")) return(g)
+  g <- .Call(C_group, g, FALSE, FALSE)
+  return(list(attr(g,"N.groups"), g, NULL))
+}
+
+G_t <- function(x) {
+  if(is.null(x)) return(x)
+  # If integer time variable contains NA, does not break C++ code..
+  if(is.atomic(x)) {
+    if(is.object(x)) {
+      if(inherits(x, c("factor", "qG"))) return(x)
+      if(is.numeric(unclass(x))) return(timeid(x, factor = FALSE))
+    } else if(is.numeric(x)) {
+      # if(is.double(x)) message("Time variable is of type double, but not a date/time object. It is therefore coerced to integer and assumed to represent unitary timesteps. If this is not desired pass timeid(t). To silence this message pass as.integer(t).")
+      return(as.integer(x))
+    }
+    return(qG(x, na.exclude = FALSE, sort = TRUE, method = "hash")) # make sure it is sorted !
+  }
+  # if(is_GRP(x)) return(x[[2L]]) # Not necessary because GRP.default also returns it..
+  return(GRP.default(x, return.groups = FALSE, return.order = FALSE, sort = TRUE, call = FALSE)[[2L]])
+}
+
+
 # Added... could also do in GRP.default... but this is better, no match.call etc... match.call takes 4 microseconds. could do both ?? think about possible applications...
 GRP.GRP <- function(X, ...) X
 
@@ -240,7 +293,7 @@ GRP.factor <- function(X, ..., group.sizes = TRUE, drop = FALSE, return.groups =
 }
 
 GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE) {
-  g <- unclass(getpix(attr(X, "index"))) # index cannot be atomic since plm always adds a time variable !
+  g <- unclass(findex(X)) # index cannot be atomic since plm always adds a time variable !
   if(length(effect) > 1L) return(GRP.default(g[effect], ...))
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   # if(length(g) > 2L) {
@@ -331,7 +384,7 @@ print.GRP_df <- function(x, ...) {
     # Groups: # if(any(g[[6L]])) "ordered groups" else "unordered groups", -> ordered 99% of times...
     cat("\nGrouped by: ", paste(g[[5L]], collapse = ", "), stats, "\n")
     if(inherits(x, "pdata.frame"))
-      message("\nNote: 'pdata.frame' methods for flag, fdiff, fgrowth, fbetween, fwithin and varying\n      take precedence over the 'grouped_df' methods for these functions.")
+      message("\nNote: 'pdata.frame' methods for flag, fdiff, fgrowth, fcumsum, fbetween, fwithin, fscale and varying\n      take precedence over the 'grouped_df' methods for these functions.")
   }
 }
 
@@ -655,14 +708,15 @@ funique.default <- function(x, sort = FALSE, method = "auto", ...) {
 funique.data.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   use.group <- switch(method, auto = !sort, hash = TRUE, radix = FALSE, stop("method needs to be 'auto', 'hash' or 'radix'."))
-  o <- if(is.null(cols)) switchGRP(x, starts = TRUE, sort = sort, use.group = use.group, ...) else
-       switchGRP(colsubset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...) # if(is.call(by)) .subset(x, ckmatch(attr(x, "names"), all.vars(by)))
+  o <- switchGRP(if(is.null(cols)) x else colsubset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...)
   if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) # return(x)
      return(if(inherits(x, "data.table")) alc(x) else x)
   st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
   rn <- attr(x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE))
-  return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE), "row.names", rn[st]))
+  res <- .Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE)
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(res)
+  attr(res, "row.names") <- Csv(rn, st)
+  res
 }
 
 funique.list <- function(x, cols = NULL, sort = FALSE, method = "auto", ...) funique.data.frame(x, cols, sort, method, ...)
@@ -675,8 +729,40 @@ funique.sf <- function(x, cols = NULL, sort = FALSE, method = "auto", ...) {
   if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) return(x)
   st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
   rn <- attr(x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE))
-  return(`attr<-`(.Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE), "row.names", rn[st]))
+  res <- .Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE)
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(res)
+  attr(res, "row.names") <- Csv(rn, st)
+  res
+}
+
+funique.pseries <- function(x, sort = FALSE, method = "auto", drop.index.levels = "id", ...) {
+  if(is.array(x)) stop("funique currently only supports atomic vectors and data.frames")
+  use.group <- switch(method, auto = !sort, hash = TRUE, radix = FALSE, stop("method needs to be 'auto', 'hash' or 'radix'."))
+  o <- switchGRP(x, starts = TRUE, sort = sort, use.group = use.group, ...)
+  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) return(x)
+  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
+  res <- Csv(x, st)
+  if(length(names(x))) names(res) <- Csv(names(x), st)
+  index <- findex(x)
+  index_ss <- droplevels_index(.Call(C_subsetDT, index, st, seq_along(unclass(index)), FALSE), drop.index.levels)
+  attr(res, if(inherits(x, "indexed_series")) "index_df" else "index") <- index_ss
+  res
+}
+
+funique.pdata.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", drop.index.levels = "id", ...) {
+  use.group <- switch(method, auto = !sort, hash = TRUE, radix = FALSE, stop("method needs to be 'auto', 'hash' or 'radix'."))
+  o <- switchGRP(if(is.null(cols)) x else colsubset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...)
+  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) # return(x)
+    return(if(inherits(x, "data.table")) alc(x) else x)
+  st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
+  rn <- attr(x, "row.names")
+  res <- .Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE)
+  if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- Csv(rn, st)
+  index <- findex(x)
+  index_ss <- droplevels_index(.Call(C_subsetDT, index, st, seq_along(unclass(index)), FALSE), drop.index.levels)
+  if(inherits(x, "indexed_frame")) return(reindex(res, index_ss))
+  attr(res, "index") <- index_ss
+  res
 }
 
 fdroplevels <- function(x, ...) UseMethod("fdroplevels")

@@ -49,7 +49,9 @@ ss <- function(x, i, j) {
   }
   rn <- attr(x, "row.names")
   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, i, j, checkrows))
-  return(`attr<-`(.Call(C_subsetDT, x, i, j, checkrows), "row.names", rn[i]))
+  res <- .Call(C_subsetDT, x, i, j, checkrows)
+  attr(res, "row.names") <- .Call(C_subsetVector, rn, i, checkrows)
+  res
 }
 
 fsubset.data.frame <- function(.x, subset, ...) {
@@ -81,8 +83,69 @@ fsubset.data.frame <- function(.x, subset, ...) {
   } else if(is.numeric(r)) r <- as.integer(r) else
     stop("subset needs to be an expression evaluating to logical(nrow(.x)) or integer")
   rn <- attr(.x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, .x, r, vars, checkrows))
-  return(`attr<-`(.Call(C_subsetDT, .x, r, vars, checkrows), "row.names", rn[r]))
+  res <- .Call(C_subsetDT, .x, r, vars, checkrows)
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(res)
+  attr(res, "row.names") <- .Call(C_subsetVector, rn, r, checkrows)
+  res
+}
+
+
+fsubset.pseries <- function(.x, subset, ..., drop.index.levels = "id") {
+  if(is.array(.x)) stop("fsubset does not support pseries matrices")
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  checkrows <- TRUE
+  if(!is.integer(subset)) {
+    if(is.numeric(subset)) subset <- as.integer(subset) else if(is.logical(subset)) {
+      subset <- which(subset)
+      if(length(subset) == length(.x)) return(.x)
+      checkrows <- FALSE
+    } else stop("subset needs to be integer or logical")
+  }
+  res <- .Call(C_subsetVector, .x, subset, checkrows)
+  if(length(names(.x))) names(res) <- .Call(C_subsetVector, names(.x), subset, checkrows)
+  index <- findex(.x)
+  index_ss <- droplevels_index(.Call(C_subsetDT, index, subset, seq_along(unclass(index)), checkrows), drop.index.levels)
+  attr(res, if(inherits(.x, "indexed_series")) "index_df" else "index") <- index_ss
+  res
+}
+
+# Exact same code as .data.frame, just adding a block to deal with the index
+fsubset.pdata.frame <- function(.x, subset, ..., drop.index.levels = "id") {
+  r <- eval(substitute(subset), .x, parent.frame()) # Needs to be placed above any column renaming
+  if(missing(...)) vars <- seq_along(unclass(.x)) else {
+    ix <- seq_along(unclass(.x))
+    nl <- `names<-`(as.vector(ix, "list"), attr(.x, "names"))
+    vars <- eval(substitute(c(...)), nl, parent.frame())
+    nam_vars <- names(vars)
+    if(is.integer(vars)) {
+      if(any(vars < 0L)) vars <- ix[vars]
+    } else {
+      if(is.character(vars)) vars <- ckmatch(vars, names(nl)) else if(is.numeric(vars)) {
+        vars <- if(any(vars < 0)) ix[vars] else as.integer(vars)
+      } else stop("... needs to be comma separated column names, or column indices")
+    }
+    if(length(nam_vars)) {
+      nonmiss <- nzchar(nam_vars)
+      attr(.x, "names")[vars[nonmiss]] <- nam_vars[nonmiss]
+    }
+  }
+  checkrows <- TRUE
+  if(is.logical(r)) {
+    nr <- fnrow2(.x)
+    if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(.x)) or integer") # which(r & !is.na(r)) not needed !
+    r <- which(r)
+    if(length(r) == nr) if(missing(...)) return(.x) else return(.Call(C_subsetCols, .x, vars, TRUE))
+    checkrows <- FALSE
+  } else if(is.numeric(r)) r <- as.integer(r) else
+    stop("subset needs to be an expression evaluating to logical(nrow(.x)) or integer")
+  rn <- attr(.x, "row.names")
+  res <- .Call(C_subsetDT, .x, r, vars, checkrows)
+  if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- .Call(C_subsetVector, rn, r, checkrows)
+  index <- findex(.x)
+  index_ss <- droplevels_index(.Call(C_subsetDT, index, r, seq_along(unclass(index)), checkrows), drop.index.levels)
+  if(inherits(.x, "indexed_frame")) return(reindex(res, index_ss))
+  attr(res, "index") <- index_ss
+  res
 }
 
 # Example:
@@ -469,6 +532,7 @@ dots_apply_grouped <- function(d, g, f, dots) {
       asl <- lapply(dots[ln], gsplit, g)
       if(length(dots) > length(ln)) {
         mord <- dots[-ln]
+        # TODO: use .mapply() everywhere... if does not bump up R dependency??
         FUN <- function(x) do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE, MoreArgs = mord), asl))
       } else
         FUN <- function(x) do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE), asl))
@@ -547,7 +611,7 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
   lv <- vlengths(value, FALSE)
   nr <- length(data[[1L]])
   if(all(lv == nr)) { # Improve efficiency here??
-    if(!isTRUE(g$ordered[2L])) value <- lapply(value, greorder, g)
+    if(!isTRUE(g$ordered[2L])) value <- lapply(value, function(x, g) .Call(C_greorder, x, g), g)
     if(apli) names(value) <- names(.data_)
     return(value)
   }
@@ -610,7 +674,7 @@ fmutate <- function(.data, ..., .keep = "all") {
           r <- do_grouped_expr(ei, eiv, .data, g, pe)
           .data[[nam[i]]] <- if(length(r) == g[[1L]])
                .Call(C_subsetVector, r, g[[2L]], FALSE) else # .Call(C_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
-               greorder(r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
+               .Call(C_greorder, r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
         }
       }
     }

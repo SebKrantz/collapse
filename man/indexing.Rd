@@ -1,0 +1,192 @@
+\name{indexing}
+\alias{indexing}
+\alias{findex_by}
+\alias{iby}
+\alias{findex}
+\alias{ix}
+\alias{unindex}
+\alias{reindex}
+\alias{is_irregular}
+\alias{to_plm}
+\alias{[.indexed_series}
+\alias{[.indexed_frame}
+\alias{$.indexed_frame}
+\alias{[[.indexed_frame}
+\alias{[.index_df}
+\alias{print.index_df}
+\alias{[<-.indexed_frame}
+\alias{$<-.indexed_frame}
+\alias{[[<-.indexed_frame}
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+Fast Indexed Time Series and Panels
+}
+\description{
+A fast and flexible indexed time series and panel data class that inherits from \emph{plm}'s 'pseries' and 'pdata.frame', but is more rigorous, natively handles irregularity, can be superimposed on any data.frame/list, matrix or vector, and supports ad-hoc computations inside data masking functions and model formulas.
+}
+\usage{
+## Create an 'indexed_frame' containing 'indexed_series'
+findex_by(.X, \dots, single = "auto", interact.ids = TRUE)
+iby(.X, \dots, single = "auto", interact.ids = TRUE)  # Shorthand
+
+## Retrieve the index ('index_df') from an 'indexed_frame' or 'indexed_series'
+findex(x)
+ix(x)     # Shorthand
+
+## Remove index from 'indexed_frame' or 'indexed_series' (i.e. get .X back)
+unindex(x)
+
+## Reindex 'indexed_frame' or 'indexed_series' (or index vectors / matrices)
+reindex(x, index = findex(x), single = "auto")
+
+## Check if 'indexed_frame', 'indexed_series', index or time vector is irregular
+is_irregular(x, any_id = TRUE)
+
+## Convert 'indexed_frame'/'indexed_series' to normal 'pdata.frame'/'pseries'
+to_plm(x, row.names = FALSE)
+
+
+# Subsetting & replacement methods: [(<-) methods call NextMethod().
+# Also methods for fsubset, funique and roworder(v), na_omit (internal).
+
+\method{[}{indexed_series}(x, i, \dots, drop.index.levels = "id")
+
+\method{[}{indexed_frame}(x, i, \dots, drop.index.levels = "id")
+
+\method{[}{indexed_frame}(x, i, j) <- value
+
+\method{$}{indexed_frame}(x, name)
+
+\method{$}{indexed_frame}(x, name) <- value
+
+\method{[[}{indexed_frame}(x, i, \dots)
+
+\method{[[}{indexed_frame}(x, i) <- value
+
+# Index subsetting and printing: optimized using ss()
+
+\method{[}{index_df}(x, i, j, drop = FALSE, drop.index.levels = "id")
+
+\method{print}{index_df}(x, topn = 5, ...)
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{.X}{a data frame or list-like object of equal-length columns.}
+  \item{x}{an 'indexed_frame' or 'indexed_series'. \code{findex} / \code{unindex} also work with 'pseries' and 'pdata.frame's created with \emph{plm}. For \code{is_irregular} \code{x} can also be an index (inherits 'pindex') or a vector representing time. }
+  \item{\dots}{for \code{findex_by}: variables identifying the individual (id) and/or time dimensions of the data. Passed either as unquoted comma-separated column names or (tagged) expressions involving columns, or as a vector of column names, indices, a logical vector or a selector function. The time variable must enter last. See Examples. Otherwise: further arguments passed to \code{\link[=NextMethod]{NextMethod()}}.}
+  \item{single}{character. If only one indexing variable is supplied, this can be declared as \code{"id"} or \code{"time"} variable. \code{"auto"} chooses \code{"id"} if the variable has \code{\link{anyDuplicated}} values.  }
+  \item{interact.ids}{logical. If \code{n > 2} indexing variables are passed, \code{TRUE} calls \code{\link{finteraction}} on the first \code{n-1} of them (\code{n}'th variable must be time). \code{FALSE} keeps all variables in the index. The latter slows down computations of lags / differences etc. because ad-hoc interactions need to be computed, but gives more flexibility for scaling / centering / summarising over different data dimensions.  }
+  \item{index}{and index (inherits 'pindex'), or an atomic vector or list of factors matching the data dimensions. Atomic vectors or lists with 1 factor will must be declared, see \code{single}. Atomic vectors will additionall be grouped / turned into time-factors. See Details. }
+  \item{drop.index.levels}{character. Subset methods also subset the index (= a data.frame of factors), and this argument regulates which factor levels should be dropped: either \code{"all"}, \code{"id"}, \code{"time"} or \code{"none"}. The default \code{"id"} only drops levels from id's. \code{"all"} or \code{"time"} should be used with caution because time-factors may contain levels for missing time periods (gaps in irregular sequences, or periods within a sequence removed through subsetting), and dropping those levels would create a variable that is ordinal but no longer represents time. The benefit of dropping levels is that it can speed-up subsequent computations by reducing the size of intermediate vectors created in C++.   }
+  \item{any_id}{logical. For panel series: \code{FALSE} returns the irregularity check performed for each id, \code{TRUE} calls \code{\link{any}} on those checks.}
+  \item{row.names}{logical. \code{TRUE} creates descriptive row-names (or names for pseries) as in \code{plm}. This can be expensive and is usually not required for \code{plm} models to work.}
+  \item{topn}{integer. The number of first and last rows to print.}
+  \item{i, j, name, drop, value}{Arguments passed to \code{\link{NextMethod}}, or as in the \link[=[.data.frame]{data.frame methods}. Note that for index subsetting to work, \code{i} needs to be integer or logical (or an expression evaluation to integer or logical if \code{x} is a \emph{data.table}).}
+}
+\details{
+The first thing to note about these new 'indexed_frame', 'indexed_series' and 'index_df' classes is that they inherit \emph{plm}'s 'pdata.frame', 'pseries' and 'pindex' classes, respectively. Hence they are sub-classes that add, improve, and, in some cases, remove functionality provided in \emph{plm}, with the aim of striking an optimal balance of flexibility and performance. The inheritance means that all 'pseries' and 'pdata.frame' methods in \emph{collapse}, and also some methods in \emph{plm}, apply to them. Where compatibility or performance considerations allow for it, \emph{collapse} will continue to create methods for \emph{plm}'s classes instead of the sub-classes.
+
+The use of these sub-classes does not require much knowledge of \emph{plm}, but as a basic background: A 'pdata.frame' is a data.frame with an index attribute: a data.frame of 2 factors identifying the individual and time-dimension of the data. When pulling a variable out of the pdata.frame using a method like \code{$.pdata.frame} or \code{[[.pdata.frame} (defined in \emph{plm}), a 'pseries' is created by transferring the index attribute to the vector. Methods defined for functions like \code{\link{lag}} / \code{\link{flag}} etc. use the index for correct computations on this panel data, also inside \emph{plm}'s estimation commands.
+
+\bold{Main Features and Enhancements}
+
+The 'indexed_frame' and 'indexed_series' classes extend and enhance 'pdata.frame' and 'pseries' in a number of critical dimenions. Most notably they:
+
+\itemize{
+  \item Support \bold{both time series and panel data}, by allowing indexation of data with one, two or more variables.
+  \item Are \bold{class-agnostic}: any data.frame/list (such as data.table, tibble, tsibble, sf etc.) can become an 'indexed_frame' and continue to function as usual for most use cases. Similarly, any vector or matrix (such as 'ts', 'mts', 'xts') can become an 'indexed_series'. This also allows for transient workflows e.g. \code{some_df |> findex_by(...) |> 'do something using collapse functions' |> unindex() |> 'continue working with some_df'}.
+  \item Come with a comprehensive and efficent set of \bold{methods for subsetting and manipulation}, including methods for \code{\link{fsubset}}, \code{\link{funique}}, \code{\link[=roworder]{roworder(v)}} (internal) and \code{\link{na_omit}} (internal, \code{\link{na.omit}} also works but is slower). It is also possible to group indexed data with \code{\link{fgroup_by}} for transformations e.g. using \code{\link{fmutate}}, but aggregation requires \code{unindex()}ing.
+  \item \bold{Natively handle irregularity}: non-integer time variables (such as 'Date', 'POSIXct' etc.) are passed to \code{\link{timeid}}, which efficiently determines the temporal structure by finding the greatest common divisor, and creates a time-factor with levels corresponding to a complete time-sequence. The same happens with integer time variables, which are assumed to represent unitary time steps (but can also be passed through \code{\link{timeid}} if non-unitary). Character time variables are converted to factor, which might also capture irregular gaps in panel series. Using this time-factor in the index, \emph{collapse}'s functions efficiently perform correct computations on irregular sequences and panels without the need to 'expand' the data / fill gaps. \code{is_irregular} can be used to check for irregularity in the entire sequence / panel or separately for each individual in panel data.
+\item Support computations inside \bold{data-masking functions and formulas}, by virtue of what I call \bold{deep indexation}: Each variable inside an 'indexed_frame' is an 'indexed_series' which contains in it's 'index_df' attribute an external pointer to the 'index_df' attribute of the frame. Functions operating on 'indexed_series' stored inside the frame (such as \code{with(data, flag(column))}) can fetch the index from this pointer. This allows worry-free application inside arbitary data masking environments (\code{with}, \code{\%$\%}, \code{attach}, etc..) and estimation commands (\code{glm}, \code{feols}, \code{ranger} etc..). A limitation is that external pointers are only valid during the present R session, thus when saving an 'indexed_frame' and loading it again, you need to call \code{data = reindex(data)} before computing on it.
+}
+
+\bold{Limits to plm Compatibility}
+
+In contrast to 'pseries' and 'pdata.frame's, 'indexed_series' and 'indexed_frames' do not have descriptive "names" or "row.names" attributes attached to them, mainly for efficiency reasons.
+
+Furthermore, the index is stored in an attribute named 'index_df' (same as the class name), not 'index' as in \emph{plm}, mainly to make these classes work with \emph{data.table}, \emph{tsibble} and \emph{xts}, which also utilize 'index' attributes. This for the most part poses no problem to plm compatibility because plm source code fetches the index using \code{attr(x, "index")}, and \code{\link{attr}} by default performs partial matching. %It however allows plm objects to be indexed again / doubly indexed with both 'index' and 'index_df' attributes, so care needs to be taken when working with \emph{plm}.
+
+A much greater obstacle in working with \emph{plm} is that some internal \emph{plm} code is hinged on there being no \code{[.pseries} method, and the existance of \code{[.indexed_series} limits the use of these sub-classes in most \emph{plm} estimation commands. Therefore the \code{to_plm} funcion is provided to efficeintly coerce the sub-classes to ordinary plm objects before estimation. See Examples.
+
+Overall these classes don't really benefit \emph{plm}, especially given that collapse's plm methods also support native plm objects. However, they work very well with other models and software, including base R, \emph{fixest} / \emph{lfe}, and a whole bunch of time series and ML models. See Examples.
+
+\bold{Performance Considerations}
+
+When dealing with long Date or POSIXct time sequences, it may be that the internal processing by \code{\link{timeid}} is slow simply because calling \code{\link{strftime}} on these sequences to create factor levels is slow. In this case you may choose to generate an index factor with integer levels by passing \code{timeid(t, factor = FALSE)} to \code{findex_by} or \code{reindex}.
+
+\bold{Print Method}
+
+The print methods for 'indexed_frame' and 'indexed_series' first call \code{print(unindex(x), ...)}, followed by the index variables with the number of categories (index factor levels) in square brackets. If the time factor contains unused levels (= irregularity in the sequence), the square brackets indicate the number of used levels (periods), followed by the total number of levels (periods in the sequence) in round brackets.
+
+}
+
+
+
+%% ~Make other sections like Warning with \section{Warning }{....} ~
+
+\seealso{
+\link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}}
+\examples{
+opts <- options(max.print = 100)
+
+# Indexing wlddev data
+wldi <- findex_by(wlddev, iso3c, year)
+wldi
+POP <- wldi$POP
+qsu(POP)                    # Summary statistics
+fgrowth(POP)                # Population growth
+STD(fgrowth(POP, c(1, 10))) # Within-standardized 1 and 10-year growth rates
+psmat(POP)                  # Panel-Series Matrix
+
+# Fast Statistical Functions don't have dedicated methods
+fmean(POP) # If the result is scalar, it is smart enough to drop the index
+fmean(unindex(fgrowth(POP)), findex(POP)$iso3c) # else we need to do this manually
+
+
+# Indexing Time Series
+print(AirPassengers)
+AirPassengers[-(20:30)]        # Ts class does not support irregularity, subsetting drops class
+G(AirPassengers[-(20:30)], 12) # Annual Growth Rate: Wrong!
+# Now indexing AirPassengers (identity() is a trick so that the index is named time(AirPassengers))
+iAP <- reindex(AirPassengers, identity(time(AirPassengers)))
+iAP
+findex(iAP)    # See the index
+iAP[-(20:30)]  # Subsetting
+G(iAP[-(20:30)], 12)                # Annual Growth Rate: Correct!
+L(G(iAP[-(20:30)], c(0,1,12)), 0:1) # Lagged level, period and annual growth rates...
+
+# xts
+library(magrittr)
+library(xts)
+library(zoo) # Needed for as.yearmon
+X <- wlddev \%>\% fsubset(iso3c == "DEU", date, PCGDP:POP) \%>\% {
+  xts(num_vars(.), order.by = as.yearmon(.$date))
+} \%>\% reindex(identity(index(.)))
+plot(G(unindex(X)))
+diff(X[-(30:40),])  # diff.xts gixes wrong result
+fdiff(X[-(30:40),]) # fdiff gives right result
+
+# But xts range-based subsets do not work...
+\dontrun{
+X["1980/"]
+}
+
+# Thus a better way of working with xts is not to index and use ad.hoc omputations
+X <- unindex(X)
+X["1980/"] \%>\% fdiff(t = index(.))
+
+# tsibble...
+
+
+
+options(opts)
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory (show via RShowDoc("KEYWORDS")):
+% \keyword{ ~kwd1 }
+% \keyword{ ~kwd2 }
+% Use only one keyword per line.
+% For non-standard keywords, use \concept instead of \keyword:
+% \concept{ ~cpt1 }
+% \concept{ ~cpt2 }
+% Use only one concept per line.

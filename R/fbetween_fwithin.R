@@ -15,7 +15,9 @@ fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta
 
 fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- group_effect(x, effect)
+  if(is.matrix(x))
+  .Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE) else
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -37,7 +39,7 @@ fwithin.list <- function(x, ...) fwithin.data.frame(x, ...)
 
 fwithin.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- group_effect(x, effect)
   .Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -109,11 +111,10 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   ax <- attributes(x)
   class(x) <- NULL
   nam <- names(x)
-  g <- if(length(effect) == 1L) .subset2(getpix(ax[["index"]]), effect) else
-    finteraction(.subset(getpix(ax[["index"]]), effect))
+  g <- group_effect(x, effect)
 
   if(keep.ids) {
-    gn <- which(nam %in% attr(getpix(ax[["index"]]), "names"))
+    gn <- which(nam %in% attr(findex(x), "names"))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
@@ -207,7 +208,9 @@ fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, 
 
 fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- group_effect(x, effect)
+  if(is.matrix(x))
+  .Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill) else
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill)
 }
 
@@ -229,7 +232,7 @@ fbetween.list <- function(x, ...) fbetween.data.frame(x, ...)
 
 fbetween.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- group_effect(x, effect)
   .Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill)
 }
 
@@ -301,11 +304,10 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   ax <- attributes(x)
   class(x) <- NULL
   nam <- names(x)
-  g <- if(length(effect) == 1L) .subset2(getpix(ax[["index"]]), effect) else
-    finteraction(.subset(getpix(ax[["index"]]), effect))
+  g <- group_effect(x, effect)
 
   if(keep.ids) {
-    gn <- which(nam %in% attr(getpix(ax[["index"]]), "names"))
+    gn <- which(nam %in% attr(findex(x), "names"))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
