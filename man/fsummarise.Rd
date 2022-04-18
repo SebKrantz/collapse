@@ -10,7 +10,7 @@ Fast Summarise
 }
 \usage{
 fsummarise(.data, ..., keep.group_vars = TRUE)
-smr(.data, ..., keep.group_vars = TRUE)        # Shortcut
+smr(.data, ..., keep.group_vars = TRUE)        # Shorthand
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

@@ -37,33 +37,33 @@ Efficiently select and replace (or add) a subset of columns from (to) a data fra
 ## Select and replace variables, analgous to dplyr::select but significantly faster
 fselect(.x, \dots, return = "data")
 fselect(x, \dots) <- value
-slt(.x, \dots, return = "data")   # Shortcut for fselect
-slt(x, \dots) <- value            # Shortcut for fselect<-
+slt(.x, \dots, return = "data")   # Shorthand for fselect
+slt(x, \dots) <- value            # Shorthand for fselect<-
 
 ## Select and replace columns by names, indices, logical vectors,
 ## regular expressions or using functions to identify columns
 
 get_vars(x, vars, return = "data", regex = FALSE, \dots)
-      gv(x, vars, return = "data", \dots)     # Shortcut for get_vars
-     gvr(x, vars, return = "data", \dots)     # Shortcut for get_vars(\dots, regex = TRUE)
+      gv(x, vars, return = "data", \dots)   # Shorthand for get_vars
+     gvr(x, vars, return = "data", \dots)   # Shorthand for get_vars(..., regex = TRUE)
 
 get_vars(x, vars, regex = FALSE, \dots) <- value
-      gv(x, vars, \dots) <- value             # Shortcut for get_vars<-
-     gvr(x, vars, \dots) <- value             # Shortcut for get_vars<-(\dots, regex = TRUE)
+      gv(x, vars, \dots) <- value           # Shorthand for get_vars<-
+     gvr(x, vars, \dots) <- value           # Shorthand for get_vars<-(..., regex = TRUE)
 
 ## Add columns at any position within a data.frame
 
 add_vars(x, \dots, pos = "end")
 add_vars(x, pos = "end") <- value
-      av(x, \dots, pos = "end")               # Shortcut for add_vars
-      av(x, pos = "end") <- value           # Shortcut for add_vars<-
+      av(x, \dots, pos = "end")             # Shorthand for add_vars
+      av(x, pos = "end") <- value         # Shorthand for add_vars<-
 
 ## Select and replace columns by data type
 
 num_vars(x, return = "data")
 num_vars(x) <- value
-      nv(x, return = "data")       # Shortcut for num_vars
-      nv(x) <- value               # Shortcut for num_vars<-
+      nv(x, return = "data")       # Shorthand for num_vars
+      nv(x) <- value               # Shorthand for num_vars<-
 cat_vars(x, return = "data")       # Categorical variables, see is_categorical
 cat_vars(x) <- value
 char_vars(x, return = "data")

@@ -24,18 +24,18 @@ Catering to the \emph{tidyverse} user, v1.7.0 introduced \code{fmutate}, providi
 # Modify and return data frame
 ftransform(.data, \dots)
 ftransformv(.data, vars, FUN, \dots, apply = TRUE)
-tfm(.data, \dots)               # Shortcut for ftransform
+tfm(.data, \dots)               # Shorthand for ftransform
 tfmv(.data, vars, FUN, \dots, apply = TRUE)
 
 # Modify data frame by reference
 settransform(.data, \dots)
 settransformv(.data, \dots)     # Same arguments as ftransformv
-settfm(.data, \dots)            # Shortcut for settransform
+settfm(.data, \dots)            # Shorthand for settransform
 settfmv(.data, \dots)
 
 # Replace/add modified columns in/to a data frame
 ftransform(.data) <- value
-tfm(.data) <- value           # Shortcut for ftransform<-
+tfm(.data) <- value           # Shorthand for ftransform<-
 
 # Compute columns, returned as a new data frame
 fcompute(.data, \dots, keep = NULL)
@@ -43,7 +43,7 @@ fcomputev(.data, vars, FUN, \dots, apply = TRUE, keep = NULL)
 
 # New: dplyr-style mutate (sequential evaluation + across() feature)
 fmutate(.data, ..., .keep = "all")
-mtt(.data, ..., .keep = "all") # Shortcut for fmutate
+mtt(.data, ..., .keep = "all") # Shorthand for fmutate
 }
 \arguments{
     \item{.data}{a data frame or named list of columns.}
