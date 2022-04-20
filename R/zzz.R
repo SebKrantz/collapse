@@ -32,8 +32,8 @@
   if(length(mask) && is.character(mask)) {
     # if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
     if(any(mask == "all")) mask <- c("helper", "manip", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
-    manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fmutate", "frename")
-    helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
+    manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fmutate", "frename", "findex_by", "findex")
+    helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "frange", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
     if(any(mask == "helper")) mask <- unique.default(c(helperfun, mask[mask != "helper"]))
     if(any(mask == "manip")) mask <- unique.default(c(manipfun, mask[mask != "manip"]))
     if(any(mask == "fast-fun")) {
@@ -79,7 +79,7 @@
   # }
 
   if(is.null(getOption("collapse_unused_arg_action"))) options(collapse_unused_arg_action = "warning") # error, warning, message or none
-  if(is.null(getOption("collapse_DT_alloccol"))) options(collapse_DT_alloccol = 100L)
+  # if(is.null(getOption("collapse_DT_alloccol"))) options(collapse_DT_alloccol = 100L)
 
   invisible(res)
 }
