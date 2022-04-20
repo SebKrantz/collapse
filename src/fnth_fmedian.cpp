@@ -3,6 +3,9 @@
 #define STRICT_R_HEADERS
 #include <cfloat>
 #include <Rcpp.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 using namespace Rcpp;
 
 extern "C" {
@@ -15,7 +18,8 @@ auto nisnan = [](double x) { return x == x; };
 
 //[[Rcpp::export]]
 NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const IntegerVector& g = 0,
-                      const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true, int ret = 1) {
+                      const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true,
+                      int ret = 1, int nthreads = 1) {
   int l = x.size();
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
@@ -58,6 +62,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       return out;
     } else { // with groups
       if(l != g.size()) stop("length(g) must match length(x)");
+      if(nthreads > ng) nthreads = ng;
       int ngp = ng+1;
       std::vector<std::vector<double> > gmap(ngp);
       std::vector<int> gcount(ngp);
@@ -80,7 +85,8 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       if(narm) {
         NumericVector out(ng, NA_REAL);
         for(int i = 0; i != l; ++i) if(nisnan(x[i])) gmap[g[i]][gcount[g[i]]++] = x[i];
-        for(int i = 1; i != ngp; ++i) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 1; i < ngp; ++i) {
           if(gcount[i] != 0) {
             int n = gcount[i], nth = lower ? (n-1)*Q : n*Q;
             auto begin = gmap[i].begin(), mid = begin + nth, end = begin + n;
@@ -105,7 +111,8 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
             gmap[g[i]][gcount[g[i]]++] = x[i];
           }
         }
-        for(int i = 0; i != ng; ++i) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < ng; ++i) {
           if(isnan2(out[i])) continue;
           int n = gcount[i+1], nth = lower ? (n-1)*Q : n*Q;
           auto begin = gmap[i+1].begin(), mid = begin + nth, end = begin + n;
@@ -224,7 +231,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
 //[[Rcpp::export]]
 SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerVector& g = 0,
               const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true,
-              bool drop = true, int ret = 1) {
+              bool drop = true, int ret = 1, int nthreads = 1) {
   int l = x.nrow(), col = x.ncol();
   bool tiesmean, lower;
   if(Q <= 0 || Q == 1) stop("n needs to be between 0 and 1, or between 1 and nrow(x). Use fmin and fmax for minima and maxima.");
@@ -245,11 +252,13 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
 
   if(Rf_isNull(w)) {
     if(ng == 0) {
+      if(nthreads > col) nthreads = col;
       NumericVector out = no_init_vector(col);
       if(narm) {
         NumericVector column = no_init_vector(l);
         auto begin = column.begin();
-        for(int j = col; j--; ) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < col; ++j) {
           NumericMatrix::ConstColumn colj = x( _ , j);
           auto pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
           int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
@@ -263,7 +272,8 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
       } else {
         int nth = lower ? (l-1)*Q : l*Q;
         bool tm = tiesmean && l%2 == 0;
-        for(int j = col; j--; ) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < col; ++j) {
           {
             NumericMatrix::ConstColumn colj = x( _ , j);
             for(int i = 0; i != l; ++i) {
@@ -288,6 +298,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
       return out;
     } else { // with groups
       if(l != g.size()) stop("length(g) must match nrow(x)");
+      if(nthreads > ng) nthreads = ng;
       int ngp = ng+1;
       std::vector<std::vector<double> > gmap(ngp);
       std::vector<int> gcount(ngp);
@@ -314,7 +325,8 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
           NumericMatrix::Column nthj = out( _ , j);
           gcount.assign(ngp, 0);
           for(int i = 0; i != l; ++i) if(nisnan(column[i])) gmap[g[i]][gcount[g[i]]++] = column[i];
-          for(int i = 1; i != ngp; ++i) {
+          #pragma omp parallel for num_threads(nthreads)
+          for(int i = 1; i < ngp; ++i) {
             if(gcount[i] != 0) {
               int n = gcount[i], nth = lower ? (n-1)*Q : n*Q;
               auto begin = gmap[i].begin(), mid = begin + nth, end = begin + n;
@@ -344,7 +356,8 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
               gmap[g[i]][gcount[g[i]]++] = column[i];
             }
           }
-          for(int i = 0; i != ng; ++i) {
+          #pragma omp parallel for num_threads(nthreads)
+          for(int i = 0; i < ng; ++i) {
             if(isnan2(nthj[i])) continue;
             int n = gcount[i+1], nth = lower ? (n-1)*Q : n*Q;
             auto begin = gmap[i+1].begin(), mid = begin + nth, end = begin + n;
@@ -360,6 +373,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
   } else { // with weights
     NumericVector wg = w;
     if(l != wg.size()) stop("length(w) must match nrow(x)");
+    if(nthreads > col) nthreads = col;
     IntegerVector o = no_init_vector(l);
     int *ord = INTEGER(o);
 
@@ -374,7 +388,8 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
           // goto outnth;
         }
       }
-      for(int j = col; j--; ) {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int j = 0; j < col; ++j) {
         NumericMatrix::ConstColumn column = x( _ , j);
         Cdoubleradixsort(ord, TRUE, FALSE, wrap(column)); // starts from 1....
         if(narm) {
@@ -429,7 +444,8 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         for(int i = 0; i != l; ++i) wsumQ[g[i]-1] += wg[i];
         wsumQ = wsumQ * Q;
       }
-      for(int j = col; j--; ) {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int j = 0; j < col; ++j) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column nthj = out( _ , j);
         Cdoubleradixsort(ord, TRUE, FALSE, wrap(column));
@@ -497,7 +513,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
 //[[Rcpp::export]]
 SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g = 0,
               const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true,
-              bool drop = true, int ret = 1) {
+              bool drop = true, int ret = 1, int nthreads = 1) {
   int l = x.size(), lx1 = Rf_length(x[0]);
   bool tiesmean, lower;
   if(Q <= 0 || Q == 1) stop("n needs to be between 0 and 1, or between 1 and nrow(x). Use fmin and fmax for minima and maxima.");
@@ -518,9 +534,11 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
 
   if(Rf_isNull(w)) {
     if(ng == 0) {
+      if(nthreads > l) nthreads = l;
       NumericVector out = no_init_vector(l);
       if(narm) {
-        for(int j = l; j--; ) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < l; ++j) {
           NumericVector colj = x[j];
           NumericVector column = no_init_vector(colj.size());
           auto begin = column.begin();
@@ -534,7 +552,8 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           out[j] = (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
         }
       } else {
-        for(int j = l; j--; ) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < l; ++j) {
           {
             NumericVector colj = x[j];
             int row = colj.size(), nth = lower ? (row-1)*Q : row*Q;
@@ -568,6 +587,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
 
     } else { // with groups
       if(lx1 != g.size()) stop("length(g) must match nrow(x)");
+      if(nthreads > ng) nthreads = ng;
       List out(l);
       int ngp = ng+1;
       std::vector<std::vector<double> > gmap(ngp);
@@ -593,7 +613,8 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           if(lx1 != column.size()) stop("length(g) must match nrow(x)");
           gcount.assign(ngp, 0);
           for(int i = 0; i != lx1; ++i) if(nisnan(column[i])) gmap[g[i]][gcount[g[i]]++] = column[i];
-          for(int i = 1; i != ngp; ++i) {
+          #pragma omp parallel for num_threads(nthreads)
+          for(int i = 1; i < ngp; ++i) {
             if(gcount[i] != 0) {
               int n = gcount[i], nth = lower ? (n-1)*Q : n*Q;
               auto begin = gmap[i].begin(), mid = begin + nth, end = begin + n;
@@ -622,7 +643,8 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
               gmap[g[i]][gcount[g[i]]++] = column[i];
             }
           }
-          for(int i = 0; i != ng; ++i) {
+          #pragma omp parallel for num_threads(nthreads)
+          for(int i = 0; i < ng; ++i) {
             if(isnan2(nthj[i])) continue;
             int n = gcount[i+1], nth = lower ? (n-1)*Q : n*Q;
             auto begin = gmap[i+1].begin(), mid = begin + nth, end = begin + n;
@@ -640,6 +662,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
   } else { // with weights
     NumericVector wg = w;
     if(lx1 != wg.size()) stop("length(w) must match nrow(x)");
+    if(nthreads > l) nthreads = l;
     IntegerVector o = no_init_vector(lx1);
     int *ord = INTEGER(o);
 
@@ -654,7 +677,8 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           // goto outnth;
         }
       }
-      for(int j = l; j--; ) {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int j = 0; j < l; ++j) {
         NumericVector column = x[j];
         if(lx1 != column.size()) stop("length(w) must match nrow(x)");
         Cdoubleradixsort(ord, TRUE, FALSE, column); // starts from 1
@@ -715,7 +739,8 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         for(int i = 0; i != lx1; ++i) wsumQ[g[i]-1] += wg[i];
         wsumQ = wsumQ * Q;
       }
-      for(int j = l; j--; ) {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int j = 0; j < l; ++j) {
         NumericVector column = x[j];
         if(lx1 != column.size()) stop("length(w) must match nrow(x)");
         Cdoubleradixsort(ord, TRUE, FALSE, column);

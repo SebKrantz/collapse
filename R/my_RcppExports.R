@@ -97,16 +97,16 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(Cpp_flagleadl, x, n, fill, ng, g, t, names)
 }
 
-fnthCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L) {
-  .Call(Cpp_fnth, x, n, ng, g, gs, w, narm, ret)
+fnthCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L, nthreads = 1L) {
+  .Call(Cpp_fnth, x, n, ng, g, gs, w, narm, ret, nthreads)
 }
 
-fnthmCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L) {
-  .Call(Cpp_fnthm, x, n, ng, g, gs, w, narm, drop, ret)
+fnthmCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L, nthreads = 1L) {
+  .Call(Cpp_fnthm, x, n, ng, g, gs, w, narm, drop, ret, nthreads)
 }
 
-fnthlCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L) {
-  .Call(Cpp_fnthl, x, n, ng, g, gs, w, narm, drop, ret)
+fnthlCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L, nthreads = 1L) {
+  .Call(Cpp_fnthl, x, n, ng, g, gs, w, narm, drop, ret, nthreads)
 }
 
 fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
