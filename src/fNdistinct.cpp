@@ -1,5 +1,8 @@
 // [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 using namespace Rcpp;
 
 // TODO: Perhaps redo everything with data pointers and 2d group indices (instead of filling the 2d structure every time !): http://www.cplusplus.com/reference/vector/vector/data/
