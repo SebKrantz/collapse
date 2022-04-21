@@ -11,8 +11,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // fndistinctCpp
-SEXP fndistinctCpp(const SEXP& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm);
-RcppExport SEXP _collapse_fndistinctCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP) {
+SEXP fndistinctCpp(const SEXP& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, int nthreads);
+RcppExport SEXP _collapse_fndistinctCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP nthreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -21,13 +21,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
     Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    rcpp_result_gen = Rcpp::wrap(fndistinctCpp(x, ng, g, gs, narm));
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(fndistinctCpp(x, ng, g, gs, narm, nthreads));
     return rcpp_result_gen;
 END_RCPP
 }
 // fndistinctlCpp
-SEXP fndistinctlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop);
-RcppExport SEXP _collapse_fndistinctlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP) {
+SEXP fndistinctlCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop, int nthreads);
+RcppExport SEXP _collapse_fndistinctlCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP, SEXP nthreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -37,13 +38,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
     Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fndistinctlCpp(x, ng, g, gs, narm, drop));
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(fndistinctlCpp(x, ng, g, gs, narm, drop, nthreads));
     return rcpp_result_gen;
 END_RCPP
 }
 // fndistinctmCpp
-SEXP fndistinctmCpp(SEXP x, int ng, IntegerVector g, SEXP gs, bool narm, bool drop);
-RcppExport SEXP _collapse_fndistinctmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP) {
+SEXP fndistinctmCpp(SEXP x, int ng, IntegerVector g, SEXP gs, bool narm, bool drop, int nthreads);
+RcppExport SEXP _collapse_fndistinctmCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP narmSEXP, SEXP dropSEXP, SEXP nthreadsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -53,7 +55,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< SEXP >::type gs(gsSEXP);
     Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
     Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    rcpp_result_gen = Rcpp::wrap(fndistinctmCpp(x, ng, g, gs, narm, drop));
+    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
+    rcpp_result_gen = Rcpp::wrap(fndistinctmCpp(x, ng, g, gs, narm, drop, nthreads));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -13,16 +13,16 @@
 fndistinct(x, \dots)
 
 \method{fndistinct}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, \dots)
+           use.g.names = TRUE, nthreads = 1L, \dots)
 
 \method{fndistinct}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, drop = TRUE, \dots)
+           use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
 
 \method{fndistinct}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, drop = TRUE, \dots)
+           use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
 
 \method{fndistinct}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
-           use.g.names = FALSE, keep.group_vars = TRUE, \dots)
+           use.g.names = FALSE, keep.group_vars = TRUE, nthreads = 1L, \dots)
 }
 \arguments{
 \item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}
@@ -36,6 +36,8 @@ fndistinct(x, \dots)
 \item{na.rm}{logical. \code{TRUE}: Skip missing values in \code{x} (faster computation). \code{FALSE}: Also consider 'NA' as one distinct value.}
 
 \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
+
+\item{nthreads}{integer. The number of threads to utilize. Parallelism is across groups for grouped computations and at the column-level otherwise. }
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 

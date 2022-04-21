@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 template <int RTYPE>
 IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g,
-                              const SEXP& gs, bool narm) {
+                              const SEXP& gs, bool narm, int nthreads) {
   int l = x.size();
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   auto isnanT = (RTYPE == REALSXP) ? [](storage_t x) { return x != x; } :
@@ -47,6 +47,7 @@ IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
   } else {
     // unsigned int addr;
     if(l != g.size()) stop("length(g) must match length(x)");
+    if(nthreads > ng) nthreads = ng;
     std::vector<std::vector<storage_t> > gmap(ng+1);
     IntegerVector out(ng);
     int *outm1 = out.begin()-1;
@@ -68,7 +69,8 @@ IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
     }
     for(int i = 0; i != l; ++i) gmap[g[i]][outm1[g[i]]++] = x[i];
     if(narm) {
-      for(int gr = 0; gr != ng; ++gr) {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int gr = 0; gr < ng; ++gr) {
         // const std::vector<storage_t>& temp = gmap[gr+1]; // good ? // const Vector<RTYPE>& // wrap()
         sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // temp
         for(int i = hash.n; i--; ) {
@@ -87,7 +89,8 @@ IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
         out[gr] = hash.size_;
       }
     } else {
-      for(int gr = 0; gr != ng; ++gr) {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int gr = 0; gr < ng; ++gr) {
         sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1]));
         hash.fill();
         out[gr] = hash.size_;
@@ -105,7 +108,7 @@ IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
 
 
 IntegerVector fndistinctFACT(const IntegerVector& x, int ng, const IntegerVector& g,
-                             const SEXP& gs, bool narm) {
+                             const SEXP& gs, bool narm, int nthreads) {
   int l = x.size(), nlevp = Rf_nlevels(x)+1, n = 1;
     if(ng == 0) {
       std::vector<bool> uxp(nlevp, true);
@@ -134,6 +137,7 @@ IntegerVector fndistinctFACT(const IntegerVector& x, int ng, const IntegerVector
     } else {
       // unsigned int addr;
       if(l != g.size()) stop("length(g) must match length(x)");
+      if(nthreads > ng) nthreads = ng;
       std::vector<std::vector<int> > gmap(ng+1);
       IntegerVector out(ng);
       int *outm1 = out.begin()-1;
@@ -154,7 +158,8 @@ IntegerVector fndistinctFACT(const IntegerVector& x, int ng, const IntegerVector
       }
       for(int i = 0; i != l; ++i) gmap[g[i]][outm1[g[i]]++] = x[i];
       if(narm) {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           const std::vector<int>& temp = gmap[gr+1];
           n = 1;
           std::vector<bool> uxp(nlevp, true);
@@ -167,7 +172,8 @@ IntegerVector fndistinctFACT(const IntegerVector& x, int ng, const IntegerVector
           out[gr] = n - 1;
         }
       } else {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           const std::vector<int>& temp = gmap[gr+1];
           bool anyNA = false;
           n = 1;
@@ -271,16 +277,16 @@ IntegerVector fndistinctLOGI(const LogicalVector& x, int ng, const IntegerVector
 
 
 // [[Rcpp::export]]
-SEXP fndistinctCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, bool narm = true) {
+SEXP fndistinctCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, bool narm = true, int nthreads = 1) {
   switch(TYPEOF(x)) {
   case REALSXP:
-    return fndistinctImpl<REALSXP>(x, ng, g, gs, narm);
+    return fndistinctImpl<REALSXP>(x, ng, g, gs, narm, nthreads);
   case INTSXP:
     if(Rf_isFactor(x) && (ng == 0 || Rf_nlevels(x) < Rf_length(x) / ng * 3))
-      return fndistinctFACT(x, ng, g, gs, narm);
-    return fndistinctImpl<INTSXP>(x, ng, g, gs, narm);
+      return fndistinctFACT(x, ng, g, gs, narm, nthreads);
+    return fndistinctImpl<INTSXP>(x, ng, g, gs, narm, nthreads);
   case STRSXP:
-    return fndistinctImpl<STRSXP>(x, ng, g, gs, narm);
+    return fndistinctImpl<STRSXP>(x, ng, g, gs, narm, nthreads);
   case LGLSXP:
     return fndistinctLOGI(x, ng, g, gs, narm);
   default: stop("Not supported SEXP type !");
@@ -291,29 +297,18 @@ SEXP fndistinctCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const 
 
 // [[Rcpp::export]]
 SEXP fndistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
-                    const SEXP& gs = R_NilValue, bool narm = true, bool drop = true) {
+                    const SEXP& gs = R_NilValue, bool narm = true, bool drop = true, int nthreads = 1) {
   int l = x.size();
   List out(l);
 
-  for(int j = l; j--; ) {
-    switch(TYPEOF(x[j])) {
-    case REALSXP:
-      out[j] = fndistinctImpl<REALSXP>(x[j], ng, g, gs, narm);
-      break;
-    case INTSXP:
-      if(Rf_isFactor(x[j]) && (ng == 0 || Rf_nlevels(x[j]) < Rf_length(x[j]) / ng * 3))
-        out[j] = fndistinctFACT(x[j], ng, g, gs, narm);
-      else out[j] = fndistinctImpl<INTSXP>(x[j], ng, g, gs, narm);
-      break;
-    case STRSXP:
-      out[j] = fndistinctImpl<STRSXP>(x[j], ng, g, gs, narm);
-      break;
-    case LGLSXP:
-      out[j] = fndistinctLOGI(x[j], ng, g, gs, narm);
-      break;
-    default: stop("Not supported SEXP type !");
-    }
+  if(ng == 0 && nthreads > 1) {
+    if(nthreads > l) nthreads = l;
+    #pragma omp parallel for num_threads(nthreads)
+    for(int j = 0; j < l; ++j) out[j] = fndistinctCpp(x[j], ng, g, gs, narm, 1);
+  } else {
+    for(int j = l; j--; ) out[j] = fndistinctCpp(x[j], ng, g, gs, narm, nthreads);
   }
+
   if(drop && ng == 0) {
     IntegerVector res = no_init_vector(l);
     for(int i = l; i--; ) res[i] = out[i]; // Rf_coerceVector(out, INTSXP); // doesn't work
@@ -331,7 +326,7 @@ SEXP fndistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
 
 template <int RTYPE>
 SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
-                      const SEXP& gs, bool narm, bool drop) {
+                      const SEXP& gs, bool narm, bool drop, int nthreads) {
   int l = x.nrow(), col = x.ncol();
   typedef typename Rcpp::traits::storage_type<RTYPE>::type storage_t;
   auto isnanT = (RTYPE == REALSXP) ? [](storage_t x) { return x != x; } :
@@ -342,8 +337,10 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
 
   if(ng == 0) {
     IntegerVector out = no_init_vector(col);
+    if(nthreads > col) nthreads = col;
     if(narm) {
-      for(int j = col; j--; ) {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int j = 0; j < col; ++j) {
         // ConstMatrixColumn<RTYPE> column = x(_ , j);
         sugar::IndexHash<RTYPE> hash(wrap(x(_ , j))); // wrap(column) // why wrap needed ?
         for(int i = 0; i != l; ++i) {
@@ -362,7 +359,8 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         out[j] = hash.size_;
       }
     } else {
-      for(int j = col; j--; ) {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int j = 0; j < col; ++j) {
         // ConstMatrixColumn<RTYPE> column = x(_ , j);
         sugar::IndexHash<RTYPE> hash(wrap(x(_ , j))); // wrap(column) // why wrap needed ?
         hash.fill();
@@ -378,6 +376,7 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
     return out;
   } else {
     if(l != g.size()) stop("length(g) must match length(x)");
+    if(nthreads > ng) nthreads = ng;
     int ngp = ng+1;
     std::vector<std::vector<storage_t> > gmap(ngp);
     IntegerMatrix out = no_init_matrix(ng, col);
@@ -403,7 +402,8 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         IntegerMatrix::Column outj = out(_, j);
         n.assign(ngp, 0);
         for(int i = 0; i != l; ++i) gmap[g[i]][n[g[i]]++] = column[i]; // reading in all the values. Better way ?
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           // const std::vector<storage_t>& temp = gmap[gr+1]; // good ? // const Vector<RTYPE>& // wrap()
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
           for(int i = hash.n; i--; ) {
@@ -428,7 +428,8 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         IntegerMatrix::Column outj = out(_, j);
         n.assign(ngp, 0);
         for(int i = 0; i != l; ++i) gmap[g[i]][n[g[i]]++] = column[i]; // reading in all the values. Better way ?
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1]));
           hash.fill();
           outj[gr] = hash.size_;
@@ -442,7 +443,7 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
 }
 
 template <> // No logical vector with sugar::IndexHash<RTYPE> !
-SEXP fndistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop, int nthreads) {
   int l = x.nrow(), col = x.ncol();
 
   if(ng == 0) {
@@ -540,29 +541,29 @@ SEXP fndistinctmImpl(const Matrix<LGLSXP>& x, int ng, const IntegerVector& g, co
 }
 
 template <>
-SEXP fndistinctmImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop, int nthreads) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fndistinctmImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop, int nthreads) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fndistinctmImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop, int nthreads) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fndistinctmImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop) {
+SEXP fndistinctmImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, bool narm, bool drop, int nthreads) {
   stop("Not supported SEXP type!");
 }
 
 
 // [[Rcpp::export]]
-SEXP fndistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true, bool drop = true) {
-  RCPP_RETURN_MATRIX(fndistinctmImpl, x, ng, g, gs, narm, drop);
+SEXP fndistinctmCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, bool narm = true, bool drop = true, int nthreads = 1) {
+  RCPP_RETURN_MATRIX(fndistinctmImpl, x, ng, g, gs, narm, drop, nthreads);
 }
 
 
