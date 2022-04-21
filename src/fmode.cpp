@@ -2,6 +2,9 @@
 #define STRICT_R_HEADERS
 #include <cfloat>
 #include <Rcpp.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 using namespace Rcpp ;
 
 // General to do: Check if you can do it without unsigned int and n[l+1] but just with int and n[l]
@@ -9,9 +12,8 @@ using namespace Rcpp ;
 // https://stackoverflow.com/questions/1733143/converting-between-c-stdvector-and-c-array-without-copying?rq=1
 // For named vectors, could add right name!
 
-
 template <int RTYPE>
-Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret) {
+Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret, int nthreads) {
   int l = x.size();
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   bool minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
@@ -135,6 +137,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
+      if(nthreads > ng) nthreads = ng;
       const int *pg = g.begin();
       int ngp = ng+1;
       std::vector<std::vector<storage_t> > gmap(ngp);
@@ -157,7 +160,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       }
       for(int i = 0; i != l; ++i) gmap[pg[i]][n[pg[i]]++] = x[i];
       if(narm) {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           // const std::vector<storage_t>& temp = gmap[gr]; // wrap() // good ? // const Vector<RTYPE>& // better for character strings
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1]));  // wrap(temp)
           int i = 0, s = hash.n, end = s-1, max = 1, index; // n[s+1] // fastest ? use n ?
@@ -217,7 +221,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           }
         }
       } else {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           // const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
           out[gr] = hash.src[0];
@@ -390,6 +395,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
+      if(nthreads > ng) nthreads = ng;
       const int *pg = g.begin();
       int ngp = ng+1;
       std::vector<std::vector<storage_t> > gmap(ngp);
@@ -419,7 +425,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
         wmap[gi][n[gi]++] = pwg[i];
       }
       if(narm) {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           // const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
           const std::vector<double>& wtemp = wmap[gr+1];
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
@@ -478,7 +485,8 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
           }
         }
       } else {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           // const std::vector<storage_t>& temp = gmap[gr]; // good ? // const Vector<RTYPE>& // wrap()
           const std::vector<double>& wtemp = wmap[gr+1];
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
@@ -542,7 +550,7 @@ Vector<RTYPE> fmodeImpl(const Vector<RTYPE>& x, int ng, const IntegerVector& g, 
 }
 
 
-IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret) {
+IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret, int nthreads) {
   int l = x.size(), nlevp = Rf_nlevels(x)+1, val = 0;
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   bool minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
@@ -597,6 +605,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
+      if(nthreads > ng) nthreads = ng;
       const int *pg = g.begin();
       int ngp = ng+1;
       std::vector<std::vector<int> > gmap(ngp);
@@ -619,7 +628,8 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
       }
       for(int i = 0; i != l; ++i) gmap[pg[i]][n[pg[i]]++] = x[i];
       if(narm) {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           const std::vector<int>& temp = gmap[gr+1];
           int i = 0, s = temp.size(), end = s-1, max = 1;
           while(temp[i] == NA_INTEGER && i!=end) ++i;
@@ -645,7 +655,8 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           }
         }
       } else {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           const std::vector<int>& temp = gmap[gr+1];
           int tl = temp.size(), max = 1;
           std::vector<int> n(nlevp);
@@ -730,6 +741,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
       return out;
     } else {
       if(l != g.size()) stop("length(g) must match length(x)");
+      if(nthreads > ng) nthreads = ng;
       const int *pg = g.begin();
       int ngp = ng+1;
       std::vector<std::vector<int> > gmap(ngp);
@@ -759,7 +771,8 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
         wmap[gi][n[gi]++] = pwg[i];
       }
       if(narm) {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           const std::vector<int>& temp = gmap[gr+1];
           const std::vector<double>& wtemp = wmap[gr+1];
           int i = 0, s = temp.size(), end = s-1;
@@ -788,7 +801,8 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
           }
         }
       } else {
-        for(int gr = 0; gr != ng; ++gr) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr) {
           const std::vector<int>& temp = gmap[gr+1];
           const std::vector<double>& wtemp = wmap[gr+1];
           int tl = temp.size();
@@ -826,7 +840,7 @@ IntegerVector fmodeFACT(const IntegerVector& x, int ng, const IntegerVector& g, 
 
 
 template <> // No logical vector with sugar::IndexHash<RTYPE> !
-Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret) {
+Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret, int nthreads) {
   int l = x.size();
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   bool maxm = ret != 1;
@@ -973,15 +987,15 @@ Vector<LGLSXP> fmodeImpl(const Vector<LGLSXP>& x, int ng, const IntegerVector& g
 
 
 // [[Rcpp::export]]
-SEXP fmodeCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true, int ret = 0) {
+SEXP fmodeCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true, int ret = 0, int nthreads = 1) {
   switch(TYPEOF(x)) {
-  case REALSXP: return fmodeImpl<REALSXP>(x, ng, g, gs, w, narm, ret);
+  case REALSXP: return fmodeImpl<REALSXP>(x, ng, g, gs, w, narm, ret, nthreads);
   case INTSXP:
     if(Rf_isFactor(x) && (ng == 0 || Rf_nlevels(x) < Rf_length(x) / ng * 3))
-      return fmodeFACT(x, ng, g, gs, w, narm, ret);
-    return fmodeImpl<INTSXP>(x, ng, g, gs, w, narm, ret);
-  case STRSXP: return fmodeImpl<STRSXP>(x, ng, g, gs, w, narm, ret);
-  case LGLSXP: return fmodeImpl<LGLSXP>(x, ng, g, gs, w, narm, ret);
+      return fmodeFACT(x, ng, g, gs, w, narm, ret, nthreads);
+    return fmodeImpl<INTSXP>(x, ng, g, gs, w, narm, ret, nthreads);
+  case STRSXP: return fmodeImpl<STRSXP>(x, ng, g, gs, w, narm, ret, nthreads);
+  case LGLSXP: return fmodeImpl<LGLSXP>(x, ng, g, gs, w, narm, ret, nthreads);
   default: stop("Not supported SEXP type !");
   }
 }
@@ -989,29 +1003,18 @@ SEXP fmodeCpp(const SEXP& x, int ng = 0, const IntegerVector& g = 0, const SEXP&
 
 // Replicating weight 2d array all the time is stupid
 // [[Rcpp::export]]   // Better Solution ? // What about string ? -> do like matrix, but keep vector LGLSXP method
-SEXP fmodelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true, int ret = 0) {
+SEXP fmodelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue, const SEXP& w = R_NilValue, bool narm = true, int ret = 0, int nthreads = 1) {
   int l = x.size();
   List out(l);
 
-  for(int j = l; j--; ) {
-    switch(TYPEOF(x[j])) {
-    case REALSXP:
-      out[j] = fmodeImpl<REALSXP>(x[j], ng, g, gs, w, narm, ret);
-      break;
-    case INTSXP:
-      if(Rf_isFactor(x[j]) && (ng == 0 || Rf_nlevels(x[j]) < Rf_length(x[j]) / ng * 3))
-        out[j] = fmodeFACT(x[j], ng, g, gs, w, narm, ret);
-      else out[j] = fmodeImpl<INTSXP>(x[j], ng, g, gs, w, narm, ret);
-      break;
-    case STRSXP:
-      out[j] = fmodeImpl<STRSXP>(x[j], ng, g, gs, w, narm, ret);
-      break;
-    case LGLSXP:
-      out[j] = fmodeImpl<LGLSXP>(x[j], ng, g, gs, w, narm, ret);
-      break;
-    default: stop("Not supported SEXP type !");
-    }
+  if(ng == 0 && nthreads > 1) {
+    if(nthreads > l) nthreads = l;
+    #pragma omp parallel for num_threads(nthreads)
+    for(int j = 0; j < l; ++j) out[j] = fmodeCpp(x[j], ng, g, gs, w, narm, ret, 1);
+  } else {
+    for(int j = l; j--; ) out[j] = fmodeCpp(x[j], ng, g, gs, w, narm, ret, nthreads);
   }
+
   SHALLOW_DUPLICATE_ATTRIB(out, x);
   if(ng == 0) Rf_setAttrib(out, R_RowNamesSymbol, Rf_ScalarInteger(1));
   else Rf_setAttrib(out, R_RowNamesSymbol, IntegerVector::create(NA_INTEGER, -ng));
@@ -1022,10 +1025,18 @@ SEXP fmodelCpp(const List& x, int ng = 0, const IntegerVector& g = 0, const SEXP
 
 template <int RTYPE>
 SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
-                const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret) {
+                const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret, int nthreads) {
   int col = x.ncol();
   Matrix<RTYPE> out = (ng == 0) ? no_init_matrix(1, col) : no_init_matrix(ng, col);
-  for(int j = col; j--; ) out(_, j) = fmodeImpl<RTYPE>(x(_, j), ng, g, gs, w, narm, ret);
+
+  if(ng == 0 && nthreads > 1) {
+    if(nthreads > col) nthreads = col;
+    #pragma omp parallel for num_threads(nthreads)
+    for(int j = 0; j < col; ++j) out(_, j) = fmodeImpl<RTYPE>(x(_, j), ng, g, gs, w, narm, ret, 1);
+  } else {
+    for(int j = col; j--; ) out(_, j) = fmodeImpl<RTYPE>(x(_, j), ng, g, gs, w, narm, ret, nthreads);
+  }
+
   if(drop && ng == 0) {
     Rf_setAttrib(out, R_DimSymbol, R_NilValue); // Rf_dimgets(out, R_NilValue); -> Doesn't work !
     Rf_setAttrib(out, R_NamesSymbol, colnames(x));
@@ -1038,28 +1049,28 @@ SEXP fmodemImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
 
 
 template <>
-SEXP fmodemImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret) {
+SEXP fmodemImpl(const Matrix<CPLXSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret, int nthreads) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fmodemImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret) {
+SEXP fmodemImpl(const Matrix<VECSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret, int nthreads) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fmodemImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret) {
+SEXP fmodemImpl(const Matrix<RAWSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret, int nthreads) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-SEXP fmodemImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret) {
+SEXP fmodemImpl(const Matrix<EXPRSXP>& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret, int nthreads) {
   stop("Not supported SEXP type!");
 }
 
 
 // [[Rcpp::export]]
-SEXP fmodemCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, SEXP w = R_NilValue, bool narm = true, bool drop = true, int ret = 0) {
-  RCPP_RETURN_MATRIX(fmodemImpl, x, ng, g, gs, w, narm, drop, ret);
+SEXP fmodemCpp(SEXP x, int ng = 0, IntegerVector g = 0, SEXP gs = R_NilValue, SEXP w = R_NilValue, bool narm = true, bool drop = true, int ret = 0, int nthreads = 1) {
+  RCPP_RETURN_MATRIX(fmodemImpl, x, ng, g, gs, w, narm, drop, ret, nthreads);
 }
 

@@ -109,16 +109,16 @@ fnthlCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TR
   .Call(Cpp_fnthl, x, n, ng, g, gs, w, narm, drop, ret, nthreads)
 }
 
-fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
-    .Call(Cpp_fmode, x, ng, g, gs, w, narm, ret)
+fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L, nthreads = 1L) {
+    .Call(Cpp_fmode, x, ng, g, gs, w, narm, ret, nthreads)
 }
 
-fmodelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
-    .Call(Cpp_fmodel, x, ng, g, gs, w, narm, ret)
+fmodelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L, nthreads = 1L) {
+    .Call(Cpp_fmodel, x, ng, g, gs, w, narm, ret, nthreads)
 }
 
-fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 0L) {
-    .Call(Cpp_fmodem, x, ng, g, gs, w, narm, drop, ret)
+fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 0L, nthreads = 1L) {
+    .Call(Cpp_fmodem, x, ng, g, gs, w, narm, drop, ret, nthreads)
 }
 
 fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {

@@ -4,84 +4,84 @@
 fmode <- function(x, ...) UseMethod("fmode") # , x
 
 
-fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "first", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fmode.matrix(x, g, w, TRA, na.rm, use.g.names, ties = ties, ...))
+fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "first", nthreads = 1L, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fmode.matrix(x, g, w, TRA, na.rm, use.g.names, ties = ties, nthreads = nthreads, ...))
   ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
-    if(is.null(g)) return(.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm,ret))
+    if(is.null(g)) return(.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm,ret,nthreads))
     if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
-        return(`names<-`(.Call(Cpp_fmode,x,length(lev),g,NULL,w,na.rm,ret), lev))
+        return(`names<-`(.Call(Cpp_fmode,x,length(lev),g,NULL,w,na.rm,ret,nthreads), lev))
       }
-      if(is.nmfactor(g)) return(.Call(Cpp_fmode,x,fnlevels(g),g,NULL,w,na.rm,ret))
+      if(is.nmfactor(g)) return(.Call(Cpp_fmode,x,fnlevels(g),g,NULL,w,na.rm,ret,nthreads))
       g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret))
+      return(.Call(Cpp_fmode,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret,nthreads))
     }
     if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names) return(`names<-`(.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret), GRPnames(g)))
-    return(.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
+    if(use.g.names) return(`names<-`(.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads), GRPnames(g)))
+    return(.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads))
   }
-  if(is.null(g)) return(TRAC(x,.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm,ret),0L,TRA, ...))
+  if(is.null(g)) return(TRAC(x,.Call(Cpp_fmode,x,0L,0L,NULL,w,na.rm,ret,nthreads),0L,TRA, ...))
   g <- G_guo(g)
-  TRAC(x,.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TRA, ...)
+  TRAC(x,.Call(Cpp_fmode,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads),g[[2L]],TRA, ...)
 }
 
-fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "first", ...) {
+fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = 1L, ...) {
   ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
-    if(is.null(g)) return(.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,drop,ret))
+    if(is.null(g)) return(.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,drop,ret,nthreads))
     if(is.atomic(g)) {
       if(use.g.names) {
         if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
-        return(`dimnames<-`(.Call(Cpp_fmodem,x,length(lev),g,NULL,w,na.rm,FALSE,ret), list(lev, dimnames(x)[[2L]])))
+        return(`dimnames<-`(.Call(Cpp_fmodem,x,length(lev),g,NULL,w,na.rm,FALSE,ret,nthreads), list(lev, dimnames(x)[[2L]])))
       }
-      if(is.nmfactor(g)) return(.Call(Cpp_fmodem,x,fnlevels(g),g,NULL,w,na.rm,FALSE,ret))
+      if(is.nmfactor(g)) return(.Call(Cpp_fmodem,x,fnlevels(g),g,NULL,w,na.rm,FALSE,ret,nthreads))
       g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret))
+      return(.Call(Cpp_fmodem,x,attr(g,"N.groups"),g,NULL,w,na.rm,FALSE,ret,nthreads))
     }
     if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names) return(`dimnames<-`(.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret), list(GRPnames(g), dimnames(x)[[2L]])))
-    return(.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret))
+    if(use.g.names) return(`dimnames<-`(.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret,nthreads), list(GRPnames(g), dimnames(x)[[2L]])))
+    return(.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret,nthreads))
   }
-  if(is.null(g)) return(TRAmC(x,.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,TRUE,ret),0L,TRA, ...))
+  if(is.null(g)) return(TRAmC(x,.Call(Cpp_fmodem,x,0L,0L,NULL,w,na.rm,TRUE,ret,nthreads),0L,TRA, ...))
   g <- G_guo(g)
-  TRAmC(x,.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret),g[[2L]],TRA, ...)
+  TRAmC(x,.Call(Cpp_fmodem,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,FALSE,ret,nthreads),g[[2L]],TRA, ...)
 }
 
-fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "first", ...) {
+fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = 1L, ...) {
   ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
-    if(is.null(g)) if(drop) return(unlist(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret))) else return(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret))
+    if(is.null(g)) if(drop) return(unlist(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret,nthreads))) else return(.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret,nthreads))
     if(is.atomic(g)) {
       if(use.g.names && !inherits(x, "data.table")) {
         if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
         lev <- attr(g, "levels")
-        return(setRnDF(.Call(Cpp_fmodel,x,length(lev),g,NULL,w,na.rm,ret), lev))
+        return(setRnDF(.Call(Cpp_fmodel,x,length(lev),g,NULL,w,na.rm,ret,nthreads), lev))
       }
-      if(is.nmfactor(g)) return(.Call(Cpp_fmodel,x,fnlevels(g),g,NULL,w,na.rm,ret))
+      if(is.nmfactor(g)) return(.Call(Cpp_fmodel,x,fnlevels(g),g,NULL,w,na.rm,ret,nthreads))
       g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret))
+      return(.Call(Cpp_fmodel,x,attr(g,"N.groups"),g,NULL,w,na.rm,ret,nthreads))
     }
     if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
     if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
-      return(setRnDF(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret), groups))
-    return(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret))
+      return(setRnDF(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads), groups))
+    return(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads))
   }
-  if(is.null(g)) return(TRAlC(x,.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret),0L,TRA, ...))
+  if(is.null(g)) return(TRAlC(x,.Call(Cpp_fmodel,x,0L,0L,NULL,w,na.rm,ret,nthreads),0L,TRA, ...))
   g <- G_guo(g)
-  TRAlC(x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TRA, ...)
+  TRAlC(x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads),g[[2L]],TRA, ...)
 }
 
 fmode.list <- function(x, ...) fmode.data.frame(x, ...)
 
 fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
-                             keep.group_vars = TRUE, keep.w = TRUE, ties = "first", ...) {
+                             keep.group_vars = TRUE, keep.w = TRUE, ties = "first", nthreads = 1L, ...) {
   ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- l1orn(as.character(substitute(w)), NULL)
@@ -113,19 +113,19 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
       if(gl) {
         if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], names(sumw), nam[-gn])
-          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret)), ax))
+          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads)), ax))
         }
         ax[["names"]] <- c(names(sumw), nam[-gn])
-        return(setAttributes(c(sumw, .Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret)), ax))
+        return(setAttributes(c(sumw, .Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads)), ax))
       } else if(keep.group_vars) {
         ax[["names"]] <- c(g[[5L]], nam)
-        return(setAttributes(c(g[[4L]], .Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret)), ax))
-      } else return(setAttributes(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret), ax))
+        return(setAttributes(c(g[[4L]], .Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads)), ax))
+      } else return(setAttributes(.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TRA, ...)), ax))
+      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads),g[[2L]],TRA, ...)), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(TRAlC(x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TRA, ...), ax))
-  } else return(TRAlC(x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret),g[[2L]],TRA, ...))
+    return(setAttributes(TRAlC(x[-gn],.Call(Cpp_fmodel,x[-gn],g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads),g[[2L]],TRA, ...), ax))
+  } else return(TRAlC(x,.Call(Cpp_fmodel,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,ret,nthreads),g[[2L]],TRA, ...))
 }

@@ -13,17 +13,17 @@ The \code{\link{TRA}} argument can further be used to transform \code{x} using i
 fmode(x, \dots)
 
 \method{fmode}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, ties = "first", \dots)
+      use.g.names = TRUE, ties = "first", nthreads = 1L, \dots)
 
 \method{fmode}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, ties = "first", \dots)
+      use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = 1L, \dots)
 
 \method{fmode}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, ties = "first", \dots)
+      use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = 1L, \dots)
 
 \method{fmode}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-      ties = "first", \dots)
+      ties = "first", nthreads = 1L, \dots)
 }
 \arguments{
 \item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}
@@ -49,6 +49,8 @@ fmode(x, \dots)
                 }
         \emph{Note:} \code{"min"/"max"} don't work with character data. For logical data \code{TRUE} will be chosen unless \code{ties = "min"}. See Details.
   }
+
+  \item{nthreads}{integer. The number of threads to utilize. Parallelism is across groups for grouped computations and at the column-level otherwise. }
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
