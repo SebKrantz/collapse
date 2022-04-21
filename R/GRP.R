@@ -2,8 +2,6 @@
 # Cfrank <- data.table:::Cfrank
 # forderv <- data.table:::forderv
 
-GRP <- function(X, ...) UseMethod("GRP") # , X
-
 radixorder <- function(..., na.last = TRUE, decreasing = FALSE, starts = FALSE, group.sizes = FALSE, sort = TRUE) {
   z <- pairlist(...)
   decreasing <- rep_len(as.logical(decreasing), length(z))
@@ -77,6 +75,8 @@ G_t <- function(x) {
 }
 
 
+GRP <- function(X, ...) UseMethod("GRP") # , X
+
 # Added... could also do in GRP.default... but this is better, no match.call etc... match.call takes 4 microseconds. could do both ?? think about possible applications...
 GRP.GRP <- function(X, ...) X
 
@@ -144,7 +144,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
                         group.sizes = gs,
                         groups = groups,
                         group.vars = namby,
-                        ordered = c(GRP.sort = sort, initially.ordered = sorted),
+                        ordered = c(ordered = sort, sorted = sorted),
                         order = if(return.order && !use.group) .Call(C_setAttributes, o, ao) else NULL, # `attributes<-`(o, attributes(o)[-2L]) This does a shallow copy on newer R versions # `attr<-`(o, "group.sizes", NULL): This deep-copies it..
                         group.starts = ust, # Does not need to be computed by group()
                         call = if(call) match.call() else NULL), "GRP"))
@@ -178,8 +178,8 @@ print.GRP <- function(x, n = 6, ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   ord <- x[[6L]]
   cat(paste0("collapse grouping object of length ", length(x[[2L]]), " with ",
-            x[[1L]], if(anyNA(ord)) "" else if(any(ord)) " ordered" else " unordered", " groups"), fill = TRUE)
-  cat("\nCall: ", paste0(deparse(x[["call"]]), if(is.na(ord[2L])) "" else if(ord[2L]) ", X is ordered" else ", X is unordered"), "\n\n", sep = "")
+            x[[1L]], if(isTRUE(any(ord))) " ordered" else if(anyNA(ord)) "" else " unordered", " groups"), fill = TRUE)
+  cat("\nCall: ", paste0(deparse(x[["call"]]), if(is.na(ord[2L])) "" else if(ord[2L]) ", X is sorted" else ", X is unsorted"), "\n\n", sep = "")
   cat("Distribution of group sizes: ", fill = TRUE)
   print.summaryDefault(summary.default(x[[3L]]), ...)
   if(!is.null(x[[4L]])) {
@@ -213,7 +213,7 @@ plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
     breaks <- if(ugs > 80) 80 else ugs
   }
   plot(seq_len(x[[1L]]), x[[3L]], type = type, xlab = "Group id", ylab = "Group Size",
-       main = paste0("Sizes of ", x[[1L]], if(anyNA(x[[6L]])) "" else if(any(x[[6L]])) " Ordered" else " Unordered", " Groups"), frame.plot = FALSE, ...)
+       main = paste0("Sizes of ", x[[1L]], if(isTRUE(any(x[[6L]]))) " Ordered"  else if(anyNA(x[[6L]])) "" else " Unordered", " Groups"), frame.plot = FALSE, ...)
   # grid()
   if(breaks == 1L) plot(x[[3L]][1L], x[[1L]], type = "h", ylab = "Frequency", xlab = "Group Size",
                         main = "Histogram of Group Sizes", frame.plot = FALSE, ...) else
@@ -258,15 +258,16 @@ GRP.qG <- function(X, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE
     X[is.na(X)] <- ng
     if(grl) groups <- c(groups, NA)
   }
-  ordered <- if(is.ordered(X)) c(TRUE, NA) else c(FALSE, NA)
   st <- attr(X, "starts")
+  ordered <- is.ordered(X)
   attributes(X) <- NULL
+
   return(`oldClass<-`(list(N.groups = ng,
                         group.id = X,
                         group.sizes = if(group.sizes) .Call(C_fwtabulate, X, NULL, ng, FALSE) else NULL, # tabulate(X, ng)  # .Internal(tabulate(X, ng))
                         groups = if(grl) `names<-`(list(groups), gvars) else NULL,
                         group.vars = gvars,
-                        ordered = ordered,
+                        ordered = c(ordered = if(ordered) TRUE else NA, sorted = issorted(X)),
                         order = NULL, # starts = NULL, maxgrpn = NULL,
                         group.starts = st,
                         call = if(call) match.call() else NULL), "GRP"))
@@ -279,14 +280,14 @@ GRP.factor <- function(X, ..., group.sizes = TRUE, drop = FALSE, return.groups =
   if(drop) X <- .Call(Cpp_fdroplevels, X, FALSE)
   lev <- attr(X, "levels")
   nl <- length(lev)
-  ordered <- if(is.ordered(X)) c(TRUE, NA) else c(FALSE, NA)
+  ordered <- is.ordered(X)
   attributes(X) <- NULL
   return(`oldClass<-`(list(N.groups = nl,
                         group.id = X,
                         group.sizes = if(group.sizes) .Call(C_fwtabulate, X, NULL, nl, FALSE) else NULL, # tabulate(X, nl) # .Internal(tabulate(X, nl))
                         groups = if(return.groups) `names<-`(list(lev), nam) else NULL,
                         group.vars = nam,
-                        ordered = ordered,
+                        ordered = c(ordered = if(ordered) TRUE else NA, sorted = issorted(X)),
                         order = NULL, # starts = NULL, maxgrpn = NULL,
                         group.starts = NULL,
                         call = if(call) match.call() else NULL), "GRP"))
@@ -306,14 +307,15 @@ GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups =
   # }
   lev <- attr(g, "levels")
   nl <- length(lev)
-  ordered <- if(is.ordered(g)) c(TRUE, NA) else c(FALSE, NA)
+  ordered <- is.ordered(g)
   attributes(g) <- NULL
+
   return(`oldClass<-`(list(N.groups = nl,
                         group.id = g,
                         group.sizes = if(group.sizes) .Call(C_fwtabulate, g, NULL, nl, FALSE) else NULL, # tabulate(g, nl) # .Internal(tabulate(g, nl))
                         groups = if(return.groups) `names<-`(list(lev), nam) else NULL,
                         group.vars = nam,
-                        ordered = ordered,
+                        ordered = c(ordered = if(ordered) TRUE else NA, sorted = issorted(g)),
                         order = NULL, # starts = NULL, maxgrpn = NULL,
                         group.starts = NULL,
                         call = if(call) match.call() else NULL), "GRP"))
@@ -528,12 +530,13 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   gr <- g[[lg]]
   ng <- length(gr)
   gs <- vlengths(gr, FALSE)
+  id <- .Call(C_groups2GRP, gr, fnrow2(X), gs)
   return(`oldClass<-`(list(N.groups = ng, # The C code here speeds up things a lot !!
-                        group.id = .Call(C_groups2GRP, gr, fnrow2(X), gs),  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
+                        group.id = id,  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
                         group.sizes = gs,
                         groups = if(return.groups) g[-lg] else NULL, # better reclass afterwards ? -> Nope, this is only used in internal codes...
                         group.vars = names(g)[-lg],
-                        ordered = c(TRUE, NA), # Important to have NA here, otherwise wrong result in gsplit (wrong optimization)
+                        ordered = c(ordered = TRUE, sorted = issorted(id)), # Important to have NA here, otherwise wrong result in gsplit (wrong optimization)
                         order = NULL, # starts = NULL, maxgrpn = NULL,
                         group.starts = NULL,
                         call = if(call) match.call() else NULL), "GRP"))
@@ -624,7 +627,7 @@ qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
       attributes(x) <- ax[c("levels", "class")]
     if(na.exclude || inherits(x, "na.included")) {
       clx <- oldClass(x)
-      if(ordered && !any(clx == "ordered")) oldClass(x) <- c("ordered", clx) else # can set unordered ??
+      if(ordered && !any(clx == "ordered")) oldClass(x) <- c("ordered", clx) else
       if(!ordered && any(clx == "ordered")) oldClass(x) <- clx[clx != "ordered"]
       if(drop) return(.Call(Cpp_fdroplevels, x, !inherits(x, "na.included"))) else return(x)
     }
@@ -642,7 +645,6 @@ qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
          stop("Unknown method:", method))
 }
 
-# TODO: Keep if(ordered) "ordered" ?
 qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
                return.groups = FALSE, method = "auto") {
   if(inherits(x, c("factor", "qG"))) {

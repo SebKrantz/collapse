@@ -52,6 +52,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir);
 SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam);
 SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind);
 SEXP setnames(SEXP x, SEXP nam);
+SEXP Cissorted(SEXP x, SEXP strictly);
 SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
 SEXP createeptr(SEXP x);

@@ -85,7 +85,7 @@ fungroup(X, \dots)
 
   \item{.X}{a data frame or list.}
 
-  \item{x, g}{a 'GRP' object. For \code{gsplit}, \code{x} can be a vector of any type, or \code{NULL} to return the integer indices of the groups. Both \code{gsplit/GRPN} also support vectors or data frames to be passed to \code{g/x}.}
+  \item{x, g}{a 'GRP' object. For \code{gsplit/greorder}, \code{x} can be a vector of any type, or \code{NULL} to return the integer indices of the groups. \code{gsplit/greorder/GRPN} also support vectors or data frames to be passed to \code{g/x}.}
 
   \item{by}{if \code{X} is a data frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
 
@@ -98,7 +98,7 @@ fungroup(X, \dots)
 
   \item{return.groups}{logical. Include the unique groups in the created GRP object.}
 
-  \item{return.order}{logical. Include the output from \code{\link{radixorderv}} (or \code{\link{group}}) in the created GRP object. This brings performance improvements in \code{gsplit} if \code{sort = TRUE} (and thus also benefits grouped execution of base R functions), but has a memory cost by making the object larger. }
+  \item{return.order}{logical. If \code{sort = TRUE}, include the output from \code{\link{radixorderv}} in the created GRP object. This brings performance improvements in \code{gsplit} (and thus also benefits grouped execution of base R functions), but has a memory cost by making the object larger. }
 
   \item{method}{character. The algorithm to use for grouping: either \code{"radix"}, \code{"hash"} or \code{"auto"}. \code{"auto"} will chose \code{"radix"} when \code{sort = TRUE}, yielding ordered grouping via \code{\link{radixorderv}}, and \code{"hash"}-based grouping in first-appearance order via \code{\link{group}} otherwise. It is possibly to put \code{method = "radix"} and \code{sort = FALSE}, which will group character data in first appearance order but sort numeric data (a good hybrid option). \code{method = "hash"} currently does not support any sorting, thus putting \code{sort = TRUE} will simply be ignored.}
 
@@ -112,7 +112,7 @@ fungroup(X, \dots)
 
   \item{force.char}{logical. Always output group names as character vector, even if a single numeric vector was passed to \code{GRP.default}.}
 
- \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the \code{plm::index}, 2L the second etc., identifiers can also be passed as a character string. More than one variable can be supplied. }
+ \item{effect}{\emph{plm} / indexed data methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the \link[=findex]{index}, 2L the second etc., identifiers can also be passed as a character string. More than one variable can be supplied. }
 
    \item{return}{an integer or string specifying what \code{fgroup_vars} should return. The options are:
       \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
@@ -151,14 +151,16 @@ Next to \code{GRP}, there is the function \code{fgroup_by} as a significantly fa
 
 \code{GRP} is an S3 generic function with one default method supporting vector and list input and several conversion methods:
 
-The conversion of factors to 'GRP' objects by \code{GRP.factor} involves obtaining the number of groups calling \code{ng <- fnlevels(f)} and then computing the count of each level using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes and replacing any missing values with \code{ng + 1L}. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Going from factor to 'GRP' object thus only requires a tabulation of the levels, whereas creating a factor from a 'GRP' object using \code{as_factor_GRP} does not involve any computations, but may involve interacting multiple columns using the \code{paste} function to produce unique factor levels (if multiple grouping columns were used). %  or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
+The conversion of factors to 'GRP' objects by \code{GRP.factor} involves obtaining the number of groups calling \code{ng <- fnlevels(f)} and then computing the count of each level using \code{\link[=tabulate]{tabulate(f, ng)}}. The integer group-id (2) is already given by the factor itself after removing the levels and class attributes and replacing any missing values with \code{ng + 1L}. The levels are put in a list and moved to position (4) in the 'GRP' object, which is reserved for the unique groups. Finally, a sortedness check \code{!is.unsorted(id)} is run on the group-id to check if the data represented by the factor was sorted (6).
+
+Creating a factor from a 'GRP' object using \code{as_factor_GRP} does not involve any computations, but may involve interacting multiple columns using the \code{paste} function to produce unique factor levels (if multiple grouping columns were used). %  or \code{\link{as.character}} conversions if the grouping column(s) were numeric (which are potentially expensive).
 
 The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped data frame and converts it to a 'GRP' object. If the grouped data frame was generated using \code{fgroup_by}, all work is done already. If it was created using \code{dplyr::group_by}, a C routine is called to efficiently convert the grouping object.
 
 \emph{Note}: For faster factor generation and a factor-light class 'qG' which avoids the coercion of factor levels to character also see \code{\link{qF}} and \code{\link{qG}}.
 }
 \value{
-  A list-like object of class `GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered or not and the ordering vector used to perform the ordering. The object is structured as follows:
+  A list-like object of class `GRP' containing information about the number of groups, the observations (rows) belonging to each group, the size of each group, the unique group names / definitions, whether the groups are ordered and data grouped is sorted or not, the ordering vector used to perform the ordering and the group start positions. The object is structured as follows:
   \tabular{lllllll}{\emph{ List-index }  \tab\tab \emph{ Element-name }   \tab\tab \emph{ Content type } \tab\tab \emph{ Content description} \cr\cr
 
                  [[1]] \tab\tab N.groups   \tab\tab \code{integer(1)} \tab\tab Number of Groups \cr\cr
@@ -170,7 +172,7 @@ The method \code{GRP.grouped_df} takes the 'groups' attribute from a grouped dat
                  [[4]] \tab\tab groups    \tab\tab \code{unique(X)} or \code{NULL} \tab\tab Unique groups (same format as input, except for \code{fgroup_by} which uses a plain list, sorted if \code{sort = TRUE}), or \code{NULL} if \code{return.groups = FALSE} \cr\cr
 
                  [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr\cr
-                 [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]- TRUE} if \code{sort = TRUE}, \code{[2]- TRUE} if \code{X} already sorted. If \code{sort = FALSE} the second entry is \code{NA}. \cr\cr
+                 [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]} Whether the groups are ordered: equal to the \code{sort} argument in the default method, or \code{TRUE} if converted objects inherit a class \code{"ordered"} and \code{NA} otherwise, \code{[2]} Whether the data (\code{X}) is already sorted: the result of \code{!is.unsorted(group.id)}. If \code{sort = FALSE} (default method) the second entry is \code{NA}. \cr\cr
 
                  [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} (with \code{"starts"} attribute), or \code{NULL} if \code{return.order = FALSE} \cr\cr
                  [[8]] \tab\tab group.starts \tab\tab \code{integer(N.groups)} or \code{NULL} \tab\tab The first-occurrence positions/rows of the groups. Useful e.g. with \code{ffirst(x, g, na.rm = FALSE)}. \code{NULL} if \code{return.groups = FALSE}. \cr\cr

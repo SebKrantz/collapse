@@ -654,6 +654,8 @@ fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L
 # NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 # NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
 
+issorted <- function(x, strictly = FALSE) .Call(C_issorted, x, strictly)
+
 charorNULL <- function(x) if(is.character(x)) x else NULL
 
 tochar <- function(x) if(is.character(x)) x else as.character(x)  # if(is.object(x)) as.character(x) else .Call(C_aschar, x)

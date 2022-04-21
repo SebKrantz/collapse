@@ -287,6 +287,10 @@ SEXP setnames(SEXP x, SEXP nam) {
   return x;
 }
 
+SEXP Cissorted(SEXP x, SEXP strictly) {
+   return ScalarLogical(FALSE == isUnsorted(x, (Rboolean)asLogical(strictly)));
+}
+
 SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna) {
   int l = length(x), narm = asLogical(ckna);
   if(l != length(y)) error("length mismatch");
