@@ -26,14 +26,14 @@ timeid(x, factor = TRUE, ordered = TRUE, extra = FALSE)
   }
 }
 \details{
-Let \code{range} and \code{step} be the like-named attributes returned when \code{extra = TRUE}, then, if \code{factor = TRUE}, a complete sequence of levels is generated as \code{seq(range[1], range[2], by = step) |> copyMostAttrib(x) |> as.character()}. If \code{factor = FALSE}, the number of timesteps recorded in the \code{"N.groups"} attribute is computed as \code{(range[2]-range[1])/step + 1}, which is equal to the theoretical number of factor levels. In both cases the underlying integer id is the same and preserves gaps in time. Large gaps (strong irregularity) can result in many unused factor levels, the generation of which can become expensive. Using \code{factor = FALSE} is thus more efficient.
+Let \code{range_x} and \code{step_x} be the like-named attributes returned when \code{extra = TRUE}, then, if \code{factor = TRUE}, a complete sequence of levels is generated as \code{seq(range_x[1], range_x[2], by = step_x) |> copyMostAttrib(x) |> as.character()}. If \code{factor = FALSE}, the number of timesteps recorded in the \code{"N.groups"} attribute is computed as \code{(range_x[2]-range_x[1])/step_x + 1}, which is equal to the theoretical number of factor levels. In both cases the underlying integer id is the same and preserves gaps in time. Large gaps (strong irregularity) can result in many unused factor levels, the generation of which can become expensive. Using \code{factor = FALSE} is thus more efficient.
 }
 \value{
 A factor or \code{\link{qG}} object, optionally with additional attributes attached.
 }
 
 \seealso{
-\link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
+\link[=indexing]{Indexing}, \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 # A normal use case
@@ -50,6 +50,9 @@ diff(attr(tid, "unique"))
 
 # So in this case simple factor generation gives a better result
 qF(wlddev$date, ordered = TRUE, na.exclude = FALSE)
+
+# The best way to deal with this data would be to convert it
+# to zoo::yearmon and then use timeid
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

@@ -124,6 +124,7 @@ The print methods for 'indexed_frame' and 'indexed_series' first call \code{prin
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
+\code{\link{timeid}},
 \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}}
 \examples{
 opts <- options(max.print = 100)
