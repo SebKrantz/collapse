@@ -24,11 +24,11 @@
 \description{
   \code{GRP} performs fast, ordered and unordered, groupings of vectors and data frames (or lists of vectors) using \code{\link{radixorderv}} or \code{\link{group}}. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \emph{collapse}'s fast statistical and transformation functions / operators, as well as to \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
 
-\code{fgroup_by} is similar to \code{dplyr::group_by} but faster. It creates a grouped data frame with a 'GRP' object attached - for faster dplyr-like programming with \emph{collapse}'s fast functions.
+\code{fgroup_by} is similar to \code{dplyr::group_by} but faster and class-agnostic. It creates a grouped data frame with a 'GRP' object attached - for fast dplyr-like programming with \emph{collapse}'s fast functions.
 
 There are also several conversion methods to convert to and from 'GRP' objects. Notable among these is \code{GRP.grouped_df}, which returns a 'GRP' object from a grouped data frame created with \code{dplyr::group_by} or \code{fgroup_by}, and the duo \code{GRP.factor} and \code{as_factor_GRP}.
 
-\code{gsplit} efficiently splits a vector based on a grouping object.
+\code{gsplit} efficiently splits a vector based on a grouping object, \code{greorder} helps to recombine the results.
 }
 \usage{
 GRP(X, \dots)

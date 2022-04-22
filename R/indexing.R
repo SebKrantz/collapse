@@ -383,7 +383,6 @@ print.index_df <- function(x, topn = 5, ...) {
   clx <- oldClass(x)
   res <- unindex_light(x)
 
-  # TODO: What about data.table's indexing feature??
   if(any(clx == "data.table")) {
     # res <- NextMethod() # doesn't work with i
     if(any(clx == "invisible"))  # for chaining...

@@ -45,7 +45,6 @@ is_irregular(x, any_id = TRUE)
 ## Convert 'indexed_frame'/'indexed_series' to normal 'pdata.frame'/'pseries'
 to_plm(x, row.names = FALSE)
 
-
 # Subsetting & replacement methods: [(<-) methods call NextMethod().
 # Also methods for fsubset, funique and roworder(v), na_omit (internal).
 
@@ -112,7 +111,7 @@ Overall these classes don't really benefit \emph{plm}, especially given that col
 
 \bold{Performance Considerations}
 
-When dealing with long Date or POSIXct time sequences, it may be that the internal processing by \code{\link{timeid}} is slow simply because calling \code{\link{strftime}} on these sequences to create factor levels is slow. In this case you may choose to generate an index factor with integer levels by passing \code{timeid(t, factor = FALSE)} to \code{findex_by} or \code{reindex}.
+When dealing with long Date or POSIXct time sequences, it may be that the internal processing by \code{\link{timeid}} is slow simply because calling \code{\link{strftime}} on these sequences to create factor levels is slow. In this case you may choose to generate an index factor with integer levels by passing \code{timeid(t, factor = FALSE)} to \code{findex_by} or \code{reindex} (the lazy evaluation of expressions like \code{as.character(seq_len(nlev))} in modern R makes this extremely efficient).
 
 \bold{Print Method}
 

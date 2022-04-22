@@ -69,7 +69,7 @@ missing_cases(X,            # The oposite of complete.cases(), faster for
 vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
-frange(x, na.rm = TRUE)     # Much faster base::range, for integers and doubles
+frange(x, na.rm = TRUE)     # Much faster base::range, for integer and double objects
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
 fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
 fncol(X)                    # Faster ncol for data frames (not faster for matrices)
