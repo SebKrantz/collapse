@@ -54,8 +54,8 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
 
   if(!is.null(wsym)) {
     w <- eval(wsym, x, parent.frame())
-    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
-      if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn2 %in% wn)) stop("Weights coincide with grouping variables!")
       gn2 <- c(gn2, wn)
       if(keep.w) gn <- c(gn, wn)
     }
@@ -96,8 +96,8 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
 
   if(!is.null(wsym)) {
     w <- eval(wsym, x, parent.frame())
-    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
-      if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn2 %in% wn)) stop("Weights coincide with grouping variables!")
       gn2 <- c(gn2, wn)
       if(keep.w) gn <- c(gn, wn)
     }
@@ -255,8 +255,8 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
 
   if(!is.null(wsym)) {
     w <- eval(wsym, x, parent.frame())
-    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
-      if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn2 %in% wn)) stop("Weights coincide with grouping variables!")
       gn2 <- c(gn2, wn)
       if(keep.w) gn <- c(gn, wn)
     }
@@ -298,8 +298,8 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
 
   if(!is.null(wsym)) {
     w <- eval(wsym, x, parent.frame())
-    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
-      if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn2 %in% wn)) stop("Weights coincide with grouping variables!")
       gn2 <- c(gn2, wn)
       if(keep.w) gn <- c(gn, wn)
     }
