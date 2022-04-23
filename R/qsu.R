@@ -82,7 +82,7 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     } else pidn <- NULL
     if(formw) {
       widn <- ckmatch(all.vars(w), nam)
-      w <- x[[widn]]
+      w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[widn]]
     } else widn <- NULL
     if(is.null(v)) {
       x <- if(is.null(cols)) x[-c(byn, pidn, widn)] else x[cols2int(cols, x, nam, FALSE)]
@@ -143,7 +143,7 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
     } else byn <- NULL
     if(formw) {
       widn <- ckmatch(all.vars(w), nam)
-      w <- x[[widn]]
+      w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[widn]]
     } else widn <- NULL
     if(is.null(v)) {
       x <- if(is.null(cols)) x[-c(byn, widn)] else x[cols2int(cols, x, nam, FALSE)]

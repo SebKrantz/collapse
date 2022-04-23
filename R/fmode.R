@@ -84,19 +84,21 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
                              keep.group_vars = TRUE, keep.w = TRUE, ties = "first", nthreads = 1L, ...) {
   ret <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   sumw <- NULL
 
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn == wn)) stop("Weights coincide with grouping variables!")
-    gn <- c(gn, wn)
-    if(keep.w) {
-      if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
-        gn2 <- gn else sumw <- gn2 <- wn
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
+      if(any(gn == wn)) stop("Weights coincide with grouping variables!")
+      gn <- c(gn, wn)
+      if(keep.w) {
+        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", wsym)) else if(keep.group_vars)
+          gn2 <- gn else sumw <- gn2 <- wn
+      }
     }
   }
 

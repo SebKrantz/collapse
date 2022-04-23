@@ -47,16 +47,20 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
                                keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
-    gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn,wn)
+
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
+      if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+      gn2 <- c(gn2, wn)
+      if(keep.w) gn <- c(gn, wn)
+    }
   }
+
   if(length(gn2)) {
     ax <- attributes(x)
     ax[["names"]] <- c(nam[gn], nam[-gn2]) # first term is removed if !length(gn)
@@ -85,16 +89,20 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
                          stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
-    gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn, wn)
+
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
+      if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+      gn2 <- c(gn2, wn)
+      if(keep.w) gn <- c(gn, wn)
+    }
   }
+
   if(length(gn2)) {
     ax <- attributes(x)
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
@@ -240,16 +248,20 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
                                 keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
-    gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn,wn)
+
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
+      if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+      gn2 <- c(gn2, wn)
+      if(keep.w) gn <- c(gn, wn)
+    }
   }
+
   if(length(gn2)) {
     ax <- attributes(x)
     ax[["names"]] <- c(nam[gn], nam[-gn2]) # first term is removed if !length(gn)
@@ -279,16 +291,20 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
                          stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
-    gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn, wn)
+
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wsym) == 1L && length(wn <- whichv(nam, as.character(wsym)))) {
+      if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
+      gn2 <- c(gn2, wn)
+      if(keep.w) gn <- c(gn, wn)
+    }
   }
+
   if(length(gn2)) {
     ax <- attributes(x)
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])

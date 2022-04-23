@@ -138,7 +138,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       namw <- all.vars(w)
       numw <- ckmatch(namw, nam)
       if(vl && ncustoml) v <- v[v != numw]
-      w <- X[[numw]]
+      w <- eval(w[[2L]], X, attr(w, ".Environment")) # w <- X[[numw]]
     } else if(keep.w) {
       numw <- 0L # length(X) + 1L
       namw <- l1orlst(as.character(substitute(w)))
