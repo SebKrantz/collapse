@@ -14,10 +14,10 @@ fsorttable <- function(x, srt) {
     if(anyNA(nam)) t <- t[-whichNA(nam)] # TODO: speef up using fwtabulate and groupat?
   }
   switch(srt,
-    value = if(sorted) t else t[forder.int(names(t))],
+    value = if(sorted || attr(o <- forder.int(names(t)), "sorted")) t else t[o],
     # "quick" sort seems best, based on multiple datasets, but "radix" (second best) keeps ties in order...
     # sort.int(t, method = "radix", decreasing = TRUE, na.last = TRUE)
-    freq = t[forder.int(t, decreasing = TRUE, na.last = TRUE)],
+    freq = if(attr(o <- forder.int(t, decreasing = TRUE, na.last = TRUE), "sorted")) t else t[o],
     none = t,
     stop("sort.table must be one of 'value', 'freq' or 'none'"))
 }
