@@ -16,7 +16,8 @@ fsorttable <- function(x, srt) {
   switch(srt,
     value = if(sorted) t else t[forder.int(names(t))],
     # "quick" sort seems best, based on multiple datasets, but "radix" (second best) keeps ties in order...
-    freq = sort.int(t, method = "radix", decreasing = TRUE, na.last = TRUE), # t[forder.int(t)]
+    # sort.int(t, method = "radix", decreasing = TRUE, na.last = TRUE)
+    freq = t[forder.int(t, decreasing = TRUE, na.last = TRUE)],
     none = t,
     stop("sort.table must be one of 'value', 'freq' or 'none'"))
 }
