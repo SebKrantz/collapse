@@ -503,3 +503,23 @@ print.index_df <- function(x, topn = 5, ...) {
   if(!(missing(i) || missing(j)) && identical(attr(x, "names"), attr(res, "names"))) return(res)
   return(reindex(res))
 }
+
+# These are primarily needed to overwrite pseries methods when plm is attached...
+# Note: could use reindex() instead of duplAttributes(), but the latter is more efficient,
+# and I can't think of a single example where it would be undesirable.
+
+Math.indexed_series <- function(x, ...) {
+  duplAttributes(get(.Generic)(unindex_light(x), ...), x)
+}
+
+Ops.indexed_series <- function(e1, e2) {
+  if(missing(e2)) { # unary operators (+, - and !)
+    res <- get(.Generic)(unindex_light(e1))
+    if(.Generic == "!") return(res)
+    return(duplAttributes(res, e1))
+  }
+  res <- get(.Generic)(unindex_light(e1), unindex_light(e2))
+  if(!any(.Generic == c("+", "-", "*", "/", "^", "%%", "%/%"))) return(res)
+  if(inherits(e1, "indexed_series")) return(duplAttributes(res, e1))
+  duplAttributes(res, e2)
+}
