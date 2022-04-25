@@ -1,5 +1,4 @@
 # note: plyr has a function and class indexed_df...
-# TODO: check if classes 'indexed_frame', 'indexed_series' and 'index_df' are unique in the R ecosystem.
 
 # getpix <- function(x) switch(typeof(x), externalptr = .Call(C_geteptr, x), x)
 
@@ -159,14 +158,23 @@ is_irregular <- function(x, any_id = TRUE) {
   return(attr(tid, "N.groups") != length(attr(tid, "unique_ints")))
 }
 
-index_series <- function(data, index) {
+# Note: data returned as plain list with attributes !
+index_series <- function(data, index, cl) {
+  oldClass(data) <- NULL
   iptr <- .Call(C_createeptr, index)
-  dapply(data, function(x) {
+  indexfun <- function(x) {
     attr(x, "index_df") <- iptr
     oldClass(x) <- unique.default(c("indexed_series", "pseries", class(x))) # Use OldClass??
     # class is better for methods such as as.data.frame.numeric (used inside plm) to apply..
     x
-  })
+  }
+  if(any(cl == "sf")) {
+    geom <- whichv(names(data), attr(data, "sf_column"))
+    data[-geom] <- lapply(data[-geom], indexfun)
+    return(data)
+  }
+  data[] <- lapply(unattrib(data), indexfun) # dapply(data, indexfun)
+  data
 }
 
 reindex <- function(x, index = findex(x), single = "auto") {
@@ -192,7 +200,7 @@ reindex <- function(x, index = findex(x), single = "auto") {
   }
   if(is.list(x)) {
     clx <- oldClass(x)
-    x <- index_series(x, index)
+    x <- index_series(x, index, clx) # x is list afterwards, so need to set class again
     attr(x, "index_df") <- index
     m <- match(c("indexed_frame", "pdata.frame", "data.frame"), clx, nomatch = 0L)
     oldClass(x) <- c("indexed_frame", if (length(mp <- m[m != 0L])) clx[-mp] else clx, "pdata.frame", if (m[3L]) "data.frame")
@@ -204,7 +212,6 @@ reindex <- function(x, index = findex(x), single = "auto") {
   x
 }
 
-# TODO: Add argument shift = "time" or shift = "row": can be used to optimize operations...
 # TODO: group for integers use quf..
 findex_by <- function(.X, ..., single = "auto", interact.ids = TRUE) { # pid = NULL, t
   clx <- oldClass(.X)
@@ -238,8 +245,8 @@ findex_by <- function(.X, ..., single = "auto", interact.ids = TRUE) { # pid = N
   }
   attr(ids, "row.names") <- .set_row_names(length(ids[[1L]]))
   oldClass(ids) <- c("index_df", "pindex", "data.frame")
-  .X <- index_series(.X, ids)
   m <- match(c("indexed_frame", "pdata.frame", "data.frame"), clx, nomatch = 0L)
+  .X <- index_series(.X, ids, clx)
   attr(.X, "index_df") <- ids
   oldClass(.X) <- c("indexed_frame", if (length(mp <- m[m != 0L])) clx[-mp] else clx, "pdata.frame", if (m[3L]) "data.frame")
   if(any(clx == "data.table")) return(alc(.X))
@@ -249,10 +256,6 @@ findex_by <- function(.X, ..., single = "auto", interact.ids = TRUE) { # pid = N
 
 iby <- findex_by
 
-# Also reorder indexed_df ??
-# Also do subset method...
-
-# is_irregular # or is_regular ?
 
 group_effect <- function(x, effect) {
   index <- findex(x)
@@ -339,7 +342,13 @@ print.indexed_series <- function(x, ...) {
   # }
 }
 
-print.indexed_frame <- function(x, ...) print.indexed_series(x, ...)
+print.indexed_frame <- function(x, ...) {
+  print(unindex(x), ...)
+  # if(inherits(index, "pindex")) {
+  cat("\nIndexed by: ", index_stats(findex(x)), "\n")
+  # }
+}
+
 
 droplevels_index <- function(index, drop.index.levels = "id") {
   oi <- switch(drop.index.levels, none = 0L, id = 1L, time = 2L, all = 3L, stop("drop.index.levels must be one of 'all', 'id', 'time' or 'none'.") )
@@ -381,16 +390,20 @@ print.index_df <- function(x, topn = 5, ...) {
 `[.indexed_frame` <- function(x, i, ..., drop.index.levels = "id") {
 
   clx <- oldClass(x)
-  res <- unindex_light(x)
+  idDTl <- any(clx == "data.table")
 
-  if(any(clx == "data.table")) {
+  if(idDTl) {
+    res <- unindex_light(x)
     # res <- NextMethod() # doesn't work with i
     if(any(clx == "invisible"))  # for chaining...
       clx <- clx[clx != "invisible"]
     if(!missing(...)) {
       rem <- as.list(substitute(list(...))[-1L])
       cal <- as.call(c(list(quote(`[`), quote(res), substitute(i)), rem))
-      if(any(grepl(":=", as.character(rem)))) {
+      rem <- as.character(rem)
+      if(any(grepl(".SD", rem)) && !any(grepl("apply", rem)))
+        warning("Found '.SD' in the call but no 'apply' function. Please note that .SD is not an indexed_frame but a plain data.table containing indexed_series. Thus indexed_frame / pdata.frame methods don't work on .SD! Consider using (m/l)apply(.SD, FUN) or reindex(.SD, ix(data)). If you are not performing indexed operations on .SD please ignore or suppress this warning.")
+      if(any(grepl(":=", rem))) {
         res <- copyMostAttributes(eval(cal, list(res = alc(res)), parent.frame()), x)
         eval.parent(substitute(x <- res))
         oldClass(res) <- c("invisible", clx)
@@ -400,14 +413,17 @@ print.index_df <- function(x, topn = 5, ...) {
     res <- eval(cal, list(res = res), parent.frame())
     if(missing(i) && fnrow2(res) != fnrow2(x)) return(unindex(res)) # data.table aggregation
     else if(!missing(i)) i <- eval(substitute(i), x, parent.frame())
-  } else res <- res[i, ...] # does not respect data.table properties, but better for sf data frame and others which might check validity of "index_df" attribute
+  } else res <- unindex(x)[i, ...] # does not respect data.table properties, but better for sf data frame and others which might check validity of "index_df" attribute
 
   index <- attr(x, "index_df")
 
-  if(!missing(i) && (fnrow2(res) != fnrow2(x) || length(i) == fnrow2(x))) { # Problem: mtcars[1:10] selects columns, not rows!!
+  if(!missing(i) && (is.atomic(res) || fnrow2(res) != fnrow2(x) || length(i) == fnrow2(x))) { # Problem: mtcars[1:10] selects columns, not rows!!
     index <- droplevels_index(ss(index, i), drop.index.levels)
-    if(is.list(res)) res <- index_series(res, index)
-  }
+    if(is.list(res)) {
+      if(fnrow2(res) != fnrow2(index)) return(unindex(res)) # could be with data.table using i and also aggregating in j
+      res <- index_series(res, index, clx)
+    }
+  } else if(!idDTl && is.list(res)) res <- index_series(res, index, clx)
 
   attr(res, "index_df") <- index
 
