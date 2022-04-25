@@ -8,12 +8,12 @@ Generate Integer-Id From Time/Date Sequences
 \code{timeid} groups time vectors in a way that preserves the temporal structure. It generate an integer id where unit steps represent the greatest common divisor in the original sequence e.g \code{c(4, 6, 10) -> c(1, 2, 4)} or \code{c(0.25, 0.75, 1) -> c(1, 3, 4)}.
 }
 \usage{
-timeid(x, factor = TRUE, ordered = TRUE, extra = FALSE)
+timeid(x, factor = FALSE, ordered = factor, extra = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{a numeric vector such as a \code{Date}, \code{POSIXct} or other integer/double vector representing time.}
-  \item{factor}{logical. \code{TRUE} returns an ordered factor with levels corrsponding to the full sequence (without irregular gaps) of time. This is useful for inclusion in the \link[=findex]{index} but might be computationally expensive for very irregular sequences, see Details. \code{FALSE} returns a simpler object of class \code{\link{qG}}. }
+  \item{factor}{logical. \code{TRUE} returns an (ordered) factor with levels corrsponding to the full sequence (without irregular gaps) of time. This is useful for inclusion in the \link[=findex]{index} but might be computationally expensive for very irregular sequences, see Details. \code{FALSE} returns a simpler object of class \code{\link{qG}}. }
   \item{ordered}{logical. \code{TRUE} adds a class "ordered". }
   \item{extra}{logical. \code{TRUE} attaches a set of 4 diagnostic items as attributes to the result:
    \itemize{
@@ -26,7 +26,7 @@ timeid(x, factor = TRUE, ordered = TRUE, extra = FALSE)
   }
 }
 \details{
-Let \code{range_x} and \code{step_x} be the like-named attributes returned when \code{extra = TRUE}, then, if \code{factor = TRUE}, a complete sequence of levels is generated as \code{seq(range_x[1], range_x[2], by = step_x) |> copyMostAttrib(x) |> as.character()}. If \code{factor = FALSE}, the number of timesteps recorded in the \code{"N.groups"} attribute is computed as \code{(range_x[2]-range_x[1])/step_x + 1}, which is equal to the theoretical number of factor levels. In both cases the underlying integer id is the same and preserves gaps in time. Large gaps (strong irregularity) can result in many unused factor levels, the generation of which can become expensive. Using \code{factor = FALSE} is thus more efficient.
+Let \code{range_x} and \code{step_x} be the like-named attributes returned when \code{extra = TRUE}, then, if \code{factor = TRUE}, a complete sequence of levels is generated as \code{seq(range_x[1], range_x[2], by = step_x) |> copyMostAttrib(x) |> as.character()}. If \code{factor = FALSE}, the number of timesteps recorded in the \code{"N.groups"} attribute is computed as \code{(range_x[2]-range_x[1])/step_x + 1}, which is equal to the theoretical number of factor levels. In both cases the underlying integer id is the same and preserves gaps in time. Large gaps (strong irregularity) can result in many unused factor levels, the generation of which can become expensive. Using \code{factor = FALSE} (the default) is thus more efficient.
 }
 \value{
 A factor or \code{\link{qG}} object, optionally with additional attributes attached.
@@ -38,11 +38,12 @@ A factor or \code{\link{qG}} object, optionally with additional attributes attac
 \examples{
 # A normal use case
 timeid(wlddev$decade)
+timeid(wlddev$decade, factor = TRUE)
 timeid(wlddev$decade, extra = TRUE)
 
 # Here a large number of levels is generated, which is expensive
-timeid(wlddev$date)
-tid <- timeid(wlddev$date, factor = FALSE, extra = TRUE) # Much faster
+timeid(wlddev$date, factor = TRUE)
+tid <- timeid(wlddev$date, extra = TRUE) # Much faster
 str(tid)
 
 # The reason for step = 1 are leap years with 366 days every 4 years

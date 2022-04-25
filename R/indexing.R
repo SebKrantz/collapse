@@ -54,7 +54,7 @@ to_plm <- function(x, row.names = FALSE) {
 # first get unique values using group(), do forder.int, then expand again...
 # also think of fixest's quf, checking if double is integer, break out of loop if fail...
 
-timeid <- function(x, factor = TRUE, ordered = TRUE, extra = FALSE) {
+timeid <- function(x, factor = FALSE, ordered = factor, extra = FALSE) {
   id <- .Call(C_group, x, TRUE, FALSE) # starts = TRUE, group.sizes = FALSE
   unik <- unattrib(Csv(x, attr(id, "starts")))
   if(!is.numeric(unik)) stop("x needs to be numeric, otherwise use qF() or qG() instead of timeid()")
@@ -119,7 +119,7 @@ make_time_factor <- function(x) {
     oldClass(x) <- c("ordered", "factor", "na.included")
     return(x)
   }
-  if(is.numeric(unclass(x))) return(timeid(x, factor = TRUE))
+  if(is.numeric(unclass(x))) return(timeid(x, factor = TRUE, ordered = FALSE))
   qF(x, na.exclude = FALSE, sort = TRUE, method = "hash")
 }
 

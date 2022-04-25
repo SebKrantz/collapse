@@ -5,17 +5,17 @@
 \title{Time Series and Panel Series} % \emph{collapse}
 
 \description{
-\emph{collapse} provides a flexible set of functions and classes to work with time-dependent data:
+\emph{collapse} provides a flexible and powerful set of functions and classes to work with time-dependent data:
 \itemize{
-\item \code{\link[=findex_by]{findex_by/iby}} creates an 'indexed_frame', a flexible structure that can be imposed upon any data-frame like class and can be used for fully or partially indexed time-based computations. Indexed frames are composed of 'indexed_series', which can also be created from vector and matrix-like objects using the \code{reindex} function. Functions \code{findex/ix}, \code{unindex}, \code{is_irregular} and \code{to_plm} help operate these classes. Methods are defined for various time-series, data-fransformation and and data manipulation functions in \emph{collapse}.
+\item \code{\link[=findex_by]{findex_by/iby}} creates an 'indexed_frame': a flexible structure that can be imposed upon any data-frame like object and facilitates \bold{indexed (time-aware) computations on time series and panel data}. Indexed frames are composed of 'indexed_series', which can also be created from vector and matrix-based objects using the \code{reindex} function. Further functions \code{findex/ix}, \code{unindex}, \code{is_irregular} and \code{to_plm} help operate these classes, check for irregularity, and ensure \emph{plm} compatibility. Methods are defined for various time series, data fransformation and data manipulation functions in \emph{collapse}.
 
-\item \code{\link{timeid}} efficiently converts numeric time sequences, such as 'Date' or 'POSIXct' vectors, to a time-factor or integer id, where a unit-step represents the greatest common divisor of the underlying sequence, and the time-structure is preserved (e.g. levels are added for irregular gaps in the sequence).
+\item \code{\link{timeid}} efficiently converts numeric time sequences, such as 'Date' or 'POSIXct' vectors, to a \bold{time-factor / integer id}, where a unit-step represents the greatest common divisor of the underlying sequence.
 
-\item \code{\link{flag}}, and the lag- and lead- operators \code{\link{L}} and \code{\link{F}} are S3 generics to efficiently compute sequences of \bold{lags and leads} on ordered or unordered regular / balanced or irregular / unbalanced time series and panel data.
+\item \code{\link{flag}}, and the lag- and lead- operators \code{\link{L}} and \code{\link{F}} are S3 generics to efficiently compute sequences of \bold{lags and leads} on regular or irregular / unbalanced time series and panel data.
 \item Similarly, \code{\link{fdiff}}, \code{\link{fgrowth}}, and the operators \code{\link{D}}, \code{\link{Dlog}} and \code{\link{G}} are S3 generics to efficiently compute sequences of suitably lagged / leaded and iterated \bold{differences, log-differences and growth rates}. \code{\link[=fdiff]{fdiff/D/Dlog}} can also compute \bold{quasi-differences} of the form \eqn{x_t - \rho x_{t-1}}.
-\item \code{\link{fcumsum}} is an S3 generic to efficiently compute cumulative sums on time series and panel data. In contrast to \code{\link{cumsum}}, it can handle missing values and supports both grouped and ordered computations.
-\item \code{\link{psmat}} is an S3 generic to efficiently convert panel-vectors or 'indexed_series' and data frames or 'indexed_frame's to \bold{panel series matrices and 3D arrays}, respectively.
-\item \code{\link{psacf}}, \code{\link{pspacf}} and \code{\link{psccf}} are S3 generics to compute estimates of the \bold{auto-, partial auto- and cross- correlation or covariance functions} for panel-vectors or 'indexed_series', and multivariate versions for data frames or 'indexed_frame's.
+\item \code{\link{fcumsum}} is an S3 generic to efficiently compute \bold{cumulative sums} on time series and panel data. In contrast to \code{\link{cumsum}}, it can handle missing values and supports both grouped and indexed / ordered computations.
+\item \code{\link{psmat}} is an S3 generic to efficiently convert panel-vectors / 'indexed_series' and data frames / 'indexed_frame's to \bold{panel series matrices and 3D arrays}, respectively (where time, individuals and variables receive different dimensions, allowing for fast indexation, visualization, and computations).
+\item \code{\link{psacf}}, \code{\link{pspacf}} and \code{\link{psccf}} are S3 generics to compute estimates of the \bold{auto-, partial auto- and cross- correlation or covariance functions} for panel-vectors / 'indexed_series', and multivariate versions for data frames / 'indexed_frame's.
 }
 }
 \section{Table of Functions}{
@@ -25,7 +25,7 @@
 
                  \code{\link[=flag]{flag/L/F}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Compute (sequences of) lags and leads \cr
                  \code{\link[=fdiff]{fdiff/D/Dlog}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Compute (sequences of lagged / leaded and iterated) (quasi-)differences or (quasi-)log-differences \cr
-                 \code{\link[=fgrowth]{fgrowth/G}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Compute (sequences of lagged / leaded and iterated) growth rates (exact or via log-differencing, in percentage terms) \cr
+                 \code{\link[=fgrowth]{fgrowth/G}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Compute (sequences of lagged / leaded and iterated) growth rates (exact, via log-differencing, or compounded) \cr
                  \code{\link{fcumsum}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df}  \tab\tab Compute cumulative sums \cr
                  \code{\link{psmat}} \tab\tab \code{default, pseries, data.frame, pdata.frame} \tab\tab Convert panel data to matrix / array \cr
                  \code{\link{psacf}} \tab\tab \code{default, pseries, data.frame, pdata.frame} \tab\tab Compute ACF on panel data \cr
