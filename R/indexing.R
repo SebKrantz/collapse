@@ -395,8 +395,8 @@ print.index_df <- function(x, topn = 5, ...) {
   if(idDTl) {
     res <- unindex_light(x)
     # res <- NextMethod() # doesn't work with i
-    if(any(clx == "invisible"))  # for chaining...
-      clx <- clx[clx != "invisible"]
+    ivsbl <- any(clx == "invisible")
+    if(ivsbl) clx <- clx[clx != "invisible"] # for chaining...
     if(!missing(...)) {
       rem <- as.list(substitute(list(...))[-1L])
       cal <- as.call(c(list(quote(`[`), quote(res), substitute(i)), rem))
@@ -411,8 +411,10 @@ print.index_df <- function(x, topn = 5, ...) {
       }
     } else cal <- as.call(list(quote(`[`), quote(res), substitute(i)))
     res <- eval(cal, list(res = res), parent.frame())
-    if(missing(i) && fnrow2(res) != fnrow2(x)) return(unindex(res)) # data.table aggregation
-    else if(!missing(i)) i <- eval(substitute(i), x, parent.frame())
+    if(missing(i) && fnrow2(res) != fnrow2(x)) {
+      if(ivsbl) oldClass(res) <- fsetdiff(oldClass(res), "invisible")
+      return(unindex(res)) # data.table aggregation
+    } else if(!missing(i)) i <- eval(substitute(i), x, parent.frame())
   } else res <- unindex(x)[i, ...] # does not respect data.table properties, but better for sf data frame and others which might check validity of "index_df" attribute
 
   index <- attr(x, "index_df")
