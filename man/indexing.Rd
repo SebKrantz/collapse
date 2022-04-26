@@ -133,21 +133,111 @@ The print methods for 'indexed_frame' and 'indexed_series' first call \code{prin
 \examples{
 opts <- options(max.print = 100)
 
-# Indexing Panel Data
+# Indexing panel data ----------------------------------------------------------
+
 wldi <- findex_by(wlddev, iso3c, year)
 wldi
+wldi[1:100,1]               # Works like a data frame
 POP <- wldi$POP
 qsu(POP)                    # Summary statistics
-fgrowth(POP)                # Population growth
-STD(fgrowth(POP, c(1, 10))) # Within-standardized 1 and 10-year growth rates
+G(POP)                      # Population growth
+STD(G(POP, c(1, 10)))       # Within-standardized 1 and 10-year growth rates
 psmat(POP)                  # Panel-Series Matrix
+plot(psmat(log10(POP)))
 
+library(magrittr)
 # Fast Statistical Functions don't have dedicated methods
-fmean(POP) # If the result is scalar, it is smart enough to drop the index
-fmean(unindex(fgrowth(POP)), findex(POP)$iso3c) # else we need to do this manually
+# Thus for aggregation we need to unindex beforehand ...
+fmean(unindex(POP))
+wldi \%>\% unindex() \%>\%
+  fgroup_by(iso3c) \%>\% num_vars() \%>\% fmean()
+# ... or unindex after taking group identifiers from the index
+fmean(unindex(fgrowth(POP)), ix(POP)$iso3c)
+wldi \%>\% num_vars() \%>\%
+  fgroup_by(iso3c = ix(.)$iso3c) \%>\%
+  unindex() \%>\% fmean()
 
+# Panel-Data modelling ---------------------------------------------------------
 
-# Indexing Time Series
+# Linear model of 5-year annualized growth rates of GDP on Life Expactancy + 5y lag
+lm(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), wldi) # p abbreviates "power"
+
+# Same, adding time fixed effects via plm package: need to utilize to_plm function
+plm::plm(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), to_plm(wldi), effect = "time")
+
+# With country and time fixed effects via fixest
+fixest::feols(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), wldi, fixef = c("iso3c", "year"))
+\donttest{
+# Running a robust MM regression without fixed effects
+robustbase::lmrob(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), wldi)
+
+# Running a robust MM regression with country and time fixed effects
+wldi \%>\% fselect(PCGDP, LIFEEX) \%>\%
+  fgrowth(5, power = 1/5) \%>\% ftransform(LIFEEX_L5 = L(LIFEEX, 5)) \%>\%
+  # drop abbreviates drop.index.levels (not strictly needed here but more consistent)
+  na_omit(drop = "all") \%>\% fhdwithin(na.rm = FALSE) \%>\% # For TFE use fwithin(effect = "year")
+  unindex() \%>\% robustbase::lmrob(formula = PCGDP ~.)    # using lm() gives same result as fixest
+
+# Using a random forest model without fixed effects
+# ranger does not support these kinds of formulas, thus we need some preprocessing...
+wldi \%>\% fselect(PCGDP, LIFEEX) \%>\%
+  fgrowth(5, power = 1/5) \%>\% ftransform(LIFEEX_L5 = L(LIFEEX, 5)) \%>\%
+  unindex() \%>\% na_omit() \%>\% ranger::ranger(formula = PCGDP ~.)
+}
+# Indexing other data frame based classes --------------------------------------
+
+library(tibble)
+wlditbl <- qTBL(wlddev) \%>\% findex_by(iso3c, year)
+wlditbl[,2] # Works like a tibble...
+wlditbl[[2]]
+wlditbl[1:1000, 10]
+head(wlditbl)
+
+library(data.table)
+wldidt <- qDT(wlddev) \%>\% findex_by(iso3c, year)
+wldidt[1:1000]      # Works like a data.table...
+wldidt[year > 2000]
+wldidt[, .(sum_PCGDP = sum(PCGDP, na.rm = TRUE)), by = country] # Aggregation unindexes the result
+wldidt[, lapply(.SD, sum, na.rm = TRUE), by = country, .SDcols = .c(PCGDP, LIFEEX)]
+# This also works but is a bit inefficient since the index is subset and then dropped
+# -> better unindex beforehand
+wldidt[year > 2000, .(sum_PCGDP = sum(PCGDP, na.rm = TRUE)), by = country]
+wldidt[, PCGDP_growth_5Y := G(PCGDP, 5, power = 1/5)]           # Can add Variables
+# Note that .SD is a data.table of indexed_series, not an indexed_frame, so this is WRONG!
+wldidt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := G(slt(.SD, PCGDP, LIFEEX), 5, power = 1/5)]
+# This gives the correct outcome
+wldidt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := lapply(slt(.SD, PCGDP, LIFEEX), G, 5, power = 1/5)]
+%# wldidt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := G(slt(reindex(.SD, ix(wldidt)), PCGDP, LIFEEX), 5, power = 1/5)] # Works !!
+library(sf)
+nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
+nci <- findex_by(nc, SID74)
+nci[1:10, "AREA"]
+st_centroid(nci) # The geometry column is never indexed, thus sf computations work normally
+st_coordinates(nci)
+fmean(sf::st_area(nci))
+
+library(tsibble)
+pedi <- findex_by(pedestrian, Sensor, Date_Time)
+pedi[1:5, ]
+findex(pedi) # Time factor with 17k levels from POSIXct
+# Now here is a case where integer levels in the index can really speed things up
+ix(iby(pedestrian, Sensor, timeid(Date_Time)))
+library(microbenchmark)
+microbenchmark(descriptive_levels = findex_by(pedestrian, Sensor, Date_Time),
+               integer_levels = findex_by(pedestrian, Sensor, timeid(Date_Time)))
+# Data has irregularity
+is_irregular(pedi)
+is_irregular(pedi, any_id = FALSE) # irregularity in all sequences
+# Manipulation such as lagging with tsibble/dplyr requires expanding rows and grouping
+# Collapse can just compute correct lag on indexed series or frames
+library(dplyr)
+microbenchmark(
+  dplyr = fill_gaps(pedestrian) \%>\% group_by_key() \%>\% mutate(Lag_Count = lag(Count)),
+  collapse = fmutate(pedi, Lag_Count = flag(Count)), times = 10)
+
+# Indexing Atomic objects ---------------------------------------------------------
+
+## ts
 print(AirPassengers)
 AirPassengers[-(20:30)]        # Ts class does not support irregularity, subsetting drops class
 G(AirPassengers[-(20:30)], 12) # Annual Growth Rate: Wrong!
@@ -159,29 +249,25 @@ iAP[-(20:30)]  # Subsetting
 G(iAP[-(20:30)], 12)                # Annual Growth Rate: Correct!
 L(G(iAP[-(20:30)], c(0,1,12)), 0:1) # Lagged level, period and annual growth rates...
 
-# xts
-library(magrittr)
+## xts
 library(xts)
-library(zoo) # Needed for as.yearmon
+library(zoo) # Needed for as.yearmon() and index() functions
 X <- wlddev \%>\% fsubset(iso3c == "DEU", date, PCGDP:POP) \%>\% {
   xts(num_vars(.), order.by = as.yearmon(.$date))
-} \%>\% reindex(identity(index(.)))
+  } \%>\% ss(-(30:40)) \%>\% reindex(identity(index(.))) # Introducing a gap
 plot(G(unindex(X)))
-diff(X[-(30:40),])  # diff.xts gixes wrong result
-fdiff(X[-(30:40),]) # fdiff gives right result
+diff(unindex(X))    # diff.xts gixes wrong result
+fdiff(X)            # fdiff gives right result
 
 # But xts range-based subsets do not work...
 \dontrun{
 X["1980/"]
 }
-
-# Thus a better way of working with xts is not to index and use ad.hoc omputations
+# Thus a better way is not to index and perform ad-hoc omputations on the xts index
 X <- unindex(X)
-X["1980/"] \%>\% fdiff(t = index(.))
+X["1980/"] \%>\% fdiff(t = index(.)) # xts index is internally processed by timeid()
 
-# tsibble...
-
-
+## Of course you can also index plain vectors / matrices...
 
 options(opts)
 }
