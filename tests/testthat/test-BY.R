@@ -45,8 +45,8 @@ test_that("BY.default works as intended", {
   expect_equal(BY(x, f, bmean), fmean(x, f))
   expect_equal(BY(x, f, bmean, return = "list"), as.list(fmean(x, f)))
   # BY(x, f, bscale)
-  expect_equal(BY(x, f, bscale, use.g.names = FALSE),   fscale(x, f))
-  expect_equal(BY(x, f, log, use.g.names = FALSE),   log(x))
+  expect_equal(BY(x, f, bscale, use.g.names = FALSE), fscale(x, f))
+  expect_equal(BY(x, f, log, use.g.names = FALSE), log(x))
   expect_equal(BY(x, f, quantile), unlist(lapply(split(x, f), quantile)))
   expect_equal(BY(x, f, quantile, expand.wide = TRUE),   t(sapply(split(x, f), quantile)))
   expect_equal(BY(x, f, quantile, return = "list"), lapply(split(x, f), quantile))
@@ -232,6 +232,25 @@ test_that("BY produces errors for wrong input", {
   expect_error(BY(mtcars, ~g, bsum)) # Not supported type
   expect_error(BY(m, ~g, bsum)) # Not supported type
   expect_error(BY(x, ~g, bsum)) # Not supported type
+
+})
+
+test_that("no row-names are generated for data.table's (only)", {
+
+  mtcDT <- qDT(mtcars)
+
+  for(FUN in list(bsum, quantile, identity)) {
+
+    expect_false(is.character(attr(BY(mtcDT, g, FUN), "row.names")))
+    if(!identical(FUN, identity)) {
+      expect_true(is.character(attr(BY(mtcDT, g, FUN, return = "data.frame"), "row.names")))
+      expect_true(is.character(dimnames(BY(mtcDT, g, FUN, return = "matrix"))[[1L]]))
+    }
+    expect_false(is.character(attr(BY(mtcDT, g, FUN, use.g.names = FALSE), "row.names")))
+    expect_false(is.character(attr(BY(mtcDT, g, FUN, use.g.names = FALSE, return = "data.frame"), "row.names")))
+    expect_false(is.character(dimnames(BY(mtcDT, g, FUN, use.g.names = FALSE, return = "matrix"))[[1L]]))
+
+  }
 
 })
 

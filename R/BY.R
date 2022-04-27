@@ -1,4 +1,3 @@
-# TODO: Make sure matrix and data.frame method never return wrong row.names...
 
 BY <- function(x, ...) UseMethod("BY")
 
@@ -32,7 +31,7 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder 
     res <- unlist(res, recursive = FALSE, use.names = TRUE)
 
     if(reorder && length(res) == length(g[[2L]]) && !isTRUE(g$ordered[2L]))
-      warning("result is same length as x but the grouping is not sorted and the function used added names. Therefore the result is not reordered. To receive reordered output without constructed names set use.g.names = FALSE")
+      warning("result is same length as x but the grouping is not sorted and the function used added names. Thus BY cannot decisively distinguish whether you are using a transformation function like scale() or a summary function like quantile() that computes a vector of statistics. The latter is assumed and the result is not reordered. To receive reordered output without constructed names set use.g.names = FALSE")
 
   } else { # Function does not assign names... or not using group names...
 
@@ -95,7 +94,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
       if(return == 1L) {
         isDTl <- inherits(x, "data.table")
         ax[["names"]] <- names(res)
-        ax[["row.names"]] <- if(use.g.names && !inherits(x, "data.table") && length(gn <- GRPnames(g))) gn else
+        ax[["row.names"]] <- if(use.g.names && !isDTl && length(gn <- GRPnames(g))) gn else
           .set_row_names(length(res[[1L]]))
       } else {
         isDTl <- FALSE
@@ -118,7 +117,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
 
   # No expand wide (classical result)
   matl <- return == 3L
-  isDTl <- !matl && return != 2L && inherits(x, "data.table")
+  isDTl <- !matl && return != 2L && inherits(x, "data.table") # is data table and return data.table
   n <- length(g[[2L]])
   rownam <- ax[["row.names"]]
   attributes(x) <- NULL
@@ -137,16 +136,16 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
       rn <- names(res1)
       names(res1) <- NULL
       if(reorder && length(res1) == n && !isTRUE(g$ordered[2L])) {
-        warning("nrow(result) is same as nrow(x) but the grouping is not sorted and the function used added names. Therefore the result is not reordered. To receive reordered output without constructed names set use.g.names = FALSE")
+        warning("nrow(result) is same as nrow(x) but the grouping is not sorted and the function used added names. Thus BY cannot decisively distinguish whether you are using a transformation function like scale() or a summary function like quantile() that computes a vector of statistics. The latter is assumed and the result is not reordered. To receive reordered output without constructed names set use.g.names = FALSE")
         reorder <- FALSE
       }
     } else { # function doesn't assign names, different options.
       res1 <- unlist(res1, FALSE, FALSE)
       if(length(res1) == g[[1L]]) rn <- GRPnames(g)
       else if(matl) {
-        rn <- if(length(res1) == n && is.character(rownam) && rownam[1L] != "1") rownam else NULL
-      } else {  # Important to check lenth(rn) here (simply keeps ax[["row.names"]])
-        rn <- if(length(res1) == n) NULL else .set_row_names(length(res1))
+        rn <- if(length(res1) == n && is.character(rownam) && rownam[1L] != "1" && (reorder || isTRUE(g$ordered[2L]))) rownam else NULL
+      } else {  # Important to check lenth(rn) below (simply keeps ax[["row.names"]])
+        rn <- if(length(res1) != n || !(reorder || isTRUE(g$ordered[2L]))) .set_row_names(length(res1)) else NULL
       }
     }
     # Finish computing results...
@@ -163,10 +162,10 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
   } else {
     if(matl) {
       res <- do.call(cbind, aplyfun(x, splaplfun, g, FUN, ...))
-      rn <- if(nrow(res) == n && is.character(rownam) && rownam[1L] != "1") rownam else NULL
+      rn <- if(nrow(res) == n && is.character(rownam) && rownam[1L] != "1" && (reorder || isTRUE(g$ordered[2L]))) rownam else NULL
     } else {
-      res <- aplyfun(x, copysplaplfun, g, FUN, ...)
-      rn <- if(length(res[[1L]]) == n) NULL else .set_row_names(length(res[[1L]]))
+      res <- aplyfun(x, copysplaplfun, g, FUN, ...) # isDTL ? -> Not needed as data.tables cannot have character row-names anyway.
+      rn <- if(length(res[[1L]]) != n || !(reorder || isTRUE(g$ordered[2L]))) .set_row_names(length(res[[1L]])) else NULL
     }
   }
 
@@ -193,7 +192,6 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
 
   if(!is.matrix(x)) stop("x needs to be a matrix")
   if(!is.function(FUN)) FUN <- match.fun(FUN)
-
 
   aplyfun <- if(parallel) function(...) parallel::mclapply(..., mc.cores = mc.cores) else lapply
   return <- switch(return[1L], same = 3L, matrix = 2L, data.frame = 1L, list = 0L,
@@ -246,13 +244,13 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
       rn <- names(res1)
       names(res1) <- NULL
       if(reorder && length(res1) == n && !isTRUE(g$ordered[2L])) {
-        warning("nrow(result) is same as nrow(x) but the grouping is not sorted and the function used added names. Therefore the result is not reordered. To receive reordered output without constructed names set use.g.names = FALSE")
+        warning("nrow(result) is same as nrow(x) but the grouping is not sorted and the function used added names. Thus BY cannot decisively distinguish whether you are using a transformation function like scale() or a summary function like quantile() that computes a vector of statistics. The latter is assumed and the result is not reordered. To receive reordered output without constructed names set use.g.names = FALSE")
         reorder <- FALSE
       }
     } else { # function doesn't assign names, different options.
       res1 <- unlist(res1, FALSE, FALSE)
       rn <- if(length(res1) == g[[1L]]) GRPnames(g) else
-            if(length(res1) == n) dn[[1L]] else NULL
+            if(length(res1) == n && (reorder || isTRUE(g$ordered[2L]))) dn[[1L]] else NULL
     }
 
     # Finish computing results...
@@ -271,10 +269,10 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
     if(matl) { # Return matrix
 
       res <- do.call(cbind, res)
-      if(nrow(res) != n) dn <- list(NULL, dn[[2L]])
+      if(nrow(res) != n || !(reorder || isTRUE(g$ordered[2L]))) dn <- list(NULL, dn[[2L]])
 
     } else { # Return data frame
-      rn <- if(length(res[[1L]]) == n) dn[[1L]] else NULL
+      rn <- if(length(res[[1L]]) == n && (reorder || isTRUE(g$ordered[2L]))) dn[[1L]] else NULL
     }
 
   }
@@ -309,24 +307,24 @@ BY.grouped_df <- function(x, FUN, ..., reorder = TRUE, keep.group_vars = TRUE, u
   if(!is.data.frame(res)) return(res)
 
   n <- fnrow2(res)
+  same_size <- n == fnrow2(x)
 
-  # Not preserving grouping variables: return appropriate object
-  if(!keep.group_vars) return(if(n == fnrow2(x) && (reorder || isTRUE(g$ordered[2L]))) res else fungroup(res))
+  # Not preserving grouping variable or same size and no grouping variables: return appropriate object
+  if(!keep.group_vars || (same_size && length(gn) == 0L)) return(if(same_size && (reorder || isTRUE(g$ordered[2L]))) res else fungroup(res))
 
-  # If same size...
-  if(n == fnrow2(x)) {
-    if(!(reorder || isTRUE(g$ordered[2L]))) return(res)
+  # If same size, with grouping variables...
+  if(same_size) {
+    if(!(reorder || isTRUE(g$ordered[2L]))) return(fungroup(res))
     ar <- attributes(res)
     ar[["names"]] <- c(g[[5L]], ar[["names"]])
     return(condalcSA(c(.subset(x, gn), res), ar, any(ar$class == "data.table")))
   }
 
-  # If other size
-  if(n != g[[1L]]) return(fungroup(res))
+  # If other size or no groups
+  if(n != g[[1L]] && is.null(g[[4L]])) return(fungroup(res))
 
   # Aggregation
   ar <- attributes(fungroup2(res, oldClass(res)))
-  attributes(res) <- NULL
   ar[["names"]] <- c(g[[5L]], ar[["names"]])
   condalcSA(c(g[[4L]], res), ar, any(ar$class == "data.table"))
 }
