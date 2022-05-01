@@ -518,8 +518,8 @@ mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is 
   # return(eval(fcal, c(list(.data_ = .data_), data), setup$ce))
   lv <- vlengths(value, FALSE)
   nr <- length(data[[1L]])
-  if(all(lv == nr)) return(value)
-  if(all(lv == 1L)) return(lapply(value, alloc, nr))
+  if(allv(lv, nr)) return(value)
+  if(allv(lv, 1L)) return(lapply(value, alloc, nr))
   stop("Without groups, NROW(value) must either be 1 or nrow(.data)")
 }
 
@@ -609,13 +609,20 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
     oldClass(value) <- NULL
   }
   lv <- vlengths(value, FALSE)
-  nr <- length(data[[1L]])
-  if(all(lv == nr)) { # Improve efficiency here??
-    if(!isTRUE(g$ordered[2L])) value <- lapply(value, function(x, g) .Call(C_greorder, x, g), g)
+  nr <- length(g[[2L]])
+  if(allv(lv, nr)) {
+    if(!isTRUE(g$ordered[2L])) {
+      if(length(value) < 4L) { # optimal?
+        value <- lapply(value, function(x, g) .Call(C_greorder, x, g), g)
+      } else {
+        ind <- .Call(C_greorder, seq_len(nr), g)
+        value <- .Call(C_subsetDT, value, ind, seq_along(value), FALSE)
+      }
+    }
     if(apli) names(value) <- names(.data_)
     return(value)
   }
-  if(!all(lv == g[[1L]])) stop("With groups, NROW(value) must either be ng or nrow(.data)")
+  if(!allv(lv, g[[1L]])) stop("With groups, NROW(value) must either be ng or nrow(.data)")
   if(apli) names(value) <- names(.data_)
   return(.Call(C_subsetDT, value, g[[2L]], seq_along(value), FALSE))
 }
