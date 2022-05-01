@@ -158,10 +158,10 @@ is.GRP <- function(x) {
 
 length.GRP <- function(x) length(x[[2L]])
 
-GRPnames <- function(x, force.char = TRUE) { # , ...
+GRPnames <- function(x, force.char = TRUE, sep = ".") { # , ...
   groups <- x[[4L]]
   if(is.null(groups)) return(NULL)
-  if(length(unclass(groups)) > 1L) return(do.call(paste, c(groups, list(sep = "."))))
+  if(length(unclass(groups)) > 1L) return(do.call(paste, c(groups, list(sep = sep))))
   if(force.char) tochar(.subset2(groups, 1L)) else .subset2(groups, 1L) # paste0(groups[[1L]]) prints "NA" but is slow, if assign with rownames<-, cannot have duplicate row names. But, attr<- "row.names" is fine !!
 }
 
@@ -371,7 +371,7 @@ fgroup_by <- function(.X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, 
 gby <- fgroup_by
 
 print.GRP_df <- function(x, ...) {
-  print(fungroup(x)) # better !! (the method could still print groups attribute etc. ) And can also get rid of .rows() in fgroup_by and other fuzz..
+  print(fungroup(x), ...) # better !! (the method could still print groups attribute etc. ) And can also get rid of .rows() in fgroup_by and other fuzz..
   # but better keep for now, other functions in dplyr might check this and only preserve attributes if they exist. -> Nah. select(UGA_sf, addr_cname) doesn't work anyway..
   # NextMethod()
   g <- attr(x, "groups")
