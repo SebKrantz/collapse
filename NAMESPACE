@@ -636,6 +636,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  S3method(aperm, qsu)
  S3method('[', psmat)
  S3method('[', qsu)
+ S3method('[', descr)
  S3method('[', pwcor)
  S3method('[', pwcov)
  S3method('[', GRP_df)
