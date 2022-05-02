@@ -25,7 +25,7 @@ across(.cols = NULL, .fns, ..., .names = NULL,
 \note{
 \code{across} does not support \emph{purr}-style lambdas, and does not support \code{dplyr}-style predicate functions e.g. \code{across(where(is.numeric), sum)}, simply use \code{across(is.numeric, sum)}. In contrast to \code{dplyr}, you can also compute on grouping columns.
 
-In general, my mission with \code{collapse} is not to create a \code{dplyr}-clone, but to take some of the useful features and make them robust and fast using base R and C/C++, with the aim of having a stable API. So don't ask me to implement the latest \emph{dplyr} feature, unless you firmly believe it is very useful and will be around 10 years from now.
+%In general, my mission with \code{collapse} is not to create a \code{dplyr}-clone, but to take some of the useful features and make them robust and fast using base R and C/C++, with the aim of having a stable API. So don't ask me to implement the latest \emph{dplyr} feature, unless you firmly believe it is very useful and will be around 10 years from now.
 }
 
 \seealso{

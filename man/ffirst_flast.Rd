@@ -62,7 +62,7 @@ flast(x, \dots)
 \code{ffirst} returns the first value in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its first value, grouped by \code{g}. Similarly \code{flast} returns the last value in \code{x}, \dots
 }
 \note{
-Both functions are significantly faster if \code{na.rm = FALSE}.
+Both functions are significantly faster if \code{na.rm = FALSE}, particularly \code{ffirst} which can take direct advantage of the 'group.starts' elements in \code{\link{GRP}} objects.
 }
 \seealso{
 \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}

@@ -71,7 +71,7 @@ to_plm(x, row.names = FALSE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{.X}{a data frame or list-like object of equal-length columns.}
-  \item{x}{an 'indexed_frame' or 'indexed_series'. \code{findex} / \code{unindex} also work with 'pseries' and 'pdata.frame's created with \emph{plm}. For \code{is_irregular} \code{x} can also be an index (inherits 'pindex') or a vector representing time. }
+  \item{x}{an 'indexed_frame' or 'indexed_series'. \code{findex} also works with 'pseries' and 'pdata.frame's created with \emph{plm}. For \code{is_irregular} \code{x} can also be an index (inherits 'pindex') or a vector representing time. }
   \item{\dots}{for \code{findex_by}: variables identifying the individual (id) and/or time dimensions of the data. Passed either as unquoted comma-separated column names or (tagged) expressions involving columns, or as a vector of column names, indices, a logical vector or a selector function. The time variable must enter last. See Examples. Otherwise: further arguments passed to \code{\link[=NextMethod]{NextMethod()}}.}
   \item{single}{character. If only one indexing variable is supplied, this can be declared as \code{"id"} or \code{"time"} variable. \code{"auto"} chooses \code{"id"} if the variable has \code{\link{anyDuplicated}} values.  }
   \item{interact.ids}{logical. If \code{n > 2} indexing variables are passed, \code{TRUE} calls \code{\link{finteraction}} on the first \code{n-1} of them (\code{n}'th variable must be time). \code{FALSE} keeps all variables in the index. The latter slows down computations of lags / differences etc. because ad-hoc interactions need to be computed, but gives more flexibility for scaling / centering / summarising over different data dimensions.  }
@@ -89,15 +89,17 @@ The use of these sub-classes does not require much knowledge of \emph{plm}, but 
 
 \bold{Main Features and Enhancements}
 
-The 'indexed_frame' and 'indexed_series' classes extend and enhance 'pdata.frame' and 'pseries' in a number of critical dimenions. Most notably they:
+The 'indexed_frame' and 'indexed_series' classes extend and enhance 'pdata.frame' and 'pseries' in a number of critical dimensions. Most notably they:
 
 \itemize{
   \item Support \bold{both time series and panel data}, by allowing indexation of data with one, two or more variables.
-  \item Are \bold{class-agnostic}: any data.frame/list (such as data.table, tibble, tsibble, sf etc.) can become an 'indexed_frame' and continue to function as usual for most use cases. Similarly, any vector or matrix (such as 'ts', 'mts', 'xts') can become an 'indexed_series'. This also allows for transient workflows e.g. \code{some_df |> findex_by(...) |> 'do something using collapse functions' |> unindex() |> 'continue working with some_df'}.
-  \item Come with a comprehensive and efficent set of \bold{methods for subsetting and manipulation}, including methods for \code{\link{fsubset}}, \code{\link{funique}}, \code{\link[=roworder]{roworder(v)}} (internal) and \code{\link{na_omit}} (internal, \code{\link{na.omit}} also works but is slower). It is also possible to group indexed data with \code{\link{fgroup_by}} for transformations e.g. using \code{\link{fmutate}}, but aggregation requires \code{unindex()}ing.
-  \item \bold{Natively handle irregularity}: time objects (such as 'Date', 'POSIXct' etc.) are passed to \code{\link{timeid}}, which efficiently determines the temporal structure by finding the greatest common divisor, and creates a time-factor with levels corresponding to a complete time-sequence. The same happens with plain numeric time variables, which are assumed to represent unitary time steps (but can also be passed through \code{\link{timeid}} if non-unitary). Character time variables are converted to factor, which might also capture irregular gaps in panel series. Using this time-factor in the index, \emph{collapse}'s functions efficiently perform correct computations on irregular sequences and panels without the need to 'expand' the data / fill gaps. \code{is_irregular} can be used to check for irregularity in the entire sequence / panel or separately for each individual in panel data.
-\item Support computations inside \bold{data-masking functions and formulas}, by virtue of what I call \bold{deep indexation}: Each variable inside an 'indexed_frame' is an 'indexed_series' which contains in it's 'index_df' attribute an external pointer to the 'index_df' attribute of the frame. Functions operating on 'indexed_series' stored inside the frame (such as \code{with(data, flag(column))}) can fetch the index from this pointer. This allows worry-free application inside arbitary data masking environments (\code{with}, \code{\%$\%}, \code{attach}, etc..) and estimation commands (\code{glm}, \code{feols}, \code{lmrob} etc..). A limitation is that external pointers are only valid during the present R session, thus when saving an 'indexed_frame' and loading it again, you need to call \code{data = reindex(data)} before computing on it.
+  \item Are \bold{class-agnostic}: any data.frame/list (such as data.table, tibble, tsibble, sf etc.) can become an 'indexed_frame' and continue to function as usual for most use cases. Similarly, any vector or matrix (such as ts, mts, xts) can become an 'indexed_series'. This also allows for transient workflows e.g. \code{some_df |> findex_by(...) |> 'do something using collapse functions' |> unindex() |> 'continue working with some_df'}.
+  \item Have a comprehensive and efficient set of \bold{methods for subsetting and manipulation}, including methods for \code{\link{fsubset}}, \code{\link{funique}}, \code{\link[=roworder]{roworder(v)}} (internal) and \code{\link{na_omit}} (internal, \code{\link{na.omit}} also works but is slower). It is also possible to group indexed data with \code{\link{fgroup_by}} for transformations e.g. using \code{\link{fmutate}}, but aggregation requires \code{unindex()}ing.
+  \item \bold{Natively handle irregularity}: time objects (such as 'Date', 'POSIXct' etc.) are passed to \code{\link{timeid}}, which efficiently determines the temporal structure by finding the greatest common divisor (GCD), and creates a time-factor with levels corresponding to a complete time-sequence. The latter is also done with plain numeric vectors, which are assumed to represent unit time steps (GDC = 1) and coerced to integer (but can also be passed through \code{\link{timeid}} if non-unitary). Character time variables are converted to factor, which might also capture irregular gaps in panel series. Using this time-factor in the index, \emph{collapse}'s functions efficiently perform correct computations on irregular sequences and panels without the need to 'expand' the data / fill gaps. \code{is_irregular} can be used to check for irregularity in the entire sequence / panel or separately for each individual in panel data.
+\item Support computations inside \bold{data-masking functions and formulas}, by virtue of "\bold{deep indexation}": Each variable inside an 'indexed_frame' is an 'indexed_series' which contains in it's 'index_df' attribute an external pointer to the 'index_df' attribute of the frame. Functions operating on 'indexed_series' stored inside the frame (such as \code{with(data, flag(column))}) can fetch the index from this pointer. This allows worry-free application inside arbitrary data masking environments (\code{with}, \code{\%$\%}, \code{attach}, etc..) and estimation commands (\code{glm}, \code{feols}, \code{lmrob} etc..) without duplication of the index in memory. A limitation is that external pointers are only valid during the present R session, thus when saving an 'indexed_frame' and loading it again, you need to call \code{data = reindex(data)} before computing on it.
 }
+
+Indexed series also have simple \link[base]{Math} and \link[base]{Ops} methods, which apply the operation to the unindexed series and shallow copy the attributes of the original object to the result, unless the result it is a logical vector (from operations like \code{!}, \code{==} etc.). For \link[base]{Ops} methods, if the LHS object is an 'indexed_series' its attributes are taken, otherwise the attributes of the RHS object are taken.
 
 \bold{Limits to plm Compatibility}
 
@@ -105,13 +107,13 @@ In contrast to 'pseries' and 'pdata.frame's, 'indexed_series' and 'indexed_frame
 
 Furthermore, the index is stored in an attribute named 'index_df' (same as the class name), not 'index' as in \emph{plm}, mainly to make these classes work with \emph{data.table}, \emph{tsibble} and \emph{xts}, which also utilize 'index' attributes. This for the most part poses no problem to plm compatibility because plm source code fetches the index using \code{attr(x, "index")}, and \code{\link{attr}} by default performs partial matching. %It however allows plm objects to be indexed again / doubly indexed with both 'index' and 'index_df' attributes, so care needs to be taken when working with \emph{plm}.
 
-A much greater obstacle in working with \emph{plm} is that some internal \emph{plm} code is hinged on there being no \code{[.pseries} method, and the existance of \code{[.indexed_series} limits the use of these sub-classes in most \emph{plm} estimation commands. Therefore the \code{to_plm} funcion is provided to efficeintly coerce the sub-classes to ordinary plm objects before estimation. See Examples.
+A much greater obstacle in working with \emph{plm} is that some internal \emph{plm} code is hinged on there being no \code{[.pseries} method, and the existence of \code{[.indexed_series} limits the use of these sub-classes in most \emph{plm} estimation commands. Therefore the \code{to_plm} function is provided to efficiently coerce the sub-classes to ordinary plm objects before estimation. See Examples.
 
 Overall these classes don't really benefit \emph{plm}, especially given that collapse's plm methods also support native plm objects. However, they work very well inside other models and software, including \emph{stats} models, \emph{fixest} / \emph{lfe}, and a whole bunch of time series and ML models. See Examples.
 
 \bold{Performance Considerations}
 
-When indexing long time-series or panels with a single variable, setting \code{single = "id" or "time"} avoids a potentially expensive call to \code{\link{anyDuplicated}}. Note also that when panel-data are regular and sorted, omitting the time variable can bring >= 2x performance improvements in operations like lagging and differencing.
+When indexing long time-series or panels with a single variable, setting \code{single = "id" or "time"} avoids a potentially expensive call to \code{\link{anyDuplicated}}. Note also that when panel-data are regular and sorted, omitting the time variable in the index can bring >= 2x performance improvements in operations like lagging and differencing (alternatively use \code{shift = "row"} argument to \code{\link{flag}}, \code{\link{fdiff}} etc.) .
 
 When dealing with long Date or POSIXct time sequences, it may also be that the internal processing by \code{\link{timeid}} is slow simply because calling \code{\link{strftime}} on these sequences to create factor levels is slow. In this case you may choose to generate an index factor with integer levels by passing \code{timeid(t)} to \code{findex_by} or \code{reindex} (which by default generates a 'qG' object which is internally converted to factor using \code{as_factor_qG}. The lazy evaluation of expressions like \code{as.character(seq_len(nlev))} in modern R makes this extremely efficient).
 
@@ -137,13 +139,18 @@ opts <- options(max.print = 100)
 
 wldi <- findex_by(wlddev, iso3c, year)
 wldi
-wldi[1:100,1]               # Works like a data frame
-POP <- wldi$POP
-qsu(POP)                    # Summary statistics
-G(POP)                      # Population growth
-STD(G(POP, c(1, 10)))       # Within-standardized 1 and 10-year growth rates
-psmat(POP)                  # Panel-Series Matrix
+wldi[1:100,1]                 # Works like a data frame
+POP <- wldi$POP               # indexed_series
+qsu(POP)                      # Summary statistics
+G(POP)                        # Population growth
+STD(G(POP, c(1, 10)))         # Within-standardized 1 and 10-year growth rates
+psmat(POP)                    # Panel-Series Matrix
 plot(psmat(log10(POP)))
+
+POP[30:5000]                  # Subsetting indexed_series
+Dlog(POP[30:5000])            # Log-difference of subset
+psacf(identity(POP[30:5000])) # ACF of subset
+L(Dlog(POP[30:5000], c(1, 10)), -1:1) # Multiple computations on subset
 
 library(magrittr)
 # Fast Statistical Functions don't have dedicated methods
@@ -151,11 +158,27 @@ library(magrittr)
 fmean(unindex(POP))
 wldi \%>\% unindex() \%>\%
   fgroup_by(iso3c) \%>\% num_vars() \%>\% fmean()
+
 # ... or unindex after taking group identifiers from the index
 fmean(unindex(fgrowth(POP)), ix(POP)$iso3c)
 wldi \%>\% num_vars() \%>\%
   fgroup_by(iso3c = ix(.)$iso3c) \%>\%
   unindex() \%>\% fmean()
+
+# With matrix methods it is easier as most attributes are dropped upon aggregation.
+G(POP, c(1, 10)) \%>\% fmean(ix(.)$iso3c)
+
+# Example of index with multiple ids
+GGDC10S \%>\% findex_by(Variable, Country, Year) \%>\% head() # default is interact.ids = TRUE
+GGDCi <- GGDC10S \%>\% findex_by(Variable, Country, Year, interact.ids = FALSE)
+head(GGDCi)
+findex(GGDCi)
+# The benefit is increased flexibility for summary statistics and data transformation
+qsu(GGDCi, effect = "Country")
+STD(GGDCi$SUM, effect = "Variable")            # Standardizing by variable
+STD(GGDCi$SUM, effect = c("Variable", "Year")) # ... by variable and year
+# But time-based operations are a bit more expensive because of the necessary interactions
+D(GGDCi$SUM)
 
 # Panel-Data modelling ---------------------------------------------------------
 
@@ -166,8 +189,8 @@ lm(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), wldi) # p abbreviat
 plm::plm(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), to_plm(wldi), effect = "time")
 
 # With country and time fixed effects via fixest
-fixest::feols(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), wldi, fixef = c("iso3c", "year"))
-\donttest{
+fixest::feols(G(PCGDP, 5, p=1/5) ~ L(G(LIFEEX, 5, p=1/5), c(0, 5)), wldi, fixef = .c(iso3c, year))
+\dontrun{
 # Running a robust MM regression without fixed effects
 robustbase::lmrob(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), wldi)
 
@@ -202,11 +225,11 @@ wldidt[, lapply(.SD, sum, na.rm = TRUE), by = country, .SDcols = .c(PCGDP, LIFEE
 # This also works but is a bit inefficient since the index is subset and then dropped
 # -> better unindex beforehand
 wldidt[year > 2000, .(sum_PCGDP = sum(PCGDP, na.rm = TRUE)), by = country]
-wldidt[, PCGDP_growth_5Y := G(PCGDP, 5, power = 1/5)]           # Can add Variables
+wldidt[, PCGDP_gr_5Y := G(PCGDP, 5, power = 1/5)]  # Can add Variables by reference
 # Note that .SD is a data.table of indexed_series, not an indexed_frame, so this is WRONG!
-wldidt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := G(slt(.SD, PCGDP, LIFEEX), 5, power = 1/5)]
+wldidt[, .c(PCGDP_gr_5Y, LIFEEX_gr_5Y) := G(slt(.SD, PCGDP, LIFEEX), 5, power = 1/5)]
 # This gives the correct outcome
-wldidt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := lapply(slt(.SD, PCGDP, LIFEEX), G, 5, power = 1/5)]
+wldidt[, .c(PCGDP_gr_5Y, LIFEEX_gr_5Y) := lapply(slt(.SD, PCGDP, LIFEEX), G, 5, power = 1/5)]
 %# wldidt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := G(slt(reindex(.SD, ix(wldidt)), PCGDP, LIFEEX), 5, power = 1/5)] # Works !!
 library(sf)
 nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
@@ -215,7 +238,7 @@ nci[1:10, "AREA"]
 st_centroid(nci) # The geometry column is never indexed, thus sf computations work normally
 st_coordinates(nci)
 fmean(sf::st_area(nci))
-
+\dontrun{
 library(tsibble)
 pedi <- findex_by(pedestrian, Sensor, Date_Time)
 pedi[1:5, ]
@@ -234,7 +257,7 @@ library(dplyr)
 microbenchmark(
   dplyr = fill_gaps(pedestrian) \%>\% group_by_key() \%>\% mutate(Lag_Count = lag(Count)),
   collapse = fmutate(pedi, Lag_Count = flag(Count)), times = 10)
-
+}
 # Indexing Atomic objects ---------------------------------------------------------
 
 ## ts

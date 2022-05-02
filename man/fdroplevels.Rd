@@ -25,10 +25,10 @@ fdroplevels(x, ...)
 \code{\link{droplevels}} passes a factor from which levels are to be dropped to \code{\link{factor}}, which first calls \code{\link{unique}} and then \code{\link{match}} to drop unused levels. Both functions internally use a hash table, which is highly inefficient. \code{fdroplevels} does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, \code{x} is simply returned. Any missing values found in \code{x} are efficiently skipped in the process of checking and replacing levels. All other attributes of \code{x} are preserved.
 }
 \value{
-\code{x} will any unused factor levels removed.
+\code{x} with unused factor levels removed.
 }
 \note{
-If \code{x} is malformed i.e. has too few levels, this function can cause a segmentation fault, thus only use with ordinary / proper factors.
+If \code{x} is malformed e.g. has too few levels, this function can cause a segmentation fault terminating the R session, thus only use with ordinary / proper factors.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

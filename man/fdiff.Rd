@@ -84,16 +84,16 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data
   \item{x}{a numeric vector / time series, (time series) matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').}
   \item{n}{integer. A vector indicating the number of lags or leads.}
   \item{diff}{integer. A vector of integers > 1 indicating the order of differencing / log-differencing.}
-  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-  \item{t}{same as \code{g}, to indicate the time-variable(s). For safe computations on unordered/irregular time series and panels. Data frame methods also allows one-sided formula i.e. \code{~time}. grouped_df method supports lazy-evaluation i.e. \code{time} (no quotes). Either support wrapping a transformation function e.g. \code{~timeid(time)}, \code{~qG(time)} etc..}
+  \item{t}{a time vector or list of vectors. See \code{\link{flag}}.}
   \item{cols}{\emph{data.frame method}: Select columns to difference using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{log}{logical. \code{TRUE} computes log-differences. See Details.}
   \item{rho}{double. Autocorrelation parameter. Set to a value between 0 and 1 for quasi-differencing. Any numeric value can be supplied. }
   \item{stubs}{logical. \code{TRUE} will rename all differenced columns by adding prefixes "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." for differences "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." for log-differences and replacing "D" / "Dlog" with "QD" / "QDlog" for quasi-differences. }
   \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} or \code{"row"}. See \code{\link{flag}} for details.}
-  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the 'groups' / 'index' attributes are kept.}
+  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
   \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
@@ -181,7 +181,6 @@ head(D(wlddev, 0:1, 1, ~ country, ~year, 9:10,          # Dropping id columns
 wldi <- findex_by(wlddev, iso3c, year)
 
 # Dynamic Panel Data Models:
-if("plm" \%in\% search()) detach("package:plm", unload = TRUE)  # For CRAN tests
 summary(lm(D(PCGDP) ~ L(PCGDP) + D(LIFEEX), data = wldi))            # Simple case
 summary(lm(Dlog(PCGDP) ~ L(log(PCGDP)) + Dlog(LIFEEX), data = wldi)) # In log-differneces
 # Adding a lagged difference...

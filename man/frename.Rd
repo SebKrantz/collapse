@@ -24,11 +24,11 @@ setrelabel(.x, \dots, cols = NULL, attrn = "label")
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{.x}{an R object with a 'names' attribute.
+  \item{.x}{for \code{(f/set)rename}: an R object with a \code{"names"} attribute. For \code{(set)relabel}: a named list.
 }
   \item{\dots}{either tagged vector expressions of the form \code{name = newname} / \code{name = newlabel}, or a single function (+ optional arguments to the function) applied to all names/labels (of columns/elements selected in \code{cols}).
 }
-  \item{cols}{If \code{\dots} is a function, select a subset of columns/elements to rename/relabel using names, indices, a logical vector or a function applied to the columns if \code{.x} is a data frame (e.g. \code{is.numeric}).}
+  \item{cols}{If \code{\dots} is a function, select a subset of columns/elements to rename/relabel using names, indices, a logical vector or a function applied to the columns if \code{.x} is a list (e.g. \code{is.numeric}).}
 
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
 }

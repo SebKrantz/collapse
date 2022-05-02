@@ -10,7 +10,7 @@
 Fast Unique Elements / Rows
 }
 \description{
-\code{funique} is a substantially faster alternative to \code{\link{unique}}. It is generic with a default vector and a data frame methods.
+\code{funique} is a substantially faster alternative to \code{\link{unique}}, particularly for data frames.
 }
 \usage{
 funique(x, \dots)
@@ -47,6 +47,11 @@ funique(x, \dots)
 If \code{x} is a data frame / list and all rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{group}} for some additional computational details.
 
 The \emph{sf} method simply ignores the geometry column when determining unique values.
+
+Methods for indexed data also subset the index accordingly.
+}
+\note{
+No matrix method is provided. Please see \code{kit::funique} for a fast alternative with a matrix method. The \emph{kit} version is also often faster on vectors, but generally not on data frames.
 }
 \value{
 \code{x} with duplicate elements/rows removed. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.

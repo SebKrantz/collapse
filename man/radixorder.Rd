@@ -42,11 +42,11 @@ logical. Should the sort order be increasing or decreasing? Can be a vector of l
 % }
 %}
 \value{
-An integer ordering vector with attributes: Unless \code{na.last = NA} an attribute 'sorted' indicating whether the input data was already sorted is attached. If \code{starts = TRUE}, 'starts' giving a vector of group starts in the ordered data, and if \code{group.sizes = TRUE}, 'group.sizes' giving the vector of group sizes are attached. In either case an attribute 'maxgrpn' providing the size of the largest group is also attached.
+An integer ordering vector with attributes: Unless \code{na.last = NA} an attribute \code{"sorted"} indicating whether the input data was already sorted is attached. If \code{starts = TRUE}, \code{"starts"} giving a vector of group starts in the ordered data, and if \code{group.sizes = TRUE}, \code{"group.sizes"} giving the vector of group sizes are attached. In either case an attribute \code{"maxgrpn"} providing the size of the largest group is also attached.
 }
 
 \author{
-The C code was taken - with slight modifications, from \href{https://github.com/wch/r-source/blob/79298c499218846d14500255efd622b5021c10ec/src/main/radixsort.c}{base R source code}, and is originally due to \emph{data.table} authors Matt Dowle and Arun Srinivasan.
+The C code was taken - with slight modifications - from \href{https://github.com/wch/r-source/blob/79298c499218846d14500255efd622b5021c10ec/src/main/radixsort.c}{base R source code}, and is originally due to \emph{data.table} authors Matt Dowle and Arun Srinivasan.
 }
 
 

@@ -1,5 +1,6 @@
 \name{descr}
 \alias{descr}
+\alias{[.descr}
 \alias{print.descr}
 \alias{as.data.frame.descr}
 %- Also NEED an '\alias' for EACH other topic documented here.

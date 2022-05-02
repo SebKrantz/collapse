@@ -16,7 +16,7 @@ It is made compatible with \emph{dplyr}, \emph{data.table}, \emph{sf} and the \e
 
 }
 \section{Getting Started}{
-See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most up-to-date documentation for \emph{collapse} 1.7), or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
+See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most up-to-date documentation for \emph{collapse} 1.8), or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
 }
 
 
@@ -53,7 +53,7 @@ See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most 
 
 \section{Details}{
 % Put this below bullet points ?? % \emph{collapse} provides a carefully conceived % \emph{collapse} provides a compact set of functions % organized roughly into several topics
-\emph{collapse} provides an integrated suite of statistical and data manipulation functions. These improve, complement and extend the capabilities of base R and packages like \emph{dplyr}, \emph{data.table}, \emph{plm}, \emph{matrixStats}, \emph{Rfast} etc.. Key Highlights:
+\emph{collapse} provides an integrated suite of statistical and data manipulation functions. These improve, complement and extend the capabilities of base R and packages like \emph{dplyr}, \emph{data.table}, \emph{plm}, \emph{matrixStats}, \emph{Rfast} etc. Key Features:
 
 \itemize{
 \item Fast C/C++ based (grouped, weighted) computations embedded in highly optimized R code.
@@ -115,7 +115,7 @@ Other contributors from packages \emph{collapse} utilizes:
 \item Josh Pasek (\emph{weights})
 \item R Core Team and contributors worldwide (\emph{stats})
 }
-I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel and a host of other quant people from diverse fields for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{Github repository} for \emph{collapse}, Matthieu Stigler, Patrice Kiener, Zhiyi Xu, Kevin Tappe and Grant McDermott for feature requests and helpful suggestions.
+I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel and a host of other quant people from diverse fields for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{GitHub repository} for \emph{collapse}, Matthieu Stigler, Patrice Kiener, Zhiyi Xu, Kevin Tappe and Grant McDermott for feature requests and helpful suggestions.
 }
 \section{Developing / Bug Reporting}{
 \itemize{
@@ -448,7 +448,7 @@ lm(LIFEEX ~ log(PCGDP) + OECD + B(log(PCGDP), country),
 lm(LIFEEX ~ L(LIFEEX, 10, country) + log(PCGDP) + OECD + B(log(PCGDP), country),
    wlddev \%>\% fselect(country, OECD, PCGDP, LIFEEX) \%>\% na_omit)
 
-# Tranformation functions and operators also indexed data classes:
+# Tranformation functions and operators also support indexed data classes:
 wldi <- findex_by(wlddev, country, year)
 head(W(wldi$PCGDP))                      # Country-demeaning
 head(W(wldi, cols = 9:12))

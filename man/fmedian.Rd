@@ -58,7 +58,7 @@ The weighted median is defined as the element \code{k} from a set of sorted elem
 
 The weighted median is computed using \code{\link{radixorder}} to first obtain an ordering of all elements, so it is considerably more computationally expensive than the unweighted version. With groups, the entire vector is also ordered, and the weighted median is computed in a single ordered pass through the data (after group-summing the weights, skipping weights for which \code{x} is missing).
 
-If \code{x} is a matrix or data frame, these computations are performed independently for each column. When applied to data frames with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
+If \code{x} is a matrix or data frame, these computations are performed independently for each column. When applied to data frames with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes. The attributes of the data frame itself are also preserved.
 
 
 %smaller to the left and to the right of
@@ -67,7 +67,7 @@ If \code{x} is a matrix or data frame, these computations are performed independ
 
 }
 \value{
-The (\code{w} weighted) median value of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its median, grouped by \code{g}.
+The (\code{w} weighted) median value of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its (grouped, weighted) median.
 }
 \seealso{
 \code{\link{fnth}}, \code{\link{fmean}}, \code{\link{fmode}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
@@ -98,7 +98,7 @@ m <- qM(mtcars)
 fmedian(m)
 head(fmedian(m, TRA = "-"))
 fmedian(m, g) # etc..
-\donttest{ % No code relying on suggested package
+%\donttest{ % No code relying on suggested package
 library(dplyr)
 # grouped_df method
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian()
@@ -107,7 +107,7 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian()              # Faster grouping
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian(TRA = "-")     # De-median
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%    # Faster selecting
       fmedian(hp, "-")  # Weighted de-median mpg, using hp as weights
-}
+%}
 }
 \keyword{univar}
 \keyword{manip}

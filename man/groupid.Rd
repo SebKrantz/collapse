@@ -16,7 +16,7 @@ groupid(x, o = NULL, start = 1L, na.skip = FALSE, check.o = TRUE)
 
   \item{o}{an (optional) integer ordering vector specifying the order by which to pass through \code{x}.}
 
-  \item{start}{integer. The starting value of the resulting group-id. Default is starting from 1. For C++ programmers, starting from 0 could be a better choice. }
+  \item{start}{integer. The starting value of the resulting group-id. Default is starting from 1.} %For C++ programmers, starting from 0 could be a better choice. }
 
   \item{na.skip}{logical. Skip missing values i.e. if \code{TRUE} something like \code{groupid(c("a", NA, "a"))} gives \code{c(1, NA, 1)} whereas \code{FALSE} gives \code{c(1, 2, 3)}.}
 
@@ -28,7 +28,7 @@ An integer vector of class 'qG'. See \code{\link{qG}}.
 }
 
 \seealso{
-\code{\link{seqid}}, \code{\link{qG}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{seqid}}, \code{\link{timeid}}, \code{\link{qG}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 groupid(airquality$Month)

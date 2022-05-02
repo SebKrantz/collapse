@@ -19,13 +19,12 @@
 Fast Growth Rates for Time Series and Panel Data
 }
 \description{
-\code{fgrowth} is a S3 generic to compute (sequences of) suitably lagged / leaded, iterated growth rates, obtained with via the exact method of computation or through log differencing. By default growth rates are provided in percentage terms, but any scale factor can be applied. The growth operator \code{G} is a parsimonious wrapper around \code{fgrowth}, and also provides more flexibility when applied to data frames.
+\code{fgrowth} is a S3 generic to compute (sequences of) suitably lagged / leaded, iterated and compounded growth rates, obtained with via the exact method of computation or through log differencing. By default growth rates are provided in percentage terms, but any scale factor can be applied. The growth operator \code{G} is a parsimonious wrapper around \code{fgrowth}, and also provides more flexibility when applied to data frames.
 
 }
 \usage{
 fgrowth(x, n = 1, diff = 1, \dots)
-
-G(x, n = 1, diff = 1, \dots)
+      G(x, n = 1, diff = 1, \dots)
 
 \method{fgrowth}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
         logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, \dots)
@@ -69,9 +68,9 @@ G(x, n = 1, diff = 1, \dots)
   \item{x}{a numeric vector / time series, (time series) matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').}
   \item{n}{integer. A vector indicating the number of lags or leads.}
   \item{diff}{integer. A vector of integers > 1 indicating the order of taking growth rates, e.g. \code{diff = 2} means computing the growth rate of the growth rate.}
-  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-  \item{t}{same as \code{g}, to indicate the time-variable(s). For safe computations on unordered/irregular time series and panels. Data frame methods also allows one-sided formula i.e. \code{~time}. grouped_df method supports lazy-evaluation i.e. \code{time} (no quotes). Either support wrapping a transformation function e.g. \code{~timeid(time)}, \code{~qG(time)} etc..}
+  \item{t}{a time vector or list of vectors. See \code{\link{flag}}.}
   \item{cols}{\emph{data.frame method}: Select columns to compute growth rates using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{logdiff}{logical. Compute log-difference growth rates instead of exact growth rates. See Details.}
@@ -79,7 +78,7 @@ G(x, n = 1, diff = 1, \dots)
   \item{power}{numeric. Apply a power to annualize or compound growth rates e.g. \code{fgrowth(AirPassengers, 12, power = 1/12)} is equivalent to \code{((AirPassengers/flag(AirPassengers, 12))^(1/12)-1)*100}.}
   \item{stubs}{logical. \code{TRUE} will rename all computed columns by adding a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}.", or "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." if \code{logdiff = TRUE}.}
     \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} or \code{"row"}. See \code{\link{flag}} for details.}
-  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the 'groups' / 'index' attributes are kept.}
+  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
   \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{

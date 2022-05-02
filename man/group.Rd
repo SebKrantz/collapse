@@ -14,10 +14,10 @@ group(x, starts = FALSE, group.sizes = FALSE)
 \arguments{
   \item{x}{an atomic vector or data frame / list of equal-length atomic vectors.
 }
-  \item{starts}{logical. If \code{TRUE}, an additional attribute 'starts' is attached giving a vector of group starts (index of first-occurrence of unique rows).
+  \item{starts}{logical. If \code{TRUE}, an additional attribute \code{"starts"} is attached giving a vector of group starts (= index of first-occurrence of unique rows).
 }
   \item{group.sizes}{
-logical. If \code{TRUE}, an additional attribute 'group.sizes' is attached giving the size of each group.
+logical. If \code{TRUE}, an additional attribute \code{"group.sizes"} is attached giving the size of each group.
 }
 }
 \details{
@@ -27,7 +27,7 @@ A data frame is grouped on a column-by-column basis, starting from the leftmost 
 An object is of class 'qG' see \code{\link{qG}}.
 }
 \author{
-The Hash Function was taken from the excellent \emph{kit} package by Morgan Jacob.
+The Hash Function and inspiration was taken from the excellent \emph{kit} package by Morgan Jacob, the algorithm was developed by Sebastian Krantz.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

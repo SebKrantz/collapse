@@ -5,7 +5,7 @@
 \alias{.FAST_FUN}
 \title{Fast (Grouped, Weighted) Statistical Functions for Matrix-Like Objects}  % Vectors, Matrix and Data Frame Columns}
 \description{
-With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{fnth}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fnobs}} and \code{\link{fndistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on atomic vectors, matrices and data frames, with special support for grouped data frames / tibbles (\emph{dplyr}) and \emph{data.table}'s.
+With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{fnth}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fnobs}} and \code{\link{fndistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on vectors, matrices and data frames, with special support for grouped data frames / tibbles (\emph{dplyr}) and \emph{data.table}'s.
 }
 \section{Usage}{\preformatted{
 ## All functions (FUN) follow a common syntax in 4 methods:
@@ -44,7 +44,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 \code{use.g.names} \tab \tab logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s. \cr
 
-\code{nthreads} \tab \tab integer. The number of threads to utilize. \cr
+\code{nthreads} \tab \tab integer. The number of threads to utilize. Supported by \code{\link{fsum}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}} and \code{\link{fndistinct}}. \cr
 
 \code{drop} \tab \tab \emph{matrix and data.frame methods:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}. \cr
 
@@ -52,19 +52,22 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 \code{keep.w} \tab \tab \emph{grouped_df method:} Logical. \code{TRUE} (default) also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}). \cr
 
-\code{\dots} \tab \tab arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly. \cr
+\code{\dots} \tab \tab arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly (except for the grouped_df method which always returns visible output). \cr
 }
 }
 \section{Details}{
 Please see the documentation of individual functions.
 }
 \section{Value}{
- \code{x} suitably aggregated or transformed. Data frame column-attributes and overall attributes are preserved.
+ \code{x} suitably aggregated or transformed. Data frame column-attributes and overall attributes are generally preserved if the output is of the same data type.
 }
-\section{Notes}{
+\section{Related Functionality}{
 \itemize{
 \item Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in \code{\link{qsu}}.
-\item The vector-valued functions and operators \code{\link{fcumsum}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fhdbetween]{fhdbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fhdwithin]{fhdwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are documented under \link[=data-transformations]{Data Transformations} and \link[=time-series-panel-series]{Time Series and Panel Series}. These functions also support \code{plm::pseries} and \code{plm::pdata.frame}'s.
+
+\item Function \code{\link{frange}} efficiently computes the minimum and maximum on atomic vectors.
+
+\item The vector-valued functions and operators \code{\link{fcumsum}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fhdbetween]{fhdbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fhdwithin]{fhdwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are grouped under \link[=data-transformations]{Data Transformations} and \link[=time-series-panel-series]{Time Series and Panel Series}. These functions also support \link[=indexing]{indexed data} (\emph{plm}).
 }
 }
 \seealso{

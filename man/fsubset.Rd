@@ -9,7 +9,8 @@
 \alias{fsubset.pdata.frame}
 \title{Fast Subsetting Matrix-Like Objects}
 \description{
- \code{fsubset} returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the \emph{data.table} package. Especially for data frames it is significantly (4-5 times) faster than \code{\link{subset}} or \code{dplyr::filter}. The methods also provide enhanced functionality compared to \code{\link{subset}}. The function \code{ss} provides an (internal generic) programmers alternative to \code{[} that does not drop dimensions and is significantly faster than \code{[} for data frames.
+ \code{fsubset} returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the \emph{data.table} package. %Especially for data frames it is significantly (4-5 times) faster than \code{\link{subset}} or \code{dplyr::filter}.
+ The methods also provide enhanced functionality compared to \code{\link{subset}}. The function \code{ss} provides an (internal generic) programmers alternative to \code{[} that does not drop dimensions and is significantly faster than \code{[} for data frames.
 }
 \usage{
 fsubset(.x, \dots)
@@ -45,7 +46,7 @@ ss(x, i, j)
 }
 \details{
   \code{fsubset} is a generic function, with methods supplied for vectors, matrices, and data
-  frames (including lists). It represents an improvement in both speed and functionality over \code{\link{subset}}. The function \code{ss} is an improvement of \code{[} to subset (vectors) matrices and data frames without dropping dimensions. It is significantly faster than \code{[.data.frame}. For subsetting columns alone, please see \link[=fselect]{selecting and replacing columns}.
+  frames (including lists). It represents an improvement over \code{\link{subset}} in terms of both speed and functionality. The function \code{ss} is an improvement of \code{[} to subset (vectors) matrices and data frames without dropping dimensions. It is significantly faster than \code{[.data.frame}.
 
   For ordinary vectors, \code{subset} can be integer or logical, subsetting is done in C and more efficient than \code{[} for large vectors.
 
@@ -53,7 +54,7 @@ ss(x, i, j)
 
   For both matrices and data frames, the \code{\dots} argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. \code{col1:coln}, and new column names may be assigned e.g. \code{fsubset(data, col1 > 20, newname =  col2, col3:col6)} (see examples).
 
-  For data frames, the \code{subset} argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form \code{col2 > 5 & col2 < col3} etc. (see examples). The data frame method is implemented in C, hence it is significantly faster than \code{\link{subset.data.frame}}. Note that the use of \code{\link{\%==\%}} to compare a single column to a single value can yield significant performance gains on large data. If fast data frame subsetting is required but no non-standard evaluation, the function \code{ss} is slightly simpler and faster.
+  For data frames, the \code{subset} argument is also evaluated in a non-standard way. Thus next to vector of row-indices or logical vectors, it supports logical expressions of the form \code{col2 > 5 & col2 < col3} etc. (see examples). The data frame method is implemented in C, hence it is significantly faster than \code{\link{subset.data.frame}}. If fast data frame subsetting is required but no non-standard evaluation, the function \code{ss} is slightly simpler and faster.
 
 Factors may have empty levels after subsetting; unused levels are not automatically removed.  See \code{\link{fdroplevels}} to drop all unused levels from a data frame.
 
@@ -66,6 +67,10 @@ Factors may have empty levels after subsetting; unused levels are not automatica
 \code{ss} offers no support for indexed data. Use \code{fsubset} with indices instead.
 
 No replacement method \code{fsubset<-} or \code{ss<-} is offered in \emph{collapse}. For efficient subset replacement (without copying) use \code{data.table::set}, which can also be used with data frames and tibbles. To search and replace certain elements without copying, and to efficiently copy elements / rows from an equally sized vector / data frame, see \code{\link{setv}}.
+
+For subsetting columns alone, please also see \link[=fselect]{selecting and replacing columns}.
+
+Note that the use of \code{\link{\%==\%}} can yield significant performance gains on large data.
 }
 \seealso{
   \code{\link{fselect}},

@@ -35,12 +35,12 @@ psmat(x, \dots)
   \item{x}{a vector, indexed series 'indexed_series' ('pseries'), data frame or 'indexed_frame' ('pdata.frame').}
   \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}. If the panel is balanced an integer indicating the number of groups can also be supplied. See Examples.}
 \item{by}{\emph{data.frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
-\item{t}{same inputs as \code{g}, to indicate the time-variable(s) or second identifier(s). \code{g} and \code{t} together should fully identify the panel. If \code{t = NULL}, the data is assumed sorted and \code{seq_col} is used to generate rownames for the output matrix.}
+\item{t}{same inputs as \code{g/by}, to indicate the time-variable(s) or second identifier(s). \code{g} and \code{t} together should fully identify the panel. If \code{t = NULL}, the data is assumed sorted and \code{seq_col} is used to generate rownames for the output matrix.}
 \item{cols}{\emph{data.frame method}: Select columns using a function, column names, indices or a logical vector. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{transpose}{logical. \code{TRUE} generates the matrix such that \code{g/by -> columns, t -> rows}. Default is \code{g/by -> rows, t -> columns}.}
 \item{array}{\emph{data.frame / pdata.frame methods}: logical. \code{TRUE} returns a 3D array (if just one column is selected a matrix is returned). \code{FALSE} returns a list of matrices.}
  \item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
-  \item{\dots}{arguments to be passed to or from other methods, or for the plot method additional arguments passed to \code{ts.plot}.}
+  \item{\dots}{arguments to be passed to or from other methods, or for the plot method additional arguments passed to \code{\link{ts.plot}}.}
 
 \item{legend}{logical. Automatically create a legend of panel-groups.}
 \item{colours}{either \code{TRUE} to automatically colour by panel-groups using \code{\link{rainbow}} or a character vector of colours matching the number of panel-groups (series).}
@@ -93,11 +93,11 @@ head(unlist2d(psml, "Variable", "Country", id.factor = TRUE),2) # Using unlist2d
 
 ## Indexing simplifies things
 wldi <- findex_by(wlddev, iso3c, year)  # Creating an indexed frame
-PCGDP <- wldi$PCGDP                     # An indexed-Series of GDP per Capita
+PCGDP <- wldi$PCGDP                     # An indexed_series of GDP per Capita
 head(psmat(PCGDP), 2)                   # Same as above, more parsimonious
 plot(psmat(PCGDP))
 plot(psmat(wldi[9:12]))
-plot(psmat(G(wldi[9:12])))              # Here plotting panel- growth rates
+plot(psmat(G(wldi[9:12])))              # Here plotting panel-growth rates
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

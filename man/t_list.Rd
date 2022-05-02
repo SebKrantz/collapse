@@ -19,7 +19,9 @@ t_list(l)
 \code{l} transposed such that the second layer of the list becomes the top layer and the top layer the second layer. See Examples.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
+\note{
+To transpose a data frame / list of atomic vectors see \code{data.table::transpose()}.
+}
 
 \seealso{
 \code{\link{rsplit}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}

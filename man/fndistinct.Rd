@@ -49,7 +49,7 @@ fndistinct(x, \dots)
 \details{
 \code{fndistinct} implements a fast algorithm to find the number of distinct values utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
-If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substantial performance gains in data with many missing values. If \code{na.rm = TRUE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4.
+If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substantial performance gains in data with many missing values. If \code{na.rm = FALSE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4.
 
 Grouped computations are performed by mapping the data to a sparse-array and then hash-mapping each group. This is often not much slower than using a larger hash-map for the entire data when \code{g = NULL}.
 
@@ -77,13 +77,13 @@ head(fndistinct(wlddev, wlddev$iso3c))
 aqm <- qM(airquality)
 fndistinct(aqm)                                  # Also works for character or logical matrices
 fndistinct(aqm, airquality$Month)
-\donttest{ % No code relying on suggested package
+%\donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 airquality \%>\% group_by(Month) \%>\% fndistinct()
 wlddev \%>\% group_by(country) \%>\%
              select(PCGDP,LIFEEX,GINI,ODA) \%>\% fndistinct()
-}
+%}
 }
 \keyword{univar}
 \keyword{manip}

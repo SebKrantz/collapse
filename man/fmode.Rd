@@ -76,7 +76,7 @@ This all seamlessly generalizes to grouped computations, which are performed by 
 \code{fmode} preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary in grouped operations). If a data frame is passed to \code{fmode} and \code{drop = TRUE} (the default), \code{\link{unlist}} will be called on the result, which might not be sensible depending on the data at hand.
 }
 \value{
-The (\code{w} weighted) statistical mode of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details.
+The (\code{w} weighted) statistical mode of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its (grouped, weighed) mode. %See also Details.
 }
 \seealso{
 \code{\link{fmean}}, \code{\link{fmedian}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
