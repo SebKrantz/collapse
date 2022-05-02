@@ -1,3 +1,4 @@
+docs/* linguist-vendored
 man/* linguist-vendored
 tests/* linguist-vendored
 vignettes/* linguist-vendored
