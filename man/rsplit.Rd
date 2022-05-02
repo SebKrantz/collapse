@@ -18,7 +18,7 @@ rsplit(x, \dots)
 }
 \arguments{
   \item{x}{a vector, data.frame or list.}
-  \item{gl}{a \code{\link{GRP}} object, or a (list of) vector(s) / factor(s) (internally converted to a \code{\link{GRP}} object(s)) used to split \code{x}.}
+  \item{fl}{a \code{\link{GRP}} object, or a (list of) vector(s) / factor(s) (internally converted to a \code{\link{GRP}} object(s)) used to split \code{x}.}
   \item{by}{\emph{data.frame method}: Same as \code{fl}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{drop}{logical. \code{TRUE} removes unused levels or combinations of levels from factors before splitting; \code{FALSE} retains those combinations yielding empty list elements in the output.}
   \item{flatten}{logical. If \code{fl} is a list of vectors / factors, \code{TRUE} calls \code{\link{GRP}} on the list, creating a single grouping used for splitting; \code{FALSE} yields recursive splitting.}

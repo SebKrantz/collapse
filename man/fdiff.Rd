@@ -160,7 +160,7 @@ summary(mod)                                            # and the levels and ann
 r <- residuals(mod)                                     # Obtain residuals
 pwcor(r, L(r))                                          # Residual Autocorrelation
 fFtest(r, L(r))                                         # F-test of residual autocorrelation
-                                                        # (better use lmtest::bgtest)
+                                                        # (better use lmtest :: bgtest)
 modCO <- lm(QD1.DAX ~., D(L(EuStockMarkets, c(0, 260)), # Cochrane-Orcutt (1949) estimation
                         rho = pwcor(r, L(r))))
 summary(modCO)

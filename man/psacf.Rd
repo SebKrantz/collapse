@@ -49,7 +49,7 @@ psccf(x, y, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, 'indexed_series' ('pseries'), data frame or 'indexed_frame' ('pdata.frame').}
+  \item{x, y}{a numeric vector, 'indexed_series' ('pseries'), data frame or 'indexed_frame' ('pdata.frame').}
   \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
   \item{t}{a time vector or list of vectors. See \code{\link{flag}}.}
