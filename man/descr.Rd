@@ -15,10 +15,12 @@ descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
       Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99),
       cols = NULL, label.attr = "label", \dots)
 
-\method{print}{descr}(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
-      summary = TRUE, reverse = FALSE, \dots)
+\method{[}{descr}(x, ...)
 
 \method{as.data.frame}{descr}(x, \dots)
+
+\method{print}{descr}(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
+      summary = TRUE, reverse = FALSE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -52,11 +54,10 @@ select columns to describe using column names, indices, a logical vector or a fu
   \item{label.attr}{
 character. The name of a label attribute to display for each variable (if variables are labeled).
 }
-  \item{\dots}{
-other arguments passed to \code{\link{qsu.default}}.
-}
+  \item{\dots}{for \code{descr}: other arguments passed to \code{\link{qsu.default}}. For \code{[.descr}: variable names or indices passed to \code{[.list}. The argument is unused in the \code{print} and \code{as.data.frame} methods.}
+
 \item{x}{an object of class 'descr'.}
-\item{n}{integer. The maxiumum number of table elements to print for categorical variables. If the number of distinct elements is \code{<= n}, the whole table is printed. Otherwise the remaining items are grouped into an '... \%s Others' category.}
+\item{n}{integer. The maximum number of table elements to print for categorical variables. If the number of distinct elements is \code{<= n}, the whole table is printed. Otherwise the remaining items are grouped into an '... \%s Others' category.}
 \item{perc}{logical. \code{TRUE} (default) adds percentages to the frequencies in the table for categorical variables.}
 \item{digits}{integer. The number of decimals to print in statistics and percentage tables.}
 \item{t.table}{logical. \code{TRUE} (default) prints a transposed table.}
@@ -89,7 +90,7 @@ print(descr(GGDC10S), reverse = TRUE, t.table = FALSE)
 # Generating a data frame
 as.data.frame(descr(wlddev, table = FALSE))
 
-## Passing Arguments down to qsu: For Panel Data Statistics
+## Passing Arguments down to qsu.default: For Panel Data Statistics
 descr(iris, pid = iris$Species)
 descr(wlddev, pid = wlddev$iso3c)
 

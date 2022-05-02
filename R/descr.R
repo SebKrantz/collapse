@@ -76,7 +76,10 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
   res
 }
 
+`[.descr` <- function(x, ...) copyMostAttributes(.subset(x, ...), x)
+
 print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, reverse = FALSE, ...) {
+  oldClass(x) <- NULL
   w <- paste(rep("-", .Options$width), collapse = "")
   arstat <- attr(x, "arstat")
   DSname <- attr(x, "name")
@@ -138,13 +141,17 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
 # Note: This does not work for array stats (using g or pid.. )
 as.data.frame.descr <- function(x, ...) {
    if(attr(x, "arstat")) stop("Cannot handle arrays of statistics!")
-   if(attr(x, "table")) {
+  has_tables <- attr(x, "table")
+  nam <- attr(x, "names")
+  attributes(x) <- NULL # faster lapply
+   if(has_tables) {
      r <- lapply(x, function(z) c(list(Class = strclp(z[[1L]]), Label = null2NA(z[[2L]])),
           unlist(`names<-`(lapply(z[names(z) != "Table"][-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
    } else {
      r <- lapply(x, function(z) c(list(Class = strclp(z[[1L]]), Label = null2NA(z[[2L]])),
           unlist(`names<-`(lapply(z[-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
    }
+  names(r) <- nam
    r <- .Call(C_rbindlist, r, TRUE, TRUE, "Variable")
    if(allNA(r[["Label"]])) r[["Label"]] <- NULL
    attr(r, "row.names") <- .set_row_names(length(r[[1L]]))
