@@ -1,10 +1,18 @@
-# collapse 1.8.0.9000
+# collapse 1.8.0
 
-*collapse* 1.8.0, to be released end of March / early April 2022, sets a modest start to OpenMP multithreading, brings increased support for data transformation by reference, and enhances the packages descriptive statistics toolset. 
+*collapse* 1.8.0, released early May 2022, brings enhanced support for indexed computations on time series and panel data by introducing flexible 'indexed_frame' and 'indexed_series' classes and surrounding infrastructure, sets a modest start to OpenMP multithreading as well as data transformation by reference in statistical functions, and enhances the packages descriptive statistics toolset. 
 
 ### Changes to functionality
 
-* *Fast Sttatistical Functions* operating on numeric data (such as `fmean`, `fmedian`, `fsum`, `fmin`, `fmax`, ...) now preserve attributes in more cases. Previously these functions did not preserve attributes for simple computations using the default method, and only preserved attributes in grouped computations if `!is.object(x)` (see NEWS section for collapse 1.4.0). This meant that `fmin` and `fmax` did not preserve the attributes of Date or POSIXct objects, and none of these function preserved 'units' objects (used a lot by the *sf* package). Now, attributes are preserved if `!inherits(x, "ts")`, that is the new default of these functions is to generally keep attributes, except for 'ts' objects where doing so obviously causes an unwanted error (note that 'xts' and others are handled by the matrix or data.frame method where other principles apply, see NEWS for 1.4.0). An exception are the functions `fnobs` and `fndistinct` where the previous default is kept. 
+* Functions `Recode`, `replace_non_finite`, depreciated since *collapse* v1.1.0 and `is.regular`, depreciated since *collapse* v1.5.1 and clashing with a more important function in the *zoo* package, are now removed.
+
+* *Fast Statistical Functions* operating on numeric data (such as `fmean`, `fmedian`, `fsum`, `fmin`, `fmax`, ...) now preserve attributes in more cases. Previously these functions did not preserve attributes for simple computations using the default method, and only preserved attributes in grouped computations if `!is.object(x)` (see NEWS section for collapse 1.4.0). This meant that `fmin` and `fmax` did not preserve the attributes of Date or POSIXct objects, and none of these functions preserved 'units' objects (used a lot by the *sf* package). Now, attributes are preserved if `!inherits(x, "ts")`, that is the new default of these functions is to generally keep attributes, except for 'ts' objects where doing so obviously causes an unwanted error (note that 'xts' and others are handled by the matrix or data.frame method where other principles apply, see NEWS for 1.4.0). An exception are the functions `fnobs` and `fndistinct` where the previous default is kept. 
+
+* *Time Series Functions* `flag`, `fdiff`, `fgrowth` and `psacf/pspacf/psccf` (and the operators `L/F/D/Dlog/G`) now internally process time objects passed to the `t` argument (where `is.object(t) && is.numeric(unclass(t))`) via a new function called `timeid` which turns them into integer vectors based on the greatest common divisor (GCD) (see below). Previously such objects were converted to factor. This can change behavior of code e.g. a 'Date' variable representing monthly data may be regular when converted to factor, but is now irregular and regarded as daily data (with a GCD of 1) because of the different day counts of the months. Users should fix such code by either by calling `qG` on the time variable (for grouping / factor-conversion) or using appropriate classes e.g. `zoo::yearmon`. Note that plain numeric vectors where `!is.object(t)` are still used directly for indexation without passing them through `timeid` (which can still be applied manually if desired).
+
+* `BY` now has an argument `reorder = TRUE`, which casts elements in the original order if `NROW(result) == NROW(x)` (like `fmutate`). Previously the result was just in order of the groups, regardless of the length of the output. To obtain the former outcome users need to set `reorder = FALSE`. 
+
+* `options("collapse_DT_alloccol")` was removed, the default is now fixed at 100. The reason is that *data.table* automatically expands the range of overallocated columns if required (so the option is not really necessary), and calling R options from C slows down C code and can cause problems in parallel code.
 
 ### Bug Fixes
 
@@ -12,29 +20,65 @@
 
 * Fixed a bug in `across` caused by two `function(x)` statements being passed in a list e.g. `mtcars |> fsummarise(acr(mpg, list(ssdd = function(x) sd(x), mu = function(x) mean(x))))`. Thanks @trang1618 for reporting #233. 
 
-* Fixed an issue in `across()` when locial vectors were used to select column on grouped data e.g. `mtcars %>% gby(vs, am) %>% smr(acr(startsWith(names(.), "c"), fmean))` now works without error. 
+* Fixed an issue in `across()` when logical vectors were used to select column on grouped data e.g. `mtcars %>% gby(vs, am) %>% smr(acr(startsWith(names(.), "c"), fmean))` now works without error. 
+
+* `qsu` gives proper output for length 1 vectors e.g. `qsu(1)`. 
+
+* *collapse* depends on R > 3.3.0, due to the use of newer C-level macros introduced then. The earlier indication of R > 2.1.0 was only based on R-level code and misleading. Thanks @ben-schwen for reporting #236. I will try to maintain this dependency for as long as possible, without being too restrained by development in R's C API and the ALTREP system in particular, which *collapse* might utilize in the future.
 
 ### Additions
 
+* Introduction of 'indexed_frame','indexed_series' and 'index_df' classes: fast and flexible indexed time series and panel data classes that inherit from *plm*'s 'pdata.frame', 'pseries' and 'pindex' classes. These classes take full advantage of *collapse*'s computational infrastructure, are class-agnostic i.e. they can be superimposed upon any data frame or vector/matrix like object while maintaining most of the functionality of that object, support both time series and panel data, natively handle irregularity, and supports ad-hoc computations inside arbitrary data masking functions and model formulas. This infrastructure comprises of additional functions and methods, and modification of some existing functions and 'pdata.frame' / 'pseries' methods. 
+
+  - New functions: `findex_by/iby`, `findex/ix`, `unindex`, `reindex`, `is_irregular`, `to_plm`. 
+  
+  - New methods: `[.indexed_series`, `[.indexed_frame`, `[<-.indexed_frame`, `$.indexed_frame`, 
+  `$<-.indexed_frame`, `[[.indexed_frame`, `[[<-.indexed_frame`, `[.index_df`, `fsubset.pseries`, `fsubset.pdata.frame`, `funique.pseries`, `funique.pdata.frame`, `roworder(v)` (internal) `na_omit` (internal), `print.indexed_series`, `print.indexed_frame`, `print.index_df`, `Math.indexed_series`, `Ops.indexed_series`.  
+  
+  - Modification of 'pseries' and 'pdata.frame' methods for functions `flag/L/F`, `fdiff/D/Dlog`, `fgrowth/G`, `fcumsum`, `psmat`, `psacf/pspacf/psccf`, `fscale/STD`, `fbetween/B`, `fwithin/W`, `fhdbetween/HDB`, `fhdwithin/HDW`, `qsu` and `varying` to take advantage of 'indexed_frame' and 'indexed_series' while continuing to work as before with 'pdata.frame' and 'pseries'.
+  
+  For more information and details see `help("indexing")`.
+  
+* Added function `timeid`: Generation of an integer-id/time-factor from time or date sequences represented by integer of double vectors (such as 'Date', 'POSIXct', 'ts', 'yearmon', 'yearquarter' or plain integers / doubles) by a numerically quite robust greatest common divisor method (see below). This function is used internally in `findex_by`, `reindex` and also in evaluation of the `t` argument to functions like `flag`/`fdiff`/`fgrowth` whenever `is.object(t) && is.numeric(unclass(t))` (see also note above). 
+
+* Programming helper function `vgcd` to efficiently compute the greatest common divisor from a vector or positive integer or double values (which should ideally be unique and sorted as well, `timeid` uses `vgcd(sort(unique(diff(sort(unique(na_rm(x)))))))`). Precision for doubles is up to 6 digits. 
+
+* Programming helper function `frange`: A significantly faster alternative to `base::range`, which calls both `min` and `max`. Note that `frange` inherits *collapse*'s global `na.rm = TRUE` default. 
+
 * Added function `qtable`: A versatile and computationally more efficient alternative to `base::table`. Notably, it also supports tabulations with frequency weights, and computation of a statistic over combinations of variables. Objects are of class 'qtable' that inherits from 'table'. Thus all 'table' methods apply to it.
 
-* `TRA` was rewritten in C, and now has an additional argument `set = TRUE` which toggles data transformation by reference. The function `setTRA` was added as a shortcut which additionally returns the result invisibly. Since `TRA` is usually accessed internally through the like-named argument to *Fast Statistical Functions*, passing `set = TRUE` to those functions yields an internal call to `setTRA`. For example `fmedian(num_vars(iris), g = iris$Species, TRA = "-", set = TRUE)` subtracts the species-wise median from the numeric variables in the iris dataset, modifying the data in place and returning the result invisibly. Similarly the argument can be added in other workflows such as `iris |> fgroup_by(Species) |> fmutate(across(1:2, fmedian, set = TRUE))` or  `mtcars |> ftransform(mpg = mpg %+=% hp, wt = fsd(wt, cyl, TRA = "replace_fill", set = TRUE))`.
+* `TRA` was rewritten in C, and now has an additional argument `set = TRUE` which toggles data transformation by reference. The function `setTRA` was added as a shortcut which additionally returns the result invisibly. Since `TRA` is usually accessed internally through the like-named argument to *Fast Statistical Functions*, passing `set = TRUE` to those functions yields an internal call to `setTRA`. For example `fmedian(num_vars(iris), g = iris$Species, TRA = "-", set = TRUE)` subtracts the species-wise median from the numeric variables in the iris dataset, modifying the data in place and returning the result invisibly. Similarly the argument can be added in other workflows such as `iris |> fgroup_by(Species) |> fmutate(across(1:2, fmedian, set = TRUE))` or  `mtcars |> ftransform(mpg = mpg %+=% hp, wt = fsd(wt, cyl, TRA = "replace_fill", set = TRUE))`. Note that such chains must be ended by `invisible()` if no printout is wanted. 
+
+* Exported helper function `greorder`, the companion to `gsplit` to reorder output in `fmutate` (and now also in `BY`): let `g` be a 'GRP' object (or something coercible such as a vector) and `x` a vector, then `greorder` orders data in `y = unlist(gsplit(x, g))` such that `identical(greorder(y, g), x)`. 
 
 ### Improvements
 
-* OpenMP multithreading in `fsum` and `fmean`, implemented via an additional `nthreads` argument. The default is to use 1 thread, which internally calls a serial version of the code (thus no change in the default behavior. The plan is to slowly roll this out over all statistical functions and then introduce options to set alternative global defaults. See `?fsum` for details).
+* OpenMP multithreading in `fsum`, `fmean`, `fmedian`, `fnth`, `fmode` and `fndistinct`, implemented via an additional `nthreads` argument. The default is to use 1 thread, which internally calls a serial version of the code (thus no change in the default behavior). 
+The plan is to slowly roll this out over all statistical functions and then introduce options to set alternative global defaults. Multi-threading internally works different for different functions, see the `nthreads` argument documentation of a particular function.
 
-* `TRA` has an additional option `"replace_NA"`, e.g. `wlddev |> fgroup_by(iso3c) |> fmutate(across(PCGDP:POP, fmedian, TRA = "replace_NA"))` performs median value imputation of missing values. Similarly for a matrix `X <- matrix(na_insert(rnorm(1e7)), ncol = 100)`, `fmean(X, TRA = "replace_NA", set = TRUE, nthreads = 4)` (column-wise multi-threaded mean imputation by reference).
+* `TRA` has an additional option `"replace_NA"`, e.g. `wlddev |> fgroup_by(iso3c) |> fmutate(across(PCGDP:POP, fmedian, TRA = "replace_NA"))` performs median value imputation of missing values. Similarly for a matrix `X <- matrix(na_insert(rnorm(1e7)), ncol = 100)`, `fmedian(X, TRA = "replace_NA", set = TRUE, nthreads = 4)` (column-wise multi-threaded median imputation by reference).
 
 * `fprod` was rewritten in C, providing a slightly faster internal method for integers. 
 
-* 'GRP' objects now also contain a 'group.starts' item in the 8'th slot that gives the first positions of the unique groups, and is returned alongside the groups whenever `return.groups = TRUE`. This now benefits `ffirst` when invoked with `na.rm = FALSE`, e.g. `wlddev %>% fgroup_by(country) %>% ffirst(na.rm = FALSE)` is now just as efficient as `funique(wlddev, cols = "country")`. Note that no additional computing cost is incurred by preserving the 'group.starts' information. 
+* 'GRP' objects now also contain a 'group.starts' item in the 8'th slot that gives the first positions of the unique groups, and is returned alongside the groups whenever `return.groups = TRUE`. This now benefits `ffirst` when invoked with `na.rm = FALSE`, e.g. `wlddev %>% fgroup_by(country) %>% ffirst(na.rm = FALSE)` is now just as efficient as `funique(wlddev, cols = "country")`. Note that no additional computing cost is incurred by preserving the 'group.starts' information, it just blocks a bit of additional memory. 
 
-* `descr()` received some performance improvements (up to 2x for categorical data), and has an additional argument `sort.table`, allowing frequency tables for categorical variables to be sorted by frequency (`"freq"`) or by table values (`"value"`). The new default is (`"freq"`), which presents tables in decreading order of frequency. The print method was also enhanced, and by default now prints 14 values with the highest frequency and groups the remaining values into a single `... %s Others` category. Furthermore, if there are any missing values in the column, the percentage of values missing is now printed behind `Statistics: `. An additional `reverse` argument to the print method allows for reverse printing of `descr()` output.  
+* Conversion methods `GRP.factor`, `GRP.qG`, `GRP.pseries`, `GRP.pdata.frame` and `GRP.grouped_df` now also efficiently check if grouping vectors are sorted (the information is stored in the "ordered" element of 'GRP' objects). This leads to performance improvements in `gsplit` / `greorder` and dependent functions such as `BY` and `rsplit` if factors are sorted. 
+
+* `descr()` received some performance improvements (up to 2x for categorical data), and has an additional argument `sort.table`, allowing frequency tables for categorical variables to be sorted by frequency (`"freq"`) or by table values (`"value"`). The new default is (`"freq"`), which presents tables in decreasing order of frequency. A method `[.descr` was added allowing 'descr' objects to be subset like a list. The print method was also enhanced, and by default now prints 14 values with the highest frequency and groups the remaining values into a single `... %s Others` category. Furthermore, if there are any missing values in the column, the percentage of values missing is now printed behind `Statistics `. An additional `reverse` argument to the print method allows for reverse printing of `descr()` output. 
 
 * `whichv` (and operators `%==%`, `%!=%`) now also support comparisons of equal-length arguments e.g. `1:3 %==% 1:3`. Note that this should not be used to compare 2 factors. 
 
+* Added some code to the `.onLoad` function that checks for the existence of a `.fastverse` configuration file containing a setting for `_opt_collapse_mask`: If found the code makes sure that the option takes effect before the package is loaded. This means that inside projects using the *fastverse* and `options("collapse_mask")` to replace base R / *dplyr* functions, *collapse* cannot be loaded without the masking being applied, making it more secure to utilize this feature. For more information about function masking see `help("collapse-options")` and for `.fastverse` configuration files see the [fastverse vignette](https://sebkrantz.github.io/fastverse/articles/fastverse_intro.html#custom-fastverse-configurations-for-projects). 
+
+* Added hidden `.list` methods for `fhdwithin/HDW` and `fhdbetween/HDB`. As for the other `.FAST_FUN` this is just a wrapper for the data frame method and meant to be used on unclassed data frames. 
+
+* `ss()` supports unnamed lists / data frames. 
+
+* The `t` and `w` arguments in 'grouped_df' methods (NSE) and where formula input is allowed, supports ad-hoc transformations. E.g. `wlddev %>% gby(iso3c) %>% flag(t = qG(date))` or `L(wlddev, 1, ~ iso3c, ~qG(date))`, similarly `qsu(wlddev, w = ~ log(POP))`, `wlddev %>% gby(iso3c) %>% collapg(w = log(POP))` or `wlddev %>% gby(iso3c) %>% nv() %>% fmean(w = log(POP))`.   
+
 * Small improvements to `group()` algorithm, avoiding some cases where the hash function performed badly, particularly with integers. 
+
+* Function `GRPnames` now has a `sep` argument to choose a separator other than `"."`.
 
 
 # collapse 1.7.6
