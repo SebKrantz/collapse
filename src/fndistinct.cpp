@@ -22,14 +22,6 @@ IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
   if(ng == 0) {
     sugar::IndexHash<RTYPE> hash(x);
      if(narm) {
-      // unsigned int addr;
-      // int *data = hash.data;
-      // int &m = hash.m;
-      // int &size_ = hash.size_;
-      // auto get_addr = hash.get_addr; // sugar::IndexHash<RTYPE>::get_addr;
-      // auto not_equal = hash.not_equal; // sugar::IndexHash<RTYPE>::not_equal;
-      // IndexHash *hashptr = new hash;
-      // auto get_addr2 = (hash.*get_addr);
       for(int i = 0; i != l; ++i) {
         storage_t val = hash.src[i];
         if(isnanT(val)) continue;
@@ -56,24 +48,29 @@ IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
     int *outm1 = out.begin()-1;
     if(Rf_isNull(gs)) {
       for(int i = 0; i != l; ++i) ++outm1[g[i]];
-      for(int i = 0; i != ng; ++i) {
-        if(out[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
-        gmap[i+1] = std::vector<storage_t> (out[i]);
-        out[i] = 0;
+      #pragma omp parallel for num_threads(nthreads)
+      for(int i = 0; i < ng; ++i) {
+        // if(out[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
+        if(out[i] > 0) {
+           gmap[i+1] = std::vector<storage_t> (out[i]);
+           out[i] = 0;
+        }
       }
       // memset(out, 0, sizeof(int)*ng); // Stable ? -> Nope, gives error
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
-      for(int i = 0; i != ng; ++i) {
-        if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
-        gmap[i+1] = std::vector<storage_t> (gsv[i]);
+      #pragma omp parallel for num_threads(nthreads)
+      for(int i = 0; i < ng; ++i) {
+        // if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
+        if(gsv[i] > 0) gmap[i+1] = std::vector<storage_t> (gsv[i]);
       }
     }
     for(int i = 0; i != l; ++i) gmap[g[i]][outm1[g[i]]++] = x[i];
     if(narm) {
       #pragma omp parallel for num_threads(nthreads)
       for(int gr = 0; gr < ng; ++gr) {
+        if(out[gr] == 0) continue;
         // const std::vector<storage_t>& temp = gmap[gr+1]; // good ? // const Vector<RTYPE>& // wrap()
         sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // temp
         for(int i = hash.n; i--; ) {
@@ -94,6 +91,7 @@ IntegerVector fndistinctImpl(const Vector<RTYPE>& x, int ng, const IntegerVector
     } else {
       #pragma omp parallel for num_threads(nthreads)
       for(int gr = 0; gr < ng; ++gr) {
+        if(out[gr] == 0) continue;
         sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1]));
         hash.fill();
         out[gr] = hash.size_;
@@ -146,23 +144,28 @@ IntegerVector fndistinctFACT(const IntegerVector& x, int ng, const IntegerVector
       int *outm1 = out.begin()-1;
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++outm1[g[i]];
-        for(int i = 0; i != ng; ++i) {
-          if(out[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
-          gmap[i+1] = std::vector<int> (out[i]);
-          out[i] = 0;
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < ng; ++i) {
+          // if(out[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
+          if(out[i] > 0) {
+            gmap[i+1] = std::vector<int> (out[i]);
+            out[i] = 0;
+          }
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != ng; ++i) {
-          if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
-          gmap[i+1] = std::vector<int> (gsv[i]);
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < ng; ++i) {
+          // if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably due to unused factor levels. Use fdroplevels(f) to drop them.");
+          if(gsv[i] > 0) gmap[i+1] = std::vector<int> (gsv[i]);
         }
       }
       for(int i = 0; i != l; ++i) gmap[g[i]][outm1[g[i]]++] = x[i];
       if(narm) {
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr) {
+          if(out[gr] == 0) continue;
           const std::vector<int>& temp = gmap[gr+1];
           n = 1;
           std::vector<bool> uxp(nlevp, true);
@@ -177,6 +180,7 @@ IntegerVector fndistinctFACT(const IntegerVector& x, int ng, const IntegerVector
       } else {
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr) {
+          if(out[gr] == 0) continue;
           const std::vector<int>& temp = gmap[gr+1];
           bool anyNA = false;
           n = 1;
@@ -304,7 +308,7 @@ SEXP fndistinctlCpp(const List& x, int ng = 0, const IntegerVector& g = 0,
   int l = x.size();
   List out(l);
 
-  if(ng == 0 && nthreads > 1) {
+  if(nthreads > 1 && ((ng == 0 && l > 1) || (ng != 0 && nthreads < l))) {
     if(nthreads > l) nthreads = l;
     #pragma omp parallel for num_threads(nthreads)
     for(int j = 0; j < l; ++j) out[j] = fndistinctCpp(x[j], ng, g, gs, narm, 1);
@@ -387,16 +391,18 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
     if(Rf_isNull(gs)) {
       // memset(n, 0, sizeof(int)*ng);
       for(int i = 0; i != l; ++i) ++n[g[i]];
-      for(int i = 1; i != ngp; ++i) {
-        if(n[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
-        gmap[i] = std::vector<storage_t> (n[i]);
+      #pragma omp parallel for num_threads(nthreads)
+      for(int i = 1; i < ngp; ++i) {
+        // if(n[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
+        if(n[i] > 0) gmap[i] = std::vector<storage_t> (n[i]);
       }
     } else {
       IntegerVector gsv = gs;
       if(ng != gsv.size()) stop("ng must match length(gs)");
-      for(int i = 0; i != ng; ++i) {
-        if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
-        gmap[i+1] = std::vector<storage_t> (gsv[i]);
+      #pragma omp parallel for num_threads(nthreads)
+      for(int i = 0; i < ng; ++i) {
+        // if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
+        if(gsv[i] > 0) gmap[i+1] = std::vector<storage_t> (gsv[i]);
       }
     }
     if(narm) {
@@ -407,6 +413,7 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         for(int i = 0; i != l; ++i) gmap[g[i]][n[g[i]]++] = column[i]; // reading in all the values. Better way ?
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr) {
+          if(n[gr+1] == 0) continue;
           // const std::vector<storage_t>& temp = gmap[gr+1]; // good ? // const Vector<RTYPE>& // wrap()
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1])); // wrap(temp)
           for(int i = hash.n; i--; ) {
@@ -433,6 +440,7 @@ SEXP fndistinctmImpl(const Matrix<RTYPE>& x, int ng, const IntegerVector& g,
         for(int i = 0; i != l; ++i) gmap[g[i]][n[g[i]]++] = column[i]; // reading in all the values. Better way ?
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr) {
+          if(n[gr+1] == 0) continue;
           sugar::IndexHash<RTYPE> hash(wrap(gmap[gr+1]));
           hash.fill();
           outj[gr] = hash.size_;

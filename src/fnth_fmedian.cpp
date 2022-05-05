@@ -68,17 +68,21 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
       std::vector<int> gcount(ngp);
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++gcount[g[i]];
-        for(int i = 1; i != ngp; ++i) {
-          if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
-          gmap[i] = std::vector<double> (gcount[i]);
-          gcount[i] = 0;
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 1; i < ngp; ++i) {
+          // if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
+          if(gcount[i] > 0) {
+            gmap[i] = std::vector<double> (gcount[i]);
+            gcount[i] = 0;
+          }
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != ng; ++i) {
-          if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
-          gmap[i+1] = std::vector<double> (gsv[i]);
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < ng; ++i) {
+          // if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
+          if(gsv[i] > 0) gmap[i+1] = std::vector<double> (gsv[i]);
         }
       }
 
@@ -134,14 +138,18 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
     if(ng == 0) {
       double wsumQ = 0, wsum = wg[o[0]-1];
       int k = 1;
+      if(l < 10000) nthreads = 1;
       if(narm) {
-        for(int i = 0; i != l; ++i) if(nisnan(x[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
+        #pragma omp parallel for num_threads(nthreads) reduction(+:wsumQ)
+        for(int i = 0; i < l; ++i) if(nisnan(x[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
         if(wsumQ == 0) return Rf_ScalarReal(NA_REAL);
-        wsumQ *= Q;
       } else {
         if(isnan2(x[o[l-1]-1])) return Rf_ScalarReal(NA_REAL);
-        wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
+        #pragma omp parallel for num_threads(nthreads) reduction(+:wsumQ)
+        for(int i = 0; i < l; ++i) wsumQ += wg[i];
+        // wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
       }
+      wsumQ *= Q; // This was only under narm = TRUE in the series version
       if(isnan2(wsumQ)) stop("Missing weights in order statistics are currently only supported if x is also missing"); // return Rf_ScalarReal(NA_REAL);
       if(lower) {
         while(wsum < wsumQ) wsum += wg[o[k++]-1];
@@ -157,7 +165,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
         while(wsum <= wsumQ) wsum += wg[o[k++]-1];
       }
       return Rf_ScalarReal(x[o[k-1]-1]);
-    } else { // with groups and weights
+    } else { // with groups and weights: no efficient parallelism possible...
       if(l != g.size()) stop("length(g) must match length(x)");
       NumericVector wsumQ(ng), wsum(ng), out(ng, NA_REAL);
       if(narm) {
@@ -304,22 +312,24 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
       std::vector<int> gcount(ngp);
       if(Rf_isNull(gs)) {
         for(int i = 0; i != l; ++i) ++gcount[g[i]];
-        for(int i = 1; i != ngp; ++i) {
-          if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
-          gmap[i] = std::vector<double> (gcount[i]);
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 1; i < ngp; ++i) {
+          // if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
+          if(gcount[i] > 0) gmap[i] = std::vector<double> (gcount[i]);
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != ng; ++i) {
-          if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
-          gmap[i+1] = std::vector<double> (gsv[i]);
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < ng; ++i) {
+          // if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
+          if(gsv[i] > 0) gmap[i+1] = std::vector<double> (gsv[i]);
         }
       }
 
       if(narm) {
         NumericMatrix out = no_init_matrix(ng, col);
-        std::fill(out.begin(), out.end(), NA_REAL);
+        std::fill(out.begin(), out.end(), NA_REAL); // parallelize??
         for(int j = col; j--; ) {
           NumericMatrix::ConstColumn column = x( _ , j);
           NumericMatrix::Column nthj = out( _ , j);
@@ -594,16 +604,18 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
       std::vector<int> gcount(ngp);
       if(Rf_isNull(gs)) {
         for(int i = 0; i != lx1; ++i) ++gcount[g[i]];
-        for(int i = 1; i != ngp; ++i) {
-          if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
-          gmap[i] = std::vector<double> (gcount[i]);
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 1; i < ngp; ++i) {
+          // if(gcount[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
+          if(gcount[i] > 0) gmap[i] = std::vector<double> (gcount[i]);
         }
       } else {
         IntegerVector gsv = gs;
         if(ng != gsv.size()) stop("ng must match length(gs)");
-        for(int i = 0; i != ng; ++i) {
-          if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
-          gmap[i+1] = std::vector<double> (gsv[i]);
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < ng; ++i) {
+          // if(gsv[i] == 0) stop("Group size of 0 encountered. This is probably because of unused factor levels. Use fdroplevels(f) to drop them.");
+          if(gsv[i] > 0) gmap[i+1] = std::vector<double> (gsv[i]);
         }
       }
       if(narm) {
