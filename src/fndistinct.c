@@ -261,18 +261,15 @@ SEXP ndistinct_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, i
   int l = length(x), *pres = INTEGER(res);
   if(nthreads > ng) nthreads = ng;
 
-  if(sorted) { // Sorted: compute cumulative group size (= starts) on the fly...
+  if(sorted) { // Sorted: could compute cumulative group size (= starts) on the fly... but doesn't work multithreaded...
     po = &l;
-    int gs = 0, gsgr = 0;
+    // int gs = 0, gsgr = 0; // need pst because gs += gsgr; doesn't work multithreaded...
     switch(TYPEOF(x)) {
       case REALSXP: {
         const double *px = REAL(x);
         #pragma omp parallel for num_threads(nthreads)
-        for(int gr = 0; gr < ng; ++gr) {
-          gsgr = pgs[gr];
-          pres[gr] = gsgr == 0 ? 0 : ndistinct_double(px + gs, po, gsgr, 1, narm);
-          gs += gsgr;
-        }
+        for(int gr = 0; gr < ng; ++gr)
+          pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_double(px + pst[gr]-1, po, pgs[gr], 1, narm);
         break;
       }
       case INTSXP: {
@@ -280,39 +277,27 @@ SEXP ndistinct_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, i
         if(isFactor(x) && (ng == 0 || nlevels(x) < l / ng * 3)) {
           int M = nlevels(x);
           #pragma omp parallel for num_threads(nthreads)
-          for(int gr = 0; gr < ng; ++gr) {
-            gsgr = pgs[gr];
-            pres[gr] = gsgr == 0 ? 0 : ndistinct_fct(px + gs, po, gsgr, M, 1, narm);
-            gs += gsgr;
-          }
+          for(int gr = 0; gr < ng; ++gr)
+            pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_fct(px + pst[gr]-1, po, pgs[gr], M, 1, narm);
         } else {
           #pragma omp parallel for num_threads(nthreads)
-          for(int gr = 0; gr < ng; ++gr) {
-            gsgr = pgs[gr];
-            pres[gr] = gsgr == 0 ? 0 : ndistinct_int(px + gs, po, gsgr, 1, narm);
-            gs += gsgr;
-          }
+          for(int gr = 0; gr < ng; ++gr)
+            pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_int(px + pst[gr]-1, po, pgs[gr], 1, narm);
         }
         break;
       }
       case LGLSXP: {
         const int *px = LOGICAL(x);
         #pragma omp parallel for num_threads(nthreads)
-        for(int gr = 0; gr < ng; ++gr) {
-            gsgr = pgs[gr];
-            pres[gr] = gsgr == 0 ? 0 : ndistinct_logi(px + gs, po, gsgr, 1, narm);
-            gs += gsgr;
-        }
+        for(int gr = 0; gr < ng; ++gr)
+            pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_logi(px + pst[gr]-1, po, pgs[gr], 1, narm);
         break;
       }
       case STRSXP: {
         const SEXP *px = STRING_PTR(x);
         #pragma omp parallel for num_threads(nthreads)
-        for(int gr = 0; gr < ng; ++gr) {
-          gsgr = pgs[gr];
-          pres[gr] = gsgr == 0 ? 0 : ndistinct_string(px + gs, po, gsgr, 1, narm);
-          gs += gsgr;
-        }
+        for(int gr = 0; gr < ng; ++gr)
+          pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_string(px + pst[gr]-1, po, pgs[gr], 1, narm);
         break;
       }
       default: error("Not Supported SEXP Type!");
@@ -371,23 +356,23 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
   SEXP res;
   int sorted = INTEGER(pg[5])[1], ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, l = length(x);
   if(l != length(pg[1])) error("length(g) must match length(x)");
-  if(sorted) {
-    po = pst = &l;
-  } else if(isNull(o)) {
-    int *count = (int *) Calloc(ng+1, int), *pgv = INTEGER(pg[1]);
-    int *cgs = (int *) R_alloc(ng+2, sizeof(int)); cgs[1] = 1;
-    po = (int *) R_alloc(l, sizeof(int)); --po;
+  if(isNull(o)) {
+    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
     for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
-    for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-    pst = cgs + 1; ++po;
-    Free(count);
+    pst = cgs + 1;
+    if(sorted) po = &l;
+    else {
+      int *count = (int *) Calloc(ng+1, int);
+      po = (int *) R_alloc(l, sizeof(int)); --po;
+      for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
+      ++po; Free(count);
+    }
   } else {
     po = INTEGER(o);
     pst = INTEGER(getAttrib(o, install("starts")));
   }
-
   PROTECT(res = ndistinct_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rnthreads)));
-  if(!isObject(x)) copyMostAttrib(x, res);
+  if(OBJECT(x) == 0) copyMostAttrib(x, res);
   else {
     SEXP sym_label = install("label");
     setAttrib(res, sym_label, getAttrib(x, sym_label));
@@ -417,7 +402,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       for(int j = 0; j < l; ++j) {
         SEXP xj = px[j];
         pout[j] = ndistinct_impl(xj, narm);
-        if(!isObject(xj)) copyMostAttrib(xj, pout[j]);
+        if(OBJECT(xj) == 0) copyMostAttrib(xj, pout[j]);
         else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
       }
       DFcopyAttr(out, x, /*ng=*/0);
@@ -425,17 +410,17 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
       const SEXP *pg = SEXPPTR(g), o = pg[6];
       int sorted = INTEGER(pg[5])[1], ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, gl = length(pg[1]);
-
-      if(sorted) {
-        po = pst = &l;
-      } else if(isNull(o)) {
-        int *count = (int *) Calloc(ng+1, int), *pgv = INTEGER(pg[1]);
-        int *cgs = (int *) R_alloc(ng+2, sizeof(int)); cgs[1] = 1;
-        po = (int *) R_alloc(gl, sizeof(int)); --po;
+      if(isNull(o)) {
+        int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
         for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
-        for(int i = 0; i != gl; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-        pst = cgs + 1; ++po;
-        Free(count);
+        pst = cgs + 1;
+        if(sorted) po = &l;
+        else {
+          int *count = (int *) Calloc(ng+1, int);
+          po = (int *) R_alloc(gl, sizeof(int)); --po;
+          for(int i = 0; i != gl; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
+          ++po; Free(count);
+        }
       } else {
         po = INTEGER(o);
         pst = INTEGER(getAttrib(o, install("starts")));
@@ -444,12 +429,12 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
         SEXP xj = px[j];
         if(length(xj) != gl) error("length(g) must match nrow(x)");
         pout[j] = ndistinct_g_impl(xj, ng, pgs, po, pst, sorted, narm, nthreads);
-        if(!isObject(xj)) copyMostAttrib(xj, pout[j]);
+        if(OBJECT(xj) == 0) copyMostAttrib(xj, pout[j]);
         else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
       }
       DFcopyAttr(out, x, ng);
     }
-    UNPROTECT(1);
+    UNPROTECT(2);
     return out;
   }
 }
@@ -510,30 +495,23 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
     int *pres = INTEGER(res);
     if(nthreads > col) nthreads = col; // column-level sufficient? or do sub-column level??
 
-    if(sorted) {
-      po = pst = &l;
-      // Computing beforehand: does not seem faster?!
-      // if(!isNull(o)) pst = INTEGER(getAttrib(o, install("starts")));
-      // else {
-      //   int *cgs = (int *) R_alloc(ng, sizeof(int)); cgs[0] = 1;
-      //   for(int i = 1; i != ng; ++i) cgs[i] += pgs[i-1];
-      //   pst = cgs;
-      // }
-    } else if(isNull(o)) {
-      int *count = (int *) Calloc(ng+1, int), *pgv = INTEGER(pg[1]);
-      int *cgs = (int *) R_alloc(ng+2, sizeof(int)); cgs[1] = 0;
-      po = (int *) R_alloc(gl, sizeof(int)); --po;
+    if(isNull(o)) {
+      int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
       for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
-      for(int i = 0; i != gl; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-      pst = cgs + 1; ++po;
-      Free(count);
+      pst = cgs + 1;
+      if(sorted) po = &l;
+      else {
+        int *count = (int *) Calloc(ng+1, int);
+        po = (int *) R_alloc(l, sizeof(int)); --po;
+        for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
+        ++po; Free(count);
+      }
     } else {
       po = INTEGER(o);
       pst = INTEGER(getAttrib(o, install("starts")));
     }
 
-    if(sorted) { // Sorted: compute cumulative group size (= starts) on the fly...
-      int gsgr = 0;
+    if(sorted) { // Sorted
       switch(TYPEOF(x)) {
         case REALSXP: {
           double *px = REAL(x);
@@ -541,11 +519,8 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
             double *pxj = px + j * l;
-            for(int gr = 0, gs = 0; gr < ng; ++gr) {
-              gsgr = pgs[gr];
-              pres[jng + gr] = gsgr == 0 ? 0 : ndistinct_double(pxj + gs, po, gsgr, 1, narm);
-              gs += gsgr;
-            }
+            for(int gr = 0; gr < ng; ++gr)
+              pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_double(pxj + pst[gr]-1, po, pgs[gr], 1, narm);
           }
           break;
         }
@@ -556,21 +531,15 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
             #pragma omp parallel for num_threads(nthreads)
             for(int j = 0; j < col; ++j) {
               int *pxj = px + j * l, jng = j * ng;
-              for(int gr = 0, gs = 0; gr < ng; ++gr) {
-                gsgr = pgs[gr];
-                pres[jng + gr] = gsgr == 0 ? 0 : ndistinct_fct(pxj + gs, po, gsgr, M, 1, narm);
-                gs += gsgr;
-              }
+              for(int gr = 0; gr < ng; ++gr)
+                pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_fct(pxj + pst[gr]-1, po, pgs[gr], M, 1, narm);
             }
           } else {
             #pragma omp parallel for num_threads(nthreads)
             for(int j = 0; j < col; ++j) {
               int *pxj = px + j * l, jng = j * ng;
-              for(int gr = 0, gs = 0; gr < ng; ++gr) {
-                gsgr = pgs[gr];
-                pres[jng + gr] = gsgr == 0 ? 0 : ndistinct_int(pxj + gs, po, gsgr, 1, narm);
-                gs += gsgr;
-              }
+              for(int gr = 0; gr < ng; ++gr)
+                pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_int(pxj + pst[gr]-1, po, pgs[gr], 1, narm);
             }
           }
           break;
@@ -580,11 +549,8 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int *pxj = px + j * l, jng = j * ng;
-            for(int gr = 0, gs = 0; gr < ng; ++gr) {
-              gsgr = pgs[gr];
-              pres[jng + gr] = gsgr == 0 ? 0 : ndistinct_logi(pxj + gs, po, gsgr, 1, narm);
-              gs += gsgr;
-            }
+            for(int gr = 0; gr < ng; ++gr)
+              pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_logi(pxj + pst[gr]-1, po, pgs[gr], 1, narm);
           }
           break;
         }
@@ -594,11 +560,8 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
             SEXP *pxj = px + j * l;
-            for(int gr = 0, gs = 0; gr < ng; ++gr) {
-              gsgr = pgs[gr];
-              pres[jng + gr] = gsgr == 0 ? 0 : ndistinct_string(pxj + gs, po, gsgr, 1, narm);
-              gs += gsgr;
-            }
+            for(int gr = 0; gr < ng; ++gr)
+              pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_string(pxj + pst[gr]-1, po, pgs[gr], 1, narm);
           }
           break;
         }
