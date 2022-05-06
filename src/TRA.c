@@ -57,7 +57,7 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
   int tx = TYPEOF(x), txAG = TYPEOF(xAG), l = length(x), gs = length(g);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg = &l, nog = gs == 1;
+  int *pg = &l, nog = gs <= 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
@@ -171,7 +171,7 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
 
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg = &l, nog = gs == 1;
+  int *pg = &l, nog = gs <= 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
@@ -336,7 +336,7 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
   int l = length(x), gs = length(g), tx = TYPEOF(x), txAG = TYPEOF(xAG);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg = &l, nog = gs == 1;
+  int *pg = &l, nog = gs <= 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
@@ -439,7 +439,7 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
 
   SEXP out = set == 0 ? PROTECT(allocVector(REALSXP, l)) : x;
 
-  if(gs == 1) {
+  if(gs <= 1) {
       if(length(xAG) != 1) error("If g = NULL, STATS needs to be an atomic element!");
       if(txAG != REALSXP && txAG != INTSXP && txAG != LGLSXP) error("for these transformations STATS needs to be numeric!");
 
@@ -678,7 +678,7 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
     row = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g), ng = 0,
     set = asLogical(Rset),
     ret = (TYPEOF(Rret) == STRSXP) ? TtI(Rret) : asInteger(Rret),
-    nog = gs == 1;
+    nog = gs <= 1;
 
   if(nog) {
     if(length(xAG) != col) error("If g = NULL, NROW(STATS) needs to be 1");
