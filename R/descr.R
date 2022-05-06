@@ -33,7 +33,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
 
   dotsok <- if(missing(...)) TRUE else names(substitute(c(...))[-1L]) %!in% c('pid','g')
 
-  numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fndistinctCpp(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
+  numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fndistinctC(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
 
   descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
                                                            Quant = quantile(na_rm(x), probs = Qprobs)) else
@@ -46,10 +46,10 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
                                          Table = tab) # natrm(fnobs.default(x, x)) # table(x). fnobs is a lot Faster, but includes NA as level !
                         } else
                         function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                         Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'))
+                                         Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), 'Nobs'))
 
   descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctCpp(x)) else `names<-`(fnobsC(x), 'Nobs'),
+                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), 'Nobs'),
                                           `names<-`(frange(x), c("Min", "Max"))))
 
   if(is.list(X)) {

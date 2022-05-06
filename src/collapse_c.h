@@ -98,3 +98,7 @@ SEXP fcumsumlC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
 SEXP TRAC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
 SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
 SEXP TRAlC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
+// fndistinct, rewritten in C:
+SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads);
+SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads);
+SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads);

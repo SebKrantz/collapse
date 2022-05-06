@@ -29,16 +29,8 @@ TRAlC <- function(x, xAG, g = 0L, ret = 1L, set = FALSE, ...) {
   .Call(C_TRAl, x, xAG, g, ret, set)
 }
 
-fndistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, nthreads = 1L) {
-    .Call(Cpp_fndistinct, x, ng, g, gs, narm, nthreads)
-}
-
-fndistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE, nthreads = 1L) {
-    .Call(Cpp_fndistinctl, x, ng, g, gs, narm, drop, nthreads)
-}
-
-fndistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE, nthreads = 1L) {
-    .Call(Cpp_fndistinctm, x, ng, g, gs, narm, drop, nthreads)
+fndistinctC <- function(x, g = NULL, narm = TRUE, nthreads = 1L) {
+    .Call(C_fndistinct, x, g, narm, nthreads)
 }
 
 pwnobsmCpp <- function(x) {
