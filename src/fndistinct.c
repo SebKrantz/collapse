@@ -274,7 +274,7 @@ SEXP ndistinct_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, i
       }
       case INTSXP: {
         const int *px = INTEGER(x);
-        if(isFactor(x) && (ng == 0 || nlevels(x) < l / ng * 3)) {
+        if(isFactor(x) && nlevels(x) < l / ng * 3) {
           int M = nlevels(x);
           #pragma omp parallel for num_threads(nthreads)
           for(int gr = 0; gr < ng; ++gr)
@@ -313,7 +313,7 @@ SEXP ndistinct_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, i
       }
       case INTSXP: {
         const int *px = INTEGER(x);
-        if(isFactor(x) && (ng == 0 || nlevels(x) < l / ng * 3)) {
+        if(isFactor(x) && nlevels(x) < l / ng * 3) {
           int M = nlevels(x);
           #pragma omp parallel for num_threads(nthreads)
           for(int gr = 0; gr < ng; ++gr)
@@ -354,7 +354,7 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP *pg = SEXPPTR(g), o = pg[6];
   SEXP res;
-  int sorted = INTEGER(pg[5])[1], ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, l = length(x);
+  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, l = length(x);
   if(l != length(pg[1])) error("length(g) must match length(x)");
   if(isNull(o)) {
     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
@@ -409,7 +409,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
     } else {
       if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
       const SEXP *pg = SEXPPTR(g), o = pg[6];
-      int sorted = INTEGER(pg[5])[1], ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, gl = length(pg[1]);
+      int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, gl = length(pg[1]);
       if(isNull(o)) {
         int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
         for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
@@ -488,7 +488,7 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
   } else { // With groups
     if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
     const SEXP *pg = SEXPPTR(g), o = pg[6];
-    int sorted = INTEGER(pg[5])[1], ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, gl = length(pg[1]);
+    int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, gl = length(pg[1]);
     if(l != gl) error("length(g) must match nrow(x)");
 
     SEXP res = PROTECT(allocVector(INTSXP, col * ng));
@@ -524,23 +524,13 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           }
           break;
         }
-        case INTSXP: {
+        case INTSXP: { // Factor matrix not well defined object...
           int *px = INTEGER(x);
-          if(isFactor(x) && (ng == 0 || nlevels(x) < l / ng * 3)) {
-            int M = nlevels(x);
-            #pragma omp parallel for num_threads(nthreads)
-            for(int j = 0; j < col; ++j) {
-              int *pxj = px + j * l, jng = j * ng;
-              for(int gr = 0; gr < ng; ++gr)
-                pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_fct(pxj + pst[gr]-1, po, pgs[gr], M, 1, narm);
-            }
-          } else {
-            #pragma omp parallel for num_threads(nthreads)
-            for(int j = 0; j < col; ++j) {
-              int *pxj = px + j * l, jng = j * ng;
-              for(int gr = 0; gr < ng; ++gr)
-                pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_int(pxj + pst[gr]-1, po, pgs[gr], 1, narm);
-            }
+          #pragma omp parallel for num_threads(nthreads)
+          for(int j = 0; j < col; ++j) {
+            int *pxj = px + j * l, jng = j * ng;
+            for(int gr = 0; gr < ng; ++gr)
+              pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_int(pxj + pst[gr]-1, po, pgs[gr], 1, narm);
           }
           break;
         }
@@ -581,23 +571,13 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           }
           break;
         }
-        case INTSXP: {
+        case INTSXP: { // Factor matrix not well defined object...
           int *px = INTEGER(x);
-          if(isFactor(x) && (ng == 0 || nlevels(x) < l / ng * 3)) {
-            int M = nlevels(x);
-            #pragma omp parallel for num_threads(nthreads)
-            for(int j = 0; j < col; ++j) {
-              int jng = j * ng, *pxj = px + j * l;
-              for(int gr = 0; gr < ng; ++gr)
-                pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_fct(pxj, po + pst[gr]-1, pgs[gr], M, 0, narm);
-            }
-          } else {
-            #pragma omp parallel for num_threads(nthreads)
-            for(int j = 0; j < col; ++j) {
-              int jng = j * ng, *pxj = px + j * l;
-              for(int gr = 0; gr < ng; ++gr)
-                pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_int(pxj, po + pst[gr]-1, pgs[gr], 0, narm);
-            }
+          #pragma omp parallel for num_threads(nthreads)
+          for(int j = 0; j < col; ++j) {
+            int jng = j * ng, *pxj = px + j * l;
+            for(int gr = 0; gr < ng; ++gr)
+              pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_int(pxj, po + pst[gr]-1, pgs[gr], 0, narm);
           }
           break;
         }
