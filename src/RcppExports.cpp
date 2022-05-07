@@ -248,61 +248,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fmodeCpp
-SEXP fmodeCpp(const SEXP& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret, int nthreads);
-RcppExport SEXP _collapse_fmodeCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP retSEXP, SEXP nthreadsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const SEXP& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(fmodeCpp(x, ng, g, gs, w, narm, ret, nthreads));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fmodelCpp
-SEXP fmodelCpp(const List& x, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret, int nthreads);
-RcppExport SEXP _collapse_fmodelCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP retSEXP, SEXP nthreadsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(fmodelCpp(x, ng, g, gs, w, narm, ret, nthreads));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fmodemCpp
-SEXP fmodemCpp(SEXP x, int ng, IntegerVector g, SEXP gs, SEXP w, bool narm, bool drop, int ret, int nthreads);
-RcppExport SEXP _collapse_fmodemCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP dropSEXP, SEXP retSEXP, SEXP nthreadsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(fmodemCpp(x, ng, g, gs, w, narm, drop, ret, nthreads));
-    return rcpp_result_gen;
-END_RCPP
-}
 // fnthCpp
 NumericVector fnthCpp(const NumericVector& x, double Q, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret, int nthreads);
 RcppExport SEXP _collapse_fnthCpp(SEXP xSEXP, SEXP QSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP retSEXP, SEXP nthreadsSEXP) {

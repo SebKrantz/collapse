@@ -49,18 +49,6 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(`_collapse_flagleadlCpp`, x, n, fill, ng, g, t, names)
 }
 
-fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L, nthreads = 1L) {
-    .Call(`_collapse_fmodeCpp`, x, ng, g, gs, w, narm, ret, nthreads)
-}
-
-fmodelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L, nthreads = 1L) {
-    .Call(`_collapse_fmodelCpp`, x, ng, g, gs, w, narm, ret, nthreads)
-}
-
-fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 0L, nthreads = 1L) {
-    .Call(`_collapse_fmodemCpp`, x, ng, g, gs, w, narm, drop, ret, nthreads)
-}
-
 fnthCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L, nthreads = 1L) {
     .Call(`_collapse_fnthCpp`, x, Q, ng, g, gs, w, narm, ret, nthreads)
 }
