@@ -8,18 +8,18 @@
 // TODO: outsource and memset hash table?
 // Problem: does not work in parallel, each thread needs own hash table...
 
-int ndistinct_int(const int *px, const int *po, const int n, const int sorted, const int narm) {
-  const size_t n2 = 2U * (size_t) n;
+int ndistinct_int(const int *px, const int *po, const int l, const int sorted, const int narm) {
+  const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;
-  while(M < n2) {
+  while(M < l2) {
     M *= 2;
     K++;
   }
   int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
 
   if(sorted) {
-    for (int i = 0; i != n; ++i) {
+    for (int i = 0; i != l; ++i) {
       if(px[i] == NA_INTEGER) {
         anyNA = 1;
         continue;
@@ -34,7 +34,7 @@ int ndistinct_int(const int *px, const int *po, const int n, const int sorted, c
       ibls:;
     }
   } else {
-    for (int i = 0, xi; i != n; ++i) {
+    for (int i = 0, xi; i != l; ++i) {
       xi = px[po[i]-1];
       if(xi == NA_INTEGER) {
         anyNA = 1;
@@ -56,11 +56,11 @@ int ndistinct_int(const int *px, const int *po, const int n, const int sorted, c
   return ndist;
 }
 
-int ndistinct_fct(const int *px, const int *po, const int n, const int nlev, const int sorted, const int narm) {
+int ndistinct_fct(const int *px, const int *po, const int l, const int nlev, const int sorted, const int narm) {
   int *h = (int*)Calloc(nlev+1, int);
   int ndist = 0, anyNA = narm; // Ensures breaking works if narm = TRUE or FALSE
   if(sorted) {
-    for (int i = 0, xi; i != n; ++i) {
+    for (int i = 0, xi; i != l; ++i) {
       xi = px[i];
       if(xi == NA_INTEGER) {
         anyNA = 1;
@@ -72,7 +72,7 @@ int ndistinct_fct(const int *px, const int *po, const int n, const int nlev, con
       h[xi] = 1;
     }
   } else {
-    for (int i = 0, xi; i != n; ++i) {
+    for (int i = 0, xi; i != l; ++i) {
       xi = px[po[i]-1];
       if(xi == NA_INTEGER) {
         anyNA = 1;
@@ -89,10 +89,10 @@ int ndistinct_fct(const int *px, const int *po, const int n, const int nlev, con
   return ndist;
 }
 
-int ndistinct_logi(const int *px, const int *po, const int n, const int sorted, const int narm) {
+int ndistinct_logi(const int *px, const int *po, const int l, const int sorted, const int narm) {
   int seenT = 0, seenF = 0, anyNA = narm; // Ensures breaking works if narm = TRUE or FALSE
   if(sorted) {
-    for (int i = 0, xi; i != n; ++i) {
+    for (int i = 0, xi; i != l; ++i) {
       xi = px[i];
       if(xi == NA_LOGICAL) {
         anyNA = 1;
@@ -107,7 +107,7 @@ int ndistinct_logi(const int *px, const int *po, const int n, const int sorted, 
       }
     }
   } else {
-    for (int i = 0, xi; i != n; ++i) {
+    for (int i = 0, xi; i != l; ++i) {
       xi = px[po[i]-1];
       if(xi == NA_LOGICAL) {
         anyNA = 1;
@@ -127,11 +127,11 @@ int ndistinct_logi(const int *px, const int *po, const int n, const int sorted, 
   return seenT + seenF;
 }
 
-int ndistinct_double(const double *px, const int *po, const int n, const int sorted, const int narm) {
-  const size_t n2 = 2U * (size_t) n;
+int ndistinct_double(const double *px, const int *po, const int l, const int sorted, const int narm) {
+  const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;
-  while(M < n2) {
+  while(M < l2) {
     M *= 2;
     K++;
   }
@@ -140,7 +140,7 @@ int ndistinct_double(const double *px, const int *po, const int n, const int sor
   double xi;
 
   if(sorted) {
-    for (int i = 0; i != n; ++i) {
+    for (int i = 0; i != l; ++i) {
       if(ISNAN(px[i])) {
         anyNA = 1;
         continue;
@@ -156,7 +156,7 @@ int ndistinct_double(const double *px, const int *po, const int n, const int sor
       rbls:;
     }
   } else {
-    for (int i = 0; i != n; ++i) {
+    for (int i = 0; i != l; ++i) {
       xi = px[po[i]-1];
       if(ISNAN(xi)) {
         anyNA = 1;
@@ -180,11 +180,11 @@ int ndistinct_double(const double *px, const int *po, const int n, const int sor
   return ndist;
 }
 
-int ndistinct_string(const SEXP *px, const int *po, const int n, const int sorted, const int narm) {
-  const size_t n2 = 2U * (size_t) n;
+int ndistinct_string(const SEXP *px, const int *po, const int l, const int sorted, const int narm) {
+  const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;
-  while(M < n2) {
+  while(M < l2) {
     M *= 2;
     K++;
   }
@@ -192,7 +192,7 @@ int ndistinct_string(const SEXP *px, const int *po, const int n, const int sorte
   SEXP xi;
 
   if(sorted) {
-    for (int i = 0; i != n; ++i) {
+    for (int i = 0; i != l; ++i) {
       if(px[i] == NA_STRING) {
         anyNA = 1;
         continue;
@@ -207,7 +207,7 @@ int ndistinct_string(const SEXP *px, const int *po, const int n, const int sorte
       sbls:;
     }
   } else {
-    for (int i = 0; i != n; ++i) {
+    for (int i = 0; i != l; ++i) {
       xi = px[po[i]-1];
       if(xi == NA_STRING) {
         anyNA = 1;
