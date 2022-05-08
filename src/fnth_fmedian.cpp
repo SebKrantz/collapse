@@ -133,23 +133,19 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
     if(l != wg.size()) stop("length(w) must match length(x)");
     IntegerVector o = no_init_vector(l);
     int *ord = INTEGER(o);
-    Cdoubleradixsort(ord, TRUE, FALSE, x); // starts from 1
+    Cdoubleradixsort(ord, TRUE, FALSE, wrap(x)); // starts from 1
 
     if(ng == 0) {
       double wsumQ = 0, wsum = wg[o[0]-1];
       int k = 1;
-      if(l < 10000) nthreads = 1;
       if(narm) {
-        #pragma omp parallel for num_threads(nthreads) reduction(+:wsumQ)
         for(int i = 0; i < l; ++i) if(nisnan(x[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
         if(wsumQ == 0) return Rf_ScalarReal(NA_REAL);
+        wsumQ *= Q;
       } else {
         if(isnan2(x[o[l-1]-1])) return Rf_ScalarReal(NA_REAL);
-        #pragma omp parallel for num_threads(nthreads) reduction(+:wsumQ)
-        for(int i = 0; i < l; ++i) wsumQ += wg[i];
-        // wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
+        wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
       }
-      wsumQ *= Q; // This was only under narm = TRUE in the series version
       if(isnan2(wsumQ)) stop("Missing weights in order statistics are currently only supported if x is also missing"); // return Rf_ScalarReal(NA_REAL);
       if(lower) {
         while(wsum < wsumQ) wsum += wg[o[k++]-1];
@@ -263,12 +259,11 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
       if(nthreads > col) nthreads = col;
       NumericVector out = no_init_vector(col);
       if(narm) {
-        NumericVector column = no_init_vector(l);
-        auto begin = column.begin();
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < col; ++j) {
           NumericMatrix::ConstColumn colj = x( _ , j);
-          auto pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
+          NumericVector column = no_init_vector(l); // without multithreading this could be taken out of the loop, see previous version of the code.
+          auto begin = column.begin(), pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
           int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
           if(sz == 0) {
             out[j] = colj[0];
@@ -383,7 +378,6 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
   } else { // with weights
     NumericVector wg = w;
     if(l != wg.size()) stop("length(w) must match nrow(x)");
-    if(nthreads > col) nthreads = col;
     IntegerVector o = no_init_vector(l);
     int *ord = INTEGER(o);
 
@@ -398,8 +392,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
           // goto outnth;
         }
       }
-      #pragma omp parallel for num_threads(nthreads)
-      for(int j = 0; j < col; ++j) {
+      for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         Cdoubleradixsort(ord, TRUE, FALSE, wrap(column)); // starts from 1....
         if(narm) {
@@ -437,13 +430,13 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         out[j] = column[o[k-1]-1];
       }
       // outnth:
-        if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
-        else {
-          Rf_dimgets(out, Dimension(1, col));
-          colnames(out) = colnames(x);
-          if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
-        }
-        return out;
+      if(drop) Rf_setAttrib(out, R_NamesSymbol, colnames(x));
+      else {
+        Rf_dimgets(out, Dimension(1, col));
+        colnames(out) = colnames(x);
+        if(!Rf_isObject(x)) Rf_copyMostAttrib(x, out);
+      }
+      return out;
     } else { // with groups and weights
       if(l != g.size()) stop("length(g) must match nrow(x)");
       int gi, oi;
@@ -454,8 +447,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         for(int i = 0; i != l; ++i) wsumQ[g[i]-1] += wg[i];
         wsumQ = wsumQ * Q;
       }
-      #pragma omp parallel for num_threads(nthreads)
-      for(int j = 0; j < col; ++j) {
+      for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column nthj = out( _ , j);
         Cdoubleradixsort(ord, TRUE, FALSE, wrap(column));
@@ -542,7 +534,14 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
     lower = ret != 3;
   }
 
+
   if(Rf_isNull(w)) {
+    // Needed with multithreading over columns...
+    for(int j = 0, tx; j < l; ++j) {
+      tx = TYPEOF(x[j]);
+      if(!(tx == REALSXP || tx == INTSXP || tx == LGLSXP))
+        stop("All columns of x need to be numeric");
+    }
     if(ng == 0) {
       if(nthreads > l) nthreads = l;
       NumericVector out = no_init_vector(l);
@@ -674,7 +673,6 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
   } else { // with weights
     NumericVector wg = w;
     if(lx1 != wg.size()) stop("length(w) must match nrow(x)");
-    if(nthreads > l) nthreads = l;
     IntegerVector o = no_init_vector(lx1);
     int *ord = INTEGER(o);
 
@@ -689,11 +687,10 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           // goto outnth;
         }
       }
-      #pragma omp parallel for num_threads(nthreads)
-      for(int j = 0; j < l; ++j) {
+      for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(lx1 != column.size()) stop("length(w) must match nrow(x)");
-        Cdoubleradixsort(ord, TRUE, FALSE, column); // starts from 1
+        Cdoubleradixsort(ord, TRUE, FALSE, wrap(column)); // starts from 1
         if(narm) {
           wsumQ = 0;
           for(int i = 0; i != lx1; ++i) if(nisnan(column[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
@@ -729,19 +726,19 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         out[j] = column[o[k-1]-1];
       }
       // outnth:
-        if(drop) {
-          Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
-          return out;
-        } else {
-          List outl(l);
-          for(int j = l; j--; ) {
-            outl[j] = out[j];
-            SHALLOW_DUPLICATE_ATTRIB(outl[j], x[j]);
-          }
-          SHALLOW_DUPLICATE_ATTRIB(outl, x);
-          Rf_setAttrib(outl, R_RowNamesSymbol, Rf_ScalarInteger(1));
-          return outl;
+      if(drop) {
+        Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
+        return out;
+      } else {
+        List outl(l);
+        for(int j = l; j--; ) {
+          outl[j] = out[j];
+          SHALLOW_DUPLICATE_ATTRIB(outl[j], x[j]);
         }
+        SHALLOW_DUPLICATE_ATTRIB(outl, x);
+        Rf_setAttrib(outl, R_RowNamesSymbol, Rf_ScalarInteger(1));
+        return outl;
+      }
     } else { // with groups and weights
       if(lx1 != g.size()) stop("length(w) must match length(g)");
       int gi, oi;
@@ -751,11 +748,10 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         for(int i = 0; i != lx1; ++i) wsumQ[g[i]-1] += wg[i];
         wsumQ = wsumQ * Q;
       }
-      #pragma omp parallel for num_threads(nthreads)
-      for(int j = 0; j < l; ++j) {
+      for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(lx1 != column.size()) stop("length(w) must match nrow(x)");
-        Cdoubleradixsort(ord, TRUE, FALSE, column);
+        Cdoubleradixsort(ord, TRUE, FALSE, wrap(column));
         NumericVector wsum(ng), nthj(ng, NA_REAL);
         if(narm) {
           std::fill(wsumQ.begin(), wsumQ.end(), 0.0);
