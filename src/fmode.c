@@ -855,7 +855,10 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
       pw = REAL(wd);
     } else pw = REAL(w);
   }
-  if(nullg) return w_mode_impl(x, pw, asLogical(Rnarm), asInteger(Rret));
+  if(nullg) {
+    if(TYPEOF(w) != REALSXP) UNPROTECT(1);
+    return w_mode_impl(x, pw, asLogical(Rnarm), asInteger(Rret));
+  }
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP *pg = SEXPPTR(g), o = pg[6];
   int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst;
@@ -876,12 +879,13 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     pst = INTEGER(getAttrib(o, install("starts")));
   }
   if(nullw) return mode_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
+  if(TYPEOF(w) != REALSXP) UNPROTECT(1);
   return w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
 }
 
 // TODO: allow column-level parallelism??
 SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
-  int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0,
+  int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0, nprotect = 1,
     narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads);
   if(l < 1) return x;
   SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
@@ -896,7 +900,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
       if(length(w) != nrx) error("length(w) must match nrow(x)");
       if(TYPEOF(w) != REALSXP) {
         if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double)");
-        SEXP wd = PROTECT(coerceVector(w, REALSXP));
+        SEXP wd = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
         pw = REAL(wd);
       } else pw = REAL(w);
     }
@@ -932,7 +936,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     }
   }
   DFcopyAttr(out, x, ng);
-  UNPROTECT(1);
+  UNPROTECT(nprotect);
   return out;
 }
 
@@ -941,7 +945,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1],
       narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads),
-      nullg = isNull(g), nullw = isNull(w);
+      nullg = isNull(g), nullw = isNull(w), nprotect = 1;
   if(l <= 1) return x; // Prevents seqfault for numeric(0) #101
   if(nthreads > col) nthreads = col;
 
@@ -950,7 +954,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
     if(length(w) != l) error("length(w) must match nrow(x)");
     if(TYPEOF(w) != REALSXP) {
       if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double)");
-      SEXP wd = PROTECT(coerceVector(w, REALSXP));
+      SEXP wd = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
       pw = REAL(wd);
     } else pw = REAL(w);
   }
@@ -1007,7 +1011,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
     }
 
     matCopyAttr(res, x, Rdrop, /*ng=*/0);
-    UNPROTECT(1);
+    UNPROTECT(nprotect);
     return res;
   }
 
@@ -1189,7 +1193,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
   }
 
   matCopyAttr(res, x, Rdrop, ng);
-  UNPROTECT(1);
+  UNPROTECT(nprotect);
   return res;
 }
 
