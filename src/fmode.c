@@ -11,7 +11,7 @@
 int mode_int(const int *px, const int *po, const int l, const int sorted, const int narm, const int ret) {
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
-  int K = 8, index = 0, val, mode, max = 1,
+  int K = 8, index = 0, val, mode, max = 1, i = 0, end = l-1,
       minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   while(M < l2) {
     M *= 2;
@@ -21,7 +21,9 @@ int mode_int(const int *px, const int *po, const int l, const int sorted, const 
   int *n = (int*)Calloc(l, int); // Table to count frequency of values
 
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
+    mode = px[0];
+    if(narm) while(mode == NA_INTEGER && i < end) mode = px[++i];
+    for(; i < l; ++i) {
       val = px[i];
       if(val == NA_INTEGER && narm) continue;
       id = HASH(val, K);
@@ -47,7 +49,9 @@ int mode_int(const int *px, const int *po, const int l, const int sorted, const 
       }
     }
   } else {
-    for(int i = 0; i != l; ++i) {
+    mode = px[po[0]-1];
+    if(narm) while(mode == NA_INTEGER && i < end) mode = px[po[++i]-1];
+    for(; i < l; ++i) {
       val = px[po[i]-1];
       if(val == NA_INTEGER && narm) continue;
       id = HASH(val, K);
@@ -82,7 +86,7 @@ int mode_int(const int *px, const int *po, const int l, const int sorted, const 
 int w_mode_int(const int *px, const double *pw, const int *po, const int l, const int sorted, const int narm, const int ret) {
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
-  int K = 8, index = 0, val, mode,
+  int K = 8, index = 0, val, mode, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   while(M < l2) {
     M *= 2;
@@ -93,7 +97,9 @@ int w_mode_int(const int *px, const double *pw, const int *po, const int l, cons
   double max = DBL_MIN;
 
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
+    mode = px[0];
+    if(narm) while((mode == NA_INTEGER || ISNAN(pw[i])) && i < end) mode = px[++i];
+    for(; i < l; ++i) {
       val = px[i];
       if(ISNAN(pw[i]) || (val == NA_INTEGER && narm)) continue;
       id = HASH(val, K);
@@ -120,7 +126,9 @@ int w_mode_int(const int *px, const double *pw, const int *po, const int l, cons
       }
     }
   } else {
-    for(int i = 0, oi; i != l; ++i) {
+    mode = px[po[0]-1];
+    if(narm) while((mode == NA_INTEGER || ISNAN(pw[po[i]-1])) && i < end) mode = px[po[++i]-1];
+    for(int oi; i < l; ++i) {
       oi = po[i]-1;
       val = px[oi];
       if(ISNAN(pw[oi]) || (val == NA_INTEGER && narm)) continue;
@@ -156,12 +164,14 @@ int w_mode_int(const int *px, const double *pw, const int *po, const int l, cons
 
 
 int mode_fct_logi(const int *px, const int *po, const int l, const int nlev, const int sorted, const int narm, const int ret) {
-  int val, mode, max = 1, nlevp = nlev + 1,
+  int val, mode, max = 1, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   int *n = (int*)Calloc(nlevp+1, int); // Table to count frequency of values
 
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
+    mode = px[0];
+    if(narm) while(mode == NA_INTEGER && i < end) mode = px[++i];
+    for(; i < l; ++i) {
       val = px[i];
       if(val == NA_INTEGER) {
         if(narm) continue;
@@ -181,7 +191,9 @@ int mode_fct_logi(const int *px, const int *po, const int l, const int nlev, con
       }
     }
   } else {
-    for(int i = 0, xi; i != l; ++i) {
+    mode = px[po[0]-1];
+    if(narm) while(mode == NA_INTEGER && i < end) mode = px[po[++i]-1];
+    for(int xi; i < l; ++i) {
       val = xi = px[po[i]-1];
       if(val == NA_INTEGER) {
         if(narm) continue;
@@ -207,13 +219,15 @@ int mode_fct_logi(const int *px, const int *po, const int l, const int nlev, con
 }
 
 int w_mode_fct_logi(const int *px, const double *pw, const int *po, const int l, const int nlev, const int sorted, const int narm, const int ret) {
-  int val, mode, nlevp = nlev + 1,
+  int val, mode, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   double *sumw = (double*)Calloc(nlevp+1, double); // Table to save each values sum of weights
   double max = DBL_MIN;
 
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
+    mode = px[0];
+    if(narm) while((mode == NA_INTEGER || ISNAN(pw[i])) && i < end) mode = px[++i];
+    for(; i < l; ++i) {
       if(ISNAN(pw[i])) continue;
       val = px[i];
       if(val == NA_INTEGER) {
@@ -235,7 +249,9 @@ int w_mode_fct_logi(const int *px, const double *pw, const int *po, const int l,
       }
     }
   } else {
-    for(int i = 0, oi, xoi; i != l; ++i) {
+    mode = px[po[0]-1];
+    if(narm) while((mode == NA_INTEGER || ISNAN(pw[po[i]-1])) && i < end) mode = px[po[++i]-1];
+    for(int oi, xoi; i < l; ++i) {
       oi = po[i]-1;
       if(ISNAN(pw[oi])) continue;
       val = xoi = px[oi];
@@ -267,7 +283,7 @@ int w_mode_fct_logi(const int *px, const double *pw, const int *po, const int l,
 double mode_double(const double *px, const int *po, const int l, const int sorted, const int narm, const int ret) {
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
-  int K = 8, index = 0, max = 1,
+  int K = 8, index = 0, max = 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   while(M < l2) {
     M *= 2;
@@ -279,7 +295,9 @@ double mode_double(const double *px, const int *po, const int l, const int sorte
   union uno tpv;
 
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
+    mode = px[0];
+    if(narm) while(ISNAN(mode) && i < end) mode = px[++i];
+    for(; i < l; ++i) {
       val = px[i];
       if(ISNAN(val) && narm) continue;
       tpv.d = val;
@@ -306,7 +324,9 @@ double mode_double(const double *px, const int *po, const int l, const int sorte
       }
     }
   } else {
-    for(int i = 0; i != l; ++i) {
+    mode = px[po[0]-1];
+    if(narm) while(ISNAN(mode) && i < end) mode = px[po[++i]-1];
+    for(; i < l; ++i) {
       val = px[po[i]-1];
       if(ISNAN(val) && narm) continue;
       tpv.d = val;
@@ -342,7 +362,7 @@ double mode_double(const double *px, const int *po, const int l, const int sorte
 double w_mode_double(const double *px, const double *pw, const int *po, const int l, const int sorted, const int narm, const int ret) {
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
-  int K = 8, index = 0, minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
+  int K = 8, index = 0, i = 0, end = l-1, minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   while(M < l2) {
     M *= 2;
     K++;
@@ -353,7 +373,9 @@ double w_mode_double(const double *px, const double *pw, const int *po, const in
   union uno tpv;
 
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
+    mode = px[0];
+    if(narm) while((ISNAN(mode) || ISNAN(pw[i])) && i < end) mode = px[++i];
+    for(; i < l; ++i) {
       val = px[i];
       if(ISNAN(pw[i]) || (ISNAN(val) && narm)) continue;
       tpv.d = val;
@@ -381,7 +403,9 @@ double w_mode_double(const double *px, const double *pw, const int *po, const in
       }
     }
   } else {
-    for(int i = 0, oi; i != l; ++i) {
+    mode = px[po[0]-1];
+    if(narm) while((ISNAN(mode) || ISNAN(pw[po[i]-1])) && i < end) mode = px[po[++i]-1];
+    for(int oi; i < l; ++i) {
       oi = po[i]-1;
       val = px[oi];
       if(ISNAN(pw[oi]) || (ISNAN(val) && narm)) continue;
@@ -420,7 +444,7 @@ double w_mode_double(const double *px, const double *pw, const int *po, const in
 SEXP mode_string(const SEXP *px, const int *po, const int l, const int sorted, const int narm, const int ret) {
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
-  int K = 8, index = 0, max = 1,
+  int K = 8, index = 0, max = 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   while(M < l2) {
     M *= 2;
@@ -431,7 +455,9 @@ SEXP mode_string(const SEXP *px, const int *po, const int l, const int sorted, c
   SEXP val, mode;
 
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
+    mode = px[0];
+    if(narm) while(mode == NA_STRING && i < end) mode = px[++i];
+    for(; i < l; ++i) {
       val = px[i];
       if(val == NA_STRING && narm) continue;
       id = HASH(((intptr_t) val & 0xffffffff), K);
@@ -457,7 +483,9 @@ SEXP mode_string(const SEXP *px, const int *po, const int l, const int sorted, c
       }
     }
   } else {
-    for(int i = 0; i != l; ++i) {
+    mode = px[po[0]-1];
+    if(narm) while(mode == NA_STRING && i < end) mode = px[po[++i]-1];
+    for(; i < l; ++i) {
       val = px[po[i]-1];
       if(val == NA_STRING && narm) continue;
       id = HASH(((intptr_t) val & 0xffffffff), K);
@@ -492,7 +520,7 @@ SEXP mode_string(const SEXP *px, const int *po, const int l, const int sorted, c
 SEXP w_mode_string(const SEXP *px, const double *pw, const int *po, const int l, const int sorted, const int narm, const int ret) {
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
-  int K = 8, index = 0, minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
+  int K = 8, index = 0, i = 0, end = l-1, minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   while(M < l2) {
     M *= 2;
     K++;
@@ -503,7 +531,9 @@ SEXP w_mode_string(const SEXP *px, const double *pw, const int *po, const int l,
   SEXP val, mode;
 
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
+    mode = px[0];
+    if(narm) while((mode == NA_STRING || ISNAN(pw[i])) && i < end) mode = px[++i];
+    for(; i != l; ++i) {
       val = px[i];
       if(ISNAN(pw[i]) || (val == NA_STRING && narm)) continue;
       id = HASH(((intptr_t) val & 0xffffffff), K);
@@ -530,7 +560,9 @@ SEXP w_mode_string(const SEXP *px, const double *pw, const int *po, const int l,
       }
     }
   } else {
-    for(int i = 0, oi; i != l; ++i) {
+    mode = px[po[0]-1];
+    if(narm) while((mode == NA_STRING || ISNAN(pw[po[i]-1])) && i < end) mode = px[po[++i]-1];
+    for(int oi; i != l; ++i) {
       oi = po[i]-1;
       val = px[oi];
       if(ISNAN(pw[oi]) || (val == NA_STRING && narm)) continue;
@@ -847,6 +879,7 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   return w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
 }
 
+// TODO: allow column-level parallelism??
 SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0,
     narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads);
@@ -883,19 +916,17 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
         if(sorted) po = &l;
         else {
           int *count = (int *) Calloc(ng+1, int);
-          po = (int *) R_alloc(l, sizeof(int)); --po;
-          for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
+          po = (int *) R_alloc(nrx, sizeof(int)); --po;
+          for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
           ++po; Free(count);
         }
       } else {
         po = INTEGER(o);
         pst = INTEGER(getAttrib(o, install("starts")));
       }
-      if(nullw) {
-        // #pragma omp parallel for num_threads(nthreads) // Parallelism at sub-column level
+      if(nullw) { // Parallelism at sub-column level
         for(int j = 0; j < l; ++j) pout[j] = mode_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, nthreads);
-      } else {
-        // #pragma omp parallel for num_threads(nthreads) // Parallelism at sub-column level
+      } else { // Parallelism at sub-column level
         for(int j = 0; j < l; ++j) pout[j] = w_mode_g_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, nthreads);
       }
     }
