@@ -21,7 +21,7 @@ atomic vectors or factors spanning the table dimensions, (optionally) with tags 
   a single vector to aggregate over the table dimensions e.g. a vector of frequency weights.
 }
   \item{wFUN}{
-a function or function-string used to aggregate \code{w} over the table dimensions. The default \code{NULL} computes the sum of the non-missing weights via an optimized internal algorithm. \link[=fast-statistical-functions]{Fast Statistical Functions} passed also receive vectorized execution, but some of them like \code{\link{fmedian}} give errors for zero-frequencies (in that case use base R equivalents, see Examples).
+a function used to aggregate \code{w} over the table dimensions. The default \code{NULL} computes the sum of the non-missing weights via an optimized internal algorithm. \link[=fast-statistical-functions]{Fast Statistical Functions} also receive vectorized execution.
 }
 \item{wFUN.args}{
 a list of (optional) further arguments passed to \code{wFUN}. See Examples.
@@ -83,8 +83,8 @@ wlda15 \%$\% qtable(region, income, w = LIFEEX, wFUN = fmean)
 wlda15 \%$\% qtable(region, income, w = LIFEEX, wFUN = fmean,
                   wFUN.args = list(w = POP))
 
-# GDP per capita (constant 2010 US$): median (fmedian gives error)
-wlda15 \%$\% qtable(region, income, w = PCGDP, wFUN = median,
+# GDP per capita (constant 2010 US$): median
+wlda15 \%$\% qtable(region, income, w = PCGDP, wFUN = fmedian,
                   wFUN.args = list(na.rm = TRUE))
 
 # GDP per capita (constant 2010 US$): median, weighted by population
