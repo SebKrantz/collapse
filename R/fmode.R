@@ -81,19 +81,19 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
       if(gl) {
         if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], names(sumw), nam[-gn])
-          return(setAttributes(c(g[[4L]], sumw, .Call(Cpp_fmodel,x[-gn],g,w,na.rm,r,nthreads)), ax))
+          return(setAttributes(c(g[[4L]], sumw, .Call(C_fmodel,x[-gn],g,w,na.rm,r,nthreads)), ax))
         }
         ax[["names"]] <- c(names(sumw), nam[-gn])
-        return(setAttributes(c(sumw, .Call(Cpp_fmodel,x[-gn],g,w,na.rm,r,nthreads)), ax))
+        return(setAttributes(c(sumw, .Call(C_fmodel,x[-gn],g,w,na.rm,r,nthreads)), ax))
       } else if(keep.group_vars) {
         ax[["names"]] <- c(g[[5L]], nam)
-        return(setAttributes(c(g[[4L]], .Call(Cpp_fmodel,x,g,w,na.rm,r,nthreads)), ax))
-      } else return(setAttributes(.Call(Cpp_fmodel,x,g,w,na.rm,r,nthreads), ax))
+        return(setAttributes(c(g[[4L]], .Call(C_fmodel,x,g,w,na.rm,r,nthreads)), ax))
+      } else return(setAttributes(.Call(C_fmodel,x,g,w,na.rm,r,nthreads), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(Cpp_fmodel,x[-gn],g,w,na.rm,r,nthreads),g[[2L]],TRA, ...)), ax))
+      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(C_fmodel,x[-gn],g,w,na.rm,r,nthreads),g[[2L]],TRA, ...)), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(TRAlC(x[-gn],.Call(Cpp_fmodel,x[-gn],g,w,na.rm,r,nthreads),g[[2L]],TRA, ...), ax))
-  } else return(TRAlC(x,.Call(Cpp_fmodel,x,g,w,na.rm,r,nthreads),g[[2L]],TRA, ...))
+    return(setAttributes(TRAlC(x[-gn],.Call(C_fmodel,x[-gn],g,w,na.rm,r,nthreads),g[[2L]],TRA, ...), ax))
+  } else return(TRAlC(x,.Call(C_fmodel,x,g,w,na.rm,r,nthreads),g[[2L]],TRA, ...))
 }

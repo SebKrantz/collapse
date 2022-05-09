@@ -649,7 +649,7 @@ fcolsubset <- function(x, ind, checksf = FALSE) { # fastest !
 rgrep <- function(exp, nam, ..., sort = TRUE) if(length(exp) == 1L) grep(exp, nam, ...) else .Call(Cpp_funique, unlist(lapply(exp, grep, nam, ...), use.names = FALSE), sort)
 rgrepl <- function(exp, nam, ...) if(length(exp) == 1L) grepl(exp, nam, ...) else Reduce(`|`, lapply(exp, grepl, nam, ...))
 
-fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L else .Call(Cpp_fndistinct,x,0L,0L,NULL,FALSE,1L) != length(x)
+fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L else .Call(C_fndistinct,x,NULL,FALSE,1L) != length(x)
 
 # NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 # NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
