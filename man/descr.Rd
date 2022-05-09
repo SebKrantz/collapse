@@ -21,7 +21,7 @@ descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
 \method{as.data.frame}{descr}(x, \dots)
 
 \method{print}{descr}(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
-      summary = TRUE, reverse = FALSE, \dots)
+      summary = TRUE, reverse = FALSE, stepwise = FALSE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -64,6 +64,7 @@ character. The name of a label attribute to display for each variable (if variab
 \item{t.table}{logical. \code{TRUE} (default) prints a transposed table.}
 \item{summary}{logical. \code{TRUE} (default) computes and displays a summary of the frequencies, if the size of the table for a categorical variable exceeds \code{n}.}
 \item{reverse}{logical. \code{TRUE} prints contents in reverse order, starting with the last column, so that the dataset can be analyzed by scrolling up the console after calling \code{descr}.}
+\item{stepwise}{logical. \code{TRUE} prints one variable at a time. The user needs to press [enter] to see the printout for the next variable.}
 }
 \details{
 \code{descr} was heavily inspired by \code{Hmisc::describe}, but computes about 10x faster. The performance is comparable to \code{\link{summary}}. \code{descr} was built as a wrapper around \code{\link{qsu}}, to enrich the set of statistics computed by \code{\link{qsu}} for both numeric and categorical variables.

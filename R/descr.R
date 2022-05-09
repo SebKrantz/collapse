@@ -78,7 +78,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
 
 `[.descr` <- function(x, ...) copyMostAttributes(.subset(x, ...), x)
 
-print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, reverse = FALSE, ...) {
+print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, reverse = FALSE, stepwise = FALSE, ...) {
   oldClass(x) <- NULL
   w <- paste(rep("-", .Options$width), collapse = "")
   arstat <- attr(x, "arstat")
@@ -92,6 +92,7 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
   }
   nam <- names(x) # Needs to be here
   for(i in seq_along(x)) {
+    if(stepwise) invisible(readline(prompt="Press [enter] for next variable or [esc] to exit"))
     xi <- x[[i]]
     cat(nam[i]," (",strclp(xi[[1L]]),"): ",xi[[2L]], "\n", sep = "")
     stat <- xi[[3L]]
