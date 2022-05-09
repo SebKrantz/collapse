@@ -50,6 +50,13 @@ wBY <- function(x, f, FUN, w, ...) {
   qDF(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...), return = "matrix"))
 }
 
+for (nth in 1:2) {
+
+  if(nth == 2L) {
+    if(Sys.getenv("NCRAN") == "TRUE") {
+      fsum <- function(x, ...) collapse::fsum(x, ..., nthreads = 2L)
+    } else break
+  }
 
 test_that("fsum performs like base::sum and base::colSums", {
   expect_equal(fsum(NA), bsum(NA))
@@ -542,4 +549,4 @@ test_that("Integer overflow errors", {
   expect_error(fsum(xNA, g, na.rm = FALSE))
 })
 
-
+}
