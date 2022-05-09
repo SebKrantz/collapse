@@ -62,7 +62,7 @@ fmode(x, \dots)
 
 }
 \details{
-\code{fmode} implements a pretty fast algorithm to find the statistical mode utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
+\code{fmode} implements a pretty fast C-level hashing algorithm inspired by the \emph{kit} package to find the statistical mode. % utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
 %If all values are distinct, the first value is returned. If there are multiple distinct values having the top frequency, the first value established as having the top frequency when passing through the data from element 1 to element n is returned.
 If \code{na.rm = FALSE}, \code{NA} is not removed but treated as any other value (i.e. it's frequency is counted). If all values are \code{NA}, \code{NA} is always returned.

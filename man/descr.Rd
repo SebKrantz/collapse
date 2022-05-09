@@ -86,7 +86,7 @@ descr(iris)
 descr(wlddev)
 descr(GGDC10S)
 
-# Some useful print options
+# Some useful print options (also try stepwise argument)
 print(descr(GGDC10S), reverse = TRUE, t.table = FALSE)
 
 # Generating a data frame

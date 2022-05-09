@@ -39,7 +39,7 @@ fmedian(x, \dots)
 
 \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
-\item{nthreads}{integer. The number of threads to utilize. Parallelism is across groups for grouped computations and at the column-level otherwise. }
+\item{nthreads}{integer. The number of threads to utilize. Parallelism is across groups for grouped computations and at the column-level otherwise. No parallelism is available for weighted computations. }
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 

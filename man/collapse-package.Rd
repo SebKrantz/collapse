@@ -53,7 +53,7 @@ See \link[=collapse-documentation]{Collapse Documentation & Overview} (the most 
 
 \section{Details}{
 % Put this below bullet points ?? % \emph{collapse} provides a carefully conceived % \emph{collapse} provides a compact set of functions % organized roughly into several topics
-\emph{collapse} provides an integrated suite of statistical and data manipulation functions. These improve, complement and extend the capabilities of base R and packages like \emph{dplyr}, \emph{data.table}, \emph{plm}, \emph{matrixStats}, \emph{Rfast} etc. Key Features:
+\emph{collapse} provides an integrated suite of statistical and data manipulation functions. These improve, complement and extend the capabilities of base R and packages like \emph{dplyr}, \emph{data.table}, \emph{plm}, \emph{matrixStats}, \emph{Rfast} etc. In a nutshell, \emph{collapse} provides:
 
 \itemize{
 \item Fast C/C++ based (grouped, weighted) computations embedded in highly optimized R code.
