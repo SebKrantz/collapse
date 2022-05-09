@@ -262,6 +262,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(qsu.default)
  export(qsu.matrix)
  export(qsu.data.frame)
+ export(qtab)
  export(qtable)
  export(descr)
  export(rapply2d)

@@ -1,6 +1,6 @@
 
 
-qtable <- function(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
+qtab <- function(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
                    dnn = "auto", sort = TRUE,
                    na.exclude = TRUE, drop = FALSE, method = "auto") {
   ll <- ...length() == 1L && is.list(..1)
@@ -76,8 +76,10 @@ qtable <- function(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
 
   dim(tab) <- dm
   dimnames(tab) <- dn
-  oldClass(tab) <- c("qtable", "table")
+  oldClass(tab) <- c("qtab", "table")
   attr(tab, "sorted") <- sort
   attr(tab, "weighted") <- !is.null(w)
   tab
 }
+
+qtable <- function(...) qtab(...)

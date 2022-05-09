@@ -45,7 +45,7 @@
 
 * Programming helper function `frange`: A significantly faster alternative to `base::range`, which calls both `min` and `max`. Note that `frange` inherits *collapse*'s global `na.rm = TRUE` default. 
 
-* Added function `qtable`: A versatile and computationally more efficient alternative to `base::table`. Notably, it also supports tabulations with frequency weights, and computation of a statistic over combinations of variables. Objects are of class 'qtable' that inherits from 'table'. Thus all 'table' methods apply to it.
+* Added function `qtab`: A versatile and computationally more efficient alternative to `base::table`. Notably, it also supports tabulations with frequency weights, and computation of a statistic over combinations of variables. Objects are of class 'qtab' that inherits from 'table'. Thus all 'table' methods apply to it.
 
 * `TRA` was rewritten in C, and now has an additional argument `set = TRUE` which toggles data transformation by reference. The function `setTRA` was added as a shortcut which additionally returns the result invisibly. Since `TRA` is usually accessed internally through the like-named argument to *Fast Statistical Functions*, passing `set = TRUE` to those functions yields an internal call to `setTRA`. For example `fmedian(num_vars(iris), g = iris$Species, TRA = "-", set = TRUE)` subtracts the species-wise median from the numeric variables in the iris dataset, modifying the data in place and returning the result invisibly. Similarly the argument can be added in other workflows such as `iris |> fgroup_by(Species) |> fmutate(across(1:2, fmedian, set = TRUE))` or  `mtcars |> ftransform(mpg = mpg %+=% hp, wt = fsd(wt, cyl, TRA = "replace_fill", set = TRUE))`. Note that such chains must be ended by `invisible()` if no printout is wanted. 
 
@@ -58,7 +58,11 @@ The plan is to slowly roll this out over all statistical functions and then intr
 
 * `TRA` has an additional option `"replace_NA"`, e.g. `wlddev |> fgroup_by(iso3c) |> fmutate(across(PCGDP:POP, fmedian, TRA = "replace_NA"))` performs median value imputation of missing values. Similarly for a matrix `X <- matrix(na_insert(rnorm(1e7)), ncol = 100)`, `fmedian(X, TRA = "replace_NA", set = TRUE, nthreads = 4)` (column-wise multi-threaded median imputation by reference).
 
-* `fprod` was rewritten in C, providing a slightly faster internal method for integers. 
+* `fmean` and `fprod` was rewritten in C, providing a slightly faster internal method for integers. 
+
+* `fmode` and `fndistinct` rewritten in C:
+
+* All *Fast Statistical Functions* support zero group sizes (e.g. grouping with a factor that has unused levels will always produce an output of length `nlevels(x)` with `0` or `NA` elements for the unused levels). Previously this produced an error message with counting/ordinal functions `fmode`, `fndistinct`, `fnth` and `fmedian`. 
 
 * 'GRP' objects now also contain a 'group.starts' item in the 8'th slot that gives the first positions of the unique groups, and is returned alongside the groups whenever `return.groups = TRUE`. This now benefits `ffirst` when invoked with `na.rm = FALSE`, e.g. `wlddev %>% fgroup_by(country) %>% ffirst(na.rm = FALSE)` is now just as efficient as `funique(wlddev, cols = "country")`. Note that no additional computing cost is incurred by preserving the 'group.starts' information, it just blocks a bit of additional memory. 
 

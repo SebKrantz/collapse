@@ -9,7 +9,7 @@
 \itemize{
 \item \code{\link{qsu}}, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software. It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method. Statistics can be computed weighted, by groups, and also within-and between entities (for multilevel / panel data).
 
-\item \code{\link{qtable}}, shorthand for quick-table, is a faster and more versatile alternative to \code{\link{table}}. Notably, it also supports tabulations with frequency weights, as well as computing a statistic over combinations of variables. 'qtable's inherit the 'table' class, allowing for seamless application of 'table' methods.
+\item \code{\link{qtab}}, shorthand for quick-table, is a faster and more versatile alternative to \code{\link{table}}. Notably, it also supports tabulations with frequency weights, as well as computing a statistic over combinations of variables. 'qtab's inherit the 'table' class, allowing for seamless application of 'table' methods.
 
 \item \code{\link{descr}} computes a concise and detailed description of a data frame, including (sorted) frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by \code{Hmisc::describe}, but about 10x faster.
 
@@ -24,7 +24,7 @@
 \section{Table of Functions}{
   \tabular{lllll}{\emph{ Function / S3 Generic }   \tab\tab \emph{ Methods }   \tab\tab \emph{ Description }  \cr
                  \code{\link{qsu}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame}  \tab\tab Fast (grouped, weighted, panel-decomposed) summary statistics \cr
-                 \code{\link{qtable}} \tab\tab No methods, for data frames or vectors  \tab\tab Fast (weighted) cross tabulation \cr
+                 \code{\link{qtab}} \tab\tab No methods, for data frames or vectors  \tab\tab Fast (weighted) cross tabulation \cr
                  \code{\link{descr}} \tab\tab No methods, for data frames or lists of vectors  \tab\tab Detailed statistical description of data frame \cr
                  \code{\link{pwcor}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise (weighted) correlations \cr
                  \code{\link{pwcov}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise (weighted) covariances \cr

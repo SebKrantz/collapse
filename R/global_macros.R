@@ -49,7 +49,7 @@
                                "is_unlistable", "ix", "L", "ldepth", "list_elem", "list_elem<-", "logi_vars", "logi_vars<-",
                                "massign", "mctl", "missing_cases", "mrtl", "mtt", "na_insert", "na_omit", "na_rm",
                                "namlab", "num_vars", "num_vars<-", "nv", "nv<-", "pad", "psacf", "psccf", "psmat",
-                               "pspacf", "pwcor", "pwcov", "pwnobs", "qDF", "qDT", "qF", "qG", "qM", "qsu", "qtable",
+                               "pspacf", "pwcor", "pwcov", "pwnobs", "qDF", "qDT", "qF", "qG", "qM", "qsu", "qtab", "qtable",
                                "qTBL", "radixorder", "radixorderv", "rapply2d", "recode_char", "recode_num", "reg_elem",
                                "reindex", "relabel", "replace_Inf", "replace_outliers", "rm_stub", "rnm", "roworder",
                                "roworderv", "rsplit", "sbt", "seq_col", "seq_row", "seqid", "setAttrib", "setColnames",
