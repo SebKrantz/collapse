@@ -49,13 +49,20 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
         int sz = pend - xd.begin(), nth = lower ? (sz-1)*Q : sz*Q; // return NumericVector::create(sz, (sz-1)*Q, sz*Q-1, sz*Q);
         if(sz == 0) return Rf_ScalarReal(x[0]);
         std::nth_element(xd.begin(), xd.begin()+nth, pend);
-        out = (tiesmean && sz%2 == 0) ? (xd[nth] + *(std::min_element(xd.begin()+nth+1, pend)))*0.5 : xd[nth];
+        out[0] = (tiesmean && sz%2 == 0) ? (xd[nth] + *(std::min_element(xd.begin()+nth+1, pend)))*0.5 : xd[nth];
       } else {
-        for(int i = 0; i != l; ++i) if(isnan2(x[i])) return Rf_ScalarReal(x[i]);
-        NumericVector xd = Rf_duplicate(x);
-        int nth = lower ? (l-1)*Q : l*Q;
-        std::nth_element(xd.begin(), xd.begin()+nth, xd.end());
-        out = (tiesmean && l%2 == 0) ? (xd[nth] + *(std::min_element(xd.begin()+nth+1, xd.end())))*0.5 : xd[nth];
+        for(int i = 0; i != l; ++i) {
+          if(isnan2(x[i])) {
+            out[0] = x[i];
+            break;
+          }
+        }
+        if(nisnan(out[0])) {
+          NumericVector xd = Rf_duplicate(x);
+          int nth = lower ? (l-1)*Q : l*Q;
+          std::nth_element(xd.begin(), xd.begin()+nth, xd.end());
+          out[0] = (tiesmean && l%2 == 0) ? (xd[nth] + *(std::min_element(xd.begin()+nth+1, xd.end())))*0.5 : xd[nth];
+        }
       }
       if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
         Rf_copyMostAttrib(x, out);
@@ -117,7 +124,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
         }
         #pragma omp parallel for num_threads(nthreads)
         for(int i = 0; i < ng; ++i) {
-          if(isnan2(out[i])) continue;
+          if(isnan2(out[i]) || gcount[i+1] == 0) continue;
           int n = gcount[i+1], nth = lower ? (n-1)*Q : n*Q;
           auto begin = gmap[i+1].begin(), mid = begin + nth, end = begin + n;
           std::nth_element(begin, mid, end);
@@ -136,14 +143,20 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
     Cdoubleradixsort(ord, TRUE, FALSE, wrap(x)); // starts from 1
 
     if(ng == 0) {
-      double wsumQ = 0, wsum = wg[o[0]-1];
+      double wsumQ = 0, wsum = wg[o[0]-1], res = DBL_MIN;
       int k = 1;
       if(narm) {
         for(int i = 0; i < l; ++i) if(nisnan(x[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
-        if(wsumQ == 0) return Rf_ScalarReal(NA_REAL);
+        if(wsumQ == 0) {
+          res = NA_REAL;
+          goto end;
+        }
         wsumQ *= Q;
       } else {
-        if(isnan2(x[o[l-1]-1])) return Rf_ScalarReal(NA_REAL);
+        if(isnan2(x[o[l-1]-1]))  {
+          res = NA_REAL;
+          goto end;
+        }
         wsumQ = std::accumulate(wg.begin(), wg.end(), 0.0) * Q;
       }
       if(isnan2(wsumQ)) stop("Missing weights in order statistics are currently only supported if x is also missing"); // return Rf_ScalarReal(NA_REAL);
@@ -155,12 +168,18 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
             out += x[o[k++]-1];
             ++n;
           }
-          return Rf_ScalarReal((out + x[o[k]-1]) / n);
+          res = (out + x[o[k]-1]) / n;
         }
       } else {
         while(wsum <= wsumQ) wsum += wg[o[k++]-1];
       }
-      return Rf_ScalarReal(x[o[k-1]-1]);
+      if(res == DBL_MIN) res = x[o[k-1]-1];
+      end:;
+      if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
+        SEXP out = Rf_ScalarReal(res);
+        Rf_copyMostAttrib(x, out);
+        return out;
+      } else return Rf_ScalarReal(res);
     } else { // with groups and weights: no efficient parallelism possible...
       if(l != g.size()) stop("length(g) must match length(x)");
       NumericVector wsumQ(ng), wsum(ng), out(ng, NA_REAL);
@@ -363,7 +382,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
           }
           #pragma omp parallel for num_threads(nthreads)
           for(int i = 0; i < ng; ++i) {
-            if(isnan2(nthj[i])) continue;
+            if(isnan2(nthj[i]) || gcount[i+1] == 0) continue;
             int n = gcount[i+1], nth = lower ? (n-1)*Q : n*Q;
             auto begin = gmap[i+1].begin(), mid = begin + nth, end = begin + n;
             std::nth_element(begin, mid, end);
@@ -555,10 +574,10 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
           if(sz == 0) {
             out[j] = colj[0];
-            continue;
+          } else {
+            std::nth_element(begin, begin+nth, pend);
+            out[j] = (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
           }
-          std::nth_element(begin, begin+nth, pend);
-          out[j] = (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
         }
       } else {
         #pragma omp parallel for num_threads(nthreads)
@@ -656,7 +675,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
           }
           #pragma omp parallel for num_threads(nthreads)
           for(int i = 0; i < ng; ++i) {
-            if(isnan2(nthj[i])) continue;
+            if(isnan2(nthj[i]) || gcount[i+1] == 0) continue;
             int n = gcount[i+1], nth = lower ? (n-1)*Q : n*Q;
             auto begin = gmap[i+1].begin(), mid = begin + nth, end = begin + n;
             std::nth_element(begin, mid, end);
