@@ -53,7 +53,7 @@ wBY <- function(x, f, FUN, w, ...) {
 for (nth in 1:2) {
 
   if(nth == 2L) {
-    if(Sys.getenv("NCRAN") == "TRUE") {
+    if(Sys.getenv("OMP") == "TRUE") {
       fsum <- function(x, ...) collapse::fsum(x, ..., nthreads = 2L)
     } else break
   }
