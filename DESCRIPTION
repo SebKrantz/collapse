@@ -34,7 +34,7 @@ Description: A C/C++ based package for advanced data transformation and
         (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations, 
         linear prediction, model fitting and testing exclusion restrictions.
     (4) Advanced time-computations: Fast and flexible indexed time series and panel data classes. 
-        (Sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
+        Fast (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
         differences and (compounded) growth rates on (irregular) time series and panels. 
         Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.

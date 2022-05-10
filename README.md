@@ -19,7 +19,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a class-agnostic approach to data manipulation in R, supporting base R, *dplyr* (*tibble*), *data.table*, *sf*, *plm* classes for panel data ('pseries' and 'pdata.frame'), and non-destructively handling other matrix or data frame based classes (including most time series classes such as 'ts', 'xts' / 'zoo', 'timeSeries', 'tsibble', etc.). 
+It further implements a class-agnostic approach to data manipulation in R, supporting base R, *dplyr* (*tibble*), *data.table*, *sf*, *plm* classes for panel data ('pseries' and 'pdata.frame'), and non-destructively handling other matrix or data frame based classes (including most time series classes such as 'ts', 'xts' / 'zoo', 'tsibble', etc.). 
 
 <!-- *collapse* thus provides a robust, flexible, class-agnostic and computationally advanced toolkit for data manipulation in R. -->
 
@@ -41,8 +41,7 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
         (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations, 
         linear prediction, model fitting and testing exclusion restrictions.
 
-*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes. 
-        (Sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
+*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes. Fast (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
         differences and (compounded) growth rates on (irregular) time series and panels. 
         Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
