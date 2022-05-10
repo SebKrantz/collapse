@@ -613,7 +613,7 @@ SEXP mode_impl(SEXP x, int narm, int ret) {
                               mode_int(INTEGER(x), &l, l, 1, narm, ret)));
       break;
     case LGLSXP:
-      PROTECT(res = ScalarLogical(mode_fct_logi(LOGICAL(x), &l, l, 1, 1, narm, ret)));
+      PROTECT(res = duplicate(ScalarLogical(mode_fct_logi(LOGICAL(x), &l, l, 1, 1, narm, ret))));
       break;
     case STRSXP:
       PROTECT(res = ScalarString(mode_string(STRING_PTR(x), &l, l, 1, narm, ret)));
