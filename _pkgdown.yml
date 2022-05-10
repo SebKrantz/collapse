@@ -83,6 +83,7 @@ reference:
   - fdroplevels
   - groupid
   - seqid
+  - timeid
 - title: "Fast Data Manipulation"
   desc: "Fast and flexible select, replace, add, subset, transform, sort / reorder and rename / relabel data / data frame columns."
 - contents:
@@ -125,6 +126,8 @@ reference:
   desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (unordered, irregular) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
 - contents:
   - "time-series-panel-series"
+  - indexing
+  - timeid
   - flag
   - fdiff
   - fgrowth
@@ -147,6 +150,7 @@ reference:
 - contents:
   - "summary-statistics"
   - qsu
+  - qtab
   - descr
   - "pwcor-pwcov-pwnobs"
   - varying

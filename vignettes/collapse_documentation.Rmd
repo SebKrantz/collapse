@@ -24,9 +24,9 @@ After installing *collapse*, you can call `help("collapse-documentation")` which
 
 Thus *collapse* comes with a fully structured hierarchical documentation which you can browse within R - and that provides everything necessary to fully understand the package. The Documentation is also available [online](<https://sebkrantz.github.io/collapse/reference/index.html>).
 
-The package page under `help("collapse-package")` additionally provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality (which lack features introduced in 1.7 though). 
+The package page under `help("collapse-package")` additionally provides some more general information about the package and its design philosophy, as well as a very compact set of examples covering important functionality. 
 
-Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is the fastest way to get acquainted with the package. `help("collapse-documentation")` is also the most up-to-date documentation of the package at the time of releasing 1.7 (January 2022).
+Reading `help("collapse-package")` and `help("collapse-documentation")` and working through the examples on `help("collapse-package")` is the fastest way to get acquainted with the package. `help("collapse-documentation")` is always the most up-to-date documentation of the package.
 
 ## Vignettes
 
@@ -42,11 +42,11 @@ There are also 5 vignettes which are available [online](<https://sebkrantz.githu
 
 * [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames
 
-Note that these vignettes currently (January 2022) do not cover features introduced in version 1.7. They have been updated if you see a 2022 in the date of the vignette.   
+Note that these vignettes currently (May 2022) do not cover features introduced in versions 1.7 and 1.8. They have been updated if you see a 2022 in the date of the vignette.   
 
 ## Blog
 
-I maintain a [blog](<https://sebkrantz.github.io/Rblog/>) linked to [Rbloggers.com](<https://www.r-bloggers.com/>) where I introduced *collapse* with some compact posts covering central functionality. Among these, the post about [programming with *collapse*](<https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/>) is highly recommended for ambitious users and developers willing to build on *collapse*, as it exposes to some degree how central parts of *collapse* work together and provides tips on how to write very efficient *collapse* code. Future blog posts will expose some specialized functionality in more detail. 
+I maintain a [blog](<https://sebkrantz.github.io/Rblog/>) linked to [Rbloggers.com](<https://www.r-bloggers.com/>) where I introduced *collapse* with some compact posts covering central functionality. Among these, the post about [programming with *collapse*](<https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/>) is recommended for ambitious users and developers willing to build on *collapse*. <!-- , as it exposes to some degree how central parts of *collapse* work together and provides tips on how to write very efficient *collapse* code. Future blog posts will expose some specialized functionality in more detail. -->
 
 ## Cheatsheet
 

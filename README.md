@@ -19,7 +19,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a class-agnostic approach to data manipulation in R, supporting base R, *dplyr* (*tibble*), *data.table*, *sf*, *plm* classes for panel data ('pseries' and 'pdata.frame'), and non-destructively handling other matrix or data frame based classes (including most time series classes such as 'ts', 'xts' / 'zoo', 'timeSeries', 'tsibble', 'tibbletime', etc.). 
+It further implements a class-agnostic approach to data manipulation in R, supporting base R, *dplyr* (*tibble*), *data.table*, *sf*, *plm* classes for panel data ('pseries' and 'pdata.frame'), and non-destructively handling other matrix or data frame based classes (including most time series classes such as 'ts', 'xts' / 'zoo', 'tsibble', etc.). 
 
 <!-- *collapse* thus provides a robust, flexible, class-agnostic and computationally advanced toolkit for data manipulation in R. -->
 
@@ -30,33 +30,29 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 
 *  **Advanced statistical programming**: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast and programmable grouping, ordering, unique values / rows, 
+        data frames. Fast and programmable grouping, ordering, unique values/rows, 
         factor generation and interactions. Fast and flexible functions for data 
         manipulation, data object conversions, and memory efficient R programming.
 
-*  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, 
-        weighted, parallelized and fully custom data aggregation.
+*  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, weighted and parallelized data aggregation.
 
-*  **Advanced transformations**: Fast row / column arithmetic, (grouped) replacing 
-        and sweeping out of statistics, (grouped, weighted) scaling / standardizing, 
-        between (averaging) and (quasi-)within (demeaning) transformations, 
-        higher-dimensional centering (i.e. multiple fixed effects or polynomials), 
+*  **Advanced transformations**: Fast row/column arithmetic, (grouped) replacing 
+        and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, 
+        (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations, 
         linear prediction, model fitting and testing exclusion restrictions.
 
-*  **Advanced time-computations**: Fast (sequences of) lags / leads, and 
-        (lagged / leaded, iterated, quasi-, log-) differences and (compounded) 
-        growth rates on (irregular) time series and panel data. 
+*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes. Fast (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
+        differences and (compounded) growth rates on (irregular) time series and panels. 
         Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
 
-*  **List processing**: (Recursive) list search, splitting, 
-        extraction / subsetting, data-apply, and generalized recursive 
-        row-binding / unlisting in 2D.
+*  **List processing**: Recursive list search, splitting, 
+        extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.
 
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
-        summary statistics for complex multilevel / panel data.
+        summary statistics and descriptive tools.
 
-*collapse* utilizes both C and C++ via *Rcpp*, and also uses C/C++ functions from *data.table*, *kit*, *fixest*, *weights*, *RcppArmadillo*, *RcppEigen* and *stats*. Currently no low-level parallelism is implemented. Effort has been expended to minimize the execution speed of R code employed. 
+*collapse* utilizes both C and C++ via *Rcpp*, and also uses C/C++ functions from *data.table*, *kit*, *fixest*, *weights*, *RcppArmadillo*, *RcppEigen* and *stats*. Effort has been expended to minimize the execution speed of R code employed. 
 
 ## Installation
 
@@ -65,6 +61,7 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 install.packages("collapse")
 
 # Install previous versions from the CRAN Archive (Requires Rtools)
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.7.6.tar.gz", repos = NULL, type = "source")
 install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.6.5.tar.gz", repos = NULL, type = "source")
 install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.5.3.tar.gz", repos = NULL, type = "source")
 
@@ -297,9 +294,12 @@ Some simple benchmarks against *dplyr*, *data.table* and *plm* are provided in [
 
 <!-- using functions that *data.table* also GeForce optimizes, -->
 
-* For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to *data.table* (e.g. see [here](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html#benchmark>) and [here](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>))^[Collapse has quite efficient algorithms but no low-level parallelism. Thus huge aggregations with simple functions like `mean` or `sum` and meaningful parallel processing power are faster on *data.table*, whereas *collapse* can still be faster on 2-core machines.].
+* For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to *data.table* (e.g. see [here](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html#benchmark>) and [here](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>)).
 
-* For more complex categorical or weighed aggregations and for data transformations, *collapse* can be ~10x faster than *data.table*. Notable are very fast algorithms for (grouped) statistical mode and distinct value counts, variance, various weighted statistics, scaling, centering, panel-lags, differences and growth rates.
+<!--
+^[Collapse has quite efficient algorithms but no low-level parallelism. Thus huge aggregations with simple functions like `mean` or `sum` and meaningful parallel processing power are faster on *data.table*, whereas *collapse* can still be faster on 2-core machines.]. -->
+
+* For more complex categorical or weighed aggregations and for data transformations, *collapse* can be up to ~10x faster than *data.table*. Notable are very fast algorithms for (grouped) statistical mode and distinct value counts, various weighted statistics, scaling, centering, panel-lags, differences and growth rates.
 
 * Due to its highly optimized R code, *collapse* is very efficient for programming. On smaller data a *collapse* implementation will execute within microseconds, whereas packages like *dplyr* or *data.table* will typically evaluate in the millisecond domain (up to ~100x slower).
 

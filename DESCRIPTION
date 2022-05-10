@@ -34,14 +34,14 @@ Description: A C/C++ based package for advanced data transformation and
         (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations, 
         linear prediction, model fitting and testing exclusion restrictions.
     (4) Advanced time-computations: Fast and flexible indexed time series and panel data classes. 
-        (Sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
+        Fast (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
         differences and (compounded) growth rates on (irregular) time series and panels. 
         Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
     (5) List processing: Recursive list search, splitting, 
         extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
-        summary statistics and descriptive tools (for panel data).
+        summary statistics and descriptive tools.
 URL: https://sebkrantz.github.io/collapse/,  
      https://github.com/SebKrantz/collapse,
      https://twitter.com/collapse_R
