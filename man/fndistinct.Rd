@@ -52,7 +52,7 @@ fndistinct(x, \dots)
 
 If \code{na.rm = TRUE} (the default), missing values will be skipped yielding substantial performance gains in data with many missing values. If \code{na.rm = FALSE}, missing values will simply be treated as any other value and read into the hash-map. Thus with the former, a numeric vector \code{c(1.25,NaN,3.56,NA)} will have a distinct value count of 2, whereas the latter will return a distinct value count of 4.
 
-Grouped computations are performed by mapping the data to a sparse-array and then hash-mapping each group. This is often not much slower than using a larger hash-map for the entire data when \code{g = NULL}.
+% Grouped computations are performed by mapping the data to a sparse-array and then hash-mapping each group. This is often not much slower than using a larger hash-map for the entire data when \code{g = NULL}.
 
 \code{fndistinct} preserves all attributes of non-classed vectors / columns, and only the 'label' attribute (if available) of classed vectors / columns (i.e. dates or factors). When applied to data frames and matrices, the row-names are adjusted as necessary.
 
