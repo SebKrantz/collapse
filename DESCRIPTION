@@ -41,7 +41,7 @@ Description: A C/C++ based package for advanced data transformation and
     (5) List processing: Recursive list search, splitting, 
         extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.
     (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
-        summary statistics and descriptive tools (for panel data).
+        summary statistics and descriptive tools.
 URL: https://sebkrantz.github.io/collapse/,  
      https://github.com/SebKrantz/collapse,
      https://twitter.com/collapse_R
