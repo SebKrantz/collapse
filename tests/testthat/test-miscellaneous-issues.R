@@ -87,7 +87,7 @@ test_that("Using a factor with unused levels does not pose a problem to statisti
 
     # Other Statistical Functions
     for(i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), .FAST_STAT_FUN)) {
-      print(i)
+      # print(i)
       FUN <- match.fun(i)
       if(grepl("hd", i, ignore.case = TRUE)) {
         expect_equal(FUN(d, fl = f), FUN(d, fl = fd))

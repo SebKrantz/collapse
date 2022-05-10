@@ -537,16 +537,16 @@ test_that("Miscellaneous Issues with Integers", {
   expect_identical(fsum(-c(-2147483646L, -2L), na.rm = FALSE), 2147483648)
 })
 
-x <- as.integer(wlddev$year*1000000L)
+z <- as.integer(wlddev$year*1000000L)
 set.seed(101)
-xNA <- na_insert(x)
-g <- wlddev$iso3c
+zNA <- na_insert(z)
+gz <- wlddev$iso3c
 test_that("Integer overflow errors", {
   # With groups
-  expect_error(fsum(x, g))
-  expect_error(fsum(x, g, na.rm = FALSE))
-  expect_error(fsum(xNA, g))
-  expect_error(fsum(xNA, g, na.rm = FALSE))
+  expect_error(fsum(z, gz))
+  expect_error(fsum(z, gz, na.rm = FALSE))
+  expect_error(fsum(zNA, gz))
+  expect_error(fsum(zNA, gz, na.rm = FALSE))
 })
 
 }
