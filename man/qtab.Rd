@@ -6,14 +6,14 @@
 Fast (Weighted) Cross Tabulation
 }
 \description{
-A versatile and computationally more efficient alternative to \code{\link{table}}. Notably, it also supports tabulations with frequency weights, and computation of a statistic over combinations of variables.
+A versatile and computationally more efficient replacement for \code{\link{table}}. Notably, it also supports tabulations with frequency weights, and computation of a statistic over combinations of variables.
 }
 \usage{
 qtab(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
      dnn = "auto", sort = TRUE, na.exclude = TRUE,
      drop = FALSE, method = "auto")
 
-qtable(...) # Long-form: to facilitate replacement in codes using table()
+qtable(...) # Long-form: to facilitate replacement of table()
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
