@@ -846,7 +846,7 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   int nullg = isNull(g), nullw = isNull(w), l = length(x);
   if(l <= 1) return x;
   if(nullg && nullw) return mode_impl(x, asLogical(Rnarm), asInteger(Rret));
-  double *pw;
+  double tmp = 0.0, *pw = &tmp;
   if(!nullw) {
     if(length(w) != l) error("length(w) must match length(x)");
     if(TYPEOF(w) != REALSXP) {
@@ -895,7 +895,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     for(int j = 0; j < l; ++j) pout[j] = mode_impl(px[j], narm, ret);
   } else {
     int nrx = length(px[0]);
-    double *pw;
+    double tmp = 0.0, *pw = &tmp;
     if(!nullw) {
       if(length(w) != nrx) error("length(w) must match nrow(x)");
       if(TYPEOF(w) != REALSXP) {
@@ -949,7 +949,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
   if(l <= 1) return x; // Prevents seqfault for numeric(0) #101
   if(nthreads > col) nthreads = col;
 
-  double *pw;
+  double tmp = 0.0, *pw = &tmp;
   if(!nullw) {
     if(length(w) != l) error("length(w) must match nrow(x)");
     if(TYPEOF(w) != REALSXP) {
