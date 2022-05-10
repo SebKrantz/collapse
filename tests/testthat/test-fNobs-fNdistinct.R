@@ -7,7 +7,7 @@ xNA <- x
 xNA[sample.int(100,20)] <- NA
 f <- as.factor(sample.int(10, 100, TRUE))
 data <- fsubset(wlddev, iso3c %in% c("BLZ","IND","USA","SRB","GRL"))
-g <- GRP(droplevels(data$iso3c))
+g <- GRP.default(data$iso3c) # rev(), droplevels()
 dataNA <- na_insert(data)
 m <- as.matrix(data)
 mNA <- as.matrix(dataNA)
@@ -85,6 +85,14 @@ dataNA$LC <- NULL
 
 # fndistinct
 
+for (nth in 1:2) {
+
+  if(nth == 2L) {
+    if(Sys.getenv("OMP") == "TRUE") {
+      fndistinct <- function(x, ...) collapse::fndistinct(x, ..., nthreads = 2L)
+    } else break
+  }
+
 test_that("fndistinct performs like Ndistinct (defined above)", {
   expect_equal(fndistinct(NA), 0)
   expect_equal(fndistinct(NA, na.rm = FALSE), 1)
@@ -115,6 +123,16 @@ test_that("fndistinct performs like Ndistinct (defined above)", {
   expect_equal(fndistinct(data, g, na.rm = FALSE), BY(data, g, Ndistinct))
   expect_equal(fndistinct(dataNA, g, na.rm = FALSE), BY(dataNA, g, Ndistinct))
   expect_equal(fndistinct(dataNA, g), BY(dataNA, g, Ndistinct, na.rm = TRUE))
+
+  fg = as_factor_GRP(g)
+  expect_equal(fndistinct(m, fg), BY(m, g, Ndistinct, na.rm = TRUE))
+  expect_equal(fndistinct(m, fg, na.rm = FALSE), BY(m, g, Ndistinct))
+  expect_equal(fndistinct(mNA, fg, na.rm = FALSE), BY(mNA, g, Ndistinct))
+  expect_equal(fndistinct(mNA, fg), BY(mNA, g, Ndistinct, na.rm = TRUE))
+  expect_equal(fndistinct(data, fg), BY(data, g, Ndistinct, na.rm = TRUE))
+  expect_equal(fndistinct(data, fg, na.rm = FALSE), BY(data, g, Ndistinct))
+  expect_equal(fndistinct(dataNA, fg, na.rm = FALSE), BY(dataNA, g, Ndistinct))
+  expect_equal(fndistinct(dataNA, fg), BY(dataNA, g, Ndistinct, na.rm = TRUE))
 })
 
 test_that("fndistinct performs numerically stable", {
@@ -194,3 +212,5 @@ test_that("fndistinct produces errors for wrong input", {
   expect_visible(fndistinct(wlddev))
   expect_visible(fndistinct(wlddev, wlddev$iso3c))
 })
+
+}

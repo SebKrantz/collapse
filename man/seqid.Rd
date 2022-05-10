@@ -21,9 +21,9 @@ seqid(x, o = NULL, del = 1L, start = 1L, na.skip = FALSE,
 
   \item{del}{integer. The integer deliminating two consecutive points in a sequence. \code{del = 1} lets \code{seqid} track sequences of the form \code{c(1,2,3,..)}, \code{del = 2} tracks sequences \code{c(1,3,5,..)} etc.}
 
-  \item{start}{integer. The starting value of the resulting sequence id. Default is starting from 1. For C++ programmers, starting from 0 could be a better choice. }
+  \item{start}{integer. The starting value of the resulting sequence id. Default is starting from 1. }
 
-  \item{na.skip}{logical. Skip missing values in the sequence. The default behavior is skipping such that \code{seqid(c(1, NA, 2))} is regarded as one sequence and coded as \code{c(1, NA, 1)}.}
+  \item{na.skip}{logical. \code{TRUE} skips missing values in the sequence. The default behavior is skipping such that \code{seqid(c(1, NA, 2))} is regarded as one sequence and coded as \code{c(1, NA, 1)}.}
 
  \item{skip.seq}{logical. If \code{na.skip = TRUE}, this changes the behavior such that missing values are viewed as part of the sequence, i.e. \code{seqid(c(1, NA, 3))} is regarded as one sequence and coded as \code{c(1, NA, 1)}.}
 
@@ -42,14 +42,14 @@ The theory of the workaround was to express an irregular time series or panel se
 
 In general, for any regularly spaced panel the identity given by \code{identical(groupid(id, order(id, time)), seqid(time, order(id, time)))} should hold.
 
-Regularly spaced panels with gaps in time (such as a panel-survey with measurements every 2 years) can be handled either by \code{seqid(\dots, del = gap)} or, in most cases, simply by converting the time variable to factor using \code{\link{qF}}, which will make observations consecutive.
+% Regularly spaced panels with gaps in time (such as a panel-survey with measurements every 2 years) can be handled either by \code{seqid(\dots, del = gap)} or, in most cases, simply by converting the time variable to factor using \code{\link{qF}}, which will make observations consecutive.
 
 % \enumerate{
 % \item Sort the data in ascending order (e.g. using \code{data.table::setorder(data, time)} for time series and \code{data.table::setorder(data, id, time)} for panels)
 % \item Generate a new id variable using \code{seqid} (e.g. \code{settransform(data, newid = seqid(time))})
 % \item Use the new id to identify the data together with the time variable (e.g. compute a panel-lag using \code{L(data, 1, ~newid, ~time)} or create a panel data frame: \code{pdata <- plm::pdata.frame(data, index = c("newid", "time")); L(pdata)})
 % }
-There are potentially other more analytical applications for \code{seqid}\dots
+%There are potentially other more analytical applications for \code{seqid}\dots
 
 For the opposite operation of creating a new time-variable that is consecutive in each group, see \code{data.table::rowid}.
 
@@ -60,7 +60,7 @@ An integer vector of class 'qG'. See \code{\link{qG}}.
 }
 
 \seealso{
-\code{\link{groupid}}, \code{\link{qG}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{timeid}}, \code{\link{groupid}}, \code{\link{qG}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 
 }
 \examples{

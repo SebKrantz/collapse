@@ -20,7 +20,7 @@ varying(x, ...)
 
 \method{varying}{data.frame}(x, by = NULL, cols = NULL, any_group = TRUE, use.g.names = TRUE, drop = TRUE, ...)
 
-# Methods for compatibility with plm:
+# Methods for indexed data / compatibility with plm:
 
 \method{varying}{pseries}(x, effect = 1L, any_group = TRUE, use.g.names = TRUE, ...)
 
@@ -40,7 +40,7 @@ varying(x, ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{x}{a vector, matrix, data.frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df'). Data must not be numeric.}
+    \item{x}{a vector, matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df'). Data must not be numeric.}
 
 \item{g}{a factor, \code{GRP} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{GRP} object) used to group \code{x}.}
 
@@ -54,7 +54,7 @@ varying(x, ...)
 
 \item{drop}{\emph{matrix and data.frame methods:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if the result is 1-dimensional.}
 
-\item{effect}{\emph{plm} methods: Select the panel identifier by which variation in the data should be examined. 1L takes the first variable in the \code{plm::index}, 2L the second etc.. Index variables can also be called by name. More than one index variable can be supplied, which will be interacted.}
+\item{effect}{\emph{plm} methods: Select the panel identifier by which variation in the data should be examined. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc.. Index variables can also be called by name. More than one index variable can be supplied, which will be interacted.}
 
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 

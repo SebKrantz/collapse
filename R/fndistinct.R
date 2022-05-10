@@ -1,84 +1,47 @@
 
-
-# For foundational changes to this code see fsum.R
-# Note: matrix method needs memory equal to size of the object, while data.frame method does not need any memory ?!
-
 fndistinct <- function(x, ...) UseMethod("fndistinct") # , x
 
-fndistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fndistinct.matrix(x, g, TRA, na.rm, use.g.names, ...))
+fndistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, nthreads = 1L, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fndistinct.matrix(x, g, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
+  if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
+  res <- .Call(C_fndistinct,x,g,na.rm,nthreads)
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
-    if(is.null(g)) return(.Call(Cpp_fndistinct,x,0L,0L,NULL,na.rm))
-    if(is.atomic(g)) {
-      if(use.g.names) {
-        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
-        lev <- attr(g, "levels")
-        return(`names<-`(.Call(Cpp_fndistinct,x,length(lev),g,NULL,na.rm), lev))
-      }
-      if(is.nmfactor(g)) return(.Call(Cpp_fndistinct,x,fnlevels(g),g,NULL,na.rm))
-      g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fndistinct,x,attr(g,"N.groups"),g,NULL,na.rm))
-    }
-    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names) return(`names<-`(.Call(Cpp_fndistinct,x,g[[1L]],g[[2L]],g[[3L]],na.rm), GRPnames(g)))
-    return(.Call(Cpp_fndistinct,x,g[[1L]],g[[2L]],g[[3L]],na.rm))
+    if(is.null(g)) return(res)
+    if(use.g.names) names(res) <- GRPnames(g, FALSE)
+    return(res)
   }
-  if(is.null(g)) return(TRAC(x,.Call(Cpp_fndistinct,x,0L,0L,NULL,na.rm),0L,TRA, ...))
-  g <- G_guo(g)
-  TRAC(x,.Call(Cpp_fndistinct,x,g[[1L]],g[[2L]],g[[3L]],na.rm),g[[2L]],TRA, ...)
+  TRAC(x,res,g[[2L]],TRA, ...)
 }
 
-fndistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fndistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...) {
+  if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
+  res <- .Call(C_fndistinctm,x,g,na.rm,drop,nthreads)
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
-    if(is.null(g)) return(.Call(Cpp_fndistinctm,x,0L,0L,NULL,na.rm,drop))
-    if(is.atomic(g)) {
-      if(use.g.names) {
-        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
-        lev <- attr(g, "levels")
-        return(`dimnames<-`(.Call(Cpp_fndistinctm,x,length(lev),g,NULL,na.rm,FALSE), list(lev, dimnames(x)[[2L]])))
-      }
-      if(is.nmfactor(g)) return(.Call(Cpp_fndistinctm,x,fnlevels(g),g,NULL,na.rm,FALSE))
-      g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fndistinctm,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE))
-    }
-    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names) return(`dimnames<-`(.Call(Cpp_fndistinctm,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE), list(GRPnames(g), dimnames(x)[[2L]])))
-    return(.Call(Cpp_fndistinctm,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE))
+    if(is.null(g)) return(res)
+    if(use.g.names) dimnames(res)[[1L]] <- GRPnames(g)
+    return(res)
   }
-  if(is.null(g)) return(TRAmC(x,.Call(Cpp_fndistinctm,x,0L,0L,NULL,na.rm,TRUE),0L,TRA, ...))
-  g <- G_guo(g)
-  TRAmC(x,.Call(Cpp_fndistinctm,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TRA, ...)
+  TRAmC(x,res,g[[2L]],TRA, ...)
 }
 
-fndistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fndistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...) {
+  if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
+  res <- .Call(C_fndistinctl,x,g,na.rm,drop,nthreads)
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
-    if(is.null(g)) return(.Call(Cpp_fndistinctl,x,0L,0L,NULL,na.rm,drop))
-    if(is.atomic(g)) {
-      if(use.g.names && !inherits(x, "data.table")) {
-        if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
-        lev <- attr(g, "levels")
-        return(setRnDF(.Call(Cpp_fndistinctl,x,length(lev),g,NULL,na.rm,FALSE), lev))
-      }
-      if(is.nmfactor(g)) return(.Call(Cpp_fndistinctl,x,fnlevels(g),g,NULL,na.rm,FALSE))
-      g <- qG(g, na.exclude = FALSE)
-      return(.Call(Cpp_fndistinctl,x,attr(g,"N.groups"),g,NULL,na.rm,FALSE))
-    }
-    if(!is_GRP(g)) g <- GRP.default(g, return.groups = use.g.names, call = FALSE)
-    if(use.g.names && !inherits(x, "data.table") && length(groups <- GRPnames(g)))
-      return(setRnDF(.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE), groups))
-    return(.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE))
+    if(is.null(g)) return(res)
+    if(use.g.names && !inherits(x, "data.table") && length(gn <- GRPnames(g)))
+      attr(res, "row.names") <- gn
+    return(res)
   }
-  if(is.null(g)) return(TRAlC(x,.Call(Cpp_fndistinctl,x,0L,0L,NULL,na.rm,TRUE),0L,TRA, ...))
-  g <- G_guo(g)
-  TRAlC(x,.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TRA, ...)
+  TRAlC(x,res,g[[2L]],TRA, ...)
 }
 
 fndistinct.list <- function(x, ...) fndistinct.data.frame(x, ...)
 
-fndistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+fndistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, nthreads = 1L, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
@@ -95,21 +58,21 @@ fndistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FAL
       if(gl) {
         if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], nam[-gn])
-          return(setAttributes(c(g[[4L]],.Call(Cpp_fndistinctl,x[-gn],g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE)), ax))
+          return(setAttributes(c(g[[4L]],.Call(C_fndistinctl,x[-gn],g,na.rm,FALSE,nthreads)), ax))
         }
         ax[["names"]] <- nam[-gn]
-        return(setAttributes(.Call(Cpp_fndistinctl,x[-gn],g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE), ax))
+        return(setAttributes(.Call(C_fndistinctl,x[-gn],g,na.rm,FALSE,nthreads), ax))
       } else if(keep.group_vars) {
         ax[["names"]] <- c(g[[5L]], nam)
-        return(setAttributes(c(g[[4L]],.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE)), ax))
-      } else return(setAttributes(.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE), ax))
+        return(setAttributes(c(g[[4L]],.Call(C_fndistinctl,x,g,na.rm,FALSE,nthreads)), ax))
+      } else return(setAttributes(.Call(C_fndistinctl,x,g,na.rm,FALSE,nthreads), ax))
     } else if(keep.group_vars) {
       ax[["names"]] <- c(nam[gn], nam[-gn])
-      return(setAttributes(c(x[gn],TRAlC(x[-gn],.Call(Cpp_fndistinctl,x[-gn],g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TRA, ...)), ax))
+      return(setAttributes(c(x[gn],TRAlC(x[-gn],.Call(C_fndistinctl,x[-gn],g,na.rm,FALSE,nthreads),g[[2L]],TRA, ...)), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(TRAlC(x[-gn],.Call(Cpp_fndistinctl,x[-gn],g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TRA, ...), ax))
-  } else return(TRAlC(x,.Call(Cpp_fndistinctl,x,g[[1L]],g[[2L]],g[[3L]],na.rm,FALSE),g[[2L]],TRA, ...))
+    return(setAttributes(TRAlC(x[-gn],.Call(C_fndistinctl,x[-gn],g,na.rm,FALSE,nthreads),g[[2L]],TRA, ...), ax))
+  } else return(TRAlC(x,.Call(C_fndistinctl,x,g,na.rm,FALSE,nthreads),g[[2L]],TRA, ...))
 }
 
 

@@ -37,33 +37,33 @@ Efficiently select and replace (or add) a subset of columns from (to) a data fra
 ## Select and replace variables, analgous to dplyr::select but significantly faster
 fselect(.x, \dots, return = "data")
 fselect(x, \dots) <- value
-slt(.x, \dots, return = "data")   # Shortcut for fselect
-slt(x, \dots) <- value            # Shortcut for fselect<-
+slt(.x, \dots, return = "data")   # Shorthand for fselect
+slt(x, \dots) <- value            # Shorthand for fselect<-
 
 ## Select and replace columns by names, indices, logical vectors,
 ## regular expressions or using functions to identify columns
 
 get_vars(x, vars, return = "data", regex = FALSE, \dots)
-      gv(x, vars, return = "data", \dots)     # Shortcut for get_vars
-     gvr(x, vars, return = "data", \dots)     # Shortcut for get_vars(\dots, regex = TRUE)
+      gv(x, vars, return = "data", \dots)   # Shorthand for get_vars
+     gvr(x, vars, return = "data", \dots)   # Shorthand for get_vars(..., regex = TRUE)
 
 get_vars(x, vars, regex = FALSE, \dots) <- value
-      gv(x, vars, \dots) <- value             # Shortcut for get_vars<-
-     gvr(x, vars, \dots) <- value             # Shortcut for get_vars<-(\dots, regex = TRUE)
+      gv(x, vars, \dots) <- value           # Shorthand for get_vars<-
+     gvr(x, vars, \dots) <- value           # Shorthand for get_vars<-(..., regex = TRUE)
 
 ## Add columns at any position within a data.frame
 
 add_vars(x, \dots, pos = "end")
 add_vars(x, pos = "end") <- value
-      av(x, \dots, pos = "end")               # Shortcut for add_vars
-      av(x, pos = "end") <- value           # Shortcut for add_vars<-
+      av(x, \dots, pos = "end")             # Shorthand for add_vars
+      av(x, pos = "end") <- value         # Shorthand for add_vars<-
 
 ## Select and replace columns by data type
 
 num_vars(x, return = "data")
 num_vars(x) <- value
-      nv(x, return = "data")       # Shortcut for num_vars
-      nv(x) <- value               # Shortcut for num_vars<-
+      nv(x, return = "data")       # Shorthand for num_vars
+      nv(x) <- value               # Shorthand for num_vars<-
 cat_vars(x, return = "data")       # Categorical variables, see is_categorical
 cat_vars(x) <- value
 char_vars(x, return = "data")
@@ -89,7 +89,7 @@ date_vars(x) <- value
                  5 \tab\tab "logical"   \tab\tab logical selection vector \cr
                  6 \tab\tab "named_logical"     \tab\tab named logical vector \cr
   }
-  \emph{Note}: replacement functions only replace data, However column names are replaced together with the data (if available).
+  \emph{Note}: replacement functions only replace data, however column names are replaced together with the data (if available).
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}. Matching is done using \code{\link{grep}}.}
 \item{pos}{the position where columns are added in the data frame. \code{"end"} (default) will append the data frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
@@ -101,7 +101,7 @@ date_vars(x) <- value
 
 Similarly type-wise operations like \code{data[sapply(data, is.numeric)]} or \code{data[sapply(data, is.numeric)] <- value} are facilitated and more efficient using \code{num_vars(data)} and \code{num_vars(data) <- value} or the shortcuts \code{nv} and \code{nv<-} etc.
 
-\code{fselect} provides an efficient alternative to \code{dplyr::select}, allowing the selection of variables based on expressions evaluated within the data frame, see Examples. It is about 100x faster than \code{dplyr::select} but also more simple as it does not provide special methods for grouped tibbles.
+\code{fselect} provides an efficient alternative to \code{dplyr::select}, allowing the selection of variables based on expressions evaluated within the data frame, see Examples. It is about 100x faster than \code{dplyr::select} but also more simple as it does not provide special methods (except for 'sf' and 'data.table' which are handled internally) .
 
 Finally, \code{add_vars(data1, data2, data3, \dots)} is a lot faster than \code{cbind(data1, data2, data3, \dots)}, and preserves the attributes of \code{data1} (i.e. it is like adding columns to \code{data1}). The replacement function \code{add_vars(data) <- someFUN(get_vars(data, cols))} efficiently appends \code{data} with computed columns. The \code{pos} argument allows adding columns at positions other than the end (right) of the data frame, see Examples.
 

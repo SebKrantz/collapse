@@ -54,6 +54,7 @@ extern SEXP sym_sorted;
 // extern SEXP sym_starts;
 // extern SEXP char_starts;
 extern SEXP sym_index;
+extern SEXP sym_index_df;
 extern SEXP sym_inherits;
 extern SEXP sym_sf_column;
 extern SEXP SelfRefSymbol;

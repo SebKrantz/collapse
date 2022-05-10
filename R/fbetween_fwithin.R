@@ -15,7 +15,9 @@ fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta
 
 fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- group_effect(x, effect)
+  if(is.matrix(x))
+  .Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE) else
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -37,7 +39,7 @@ fwithin.list <- function(x, ...) fwithin.data.frame(x, ...)
 
 fwithin.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- group_effect(x, effect)
   .Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
@@ -45,16 +47,20 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
                                keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
-    gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn,wn)
+
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn2 %in% wn)) stop("Weights coincide with grouping variables!")
+      gn2 <- c(gn2, wn)
+      if(keep.w) gn <- c(gn, wn)
+    }
   }
+
   if(length(gn2)) {
     ax <- attributes(x)
     ax[["names"]] <- c(nam[gn], nam[-gn2]) # first term is removed if !length(gn)
@@ -83,16 +89,20 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
                          stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
-    gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn, wn)
+
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn2 %in% wn)) stop("Weights coincide with grouping variables!")
+      gn2 <- c(gn2, wn)
+      if(keep.w) gn <- c(gn, wn)
+    }
   }
+
   if(length(gn2)) {
     ax <- attributes(x)
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
@@ -109,11 +119,10 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   ax <- attributes(x)
   class(x) <- NULL
   nam <- names(x)
-  g <- if(length(effect) == 1L) .subset2(getpix(ax[["index"]]), effect) else
-    finteraction(.subset(getpix(ax[["index"]]), effect))
+  g <- group_effect(x, effect)
 
   if(keep.ids) {
-    gn <- which(nam %in% attr(getpix(ax[["index"]]), "names"))
+    gn <- which(nam %in% attr(findex(x), "names"))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
@@ -207,7 +216,9 @@ fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, 
 
 fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- group_effect(x, effect)
+  if(is.matrix(x))
+  .Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill) else
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill)
 }
 
@@ -229,7 +240,7 @@ fbetween.list <- function(x, ...) fbetween.data.frame(x, ...)
 
 fbetween.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  g <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  g <- group_effect(x, effect)
   .Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill)
 }
 
@@ -237,16 +248,20 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
                                 keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
-    gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn,wn)
+
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn2 %in% wn)) stop("Weights coincide with grouping variables!")
+      gn2 <- c(gn2, wn)
+      if(keep.w) gn <- c(gn, wn)
+    }
   }
+
   if(length(gn2)) {
     ax <- attributes(x)
     ax[["names"]] <- c(nam[gn], nam[-gn2]) # first term is removed if !length(gn)
@@ -276,16 +291,20 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
                          stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- which(nam %in% g[[5L]])
   gn <- if(keep.group_vars) gn2 else NULL
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn2 == wn)) stop("Weights coincide with grouping variables!")
-    gn2 <- c(gn2,wn)
-    if(keep.w) gn <- c(gn, wn)
+
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn2 %in% wn)) stop("Weights coincide with grouping variables!")
+      gn2 <- c(gn2, wn)
+      if(keep.w) gn <- c(gn, wn)
+    }
   }
+
   if(length(gn2)) {
     ax <- attributes(x)
     ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
@@ -301,11 +320,10 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   ax <- attributes(x)
   class(x) <- NULL
   nam <- names(x)
-  g <- if(length(effect) == 1L) .subset2(getpix(ax[["index"]]), effect) else
-    finteraction(.subset(getpix(ax[["index"]]), effect))
+  g <- group_effect(x, effect)
 
   if(keep.ids) {
-    gn <- which(nam %in% attr(getpix(ax[["index"]]), "names"))
+    gn <- which(nam %in% attr(findex(x), "names"))
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 

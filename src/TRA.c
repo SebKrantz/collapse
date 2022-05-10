@@ -57,10 +57,11 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
   int tx = TYPEOF(x), txAG = TYPEOF(xAG), l = length(x), gs = length(g);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg = &l, nog = gs == 1;
+  int *pg = &l, nog = gs <= 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
+    if(TYPEOF(g) != INTSXP) error("g must be integer typed, please report this as g should have been internally grouped");
     if(gs != l) error("length(g) must match NROW(x)");
     pg = INTEGER(g);
   }
@@ -171,10 +172,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
 
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg = &l, nog = gs == 1;
+  int *pg = &l, nog = gs <= 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
+    if(TYPEOF(g) != INTSXP) error("g must be integer typed, please report this as g should have been internally grouped");
     if(gs != l) error("length(g) must match NROW(x)");
     pg = INTEGER(g); // Wmaybe uninitialized
   }
@@ -336,10 +338,11 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
   int l = length(x), gs = length(g), tx = TYPEOF(x), txAG = TYPEOF(xAG);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
 
-  int *pg = &l, nog = gs == 1;
+  int *pg = &l, nog = gs <= 1;
   if(nog) {
     if(length(xAG) != 1) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
+    if(TYPEOF(g) != INTSXP) error("g must be integer typed, please report this as g should have been internally grouped");
     if(gs != l) error("length(g) must match NROW(x)");
     pg = INTEGER(g); // Wmaybe uninitialized
   }
@@ -439,7 +442,7 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
 
   SEXP out = set == 0 ? PROTECT(allocVector(REALSXP, l)) : x;
 
-  if(gs == 1) {
+  if(gs <= 1) {
       if(length(xAG) != 1) error("If g = NULL, STATS needs to be an atomic element!");
       if(txAG != REALSXP && txAG != INTSXP && txAG != LGLSXP) error("for these transformations STATS needs to be numeric!");
 
@@ -498,6 +501,7 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
 
 
   } else {
+      if(TYPEOF(g) != INTSXP) error("g must be integer typed, please report this as g should have been internally grouped");
       if(gs != l) error("length(g) must match nrow(x)");
       int *pg = INTEGER(g);
 
@@ -675,16 +679,18 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
   if(isNull(dim)) error("x is not a matrix");
   if(length(Rret) != 1) error("can only perform one transformation at a time");
   int tx = TYPEOF(x), txAG = TYPEOF(xAG), gs = length(g),
-    row = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g), ng = 0,
+    row = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = &gs, ng = 0,
     set = asLogical(Rset),
     ret = (TYPEOF(Rret) == STRSXP) ? TtI(Rret) : asInteger(Rret),
-    nog = gs == 1;
+    nog = gs <= 1;
 
   if(nog) {
     if(length(xAG) != col) error("If g = NULL, NROW(STATS) needs to be 1");
   } else {
+    if(TYPEOF(g) != INTSXP) error("g must be integer typed, please report this as g should have been internally grouped");
     if(gs != row) error("length(g) must match ncol(x)");
     if(ncols(xAG) != col) error("ncol(STATS) must match ncol(x)");
+    pg = INTEGER(g);
     ng = nrows(xAG);
   }
 

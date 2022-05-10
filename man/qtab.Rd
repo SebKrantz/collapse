@@ -1,16 +1,19 @@
-\name{qtable}
+\name{qtab}
+\alias{qtab}
 \alias{qtable}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Weighted) Cross Tabulation
 }
 \description{
-A versatile and computationally more efficient alternative to \code{\link{table}}. Notably, it also supports tabulations with frequency weights, and computation of a statistic over combinations of variables.
+A versatile and computationally more efficient replacement for \code{\link{table}}. Notably, it also supports tabulations with frequency weights, and computation of a statistic over combinations of variables.
 }
 \usage{
-qtable(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
-       dnn = "auto", sort = TRUE, na.exclude = TRUE,
-       drop = FALSE, method = "auto")
+qtab(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
+     dnn = "auto", sort = TRUE, na.exclude = TRUE,
+     drop = FALSE, method = "auto")
+
+qtable(...) # Long-form: to facilitate replacement of table()
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -21,7 +24,7 @@ atomic vectors or factors spanning the table dimensions, (optionally) with tags 
   a single vector to aggregate over the table dimensions e.g. a vector of frequency weights.
 }
   \item{wFUN}{
-a function or function-string used to aggregate \code{w} over the table dimensions. The default \code{NULL} computes the sum of the non-missing weights via an optimized internal algorithm. \link[=fast-statistical-functions]{Fast Statistical Functions} passed also receive vectorized execution, but some of them like \code{\link{fmedian}} give errors for zero-frequencies (in that case use base R equivalents, see Examples).
+a function used to aggregate \code{w} over the table dimensions. The default \code{NULL} computes the sum of the non-missing weights via an optimized internal algorithm. \link[=fast-statistical-functions]{Fast Statistical Functions} also receive vectorized execution.
 }
 \item{wFUN.args}{
 a list of (optional) further arguments passed to \code{wFUN}. See Examples.
@@ -47,7 +50,7 @@ arguments passed down to \code{\link{qF}}:
 }
 
 \value{
-An array of class 'qtable' that inherits from 'table'. Thus all 'table' methods apply to it.
+An array of class 'qtab' that inherits from 'table'. Thus all 'table' methods apply to it.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -57,42 +60,42 @@ An array of class 'qtable' that inherits from 'table'. Thus all 'table' methods 
 }
 \examples{
 ## Basic use
-qtable(iris$Species)
-with(mtcars, qtable(vs, am))
-qtable(mtcars[.c(vs, am)])
+qtab(iris$Species)
+with(mtcars, qtab(vs, am))
+qtab(mtcars[.c(vs, am)])
 
 library(magrittr)
-iris \%$\% qtable(Sepal.Length > mean(Sepal.Length), Species)
-iris \%$\% qtable(AMSL = Sepal.Length > mean(Sepal.Length), Species)
+iris \%$\% qtab(Sepal.Length > mean(Sepal.Length), Species)
+iris \%$\% qtab(AMSL = Sepal.Length > mean(Sepal.Length), Species)
 
 ## World after 2015
 wlda15 <- wlddev \%>\% fsubset(year >= 2015) \%>\% collap(~ iso3c)
 
 # Regions and income levels (country frequency)
-wlda15 \%$\% qtable(region, income)
-wlda15 \%$\% qtable(region, income, dnn = vlabels)
-wlda15 \%$\% qtable(region, income, dnn = "namlab")
+wlda15 \%$\% qtab(region, income)
+wlda15 \%$\% qtab(region, income, dnn = vlabels)
+wlda15 \%$\% qtab(region, income, dnn = "namlab")
 
 # Population (millions)
-wlda15 \%$\% qtable(region, income, w = POP) \%>\% divide_by(1e6)
+wlda15 \%$\% qtab(region, income, w = POP) \%>\% divide_by(1e6)
 
 # Life expectancy (years)
-wlda15 \%$\% qtable(region, income, w = LIFEEX, wFUN = fmean)
+wlda15 \%$\% qtab(region, income, w = LIFEEX, wFUN = fmean)
 
 # Life expectancy (years), weighted by population
-wlda15 \%$\% qtable(region, income, w = LIFEEX, wFUN = fmean,
+wlda15 \%$\% qtab(region, income, w = LIFEEX, wFUN = fmean,
                   wFUN.args = list(w = POP))
 
-# GDP per capita (constant 2010 US$): median (fmedian gives error)
-wlda15 \%$\% qtable(region, income, w = PCGDP, wFUN = median,
+# GDP per capita (constant 2010 US$): median
+wlda15 \%$\% qtab(region, income, w = PCGDP, wFUN = fmedian,
                   wFUN.args = list(na.rm = TRUE))
 
 # GDP per capita (constant 2010 US$): median, weighted by population
-wlda15 \%$\% qtable(region, income, w = PCGDP, wFUN = fmedian,
+wlda15 \%$\% qtab(region, income, w = PCGDP, wFUN = fmedian,
                   wFUN.args = list(w = POP))
 
 # Including OECD membership
-tab <- wlda15 \%$\% qtable(region, income, OECD)
+tab <- wlda15 \%$\% qtab(region, income, OECD)
 tab
 
 # Various 'table' methods

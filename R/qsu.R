@@ -24,7 +24,7 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
 
 qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, stable.algo = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  pid <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  pid <- group_effect(x, effect)
   if(is.null(g)) return(fbstatsCpp(x,higher,0L,0L,fnlevels(pid),pid,w,stable.algo))
   if(is.atomic(g)) {
     if(!is.nmfactor(g)) g <- qF(g, na.exclude = FALSE)
@@ -82,7 +82,7 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     } else pidn <- NULL
     if(formw) {
       widn <- ckmatch(all.vars(w), nam)
-      w <- x[[widn]]
+      w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[widn]]
     } else widn <- NULL
     if(is.null(v)) {
       x <- if(is.null(cols)) x[-c(byn, pidn, widn)] else x[cols2int(cols, x, nam, FALSE)]
@@ -123,7 +123,8 @@ qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FAL
 
 qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  pid <- if(length(effect) == 1L) .subset2(getpix(attr(x, "index")), effect) else finteraction(.subset(getpix(attr(x, "index")), effect))
+  pid <- group_effect(x, effect)
+  x <- unindex(x)
 
   formby <- is.call(by)
   formw <- is.call(w)
@@ -142,7 +143,7 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
     } else byn <- NULL
     if(formw) {
       widn <- ckmatch(all.vars(w), nam)
-      w <- x[[widn]]
+      w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[widn]]
     } else widn <- NULL
     if(is.null(v)) {
       x <- if(is.null(cols)) x[-c(byn, widn)] else x[cols2int(cols, x, nam, FALSE)]

@@ -17,7 +17,7 @@
 Auto- and Cross- Covariance and Correlation Function Estimation for Panel Series
 }
 \description{
-\code{psacf}, \code{pspacf} and \code{psccf} compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors and \code{plm::pseries}. They are analogues to \code{\link{acf}}, \code{\link{pacf}} and \code{\link{ccf}}.
+\code{psacf}, \code{pspacf} and \code{psccf} compute (and by default plot) estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel series. They are analogues to \code{\link{acf}}, \code{\link{pacf}} and \code{\link{ccf}}.
 }
 \usage{
 psacf(x, \dots)
@@ -30,16 +30,18 @@ psccf(x, y, \dots)
 \method{psccf}{default}(x, y, g, t = NULL, lag.max = NULL, type = c("correlation", "covariance"),
       plot = TRUE, gscale = TRUE, \dots)
 
+\method{psacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
+      type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, \dots)
+\method{pspacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
+       plot = TRUE, gscale = TRUE, \dots)
+
+# Methods for indexed data / compatibility with plm:
+
 \method{psacf}{pseries}(x, lag.max = NULL, type = c("correlation", "covariance","partial"),
       plot = TRUE, gscale = TRUE, \dots)
 \method{pspacf}{pseries}(x, lag.max = NULL, plot = TRUE, gscale = TRUE, \dots)
 \method{psccf}{pseries}(x, y, lag.max = NULL, type = c("correlation", "covariance"),
       plot = TRUE, gscale = TRUE, \dots)
-
-\method{psacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
-      type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, \dots)
-\method{pspacf}{data.frame}(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
-       plot = TRUE, gscale = TRUE, \dots)
 
  \method{psacf}{pdata.frame}(x, cols = is.numeric, lag.max = NULL,
       type = c("correlation", "covariance","partial"), plot = TRUE, gscale = TRUE, \dots)
@@ -47,12 +49,10 @@ psccf(x, y, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-\item{x, y}{a numeric vector, panel series (\code{plm::pseries}), data frame or
-panel data-frame (\code{plm::pdata.frame}).}
-  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x, y}. }
+  \item{x, y}{a numeric vector, 'indexed_series' ('pseries'), data frame or 'indexed_frame' ('pdata.frame').}
+  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same input as \code{g}, but also allows one- or two-sided formulas using the variables in \code{x}, i.e. \code{~ idvar} or \code{var1 + var2 ~ idvar1 + idvar2}.}
-
-    \item{t}{same input as g, to indicate the time-variable(s). For secure computations on unordered panel-vectors. Data frame method also allows one-sided formula i.e. \code{~time}.}
+  \item{t}{a time vector or list of vectors. See \code{\link{flag}}.}
     \item{cols}{\emph{data.frame method}: Select columns using a function, column names, indices or a logical vector. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{lag.max}{integer. Maximum lag at which to calculate the acf. Default is \code{2*sqrt(length(x)/ng)} where \code{ng} is the number of groups in the panel series / supplied to \code{g}.}
 \item{type}{character. String giving the type of acf to be computed. Allowed values are "correlation" (the default), "covariance" or "partial".}
@@ -73,13 +73,13 @@ An object of class 'acf', see \code{\link{acf}}. The result is returned invisibl
 % \author{
 %%  ~~who you are~~
 % }
-\note{
+%\note{
 % \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{\link{cor} to correlate \code{x} with it's lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and it's lag).
 
-For \code{plm::pseries} and \code{plm::pdata.frame}, the first index variable is assumed to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
+% For \code{plm::pseries} and \code{plm::pdata.frame}, the first index variable is assumed to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
 
-The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' will not work.
-}
+%The \code{pdata.frame} method only works for properly subsetted objects of class 'pdata.frame'. A list of 'pseries' will not work.
+%}
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
@@ -98,17 +98,17 @@ psccf(wlddev$PCGDP, wlddev$LIFEEX, wlddev$country)              # CCF with Life-
 psacf(wlddev, PCGDP + LIFEEX + ODA ~ country, ~year)            # ACF and CCF of GDP, LIFEEX and ODA
 psacf(wlddev, ~ country, ~year, c(9:10,12))                     # Same, using cols argument
 pspacf(wlddev, ~ country, ~year, c(9:10,12))                    # Partial ACF
-\donttest{ % No code relying on suggested package
-## Using plm:
-pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))# Creating a Panel Data Frame
-PCGDP <- pwlddev$PCGDP                                          # Panel Series  of GDP per Capita
-LIFEEX <- pwlddev$LIFEEX                                        # Panel Series  of Life Expectancy
-psacf(PCGDP)                                                    # Same as above, more parsimonious
+
+## Using indexed data:
+wldi <- findex_by(wlddev, iso3c, year)  # Creating a indexed frame
+PCGDP <- wldi$PCGDP                     # Indexed Series of GDP per Capita
+LIFEEX <- wldi$LIFEEX                   # Indexed Series of Life Expectancy
+psacf(PCGDP)                            # Same as above, more parsimonious
 pspacf(PCGDP)
 psccf(PCGDP, LIFEEX)
-psacf(pwlddev[c(9:10,12)])
-pspacf(pwlddev[c(9:10,12)])
-}
+psacf(wldi[c(9:10,12)])
+pspacf(wldi[c(9:10,12)])
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

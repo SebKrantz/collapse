@@ -29,16 +29,8 @@ TRAlC <- function(x, xAG, g = 0L, ret = 1L, set = FALSE, ...) {
   .Call(C_TRAl, x, xAG, g, ret, set)
 }
 
-fndistinctCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE) {
-    .Call(Cpp_fndistinct, x, ng, g, gs, narm)
-}
-
-fndistinctlCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fndistinctl, x, ng, g, gs, narm, drop)
-}
-
-fndistinctmCpp <- function(x, ng = 0L, g = 0L, gs = NULL, narm = TRUE, drop = TRUE) {
-    .Call(Cpp_fndistinctm, x, ng, g, gs, narm, drop)
+fndistinctC <- function(x, g = NULL, narm = TRUE, nthreads = 1L) {
+    .Call(C_fndistinct, x, g, narm, nthreads)
 }
 
 pwnobsmCpp <- function(x) {
@@ -97,28 +89,16 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(Cpp_flagleadl, x, n, fill, ng, g, t, names)
 }
 
-fnthCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L) {
-  .Call(Cpp_fnth, x, n, ng, g, gs, w, narm, ret)
+fnthCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L, nthreads = 1L) {
+  .Call(Cpp_fnth, x, n, ng, g, gs, w, narm, ret, nthreads)
 }
 
-fnthmCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L) {
-  .Call(Cpp_fnthm, x, n, ng, g, gs, w, narm, drop, ret)
+fnthmCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L, nthreads = 1L) {
+  .Call(Cpp_fnthm, x, n, ng, g, gs, w, narm, drop, ret, nthreads)
 }
 
-fnthlCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L) {
-  .Call(Cpp_fnthl, x, n, ng, g, gs, w, narm, drop, ret)
-}
-
-fmodeCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
-    .Call(Cpp_fmode, x, ng, g, gs, w, narm, ret)
-}
-
-fmodelCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 0L) {
-    .Call(Cpp_fmodel, x, ng, g, gs, w, narm, ret)
-}
-
-fmodemCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 0L) {
-    .Call(Cpp_fmodem, x, ng, g, gs, w, narm, drop, ret)
+fnthlCpp <- function(x, n = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L, nthreads = 1L) {
+  .Call(Cpp_fnthl, x, n, ng, g, gs, w, narm, drop, ret, nthreads)
 }
 
 fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {

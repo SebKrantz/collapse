@@ -57,7 +57,7 @@ With groups passed to \code{g}, \code{STATS} needs to be of the same type as \co
 
 For example Let \code{x = c(1.2, 4.6, 2.5, 9.1, 8.7, 3.3)}, g is an integer vector in 3 groups \code{g = c(1,3,3,2,1,2)} and \code{STATS = fmean(x,g) = c(4.95, 6.20, 3.55)}. Then \code{out = TRA(x,STATS,"-",g) = c(-3.75,  1.05, -1.05,  2.90,  3.75, -2.90)} [same as \code{fmean(x, g, TRA = "-")}] does the equivalent of the following for-loop: \code{for(i in 1:6) out[i] = x[i] - STATS[g[i]]}.
 
-Correct computation requires that \code{g} as used in \code{fmean} and \code{g} passed to \code{TRA} are exactly the same vector. Using \code{g = c(1,3,3,2,1,2)} for \code{fmean} and \code{g = c(3,1,1,2,3,2)} for \code{TRA} will not give the right result. The safest way of programming with \code{TRA} is thus to repeatedly employ the same factor or \code{\link{GRP}} object for all grouped computations. Atomic vectors passed to \code{g} will be converted to factors (see \code{\link{qF}}) and lists will be converted to \code{\link{GRP}} objects. This is also done by all \link[=fast-statistical-functions]{Fast Statistical Functions} and by default by \code{\link{BY}}, thus together with these functions, \code{TRA} can also safely be used with atomic- or list-groups. Problems may arise if functions from other packages internally group atomic vectors or lists in a non-sorted way. [\emph{Note}: \code{as.factor} conversions are ok as this also involves sorting.]
+Correct computation requires that \code{g} as used in \code{fmean} and \code{g} passed to \code{TRA} are exactly the same vector. Using \code{g = c(1,3,3,2,1,2)} for \code{fmean} and \code{g = c(3,1,1,2,3,2)} for \code{TRA} will not give the right result. The safest way of programming with \code{TRA} is thus to repeatedly employ the same factor or \code{\link{GRP}} object for all grouped computations. Atomic vectors passed to \code{g} will be converted to factors (see \code{\link{qF}}) and lists will be converted to \code{\link{GRP}} objects. This is also done by all \link[=fast-statistical-functions]{Fast Statistical Functions} and \code{\link{BY}}, thus together with these functions, \code{TRA} can also safely be used with atomic- or list-groups (as long as all functions apply sorted grouping, which is the default in \emph{collapse}). %Problems may arise if functions from other packages internally group atomic vectors or lists in a non-sorted way. [\emph{Note}: \code{as.factor} conversions are ok as this also involves sorting.]
 
 %In contrast to the other methods, \code{TRA.grouped_df} matches column names exactly, thus \code{STATS} can be any subset of aggregated columns in \code{x} in any order, with or without grouping columns. \code{TRA.grouped_df} will transform the columns in \code{x} with their aggregated versions matched from \code{STATS} (ignoring grouping columns found in \code{x} or \code{STATS} and columns in \code{x} not found in \code{STATS}), and return \code{x} again.
 
@@ -97,17 +97,15 @@ head(TRA(m, fmean(m, f), "-+", f))      # Centering on the overall mean ...
                                         #           W(m, f, mean = "overall.mean")]
 head(TRA(TRA(m, fmean(m, f), "-", f),   # Also the same thing done manually !!
      fmean(m), "+"))
-\donttest{ % No code relying on suggested package
-# grouped tibble method
-library(dplyr)
-iris \%>\%  group_by(Species) \%>\% TRA(fmean(.))
-iris \%>\%  group_by(Species) \%>\% fmean(TRA = "-")        # Same thing
-iris \%>\%  group_by(Species) \%>\% TRA(fmean(.)[c(2,4)])   # Only transforming 2 columns
-iris \%>\%  group_by(Species) \%>\% TRA(fmean(.)[c(2,4)],   # Dropping species column
+% \donttest{ % No code relying on suggested package
+# Grouped data method
+library(magrittr)
+iris \%>\%  fgroup_by(Species) \%>\% TRA(fmean(.))
+iris \%>\%  fgroup_by(Species) \%>\% fmean(TRA = "-")        # Same thing
+iris \%>\%  fgroup_by(Species) \%>\% TRA(fmean(.)[c(2,4)])   # Only transforming 2 columns
+iris \%>\%  fgroup_by(Species) \%>\% TRA(fmean(.)[c(2,4)],   # Dropping species column
                             keep.group_vars = FALSE)
-
-iris \%>\%  fgroup_by(Species) \%>\% TRA(fmean(.))  # Faster collapse grouping...
-}
+%}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the R documentation directory.
 \keyword{manip} % __ONLY ONE__ keyword per line

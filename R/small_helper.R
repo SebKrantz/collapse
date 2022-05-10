@@ -57,17 +57,6 @@ massign <- function(nam, values, envir = parent.frame()) invisible(.Call(C_multi
 #   invisible()
 # }
 
-group <- function(x, starts = FALSE, group.sizes = FALSE) `oldClass<-`(.Call(C_group, x, starts, group.sizes), c("qG", "na.included"))
-gsplit <- function(x = NULL, g, use.g.names = FALSE, ...) {
-  if(!inherits(g, "GRP")) g <- GRP(g, return.groups = use.g.names, call = FALSE, ...)
-  res <- if(is.null(x)) .Call(C_gsplit, 1L, g, TRUE) else if(length(unclass(x)) == length(g[[2L]]))
-         .Call(C_gsplit, x, g, FALSE) else if(is.object(x))
-         lapply(.Call(C_gsplit, 1L, g, TRUE), function(i) x[i]) else
-         stop("length(x) must match length(g)")
-  if(use.g.names) names(res) <- GRPnames(g, FALSE)
-  res
-}
-greorder <- function(x, g) .Call(C_greorder, x, g)
 
 getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s'), then unload [detach('package:collapse', unload = TRUE)] and reload [library(collapse)].")
 {
@@ -79,15 +68,6 @@ getenvFUN <- function(nam, efmt1 = "For this method need to install.packages('%s
   }
   FUN
 }
-
-getpix <- function(x) switch(typeof(x), externalptr = .Call(C_geteptr, x), x)
-
-# getplmindex <- function(x) {
-# ix <- getpix(attr(x, "index"))
-# if(is.list(ix)) return(ix)
-# .Call(C_geteptr, ix)
-# }
-
 # qM2 <- function(x) if(is.list(x)) do.call(cbind, x) else x
 
 null2NA <- function(x) if(is.null(x)) NA_character_ else x
@@ -363,8 +343,9 @@ whichv <- function(x, value, invert = FALSE) .Call(C_whichv, x, value, invert)
 "%!=%" <- function(x, value) .Call(C_whichv, x, value, TRUE)
 whichNA <- function(x, invert = FALSE) .Call(C_whichv, x, NA, invert)
 
-
+frange <- function(x, na.rm = TRUE) .Call(C_frange, x, na.rm)
 alloc <- function(value, n) .Call(C_alloc, value, n)
+vgcd <- function(x) .Call(C_vecgcd, x)
 
 allNA <- function(x) .Call(C_allNA, x, TRUE) # True means give error for unsupported vector types, not FALSE.
 anyv <- function(x, value) .Call(C_anyallv, x, value, FALSE)
@@ -417,25 +398,31 @@ null_rm <- function(l) if(!all(ind <- vlengths(l, FALSE) > 0L)) .subset(l, ind) 
 
 all_eq <- function(x) .Call(C_anyallv, x, x[1L], TRUE)
 
-na_omit <- function(X, cols = NULL, na.attr = FALSE) {
+na_omit <- function(X, cols = NULL, na.attr = FALSE, ...) {
   if(is.list(X)) {
     iX <- seq_along(unclass(X))
     rl <- if(is.null(cols)) !.Call(C_dt_na, X, iX) else
       !.Call(C_dt_na, X, cols2int(cols, X, attr(X, "names"))) # gives error if X not list
     rkeep <- which(rl)
     if(length(rkeep) == fnrow2(X)) return(condalc(X, inherits(X, "data.table")))
-    res <- .Call(C_subsetDT, X, rkeep, iX, FALSE)
+    res <- .Call(C_subsetDT, X, rkeep, iX, FALSE) # This allocates data.tables...
     rn <- attr(X, "row.names")
-    if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- rn[rkeep]
+    if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- Csv(rn, rkeep)
     if(na.attr) {
       attr(res, "na.action") <- `oldClass<-`(whichv(rl, FALSE), "omit")
-      if(inherits(res, "data.table")) return(alc(res))
+      if(inherits(res, "data.table") && !inherits(X, "pdata.frame")) return(alc(res))
+    }
+    if(inherits(X, "pdata.frame")) {
+      index <- findex(X)
+      index_omit <- droplevels_index(.Call(C_subsetDT, index, rkeep, seq_along(unclass(index)), FALSE), ...)
+      if(inherits(X, "indexed_frame")) return(reindex(res, index_omit)) # data.table handled here
+      attr(res, "index") <- index_omit
     }
   } else {
     rl <- if(is.null(cols)) complete.cases(X) else complete.cases(X[, cols])
     rkeep <- which(rl)
     if(length(rkeep) == NROW(X)) return(X)
-    res <- if(is.matrix(X)) X[rkeep, , drop = FALSE] else X[rkeep]
+    res <- if(is.matrix(X)) X[rkeep, , drop = FALSE, ...] else X[rkeep, ...]
     if(na.attr) attr(res, "na.action") <- `oldClass<-`(whichv(rl, FALSE), "omit")
   }
   res
@@ -478,17 +465,8 @@ seq_row <- function(X) if(is.list(X)) seq_along(.subset2(X, 1L)) else seq_len(di
 
 seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(dim(X)[2L])
 
-# na.last is false !!
-forder.int <- function(x) .Call(C_radixsort, FALSE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
-ford <- function(x, g = NULL) {
-  if(!is.null(g)) {
-    x <- c(if(is.atomic(g)) list(g) else if(is_GRP(g)) g[2L] else g,
-           if(is.atomic(x)) list(x) else x, list(method = "radix"))
-    return(do.call(order, x))
-  }
-  if(is.list(x)) return(do.call(order, c(x, list(method = "radix"))))
-  if(length(x) < 1000L) .Call(C_radixsort, TRUE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) else order(x, method = "radix")
-}
+# na.last is false (needed for timeid)
+forder.int <- function(x, na.last = FALSE, decreasing = FALSE) .Call(C_radixsort, na.last, decreasing, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
 
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !
 
@@ -668,64 +646,15 @@ fcolsubset <- function(x, ind, checksf = FALSE) { # fastest !
 #   # .Call(C_setAttributes, x[ind], ax)
 # }
 
-G_guo <- function(g) {
-  if(is.atomic(g)) {
-    if(inherits(g, c("factor", "qG"))) {
-      if(inherits(g, "na.included") || !anyNA(unclass(g)))
-        return(list(if(is.factor(g)) fnlevels(g) else attr(g, "N.groups"), unattrib(g), NULL))
-      if(is.factor(g)) {
-        ng <- if(anyNA(lev <- attr(g, "levels"))) length(lev) else length(lev) + 1L
-      } else ng <- attr(g, "N.groups") + 1L
-      return(list(ng, copyv(unattrib(g), NA_integer_, ng), NULL))
-    }
-    g <- .Call(C_group, g, FALSE, FALSE)
-    return(list(attr(g,"N.groups"), g, NULL))
-  }
-  if(inherits(g, "GRP")) return(g)
-  g <- .Call(C_group, g, FALSE, FALSE)
-  return(list(attr(g,"N.groups"), g, NULL))
-}
-
-# Replaced by G_guo...
-# at2GRP <- function(x) {
-#   if(is.nmfactor(x)) return(list(length(attr(x, "levels")), x, NULL))
-#   res <- list(NULL, NULL, NULL)
-#   res[[2L]] <- qG(x, sort = FALSE, na.exclude = FALSE)
-#   res[[1L]] <- attr(res[[2L]], "N.groups")
-#   res
-# }
-
-G_t <- function(x) { # , wm = 1L
-  if(is.null(x)) return(x) # {
-  #   if(wm > 0L) message(switch(wm, "Panel-lag computed without timevar: Assuming ordered data",
-  #                            "Panel-difference computed without timevar: Assuming ordered data",
-  #                            "Panel-growth rate computed without timevar: Assuming ordered data"))
-  #   return(x)
-  # }
-  # If integer time variable contains NA, does not break C++ code..
-  if(is.atomic(x)) {
-    if(is.integer(unclass(x))) return(x)
-    if(is.double(x) && !is.object(x)) return(as.integer(x))
-    return(qG(x, na.exclude = FALSE, sort = TRUE, method = "hash")) # make sure it is sorted ! qG already checks factor !
-  }
-  # if(is_GRP(x)) return(x[[2L]]) # Not necessary because GRP.default also returns it..
-  return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
-}
-
-# Not currently used !!
-# G_t2 <- function(x) {
-#   if(is.atomic(x)) if(is.integer(unclass(x))) return(x) else return(qG(x, sort = TRUE, na.exclude = FALSE, method = "hash")) # Hashing seems generally faster for time-variables !!
-#   if(is_GRP(x)) return(x[[2L]]) else return(GRP.default(x, return.groups = FALSE, sort = TRUE, call = FALSE)[[2L]])
-# }
-
-
 rgrep <- function(exp, nam, ..., sort = TRUE) if(length(exp) == 1L) grep(exp, nam, ...) else .Call(Cpp_funique, unlist(lapply(exp, grep, nam, ...), use.names = FALSE), sort)
 rgrepl <- function(exp, nam, ...) if(length(exp) == 1L) grepl(exp, nam, ...) else Reduce(`|`, lapply(exp, grepl, nam, ...))
 
-fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L else .Call(Cpp_fndistinct,x,0L,0L,NULL,FALSE) != length(x)
+fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L else .Call(C_fndistinct,x,NULL,FALSE,1L) != length(x)
 
 # NROW2 <- function(x, d) if(length(d)) d[1L] else length(x)
 # NCOL2 <- function(d, ilv) if(ilv) d[2L] else 1L
+
+issorted <- function(x, strictly = FALSE) .Call(C_issorted, x, strictly)
 
 charorNULL <- function(x) if(is.character(x)) x else NULL
 

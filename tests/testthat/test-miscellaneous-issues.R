@@ -41,6 +41,85 @@ test_that("Using a factor with unused levels does not pose a problem to flag, fd
 
 })
 
+test_that("Using a factor with unused levels does not pose a problem to statistical functions", {
+    wlddev2 <- fsubset(wlddev, iso3c %in% c("ALB", "AFG", "DZA"))
+    d <- nv(wlddev2)
+    m <- qM(d)
+    v <- d$PCGDP
+    w <- rep(1, length(v))
+    f <- wlddev2$iso3c
+    lev <- levels(f)
+    fd <- fdroplevels(f)
+    levd <- levels(fd)
+
+    # Testing BY:
+    expect_equal(attr(BY(d, f, sum), "row.names"), lev)
+    expect_equal(dimnames(BY(m, f, sum))[[1L]], lev)
+    expect_equal(names(BY(v, f, sum)), lev)
+
+    # Fast Statistical Functions
+    for(i in .FAST_STAT_FUN) {
+      # print(i)
+      FUN <- match.fun(i)
+      expect_equal(attr(FUN(d, g = f), "row.names"), lev)
+      expect_equal(dimnames(FUN(m, g = f))[[1L]], lev)
+      expect_equal(names(FUN(v, g = f)), lev)
+      expect_equal(attr(FUN(d, g = fd), "row.names"), levd)
+      expect_equal(dimnames(FUN(m, g = fd))[[1L]], levd)
+      expect_equal(names(FUN(v, g = fd)), levd)
+      if(i != "fnobs") {
+        expect_equal(attr(FUN(d, g = f, na.rm = FALSE), "row.names"), lev)
+        expect_equal(dimnames(FUN(m, g = f, na.rm = FALSE))[[1L]], lev)
+        expect_equal(names(FUN(v, g = f, na.rm = FALSE)), lev)
+      }
+      if(i %in% c("fsum", "fprod", "fmean", "fmedian", "fnth", "fmode", "fvar", "fsd")) {
+        expect_equal(attr(FUN(d, g = f, w = w), "row.names"), lev)
+        expect_equal(dimnames(FUN(m, g = f, w = w))[[1L]], lev)
+        expect_equal(names(FUN(v, g = f, w = w)), lev)
+        expect_equal(attr(FUN(d, g = f, w = w, na.rm = FALSE), "row.names"), lev)
+        expect_equal(dimnames(FUN(m, g = f, w = w, na.rm = FALSE))[[1L]], lev)
+        expect_equal(names(FUN(v, g = f, w = w, na.rm = FALSE)), lev)
+        expect_equal(FUN(d, g = f, w = w), FUN(d, g = f))
+        expect_equal(FUN(m, g = f, w = w), FUN(m, g = f))
+        expect_equal(FUN(v, g = f, w = w), FUN(v, g = f))
+      }
+    }
+
+    # Other Statistical Functions
+    for(i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), .FAST_STAT_FUN)) {
+      # print(i)
+      FUN <- match.fun(i)
+      if(grepl("hd", i, ignore.case = TRUE)) {
+        expect_equal(FUN(d, fl = f), FUN(d, fl = fd))
+        expect_equal(FUN(m, fl = f), FUN(m, fl = fd))
+        expect_equal(FUN(v, fl = f), FUN(v, fl = fd))
+        expect_equal(FUN(d, fl = f, na.rm = FALSE), FUN(d, fl = fd, na.rm = FALSE))
+        expect_equal(FUN(m, fl = f, na.rm = FALSE), FUN(m, fl = fd, na.rm = FALSE))
+        expect_equal(FUN(v, fl = f, na.rm = FALSE), FUN(v, fl = fd, na.rm = FALSE))
+        expect_equal(FUN(d, fl = f, w = w), FUN(d, fl = fd))
+        expect_equal(FUN(m, fl = f, w = w), FUN(m, fl = fd))
+        expect_equal(FUN(v, fl = f, w = w), FUN(v, fl = fd))
+        expect_equal(FUN(d, fl = f, w = w, na.rm = FALSE), FUN(d, fl = fd, na.rm = FALSE))
+        expect_equal(FUN(m, fl = f, w = w, na.rm = FALSE), FUN(m, fl = fd, na.rm = FALSE))
+        expect_equal(FUN(v, fl = f, w = w, na.rm = FALSE), FUN(v, fl = fd, na.rm = FALSE))
+      } else {
+        expect_equal(FUN(d, g = f), FUN(d, g = fd))
+        expect_equal(FUN(m, g = f), FUN(m, g = fd))
+        expect_equal(FUN(v, g = f), FUN(v, g = fd))
+        expect_equal(FUN(d, g = f, na.rm = FALSE), FUN(d, g = fd, na.rm = FALSE))
+        expect_equal(FUN(m, g = f, na.rm = FALSE), FUN(m, g = fd, na.rm = FALSE))
+        expect_equal(FUN(v, g = f, na.rm = FALSE), FUN(v, g = fd, na.rm = FALSE))
+        if(i %in% c("fscale", "STD", "fbetween", "B", "fwithin", "W")) {
+          expect_equal(FUN(d, g = f, w = w), FUN(d, g = fd))
+          expect_equal(FUN(m, g = f, w = w), FUN(m, g = fd))
+          expect_equal(FUN(v, g = f, w = w), FUN(v, g = fd))
+          expect_equal(FUN(d, g = f, w = w, na.rm = FALSE), FUN(d, g = fd, na.rm = FALSE))
+          expect_equal(FUN(m, g = f, w = w, na.rm = FALSE), FUN(m, g = fd, na.rm = FALSE))
+          expect_equal(FUN(v, g = f, w = w, na.rm = FALSE), FUN(v, g = fd, na.rm = FALSE))
+        }
+      }
+    }
+})
 
 
 library(magrittr)

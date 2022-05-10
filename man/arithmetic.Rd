@@ -16,7 +16,7 @@
 Fast Row/Column Arithmetic for Matrix-Like Objects
 }
 \description{
-Fast operators to perform row- or column-wise replacing and sweeping operations of vectors on matrices, data frames, lists.
+Fast operators to perform row- or column-wise replacing and sweeping operations of vectors on matrices, data frames, lists. See also \code{\link{setop}} for math by reference and \code{\link{setTRA}} for sweeping by reference.
 }
 \usage{
 ## Perform the operation with v and each row of X
@@ -54,7 +54,7 @@ With a matrix or data frame \code{X}, the default behavior of R when calling \co
 
 \emph{Rules of Arithmetic:} Since these operators are defined as simple infix functions, the normal rules of arithmetic are not respected. So \code{a \%c+\% b \%c*\% c} evaluates as \code{(a \%c+\% b) \%c*\% c}. As with all chained infix operations, they are just evaluated sequentially from left to right.
 
-\emph{Performance Notes:} The function \code{\link{setop}} and a related set of \code{\%op=\%} operators can be used to perform these operations by reference, and are faster if copies of the output are not required!! Furthermore, for Fast Statistical Functions, using \code{fmedian(X, TRA = "-")} will be a tiny bit faster than \code{X \%r-\% fmedian(X)}. Also use \code{fwithin(X)} for fast centering using the mean, and \code{fscale(X)} for fast scaling and centering or mean-preserving scaling.
+\emph{Performance Notes:} The function \code{\link{setop}} and a related set of \code{\%op=\%} operators as well as the \code{\link{setTRA}} function can be used to perform these operations by reference, and are faster if copies of the output are not required!! Furthermore, for Fast Statistical Functions, using \code{fmedian(X, TRA = "-")} will be a tiny bit faster than \code{X \%r-\% fmedian(X)}. Also use \code{fwithin(X)} for fast centering using the mean, and \code{fscale(X)} for fast scaling and centering or mean-preserving scaling.
 
 
 

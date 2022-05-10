@@ -1,3 +1,15 @@
+
+ford <- function(x, g = NULL) {
+  if(is.null(x)) return(NULL)
+  if(!is.null(g)) {
+    x <- c(if(is.atomic(g)) list(g) else if(is_GRP(g)) g[2L] else g,
+           if(is.atomic(x)) list(x) else x, list(method = "radix"))
+    return(do.call(order, x))
+  }
+  if(is.list(x)) return(do.call(order, c(x, list(method = "radix"))))
+  if(length(x) < 1000L) .Call(C_radixsort, TRUE, FALSE, FALSE, FALSE, TRUE, pairlist(x)) else order(x, method = "radix")
+}
+
 fcumsum <- function(x, ...) UseMethod("fcumsum") # , x
 
 fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
@@ -9,11 +21,11 @@ fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, c
   .Call(C_fcumsum,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
-fcumsum.pseries <- function(x, na.rm = TRUE, fill = FALSE, ...) {
+fcumsum.pseries <- function(x, na.rm = TRUE, fill = FALSE, shift = "time", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  index <- unclass(getpix(attr(x, "index")))
-  g <- if(length(index) > 2L) finteraction(index[-length(index)]) else index[[1L]]
-  o <- ford(index[[length(index)]], g)
+  index <- uncl2pix(x)
+  g <- index[[1L]]
+  o <- switch(shift, time = ford(index[[2L]], g), row = NULL, stop("'shift' must be either 'time' or 'row'"))
   if(is.matrix(x))
     .Call(C_fcumsumm,x,fnlevels(g),g,o,na.rm,fill) else
       .Call(C_fcumsum,x,fnlevels(g),g,o,na.rm,fill)
@@ -30,19 +42,16 @@ fcumsum.matrix <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, ch
 fcumsum.grouped_df <- function(x, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
-  osym <- all.vars(substitute(o))
+  osym <- substitute(o)
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
-  if(length(osym) && !anyNA(on <- match(osym, nam))) {
-    if(length(on) == 1L) {
-      if(any(gn == on)) stop("ordervar coincides with grouping variables!")
-      o <- .subset2(x, on)
-    } else {
-      if(any(gn %in% on)) stop("ordervar coincides with grouping variables!")
-      o <- .subset(x, on)
+  if(!is.null(osym)) {
+    o <- eval(osym, x, parent.frame())
+    if(!anyNA(on <- match(all.vars(osym), nam))) {
+      gn <- c(gn, on)
+      if(anyDuplicated.default(gn)) stop("timevar coincides with grouping variables!")
     }
     if(check.o) o <- ford(o, g)
-    gn <- c(gn, on)
   }
   if(length(gn)) {
     ax <- attributes(x)
@@ -64,10 +73,10 @@ fcumsum.data.frame <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE
 
 fcumsum.list <- function(x, ...) fcumsum.data.frame(x, ...)
 
-fcumsum.pdata.frame <- function(x, na.rm = TRUE, fill = FALSE, ...) {
+fcumsum.pdata.frame <- function(x, na.rm = TRUE, fill = FALSE, shift = "time", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  index <- unclass(getpix(attr(x, "index")))
-  g <- if(length(index) > 2L) finteraction(index[-length(index)]) else index[[1L]]
-  o <- ford(index[[length(index)]], g)
+  index <- uncl2pix(x)
+  g <- index[[1L]]
+  o <- switch(shift, time = ford(index[[2L]], g), row = NULL, stop("'shift' must be either 'time' or 'row'"))
   .Call(C_fcumsuml,x,fnlevels(g),g,o,na.rm,fill)
 }

@@ -71,14 +71,15 @@ If \code{stable.algo = FALSE}, the variance is computed in one-pass as \code{(su
 
 The weighted variance is computed with frequency weights as \code{(sum(x^2*w)-sum(w)*weighted.mean(x,w)^2)/(sum(w)-1)}. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
-Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping the values (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned.
+%Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping the values (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned.
 
-This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
+%This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast.
 
-When applied to data frames with groups or \code{drop = FALSE}, \code{fvar/fsd} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fvar/fsd} to a factor column will give a 'malformed factor' error). The attributes of the data frame itself are also preserved.
+%When applied to data frames with groups or \code{drop = FALSE}, \code{fvar/fsd} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fvar/fsd} to a factor column will give a 'malformed factor' error). The attributes of the data frame itself are also preserved.
+For further computational detail see \code{\link{fsum}}.
 }
 \value{
-\code{fvar} returns the variance of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its variance, grouped by \code{g}. \code{fsd} computes the standard deviation of \code{x} in like manor.
+\code{fvar} returns the (\code{w} weighted) variance of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its (grouped, weighted) variance. \code{fsd} computes the standard deviation of \code{x} in like manor.
 }
 \references{
 Welford, B. P. (1962). Note on a method for calculating corrected sums of squares and products. \emph{Technometrics}. 4 (3): 419-420. doi:10.2307/1266577.
@@ -108,14 +109,14 @@ head(fsd(iris[-5], iris[[5]], TRA = "/")) # Data scaled by species (see also fsc
 m <- qM(mtcars)
 fsd(m)
 fsd(m, mtcars$cyl) # etc..
-\donttest{ % No code relying on suggested package
+%\donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd()
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(keep.group_vars = FALSE) # Remove grouping columns
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp)      # Weighted by hp
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsd(hp, "/") # Weighted scaling transformation
-}
+%}
 }
 \keyword{univar}
 \keyword{manip}

@@ -40,6 +40,13 @@ wBY <- function(x, f, FUN, w, ...) {
   qDF(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...), return = "matrix"))
 }
 
+for (nth in 1:2) {
+
+  if(nth == 2L) {
+    if(Sys.getenv("OMP") == "TRUE") {
+      fmean <- function(x, ...) collapse::fmean(x, ..., nthreads = 2L)
+    } else break
+  }
 
 test_that("fmean performs like base::mean", {
   expect_equal(fmean(NA), bmean(NA))
@@ -277,6 +284,7 @@ test_that("fmean with complete weights performs numerically stable", {
   expect_true(all_obj_equal(replicate(50, fmean(mtcNA, g, wdat), simplify = FALSE)))
 })
 
+
 test_that("fmean with missing weights performs numerically stable", {
   expect_true(all_obj_equal(replicate(50, fmean(1, w = NA), simplify = FALSE)))
   expect_true(all_obj_equal(replicate(50, fmean(NA, w = NA), simplify = FALSE)))
@@ -387,5 +395,7 @@ test_that("fmean produces errors for wrong input", {
   expect_error(fmean(wlddev, wlddev$iso3c))
   expect_error(fmean(wlddev, wlddev$iso3c, wlddev$year))
 })
+
+}
 
 

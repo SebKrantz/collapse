@@ -12,9 +12,13 @@ set.seed(101)
 x <- rnorm(100)
 xNA <- x
 xNA[sample.int(100,20)] <- NA
-f <- as.factor(sort(sample.int(10, 100, TRUE)))
+fuo <- sample.int(10, 100, TRUE)
+fo <- as.factor(sort(fuo))
+fuo <- as.factor(fuo)
 g <- GRP(mtcars, ~ cyl + vs + am)
-f2 <- as.factor(sort(sample.int(6, 32, TRUE)))
+f2uo <- sample.int(6, 32, TRUE)
+f2o <- as.factor(sort(f2uo))
+f2uo <- as.factor(f2uo)
 m <- as.matrix(mtcars)
 mNA <- na_insert(m)
 mtcNA <- na_insert(mtcars)
@@ -33,14 +37,16 @@ options(warn = -1)
 
 test_that("BY.default works as intended", {
 
+  for (f in list(fuo, fo)) {
+
   # No missing values
   expect_equal(BY(x, f, bsum), fsum(x, f))
   expect_equal(BY(x, f, bsum, return = "list"), as.list(fsum(x, f)))
   expect_equal(BY(x, f, bmean), fmean(x, f))
   expect_equal(BY(x, f, bmean, return = "list"), as.list(fmean(x, f)))
   # BY(x, f, bscale)
-  expect_equal(BY(x, f, bscale, use.g.names = FALSE),   fscale(x, f))
-  expect_equal(BY(x, f, log, use.g.names = FALSE),   log(x))
+  expect_equal(BY(x, f, bscale, use.g.names = FALSE), fscale(x, f))
+  expect_equal(BY(x, f, log, use.g.names = FALSE), log(x))
   expect_equal(BY(x, f, quantile), unlist(lapply(split(x, f), quantile)))
   expect_equal(BY(x, f, quantile, expand.wide = TRUE),   t(sapply(split(x, f), quantile)))
   expect_equal(BY(x, f, quantile, return = "list"), lapply(split(x, f), quantile))
@@ -68,90 +74,119 @@ test_that("BY.default works as intended", {
   expect_equal(BY(xNA, f, mysumf, return = "list"), lapply(split(xNA, f), mysumf))
   expect_equal(BY(xNA, f, mysumf, return = "list", expand.wide = TRUE), lapply(split(xNA, f), mysumf)) # This should have no effect !!
 
+  }
+
 })
 
 test_that("BY.matrix works as intended", {
 
+  for (f in list(g, f2uo, f2o)) {
   # No missing values
-  expect_equal(BY(m, g, bsum), fsum(m, g))
-  expect_equal(BY(m, g, bsum, return = "data.frame"), qDF(fsum(m, g)))
-  expect_equal(BY(m, g, bmean), fmean(m, g))
-  expect_equal(BY(m, g, bmean, return = "data.frame"), qDF(fmean(m, g)))
-  # BY(m, g, bscale)
-  expect_equal(BY(m, f2, bscale, use.g.names = FALSE),   setRownames(fscale(m, f2), NULL))
-  expect_equal(BY(m, f2, log, use.g.names = FALSE), setRownames(log(m), NULL))
-  expect_equal(BY(m, f2, quantile), qM(lapply(mctl(m, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile)))))
-  expect_equal(setDimnames(BY(m, f2, quantile, expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mctl(m, names = TRUE), function(x) do.call(rbind, lapply(split(x, f2), quantile)))), NULL))
-  expect_equal(BY(m, f2, quantile, return = "data.frame"), qDF(qM(lapply(mctl(m, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile))))))
-  expect_equal(unname(BY(m, f2, quantile, return = "data.frame", expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mctl(m, names = TRUE), function(x) do.call(rbind, lapply(split(x, f2), quantile)))))))
+  expect_equal(BY(m, f, bsum), fsum(m, f))
+  expect_equal(BY(m, f, bsum, return = "data.frame"), qDF(fsum(m, f)))
+  expect_equal(BY(m, f, bmean), fmean(m, f))
+  expect_equal(BY(m, f, bmean, return = "data.frame"), qDF(fmean(m, f)))
 
-  # Missing values removed
-  expect_equal(BY(mNA, g, bsum, na.rm = TRUE), na20(fsum(mNA, g)))
-  expect_equal(BY(mNA, g, bsum, return = "data.frame", na.rm = TRUE), qDF(na20(fsum(mNA, g))))
-  expect_equal(BY(mNA, g, bmean, na.rm = TRUE), fmean(mNA, g))
-  expect_equal(BY(mNA, g, bmean, return = "data.frame", na.rm = TRUE), qDF(fmean(mNA, g)))
-  expect_equal(BY(mNA, f2, bscale, use.g.names = FALSE), setRownames(fscale(mNA, f2), NULL))
-  expect_equal(BY(mNA, f2, log, use.g.names = FALSE), setRownames(log(mNA), NULL))
-  expect_equal(BY(mNA, f2, quantile, na.rm = TRUE), qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile, na.rm = TRUE)))))
-  expect_equal(setDimnames(BY(mNA, f2, quantile, expand.wide = TRUE, na.rm = TRUE), NULL), setDimnames(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f2), quantile, na.rm = TRUE)))), NULL))
-  expect_equal(BY(mNA, f2, quantile, return = "data.frame", na.rm = TRUE), qDF(qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f2), quantile, na.rm = TRUE))))))
-  expect_equal(unname(BY(mNA, f2, quantile, return = "data.frame", expand.wide = TRUE, na.rm = TRUE)), unname(qDF(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f2), quantile, na.rm = TRUE)))))))
+  expect_true(all_obj_equal(BY(m, f, bscale), BY(m, f, bscale, use.g.names = FALSE), fscale(m, f)))
+  expect_true(all_obj_equal(BY(m, f, log), BY(m, f, log, use.g.names = FALSE), log(m)))
 
   # Missing values kept
-  expect_equal(BY(mNA, g, bsum), fsum(mNA, g, na.rm = FALSE))
-  expect_equal(BY(mNA, g, bsum, return = "data.frame"), qDF(fsum(mNA, g, na.rm = FALSE)))
-  expect_equal(BY(mNA, g, bmean), fmean(mNA, g, na.rm = FALSE))
-  expect_equal(BY(mNA, g, bmean, return = "data.frame"), qDF(fmean(mNA, g, na.rm = FALSE)))
-  expect_equal(BY(mNA, f2, mysumf), qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f2), mysumf)))))
-  expect_equal(setDimnames(BY(mNA, f2, mysumf, expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f2), mysumf)))), NULL))
-  expect_equal(BY(mNA, f2, mysumf, return = "data.frame"), qDF(qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f2), mysumf))))))
-  expect_equal(unname(BY(mNA, f2, mysumf, return = "data.frame", expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f2), mysumf)))))))
+  expect_equal(BY(mNA, f, bsum), fsum(mNA, f, na.rm = FALSE))
+  expect_equal(BY(mNA, f, bsum, return = "data.frame"), qDF(fsum(mNA, f, na.rm = FALSE)))
+  expect_equal(BY(mNA, f, bmean), fmean(mNA, f, na.rm = FALSE))
+  expect_equal(BY(mNA, f, bmean, return = "data.frame"), qDF(fmean(mNA, f, na.rm = FALSE)))
+
+  }
+
+  for (f in list(f2uo, f2o)) {
+
+  expect_equal(BY(m, f, quantile), qM(lapply(mctl(m, names = TRUE), function(x) unlist(lapply(split(x, f), quantile)))))
+  expect_equal(setDimnames(BY(m, f, quantile, expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mctl(m, names = TRUE), function(x) do.call(rbind, lapply(split(x, f), quantile)))), NULL))
+  expect_equal(BY(m, f, quantile, return = "data.frame"), qDF(qM(lapply(mctl(m, names = TRUE), function(x) unlist(lapply(split(x, f), quantile))))))
+  expect_equal(unname(BY(m, f, quantile, return = "data.frame", expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mctl(m, names = TRUE), function(x) do.call(rbind, lapply(split(x, f), quantile)))))))
+
+  # Missing values removed
+  expect_equal(BY(mNA, f, bsum, na.rm = TRUE), na20(fsum(mNA, f)))
+  expect_equal(BY(mNA, f, bsum, return = "data.frame", na.rm = TRUE), qDF(na20(fsum(mNA, f))))
+  expect_equal(BY(mNA, f, bmean, na.rm = TRUE), fmean(mNA, f))
+  expect_equal(BY(mNA, f, bmean, return = "data.frame", na.rm = TRUE), qDF(fmean(mNA, f)))
+  expect_true(all_obj_equal(BY(mNA, f, bscale), BY(mNA, f, bscale, use.g.names = FALSE), fscale(mNA, f)))
+  expect_true(all_obj_equal(BY(mNA, f, log), BY(mNA, f, log, use.g.names = FALSE), log(mNA)))
+
+  expect_equal(BY(mNA, f, quantile, na.rm = TRUE), qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f), quantile, na.rm = TRUE)))))
+  expect_equal(setDimnames(BY(mNA, f, quantile, expand.wide = TRUE, na.rm = TRUE), NULL), setDimnames(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f), quantile, na.rm = TRUE)))), NULL))
+  expect_equal(BY(mNA, f, quantile, return = "data.frame", na.rm = TRUE), qDF(qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f), quantile, na.rm = TRUE))))))
+  expect_equal(unname(BY(mNA, f, quantile, return = "data.frame", expand.wide = TRUE, na.rm = TRUE)), unname(qDF(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f), quantile, na.rm = TRUE)))))))
+
+  # Missing values kept
+  expect_equal(BY(mNA, f, mysumf), qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f), mysumf)))))
+  expect_equal(setDimnames(BY(mNA, f, mysumf, expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f), mysumf)))), NULL))
+  expect_equal(BY(mNA, f, mysumf, return = "data.frame"), qDF(qM(lapply(mctl(mNA, names = TRUE), function(x) unlist(lapply(split(x, f), mysumf))))))
+  expect_equal(unname(BY(mNA, f, mysumf, return = "data.frame", expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mctl(mNA, names = TRUE), function(x) do.call(rbind, lapply(split(x, f), mysumf)))))))
+
+  }
 
 })
 
 test_that("BY.data.frame works as intended", {
 
+  condsetrn <- function(x) if(is.null(rownames(x))) setRownames(x) else x
+
+  for (f in list(g, f2uo, f2o)) {
+
   # No missing values
-  expect_equal(BY(mtcars, g, bsum), fsum(mtcars, g))
-  expect_equal(BY(mtcars, g, bsum, return = "matrix"), qM(fsum(mtcars, g)))
-  expect_equal(BY(mtcars, g, bmean), fmean(mtcars, g))
-  expect_equal(BY(mtcars, g, bmean, return = "matrix"), qM(fmean(mtcars, g)))
-  # BY(mtcars, g, bscale)
-  expect_equal(BY(mtcars, f2, bscale, use.g.names = FALSE),  setRownames(fscale(mtcars, f2)))
-  expect_equal(BY(mtcars, f2, log, use.g.names = FALSE),  setRownames(log(mtcars)))
-  expect_equal(BY(mtcars, f2, quantile), qDF(qM(lapply(mtcars, function(x) unlist(lapply(split(x, f2), quantile))))))
-  expect_equal(unname(BY(mtcars, f2, quantile, expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mtcars, function(x) do.call(rbind, lapply(split(x, f2), quantile)))))))
-  expect_equal(BY(mtcars, f2, quantile, return = "matrix"), qM(lapply(mtcars, function(x) unlist(lapply(split(x, f2), quantile)))))
-  expect_equal(setDimnames(BY(mtcars, f2, quantile, return = "matrix", expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mtcars, function(x) do.call(rbind, lapply(split(x, f2), quantile)))), NULL))
+  expect_equal(BY(mtcars, f, bsum), fsum(mtcars, f))
+  expect_equal(BY(mtcars, f, bsum, return = "matrix"), condsetrn(qM(fsum(mtcars, f))))
+  expect_equal(BY(mtcars, f, bmean), fmean(mtcars, f))
+  expect_equal(BY(mtcars, f, bmean, return = "matrix"), condsetrn(qM(fmean(mtcars, f))))
+  # BY(mtcars, f, bscale)
+  expect_equal(BY(mtcars, f, bscale, use.g.names = FALSE),  fscale(mtcars, f))
+  expect_equal(BY(mtcars, f, log, use.g.names = FALSE),  log(mtcars))
 
   # Missing values removed
-  expect_equal(BY(mtcNA, g, bsum, na.rm = TRUE), na20(fsum(mtcNA, g)))
-  expect_equal(BY(mtcNA, g, bsum, return = "matrix", na.rm = TRUE), na20(qM(fsum(mtcNA, g))))
-  expect_equal(BY(mtcNA, g, bmean, na.rm = TRUE), fmean(mtcNA, g))
-  expect_equal(BY(mtcNA, g, bmean, return = "matrix", na.rm = TRUE), qM(fmean(mtcNA, g)))
-  expect_equal(BY(mtcNA, f2, bscale, use.g.names = FALSE), setRownames(fscale(mtcNA, f2)))
-  expect_equal(BY(mtcNA, f2, log, use.g.names = FALSE), setRownames(log(mtcNA)))
-  expect_equal(BY(mtcNA, f2, quantile, na.rm = TRUE), qDF(qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f2), quantile, na.rm = TRUE))))))
-  expect_equal(unname(BY(mtcNA, f2, quantile, expand.wide = TRUE, na.rm = TRUE)), unname(qDF(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f2), quantile, na.rm = TRUE)))))))
-  expect_equal(BY(mtcNA, f2, quantile, return = "matrix", na.rm = TRUE), qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f2), quantile, na.rm = TRUE)))))
-  expect_equal(setDimnames(BY(mtcNA, f2, quantile, return = "matrix", expand.wide = TRUE, na.rm = TRUE), NULL), setDimnames(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f2), quantile, na.rm = TRUE)))), NULL))
+  expect_equal(BY(mtcNA, f, bsum, na.rm = TRUE), na20(fsum(mtcNA, f)))
+  expect_equal(BY(mtcNA, f, bsum, return = "matrix", na.rm = TRUE), condsetrn(na20(qM(fsum(mtcNA, f)))))
+  expect_equal(BY(mtcNA, f, bmean, na.rm = TRUE), fmean(mtcNA, f))
+  expect_equal(BY(mtcNA, f, bmean, return = "matrix", na.rm = TRUE), condsetrn(qM(fmean(mtcNA, f))))
+  expect_equal(BY(mtcNA, f, bscale, use.g.names = FALSE), fscale(mtcNA, f))
+  expect_equal(BY(mtcNA, f, log, use.g.names = FALSE), log(mtcNA))
 
   # Missing values kept
-  expect_equal(BY(mtcNA, g, bsum), fsum(mtcNA, g, na.rm = FALSE))
-  expect_equal(BY(mtcNA, g, bsum, return = "matrix"), qM(fsum(mtcNA, g, na.rm = FALSE)))
-  expect_equal(BY(mtcNA, g, bmean), fmean(mtcNA, g, na.rm = FALSE))
-  expect_equal(BY(mtcNA, g, bmean, return = "matrix"), qM(fmean(mtcNA, g, na.rm = FALSE)))
-  expect_equal(BY(mtcNA, f2, mysumf), qDF(qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f2), mysumf))))))
-  expect_equal(unname(BY(mtcNA, f2, mysumf, expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f2), mysumf)))))))
-  expect_equal(BY(mtcNA, f2, mysumf, return = "matrix"), qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f2), mysumf)))))
-  expect_equal(setDimnames(BY(mtcNA, f2, mysumf, return = "matrix", expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f2), mysumf)))), NULL))
+  expect_equal(BY(mtcNA, f, bsum), fsum(mtcNA, f, na.rm = FALSE))
+  expect_equal(BY(mtcNA, f, bsum, return = "matrix"), condsetrn(qM(fsum(mtcNA, f, na.rm = FALSE))))
+  expect_equal(BY(mtcNA, f, bmean), fmean(mtcNA, f, na.rm = FALSE))
+  expect_equal(BY(mtcNA, f, bmean, return = "matrix"), condsetrn(qM(fmean(mtcNA, f, na.rm = FALSE))))
+
+  }
+
+  for (f in list(f2uo, f2o)) {
+
+  # No missing values
+  expect_equal(BY(mtcars, f, quantile), qDF(qM(lapply(mtcars, function(x) unlist(lapply(split(x, f), quantile))))))
+  expect_equal(unname(BY(mtcars, f, quantile, expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mtcars, function(x) do.call(rbind, lapply(split(x, f), quantile)))))))
+  expect_equal(BY(mtcars, f, quantile, return = "matrix"), qM(lapply(mtcars, function(x) unlist(lapply(split(x, f), quantile)))))
+  expect_equal(setDimnames(BY(mtcars, f, quantile, return = "matrix", expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mtcars, function(x) do.call(rbind, lapply(split(x, f), quantile)))), NULL))
+
+  # Missing values removed
+  expect_equal(BY(mtcNA, f, quantile, na.rm = TRUE), qDF(qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f), quantile, na.rm = TRUE))))))
+  expect_equal(unname(BY(mtcNA, f, quantile, expand.wide = TRUE, na.rm = TRUE)), unname(qDF(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f), quantile, na.rm = TRUE)))))))
+  expect_equal(BY(mtcNA, f, quantile, return = "matrix", na.rm = TRUE), qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f), quantile, na.rm = TRUE)))))
+  expect_equal(setDimnames(BY(mtcNA, f, quantile, return = "matrix", expand.wide = TRUE, na.rm = TRUE), NULL), setDimnames(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f), quantile, na.rm = TRUE)))), NULL))
+
+  # Missing values kept
+  expect_equal(BY(mtcNA, f, mysumf), qDF(qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f), mysumf))))))
+  expect_equal(unname(BY(mtcNA, f, mysumf, expand.wide = TRUE)), unname(qDF(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f), mysumf)))))))
+  expect_equal(BY(mtcNA, f, mysumf, return = "matrix"), qM(lapply(mtcNA, function(x) unlist(lapply(split(x, f), mysumf)))))
+  expect_equal(setDimnames(BY(mtcNA, f, mysumf, return = "matrix", expand.wide = TRUE), NULL), setDimnames(do.call(cbind, lapply(mtcNA, function(x) do.call(rbind, lapply(split(x, f), mysumf)))), NULL))
+
+  }
 
 })
 
 test_that("Output type is as expected", {
 
-  expect_true(is.atomic(BY(x, f, bsum)))
-  expect_true(is.atomic(BY(xNA, f, bsum, na.rm = TRUE)))
+  expect_true(is.atomic(BY(x, fuo, bsum)))
+  expect_true(is.atomic(BY(xNA, fuo, bsum, na.rm = TRUE)))
   expect_true(is.matrix(BY(mtcars, g, bsum, return = "matrix")))
   expect_true(is.data.frame(BY(m, g, bsum, return = "data.frame")))
   # BY(mtcars, g, quantile, expand.wide = TRUE, return = "list")
@@ -197,6 +232,25 @@ test_that("BY produces errors for wrong input", {
   expect_error(BY(mtcars, ~g, bsum)) # Not supported type
   expect_error(BY(m, ~g, bsum)) # Not supported type
   expect_error(BY(x, ~g, bsum)) # Not supported type
+
+})
+
+test_that("no row-names are generated for data.table's (only)", {
+
+  mtcDT <- qDT(mtcars)
+
+  for(FUN in list(bsum, quantile, identity)) {
+
+    expect_false(is.character(attr(BY(mtcDT, g, FUN), "row.names")))
+    if(!identical(FUN, identity)) {
+      expect_true(is.character(attr(BY(mtcDT, g, FUN, return = "data.frame"), "row.names")))
+      expect_true(is.character(dimnames(BY(mtcDT, g, FUN, return = "matrix"))[[1L]]))
+    }
+    expect_false(is.character(attr(BY(mtcDT, g, FUN, use.g.names = FALSE), "row.names")))
+    expect_false(is.character(attr(BY(mtcDT, g, FUN, use.g.names = FALSE, return = "data.frame"), "row.names")))
+    expect_false(is.character(dimnames(BY(mtcDT, g, FUN, use.g.names = FALSE, return = "matrix"))[[1L]]))
+
+  }
 
 })
 

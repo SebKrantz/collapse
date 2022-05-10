@@ -39,12 +39,14 @@ A copy of \code{X} with rows reordered. If \code{X} is already sorted, \code{X} 
 }
 \note{
 If you don't require a copy of the data, use \code{data.table::setorder} (you can also use it in a piped call as it invisibly returns the data).
+
+\code{roworder(v)} has internal facilities to deal with \link[=indexing]{indexed data}.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
 \seealso{
-\code{\link{colorder}}, \code{\link{fsubset}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
+\code{\link{colorder}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 head(roworder(airquality, Month, -Ozone))

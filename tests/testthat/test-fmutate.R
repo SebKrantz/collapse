@@ -9,12 +9,12 @@ bmax <- base::max
 
 NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
 
-if(NCRAN) {
-
 mtc <- dplyr::as_tibble(mtcars)
 gmtc <- dplyr::group_by(mtc, cyl, vs, am)
 
 expect_equal(gsplit(mtcars$mpg, GRP(gmtc), TRUE), split(mtcars$mpg, as_factor_GRP(GRP(gmtc))))
+
+if(NCRAN) {
 
 test_that("fsummarise works like dplyr::summarise for tagged vector expressions", {
 
@@ -108,8 +108,12 @@ test_that("fsummarise works like dplyr::summarise for tagged vector expressions"
 
 })
 
+}
+
 wld <- dplyr::as_tibble(wlddev)
-gwld <- dplyr::group_by(wlddev, country)
+gwld <- dplyr::group_by(wlddev, iso3c)
+
+if(NCRAN) {
 
 test_that("fsummarise works like dplyr::summarise with across and simple usage", {
 
@@ -258,6 +262,7 @@ test_that("fsummarise works like dplyr::summarise with across and grouped usage"
 
 })
 
+}
 
 test_that("fsummarise miscellaneous things", {
 
@@ -290,7 +295,7 @@ test_that("fsummarise miscellaneous things", {
 
 })
 
-
+if(NCRAN) {
 
 test_that("fmutate works as intended for simple usage", {
 
@@ -324,6 +329,8 @@ test_that("fmutate works as intended for simple usage", {
   ))
 
 })
+
+}
 
 test_that("fmutate with across works like ftransformv", {
 
@@ -364,6 +371,16 @@ test_that("fmutate with across works like ftransformv", {
 
 })
 
+test_that("fmutate with across reorders correctly", {
+
+  for(i in seq_col(wlddev)) {
+    expect_equal(fungroup(fmutate(fgroup_by(wlddev, i), across(c(PCGDP, LIFEEX), identity))), wlddev)
+    expect_equal(fungroup(fmutate(fgroup_by(wlddev, i), across(.fns = identity))), wlddev)
+  }
+
+})
+
+if(NCRAN) {
 
 test_that("fmutate miscellaneous", {
 

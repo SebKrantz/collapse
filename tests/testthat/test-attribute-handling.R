@@ -27,7 +27,7 @@ test_that("statistical functions handle attributes properly", {
       expect_identical(attributes(FUN(date)), attributes(date))
     }
     if(i %!in% c("fsum", "fvar", "fsd", countFUN)) expect_identical(attributes(FUN(fac)), attributes(fac))
-    expect_true(is.null(attributes(FUN(AirPassengers))))
+    if(i != "fmode") expect_true(is.null(attributes(FUN(AirPassengers))))
     expect_identical(attributes(FUN(EuStockMarkets)), list(names = colnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, drop = FALSE)), list(dim = c(1L, 4L), dimnames = list(NULL, colnames(EuStockMarkets))))
     expect_identical(attributes(FUN(m)), list(names = colnames(m)))
@@ -46,8 +46,8 @@ test_that("statistical functions handle attributes properly", {
     expect_identical(attributes(FUN(date, g1)), if(i %!in% countFUN) c(attributes(date), list(names = unattrib(GRPnames(g1)))) else list(label = vlabels(date), names = unattrib(GRPnames(g1))))
     expect_identical(attributes(FUN(fac, g1, use.g.names = FALSE)), if(i %!in% countFUN) attributes(fac) else list(label = vlabels(fac)))
     expect_identical(attributes(FUN(fac, g1)), if(i %!in% countFUN) c(attributes(fac), list(names = unattrib(GRPnames(g1)))) else list(label = vlabels(fac), names = unattrib(GRPnames(g1))))
-    expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), NULL)
-    expect_identical(attributes(FUN(AirPassengers, f1)), list(names = as.character(1:5)))
+    if(i != "fmode") expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), NULL)
+    if(i != "fmode") expect_identical(attributes(FUN(AirPassengers, f1)), list(names = as.character(1:5)))
     expect_identical(attributes(FUN(EuStockMarkets, f2, use.g.names = FALSE)), list(dim = c(5L, 4L), dimnames = dimnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, f2)), list(dim = c(5L, 4L), dimnames = list(as.character(1:5), colnames(EuStockMarkets))))
     expect_identical(attributes(FUN(m, g2, use.g.names = FALSE)), list(dim = c(7L, 11L), dimnames = list(NULL, colnames(m))))
@@ -70,7 +70,7 @@ test_that("statistical functions handle attributes properly", {
     # print(i)
     FUN <- match.fun(i)
     for(k in names(wlddev)) expect_identical(attributes(FUN(wlddev[[k]])), attributes(wlddev[[k]]))
-    expect_identical(attributes(FUN(AirPassengers)), NULL)
+    if(i != "fmode") expect_identical(attributes(FUN(AirPassengers)), NULL)
     expect_identical(attributes(FUN(EuStockMarkets)), list(names = colnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, drop = FALSE)), list(dim = c(1L, 4L), dimnames = list(NULL, colnames(EuStockMarkets))))
     expect_identical(attributes(FUN(m)), list(names = colnames(m)))
@@ -85,8 +85,8 @@ test_that("statistical functions handle attributes properly", {
     # Grouped
     for(k in names(wlddev)) expect_identical(attributes(FUN(wlddev[[k]], g1, use.g.names = FALSE)), attributes(wlddev[[k]]))
     for(k in names(wlddev)) expect_identical(attributes(FUN(wlddev[[k]], g1)), c(attributes(wlddev[[k]]), list(names = unattrib(GRPnames(g1)))))
-    expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), NULL)
-    expect_identical(attributes(FUN(AirPassengers, f1)), list(names = as.character(1:5)))
+    if(i != "fmode") expect_identical(attributes(FUN(AirPassengers, f1, use.g.names = FALSE)), NULL)
+    if(i != "fmode") expect_identical(attributes(FUN(AirPassengers, f1)), list(names = as.character(1:5)))
     expect_identical(attributes(FUN(EuStockMarkets, f2, use.g.names = FALSE)), list(dim = c(5L, 4L), dimnames = dimnames(EuStockMarkets)))
     expect_identical(attributes(FUN(EuStockMarkets, f2)), list(dim = c(5L, 4L), dimnames = list(as.character(1:5), colnames(EuStockMarkets))))
     expect_identical(attributes(FUN(m, g2, use.g.names = FALSE)), list(dim = c(7L, 11L), dimnames = list(NULL, colnames(m))))
@@ -150,6 +150,66 @@ transFUN <- setdiff(c(.FAST_FUN, .OPERATOR_FUN), c(.FAST_STAT_FUN, "fhdbetween",
 
 options(collapse_unused_arg_action = "none", warn = -1)
 
+test_that("preservation of difftime (and related classes)", {
+  v <- diff(wlddev$date)
+  av <- attributes(v)
+  v <- c(NA, v)
+  attributes(v) <- av
+  vd <- qDT(v)
+  g <- group(wlddev$iso3c)
+  w <- abs(rnorm(length(v))) + 5
+
+  for(i in setdiff(.FAST_STAT_FUN, c("fnobs", "fndistinct"))) {
+    # print(i)
+    FUN <- match.fun(i)
+    for(t in list(NULL, "replace_fill")) {
+      expect_identical(attributes(FUN(v, TRA = t)), av)
+      expect_identical(attributes(FUN(v, g = g, use.g.names = FALSE, TRA = t)), av)
+      expect_identical(attributes(FUN(v, na.rm = FALSE, TRA = t)), av)
+      expect_identical(attributes(FUN(v, g = g, na.rm = FALSE, use.g.names = FALSE, TRA = t)), av)
+      expect_identical(attributes(FUN(vd, drop = FALSE, TRA = t)[[1L]]), av)
+      expect_identical(attributes(FUN(vd, g = g, use.g.names = FALSE, TRA = t)[[1L]]), av)
+      expect_identical(attributes(FUN(vd, drop = FALSE, na.rm = FALSE, TRA = t)[[1L]]), av)
+      expect_identical(attributes(FUN(vd, g = g, na.rm = FALSE, use.g.names = FALSE, TRA = t)[[1L]]), av)
+      if(i %in% c("fsum", "fprod", "fmean", "fmedian", "fnth", "fmode", "fvar", "fsd")) {
+        expect_identical(attributes(FUN(v, w = w, TRA = t)), av)
+        expect_identical(attributes(FUN(v, g = g, w = w, use.g.names = FALSE, TRA = t)), av)
+        expect_identical(attributes(FUN(v, w = w, na.rm = FALSE, TRA = t)), av)
+        expect_identical(attributes(FUN(v, g = g, w = w, na.rm = FALSE, use.g.names = FALSE, TRA = t)), av)
+        expect_identical(attributes(FUN(vd, drop = FALSE, w = w, TRA = t)[[1L]]), av)
+        expect_identical(attributes(FUN(vd, g = g, w = w, use.g.names = FALSE, TRA = t)[[1L]]), av)
+        expect_identical(attributes(FUN(vd, drop = FALSE, w = w, na.rm = FALSE, TRA = t)[[1L]]), av)
+        expect_identical(attributes(FUN(vd, g = g, w = w, na.rm = FALSE, use.g.names = FALSE, TRA = t)[[1L]]), av)
+      }
+    }
+  }
+
+  for(i in c("fnobs", "fndistinct")) {
+    FUN <- match.fun(i)
+    for(t in list(NULL, "replace_fill")) {
+      expect_false(identical(attributes(FUN(v, TRA = t)), av))
+      expect_false(identical(attributes(FUN(v, g, use.g.names = FALSE, TRA = t)), av))
+      expect_false(identical(attributes(FUN(vd, TRA = t)[[1L]]), av))
+      expect_false(identical(attributes(FUN(vd, g, use.g.names = FALSE, TRA = t)[[1L]]), av))
+    }
+  }
+
+  for(i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c(.FAST_STAT_FUN, "fhdbetween", "HDB", "fhdwithin", "HDW", "Dlog"))) {
+    # print(i)
+    FUN <- match.fun(i)
+    expect_identical(attributes(FUN(v)), av)
+    expect_identical(attributes(FUN(v, g = g, by = g)), av)
+    expect_identical(attributes(FUN(vd, cols = NULL)[[1L]]), av)
+    expect_identical(attributes(FUN(vd, g = g, by = g, cols = NULL)[[1L]]), av)
+    if(i %in% c("fscale", "STD", "fbetween", "B", "fwithin", "W")) {
+      expect_identical(attributes(FUN(v, w = w)), av)
+      expect_identical(attributes(FUN(v, g = g, by = g, w = w)), av)
+      expect_identical(attributes(FUN(vd, w = w, cols = NULL)[[1L]]), av)
+      expect_identical(attributes(FUN(vd, g = g, by = g, w = w, cols = NULL)[[1L]]), av)
+    }
+  }
+
+})
 
 test_that("transformation functions preserve all attributes", {
 

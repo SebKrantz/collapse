@@ -20,8 +20,6 @@ Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 }
 \description{
 \code{fscale} is a generic function to efficiently standardize (scale and center) data. \code{STD} is a wrapper around \code{fscale} representing the 'standardization operator', with more options than \code{fscale} when applied to matrices and data frames.  Standardization can be simple or groupwise, ordinary or weighted. Arbitrary target means and standard deviations can be set, with special options for grouped scaling and centering. It is also possible to scale data without centering i.e. perform mean-preserving scaling.
-
-\emph{Note}: For centering without scaling see \code{\link[=fwithin]{fwithin/W}}. For simple not mean-preserving scaling use \code{\link[=fsd]{fsd(..., TRA = "/")}}. To sweep pre-computed means and scale-factors out of data see \code{\link{TRA}}.
 }
 \usage{
 fscale(x, \dots)
@@ -38,7 +36,7 @@ fscale(x, \dots)
 \method{STD}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
     mean = 0, sd = 1, stub = "STD.", keep.by = TRUE, keep.w = TRUE, \dots)
 
-# Methods for compatibility with plm:
+# Methods for indexed data / compatibility with plm:
 
 \method{fscale}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
 \method{STD}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
@@ -56,13 +54,13 @@ fscale(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df').}
-  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+    \item{x}{a numeric vector, matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').}
+  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
   \item{by}{\emph{STD data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-    \item{cols}{\emph{data.frame method}: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
+    \item{cols}{\emph{STD (p)data.frame method}: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric columns. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{w}{a numeric vector of (non-negative) weights. \code{STD} data frame and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\emph{dplyr}) method supports lazy-evaluation. See Examples.}
   \item{na.rm}{logical. Skip missing values in \code{x} or \code{w} when computing means and sd's.}
-  \item{effect}{\emph{plm} methods: Select which panel identifier should be used as group-id. 1L takes the first variable in the \code{plm::index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
+  \item{effect}{\emph{plm} methods: Select which panel identifier should be used as group-id. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{mean}{the mean to center on (default is 0). If \code{mean = FALSE}, no centering will be performed. In that case the scaling is mean-preserving. A numeric value different from 0 (i.e. \code{mean = 5}) will be added to the data after subtracting out the mean(s), such that the data will have a mean of 5. A special option when performing grouped scaling and centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}
  \item{sd}{the standard deviation to scale the data to (default is 1). A numeric value different from 0 (i.e. \code{sd = 3}) will scale the data to have a standard deviation  of 3. A special option when performing grouped scaling is \code{sd = "within.sd"}. In that case the within standard deviation (= the standard deviation of the group-centered series) will be calculated and applied to each group. The results is that the variance of the data within each group is harmonized without forcing a certain variance (such as 1).}
@@ -71,7 +69,7 @@ fscale(x, \dots)
   \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
-If \code{g = NULL}, \code{fscale} by default (column-wise) subtracts the mean or weighted mean (if \code{w} is supplied) from all data points in \code{x}, and then divides this difference by the standard deviation or frequency-weighted standard deviation (if \code{w} is supplied). The result is that all columns in \code{x} will have mean 0 and standard deviation 1. Alternatively, data can be scaled to have a mean of \code{mean} and a standard deviation of \code{sd}. If \code{mean = FALSE} the data is only scaled (not centered) such that the mean of the data is preserved. \cr
+If \code{g = NULL}, \code{fscale} by default (column-wise) subtracts the mean or weighted mean (if \code{w} is supplied) from all data points in \code{x}, and then divides this difference by the standard deviation or frequency-weighted standard deviation. The result is that all columns in \code{x} will have a (weighted) mean 0 and (weighted) standard deviation 1. Alternatively, data can be scaled to have a mean of \code{mean} and a standard deviation of \code{sd}. If \code{mean = FALSE} the data is only scaled (not centered) such that the mean of the data is preserved. \cr
 
 Means and standard deviations are computed using Welford's numerically stable online algorithm.
 
@@ -93,9 +91,9 @@ Special options for grouped scaling are \code{mean = "overall.mean"} and \code{s
 % \author{
 %%  ~~who you are~~
 % }
-% \note{
-%%  ~~further notes~~
-% }
+\note{
+For centering without scaling see \code{\link[=fwithin]{fwithin/W}}. For simple not mean-preserving scaling use \code{\link[=fsd]{fsd(..., TRA = "/")}}. To sweep pre-computed means and scale-factors out of data see \code{\link{TRA}}.
+}
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
@@ -122,24 +120,23 @@ head(qsu(fscale(get_vars(wlddev, 9:12),             # This group-centers on the 
     mean = "overall.mean", sd = "within.sd"),       # -> data harmonized in the first 2 moments
     by = wlddev$iso3c))
 
-\donttest{ % No code relying on suggested package
-## Using plm
-pwlddev <- plm::pdata.frame(wlddev, index = c("iso3c","year"))
-head(STD(pwlddev))                                  # Standardizing all numeric variables by country
-head(STD(pwlddev, effect = 2L))                     # Standardizing all numeric variables by year
+## Indexed data
+wldi <- findex_by(wlddev, iso3c, year)
+head(STD(wldi))                                  # Standardizing all numeric variables by country
+head(STD(wldi, effect = 2L))                     # Standardizing all numeric variables by year
 
 ## Weighted Standardizing
 weights = abs(rnorm(nrow(wlddev)))
 head(fscale(get_vars(wlddev,9:12), wlddev$iso3c, weights))
 head(STD(wlddev, ~iso3c, weights, 9:12))
 
-# Using dplyr
-library(dplyr)
-wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX) \%>\% STD()
-wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX) \%>\% STD(weights) # weighted standardizing
-wlddev \%>\% group_by(iso3c) \%>\% select(PCGDP,LIFEEX,POP) \%>\% STD(POP) # weighting by POP ->
+# Grouped data
+library(magrittr)
+wlddev \%>\% fgroup_by(iso3c) \%>\% fselect(PCGDP,LIFEEX) \%>\% STD()
+wlddev \%>\% fgroup_by(iso3c) \%>\% fselect(PCGDP,LIFEEX) \%>\% STD(weights) # weighted standardizing
+wlddev \%>\% fgroup_by(iso3c) \%>\% fselect(PCGDP,LIFEEX,POP) \%>\% STD(POP) # weighting by POP ->
 # ..keeps the weight column unless keep.w = FALSE
-}
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

@@ -6,7 +6,7 @@
 Fast Reordering of Data Frame Columns
 }
 \description{
-Efficiently reorder columns in a data frame (no copies). To do this by reference see also \code{data.table::setcolorder}.
+Efficiently reorder columns in a data frame. To do this fully by reference see also \code{data.table::setcolorder}.
 }
 \usage{
 colorder(.X, \dots, pos = "front")
@@ -30,7 +30,7 @@ colorderv(X, neworder = radixorder(names(X)),
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{X} using a (vector of) regular expression(s) passed to \code{neworder}. Matching is done using \code{\link{grep}}. \emph{Note} that multiple regular expressions will be matched in the order they are passed, and \code{\link{funique}} will be applied to the resulting set of indices. }
 }
 \value{
-\code{.X/X} with columns re-ordered (no deep copy).
+\code{.X/X} with columns reordered (no deep copies).
 }
 
 

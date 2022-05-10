@@ -23,11 +23,11 @@ fcumsum(x, \dots)
 
 \method{fcumsum}{data.frame}(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, \dots)
 
-# Methods for compatibility with plm:
+# Methods for indexed data / compatibility with plm:
 
-\method{fcumsum}{pseries}(x, na.rm = TRUE, fill = FALSE, \dots)
+\method{fcumsum}{pseries}(x, na.rm = TRUE, fill = FALSE, shift = "time", \dots)
 
-\method{fcumsum}{pdata.frame}(x, na.rm = TRUE, fill = FALSE, \dots)
+\method{fcumsum}{pdata.frame}(x, na.rm = TRUE, fill = FALSE, shift = "time", \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
@@ -35,23 +35,24 @@ fcumsum(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a vector / time series, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df').}
-  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+  \item{x}{a numeric vector / time series, (time series) matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').}
+  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
   \item{o}{a vector or list of vectors providing the order in which the elements of \code{x} are cumulatively summed. Will be passed to \code{\link{radixorderv}} unless \code{check.o = FALSE}.}
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost.}
 \item{fill}{if \code{na.rm = TRUE}, setting \code{fill = TRUE} will overwrite missing values with the previous value of the cumulative sum, starting from 0.}
 \item{check.o}{logical. Programmers option: \code{FALSE} prevents passing \code{o} to \code{\link{radixorderv}}, requiring \code{o} to be a valid ordering vector that is integer typed with each element in the range \code{[1, length(x)]}. This gives some extra speed, but will terminate R if any element of \code{o} is too large or too small. }
-  \item{keep.ids}{\emph{pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all grouping variables and variables passed to\code{o}). \emph{Note}: For grouped / panel data frames identifiers are dropped, but the 'groups' / 'index' attributes are kept.}
+    \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} or \code{"row"}. See \code{\link{flag}} for details. The argument here does not control 'shifting' of data but rather the order in which elements are summed.}
+  \item{keep.ids}{\emph{pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all grouping variables and variables passed to\code{o}). \emph{Note}: For grouped / panel data frames identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
 \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
 If \code{na.rm = FALSE}, \code{fcumsum} works like \code{\link{cumsum}} and propagates missing values. The default \code{na.rm = TRUE} skips missing values and computes the cumulative sum on the non-missing values. Missing values are kept. If \code{fill = TRUE}, missing values are replaced with the previous value of the cumulative sum (starting from 0), computed on the non-missing values.
 
-By default the cumulative sum is computed in the order in which elements appear in \code{x}. If \code{o} is provided, the cumulative sum is computed in the order given by \code{radixorderv(o)}, without the need to first sort \code{x}. This applies as well if groups are used (\code{g}), in which the cumulative sum is computed separately in each group.
+By default the cumulative sum is computed in the order in which elements appear in \code{x}. If \code{o} is provided, the cumulative sum is computed in the order given by \code{radixorderv(o)}, without the need to first sort \code{x}. This applies as well if groups are used (\code{g}), in which case the cumulative sum is computed separately in each group.
 
-The \emph{pseries} and \emph{pdata.frame} methods assume that the last factor in the \code{plm::index} is the time-variable and the rest are grouping variables. The time-variable is passed to \code{radixorderv} and used for ordered computation, so that cumulative sums are accurately computed regardless of whether the panel-data is ordered or balanced.
+The \emph{pseries} and \emph{pdata.frame} methods assume that the last factor in the \link[=findex]{index} is the time-variable and the rest are grouping variables. The time-variable is passed to \code{radixorderv} and used for ordered computation, so that cumulative sums are accurately computed regardless of whether the panel-data is ordered or balanced.
 
-\code{fcumsum} explicitly supports integers. Integers in R are bounded at bounded at +-2,147,483,647, and an integer overflow error will be provided if the cumulative sum (within any group) exceeds +-2,147,483,647.
+\code{fcumsum} explicitly supports integers. Integers in R are bounded at bounded at +-2,147,483,647, and an integer overflow error will be provided if the cumulative sum (within any group) exceeds +-2,147,483,647. In that case data should be converted to double beforehand.
 
 }
 \value{

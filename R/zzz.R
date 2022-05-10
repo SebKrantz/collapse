@@ -7,41 +7,33 @@
   # https://stackoverflow.com/questions/12598242/global-variables-in-packages-in-r
   # https://stackoverflow.com/questions/49056642/r-how-to-make-variable-available-to-namespace-at-loading-time?noredirect=1&lq=1
   .collapse_env <- new.env()
-
-  # This slows down th eloading of collapse too much. Therefore we load those when needed.
-  # suppressMessages({
-  #
-  # .collapse_env$fixest_demean <-
-  #       if(requireNamespace("fixest", quietly = TRUE)) # fixest::demean else NULL
-  #          get0("demean", envir = getNamespace("fixest")) else NULL
-  #
-  # .collapse_env$weights_wtd.cors <-
-  #       if(requireNamespace("weights", quietly = TRUE)) # weights::wtd.cors else NULL
-  #          get0("wtd.cors", envir = getNamespace("weights")) else NULL
-  #
-  # .collapse_env$RcppArmadillo_fastLm <-
-  #        if(requireNamespace("RcppArmadillo", quietly = TRUE)) # RcppArmadillo::fastLmPure else NULL
-  #          get0("fastLmPure", envir = getNamespace("RcppArmadillo")) else NULL # _RcppArmadillo_fastLm_impl
-  #
-  # .collapse_env$RcppEigen_fastLm <-
-  #        if(requireNamespace("RcppEigen", quietly = TRUE)) # RcppEigen::fastLmPure else NULL
-  #          get0("fastLmPure", envir = getNamespace("RcppEigen")) else NULL # RcppEigen_fastLm_Impl
-  #
-  # })
-
   clpns <- parent.env(environment())
   assign(".collapse_env", .collapse_env, envir = clpns)
 
-  # Old solution: does not dynamically update, would have to re-install collapse after installing these packages
-  # assign(".RcppArmadillo_fastLm",
-  #        if(requireNamespace("RcppArmadillo", quietly = TRUE))
-  #        get0("_RcppArmadillo_fastLm_impl", envir = getNamespace("RcppArmadillo")) else NULL, envir = parent.env(environment()))
+  mask <- getOption("collapse_mask")
 
-  if(length(mask <- getOption("collapse_mask")) && is.character(mask)) {
+  # This checks if a .fastverse config file is there: to make sure collapse cannot be loaded without masking in project
+  if(!(length(mask) && is.character(mask))) {
+    if(file.exists(".fastverse")) {
+      fileConn <- file(".fastverse")
+      contents <- readLines(fileConn, warn = FALSE, skipNul = TRUE)
+      close(fileConn)
+      contents <- trimws(contents[nzchar(contents)])
+      mask <- which(startsWith(contents, "_opt_collapse_mask")) # Also works with if-clause below
+      if(length(mask)) {
+        if(length(mask) > 1L) stop("Multiple collapse_mask options set in .fastverse config file")
+        mask <- paste0("options(", substr(contents[mask], 6L, 100000L), ")")
+        eval(str2lang(mask))
+        mask <- getOption("collapse_mask")
+      }
+    }
+  }
+
+  if(length(mask) && is.character(mask)) {
     # if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
     if(any(mask == "all")) mask <- c("helper", "manip", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
-    manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fmutate", "frename")
-    helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
+    manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fmutate", "frename", "findex_by", "findex")
+    helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "frange", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
     if(any(mask == "helper")) mask <- unique.default(c(helperfun, mask[mask != "helper"]))
     if(any(mask == "manip")) mask <- unique.default(c(manipfun, mask[mask != "manip"]))
     if(any(mask == "fast-fun")) {
@@ -72,9 +64,7 @@
     namespaceExport(clpns, unmask)
   }
 
-  if(isTRUE(getOption("collapse_F_to_FALSE"))) {
-    assign("F", FALSE, envir = clpns)
-  }
+  if(isTRUE(getOption("collapse_F_to_FALSE"))) assign("F", FALSE, envir = clpns)
 
   # Experimental collapse_remove option: doesn't work because namespace exports not defined yet.
   # if(length(crem <- getOption("collapse_remove")) && is.character(crem)) {
@@ -88,10 +78,8 @@
   #   # clpns[[".__NAMESPACE__."]][["exports"]] <- exports
   # }
 
-
-
-  options(collapse_unused_arg_action = "warning", # error, warning, message or none
-          collapse_DT_alloccol = 100L)
+  if(is.null(getOption("collapse_unused_arg_action"))) options(collapse_unused_arg_action = "warning") # error, warning, message or none
+  # if(is.null(getOption("collapse_DT_alloccol"))) options(collapse_DT_alloccol = 100L)
 
   invisible(res)
 }
@@ -106,7 +94,7 @@
 
 # Note: To create local dev version of package change package name in DESCRIPTION, NAMESPACE, this file (including C_collapse_init),
 # replace all instances of `_collapse_` in source files (except for _collapse_DT_alloccol`), and also rename `R_init_collapse` in ExportSymbols.cpp.
-# and in vignetter / Rd files replace library(collapse)
+# and in vignettes / Rd files replace library(collapse)
 release_questions <- function() {
   c(
     "Have you updated the version number in DESCRIPTION, NEWS.md, NEWS.Rd, cran.comments and .onAttach?",
@@ -117,6 +105,6 @@ release_questions <- function() {
     "updated collapse-package.Rd and collapse-documentation.Rd?",
     "All functions in global_macros.R?",
     "checked all depreciated functions and arguments?",
-    "any changess to arguments or order of arguments in key functions (GRP etc.). Does everything work?"
+    "any changes to arguments or order of arguments in key functions (GRP etc.). Does everything work?"
   )
 }

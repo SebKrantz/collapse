@@ -429,8 +429,8 @@ test_that("fdroplevels works as intended", {
   expect_identical(fdroplevels(wld150$iso3c), droplevels(wld150$iso3c))
   expect_identical(fdroplevels(wldNA150$iso3c), droplevels(wldNA150$iso3c))
   expect_message(fdroplevels(1:3))
-  expect_warning(fdroplevels(wld150, bla = 1))
-  expect_warning(fdroplevels(wld150$iso3c, bla = 1))
+  # expect_warning(fdroplevels(wld150, bla = 1))
+  # expect_warning(fdroplevels(wld150$iso3c, bla = 1))
   expect_error(fdroplevels.factor(wld150$country))
 
 })

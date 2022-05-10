@@ -61,7 +61,7 @@ fbetween(x, \dots)
 \method{W}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
   mean = 0, theta = 1, stub = "W.", keep.by = TRUE, keep.w = TRUE, \dots)
 
-# Methods for compatibility with plm:
+# Methods for indexed data / compatibility with plm:
 
 \method{fbetween}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
 \method{fwithin}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, \dots)
@@ -88,13 +88,13 @@ fbetween(x, \dots)
 }
 
 \arguments{
-  \item{x}{a numeric vector, matrix, data frame, panel series (class \code{pseries} of package \code{plm}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df').}
-  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+    \item{x}{a numeric vector, matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').}
+  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
   \item{by}{\emph{B and W data.frame method}: Same as g, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{w}{a numeric vector of (non-negative) weights. \code{B}/\code{W} data frame and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\emph{dplyr}) method supports lazy-evaluation. See Examples.}
-    \item{cols}{\emph{data.frame method}: Select columns to center/average using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
+    \item{cols}{\emph{B/W (p)data.frame methods}: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric columns. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{na.rm}{logical. Skip missing values in \code{x} and \code{w} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be \code{NA}, and all data points belonging to that group in the output vector will also be \code{NA}.}
-      \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the \code{plm::index}, 2L the second etc. Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted. }
+      \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc. Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted. }
   \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
   \item{fill}{\emph{option to \code{fbetween}/\code{B}}: Logical. \code{TRUE} will overwrite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
   \item{mean}{\emph{option to \code{fwithin}/\code{W}}: The mean to center on, default is 0, but a different mean can be supplied and will be added to the data after the centering is performed. A special option when performing grouped centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}
@@ -162,7 +162,7 @@ lm(mpg ~ carb + B(carb,cyl), data = mtcars)                     # Procedure sugg
 plm::plm(mpg ~ carb, mtcars, index = "cyl", model = "within")   # "Proof"..
 }
 # This takes the interaction of cyl, vs and am as fixed effects
-lm(W(mpg,list(cyl,vs,am)) ~ W(carb,list(cyl,vs,am)), data = mtcars)
+lm(W(mpg) ~ W(carb), data = iby(mtcars, id = finteraction(cyl, vs, am)))
 lm(mpg ~ carb, data = W(mtcars, ~ cyl + vs + am, stub = FALSE))
 lm(mpg ~ carb + B(carb,list(cyl,vs,am)), data = mtcars)
 

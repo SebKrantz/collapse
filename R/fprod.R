@@ -79,19 +79,21 @@ fprod.list <- function(x, ...) fprod.data.frame(x, ...)
 fprod.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                             keep.group_vars = TRUE, keep.w = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
-  wsym <- l1orn(as.character(substitute(w)), NULL)
+  wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)
   prodw <- NULL
 
-  if(length(wsym) && length(wn <- whichv(nam, wsym))) {
-    w <- .subset2(x, wn)
-    if(any(gn == wn)) stop("Weights coincide with grouping variables!")
-    gn <- c(gn, wn)
-    if(keep.w) {
-      if(nTRAl) prodw <- `names<-`(list(.Call(C_fprod,w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("prod.", wsym)) else if(keep.group_vars)
-        gn2 <- gn else prodw <- gn2 <- wn
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame())
+    if(length(wn <- which(nam %in% all.vars(wsym)))) {
+      if(any(gn %in% wn)) stop("Weights coincide with grouping variables!")
+      gn <- c(gn, wn)
+      if(keep.w) {
+        if(nTRAl) prodw <- `names<-`(list(.Call(C_fprod,w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("prod.", if(length(wsym) == 1L) wsym else deparse(wsym))) else if(keep.group_vars)
+          gn2 <- gn else prodw <- gn2 <- wn
+      }
     }
   }
 

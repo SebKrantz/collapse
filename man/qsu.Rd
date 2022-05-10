@@ -28,7 +28,7 @@ qsu(x, \dots)
 \method{qsu}{data.frame}(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE,
     array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
 
-# Methods for compatibility with plm:
+# Methods for indexed data / compatibility with plm:
 
 \method{qsu}{pseries}(x, g = NULL, w = NULL, effect = 1L, higher = FALSE,
     array = TRUE, stable.algo = TRUE, \dots)
@@ -47,7 +47,7 @@ qsu(x, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{a vector, matrix, data frame, panel series (\code{plm::pseries}) or panel data frame (\code{plm::pdata.frame}).}
+  \item{x}{a vector, matrix, data frame, 'indexed_series' ('pseries') or 'indexed_frame' ('pdata.frame').}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{(p)data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1 + group2} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. Data frame method also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data if \code{g/by} is also used). However, passing any LHS variables to \code{pid} will overwrite any \code{LHS} variables passed to \code{by}.}
@@ -55,10 +55,10 @@ qsu(x, \dots)
   \item{cols}{select columns to summarize using column names, indices, a logical vector or a function (e.g. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{pid} overwrite \code{cols}.}
 
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
-  \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) output to array, else output (nested) list of matrices.}
+  \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) \code{TRUE} returns an array, while \code{FALSE} returns a (nested) list of matrices.}
   \item{stable.algo}{logical. \code{FALSE} uses a faster but less stable method to calculate the standard deviation (see Details of \code{\link{fsd}}). Only available if \code{w = NULL} and \code{higher = FALSE}.}
   \item{vlabels}{logical \code{TRUE} or a function: to display variable labels in the summary. See Details.}
-  \item{effect}{\emph{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L takes the first variable in the \code{plm::index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
+  \item{effect}{\emph{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
   \item{\dots}{arguments to be passed to or from other methods.}
   \item{digits}{the number of digits to print after the comma/dot.}
   \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is to print out numbers with up to 9 digits and print larger numbers scientifically).}
@@ -143,17 +143,16 @@ r[3, 1] <- r[1, 1] / r[2, 1]
 print.qsu(r)
 # Proof:
 qsu(x, pid = g)
-\donttest{ % No code relying on suggested package
-# Using plm:
-pwlddev <- plm::pdata.frame(wlddev,         # Creating a Panel Data Frame frame from this data
-                  index = c("iso3c","year"))
-qsu(pwlddev)                                # Summary for pdata.frame -> qsu(wlddev, pid = ~ iso3c)
-qsu(pwlddev$PCGDP)                          # Default summary for Panel Series  (class pseries)
-qsu(G(pwlddev$PCGDP))                       # Summarizing GDP growth, see also ?G
+
+# Using indexed data:
+wldi <- findex_by(wlddev, iso3c, year)   # Creating a Indexed Data Frame frame from this data
+qsu(wldi)                                # Summary for pdata.frame -> qsu(wlddev, pid = ~ iso3c)
+qsu(wldi$PCGDP)                          # Default summary for Panel Series
+qsu(G(wldi$PCGDP))                       # Summarizing GDP growth, see also ?G
 
 # Grouped Panel Data Summaries -------------
 qsu(wlddev, ~ region, ~ iso3c, cols = 9:12) # Panel-Statistics by region
-psr <- qsu(pwlddev, ~ region, cols = 9:12)  # Same on plm pdata.frame
+psr <- qsu(wldi, ~ region, cols = 9:12)     # Same on indexed data
 psr                                         # -> Gives a 4D array
 psr[,"N/T",,]                               # Checking out the number of observations:
 # In North america we only have 3 countries, for the GINI we only have 3.91 observations on average
@@ -162,7 +161,7 @@ psr[,"SD",,]                                # Considering only standard deviatio
 # -> In all regions variations in inequality (GINI) between countries are greater than variations
 # in inequality within countries. The opposite is true for Life-Expectancy in all regions apart
 # from Europe, etc..
-}
+
 # Again let's do this manually for PDGCP:
 d <- cbind(Overall = x,
            Between = fbetween(x, g),

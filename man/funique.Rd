@@ -3,12 +3,14 @@
 \alias{funique.default}
 \alias{funique.data.frame}
 \alias{funique.sf}
+\alias{funique.pseries}
+\alias{funique.pdata.frame}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Unique Elements / Rows
 }
 \description{
-\code{funique} is a substantially faster alternative to \code{\link{unique}}. It is generic with a default vector and a data frame methods.
+\code{funique} is a substantially faster alternative to \code{\link{unique}}, particularly for data frames.
 }
 \usage{
 funique(x, \dots)
@@ -18,6 +20,12 @@ funique(x, \dots)
 \method{funique}{data.frame}(x, cols = NULL, sort = FALSE, method = "auto", \dots)
 
 \method{funique}{sf}(x, cols = NULL, sort = FALSE, method = "auto", \dots)
+
+# Methods for indexed data / compatibility with plm:
+
+\method{funique}{pseries}(x, sort = FALSE, method = "auto", drop.index.levels = "id", \dots)
+
+\method{funique}{pdata.frame}(x, cols = NULL, sort = FALSE, method = "auto", drop.index.levels = "id", \dots)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -33,11 +41,17 @@ funique(x, \dots)
   }
 \item{cols}{compute unique rows according to a subset of columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. \code{is.character}). \emph{Note:} All columns are returned. }
 \item{\dots}{arguments passed to \code{\link{radixorderv}}, e.g. \code{decreasing} or \code{na.last}. Only applicable if \code{method = "radix"}.}
+\item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
 }
 \details{
 If \code{x} is a data frame / list and all rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{group}} for some additional computational details.
 
 The \emph{sf} method simply ignores the geometry column when determining unique values.
+
+Methods for indexed data also subset the index accordingly.
+}
+\note{
+No matrix method is provided. Please see \code{kit::funique} for a fast alternative with a matrix method. The \emph{kit} version is also often faster on vectors, but generally not on data frames.
 }
 \value{
 \code{x} with duplicate elements/rows removed. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.

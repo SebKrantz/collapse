@@ -73,6 +73,13 @@ wBY <- function(x, f, FUN, w, ...) {
   qDF(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...), return = "matrix"))
 }
 
+for (FUN in 1:2) {
+
+  if(FUN == 2L) {
+    if(Sys.getenv("OMP") == "TRUE") {
+      fmedian <- function(x, ...) collapse::fmedian(x, ..., nthreads = 2L)
+    } else break
+  }
 
 test_that("fmedian performs like base::median", {
   expect_equal(fmedian(NA), as.double(bmedian(NA)))
@@ -339,10 +346,21 @@ test_that("fmedian produces errors for wrong input", {
   expect_error(fmedian(wlddev, wlddev$iso3c, wlddev$year))
 })
 
+}
+
 # fnth
 
 g <- GRP(mtcars, ~ cyl)
 gf <- as_factor_GRP(g)
+
+for (FUN in 1:2) {
+
+  if(FUN == 2L) {
+    if(Sys.getenv("OMP") == "TRUE") {
+      fnth <- function(x, ...) collapse::fnth(x, ..., nthreads = 2L)
+    } else break
+  }
+
 
 test_that("fnth gives a proper lower/upper/average weighted median on complete data", {
 
@@ -666,5 +684,5 @@ test_that("fnth properly deals with missing data", {
   expect_error(fnth(1:2, w = c(NA, 1)))
 })
 
-
+}
 

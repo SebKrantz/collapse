@@ -72,6 +72,7 @@ Mode <- function(x, na.rm = FALSE, ties = "first") {
   ox <- unam(x)[o]
   switch(ties,
          first = unam(x)[which.max(rowidv(ox)[radixorder(o)])],
+         last = unam(x)[which.max(rowidv(ox)[radixorder(o, decreasing = TRUE)])],
          min = minwa(ox[whichmax(rowidv(ox))]),
          max = maxwa(ox[whichmax(rowidv(ox))]),
          stop("Unknown ties option"))
@@ -100,9 +101,8 @@ wMode <- function(x, w, na.rm = FALSE, ties = "first") {
   g <- GRP.default(x, call = FALSE)
   switch(ties,
          first = {
-           g <- as_factor_GRP(g)
-           o <- radixorder(unlist(split.default(seq_along(w), g), use.names = FALSE))
-           sw <- unlist(lapply(split.default(w, g), base::cumsum), use.names = FALSE)[o]
+           o <- radixorder(unlist(gsplit(seq_along(w), g), use.names = FALSE))
+           sw <- unlist(lapply(gsplit(w, g), base::cumsum), use.names = FALSE)[o]
            fsubset.default(x, which.max(sw))
          },
          min = minwa(fsubset.default(g[["groups"]][[1L]], whichmax(fsum.default(w, g, use.g.names = FALSE)))),
@@ -121,6 +121,14 @@ wBY <- function(x, f, FUN, w, ...) {
     if(is_date(xi)) do.call(c, r) else unlist(r)
     }), `names<-`, NULL)
 }
+
+for (nth in 1:2) {
+
+  if(nth == 2L) {
+    if(Sys.getenv("OMP") == "TRUE") {
+      fmode <- function(x, ...) collapse::fmode(x, ..., nthreads = 2L)
+    } else break
+  }
 
 if(identical(Sys.getenv("NCRAN"), "TRUE")) {
 
@@ -210,10 +218,10 @@ test_that("fmode performs like fmode with weights all equal", {
   expect_equal(fmode(1, na.rm = FALSE, ties = t), fmode(1, w = 5, na.rm = FALSE, ties = t))
   expect_equal(fmode(1:3, na.rm = FALSE, ties = t), fmode(1:3, w = rep(1.4, 3), na.rm = FALSE, ties = t))
   expect_equal(fmode(-1:1, na.rm = FALSE, ties = t), fmode(-1:1, w = rep(1.4, 3), na.rm = FALSE, ties = t))
-  # expect_equal(fmode(x, ties = t), fmode(x, w = rep(1,100), ties = t))
-  # expect_equal(fmode(x, na.rm = FALSE, ties = t), fmode(x, w = rep(1.4, 100), na.rm = FALSE, ties = t))  # failed on patched solaris...
-  # expect_equal(fmode(xNA, na.rm = FALSE, ties = t), fmode(xNA, w = rep(4.6, 100), na.rm = FALSE, ties = t))
-  # expect_equal(fmode(xNA, ties = t), fmode(xNA, w = rep(4.6, 100), ties = t)) # failed on patched solaris...
+  expect_equal(fmode(x, ties = t), fmode(x, w = rep(1,100), ties = t))
+  expect_equal(fmode(x, na.rm = FALSE, ties = t), fmode(x, w = rep(1.4, 100), na.rm = FALSE, ties = t))  # failed on patched solaris...
+  expect_equal(fmode(xNA, na.rm = FALSE, ties = t), fmode(xNA, w = rep(4.6, 100), na.rm = FALSE, ties = t))
+  expect_equal(fmode(xNA, ties = t), fmode(xNA, w = rep(4.6, 100), ties = t)) # failed on patched solaris...
   expect_equal(fmode(m, ties = t), fmode(m, w = rep(6587, l), ties = t))
   expect_equal(fmode(m, na.rm = FALSE, ties = t), fmode(m, w = rep(6587, l), na.rm = FALSE, ties = t))
   expect_equal(fmode(mNA, na.rm = FALSE, ties = t), fmode(mNA, w = rep(6587, l), na.rm = FALSE, ties = t))
@@ -224,7 +232,7 @@ test_that("fmode performs like fmode with weights all equal", {
   expect_equal(fmode(dataNA, ties = t), fmode(dataNA, w = rep(6787, l), ties = t))
   expect_equal(fmode(x, f, ties = t), fmode(x, f, rep(546,100), ties = t))
   expect_equal(fmode(x, f, na.rm = FALSE, ties = t), fmode(x, f, rep(5,100), na.rm = FALSE, ties = t))
-#  expect_equal(fmode(xNA, f, na.rm = FALSE, ties = t), fmode(xNA, f, rep(52.7,100), na.rm = FALSE, ties = t)) # Failed sometimes for some reason... v. 1.5.1 error
+  expect_equal(fmode(xNA, f, na.rm = FALSE, ties = t), fmode(xNA, f, rep(52.7,100), na.rm = FALSE, ties = t)) # Failed sometimes for some reason... v. 1.5.1 error
   expect_equal(fmode(xNA, f, ties = t), fmode(xNA, f, rep(599,100), ties = t))
   expect_equal(fmode(m, g, ties = t), fmode(m, g, rep(546,l), ties = t))
   expect_equal(fmode(m, g, na.rm = FALSE, ties = t), fmode(m, g, rep(1,l), na.rm = FALSE, ties = t))
@@ -287,8 +295,8 @@ test_that("fmode with weights performs like wMode (defined above)", {
   expect_equal(fmode(mNA, w = wdatNA, ties = t), dapply(mNA, wMode, wdatNA, na.rm = TRUE, ties = t))
   expect_equal(fmode(getdata(tf), w = wdatNA, ties = t, drop = FALSE), dapply(getdata(tf), wMode, wdatNA, na.rm = TRUE, ties = t, drop = FALSE))
   expect_equal(fmode(getdataNA(tf), w = wdatNA, ties = t, drop = FALSE), dapply(getdataNA(tf), wMode, wdatNA, na.rm = TRUE, ties = t, drop = FALSE))
-  # expect_equal(fmode(x, f, wNA, ties = t), wBY(x, f, wMode, wNA, na.rm = TRUE, ties = t)) # failed on MAC OSX
-  # expect_equal(fmode(xNA, f, wNA, ties = t), wBY(xNA, f, wMode, wNA, na.rm = TRUE, ties = t)) # failed on mac OSX...
+  expect_equal(fmode(x, f, wNA, ties = t), wBY(x, f, wMode, wNA, na.rm = TRUE, ties = t)) # failed on MAC OSX
+  expect_equal(fmode(xNA, f, wNA, ties = t), wBY(xNA, f, wMode, wNA, na.rm = TRUE, ties = t)) # failed on mac OSX...
   expect_equal(fmode(m, g, wdatNA, ties = t), wBY(m, gf, wMode, wdatNA, na.rm = TRUE, ties = t))
   expect_equal(fmode(mNA, g, wdatNA, ties = t), wBY(mNA, gf, wMode, wdatNA, na.rm = TRUE, ties = t))
   expect_equal(fmode(getdata(tf), g, wdatNA, ties = t), wBY(getdata(tf), gf, wMode, wdatNA, na.rm = TRUE, ties = t))
@@ -409,11 +417,11 @@ test_that("fmode handles special values in the right way", {
   expect_equal(fmode(c(1,NaN)), 1)
   expect_equal(fmode(c(1,Inf)), 1)
   expect_equal(fmode(c(1,-Inf)), 1)
-  expect_equal(fmode(c(FALSE,TRUE)), TRUE) # ???????
+  expect_equal(fmode(c(FALSE,TRUE)), FALSE)
   expect_equal(fmode(c(FALSE,FALSE)), FALSE)
   expect_equal(fmode(c(1,Inf), na.rm = FALSE), 1)
   expect_equal(fmode(c(1,-Inf), na.rm = FALSE), 1)
-  expect_equal(fmode(c(FALSE,TRUE), na.rm = FALSE), TRUE) # ??????
+  expect_equal(fmode(c(FALSE,TRUE), na.rm = FALSE), FALSE)
   expect_equal(fmode(c(FALSE,FALSE), na.rm = FALSE), FALSE)
 })
 
@@ -434,14 +442,14 @@ test_that("fmode with weights handles special values in the right way", {
   expect_equal(fmode(NaN, w = NA), NaN)
   expect_equal(fmode(Inf, w = NA), Inf)
   expect_equal(fmode(-Inf, w = NA), -Inf)
-  expect_equal(fmode(TRUE, w = NA), NA)
-  expect_equal(fmode(FALSE, w = NA), NA)
+  expect_equal(fmode(TRUE, w = NA), TRUE)
+  expect_equal(fmode(FALSE, w = NA), FALSE)
   expect_equal(fmode(NA, w = NA, na.rm = FALSE), NA)
   expect_equal(fmode(NaN, w = NA, na.rm = FALSE), NaN)
   expect_equal(fmode(Inf, w = NA, na.rm = FALSE), Inf)
   expect_equal(fmode(-Inf, w = NA, na.rm = FALSE), -Inf)
-  expect_equal(fmode(TRUE, w = NA, na.rm = FALSE), NA)
-  expect_equal(fmode(FALSE, w = NA, na.rm = FALSE), NA)
+  expect_equal(fmode(TRUE, w = NA, na.rm = FALSE), TRUE)
+  expect_equal(fmode(FALSE, w = NA, na.rm = FALSE), FALSE)
   expect_equal(fmode(1:3, w = c(1,Inf,3)), 2)
   expect_equal(fmode(1:3, w = c(1,-Inf,3)), 3)
   expect_equal(fmode(1:3, w = c(1,Inf,3), na.rm = FALSE), 2)
@@ -473,4 +481,4 @@ test_that("fmode produces errors for wrong input", {
   expect_visible(fmode(wlddev, wlddev$iso3c, wlddev$year))
 })
 
-
+}

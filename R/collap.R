@@ -79,10 +79,8 @@ applyfuns_internal <- function(data, by, FUN, fFUN, parallel, cores, ...) {
 }
 
 
-# CHeck this :
-# X = wlddev; by = ~ iso3c; wFUN = .c(fmean, fsd); w = ~ ODA
 
-# NOTE: CUSTOM SEPARATOR doesn't work because of unlist() !!!!!!!!!!!!
+# NOTE: CUSTOM SEPARATOR doesn't work because of unlist() !
 
 # keep.w toggle w being kept even if passed externally ? -> Also not done with W, B , etc !! -> but they also don't keep by ..
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
@@ -137,8 +135,8 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
     if(is.call(w)) {
       namw <- all.vars(w)
       numw <- ckmatch(namw, nam)
-      if(vl && ncustoml) v <- v[v != numw]
-      w <- X[[numw]]
+      if(vl && ncustoml) v <- fsetdiff(v, numw) # v[v != numw]
+      w <- eval(w[[2L]], X, attr(w, ".Environment")) # w <- X[[numw]]
     } else if(keep.w) {
       numw <- 0L # length(X) + 1L
       namw <- l1orlst(as.character(substitute(w)))
@@ -539,14 +537,16 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
   # clx <- oldClass(X)
   attr(X, "groups") <- NULL
   oldClass(X) <- fsetdiff(oldClass(X), c("GRP_df", "grouped_df"))  # clx[clx != "grouped_df"]
-  if(length(wsym <- as.character(substitute(w))) == 1L) { # Non-standard evaluation of w argument
-    if(any(windl <- wsym == attr(X, "names"))) {
-      assign(wsym, .subset2(X, wsym)) # needs to be here !! (before subsetting!!)
+  wsym <- substitute(w)
+  if(!is.null(wsym)) { # Non-standard evaluation of w argument
+    if(any(windl <- attr(X, "names") %in% all.vars(wsym))) {
+      wchar <- if(length(wsym) == 1L) as.character(wsym) else deparse(wsym)
+      assign(wchar,  eval(wsym, X, parent.frame())) # needs to be here !! (before subsetting!!)
       if(is.null(custom)) X <- fcolsubset(X, ngn & !windl) # else X <- X # Needed ?? -> nope !!
       expr <- substitute(collap(X, by, FUN, catFUN, cols, NULL, wFUN, custom,
                                 keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, TRUE, "auto", parallel,
                                 mc.cores, return, give.names, ...))
-      expr[[7L]] <- as.symbol(wsym) # best solution !!
+      expr[[7L]] <- as.symbol(wchar) # best solution !!
       return(eval(expr))
     }
   }

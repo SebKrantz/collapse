@@ -26,6 +26,7 @@ SEXP sym_sorted;
 // SEXP sym_starts;
 // SEXP char_starts;
 SEXP sym_index;
+SEXP sym_index_df;
 SEXP sym_inherits;
 SEXP sym_sf_column;
 SEXP SelfRefSymbol;
@@ -140,6 +141,7 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   sym_sorted  = install("sorted");
   // sym_maxgrpn = install("maxgrpn");
   sym_index   = install("index");
+  sym_index_df   = install("index_df");
   sym_inherits = install("inherits");
   sym_sf_column = install("sf_column");
   SelfRefSymbol = install(".internal.selfref");

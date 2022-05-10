@@ -327,7 +327,7 @@ fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
 fhdwithin.pseries <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, ...) {
-  ix <- getpix(attr(x, "index"))
+  ix <- findex(x)
   namix <- attr(ix, "names")
   if(is.character(effect) && length(effect) == 1L && effect == "all") {
     effect <- seq_along(namix)
@@ -412,7 +412,7 @@ fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
 
 # x = collapse:::colsubset(pwlddev, is.numeric)
 fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
-  ix <- getpix(attr(x, "index"))
+  ix <- findex(x)
   namix <- attr(ix, "names")
   if(is.character(effect) && length(effect) == 1L && effect == "all") {
     effect <- seq_along(namix)
@@ -444,7 +444,7 @@ fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = TRUE, fil
       reix <- copyMostAttributes(c(.Call(C_subsetDT, ix, cc, toss, FALSE), gcc)[namix], ix)
     } else reix <- copyMostAttributes(gcc, ix)
     attr(reix, "row.names") <- .set_row_names(length(cc))
-    attr(Y, "index") <- reix
+    attr(Y, if(inherits(x, "indexed_frame")) "index_df" else "index") <- reix
     attr(Y, "na.rm") <- which(miss)
     return(Y)
   } else return(demean(x, g, w, ...)) # setAttributes(, ax) -> Not needed anymore (included in demean())

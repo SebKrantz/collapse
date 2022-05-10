@@ -16,7 +16,7 @@ A suite of functions to subset or extract from (potentially complex) lists and l
 \itemize{
 \item \code{atomic_elem} and \code{list_elem} are non-recursive functions to extract and replace the atomic and sub-list elements at the top-level of the list tree.
 \item \code{reg_elem} is the recursive equivalent of \code{atomic_elem} and returns the 'regular' part of the list - with atomic elements in the final nodes. \code{irreg_elem} returns all the non-regular elements (i.e. call and terms objects, formulas, etc\dots). See Examples.
-\item \code{get_elem} returns the part of the list responding to either an identifier function, regular expression or exact element names, or indices applied to all final objects. \code{has_elem} checks for the existence of the searched element and returns \code{TRUE} if a match is found. See Examples.
+\item \code{get_elem} returns the part of the list responding to either an identifier function, regular expression, exact element names or indices applied to all final objects. \code{has_elem} checks for the existence of an element and returns \code{TRUE} if a match is found. See Examples.
 }
 }
 \usage{
@@ -30,7 +30,7 @@ list_elem(l) <- value
 reg_elem(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
 irreg_elem(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
 
-## Extract elements using a function or regular expression
+## Extract elements / subset list tree
 get_elem(l, elem, recursive = TRUE, DF.as.list = FALSE, keep.tree = FALSE,
          keep.class = FALSE, regex = FALSE, \dots)
 
@@ -52,21 +52,21 @@ has_elem(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALSE, \dots)
                  5 \tab\tab "logical"   \tab\tab logical selection vector \cr
                  6 \tab\tab "named_logical"     \tab\tab named logical vector \cr
   }
-  \emph{Note}: replacement functions only replace data, However column names are replaced together with the data.
+  \emph{Note}: replacement functions only replace data, names are replaced together with the data.
   }
 
 
   \item{recursive}{logical. Should the list search be recursive (i.e. go though all the elements), or just at the top-level?}
   \item{DF.as.list}{logical. \code{TRUE} treats data frames like (sub-)lists; \code{FALSE} like atomic elements.}
   \item{keep.tree}{logical. \code{TRUE} always returns the entire list tree leading up to all matched results, while \code{FALSE} drops the top-level part of the tree if possible.}
-  \item{keep.class}{logical. For classed objects: Should the class be retained?}
+  \item{keep.class}{logical. For objects: should the class be retained?}
   \item{regex}{logical. Should regular expression search be used on the list names, or only exact matches?}
   \item{\dots}{further arguments to \code{grep} (if \code{regex = TRUE}).}
 }
 \details{
-For a lack of better terminology, \emph{collapse} defines 'regular' R objects as objects that are either atomic or a list. \code{reg_elem} with \code{recursive = TRUE} extracts the subset of the list tree leading up to atomic elements in the final nodes. This part of the list tree is unlistable - calling \code{is_unlistable(reg_elem(l))} will be \code{TRUE} for all lists \code{l}. Conversely, all elements left behind by \code{reg_elem} will be picked up be \code{irreg_elem} (if available). Thus \code{is_unlistable(irreg_elem(l))} is always \code{FALSE} for lists with irregular elements (otherwise \code{irreg_elem} returns an empty list). \cr
+For a lack of better terminology, \emph{collapse} defines 'regular' R objects as objects that are either atomic or a list. \code{reg_elem} with \code{recursive = TRUE} extracts the subset of the list tree leading up to atomic elements in the final nodes. This part of the list tree is unlistable - calling \code{is_unlistable(reg_elem(l))} will be \code{TRUE} for all lists \code{l}. Conversely, all elements left behind by \code{reg_elem} will be picked up be \code{irreg_elem}. Thus \code{is_unlistable(irreg_elem(l))} is always \code{FALSE} for lists with irregular elements (otherwise \code{irreg_elem} returns an empty list). \cr
 
-If \code{keep.tree = TRUE}, \code{reg_elem}, \code{irreg_elem} and \code{get_elem} always return the entire list tree, but cut off all of the branches not leading to the desired result. If \code{keep.tree = FALSE}, top-level parts of the tree are omitted so far this is possible. For example in a nested list with three levels and one data-matrix in one of the final branches, \code{get_elem(l, is.matrix, keep.tree = TRUE)} will return a list (\code{lres}) of depth 3, from which the matrix can be accessed as \code{lres[[1]][[1]][[1]]}. This however does not make much sense. \code{get_elem(l, is.matrix, keep.tree = FALSE)} will therefore figgure out that it can drop the entire tree and return just the matrix. \code{keep.tree = FALSE} makes additional optimizations if matching elements are at far-apart corners in a nested structure, by only preserving the hierarchy if elements are above each other on the same branch. Thus for a list \code{l <- list(list(2,list("a",1)),list(1,list("b",2)))} calling \code{get_elem(l, is.character)} will just return \code{list("a","b")}.
+If \code{keep.tree = TRUE}, \code{reg_elem}, \code{irreg_elem} and \code{get_elem} always return the entire list tree, but cut off all of the branches not leading to the desired result. If \code{keep.tree = FALSE}, top-level parts of the tree are omitted as far as possible. For example in a nested list with three levels and one data-matrix in one of the final branches, \code{get_elem(l, is.matrix, keep.tree = TRUE)} will return a list (\code{lres}) of depth 3, from which the matrix can be accessed as \code{lres[[1]][[1]][[1]]}. This however does not make much sense. \code{get_elem(l, is.matrix, keep.tree = FALSE)} will therefore figgure out that it can drop the entire tree and return just the matrix. \code{keep.tree = FALSE} makes additional optimizations if matching elements are at far-apart corners in a nested structure, by only preserving the hierarchy if elements are above each other on the same branch. Thus for a list \code{l <- list(list(2,list("a",1)),list(1,list("b",2)))} calling \code{get_elem(l, is.character)} will just return \code{list("a","b")}.
 }
 % \value{
 

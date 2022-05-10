@@ -132,7 +132,7 @@ void fsum_weights_omp_impl(double *pout, double *px, double *pw, int narm, int l
     if(j != l) {
       sum = px[j] * pw[j];
       #pragma omp parallel for num_threads(nth) reduction(+:sum)
-      for(int i = j; i < l; ++i) {
+      for(int i = j+1; i < l; ++i) {
         if(ISNAN(px[i]) || ISNAN(pw[i])) continue;
         sum += px[i] * pw[i];
       }
@@ -224,7 +224,7 @@ double fsum_int_omp_impl(int *px, int narm, int l, int nth) {
     if(j == l && (l > 1 || px[j-1] == NA_INTEGER)) return NA_REAL;
     sum = (long long)px[j];
     #pragma omp parallel for num_threads(nth) reduction(+:sum)
-    for(int i = j; i < l; ++i) if(px[i] != NA_INTEGER) sum += (long long)px[i];
+    for(int i = j+1; i < l; ++i) if(px[i] != NA_INTEGER) sum += (long long)px[i];
   } else {
     sum = 0;
     #pragma omp parallel for num_threads(nth) reduction(+:sum)
@@ -472,37 +472,35 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
 }
 
 SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
-  int l = length(x), ng = asInteger(Rng), nth = asInteger(Rnth);
+  int l = length(x), ng = asInteger(Rng), nth = asInteger(Rnth), nprotect = 1;
   // TODO: Disable multithreading if overall data size is small?
   if(l < 1) return x; // needed ??
   if(ng == 0 && asLogical(Rdrop)) {
     SEXP out = PROTECT(allocVector(REALSXP, l)), *px = SEXPPTR(x);
     double *pout = REAL(out);
     if(nth > 1 && l >= nth) { // If high-dimensional: column-level parallelism
-      SEXP Rnth1 = PROTECT(ScalarInteger(1));
+      SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect;
       #pragma omp parallel for num_threads(nth)
       for(int j = 0; j < l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, Rnth1));
-      UNPROTECT(1);
     } else {
       for(int j = 0; j != l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, Rnth));
     }
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
-    UNPROTECT(1);
+    UNPROTECT(nprotect);
     return out;
   }
   SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
   if((ng > 0 && nth > 1 && l > 1) || (ng == 0 && nth > 1 && nth >= l)) {
     if(nth > l) nth = l;
-    SEXP Rnth1 = PROTECT(ScalarInteger(1)); // Needed if ng == 0, otherwise double multithreading
+    SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect; // Needed if ng == 0, otherwise double multithreading
     #pragma omp parallel for num_threads(nth)
     for(int j = 0; j < l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth1);
-    UNPROTECT(1);
   } else {
     for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth);
   }
   // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
   DFcopyAttr(out, x, ng);
-  UNPROTECT(1);
+  UNPROTECT(nprotect);
   return out;
 }
 

@@ -24,6 +24,7 @@ SEXP subsetCols(SEXP, SEXP, SEXP);
 SEXP subsetVector(SEXP, SEXP, SEXP);
 SEXP Calloccol(SEXP dt); // , SEXP Rn
 SEXP falloc(SEXP, SEXP);
+SEXP frange(SEXP x, SEXP Rnarm);
 // SEXP CasChar(SEXP x);
 SEXP setAttributes(SEXP x, SEXP a);
 void setattributes(SEXP x, SEXP a);
@@ -51,11 +52,14 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir);
 SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam);
 SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind);
 SEXP setnames(SEXP x, SEXP nam);
+SEXP Cissorted(SEXP x, SEXP strictly);
 SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
+SEXP createeptr(SEXP x);
 SEXP geteptr(SEXP x);
 SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna);
 SEXP fwtabulate(SEXP x, SEXP w, SEXP ngp, SEXP ckna);
+SEXP vecgcd(SEXP x);
 // fnobs rewritten in C:
 SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
@@ -94,3 +98,12 @@ SEXP fcumsumlC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill);
 SEXP TRAC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
 SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
 SEXP TRAlC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset);
+// fndistinct, rewritten in C:
+SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads);
+SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads);
+SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads);
+// fmode, rewritten in C:
+SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads);
+SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads);
+SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads);
+

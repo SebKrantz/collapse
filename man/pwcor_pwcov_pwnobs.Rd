@@ -47,7 +47,7 @@ a numeric matrix, 3D array or list of matrices with the computed statistics. For
 }
 
 \note{
-\code{weights::wtd.cors} is imported for weighted pairwise correlations (written in C for speed). For weighted correlations with bootstrap SE's see \code{weights::wtd.cor} (but bootstrap can be slow). Weighted correlations for complex surveys are implemented in \code{jtools::svycor}. An equivalent and faster implementation of \code{pwcor} (without weights) is provided in \code{Hmisc::rcorr} (written in Fortran).
+\code{weights::wtd.cors} is imported for weighted pairwise correlations (written in C for speed). For weighted correlations with bootstrap SE's see \code{weights::wtd.cor} (bootstrap can be slow). Weighted correlations for complex surveys are implemented in \code{jtools::svycor}. An equivalent and faster implementation of \code{pwcor} (without weights) is provided in \code{Hmisc::rcorr} (written in Fortran).
 }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~

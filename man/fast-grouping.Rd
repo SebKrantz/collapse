@@ -11,7 +11,7 @@
 
 \item \code{\link{group}} provides fast grouping in first-appearance order of rows, based on a hashing algorithm in C. Objects have class 'qG', see below.
 
-\item \code{\link{GRP}} creates \emph{collapse} grouping objects of class 'GRP' based on \code{\link{radixorderv}} or \code{\link{group}}. 'GRP' objects form the central building block for grouped operations and programming in \emph{collapse} and are very efficient inputs to all \emph{collapse} functions supporting grouped operations. A 'GRP' object provides information about (1) the number of groups, (2) which rows belong to which group, (3) the group sizes, (4) the unique groups, (5) the variables used for grouping, (6) whether the grouping and initial inputs were ordered and (7) (optionally) the output from \code{\link{radixorder}} containing the ordering vector with group starts and maximum group size attributes.
+\item \code{\link{GRP}} creates \emph{collapse} grouping objects of class 'GRP' based on \code{\link{radixorderv}} or \code{\link{group}}. 'GRP' objects form the central building block for grouped operations and programming in \emph{collapse} and are very efficient inputs to all \emph{collapse} functions supporting grouped operations. %A 'GRP' object provides information about (1) the number of groups, (2) which rows belong to which group, (3) the group sizes, (4) the unique groups, (5) the variables used for grouping, (6) whether the grouping and initial inputs were ordered and (7) (optionally) the output from \code{\link{radixorder}} containing the ordering vector with group starts and maximum group size attributes.
 
 \item \code{\link{fgroup_by}} provides a fast replacement for \code{dplyr::group_by}, creating a grouped data frame (or data.table / tibble etc.) with a 'GRP' object attached. This grouped frame can be used for grouped operations using \emph{collapse}'s fast functions. % \emph{dplyr} functions will treat this tibble like an ordinary (non-grouped) one.
 
@@ -28,6 +28,9 @@
 \item \code{\link{groupid}} is a generalization of \code{data.table::rleid} providing a run-length type group-id from atomic vectors. It is generalization as it also supports passing an ordering vector and skipping missing values. For example \code{\link{qF}} and \code{\link{qG}} with \code{method = "radix"} are essentially implemented using \code{groupid(x, radixorder(x))}.
 
 \item \code{\link{seqid}} is a specialized function which creates a group-id from sequences of integer values. For any regular panel dataset \code{groupid(id, order(id, time))} and \code{seqid(time, order(id, time))} provide the same id variable. \code{\link{seqid}} is especially useful for identifying discontinuities in time-sequences.
+
+\item \code{\link{timeid}} is a specialized function to convert integer or double vectors representing time (such as 'Date', 'POSIXct' etc.) to factor or 'qG' object based on the greatest common divisor of elements (thus preserving gaps in time intervals).
+
 }
 }
 \section{Table of Functions}{
@@ -43,11 +46,12 @@
                  \code{\link{fdroplevels}} \tab\tab \code{factor, data.frame, list} \tab\tab Fast removal of unused factor levels \cr
                  \code{\link{finteraction}} \tab\tab No methods, for data frames and vectors \tab\tab Fast interactions \cr
                  \code{\link{groupid}} \tab\tab No methods, for vectors \tab\tab Run-length type group-id \cr
-                 \code{\link{seqid}} \tab\tab No methods, for vectors \tab\tab Run-length type integer sequence-id \cr
+                 \code{\link{seqid}} \tab\tab No methods, for integer vectors \tab\tab Run-length type integer sequence-id \cr
+                 \code{\link{timeid}} \tab\tab No methods, for integer or double vectors \tab\tab Integer-id from time/date sequences \cr
 }
 }
 \seealso{
-\link[=collapse-documentation]{Collapse Overview}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=fast-statistical-functions]{Fast Statistical Functions}
+\link[=collapse-documentation]{Collapse Overview}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=time-series-panel-series]{Time Series and Panel Series}
 }
 \keyword{manip}
 \keyword{documentation}

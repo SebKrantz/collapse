@@ -13,17 +13,17 @@ The \code{\link{TRA}} argument can further be used to transform \code{x} using i
 fmode(x, \dots)
 
 \method{fmode}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, ties = "first", \dots)
+      use.g.names = TRUE, ties = "first", nthreads = 1L, \dots)
 
 \method{fmode}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, ties = "first", \dots)
+      use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = 1L, \dots)
 
 \method{fmode}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, ties = "first", \dots)
+      use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = 1L, \dots)
 
 \method{fmode}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-      ties = "first", \dots)
+      ties = "first", nthreads = 1L, \dots)
 }
 \arguments{
 \item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}
@@ -47,8 +47,11 @@ fmode(x, \dots)
                  3 \tab\tab "max"   \tab\tab take the largest of the possible modes. \cr
                  4 \tab\tab "last"   \tab\tab take the last occurring mode. \cr
                 }
-        \emph{Note:} \code{"min"/"max"} don't work with character data. For logical data \code{TRUE} will be chosen unless \code{ties = "min"}. See Details.
+        \emph{Note:} \code{"min"/"max"} don't work with character data. % For logical data \code{TRUE} will be chosen unless \code{ties = "min"}.
+        See also Details.
   }
+
+  \item{nthreads}{integer. The number of threads to utilize. Parallelism is across groups for grouped computations and at the column-level otherwise. }
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -60,7 +63,7 @@ fmode(x, \dots)
 
 }
 \details{
-\code{fmode} implements a pretty fast algorithm to find the statistical mode utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
+\code{fmode} implements a pretty fast C-level hashing algorithm inspired by the \emph{kit} package to find the statistical mode. % utilizing index- hashing implemented in the \code{Rcpp::sugar::IndexHash} class.
 
 %If all values are distinct, the first value is returned. If there are multiple distinct values having the top frequency, the first value established as having the top frequency when passing through the data from element 1 to element n is returned.
 If \code{na.rm = FALSE}, \code{NA} is not removed but treated as any other value (i.e. it's frequency is counted). If all values are \code{NA}, \code{NA} is always returned.
@@ -69,12 +72,12 @@ The weighted mode is computed by summing up the weights for all distinct values 
 
 It is possible that multiple values have the same mode (the maximum frequency or sum of weights). Typical cases are simply when all values are either all the same or all distinct. In such cases, the default option \code{ties = "first"} returns the first occurring value in the data reaching the maximum frequency count or sum of weights. For example in a sample \code{x = c(1, 3, 2, 2, 4, 4, 1, 7)}, the first mode is 2 as \code{fmode} goes through the data from left to right. \code{ties = "last"} on the other hand gives 1. It is also possible to take the minimum or maximum mode, i.e. \code{fmode(x, ties = "min")} returns 1, and \code{fmode(x, ties = "max")} returns 4. It should be noted that options \code{ties = "min"} and \code{ties = "max"} give unintuitive results for character data (no strict alphabetic sorting, similar to using \code{<} and \code{>} to compare character values in R). These options are also best avoided if missing values are counted (\code{na.rm = FALSE}) since no proper logical comparison with missing values is possible: With numeric data it depends, since in C++ any comparison with \code{NA_real_} evaluates to \code{FALSE}, \code{NA_real_} is chosen as the min or max mode only if it is also the first mode, and never otherwise. For integer data, \code{NA_integer_} is stored as the smallest integer in C++, so it will always be chosen as the min mode and never as the max mode. For character data, \code{NA_character_} is stored as the string \code{"NA"} in C++ and thus the behavior depends on the other character content. \code{fmode} also implements a fast method for logical values which does not support the options \code{"first"/"last"} i.e. \code{TRUE} is returned unless \code{ties = "min"}.
 
-This all seamlessly generalizes to grouped computations, which are performed by mapping the data to a sparse-array (except for logical values) and then going group-by group.
+% This all seamlessly generalizes to grouped computations, which are performed by mapping the data to a sparse-array (except for logical values) and then going group-by group.
 
 \code{fmode} preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary in grouped operations). If a data frame is passed to \code{fmode} and \code{drop = TRUE} (the default), \code{\link{unlist}} will be called on the result, which might not be sensible depending on the data at hand.
 }
 \value{
-The (\code{w} weighted) statistical mode of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its mode, grouped by \code{g}. See also Details.
+The (\code{w} weighted) statistical mode of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its (grouped, weighed) mode. %See also Details.
 }
 \seealso{
 \code{\link{fmean}}, \code{\link{fmedian}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}

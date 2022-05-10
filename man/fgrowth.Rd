@@ -19,13 +19,12 @@
 Fast Growth Rates for Time Series and Panel Data
 }
 \description{
-\code{fgrowth} is a S3 generic to compute (sequences of) suitably lagged / leaded and iterated growth rates, obtained with via the exact method of computation of through log differencing. By default growth rates are provided in percentage terms, but any scale factor can be applied. The growth operator \code{G} is a parsimonious wrapper around \code{fgrowth}, and also provides more flexibility when applied to data frames.
+\code{fgrowth} is a S3 generic to compute (sequences of) suitably lagged / leaded, iterated and compounded growth rates, obtained with via the exact method of computation or through log differencing. By default growth rates are provided in percentage terms, but any scale factor can be applied. The growth operator \code{G} is a parsimonious wrapper around \code{fgrowth}, and also provides more flexibility when applied to data frames.
 
 }
 \usage{
 fgrowth(x, n = 1, diff = 1, \dots)
-
-G(x, n = 1, diff = 1, \dots)
+      G(x, n = 1, diff = 1, \dots)
 
 \method{fgrowth}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
         logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, \dots)
@@ -45,17 +44,17 @@ G(x, n = 1, diff = 1, \dots)
   fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE,
   keep.ids = TRUE, \dots)
 
-# Methods for compatibility with plm:
+# Methods for indexed data / compatibility with plm:
 
 \method{fgrowth}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
-        power = 1, stubs = TRUE, \dots)
+        power = 1, stubs = length(n) + length(diff) > 2L, shift = "time", \dots)
 \method{G}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
-  power = 1, stubs = TRUE, \dots)
+  power = 1, stubs = TRUE, shift = "time", \dots)
 
 \method{fgrowth}{pdata.frame}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
-        power = 1, stubs = length(n) + length(diff) > 2L, \dots)
+        power = 1, stubs = length(n) + length(diff) > 2L, shift = "time", \dots)
 \method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE,
-  scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
+  scale = 100, power = 1, stubs = TRUE, shift = "time", keep.ids = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
@@ -66,23 +65,24 @@ G(x, n = 1, diff = 1, \dots)
   scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
 }
 \arguments{
-  \item{x}{a numeric vector, matrix, data frame, panel series (\code{plm::pseries}), panel data frame (\code{plm::pdata.frame}) or grouped data frame (class 'grouped_df').}
+  \item{x}{a numeric vector / time series, (time series) matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').}
   \item{n}{integer. A vector indicating the number of lags or leads.}
   \item{diff}{integer. A vector of integers > 1 indicating the order of taking growth rates, e.g. \code{diff = 2} means computing the growth rate of the growth rate.}
-  \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
+  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
   \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-  \item{t}{same input as \code{g/by}, to indicate the time-variable(s). For safe computation of growth rates on unordered time series and panels. Data Frame method also allows one-sided formula i.e. \code{~time}. grouped_df method supports lazy-evaluation i.e. \code{time} (no quotes).}
+  \item{t}{a time vector or list of vectors. See \code{\link{flag}}.}
   \item{cols}{\emph{data.frame method}: Select columns to compute growth rates using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{logdiff}{logical. Compute log-difference growth rates instead of exact growth rates. See Details.}
   \item{scale}{logical. Scale factor post-applied to growth rates, default is 100 which gives growth rates in percentage terms. See Details.}
   \item{power}{numeric. Apply a power to annualize or compound growth rates e.g. \code{fgrowth(AirPassengers, 12, power = 1/12)} is equivalent to \code{((AirPassengers/flag(AirPassengers, 12))^(1/12)-1)*100}.}
   \item{stubs}{logical. \code{TRUE} will rename all computed columns by adding a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}.", or "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." if \code{logdiff = TRUE}.}
-  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all panel-identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For grouped / panel data frames identifiers are dropped, but the 'groups' / 'index' attributes are kept.}
+    \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} or \code{"row"}. See \code{\link{flag}} for details.}
+  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
   \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
-\code{fgrowth/G} by default computes exact growth rates using \code{repeat(diff) ((x[i]/x[i-n])^power - 1)*scale}, and, if \code{logdiff = TRUE} approximate growth rates using \code{repeat(diff) log(x[i]/x[i-n])*scale}. So for \code{diff > 1} it computes growth rate of growth rates etc.. For further details see the help pages for \code{\link{fdiff}} and \code{\link{flag}}.
+\code{fgrowth/G} by default computes exact growth rates using \code{repeat(diff) ((x[i]/x[i-n])^power - 1)*scale}, so for \code{diff > 1} it computes growth rate of growth rates. If \code{logdiff = TRUE}, approximate growth rates are computed using \code{log(x[i]/x[i-n])*scale} for \code{diff = 1} and \code{repeat(diff-1) x[i] - x[i-n]} thereafter (usually \code{diff = 1} for log-differencing). For further details see the help pages of \code{\link{fdiff}} and \code{\link{flag}}.
 
 }
 \value{
@@ -121,44 +121,6 @@ head(G(wlddev, 0:1, 1, ~ country, ~year, cols = 9:10))  # Same, also retaining o
 head(G(wlddev, 0:1, 1, ~ country, ~year, 9:10,          # Dropping id columns
        keep.ids = FALSE))
 
-# Dynamic Panel Data Models:
-summary(lm(G(PCGDP,1,1,iso3c,year) ~                    # GDP growth regressed on it's lagged level
-             L(PCGDP,1,iso3c,year) +                    # and the growth rate of Life Expanctancy
-             G(LIFEEX,1,1,iso3c,year), data = wlddev))
-
-g = qF(wlddev$country)                                  # Omitting t and precomputing g allows for a
-summary(lm(G(PCGDP,1,1,g) ~ L(PCGDP,1,g) +              # bit more parsimonious specification
-                            G(LIFEEX,1,1,g), wlddev))
-
-summary(lm(G1.PCGDP ~.,                                 # Now adding level and lagged level of
-L(G(wlddev,0:1,1, ~ country, ~year,9:10),0:1,           # LIFEEX and lagged growth rates
-  ~ country, ~year, keep.ids = FALSE)[-1]))
-\donttest{ % No code relying on suggested package
-## Using plm can make things easier, but avoid attaching or 'with' calls:
-pwlddev <- plm::pdata.frame(wlddev, index = c("country","year"))
-head(G(pwlddev, 0:1, 1, 9:10))                          # Again growth rates of LIFEEX and PCGDP
-PCGDP <- pwlddev$PCGDP                                  # A panel-Series of GDP per Capita
-head(G(PCGDP))                                          # Growth rate of the panel series
-summary(lm(G1.PCGDP ~.,                                 # Running the dynamic model again ->
-           data = L(G(pwlddev,0:1,1,9:10),0:1,          # code becomes a bit simpler
-                    keep.ids = FALSE)[-1]))
-
-# One could be tempted to also do something like this, but THIS DOES NOT WORK!!:
-# -> a pseries is only created when subsetting the pdata.frame using $ or [[
-summary(lm(G(PCGDP) ~ L(G(PCGDP,0:1)) + L(G(LIFEEX,0:1),0:1), pwlddev))
-
-# To make it work, one needs to create pseries
-LIFEEX <- pwlddev$LIFEEX
-summary(lm(G(PCGDP) ~ L(G(PCGDP,0:1)) + L(G(LIFEEX,0:1),0:1))) # THIS WORKS !
-
-## Using dplyr:
-library(dplyr)
-wlddev \%>\% group_by(country) \%>\%
-             select(PCGDP,LIFEEX) \%>\% fgrowth(0:1)          # Adding growth rates
-wlddev \%>\% group_by(country) \%>\%
-             select(year,PCGDP,LIFEEX) \%>\%
-             fgrowth(0:1, t = year)                        # Also using t (safer)
-}
 }
 \keyword{manip}
 \keyword{ts}

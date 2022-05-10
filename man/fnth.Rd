@@ -14,17 +14,17 @@ Fast (Grouped, Weighted) N'th Element/Quantile for Matrix-Like Objects
 fnth(x, n = 0.5, \dots)
 
 \method{fnth}{default}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, ties = "mean", \dots)
+     use.g.names = TRUE, ties = "mean", nthreads = 1L, \dots)
 
 \method{fnth}{matrix}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ties = "mean", \dots)
+     use.g.names = TRUE, drop = TRUE, ties = "mean", nthreads = 1L, \dots)
 
 \method{fnth}{data.frame}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ties = "mean", \dots)
+     use.g.names = TRUE, drop = TRUE, ties = "mean", nthreads = 1L, \dots)
 
 \method{fnth}{grouped_df}(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-     ties = "mean", \dots)
+     ties = "mean", nthreads = 1L, \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
@@ -41,6 +41,8 @@ fnth(x, n = 0.5, \dots)
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
 \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
+
+\item{nthreads}{integer. The number of threads to utilize. Parallelism is across groups for grouped computations and at the column-level otherwise. No parallelism is available for weighted computations. }
 
 \item{ties}{an integer or character string specifying the method to resolve ties between adjacent qualifying elements:
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
@@ -77,7 +79,7 @@ If \code{x} is a matrix or data frame, these computations are performed independ
 
 }
 \value{
-The (\code{w} weighted) n'th element of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its n'th element, grouped by \code{g}.
+The (\code{w} weighted) n'th element of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its (grouped, weighted) n'th element.
 
 }
 \seealso{
@@ -112,7 +114,7 @@ m <- qM(mtcars)
 fnth(m, 0.75)
 head(fnth(m, 0.75, TRA = "-"))
 fnth(m, 0.75, g) # etc..
-\donttest{ % No code relying on suggested package
+%\donttest{ % No code relying on suggested package
 library(dplyr)
 ## grouped_df method
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fnth(0.75)
@@ -121,7 +123,7 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75)              # Faster groupin
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75, TRA = "/")   # Divide by third quartile
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%     # Faster selecting
       fnth(0.75, hp, "/")  # Divide mpg by its third weighted group-quartile, using hp as weights
-}
+%}
 }
 \keyword{univar}
 \keyword{manip}

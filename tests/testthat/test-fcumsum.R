@@ -51,13 +51,6 @@ basecumsum <- function(x, na.rm = TRUE, fill = FALSE) {
   data.table::nafill(x, type = "locf")
 }
 
-rnBY <- function(x, ...) {
-  if(is.list(x) || is.array(x))
-    return(setRownames(BY(x, ...), if(is.list(x)) attr(x, "row.names") else dimnames(x)[[1L]]))
-  BY(x, ...)
-}
-
-
 test_that("fcumsum performs like basecumsum", {
   # No groups, no ordering
   expect_equal(fcumsum(-10:10), basecumsum(-10:10))
@@ -88,18 +81,18 @@ test_that("fcumsum performs like basecumsum", {
   expect_equal(fcumsum(xNA, f), BY(xNA, f, basecumsum, use.g.names = FALSE))
   expect_equal(fcumsum(xNA, na.rm = FALSE, f), BY(xNA, f, basecumsum, na.rm = FALSE, use.g.names = FALSE))
   expect_equal(fcumsum(xNA, f, fill = TRUE), BY(xNA, f, basecumsum, fill = TRUE, use.g.names = FALSE))
-  expect_equal(fcumsum(m, g), rnBY(m, g, basecumsum, use.g.names = FALSE))
-  expect_equal(fcumsum(m, na.rm = FALSE, g), rnBY(m, g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
-  expect_equal(fcumsum(m, g, fill = TRUE), rnBY(m, g, basecumsum, fill = TRUE, use.g.names = FALSE))
-  expect_equal(fcumsum(mNA, g), rnBY(mNA, g, basecumsum, use.g.names = FALSE))
-  expect_equal(fcumsum(mNA, na.rm = FALSE, g), rnBY(mNA, g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
-  expect_equal(fcumsum(mNA, g, fill = TRUE), rnBY(mNA, g, basecumsum, fill = TRUE, use.g.names = FALSE))
-  expect_equal(fcumsum(num_vars(data), g), rnBY(num_vars(data), g, basecumsum, use.g.names = FALSE))
-  expect_equal(fcumsum(num_vars(data), na.rm = FALSE, g), rnBY(num_vars(data), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
-  expect_equal(fcumsum(num_vars(data), g, fill = TRUE), rnBY(num_vars(data), g, basecumsum, fill = TRUE, use.g.names = FALSE))
-  expect_equal(fcumsum(num_vars(dataNA), g), rnBY(num_vars(dataNA), g, basecumsum, use.g.names = FALSE))
-  expect_equal(fcumsum(num_vars(dataNA), g, na.rm = FALSE), rnBY(num_vars(dataNA), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
-  expect_equal(fcumsum(num_vars(dataNA), g, fill = TRUE), rnBY(num_vars(dataNA), g, basecumsum, fill = TRUE, use.g.names = FALSE))
+  expect_equal(fcumsum(m, g), BY(m, g, basecumsum, use.g.names = FALSE))
+  expect_equal(fcumsum(m, na.rm = FALSE, g), BY(m, g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
+  expect_equal(fcumsum(m, g, fill = TRUE), BY(m, g, basecumsum, fill = TRUE, use.g.names = FALSE))
+  expect_equal(fcumsum(mNA, g), BY(mNA, g, basecumsum, use.g.names = FALSE))
+  expect_equal(fcumsum(mNA, na.rm = FALSE, g), BY(mNA, g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
+  expect_equal(fcumsum(mNA, g, fill = TRUE), BY(mNA, g, basecumsum, fill = TRUE, use.g.names = FALSE))
+  expect_equal(fcumsum(num_vars(data), g), BY(num_vars(data), g, basecumsum, use.g.names = FALSE))
+  expect_equal(fcumsum(num_vars(data), na.rm = FALSE, g), BY(num_vars(data), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
+  expect_equal(fcumsum(num_vars(data), g, fill = TRUE), BY(num_vars(data), g, basecumsum, fill = TRUE, use.g.names = FALSE))
+  expect_equal(fcumsum(num_vars(dataNA), g), BY(num_vars(dataNA), g, basecumsum, use.g.names = FALSE))
+  expect_equal(fcumsum(num_vars(dataNA), g, na.rm = FALSE), BY(num_vars(dataNA), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
+  expect_equal(fcumsum(num_vars(dataNA), g, fill = TRUE), BY(num_vars(dataNA), g, basecumsum, fill = TRUE, use.g.names = FALSE))
 })
 
 test_that("fcumsum correctly handles unordered time-series and panel-series computations", {
@@ -243,18 +236,18 @@ test_that("fcumsum with integers performs like basecumsum", {
   expect_identical(fcumsum(xNA, f), BY(xNA, f, basecumsum, use.g.names = FALSE))
   expect_identical(fcumsum(xNA, na.rm = FALSE, f), BY(xNA, f, basecumsum, na.rm = FALSE, use.g.names = FALSE))
   expect_identical(fcumsum(xNA, f, fill = TRUE), BY(xNA, f, basecumsum, fill = TRUE, use.g.names = FALSE))
-  expect_identical(fcumsum(m, g), rnBY(m, g, basecumsum, use.g.names = FALSE))
-  expect_identical(fcumsum(m, na.rm = FALSE, g), rnBY(m, g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
-  expect_identical(fcumsum(m, g, fill = TRUE), rnBY(m, g, basecumsum, fill = TRUE, use.g.names = FALSE))
-  expect_identical(fcumsum(mNA, g), rnBY(mNA, g, basecumsum, use.g.names = FALSE))
-  expect_identical(fcumsum(mNA, na.rm = FALSE, g), rnBY(mNA, g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
-  expect_identical(fcumsum(mNA, g, fill = TRUE), rnBY(mNA, g, basecumsum, fill = TRUE, use.g.names = FALSE))
-  expect_identical(fcumsum(num_vars(data), g), rnBY(num_vars(data), g, basecumsum, use.g.names = FALSE))
-  expect_identical(fcumsum(num_vars(data), na.rm = FALSE, g), rnBY(num_vars(data), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
-  expect_identical(fcumsum(num_vars(data), g, fill = TRUE), rnBY(num_vars(data), g, basecumsum, fill = TRUE, use.g.names = FALSE))
-  expect_identical(fcumsum(num_vars(dataNA), g), rnBY(num_vars(dataNA), g, basecumsum, use.g.names = FALSE))
-  expect_identical(fcumsum(num_vars(dataNA), g, na.rm = FALSE), rnBY(num_vars(dataNA), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
-  expect_identical(fcumsum(num_vars(dataNA), g, fill = TRUE), rnBY(num_vars(dataNA), g, basecumsum, fill = TRUE, use.g.names = FALSE))
+  expect_identical(fcumsum(m, g), BY(m, g, basecumsum, use.g.names = FALSE))
+  expect_identical(fcumsum(m, na.rm = FALSE, g), BY(m, g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
+  expect_identical(fcumsum(m, g, fill = TRUE), BY(m, g, basecumsum, fill = TRUE, use.g.names = FALSE))
+  expect_identical(fcumsum(mNA, g), BY(mNA, g, basecumsum, use.g.names = FALSE))
+  expect_identical(fcumsum(mNA, na.rm = FALSE, g), BY(mNA, g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
+  expect_identical(fcumsum(mNA, g, fill = TRUE), BY(mNA, g, basecumsum, fill = TRUE, use.g.names = FALSE))
+  expect_identical(fcumsum(num_vars(data), g), BY(num_vars(data), g, basecumsum, use.g.names = FALSE))
+  expect_identical(fcumsum(num_vars(data), na.rm = FALSE, g), BY(num_vars(data), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
+  expect_identical(fcumsum(num_vars(data), g, fill = TRUE), BY(num_vars(data), g, basecumsum, fill = TRUE, use.g.names = FALSE))
+  expect_identical(fcumsum(num_vars(dataNA), g), BY(num_vars(dataNA), g, basecumsum, use.g.names = FALSE))
+  expect_identical(fcumsum(num_vars(dataNA), g, na.rm = FALSE), BY(num_vars(dataNA), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
+  expect_identical(fcumsum(num_vars(dataNA), g, fill = TRUE), BY(num_vars(dataNA), g, basecumsum, fill = TRUE, use.g.names = FALSE))
 })
 
 test_that("fcumsum with integers correctly handles unordered time-series and panel-series computations", {

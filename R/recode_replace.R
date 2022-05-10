@@ -258,10 +258,10 @@ replace_Inf <- function(X, value = NA, replace.nan = FALSE) {
   `[<-`(X, is.infinite(X), value = value)
 }
 
-replace_non_finite <- function(X, value = NA, replace.nan = TRUE) {
-  .Deprecated("replace_Inf")
-  replace_Inf(X, value, replace.nan)
-}
+# replace_non_finite <- function(X, value = NA, replace.nan = TRUE) {
+#   .Deprecated("replace_Inf")
+#   replace_Inf(X, value, replace.nan)
+# }
 
 replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min", "max", "overall_SDs")) {
   ll <- length(limits)
@@ -280,7 +280,7 @@ replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min
              if(inherits(X, c("grouped_df", "pdata.frame"))) {
               num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
               num <- if(inherits(X, "grouped_df")) num & !fgroup_vars(X, "logical") else
-                      num & attr(getpix(attr(X, "index")), "names") %!in% attr(X, "names")
+                      num & attr(findex(X), "names") %!in% attr(X, "names")
               clx <- oldClass(X)
               STDXnum <- fscale(fcolsubset(X, num))
               oldClass(X) <- NULL
@@ -367,71 +367,71 @@ pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i 
 # Something like this already exists?? -> should work with lists as well...
 
 
-# Previous version of Recode (Until collapse 1.1.0), Now depreciated in favor or recode_num and recode_char
-comp <- function(x, val) do.call(cbind, lapply(x, `==`, val))
-comp_grepl <- function(x, val) do.call(cbind, lapply(x, function(y) grepl(val, y)))
-
-Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
-  .Deprecated("recode_num, recode_char")
-  if(missing(...)) stop("Recode requires arguments of the form: value = replacement")
-  if(is.list(X) && !inherits(X, "data.frame")) stop("Recode only works with atomic objects or data.frames")
-  args <- list(...)
-  nam <- names(args)
-
-  if(reserve.na.nan && any(wm <- !is.na(ma <- match(c("NaN","NA"), nam)))) { # more efficient way to code this ??
-    if(wm[1L]) {  # note: does not give multiple-matching error !!
-      if(is.list(X)) {
-        X[do.call(cbind, lapply(X, is.nan))] <- args[[ma[1L]]]
-      } else X[is.nan(X)] <- args[[ma[1L]]]
-    }
-    if(wm[2L]) X[is.na(X)] <- args[[ma[2L]]] # is.na already accounts for NaN, so this needs to the the order!!
-    if(bsum(wm) == length(args)) return(X)
-    args <- args[-ma[wm]]
-    nam <- names(args)
-  }
-
-  arglen <- length(args)
-  onearg <- arglen == 1L
-
-  if(regex) {
-    if(is.list(X)) {
-      if(onearg) {
-        X[comp_grepl(X, nam)] <- args[[1L]]
-      } else if(copy) {
-        for (i in seq_along(X)) {
-          Xi <- X[[i]]
-          for (j in seq_len(arglen)) X[[i]][grepl(nam[j], Xi)] <- args[[j]]
-        }
-      } else for (j in seq_len(arglen)) X[comp_grepl(X, nam[j])] <- args[[j]]
-    } else {
-      if(onearg) X[grepl(nam, X)] <- args[[1L]] else if(copy) {
-        Y <- X
-        for (j in seq_len(arglen)) X[grepl(nam[j], Y)] <- args[[j]]
-      } else for (j in seq_len(arglen)) X[grepl(nam[j], X)] <- args[[j]]
-    }
-  } else {
-    if(is.list(X)) {
-      oldopts <- options(warn = -1) # faster than suppressWarnings !!
-      on.exit(options(oldopts))
-      numnam <- as.numeric(nam) # suppressWarnings(numnam <- as.numeric(nam)) -> this line takes most time !!
-      if(onearg && !is.na(numnam)) nam <- numnam else {
-        nam <- as.vector(nam, "list")
-        if(any(numnaml <- !is.na(numnam))) nam[numnaml] <- numnam[numnaml]
-      }
-      if(onearg) X[comp(X, nam)] <- args[[1L]] else if(copy) {
-        Y <- X
-        for (j in seq_len(arglen)) X[comp(Y, nam[[j]])] <- args[[j]]
-      } else for (j in seq_len(arglen)) X[comp(X, nam[[j]])] <- args[[j]]
-    } else {
-      if(!is.character(X)) nam <- as.numeric(nam)
-      if(onearg) X[X == nam] <- args[[1L]] else if(copy) {
-        Y <- X
-        for (j in seq_len(arglen)) X[Y == nam[j]] <- args[[j]]
-      } else for (j in seq_len(arglen)) X[X == nam[j]] <- args[[j]]
-    }
-  }
-  return(X)
-}
+# # Previous version of Recode (Until collapse 1.1.0), Now depreciated in favor or recode_num and recode_char
+# comp <- function(x, val) do.call(cbind, lapply(x, `==`, val))
+# comp_grepl <- function(x, val) do.call(cbind, lapply(x, function(y) grepl(val, y)))
+#
+# Recode <- function(X, ..., copy = FALSE, reserve.na.nan = TRUE, regex = FALSE) {
+#   .Deprecated("recode_num, recode_char")
+#   if(missing(...)) stop("Recode requires arguments of the form: value = replacement")
+#   if(is.list(X) && !inherits(X, "data.frame")) stop("Recode only works with atomic objects or data.frames")
+#   args <- list(...)
+#   nam <- names(args)
+#
+#   if(reserve.na.nan && any(wm <- !is.na(ma <- match(c("NaN","NA"), nam)))) { # more efficient way to code this ??
+#     if(wm[1L]) {  # note: does not give multiple-matching error !!
+#       if(is.list(X)) {
+#         X[do.call(cbind, lapply(X, is.nan))] <- args[[ma[1L]]]
+#       } else X[is.nan(X)] <- args[[ma[1L]]]
+#     }
+#     if(wm[2L]) X[is.na(X)] <- args[[ma[2L]]] # is.na already accounts for NaN, so this needs to the the order!!
+#     if(bsum(wm) == length(args)) return(X)
+#     args <- args[-ma[wm]]
+#     nam <- names(args)
+#   }
+#
+#   arglen <- length(args)
+#   onearg <- arglen == 1L
+#
+#   if(regex) {
+#     if(is.list(X)) {
+#       if(onearg) {
+#         X[comp_grepl(X, nam)] <- args[[1L]]
+#       } else if(copy) {
+#         for (i in seq_along(X)) {
+#           Xi <- X[[i]]
+#           for (j in seq_len(arglen)) X[[i]][grepl(nam[j], Xi)] <- args[[j]]
+#         }
+#       } else for (j in seq_len(arglen)) X[comp_grepl(X, nam[j])] <- args[[j]]
+#     } else {
+#       if(onearg) X[grepl(nam, X)] <- args[[1L]] else if(copy) {
+#         Y <- X
+#         for (j in seq_len(arglen)) X[grepl(nam[j], Y)] <- args[[j]]
+#       } else for (j in seq_len(arglen)) X[grepl(nam[j], X)] <- args[[j]]
+#     }
+#   } else {
+#     if(is.list(X)) {
+#       oldopts <- options(warn = -1) # faster than suppressWarnings !!
+#       on.exit(options(oldopts))
+#       numnam <- as.numeric(nam) # suppressWarnings(numnam <- as.numeric(nam)) -> this line takes most time !!
+#       if(onearg && !is.na(numnam)) nam <- numnam else {
+#         nam <- as.vector(nam, "list")
+#         if(any(numnaml <- !is.na(numnam))) nam[numnaml] <- numnam[numnaml]
+#       }
+#       if(onearg) X[comp(X, nam)] <- args[[1L]] else if(copy) {
+#         Y <- X
+#         for (j in seq_len(arglen)) X[comp(Y, nam[[j]])] <- args[[j]]
+#       } else for (j in seq_len(arglen)) X[comp(X, nam[[j]])] <- args[[j]]
+#     } else {
+#       if(!is.character(X)) nam <- as.numeric(nam)
+#       if(onearg) X[X == nam] <- args[[1L]] else if(copy) {
+#         Y <- X
+#         for (j in seq_len(arglen)) X[Y == nam[j]] <- args[[j]]
+#       } else for (j in seq_len(arglen)) X[X == nam[j]] <- args[[j]]
+#     }
+#   }
+#   return(X)
+# }
 
 
 # Experimental:

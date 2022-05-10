@@ -13,16 +13,17 @@
 fmedian(x, \dots)
 
 \method{fmedian}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-        use.g.names = TRUE, \dots)
+        use.g.names = TRUE, nthreads = 1L, \dots)
 
 \method{fmedian}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-        use.g.names = TRUE, drop = TRUE, \dots)
+        use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
 
 \method{fmedian}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-        use.g.names = TRUE, drop = TRUE, \dots)
+        use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
 
 \method{fmedian}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
-        use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
+        use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
+        nthreads = 1L, \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
@@ -37,6 +38,8 @@ fmedian(x, \dots)
 \item{na.rm}{logical. Skip missing values in \code{x}. Defaults to \code{TRUE} and implemented at very little computational cost. If \code{na.rm = FALSE} a \code{NA} is returned when encountered.}
 
 \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
+
+\item{nthreads}{integer. The number of threads to utilize. Parallelism is across groups for grouped computations and at the column-level otherwise. No parallelism is available for weighted computations. }
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}
 
@@ -55,7 +58,7 @@ The weighted median is defined as the element \code{k} from a set of sorted elem
 
 The weighted median is computed using \code{\link{radixorder}} to first obtain an ordering of all elements, so it is considerably more computationally expensive than the unweighted version. With groups, the entire vector is also ordered, and the weighted median is computed in a single ordered pass through the data (after group-summing the weights, skipping weights for which \code{x} is missing).
 
-If \code{x} is a matrix or data frame, these computations are performed independently for each column. When applied to data frames with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved.
+If \code{x} is a matrix or data frame, these computations are performed independently for each column. When applied to data frames with groups or \code{drop = FALSE}, \code{fmedian} preserves all column attributes. The attributes of the data frame itself are also preserved.
 
 
 %smaller to the left and to the right of
@@ -64,7 +67,7 @@ If \code{x} is a matrix or data frame, these computations are performed independ
 
 }
 \value{
-The (\code{w} weighted) median value of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its median, grouped by \code{g}.
+The (\code{w} weighted) median value of \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its (grouped, weighted) median.
 }
 \seealso{
 \code{\link{fnth}}, \code{\link{fmean}}, \code{\link{fmode}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
@@ -95,7 +98,7 @@ m <- qM(mtcars)
 fmedian(m)
 head(fmedian(m, TRA = "-"))
 fmedian(m, g) # etc..
-\donttest{ % No code relying on suggested package
+%\donttest{ % No code relying on suggested package
 library(dplyr)
 # grouped_df method
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian()
@@ -104,7 +107,7 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian()              # Faster grouping
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian(TRA = "-")     # De-median
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%    # Faster selecting
       fmedian(hp, "-")  # Weighted de-median mpg, using hp as weights
-}
+%}
 }
 \keyword{univar}
 \keyword{manip}
