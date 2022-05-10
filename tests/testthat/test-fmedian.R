@@ -76,7 +76,7 @@ wBY <- function(x, f, FUN, w, ...) {
 for (FUN in 1:2) {
 
   if(FUN == 2L) {
-    if(Sys.getenv("NCRAN") == "TRUE") {
+    if(Sys.getenv("OMP") == "TRUE") {
       fmedian <- function(x, ...) collapse::fmedian(x, ..., nthreads = 2L)
     } else break
   }
@@ -356,7 +356,7 @@ gf <- as_factor_GRP(g)
 for (FUN in 1:2) {
 
   if(FUN == 2L) {
-    if(Sys.getenv("NCRAN") == "TRUE") {
+    if(Sys.getenv("OMP") == "TRUE") {
       fnth <- function(x, ...) collapse::fnth(x, ..., nthreads = 2L)
     } else break
   }

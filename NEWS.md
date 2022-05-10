@@ -1,6 +1,6 @@
 # collapse 1.8.0
 
-*collapse* 1.8.0, released early May 2022, brings enhanced support for indexed computations on time series and panel data by introducing flexible 'indexed_frame' and 'indexed_series' classes and surrounding infrastructure, sets a modest start to OpenMP multithreading as well as data transformation by reference in statistical functions, and enhances the packages descriptive statistics toolset. 
+*collapse* 1.8.0, released mid of May 2022, brings enhanced support for indexed computations on time series and panel data by introducing flexible 'indexed_frame' and 'indexed_series' classes and surrounding infrastructure, sets a modest start to OpenMP multithreading as well as data transformation by reference in statistical functions, and enhances the packages descriptive statistics toolset. 
 
 ### Changes to functionality
 
@@ -53,22 +53,19 @@
 
 ### Improvements
 
-* OpenMP multithreading in `fsum`, `fmean`, `fmedian`, `fnth`, `fmode` and `fndistinct`, implemented via an additional `nthreads` argument. The default is to use 1 thread, which internally calls a serial version of the code (thus no change in the default behavior). 
-The plan is to slowly roll this out over all statistical functions and then introduce options to set alternative global defaults. Multi-threading internally works different for different functions, see the `nthreads` argument documentation of a particular function.
+* `fmean`, `fprod`, `fmode` and `fndistinct` were rewritten in C, providing performance improvements, particularly in `fmode` and `fndistinct`, and improvements for integers in `fmean` and `fprod`. 
 
-* `TRA` has an additional option `"replace_NA"`, e.g. `wlddev |> fgroup_by(iso3c) |> fmutate(across(PCGDP:POP, fmedian, TRA = "replace_NA"))` performs median value imputation of missing values. Similarly for a matrix `X <- matrix(na_insert(rnorm(1e7)), ncol = 100)`, `fmedian(X, TRA = "replace_NA", set = TRUE, nthreads = 4)` (column-wise multi-threaded median imputation by reference).
+* OpenMP multithreading in `fsum`, `fmean`, `fmedian`, `fnth`, `fmode` and `fndistinct`, implemented via an additional `nthreads` argument. The default is to use 1 thread, which internally calls a serial version of the code in `fsum` and `fmean` (thus no change in the default behavior). The plan is to slowly roll this out over all statistical functions and then introduce options to set alternative global defaults. Multi-threading internally works different for different functions, see the `nthreads` argument documentation of a particular function. Unfortunately I currently cannot guarantee thread safety, as parallelization of complex loops entails some tricky bugs and I have limited time to sort these out. So please report bugs, and if you happen to have experience with OpenMP please consider examining the code and making some suggestions. 
 
-* `fmean` and `fprod` was rewritten in C, providing a slightly faster internal method for integers. 
-
-* `fmode` and `fndistinct` rewritten in C:
+* `TRA` has an additional option `"replace_NA"`, e.g. `wlddev |> fgroup_by(iso3c) |> fmutate(across(PCGDP:POP, fmedian, TRA = "replace_NA"))` performs median value imputation of missing values. Similarly for a matrix `X <- matrix(na_insert(rnorm(1e7)), ncol = 100)`, `fmedian(X, TRA = "replace_NA", set = TRUE)` (column-wise median imputation by reference).
 
 * All *Fast Statistical Functions* support zero group sizes (e.g. grouping with a factor that has unused levels will always produce an output of length `nlevels(x)` with `0` or `NA` elements for the unused levels). Previously this produced an error message with counting/ordinal functions `fmode`, `fndistinct`, `fnth` and `fmedian`. 
 
-* 'GRP' objects now also contain a 'group.starts' item in the 8'th slot that gives the first positions of the unique groups, and is returned alongside the groups whenever `return.groups = TRUE`. This now benefits `ffirst` when invoked with `na.rm = FALSE`, e.g. `wlddev %>% fgroup_by(country) %>% ffirst(na.rm = FALSE)` is now just as efficient as `funique(wlddev, cols = "country")`. Note that no additional computing cost is incurred by preserving the 'group.starts' information, it just blocks a bit of additional memory. 
+* 'GRP' objects now also contain a 'group.starts' item in the 8'th slot that gives the first positions of the unique groups, and is returned alongside the groups whenever `return.groups = TRUE`. This now benefits `ffirst` when invoked with `na.rm = FALSE`, e.g. `wlddev %>% fgroup_by(country) %>% ffirst(na.rm = FALSE)` is now just as efficient as `funique(wlddev, cols = "country")`. Note that no additional computing cost is incurred by preserving the 'group.starts' information. 
 
 * Conversion methods `GRP.factor`, `GRP.qG`, `GRP.pseries`, `GRP.pdata.frame` and `GRP.grouped_df` now also efficiently check if grouping vectors are sorted (the information is stored in the "ordered" element of 'GRP' objects). This leads to performance improvements in `gsplit` / `greorder` and dependent functions such as `BY` and `rsplit` if factors are sorted. 
 
-* `descr()` received some performance improvements (up to 2x for categorical data), and has an additional argument `sort.table`, allowing frequency tables for categorical variables to be sorted by frequency (`"freq"`) or by table values (`"value"`). The new default is (`"freq"`), which presents tables in decreasing order of frequency. A method `[.descr` was added allowing 'descr' objects to be subset like a list. The print method was also enhanced, and by default now prints 14 values with the highest frequency and groups the remaining values into a single `... %s Others` category. Furthermore, if there are any missing values in the column, the percentage of values missing is now printed behind `Statistics `. An additional `reverse` argument to the print method allows for reverse printing of `descr()` output. 
+* `descr()` received some performance improvements (up to 2x for categorical data), and has an additional argument `sort.table`, allowing frequency tables for categorical variables to be sorted by frequency (`"freq"`) or by table values (`"value"`). The new default is (`"freq"`), which presents tables in decreasing order of frequency. A method `[.descr` was added allowing 'descr' objects to be subset like a list. The print method was also enhanced, and by default now prints 14 values with the highest frequency and groups the remaining values into a single `... %s Others` category. Furthermore, if there are any missing values in the column, the percentage of values missing is now printed behind `Statistics `. Additional arguments `reverse` and `stepwise` allow printing in reverse order and/or one variable at a time. 
 
 * `whichv` (and operators `%==%`, `%!=%`) now also support comparisons of equal-length arguments e.g. `1:3 %==% 1:3`. Note that this should not be used to compare 2 factors. 
 

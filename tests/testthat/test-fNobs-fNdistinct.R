@@ -88,7 +88,7 @@ dataNA$LC <- NULL
 for (nth in 1:2) {
 
   if(nth == 2L) {
-    if(Sys.getenv("NCRAN") == "TRUE") {
+    if(Sys.getenv("OMP") == "TRUE") {
       fndistinct <- function(x, ...) collapse::fndistinct(x, ..., nthreads = 2L)
     } else break
   }

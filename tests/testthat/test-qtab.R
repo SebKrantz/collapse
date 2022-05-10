@@ -1,4 +1,4 @@
-context("qtable")
+context("qtab")
 
 set.seed(101)
 wldNA <- na_insert(wlddev)

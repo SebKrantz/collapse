@@ -195,7 +195,7 @@ test_that("preservation of difftime (and related classes)", {
   }
 
   for(i in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c(.FAST_STAT_FUN, "fhdbetween", "HDB", "fhdwithin", "HDW", "Dlog"))) {
-    print(i)
+    # print(i)
     FUN <- match.fun(i)
     expect_identical(attributes(FUN(v)), av)
     expect_identical(attributes(FUN(v, g = g, by = g)), av)
