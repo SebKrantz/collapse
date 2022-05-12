@@ -102,7 +102,7 @@ reference:
   - "quick-conversion"
   - qF
 - title: "Advanced Data Aggregation"
-  desc: "Fast and easy multi-data-type, multi-function, weighted, parallelized and fully custom data aggregation."
+  desc: "Fast and easy multi-data-type, multi-function, weighted and parallelized data aggregation."
 - contents:
   - "advanced-aggregation"
   - collap
@@ -123,7 +123,7 @@ reference:
   - flm
   - fFtest
 - title: "Time Series and Panel Series"
-  desc: "Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (unordered, irregular) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
+  desc: "Fast and flexible indexed time series and panel data classes. Fast (sequences of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (irregular) time series and panel data. Auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversion."
 - contents:
   - "time-series-panel-series"
   - indexing
@@ -135,7 +135,7 @@ reference:
   - psacf
   - psmat
 - title: "List Processing"
-  desc: "Recursive list search / identification, extraction / subsetting, splitting, data-apply, and generalized recursive row-binding / unlisting in 2D."
+  desc: "Recursive list search, splitting, extraction/subsetting, apply, and generalized row-binding / unlisting to data frame."
 - contents:
   - "list-processing"
   - is_unlistable
@@ -146,7 +146,7 @@ reference:
   - rapply2d
   - unlist2d
 - title: "Summary Statistics"
-  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics for cross-sectional and complex multilevel / panel data."
+  desc: "Fast (grouped, weighted, panel-decomposed) summary statistics and descriptive tools."
 - contents:
   - "summary-statistics"
   - qsu
@@ -160,7 +160,7 @@ reference:
   - "recode-replace"
   - pad
 - title: "(Memory) Efficient Programming"
-  desc: "Small Functions to Make R Programming More Efficient."
+  desc: "Small functions to make R programming more efficient."
 - contents:
   - "efficient-programming"
 - title: "Small (Helper) Functions"
