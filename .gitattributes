@@ -1,5 +1,5 @@
-docs/* linguist-vendored
-man/* linguist-vendored
-tests/* linguist-vendored
-vignettes/* linguist-vendored
-misc/* linguist-vendored
+docs/** linguist-documentation
+man/** linguist-documentation
+tests/** linguist-vendored
+vignettes/** linguist-vendored
+misc/** linguist-vendored
