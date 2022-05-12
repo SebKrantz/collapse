@@ -42,7 +42,7 @@
                                "fhdwithin", "findex", "findex_by", "finteraction", "flag", "flast", "flm", "fmax", "fmean",
                                "fmedian", "fmin", "fmode", "fmutate", "fncol", "fndistinct", "fnlevels", "fnobs", "fnrow",
                                "fnth", "fprod", "frange", "frename", "fscale", "fsd", "fselect", "fselect<-", "fsubset",
-                               "fsum", "fsummarise", "ftransform", "ftransform<-", "ftransformv", "fungroup", "funique",
+                               "fsum", "fsummarise", "ftransform", "ftransform<-", "ftransformv", "fungroup", "funique", "fnunique",
                                "fvar", "fwithin", "G", "gby", "get_elem", "get_vars", "get_vars<-", "GGDC10S", "greorder",
                                "group", "groupid", "GRP", "GRPnames", "gsplit", "gv", "gv<-", "gvr", "gvr<-", "has_elem",
                                "iby", "irreg_elem", "is_categorical", "is_date", "is_GRP", "is_irregular", "is_qG",

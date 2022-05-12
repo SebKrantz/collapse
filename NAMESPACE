@@ -369,6 +369,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(funique)
  export(funique.default)
  export(funique.data.frame)
+ export(fnunique)
  export(finteraction)
  export(fnrow)
  export(fncol)

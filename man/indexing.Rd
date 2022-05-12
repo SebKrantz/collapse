@@ -133,8 +133,6 @@ The print methods for 'indexed_frame' and 'indexed_series' first call \code{prin
 \code{\link{timeid}},
 \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}}
 \examples{
-opts <- options(max.print = 100)
-
 # Indexing panel data ----------------------------------------------------------
 
 wldi <- findex_by(wlddev, iso3c, year)
@@ -207,6 +205,7 @@ wldi \%>\% fselect(PCGDP, LIFEEX) \%>\%
   fgrowth(5, power = 1/5) \%>\% ftransform(LIFEEX_L5 = L(LIFEEX, 5)) \%>\%
   unindex() \%>\% na_omit() \%>\% ranger::ranger(formula = PCGDP ~.)
 }
+
 # Indexing other data frame based classes --------------------------------------
 
 library(tibble)
@@ -258,6 +257,7 @@ microbenchmark(
   dplyr = fill_gaps(pedestrian) \%>\% group_by_key() \%>\% mutate(Lag_Count = lag(Count)),
   collapse = fmutate(pedi, Lag_Count = flag(Count)), times = 10)
 }
+
 # Indexing Atomic objects ---------------------------------------------------------
 
 ## ts
@@ -292,7 +292,6 @@ X["1980/"] \%>\% fdiff(t = index(.)) # xts index is internally processed by time
 
 ## Of course you can also index plain vectors / matrices...
 
-options(opts)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

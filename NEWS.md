@@ -1,3 +1,7 @@
+# collapse 1.8.1
+
+* Added function `fnunique` (yet another alternative to `data.table::uniqueN`, `kit::uniqLen` or `dplyr::n_distinct`, and principally a simple wrapper for `attr(group(x), "N.groups")`). At present `fnunique` generally outperforms the others on data frames.
+
 # collapse 1.8.0
 
 *collapse* 1.8.0, released mid of May 2022, brings enhanced support for indexed computations on time series and panel data by introducing flexible 'indexed_frame' and 'indexed_series' classes and surrounding infrastructure, sets a modest start to OpenMP multithreading as well as data transformation by reference in statistical functions, and enhances the packages descriptive statistics toolset. 

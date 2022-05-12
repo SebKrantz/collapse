@@ -5,12 +5,17 @@
 \alias{funique.sf}
 \alias{funique.pseries}
 \alias{funique.pdata.frame}
+\alias{fnunique}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Unique Elements / Rows
 }
 \description{
-\code{funique} is a substantially faster alternative to \code{\link{unique}}, particularly for data frames.
+\code{funique} is an efficient alternative to \code{\link{unique}} (or \code{unique.data.table, kit::funique, dplyr::distinct}).
+
+\code{fnunique} is an alternative to \code{NROW(unique(x))} (or \code{data.table::uniqueN, kit::uniqLen, dplyr::n_distinct}).
+
+The \emph{collapse} versions are versatile and highly competitive on data frames.
 }
 \usage{
 funique(x, \dots)
@@ -27,6 +32,8 @@ funique(x, \dots)
 
 \method{funique}{pdata.frame}(x, cols = NULL, sort = FALSE, method = "auto", drop.index.levels = "id", \dots)
 
+
+fnunique(x) # Fast NROW(unique(x))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -51,18 +58,19 @@ The \emph{sf} method simply ignores the geometry column when determining unique 
 Methods for indexed data also subset the index accordingly.
 }
 \note{
-No matrix method is provided. Please see \code{kit::funique} for a fast alternative with a matrix method. The \emph{kit} version is also often faster on vectors, but generally not on data frames.
+No matrix method is provided. Please see \code{kit::funique} for a fast alternative with a matrix method. The \emph{kit} version is also often faster for vectors.
 }
 \value{
 \code{x} with duplicate elements/rows removed. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.
 }
 \seealso{
-\code{\link{group}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
+\code{\link{fndistinct}}, \code{\link{group}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
 }
 \examples{
 funique(mtcars$cyl)
 funique(gv(mtcars, c(2,8,9)))
 funique(mtcars, cols = c(2,8,9))
+fnunique(gv(mtcars, c(2,8,9)))
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
