@@ -53,7 +53,7 @@ copyv(X, v, R, \dots, invert  # Faster than replace(x, x == v, r) or replace(x, 
 setv(X, v, R, \dots, invert   # Same for x[x (!/=)= v] <- r or x[(!)v] <- r[(!)v]
   = FALSE, vind1 = FALSE)   # modifies x by reference, fastest
 setop(X, op, V, \dots,        # Faster than X <- X +\-\*\/ V (modifies by reference)
-      rowwise = FALSE)      # optionally can also add v to rows of a matrix
+      rowwise = FALSE)      # optionally can also add v to rows of a matrix or list
 X \%+=\% V                    # Infix for setop(X, "+", V)
 X \%-=\% V                    # Infix for setop(X, "-", V)
 X \%*=\% V                    # Infix for setop(X, "*", V)
