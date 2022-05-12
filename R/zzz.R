@@ -33,7 +33,7 @@
     # if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
     if(any(mask == "all")) mask <- c("helper", "manip", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
     manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fmutate", "frename", "findex_by", "findex")
-    helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "frange", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
+    helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "fnunique", "frange", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
     if(any(mask == "helper")) mask <- unique.default(c(helperfun, mask[mask != "helper"]))
     if(any(mask == "manip")) mask <- unique.default(c(manipfun, mask[mask != "manip"]))
     if(any(mask == "fast-fun")) {

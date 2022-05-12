@@ -767,6 +767,11 @@ funique.pdata.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", d
   res
 }
 
+fnunique <- function(x) {
+  if(is.atomic(x) && !is.complex(x)) .Call(C_fndistinct, x, NULL, FALSE, 1L) else
+    attr(.Call(C_group, x, FALSE, FALSE), "N.groups")
+}
+
 fdroplevels <- function(x, ...) UseMethod("fdroplevels")
 
 fdroplevels.default <- function(x, ...) {

@@ -61,7 +61,7 @@ If \code{na.rm = TRUE} (the default), missing values will be skipped yielding su
 Integer. The number of distinct values in \code{x}, grouped by \code{g}, or (if \code{\link{TRA}} is used) \code{x} transformed by its distinct value count, grouped by \code{g}.
 }
 \seealso{
-\code{\link{fnobs}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fnunique}}, \code{\link{fnobs}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default vector method
