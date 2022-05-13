@@ -2,15 +2,18 @@
 
 
 <!-- badges: start -->
+[![R build status](https://github.com/SebKrantz/collapse/workflows/R-CMD-check/badge.svg)](https://github.com/SebKrantz/collapse/actions)
+[![collapse status badge](https://fastverse.r-universe.dev/badges/collapse)](https://fastverse.r-universe.dev)
 [![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse) 
 [![cran checks](https://cranchecks.info/badges/worst/collapse)](https://cran.r-project.org/web/checks/check_results_collapse.html)
-[![R build status](https://github.com/SebKrantz/collapse/workflows/R-CMD-check/badge.svg)](https://github.com/SebKrantz/collapse/actions)
+![downloads per month](http://cranlogs.r-pkg.org/badges/collapse?color=blue)
+![downloads](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=blue)
+ [![Conda Version](https://img.shields.io/conda/vn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
+ [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://codecov.io/gh/SebKrantz/collapse?branch=master)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.3.0-6666ff.svg)](https://cran.r-project.org/)
 [![status](https://tinyverse.netlify.com/badge/collapse)](https://CRAN.R-project.org/package=collapse)
 <!-- [![lifecycle](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing) -->
-![downloads per month](http://cranlogs.r-pkg.org/badges/collapse?color=blue)
-![downloads](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=blue)
 <!-- [![Travis build status](https://travis-ci.com/SebKrantz/collapse.svg?branch=master)](https://travis-ci.com/SebKrantz/collapse) -->
 <!-- badges: end -->
 
