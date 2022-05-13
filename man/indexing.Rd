@@ -278,7 +278,7 @@ library(zoo) # Needed for as.yearmon() and index() functions
 X <- wlddev \%>\% fsubset(iso3c == "DEU", date, PCGDP:POP) \%>\% {
   xts(num_vars(.), order.by = as.yearmon(.$date))
   } \%>\% ss(-(30:40)) \%>\% reindex(identity(index(.))) # Introducing a gap
-plot(G(unindex(X)))
+# plot(G(unindex(X)))
 diff(unindex(X))    # diff.xts gixes wrong result
 fdiff(X)            # fdiff gives right result
 

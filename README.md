@@ -60,12 +60,14 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 # Install the current version on CRAN
 install.packages("collapse")
 
-# Install previous versions from the CRAN Archive (Requires Rtools)
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.7.6.tar.gz", repos = NULL, type = "source")
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.6.5.tar.gz", repos = NULL, type = "source")
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.5.3.tar.gz", repos = NULL, type = "source")
+# Install current binaries from the fastverse R-universe
+install.packages("collapse", repos = "https://fastverse.r-universe.dev")
 
-# Install a stable development version from Github (Requires Rtools)
+# Install previous versions from the CRAN Archive (requires compilation)
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.7.6.tar.gz", 
+                 repos = NULL, type = "source") # Older: 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
+
+# Install a stable development version from Github (requires compilation)
 remotes::install_github("SebKrantz/collapse")
 ```
 <!--
