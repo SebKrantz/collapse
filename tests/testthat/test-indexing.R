@@ -84,3 +84,22 @@ test_that("descriptives work well", {
   expect_equal(qtable(r = wlddev$region, i = wlddev$income), qtable(r = wldi$region, i = wldi$income))
   expect_equal(pwcor(nv(wlddev)), pwcor(nv(wldi)))
 })
+
+test_that("Id variables are properly preserved in operator methods", {
+  wld1i <- findex_by(fsubset(wlddev, iso3c %==% "DEU"), year)
+  GGDCii <- findex_by(GGDC10S, Variable, Country, Year)
+  GGDCi <- findex_by(GGDC10S, Variable, Country, Year, interact.ids = FALSE)
+  for(FUN in list(L, F, D, Dlog, G, B, W, STD)) {
+      expect_identical(names(FUN(wld1i, cols = "PCGDP", stub = FALSE)), c("year", "PCGDP"))
+      expect_identical(names(FUN(wld1i, cols = "PCGDP", keep.ids = FALSE, stub = FALSE)), "PCGDP")
+      expect_identical(names(FUN(wldi, cols = "PCGDP", stub = FALSE)), c("country", "year", "PCGDP"))
+      expect_identical(names(FUN(wldi, cols = "PCGDP", keep.ids = FALSE, stub = FALSE)), "PCGDP")
+      expect_identical(names(FUN(GGDCi, cols = "SUM", stub = FALSE)), c("Country", "Variable", "Year", "SUM"))
+      expect_identical(names(FUN(GGDCi, cols = "SUM", keep.ids = FALSE, stub = FALSE)), "SUM")
+      expect_identical(names(FUN(GGDCii, cols = "SUM", stub = FALSE)), c("Country", "Variable", "Year", "SUM"))
+      expect_identical(names(FUN(GGDCii, cols = "SUM", keep.ids = FALSE, stub = FALSE)), "SUM")
+  }
+
+})
+
+

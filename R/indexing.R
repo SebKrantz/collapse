@@ -238,8 +238,11 @@ findex_by <- function(.X, ..., single = "auto", interact.ids = TRUE) { # pid = N
   } else {
     lids <- length(ids)
     if(lids > 2L) {
-      if(interact.ids) ids <- c(`names<-`(list(finteraction(ids[-lids], sort = FALSE)), paste(names(ids)[-lids], collapse = ".")), ids[lids])
-      else ids[-lids] <- lapply(ids[-lids], function(x) qF(x, sort = is.factor(x), na.exclude = FALSE))
+      if(interact.ids) {
+        nam <- names(ids)
+        ids <- c(`names<-`(list(finteraction(ids[-lids], sort = FALSE)), paste(nam[-lids], collapse = ".")), ids[lids])
+        attr(ids, "nam") <- nam # This is a trick, fetched using attr(x, "nam"), before "names" attribute
+      } else ids[-lids] <- lapply(ids[-lids], function(x) qF(x, sort = is.factor(x), na.exclude = FALSE))
     } else ids[[1L]] <- qF(ids[[1L]], sort = is.factor(ids[[1L]]), na.exclude = FALSE)
     ids[[length(ids)]] <- make_time_factor(ids[[length(ids)]])
   }
@@ -269,17 +272,19 @@ group_effect <- function(x, effect) {
 uncl2pix <- function(x, interact = FALSE) {
   ix <- unclass(findex(x))
   if(length(ix) == 2L) return(ix)
-  if(length(ix) == 1L) return(if(isTRUE(attr(ix, "single.id"))) list(ix[[1L]], NULL) else list(0L, ix[[1L]]))
-  if(length(ix) > 2L) {
+  if(length(ix) == 1L) {
+    res <- if(isTRUE(attr(ix, "single.id"))) list(ix[[1L]], NULL) else list(0L, ix[[1L]])
+  } else if(length(ix) > 2L) {
     if(interact) {
       g <- finteraction(ix[-length(ix)])
     } else {
       g <- group(ix[-length(ix)])
       attr(g, "levels") <- seq_len(attr(g, "N.groups"))
     }
-    return(list(g, ix[[length(ix)]]))
-  }
-  stop("invalid 'index' length")
+    res <- list(g, ix[[length(ix)]])
+  } else stop("invalid 'index' length")
+  attr(res, "nam") <- names(ix)
+  return(res)
 }
 
 plm_check_time <- function(x) {

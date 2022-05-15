@@ -146,7 +146,7 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
   index <- uncl2pix(x)
 
   if(keep.ids) {
-    gn <- which(nam %in% names(index))
+    gn <- which(nam %in% attr(index, "nam")) # Needed for 1 or 3+ index variables
     if(length(gn) && is.null(cols)) cols <- seq_along(unclass(x))[-gn]
   } else gn <- NULL
 
