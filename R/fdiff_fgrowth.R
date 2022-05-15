@@ -229,7 +229,7 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
   index <- uncl2pix(x)
 
   if(keep.ids) {
-    gn <- which(nam %in% names(index))
+    gn <- which(nam %in% attr(index, "nam")) # Needed for 1 or 3+ index variables
     if(length(gn) && is.null(cols)) cols <- seq_along(unclass(x))[-gn]
   } else gn <- NULL
 

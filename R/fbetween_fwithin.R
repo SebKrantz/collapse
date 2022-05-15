@@ -122,7 +122,7 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   g <- group_effect(x, effect)
 
   if(keep.ids) {
-    gn <- which(nam %in% attr(findex(x), "names"))
+    gn <- which(nam %in% attr(findex(x), "nam")) # Needed for 3+ index variables
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
@@ -323,7 +323,7 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   g <- group_effect(x, effect)
 
   if(keep.ids) {
-    gn <- which(nam %in% attr(findex(x), "names"))
+    gn <- which(nam %in% attr(findex(x), "nam")) # Needed for 3+ index variables
     if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
   } else gn <- NULL
 
