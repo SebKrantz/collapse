@@ -43,10 +43,10 @@ anyv(x, value)              # Faster than any(x == value)
 allv(x, value)              # Faster than all(x == value)
 allNA(x)                    # Faster than all(is.na(x))
 whichv(x, value,            # Faster than which(x == value)
-       invert = FALSE)      # or which(x != value)
+       invert = FALSE)      # or which(x != value). See also Note (3)
 whichNA(x, invert = FALSE)  # Faster than which((!)is.na(x))
 x \%==\% value                # Infix for whichv(v, value, FALSE), use e.g. in fsubset
-x \%!=\% value                # Infix for whichv(v, value, TRUE)
+x \%!=\% value                # Infix for whichv(v, value, TRUE). See also Note (3)
 alloc(value, n)             # Faster than rep_len(value, n)
 copyv(X, v, R, \dots, invert  # Faster than replace(x, x == v, r) or replace(x, v, r[v])
   = FALSE, vind1 = FALSE)   # or replace(x, x != v, r) or replace(x, !v, r[!v])
@@ -54,10 +54,10 @@ setv(X, v, R, \dots, invert   # Same for x[x (!/=)= v] <- r or x[(!)v] <- r[(!)v
   = FALSE, vind1 = FALSE)   # modifies x by reference, fastest
 setop(X, op, V, \dots,        # Faster than X <- X +\-\*\/ V (modifies by reference)
       rowwise = FALSE)      # optionally can also add v to rows of a matrix or list
-X \%+=\% V                    # Infix for setop(X, "+", V)
-X \%-=\% V                    # Infix for setop(X, "-", V)
-X \%*=\% V                    # Infix for setop(X, "*", V)
-X \%/=\% V                    # Infix for setop(X, "/", V)
+X \%+=\% V                    # Infix for setop(X, "+", V). See also Note (2)
+X \%-=\% V                    # Infix for setop(X, "-", V). See also Note (2)
+X \%*=\% V                    # Infix for setop(X, "*", V). See also Note (2)
+X \%/=\% V                    # Infix for setop(X, "/", V). See also Note (2)
 na_rm(x)                    # Fast: if(anyNA(x)) x[!is.na(x)] else x,
                             # also removes NULL / empty elements from list
 na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
@@ -111,7 +111,11 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
 }
 
 \note{
-(1) None of these functions currently support complex vectors. (2) It is possible to compare factors by the levels (e.g. \code{iris$Species \%==\% "setosa")}) or using integers (\code{iris$Species \%==\% 1L}). The latter is slightly more efficient. (3) Nothing special is implemented for other objects apart from basic types, e.g. for dates (which are stored as doubles) you need to generate a date object e.g. \code{wlddev$date \%==\% as.Date("2019-01-01")}, \code{wlddev$date \%==\% "2019-01-01"} will give \code{integer(0)}.
+(1) None of these functions currently support complex vectors.
+
+(2) \code{setop} and the operators \code{\%+=\%}, \code{\%-=\%}, \code{\%*=\%} and \code{\%/=\%} also work with integer data, but do not perform any integer related checks. R's integers are bounded between +-2,147,483,647 and \code{NA_integer_} is stored as the value -2,147,483,648. Thus computations resulting in values exceeding +-2,147,483,647 will result in integer overflows, and \code{NA_integer_} should not occur on either side of a \code{setop} call. These are programmers functions and meant to provide the most efficient math possible to responsible users.
+
+(3) It is possible to compare factors by the levels (e.g. \code{iris$Species \%==\% "setosa")}) or using integers (\code{iris$Species \%==\% 1L}). The latter is slightly more efficient. Nothing special is implemented for other objects apart from basic types, e.g. for dates (which are stored as doubles) you need to generate a date object i.e. \code{wlddev$date \%==\% as.Date("2019-01-01")}. Using \code{wlddev$date \%==\% "2019-01-01"} will give \code{integer(0)}.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -135,6 +139,23 @@ rm(lvec)
 # Using the \%==\% operator can yield tangible performance gains
 fsubset(wlddev, iso3c \%==\% "DEU") # 3x faster than:
 fsubset(wlddev, iso3c == "DEU")
+
+## Math by reference: permissible types of operations
+x <- alloc(1.0, 1e5) # Vector
+x \%+=\% 1
+x \%+=\% 1:1e5
+xm <- matrix(alloc(1.0, 1e5), ncol = 100) # Matrix
+xm \%+=\% 1
+xm \%+=\% 1:1e3
+setop(xm, "+", 1:100, rowwise = TRUE)
+xm \%+=\% xm
+xm \%+=\% 1:1e5
+xd <- qDF(replicate(100, alloc(1.0, 1e3), simplify = FALSE)) # Data Frame
+xd \%+=\% 1
+xd \%+=\% 1:1e3
+setop(xd, "+", 1:100, rowwise = TRUE)
+xd \%+=\% xd
+rm(x, xm, xd)
 
 ## Missing values
 mtc_na <- na_insert(mtcars, 0.15)    # Set 15\% of values missing at random

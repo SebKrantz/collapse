@@ -282,14 +282,14 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
         for(int j = 0; j < col; ++j) {
           NumericMatrix::ConstColumn colj = x( _ , j);
           NumericVector column = no_init_vector(l); // without multithreading this could be taken out of the loop, see previous version of the code.
-          auto begin = column.begin(), pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
+          double *begin = column.begin(), *pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
           int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
           if(sz == 0) {
             out[j] = colj[0];
-            continue;
+          } else {
+            std::nth_element(begin, begin+nth, pend);
+            out[j] = (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
           }
-          std::nth_element(begin, begin+nth, pend);
-          out[j] = (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
         }
       } else {
         int nth = lower ? (l-1)*Q : l*Q;
@@ -569,8 +569,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
         for(int j = 0; j < l; ++j) {
           NumericVector colj = x[j];
           NumericVector column = no_init_vector(colj.size());
-          auto begin = column.begin();
-          auto pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
+          double *begin = column.begin(), *pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
           int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
           if(sz == 0) {
             out[j] = colj[0];
@@ -592,7 +591,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
               }
             }
             NumericVector column = Rf_duplicate(colj);
-            auto begin = column.begin();
+            double *begin = column.begin();
             std::nth_element(begin, begin+nth, column.end());
             out[j] = (tiesmean && row%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, column.end())))*0.5 : column[nth];
           }
