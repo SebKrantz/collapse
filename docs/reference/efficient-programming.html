@@ -71,10 +71,10 @@
 <span class="fu">allv</span><span class="op">(</span><span class="va">x</span>, <span class="va">value</span><span class="op">)</span>              <span class="co"># Faster than all(x == value)</span>
 <span class="fu">allNA</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                    <span class="co"># Faster than all(is.na(x))</span>
 <span class="fu">whichv</span><span class="op">(</span><span class="va">x</span>, <span class="va">value</span>,            <span class="co"># Faster than which(x == value)</span>
-       invert <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>      <span class="co"># or which(x != value)</span>
+       invert <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>      <span class="co"># or which(x != value). See also Note (3)</span>
 <span class="fu">whichNA</span><span class="op">(</span><span class="va">x</span>, invert <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># Faster than which((!)is.na(x))</span>
 <span class="va">x</span> <span class="op">%==%</span> <span class="va">value</span>                <span class="co"># Infix for whichv(v, value, FALSE), use e.g. in fsubset</span>
-<span class="va">x</span> <span class="op">%!=%</span> <span class="va">value</span>                <span class="co"># Infix for whichv(v, value, TRUE)</span>
+<span class="va">x</span> <span class="op">%!=%</span> <span class="va">value</span>                <span class="co"># Infix for whichv(v, value, TRUE). See also Note (3)</span>
 <span class="fu">alloc</span><span class="op">(</span><span class="va">value</span>, <span class="va">n</span><span class="op">)</span>             <span class="co"># Faster than rep_len(value, n)</span>
 <span class="fu">copyv</span><span class="op">(</span><span class="va">X</span>, <span class="va">v</span>, <span class="va">R</span>, <span class="va">...</span>, invert  <span class="co"># Faster than replace(x, x == v, r) or replace(x, v, r[v])</span>
   <span class="op">=</span> <span class="cn">FALSE</span>, vind1 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>   <span class="co"># or replace(x, x != v, r) or replace(x, !v, r[!v])</span>
@@ -82,10 +82,10 @@
   <span class="op">=</span> <span class="cn">FALSE</span>, vind1 <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>   <span class="co"># modifies x by reference, fastest</span>
 <span class="fu">setop</span><span class="op">(</span><span class="va">X</span>, <span class="va">op</span>, <span class="va">V</span>, <span class="va">...</span>,        <span class="co"># Faster than X &lt;- X +\-\*\/ V (modifies by reference)</span>
       rowwise <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>      <span class="co"># optionally can also add v to rows of a matrix or list</span>
-<span class="va">X</span> <span class="op">%+=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "+", V)</span>
-<span class="va">X</span> <span class="op">%-=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "-", V)</span>
-<span class="va">X</span> <span class="op">%*=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "*", V)</span>
-<span class="va">X</span> <span class="op">%/=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "/", V)</span>
+<span class="va">X</span> <span class="op">%+=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "+", V). See also Note (2)</span>
+<span class="va">X</span> <span class="op">%-=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "-", V). See also Note (2)</span>
+<span class="va">X</span> <span class="op">%*=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "*", V). See also Note (2)</span>
+<span class="va">X</span> <span class="op">%/=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "/", V). See also Note (2)</span>
 <span class="fu">na_rm</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                    <span class="co"># Fast: if(anyNA(x)) x[!is.na(x)] else x,</span>
                             <span class="co"># also removes NULL / empty elements from list</span>
 <span class="fu">na_omit</span><span class="op">(</span><span class="va">X</span>, cols <span class="op">=</span> <span class="cn">NULL</span>,     <span class="co"># Faster na.omit for matrices and data frames,</span>
@@ -146,7 +146,9 @@
     </div>
     <div id="note">
     <h2>Note</h2>
-    <p>(1) None of these functions currently support complex vectors. (2) It is possible to compare factors by the levels (e.g. <code>iris$Species %==% "setosa")</code>) or using integers (<code>iris$Species %==% 1L</code>). The latter is slightly more efficient. (3) Nothing special is implemented for other objects apart from basic types, e.g. for dates (which are stored as doubles) you need to generate a date object e.g. <code>wlddev$date %==% as.Date("2019-01-01")</code>, <code>wlddev$date %==% "2019-01-01"</code> will give <code>integer(0)</code>.</p>
+    <p>(1) None of these functions currently support complex vectors.</p>
+<p>(2) <code>setop</code> and the operators <code>%+=%</code>, <code>%-=%</code>, <code>%*=%</code> and <code>%/=%</code> also work with integer data, but do not perform any integer related checks. R's integers are bounded between +-2,147,483,647 and <code>NA_integer_</code> is stored as the value -2,147,483,648. Thus computations resulting in values exceeding +-2,147,483,647 will result in integer overflows, and <code>NA_integer_</code> should not occur on either side of a <code>setop</code> call. These are programmers functions and meant to provide the most efficient math possible to responsible users.</p>
+<p>(3) It is possible to compare factors by the levels (e.g. <code>iris$Species %==% "setosa")</code>) or using integers (<code>iris$Species %==% 1L</code>). The latter is slightly more efficient. Nothing special is implemented for other objects apart from basic types, e.g. for dates (which are stored as doubles) you need to generate a date object i.e. <code>wlddev$date %==% as.Date("2019-01-01")</code>. Using <code>wlddev$date %==% "2019-01-01"</code> will give <code>integer(0)</code>.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -229,55 +231,72 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA 70.01371   NA  NA 75318337</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 56 rows ]</span>
 <span class="r-in"></span>
+<span class="r-in"><span class="co">## Math by reference: permissible types of operations</span></span>
+<span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">alloc</span><span class="op">(</span><span class="fl">1.0</span>, <span class="fl">1e5</span><span class="op">)</span> <span class="co"># Vector</span></span>
+<span class="r-in"><span class="va">x</span> <span class="op">%+=%</span> <span class="fl">1</span></span>
+<span class="r-in"><span class="va">x</span> <span class="op">%+=%</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1e5</span></span>
+<span class="r-in"><span class="va">xm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu">alloc</span><span class="op">(</span><span class="fl">1.0</span>, <span class="fl">1e5</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="co"># Matrix</span></span>
+<span class="r-in"><span class="va">xm</span> <span class="op">%+=%</span> <span class="fl">1</span></span>
+<span class="r-in"><span class="va">xm</span> <span class="op">%+=%</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1e3</span></span>
+<span class="r-in"><span class="fu">setop</span><span class="op">(</span><span class="va">xm</span>, <span class="st">"+"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, rowwise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">xm</span> <span class="op">%+=%</span> <span class="va">xm</span></span>
+<span class="r-in"><span class="va">xm</span> <span class="op">%+=%</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1e5</span></span>
+<span class="r-in"><span class="va">xd</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fu">alloc</span><span class="op">(</span><span class="fl">1.0</span>, <span class="fl">1e3</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="co"># Data Frame</span></span>
+<span class="r-in"><span class="va">xd</span> <span class="op">%+=%</span> <span class="fl">1</span></span>
+<span class="r-in"><span class="va">xd</span> <span class="op">%+=%</span> <span class="fl">1</span><span class="op">:</span><span class="fl">1e3</span></span>
+<span class="r-in"><span class="fu">setop</span><span class="op">(</span><span class="va">xd</span>, <span class="st">"+"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span>, rowwise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">xd</span> <span class="op">%+=%</span> <span class="va">xd</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">xm</span>, <span class="va">xd</span><span class="op">)</span></span>
+<span class="r-in"></span>
 <span class="r-in"><span class="co">## Missing values</span></span>
 <span class="r-in"><span class="va">mtc_na</span> <span class="op">&lt;-</span> <span class="fu">na_insert</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">0.15</span><span class="op">)</span>    <span class="co"># Set 15% of values missing at random</span></span>
 <span class="r-in"><span class="fu"><a href="fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                        <span class="co"># See observation count</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   28   28   28   28   28   28   28   28   28   28   28 </span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                      <span class="co"># 12x faster than na.omit(mtc_na)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant       18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360    14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280      19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE    16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC   15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># Adds attribute with removed cases, like na.omit</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant       18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360    14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280      19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE    16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC   15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vs"</span>,<span class="st">"am"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Removes only cases missing vs or am</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6 160.0 110 3.90    NA 17.02  0  1    4   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      NA  NA 258.0 110 3.08 3.215 19.44  1  0    3   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8 360.0 175 3.15    NA    NA  0  0   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3   8 360.0  NA 3.21 3.570 15.84  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230          22.8   4 140.8  NA 3.92 3.150 22.90  1  0    4    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 18 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6  160 110 3.90 2.620    NA  0  1    4   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        22.8  NA  108  93 3.85 2.320 18.61  1  1    4   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    21.4   6  258 110 3.08    NA 19.44  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8  360 175 3.15    NA 17.02  0  0    3    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 19 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span><span class="op">)</span>                  <span class="co"># Also works for matrices</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D           24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            19.2   6 167.6 123 3.92 3.440 18.30  1  0    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  10.4   8 472.0 205 2.93 5.250 17.98  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 10.4   8 460.0 215 3.00 5.424 17.82  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9           27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         15.2   8 275.8 180 3.07 3.780 18.00  0  0    3    3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">$</span><span class="va">vs</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># Also works with vectors</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 0 0 1 1 1 1 0 0 0 0 0 0 1 1 1 0 0 0 1 0 1 0 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 0 1 0 1 1 1 1 0 0 0 0 0 0 1 1 0 0 0 1 0 1 0 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"na.action")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  6 21 23 31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 18 21 22 29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "omit"</span>
 <span class="r-in"><span class="fu">na_rm</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>                     <span class="co"># For vectors na_rm is faster ...</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 0 0 1 1 1 1 0 0 0 0 0 0 1 1 1 0 0 0 1 0 1 0 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 0 1 0 1 1 1 1 0 0 0 0 0 0 1 1 0 0 0 1 0 1 0 0 1</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span></span>
 <span class="r-in"></span>
 </code></pre></div>
