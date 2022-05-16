@@ -56,7 +56,8 @@ to_plm <- function(x, row.names = FALSE) {
 
 timeid <- function(x, factor = FALSE, ordered = factor, extra = FALSE) {
   id <- .Call(C_group, x, TRUE, FALSE) # starts = TRUE, group.sizes = FALSE
-  unik <- unattrib(Csv(x, attr(id, "starts")))
+  unik <- Csv(x, attr(id, "starts"))
+  attributes(unik) <- NULL
   if(!is.numeric(unik)) stop("x needs to be numeric, otherwise use qF() or qG() instead of timeid()")
   is_dbl <- is.double(unik)
   o <- forder.int(unik, na.last = FALSE)
