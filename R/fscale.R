@@ -133,7 +133,7 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
 
   if(is.call(w)) {
     wn <- ckmatch(all.vars(w), nam, "Unknown weight variable:")
-    w <- x[[wn]]
+    w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[wn]]
     cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
     if(keep.w) gn <- c(gn, wn)
   }
@@ -182,7 +182,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
 
     if(is.call(w)) {
       wn <- ckmatch(all.vars(w), nam, "Unknown weight variable:")
-      w <- x[[wn]]
+      w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[wn]]
       cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
       if(keep.w) gn <- c(gn, wn)
     }

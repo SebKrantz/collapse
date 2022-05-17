@@ -130,7 +130,7 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
 
   if(is.call(w)) {
     wn <- ckmatch(all.vars(w), nam)
-    w <- x[[wn]]
+    w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[wn]]
     cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
     if(keep.w) gn <- c(gn, wn)
   }
@@ -174,7 +174,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
 
     if(is.call(w)) {
       wn <- ckmatch(all.vars(w), nam)
-      w <- x[[wn]]
+      w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[wn]]
       cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
       if(keep.w) gn <- c(gn, wn)
     }
@@ -331,7 +331,7 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
 
   if(is.call(w)) {
     wn <- ckmatch(all.vars(w), nam)
-    w <- x[[wn]]
+    w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[wn]]
     cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
     if(keep.w) gn <- c(gn, wn)
   }
@@ -374,7 +374,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
 
     if(is.call(w)) {
       wn <- ckmatch(all.vars(w), nam)
-      w <- x[[wn]]
+      w <- eval(w[[2L]], x, attr(w, ".Environment")) # w <- x[[wn]]
       cols <- if(is.null(cols)) seq_along(x)[-wn] else cols[cols != wn]
       if(keep.w) gn <- c(gn, wn)
     }
