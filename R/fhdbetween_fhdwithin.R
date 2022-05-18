@@ -549,7 +549,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       fl[[2L]] <- NULL
     } else {
       fvars <- ckmatch(all.vars(fl), nam)
-      Xvars <- if(length(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
+      Xvars <- cols2intrmgn(fvars, cols, x) # if(length(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
@@ -602,7 +602,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 
 HDW.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDW.", ...)
-add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ...), stub)
+add_stub(fhdwithin.pdata.frame(fcolsubset(x, cols2intrmgn(which(attr(x, "names") %in% attr(findex(x), "nam")), cols, x)), effect, w, na.rm, fill, variable.wise, ...), stub)
 
 HDW.list <- function(x, ...) HDW.data.frame(x, ...)
 
@@ -849,7 +849,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
       fl[[2L]] <- NULL
     } else {
       fvars <- ckmatch(all.vars(fl), nam)
-      Xvars <- if(length(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
+      Xvars <- cols2intrmgn(fvars, cols, x) #  if(length(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
     }
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
@@ -909,7 +909,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 
 HDB.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
                             variable.wise = TRUE, stub = "HDB.", ...)
-  add_stub(fhdwithin.pdata.frame(if(is.null(cols)) x else colsubset(x, cols), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
+  add_stub(fhdwithin.pdata.frame(fcolsubset(x, cols2intrmgn(which(attr(x, "names") %in% attr(findex(x), "nam")), cols, x)), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 
 HDB.list <- function(x, ...) HDB.data.frame(x, ...)
 

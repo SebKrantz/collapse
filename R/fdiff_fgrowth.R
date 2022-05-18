@@ -184,7 +184,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
         gn <- ckmatch(all.vars(by[[3L]]), nam)
       } else {
         gn <- ckmatch(all.vars(by), nam)
-        cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
+        cols <- cols2intrmgn(gn, cols, x)
       }
       by <- G_guo(if(length(gn) == 1L) x[[gn]] else x[gn])
       if(!keep.ids) gn <- NULL
@@ -227,10 +227,18 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
   ax <- attributes(x)
   nam <- ax[["names"]]
   index <- uncl2pix(x)
+  cols_fun <- is.function(cols)
 
-  if(keep.ids) {
+  if(cols_fun && identical(cols, is.numeric)) cols <- which(.Call(C_vtypes, x, 1L))
+  else if(length(cols)) cols <- cols2int(cols, x, nam, FALSE)
+
+  if(cols_fun || keep.ids) {
     gn <- which(nam %in% attr(index, "nam")) # Needed for 1 or 3+ index variables
-    if(length(gn) && is.null(cols)) cols <- seq_along(unclass(x))[-gn]
+    if(length(gn)) {
+      if(cols_fun) cols <- fsetdiff(cols, gn)
+      else if(is.null(cols)) cols <- seq_along(unclass(x))[-gn]
+    }
+    if(!keep.ids) gn <- NULL
   } else gn <- NULL
 
   g <- index[[1L]]
@@ -238,8 +246,6 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
   if(length(t) && !any(ax$class == "indexed_frame")) t <- plm_check_time(t)
 
   cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, function(k) rho * baselog(k)), y)
-
-  if(length(cols)) cols <- cols2int(cols, x, nam, FALSE)
 
   if(length(gn) && length(cols)) {
     class(x) <- NULL # Works for multiple lags !
