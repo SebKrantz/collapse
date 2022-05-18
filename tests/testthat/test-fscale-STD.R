@@ -810,7 +810,7 @@ test_that("STD.data.frame method is foolproof", {
   expect_error(STD(wlddev, w = 4))
   expect_error(STD(wlddev, w = "year"))
   expect_error(STD(wlddev, w = ~year2))
-  suppressWarnings(expect_error(STD(wlddev, w = ~year + region)))
+  # suppressWarnings(expect_error(STD(wlddev, w = ~year + region)))
   expect_error(STD(wlddev, mtcars))
   expect_error(STD(wlddev, 2))
   expect_error(STD(wlddev, "iso3c"))

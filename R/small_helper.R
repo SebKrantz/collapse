@@ -592,6 +592,17 @@ cols2char <- function(cols, x, nam) {
 #   r
 # }
 
+# Helper for operator functions...
+cols2intrmgn <- function(gn, cols, x) {
+  if(is.function(cols)) {
+    cols <- if(identical(cols, is.numeric)) .Call(C_vtypes, x, 1L) else vapply(unattrib(x), cols, TRUE)
+    cols[gn] <- FALSE
+    return(which(cols))
+  }
+  if(is.null(cols)) return(seq_along(unclass(x))[-gn])
+  cols2int(cols, x, attr(x, "names"))
+}
+
 colsubset <- function(x, ind, checksf = FALSE) {
   if(is.numeric(ind)) return(.Call(C_subsetCols, x, as.integer(ind), checksf))
   if(is.logical(ind)) {

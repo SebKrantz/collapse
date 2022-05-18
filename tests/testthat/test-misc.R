@@ -246,3 +246,65 @@ test_that("frange works well", {
   expect_equal(frange(xiNA), range(xiNA, na.rm = TRUE))
 
 })
+
+# TODO: Test other cols options and formula options !!!
+options(warn = -1)
+test_that("operator methods column selection since v1.8.1 works as intended", {
+  nnvw <- names(nv(wlddev))
+  wldi <- colorder(iby(wlddev, iso3c, year), year, pos = "end")
+  wld1i <- colorder(iby(sbt(wlddev, iso3c %==% "DEU"), year), year, pos = "end")
+  nnvg <- names(nv(GGDC10S))
+  ggdc3i <- findex_by(GGDC10S, Variable, Country, Year, interact.ids = FALSE)
+  ggdc3ii <- findex_by(GGDC10S, Variable, Country, Year)
+
+  for(op in list(L, F, D, Dlog, G, B, W, STD)) {
+    expect_equal(names(op(wlddev, stub = FALSE)), nnvw)
+    expect_equal(names(op(wlddev, by = ~ iso3c, stub = FALSE)), c("iso3c", nnvw))
+    expect_equal(names(op(wlddev, by = ~ iso3c, stub = FALSE, keep.by = FALSE, keep.ids = FALSE)), nnvw)
+    expect_equal(names(op(wlddev, by = ~ decade, stub = FALSE)), c("decade", nnvw[nnvw != "decade"]))
+    expect_equal(names(op(wlddev, by = ~ decade, stub = FALSE, keep.by = FALSE, keep.ids = FALSE)), nnvw[nnvw != "decade"])
+    expect_equal(names(op(wldi, stub = FALSE)), c("iso3c", nnvw))
+    expect_equal(names(op(wldi, stub = FALSE, keep.by = FALSE, keep.ids = FALSE)), nnvw[nnvw != "year"])
+    expect_equal(names(op(wld1i, stub = FALSE)), nnvw)
+    expect_equal(names(op(wld1i, stub = FALSE, keep.by = FALSE, keep.ids = FALSE)), nnvw[nnvw != "year"])
+    expect_equal(names(op(ggdc3i, stub = FALSE)), c("Country", "Variable", nnvg))
+    expect_equal(names(op(ggdc3i, stub = FALSE, keep.by = FALSE, keep.ids = FALSE)), nnvg[-1L])
+    expect_equal(names(op(ggdc3ii, stub = FALSE)), c("Country", "Variable", nnvg))
+    expect_equal(names(op(ggdc3ii, stub = FALSE, keep.by = FALSE, keep.ids = FALSE)), nnvg[-1L])
+  }
+
+  wlduo <- colorder(wlddev, year, pos = "end")
+  wld1uo <- sbt(wlduo, iso3c %==% "DEU")
+  for(op in list(L, F, D, Dlog, G)) {
+    expect_equal(names(op(wld1uo, t = ~ year, stubs = FALSE)), nnvw)
+    expect_equal(names(op(wld1uo, t = ~ year, stubs = FALSE, keep.ids = FALSE)), nnvw[-1L])
+    expect_equal(names(op(wld1uo, by = ~ iso3c, t = ~ year, stubs = FALSE)), c("iso3c", nnvw))
+    expect_equal(names(op(wld1uo, by = ~ iso3c, t = ~ year, stubs = FALSE, keep.ids = FALSE)), nnvw[-1L])
+  }
+  for(op in list(B, W, STD)) {
+    expect_equal(names(op(wld1uo, w = ~ year, stub = FALSE)), nnvw)
+    expect_equal(names(op(wld1uo, w = ~ year, stub = FALSE, keep.w = FALSE)), nnvw[-1L])
+    expect_equal(names(op(wld1uo, by = ~ iso3c, w = ~ year, stub = FALSE)), c("iso3c", nnvw))
+    expect_equal(names(op(wld1uo, by = ~ iso3c, w = ~ year, stub = FALSE, keep.by = FALSE)), nnvw)
+    expect_equal(names(op(wld1uo, by = ~ iso3c, w = ~ year, stub = FALSE, keep.w = FALSE)), c("iso3c", nnvw[-1L]))
+    expect_equal(names(op(wld1uo, by = ~ iso3c, w = ~ year, stub = FALSE, keep.by = FALSE, keep.w = FALSE)), nnvw[-1L])
+
+    expect_equal(names(op(wldi, w = ~POP, stub = FALSE)), c("iso3c", "year", "POP", nnvw[-c(1, 7)]))
+    expect_equal(names(op(wldi, w = ~POP, stub = FALSE, keep.ids = FALSE)), c("POP", nnvw[-c(1, 7)]))
+    expect_equal(names(op(wldi, w = ~POP, stub = FALSE, keep.w = FALSE)), c("iso3c", "year", nnvw[-c(1, 7)]))
+    expect_equal(names(op(wldi, w = ~POP, stub = FALSE, keep.ids = FALSE, keep.w = FALSE)), nnvw[-c(1, 7)])
+
+    expect_equal(names(op(wld1i, w = ~POP, stub = FALSE)), c("year", "POP", nnvw[-c(1, 7)]))
+    expect_equal(names(op(wld1i, w = ~POP, stub = FALSE, keep.ids = FALSE)), c("POP", nnvw[-c(1, 7)]))
+    expect_equal(names(op(wld1i, w = ~POP, stub = FALSE, keep.w = FALSE)), c("year", nnvw[-c(1, 7)]))
+    expect_equal(names(op(wld1i, w = ~POP, stub = FALSE, keep.ids = FALSE, keep.w = FALSE)), nnvw[-c(1, 7)])
+  }
+
+  for(op in list(HDB, HDW)) {
+    expect_equal(names(op(wlddev, wlddev$iso3c, stub = FALSE)), nnvw)
+    expect_equal(names(op(wlddev, ~ iso3c, stub = FALSE)), nnvw)
+    expect_equal(names(op(wlddev, ~ year, stub = FALSE)), nnvw[-1])
+    expect_equal(names(op(wldi, stub = FALSE)), nnvw[-1])
+  }
+})
+options(warn = 1)

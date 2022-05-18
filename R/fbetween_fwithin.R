@@ -117,16 +117,21 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
-  class(x) <- NULL
-  nam <- names(x)
+  nam <- ax[["names"]]
   g <- group_effect(x, effect)
+  cols_fun <- is.function(cols)
 
-  if(keep.ids) {
+  if(cols_fun && identical(cols, is.numeric)) cols <- which(.Call(C_vtypes, x, 1L))
+  else if(length(cols)) cols <- cols2int(cols, x, nam)
+  oldClass(x) <- NULL
+  if(cols_fun || keep.ids) {
     gn <- which(nam %in% attr(findex(x), "nam")) # Needed for 3+ index variables
-    if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
+    if(length(gn)) {
+      if(cols_fun) cols <- fsetdiff(cols, gn)
+      else if(is.null(cols)) cols <- seq_along(x)[-gn]
+    }
+    if(!keep.ids) gn <- NULL
   } else gn <- NULL
-
-  if(length(cols)) cols <- cols2int(cols, x, nam)
 
   if(is.call(w)) {
     wn <- ckmatch(all.vars(w), nam)
@@ -162,7 +167,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
         gn <- ckmatch(all.vars(by[[3L]]), nam)
       } else {
         gn <- ckmatch(all.vars(by), nam)
-        cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
+        cols <- cols2intrmgn(gn, cols, x)
       }
       by <- G_guo(if(length(gn) == 1L) x[[gn]] else x[gn])
       if(!keep.by) gn <- NULL
@@ -318,16 +323,21 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
                           stub = "B.", keep.ids = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
-  class(x) <- NULL
-  nam <- names(x)
+  nam <- ax[["names"]]
   g <- group_effect(x, effect)
+  cols_fun <- is.function(cols)
 
-  if(keep.ids) {
+  if(cols_fun && identical(cols, is.numeric)) cols <- which(.Call(C_vtypes, x, 1L))
+  else if(length(cols)) cols <- cols2int(cols, x, nam)
+  oldClass(x) <- NULL
+  if(cols_fun || keep.ids) {
     gn <- which(nam %in% attr(findex(x), "nam")) # Needed for 3+ index variables
-    if(length(gn) && is.null(cols)) cols <- seq_along(x)[-gn]
+    if(length(gn)) {
+      if(cols_fun) cols <- fsetdiff(cols, gn)
+      else if(is.null(cols)) cols <- seq_along(x)[-gn]
+    }
+    if(!keep.ids) gn <- NULL
   } else gn <- NULL
-
-  if(length(cols)) cols <- cols2int(cols, x, nam)
 
   if(is.call(w)) {
     wn <- ckmatch(all.vars(w), nam)
@@ -362,7 +372,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE
         gn <- ckmatch(all.vars(by[[3L]]), nam)
       } else {
         gn <- ckmatch(all.vars(by), nam)
-        cols <- if(is.null(cols)) seq_along(x)[-gn] else cols2int(cols, x, nam)
+        cols <- cols2intrmgn(gn, cols, x)
       }
       by <- G_guo(if(length(gn) == 1L) x[[gn]] else x[gn])
       if(!keep.by) gn <- NULL
