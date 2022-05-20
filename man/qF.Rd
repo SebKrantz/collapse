@@ -12,7 +12,7 @@ Fast Factor Generation, Interactions and Vector Grouping
 
 \code{qG}, shorthand for 'quick-group', generates a kind of factor-light without the levels attribute but instead an attribute providing the number of levels. Optionally the levels / groups can be attached, but without converting them to character. Objects have a class 'qG'. \emph{collapse} is internally set up so that nearly all functions allowing factor input (notably \code{g/by}, or \code{t} arguments), will also allow and optimally use 'qG' objects.
 
-\code{finteraction} generates a factor by interacting multiple vectors or factors. In that process missing values are always replaced with a level and unused levels are always dropped.
+\code{finteraction} generates a factor or 'qG' object by interacting multiple vectors or factors. In that process missing values are always replaced with a level and unused levels are always dropped.
 }
 \usage{
 qF(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
@@ -25,7 +25,8 @@ is_qG(x)
 
 as_factor_qG(x, ordered = FALSE, na.exclude = TRUE)
 
-finteraction(\dots, ordered = FALSE, sort = TRUE, method = "auto")
+finteraction(\dots, factor = TRUE, ordered = FALSE, sort = factor,
+             method = "auto")
 }
 \arguments{
   \item{x}{a atomic vector, factor or quick-group.}
@@ -43,6 +44,7 @@ finteraction(\dots, ordered = FALSE, sort = TRUE, method = "auto")
   Note that for \code{finteraction}, \code{method = "hash"} is always unsorted.
 }
 \item{return.groups}{logical. \code{TRUE} returns the unique elements / groups / levels of \code{x} in an attribute called \code{"groups"}. Unlike \code{qF}, they are not converted to character.}
+\item{factor}{logical. \code{TRUE} returns an factor, \code{FALSE} returns a 'qG' object. }
 \item{\dots}{multiple atomic vectors or factors, or a single list of equal-length vectors or factors. See Details. }
 }
 \details{
@@ -58,7 +60,7 @@ Regarding speed: In general \code{qF} is around 5x faster than \code{as.factor} 
 \code{finteraction} is simply a wrapper around \code{as_factor_GRP(GRP.default(X))}, where X is replaced by the arguments in '\dots' combined in a list (so it's not really an interaction function but just a multivariate grouping converted to factor, see \code{\link{GRP}} for computational details). In general: All vectors, factors, or lists of vectors / factors passed can be interacted. Interactions always create a level for missing values and always drop unused levels.
 }
 \value{
-\code{qF}  and \code{finteraction} return an (ordered) factor. \code{qG} returns an object of class 'qG': an integer grouping vector with an attribute \code{"N.groups"} indicating the number of groups, and, if \code{return.groups = TRUE}, an attribute \code{"groups"} containing the vector of unique groups / elements in \code{x} corresponding to the integer-id.
+\code{qF} returns an (ordered) factor. \code{qG} returns an object of class 'qG': an integer grouping vector with an attribute \code{"N.groups"} indicating the number of groups, and, if \code{return.groups = TRUE}, an attribute \code{"groups"} containing the vector of unique groups / elements in \code{x} corresponding to the integer-id. \code{finteraction} can return either.
 }
 \note{
 For very efficient conversion of character vectors to factor also see \code{kit::charToFact}.
@@ -85,6 +87,9 @@ microbenchmark(fmax(dat, cf), fmax(dat, cf2))
 }
 finteraction(mtcars$cyl, mtcars$vs)  # Interacting two variables (can be factors)
 head(finteraction(mtcars))           # A more crude example..
+
+finteraction(mtcars$cyl, mtcars$vs, factor = FALSE) # Returns 'qG', be default unsorted
+group(mtcars[c("cyl", "vs")]) # Same thing. Use whatever syntax is more convenient
 
 }
 \keyword{manip}
