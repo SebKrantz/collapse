@@ -31,25 +31,26 @@
 
   if(length(mask) && is.character(mask)) {
     # if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
-    if(any(mask == "all")) mask <- c("helper", "manip", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
+    mask_all <- any(mask == "all")
+    if(mask_all) mask <- c("helper", "manip", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
     manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fmutate", "frename", "findex_by", "findex")
     helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "fnunique", "frange", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
     if(any(mask == "helper")) mask <- unique.default(c(helperfun, mask[mask != "helper"]))
     if(any(mask == "manip")) mask <- unique.default(c(manipfun, mask[mask != "manip"]))
     if(any(mask == "fast-fun")) {
       mask <- unique.default(c(.FAST_FUN, mask[mask != "fast-fun"]))
-      fsfnonold <- .FAST_STAT_FUN_EXT[!startsWith(.FAST_STAT_FUN_EXT, "fN")]
-      assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, substr(fsfnonold, 2L, 100L)), envir = clpns)
-      assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, substr(.FAST_STAT_FUN, 2L, 100L)), envir = clpns)
-      ffnops <-  setdiff(.FAST_FUN_MOPS, .OPERATOR_FUN)
+      FSF_mask <- substr(.FAST_STAT_FUN, 2L, 100L)
+      assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, FSF_mask, paste0(FSF_mask, "_uw")), envir = clpns)
+      assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, FSF_mask), envir = clpns)
+      ffnops <-  fsetdiff(.FAST_FUN_MOPS, c(.OPERATOR_FUN, "fNobs", "fNdistinct", "GRPN", "n"))
       assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, substr(ffnops, 2L, 100L)), envir = clpns)
     } else {
       if(any(mask == "fast-stat-fun")) {
         mask <- unique.default(c(.FAST_STAT_FUN, mask[mask != "fast-stat-fun"]))
-        fsfnonold <- .FAST_STAT_FUN_EXT[!startsWith(.FAST_STAT_FUN_EXT, "fN")]
-        assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, substr(fsfnonold, 2L, 100L)), envir = clpns)
-        assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, substr(.FAST_STAT_FUN, 2L, 100L)), envir = clpns)
-        assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, substr(.FAST_STAT_FUN, 2L, 100L)), envir = clpns)
+        FSF_mask <- substr(.FAST_STAT_FUN, 2L, 100L)
+        assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, FSF_mask, paste0(FSF_mask, "_uw")), envir = clpns)
+        assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, FSF_mask), envir = clpns)
+        assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, FSF_mask), envir = clpns)
       }
       if(any(mask == "fast-trfm-fun")) {
         ftf <- fsetdiff(.FAST_FUN, .FAST_STAT_FUN)
@@ -61,6 +62,7 @@
     if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f'. You supplied: ", paste(mask[!m], collapse = ", "))
     unmask <- substr(mask, 2L, 100L)
     for(i in seq_along(mask)) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
+    if(mask_all) unmask <- c(unmask, "n")
     namespaceExport(clpns, unmask)
   }
 

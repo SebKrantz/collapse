@@ -225,7 +225,11 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean() # Faster alternative with collap
 mtcars \%>\% fgroup_by(cyl,vs,am)            # Print method for grouped data frame
 }
 library(magrittr)
-## Adding a column of group sizes
+## Adding a column of group sizes.
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsummarise(Sizes = GRPN())
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmutate(Sizes = GRPN())
+# Note: can also use n <- GRPN, or set options(collapse_mask = "all") to use n()
+# Other options:
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% ftransform(Sizes = GRPN(.))
 mtcars \%>\% ftransform(Sizes = GRPN(list(cyl,vs,am)))  # Same thing, slightly more efficient
 
