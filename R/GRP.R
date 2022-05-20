@@ -166,8 +166,26 @@ GRPnames <- function(x, force.char = TRUE, sep = ".") { # , ...
 }
 
 GRPN <- function(x, expand = TRUE, ...) {
+  if(!missing(...) && any(names(dots <- list(...)) == "g")) {
+    g <- dots$g
+    if(!inherits(g, "GRP")) stop("g must be a 'GRP' object")
+    res <- if(any(names(dots) == "TRA")) .Call(C_subsetVector, g$group.sizes, g$group.id, FALSE) else g$group.sizes
+    if(!missing(x) && is.list(x)) return(lapply(x, function(y) res))
+    return(res)
+  }
   g <- GRP(x, sort = FALSE, return.groups = FALSE, return.order = FALSE, call = FALSE, ...)
   if(expand) .Call(C_subsetVector, g$group.sizes, g$group.id, FALSE) else g$group.sizes
+}
+
+# Only for masking if collapse_mask = "all"
+n <- function(x, g, TRA, ...) {
+  if(missing(g)) {
+    if(missing(x)) stop("if data is not grouped need to call n() on a column")
+    return(if(is.list(x)) fnrow2(x) else length(x))
+  }
+  if(!inherits(g, "GRP")) stop("g must be a 'GRP' object")
+  if(missing(TRA)) return(g$group.sizes)
+  .Call(C_subsetVector, g$group.sizes, g$group.id, FALSE)
 }
 # group_names.GRP <- function(x, force.char = TRUE) {
 #   .Deprecated("GRPnames")
