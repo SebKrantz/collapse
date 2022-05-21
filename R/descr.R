@@ -42,7 +42,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
   descrcat <- if(table) function(x) {
                                     tab <- fsorttable(x, sort.table)
                                     list(Class = class(x), Label = attr(x, label.attr),
-                                         Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = length(tab)) else `names<-`(fnobsC(x), 'Nobs'),
+                                         Stats = if(Ndistinct) c(N = fsumC(tab), Ndist = length(tab)) else `names<-`(fsumC(tab), 'Nobs'),
                                          Table = tab) # natrm(fnobs.default(x, x)) # table(x). fnobs is a lot Faster, but includes NA as level !
                         } else
                         function(x) list(Class = class(x), Label = attr(x, label.attr),
