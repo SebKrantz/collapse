@@ -1,3 +1,12 @@
+# collapse 1.8.2
+
+* Fixing some rchk issues found by Thomas Kalibera from CRAN. 
+
+* faster `funique.default` method. 
+
+* faster internal `group` method for integers, inspired by *fixest*'s integer 'qufing'. `group` now also internally optimizes on 'qG' objects. 
+
+
 # collapse 1.8.1
 
 * Added function `fnunique` (yet another alternative to `data.table::uniqueN`, `kit::uniqLen` or `dplyr::n_distinct`, and principally a simple wrapper for `attr(group(x), "N.groups")`). At present `fnunique` generally outperforms the others on data frames.

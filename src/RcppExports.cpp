@@ -480,15 +480,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// funiqueCpp
-SEXP funiqueCpp(SEXP x, bool sort);
-RcppExport SEXP _collapse_funiqueCpp(SEXP xSEXP, SEXP sortSEXP) {
+// sortuniqueCpp
+SEXP sortuniqueCpp(SEXP x);
+RcppExport SEXP _collapse_sortuniqueCpp(SEXP xSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type x(xSEXP);
-    Rcpp::traits::input_parameter< bool >::type sort(sortSEXP);
-    rcpp_result_gen = Rcpp::wrap(funiqueCpp(x, sort));
+    rcpp_result_gen = Rcpp::wrap(sortuniqueCpp(x));
     return rcpp_result_gen;
 END_RCPP
 }

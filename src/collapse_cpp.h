@@ -57,8 +57,8 @@ SEXP _collapse_mctl(SEXP XSEXP, SEXP namesSEXP, SEXP retSEXP);
 SEXP _collapse_psmatCpp(SEXP xSEXP, SEXP gSEXP, SEXP tSEXP, SEXP transposeSEXP);
 // qFCpp
 SEXP _collapse_qFCpp(SEXP xSEXP, SEXP orderedSEXP, SEXP na_excludeSEXP, SEXP keep_attrSEXP, SEXP retSEXP);
-// funiqueCpp
-SEXP _collapse_funiqueCpp(SEXP xSEXP, SEXP sortSEXP);
+// sortuniqueCpp
+SEXP _collapse_sortuniqueCpp(SEXP xSEXP);
 // fdroplevelsCpp
 SEXP _collapse_fdroplevelsCpp(SEXP xSEXP, SEXP check_NASEXP);
 // seqid

@@ -657,7 +657,7 @@ fcolsubset <- function(x, ind, checksf = FALSE) { # fastest !
 #   # .Call(C_setAttributes, x[ind], ax)
 # }
 
-rgrep <- function(exp, nam, ..., sort = TRUE) if(length(exp) == 1L) grep(exp, nam, ...) else .Call(Cpp_funique, unlist(lapply(exp, grep, nam, ...), use.names = FALSE), sort)
+rgrep <- function(exp, nam, ..., sort = TRUE) if(length(exp) == 1L) grep(exp, nam, ...) else funique.default(unlist(lapply(exp, grep, nam, ...), use.names = FALSE), sort)
 rgrepl <- function(exp, nam, ...) if(length(exp) == 1L) grepl(exp, nam, ...) else Reduce(`|`, lapply(exp, grepl, nam, ...))
 
 fanyDuplicated <- function(x) if(length(x) < 100L) anyDuplicated.default(x) > 0L else .Call(C_fndistinct,x,NULL,FALSE,1L) != length(x)
