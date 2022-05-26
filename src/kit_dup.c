@@ -674,6 +674,8 @@ SEXP funiqueC(SEXP x) {
         if(++g == ng) break;
       }
     }
+    Free(h);
+    if(g == n) return x;
     res = PROTECT(allocVector(tx == LGLSXP ? LGLSXP : INTSXP, g));
     int *pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
@@ -705,6 +707,8 @@ SEXP funiqueC(SEXP x) {
         ibbl:;
       }
     }
+    Free(h);
+    if(g == n) return x;
     res = PROTECT(allocVector(INTSXP, g));
     int *pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
@@ -723,6 +727,8 @@ SEXP funiqueC(SEXP x) {
       st[g++] = i;
       rbl:;
     }
+    Free(h);
+    if(g == n) return x;
     res = PROTECT(allocVector(REALSXP, g));
     double *pres = REAL(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
@@ -752,6 +758,8 @@ SEXP funiqueC(SEXP x) {
       st[g++] = i;
       cbl:;
     }
+    Free(h);
+    if(g == n) return x;
     res = PROTECT(allocVector(CPLXSXP, g));
     Rcomplex *pres = COMPLEX(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
@@ -768,13 +776,14 @@ SEXP funiqueC(SEXP x) {
       st[g++] = i;
       sbl:;
     }
+    Free(h);
+    if(g == n) return x;
     res = PROTECT(allocVector(STRSXP, g));
     SEXP *pres = STRING_PTR(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   }
   copyMostAttrib(x, res);
-  Free(h);
   UNPROTECT(1);
   return res;
 }
