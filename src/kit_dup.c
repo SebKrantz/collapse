@@ -29,24 +29,24 @@ SEXP dupVecIndex(SEXP x) {
       M = isFactor(x) ? (size_t)nlevels(x) + 2 : (size_t)asInteger(getAttrib(x, install("N.groups"))) + 2;
       anyNA = !inherits(x, "na.included");
     } else {
-      int *p = INTEGER(x), x_tmp;
+      int *p = INTEGER(x);
       // Old:
-      // if(n > 10 && (NOGE(p[0], n) || NOGE(p[n/2], n) || NOGE(p[n-1], n))) goto bigint;
-      // M = (size_t)n;
-      // This loop is highly optimized...
-      for(int i = 0; i != n; ++i) {
-        x_tmp = p[i];
-        if(x_tmp > x_max) x_max = x_tmp;
-        if(x_tmp < x_min) {
-          if(x_tmp == NA_INTEGER) anyNA = 1;
-          else x_min = x_tmp;
+      if(n < 10 || NOGE(p[0], n) || NOGE(p[n/2], n) || NOGE(p[n-1], n)) {
+        // This loop is highly optimized...
+        for(int i = 0, x_tmp; i != n; ++i) {
+          x_tmp = p[i];
+          if(x_tmp > x_max) x_max = x_tmp;
+          if(x_tmp < x_min) {
+            if(x_tmp == NA_INTEGER) anyNA = 1;
+            else x_min = x_tmp;
+          }
         }
-      }
-      x_max -= x_min;
-      if(++x_max > 3 * n) goto bigint;
-      M = (size_t)(x_max + 2);
-      if(x_min == 0 || x_min == 1) tx = 1000;
-      else x_max = NA_INTEGER;
+        x_max -= x_min;
+        if(++x_max > 3 * n) goto bigint;
+        M = (size_t)(x_max + 2);
+        if(x_min == 0 || x_min == 1) tx = 1000;
+        else x_max = NA_INTEGER;
+      } else M = (size_t)n;
     }
   } else if (tx == LGLSXP) {
     M = 3;
@@ -77,26 +77,23 @@ SEXP dupVecIndex(SEXP x) {
   case INTSXP: {
     const int *px = INTEGER(x);
     // Old:
-    // if(M == (size_t)n) { // Faster version based on division hash...
-    //   unsigned int iid = 0, nu = (unsigned)n;
-    //   for (int i = 0; i != n; ++i) {
-    //     iid = (unsigned)px[i];
-    //     if(iid >= nu) iid %= nu;
-    //     // iid = (xi < nu) ? xi : xi % nu; // HASH(px[i], K); // get the hash value of x[i]
-    //     while(h[iid]) { // Check if this hash value has been seen before
-    //       if(px[h[iid]-1] == px[i]) { // Get the element of x that produced his value. if x[i] is the same, assign it the same index.
-    //         pans_i[i] = pans_i[h[iid]-1]; // h[id];
-    //         goto ibl;
-    //       } // else, we move forward to the next slot, until we find an empty one... We need to keep checking against the values,
-    //         // because if we found the same value before, we would also have put it in another slot after the initial one with the same hash value.
-    //       if(++iid >= nu) iid %= nu; // # nocov
-    //     } // We put the index into the empty slot.
-    //     h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
-    //     pans_i[i] = ++g; // h[id];
-    //     ibl:;
-    //   }
-    // }
-    if(x_max == NA_INTEGER) {
+    if(x_max == INT_MIN && M == (size_t)n) { // Faster version based on division hash...
+      unsigned int iid = 0, nu = (unsigned)n;
+      for (int i = 0; i != n; ++i) {
+        iid = (unsigned)px[i];
+        if(iid >= nu) iid %= nu;
+        while(h[iid]) {
+          if(px[h[iid]-1] == px[i]) {
+            pans_i[i] = pans_i[h[iid]-1];
+            goto ibl;
+          }
+          if(++iid >= nu) iid %= nu;
+        }
+        h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
+        pans_i[i] = ++g;
+        ibl:;
+      }
+    } else if(x_max == NA_INTEGER) { // fastver version based on range
       x_min -= 1;
       if(anyNA) {
         for (int i = 0, j; i != n; ++i) {
