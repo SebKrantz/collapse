@@ -51,7 +51,7 @@ fnunique(x) # Fast NROW(unique(x))
 \item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
 }
 \details{
-If \code{x} is a data frame / list and all rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{group}} for some additional computational details.
+If all values/rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{group}} for some additional computational details.
 
 The \emph{sf} method simply ignores the geometry column when determining unique values.
 
