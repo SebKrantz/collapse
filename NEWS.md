@@ -4,8 +4,7 @@
 
 * faster `funique.default` method. 
 
-* faster internal `group` method for integers, inspired by *fixest*'s integer 'qufing'. `group` now also internally optimizes on 'qG' objects. 
-
+* `group` now also internally optimizes on 'qG' objects. 
 
 # collapse 1.8.1
 
