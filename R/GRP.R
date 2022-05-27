@@ -725,9 +725,10 @@ funique.default <- function(x, sort = FALSE, method = "auto", ...) {
   if(is.array(x)) stop("funique currently only supports atomic vectors and data.frames")
   switch(method,
          auto = if(sort && is.numeric(x) && length(x) > 500L) radixuniquevec(x, sort, ...) else
-                .Call(Cpp_funique, x, sort),
+                if(sort) .Call(Cpp_sortunique, x) else .Call(C_funique, x),
          radix = radixuniquevec(x, sort, ...),
-         hash = .Call(Cpp_funique, x, sort)) # , ... adding dots gives error message too strict, package default is warning..
+         hash = if(sort) .Call(Cpp_sortunique, x) else .Call(C_funique, x),
+         stop("method needs to be 'auto', 'hash' or 'radix'.")) # , ... adding dots gives error message too strict, package default is warning..
 }
 
 # could make faster still... not using colsubset but something more simple... no attributes needed...
@@ -824,20 +825,4 @@ fdroplevels.list <- function(x, ...) {
     if(is.factor(y)) .Call(Cpp_fdroplevels, y, !inherits(y, "na.included")) else y), x)
 }
 
-# Old R-based trial
-# fdroplevels.factor <- function(x, ...) {
-#   if(!missing(...)) unused_arg_action(match.call(), ...)
-#   lev <- attr(x, "levels")
-#   ul <- .Call(Cpp_funique, unclass(x), TRUE)
-#   lul <- length(ul)
-#   if(!is.na(ul[lul])) { # NA always comes last
-#     if(lul == length(lev)) return(x)
-#     f <- match(unclass(x), ul) # use Rcpp match ??
-#     attr(f, "levels") <- lev[ul]
-#     return(f)
-#   }
-#   if(lul-1L == length(lev)) return(x)
-#   f <- match(unclass(x), ul[-lul]) # use Rcpp match ??
-#   attr(f, "levels") <- lev[ul[-lul]]
-#   f
-# }
+

@@ -7,25 +7,26 @@
 
 
 SEXP setAttributes(SEXP x, SEXP a) {
-  SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
-  Rf_classgets(x, Rf_getAttrib(x, R_ClassSymbol)); // forcing class after attribute copy !!
+  SET_ATTRIB(x, coerceVector(a, LISTSXP));
+  classgets(x, getAttrib(x, R_ClassSymbol)); // forcing class after attribute copy !!
   return x;
 }
 
-void setattributes(SEXP x, SEXP a) {
-  SET_ATTRIB(x, Rf_coerceVector(a, LISTSXP));
+SEXP setattributes(SEXP x, SEXP a) {
+  SET_ATTRIB(x, coerceVector(a, LISTSXP));
   // SET_OBJECT(x, TYPEOF(x)); // if(OBJECT(a))  // This does not work with ts-matrices! could also make compatible with S4 objects !
-  Rf_classgets(x, Rf_getAttrib(x, R_ClassSymbol));
+  classgets(x, getAttrib(x, R_ClassSymbol));
+  return R_NilValue;
 }
 
 // not used !
 // SEXP setAttr(SEXP x, SEXP a, SEXP v) {
-//  Rf_setAttrib(x, a, v);
+//  setAttrib(x, a, v);
 //  return x;
 // }
 
 // void setattr(SEXP x, SEXP a, SEXP v) {
-//  Rf_setAttrib(x, a, v);
+//  setAttrib(x, a, v);
 // }
 
 SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattributes ...
@@ -34,13 +35,13 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 }
 
 // R_duplicate_attr -> deep copy only of attributes -> expensive if attributes are large !
-// Rf_lazy_duplicate -> duplicate on modify -> but modifies object in global environment !
-// Rf_shallow_duplicate -> only duplicate pointer? -> best !!
+// lazy_duplicate -> duplicate on modify -> but modifies object in global environment !
+// shallow_duplicate -> only duplicate pointer? -> best !!
 
 // No speed improvement to attr<- (same slow performance for data.frame 'row.names')
 // SEXP CsetAttr(SEXP object, SEXP a, SEXP v) {
-//   SEXP res = Rf_shallow_duplicate(object);
-//   Rf_setAttrib(res, a, v);
+//   SEXP res = shallow_duplicate(object);
+//   setAttrib(res, a, v);
 //   return res;
 // }
 
@@ -53,12 +54,12 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 // 4 - neither x nor xAG are classed - preserve attributes of x, discard attributes of xAG (if any)
 //
 
-// if(Rf_isObject(xAG)) SHALLOW_DUPLICATE_ATTRIB(out, xAG);
-// else if(!Rf_isObject(x) || (tx == txAG && !Rf_isFactor(x))) SHALLOW_DUPLICATE_ATTRIB(out, x);
+// if(isObject(xAG)) SHALLOW_DUPLICATE_ATTRIB(out, xAG);
+// else if(!isObject(x) || (tx == txAG && !isFactor(x))) SHALLOW_DUPLICATE_ATTRIB(out, x);
 // else {
 //   SHALLOW_DUPLICATE_ATTRIB(out, x);
-//   Rf_classgets(out, R_NilValue); // OK !
-//   Rf_setAttrib(out, R_LevelsSymbol, R_NilValue); // if(Rf_isFactor(x)) ? faster ?
+//   classgets(out, R_NilValue); // OK !
+//   setAttrib(out, R_LevelsSymbol, R_NilValue); // if(isFactor(x)) ? faster ?
 // }
 
 // Can think further about this! but this solution appears acceptable...
@@ -67,44 +68,55 @@ SEXP copyMostAttributes(SEXP x, SEXP y) {
   int tx = TYPEOF(x);
   // -> This is about the best we can do: unlist() does not preserve dates, and we don't want to create malformed factors
   if(tx == TYPEOF(y) && (tx != INTSXP || OBJECT(x) == OBJECT(y))) {
-    Rf_copyMostAttrib(y, x);
+    copyMostAttrib(y, x);
     return x;
   }
   // In any case we can preserve variable labels..
-  SEXP sym_label = PROTECT(install("label"));
-  SEXP lab = Rf_getAttrib(y, sym_label);
-  if(TYPEOF(lab) != NILSXP) Rf_setAttrib(x, sym_label, lab);
-  UNPROTECT(1);
+  SEXP sym_label = install("label");
+  SEXP lab = getAttrib(y, sym_label);
+  if(TYPEOF(lab) != NILSXP) setAttrib(x, sym_label, lab);
   return x;
 }
 
 
 SEXP CsetAttrib(SEXP object, SEXP a) {
-  int il = TYPEOF(object) == VECSXP;
-  SEXP res = il ? PROTECT(Rf_shallow_duplicate(object)) : object; // needed, otherwise error !!
-  SET_ATTRIB(res, PROTECT(Rf_coerceVector(a, LISTSXP)));
-  Rf_classgets(res, Rf_getAttrib(res, R_ClassSymbol));
-  UNPROTECT(il+1);
+  if(TYPEOF(object) == VECSXP) {
+    SEXP res = PROTECT(shallow_duplicate(object));
+    SET_ATTRIB(res, coerceVector(a, LISTSXP));
+    classgets(res, getAttrib(res, R_ClassSymbol));
+    UNPROTECT(1);
+    return res;
+  }
+  SEXP res = object;
+  SET_ATTRIB(res, coerceVector(a, LISTSXP));
+  classgets(res, getAttrib(res, R_ClassSymbol));
   return res;
 }
 
 SEXP CcopyAttrib(SEXP to, SEXP from) {
-  int il = TYPEOF(to) == VECSXP;
-  SEXP res = il ? PROTECT(Rf_shallow_duplicate(to)) : to;
+  if(TYPEOF(to) == VECSXP) {
+    SEXP res = PROTECT(shallow_duplicate(to));
+    SHALLOW_DUPLICATE_ATTRIB(res, from);
+    UNPROTECT(1);
+    return res;
+  }
+  SEXP res = to;
   SHALLOW_DUPLICATE_ATTRIB(res, from);
-  UNPROTECT(il);
   return res;
 }
 
 
 SEXP CcopyMostAttrib(SEXP to, SEXP from) {
-  int il = TYPEOF(to) == VECSXP;
-  SEXP res = il ? PROTECT(Rf_shallow_duplicate(to)) : to;
-  Rf_copyMostAttrib(from, res);
-  if(il && isFrame(from) && length(VECTOR_ELT(to, 0)) != length(VECTOR_ELT(from, 0))) {
-    Rf_setAttrib(res, R_RowNamesSymbol, Rf_getAttrib(to, R_RowNamesSymbol));
+  if(TYPEOF(to) == VECSXP) {
+    SEXP res = PROTECT(shallow_duplicate(to));
+    copyMostAttrib(from, res);
+    if(isFrame(from) && length(VECTOR_ELT(to, 0)) != length(VECTOR_ELT(from, 0)))
+       setAttrib(res, R_RowNamesSymbol, getAttrib(to, R_RowNamesSymbol));
+    UNPROTECT(1);
+    return res;
   }
-  UNPROTECT(il);
+  SEXP res = to;
+  copyMostAttrib(from, res);
   return res;
 }
 
@@ -112,7 +124,7 @@ SEXP CcopyMostAttrib(SEXP to, SEXP from) {
 // Warning message: In .Call(C_duplattributes, x, y) : converting NULL pointer to R NULL
 // void duplattributes(SEXP x, SEXP y) {
 //  SHALLOW_DUPLICATE_ATTRIB(x, y); // SET_ATTRIB(x, ATTRIB(y));
-//  Rf_classgets(x, Rf_getAttrib(y, R_ClassSymbol)); // This solves the warning message !!
+//  classgets(x, getAttrib(y, R_ClassSymbol)); // This solves the warning message !!
   // just to return R_NilValue; and the SEXP... retrns NULL anyway
 // }
 

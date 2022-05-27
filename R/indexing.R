@@ -64,9 +64,9 @@ timeid <- function(x, factor = FALSE, ordered = factor, extra = FALSE) {
   unik_o <- if(attr(o, "sorted") && !extra) unik else Csv(unik, o) # !extra because of math by reference...
   if(is.na(unik_o[1L])) stop("Time variable may not contain missing values")
   r <- c(unik_o[1L], unik_o[length(unik_o)])
-  steps <- unik_o[-1L] - unik_o[-length(unik_o)] # tsibble uses abs(diff(unik_o)), but here we sort the values, so not necessary
+  steps <- unik_o[-1L] %-=% unik_o[-length(unik_o)] # tsibble uses abs(diff(unik_o)), but here we sort the values, so not necessary
   # if(is_dbl) steps <- round(steps, digits = 6) # This is pretty costly for long POSIXct sequences. Better not do it..
-  gcd <- .Call(C_vecgcd, .Call(Cpp_funique, steps, TRUE)) # sort = TRUE
+  gcd <- .Call(C_vecgcd, .Call(Cpp_sortunique, steps))
   if(is_dbl) {
     if(r[1L] != 1 || gcd != 1) unik %-=% (r[1L] - 1.4*gcd) # * 1.4 to make sure the as.integer conversion does proper rounding
     if(gcd != 1) unik %/=% gcd

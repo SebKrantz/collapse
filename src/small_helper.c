@@ -151,7 +151,8 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
   if(TYPEOF(lhs) != STRSXP) error("lhs needs to be character");
   int n = length(lhs);
   if(n == 1) { // lazy_duplicate appears not necessary (copy-on modify is automatically implemented, and <- also does not use it).
-    defineVar(installChar(STRING_ELT(lhs, 0)), rhs, envir);
+    SEXP nam = installChar(STRING_ELT(lhs, 0));
+    defineVar(nam, rhs, envir);
     return R_NilValue;
   }
   if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
@@ -159,31 +160,49 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
   switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, installChar does the same now, but also is available on older systems.
     case REALSXP: {
       double *prhs = REAL(rhs);
-      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), ScalarReal(prhs[i]), envir);
+      for(int i = 0; i < n; ++i) {
+        SEXP nam = installChar(plhs[i]);
+        defineVar(nam, ScalarReal(prhs[i]), envir);
+      }
       break;
     }
     case INTSXP: {
       int *prhs = INTEGER(rhs);
-      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), ScalarInteger(prhs[i]), envir);
+      for(int i = 0; i < n; ++i) {
+        SEXP nam = installChar(plhs[i]);
+        defineVar(nam, ScalarInteger(prhs[i]), envir);
+      }
       break;
     }
     case STRSXP: {
       SEXP *prhs = STRING_PTR(rhs);
-      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), ScalarString(prhs[i]), envir);
+      for(int i = 0; i < n; ++i) {
+        SEXP nam = installChar(plhs[i]);
+        defineVar(nam, ScalarString(prhs[i]), envir);
+      }
       break;
     }
     case LGLSXP: {
       int *prhs = LOGICAL(rhs);
-      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), ScalarLogical(prhs[i]), envir);
+      for(int i = 0; i < n; ++i) {
+        SEXP nam = installChar(plhs[i]);
+        defineVar(nam, ScalarLogical(prhs[i]), envir);
+      }
       break;
     }
     case VECSXP: { // lazy_duplicate appears not necessary (copy-on modify is automatically implemented, and <- also does not use it).
-      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), VECTOR_ELT(rhs, i), envir);
+      for(int i = 0; i < n; ++i) {
+        SEXP nam = installChar(plhs[i]);
+        defineVar(nam, VECTOR_ELT(rhs, i), envir);
+      }
       break;
     }
     default: {
       SEXP rhsl = PROTECT(coerceVector(rhs, VECSXP));
-      for(int i = 0; i < n; ++i) defineVar(installChar(plhs[i]), VECTOR_ELT(rhsl, i), envir);
+      for(int i = 0; i < n; ++i) {
+        SEXP nam = installChar(plhs[i]);
+        defineVar(nam, VECTOR_ELT(rhsl, i), envir);
+      }
       UNPROTECT(1);
     }
   }

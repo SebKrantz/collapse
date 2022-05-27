@@ -153,8 +153,8 @@ qFCpp <- function(x, ordered = TRUE, na_exclude = TRUE, keep_attr = TRUE, ret = 
   .Call(Cpp_qF, x, ordered, na_exclude, keep_attr, ret)
 }
 
-funiqueCpp <- function(x, sort = TRUE) {
-    .Call(Cpp_funique, x, sort)
+sortuniqueCpp <- function(x) {
+    .Call(Cpp_sortunique, x)
 }
 
 fdroplevelsCpp <- function(x, check_NA = TRUE) {

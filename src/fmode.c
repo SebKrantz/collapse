@@ -843,7 +843,7 @@ SEXP w_mode_g_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int 
 // Functions for Export --------------------------------------------------------
 
 SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
-  int nullg = isNull(g), nullw = isNull(w), l = length(x);
+  int nullg = isNull(g), nullw = isNull(w), l = length(x), nprotect = 0;
   if(l <= 1) return x;
   if(nullg && nullw) return mode_impl(x, asLogical(Rnarm), asInteger(Rret));
   double tmp = 0.0, *pw = &tmp;
@@ -851,12 +851,12 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     if(length(w) != l) error("length(w) must match length(x)");
     if(TYPEOF(w) != REALSXP) {
       if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double)");
-      SEXP wd = PROTECT(coerceVector(w, REALSXP));
+      SEXP wd = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
       pw = REAL(wd);
     } else pw = REAL(w);
   }
   if(nullg) {
-    if(TYPEOF(w) != REALSXP) UNPROTECT(1);
+    if(TYPEOF(w) != REALSXP) UNPROTECT(nprotect);
     return w_mode_impl(x, pw, asLogical(Rnarm), asInteger(Rret));
   }
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
@@ -879,7 +879,7 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     pst = INTEGER(getAttrib(o, install("starts")));
   }
   if(nullw) return mode_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
-  if(TYPEOF(w) != REALSXP) UNPROTECT(1);
+  if(TYPEOF(w) != REALSXP) UNPROTECT(nprotect);
   return w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
 }
 

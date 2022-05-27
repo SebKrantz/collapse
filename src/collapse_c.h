@@ -27,7 +27,7 @@ SEXP falloc(SEXP, SEXP);
 SEXP frange(SEXP x, SEXP Rnarm);
 // SEXP CasChar(SEXP x);
 SEXP setAttributes(SEXP x, SEXP a);
-void setattributes(SEXP x, SEXP a);
+SEXP setattributes(SEXP x, SEXP a);
 // SEXP CsetAttr(SEXP object, SEXP a, SEXP v); -> mot more efficeint than attr i.e. for row.names...
 // void setattr(SEXP x, SEXP a, SEXP v);
 SEXP duplAttributes(SEXP x, SEXP y);
@@ -55,6 +55,7 @@ SEXP setnames(SEXP x, SEXP nam);
 SEXP Cissorted(SEXP x, SEXP strictly);
 SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
+SEXP funiqueC(SEXP x);
 SEXP createeptr(SEXP x);
 SEXP geteptr(SEXP x);
 SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna);

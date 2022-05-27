@@ -620,16 +620,24 @@ SEXP TRAlC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
 #define RETLOOPS(v)                                                                       \
   switch(ret) {                                                                           \
   case 0:                                                                                 \
-    for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, ret0(px[j], v, g, set));           \
+    for(int j = 0; j != l; ++j) {                                                         \
+      SET_VECTOR_ELT(out, j, ret0(px[j], PROTECT(v), g, set)); UNPROTECT(1);              \
+    }                                                                                     \
     break;                                                                                \
   case 1:                                                                                 \
-    for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, ret1(px[j], v, g, set));           \
+    for(int j = 0; j != l; ++j) {                                                         \
+      SET_VECTOR_ELT(out, j, ret1(px[j], PROTECT(v), g, set)); UNPROTECT(1);              \
+    }                                                                                     \
     break;                                                                                \
   case 2:                                                                                 \
-    for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, ret2(px[j], v, g, set));           \
+    for(int j = 0; j != l; ++j) {                                                         \
+      SET_VECTOR_ELT(out, j, ret2(px[j], PROTECT(v), g, set)); UNPROTECT(1);              \
+    }                                                                                     \
     break;                                                                                \
   default:                                                                                \
-    for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, retoth(px[j], v, g, ret, set));    \
+    for(int j = 0; j != l; ++j) {                                                         \
+      SET_VECTOR_ELT(out, j, retoth(px[j], PROTECT(v), g, ret, set)); UNPROTECT(1);       \
+    }                                                                                     \
   }
 
   switch(TYPEOF(xAG)) {

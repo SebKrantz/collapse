@@ -518,13 +518,17 @@ SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
       switch(TYPEOF(val)) {
       case REALSXP: {
         double *pv = REAL(val);
-        for(int i = 0; i != lx; ++i) setop_core(px[i], ScalarReal(pv[i]), op, roww);
+        for(int i = 0; i != lx; ++i) {
+          setop_core(px[i], PROTECT(ScalarReal(pv[i])), op, roww); UNPROTECT(1);
+        }
         break;
       }
       case INTSXP:
       case LGLSXP: {
         int *pv = INTEGER(val);
-        for(int i = 0; i != lx; ++i) setop_core(px[i], ScalarInteger(pv[i]), op, roww);
+        for(int i = 0; i != lx; ++i) {
+          setop_core(px[i], PROTECT(ScalarInteger(pv[i])), op, roww); UNPROTECT(1);
+        }
         break;
       }
       default: error("Unsupported type '%s'", type2char(TYPEOF(val)));

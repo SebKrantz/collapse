@@ -273,7 +273,7 @@ double fsum_int_omp_impl(int *px, int narm, int l, int nth) {
 
 SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
-    narm = asLogical(Rnarm), nth = asInteger(Rnth), nprotect = 1, nwl = isNull(w);
+    narm = asLogical(Rnarm), nth = asInteger(Rnth), nprotect = 0, nwl = isNull(w);
   // ALTREP methods for compact sequences: not safe yet and not part of the API.
   // if(ALTREP(x) && ng == 0 && nwl) {
   // switch(tx) {
@@ -288,8 +288,10 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
   if(l < 100000) nth = 1; // No improvements from multithreading on small data.
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out;
-  if(!(ng == 0 && nwl && tx == INTSXP))
+  if(!(ng == 0 && nwl && tx == INTSXP)) {
     out = PROTECT(allocVector(nwl ? tx : REALSXP, ng == 0 ? 1 : ng));
+    ++nprotect;
+  }
   if(nwl) {
     switch(tx) {
       case REALSXP:

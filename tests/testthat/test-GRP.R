@@ -316,22 +316,39 @@ base_group <- function(x, sort = FALSE, group.sizes = FALSE) {
 }
 
 test_that("group() works as intended", {
-  wlduo <- wlddev[order(rnorm(nrow(wldNA))), ]
+  wlduo <- wlddev[order(rnorm(nrow(wlddev))), ]
+  wlduoNA <- na_insert(wlduo)
   dlist <- c(mtcNA, wlddev, wlduo, GGDCNA, airquality)
   # Single grouping variable
   expect_identical(lapply(dlist, group, group.sizes = TRUE), lapply(dlist, base_group, group.sizes = TRUE))
   # Multiple grouping variables
-  g <- replicate(50, sample.int(11, sample.int(6, 1)), simplify = FALSE)
+  g <- replicate(70, sample.int(11, sample.int(6, 1)), simplify = FALSE)
   expect_identical(lapply(g, function(i) group(.subset(mtcars, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(mtcars, i), group.sizes = TRUE)))
-  g <- replicate(30, sample.int(13, sample.int(4, 1)), simplify = FALSE)
+  expect_identical(lapply(g, function(i) group(.subset(mtcNA, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(mtcNA, i), group.sizes = TRUE)))
+  g <- replicate(50, sample.int(13, sample.int(4, 1)), simplify = FALSE)
   expect_identical(lapply(g, function(i) group(.subset(wlduo, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduo, i), group.sizes = TRUE)))
-  g <- replicate(30, sample.int(13, 3, replace = TRUE), simplify = FALSE)
+  expect_identical(lapply(g, function(i) group(.subset(wlduoNA, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduoNA, i), group.sizes = TRUE)))
+  g <- replicate(50, sample.int(13, 3, replace = TRUE), simplify = FALSE)
   expect_identical(lapply(g, function(i) group(.subset(wlduo, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduo, i), group.sizes = TRUE)))
+  expect_identical(lapply(g, function(i) group(.subset(wlduoNA, i), group.sizes = TRUE)), lapply(g, function(i) base_group(.subset(wlduoNA, i), group.sizes = TRUE)))
   # Positive and negative values give the same grouping
   nwld <- nv(wlduo)
   expect_identical(lapply(nwld, group), lapply(nwld %c*% -1, group))
   expect_visible(group(nwld %c*% -1))
   expect_visible(group(nwld[c(4,2,3)] %c*% -1))
+
+  expect_equal(group(0), base_group(0))
+  expect_equal(group(1), base_group(1))
+  expect_equal(group(0L), base_group(0L))
+  expect_equal(group(1L), base_group(1L))
+  expect_equal(group(Inf), base_group(Inf))
+  expect_equal(group(-Inf), base_group(-Inf))
+  expect_equal(group(c(NaN, NA, 0, 1, Inf, -Inf)), base_group(c(NaN, NA, 0, 1, Inf, -Inf)))
+  expect_equal(group(NA_integer_), base_group(NA_integer_))
+  expect_equal(group(NA_real_), base_group(NA_real_))
+  expect_equal(group(NaN), base_group(NaN))
+  expect_equal(group(NA), base_group(NA))
+  expect_equal(group(NA_character_), base_group(NA_character_))
 })
 
 GRP2 <- function(x) {
@@ -465,5 +482,12 @@ test_that("funique works well", {
  expect_equal(funique(rdat, sort = TRUE), roworderv(unique(rdat)))
  expect_equal(funique(rdatNA), setRownames(unique(rdatNA)))
  expect_equal(funique(rdatNA, sort = TRUE), roworderv(unique(rdatNA)))
+
+ expect_equal(lapply(wlddev, function(x) unattrib(base::unique(x))),
+              lapply(wlddev, function(x) unattrib(funique(x))))
+ expect_equal(lapply(wldNA, function(x) unattrib(base::unique(x))),
+              lapply(wldNA, function(x) unattrib(funique(x))))
+ expect_equal(lapply(GGDC10S, function(x) unattrib(base::unique(x))),
+              lapply(GGDC10S, function(x) unattrib(funique(x))))
 
 })
