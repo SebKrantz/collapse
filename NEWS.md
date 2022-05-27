@@ -1,3 +1,7 @@
+# collapse 1.8.3
+
+* Significant speed improvement for character data in `qF/qG` (factor-generation) if `sort = TRUE` (the default). For details see the `method` argument of `?qF`. 
+
 # collapse 1.8.2
 
 * Fixed some rchk issues found by Thomas Kalibera from CRAN. 
