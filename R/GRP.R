@@ -608,20 +608,50 @@ radixfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
 groupfact <- function(x, ord, fact, naincl, keep, retgrp = FALSE) {
   g <- .Call(C_groupat, x, fact || retgrp, naincl)
   if(fact) {
-    lev <- unattrib(tochar(Csv(x, attr(g, "starts"))))
-    if(keep) duplAttributes(g, x)
-    attr(g, "levels") <- lev
+    st <- attr(g, "starts")
+    if(keep) duplAttributes(g, x) else attributes(g) <- NULL
+    attr(g, "levels") <- unattrib(tochar(if(length(st) == length(g)) x else Csv(x, st)))
     oldClass(g) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
   } else {
-    if(retgrp) attr(g, "groups") <- Csv(x, attr(g, "starts"))
+    if(retgrp) {
+      st <- attr(g, "starts")
+      attributes(g) <- NULL
+      attr(g, "N.groups") <- length(st)
+      attr(g, "groups") <- if(length(st) == length(g)) x else Csv(x, st)
+    }
     oldClass(g) <- c(if(ord) "ordered", "qG", if(naincl) "na.included")
   }
-  attr(g, "starts") <- NULL
+  g
+}
+
+# TODO: Why is numeric to character conversion so slow?... this really does away with the added speed...
+groupfact_sorted <- function(x, ord, fact, naincl, keep, retgrp = FALSE) {
+  g <- .Call(C_groupat, x, TRUE, naincl)
+  st <- attr(g, "starts")
+  ng <- length(st)
+  lev <- if(ng == length(x)) x else Csv(x, st)
+  o <- forder.int(lev, na.last = TRUE)
+  # TODO: keep always add class na.included?? -> Could add anyNA attribute as output from groupat... also for groupfact...
+  if(!attr(o, "sorted")) {
+    if(fact || retgrp) lev <- Csv(lev, o)
+    o <- forder.int(o) # This is necessary. Can optimize??
+    g <- if(naincl) Csv(unattrib(o), g) else o[g] # [ propagates NA's
+  }
+  if(fact) {
+    if(keep) duplAttributes(g, x) else attributes(g) <- NULL
+    attr(g, "levels") <- unattrib(tochar(lev))
+    oldClass(g) <- c(if(ord) "ordered", "factor", if(naincl) "na.included")
+  } else {
+    attributes(g) <- NULL
+    attr(g, "N.groups") <- ng
+    if(retgrp) attr(g, "groups") <- lev
+    oldClass(g) <- c(if(ord) "ordered", "qG", if(naincl) "na.included")
+  }
   g
 }
 
 hashfact <- function(x, sort, ord, fact, naincl, keep, retgrp = FALSE) {
-  if(sort) return(.Call(Cpp_qF, x, ord, !naincl, keep, if(fact) 1L else 2L+retgrp))
+  if(sort) return(groupfact_sorted(x, ord, fact, naincl, keep, retgrp)) # return(.Call(Cpp_qF, x, ord, !naincl, keep, if(fact) 1L else 2L+retgrp))
   groupfact(x, ord, fact, naincl, keep, retgrp)
 }
 
@@ -662,11 +692,12 @@ qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
   }
   if(is_qG(x)) return(as_factor_qG(x, ordered, na.exclude)) #  && sort??
   switch(method, # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
-         auto  = if(is.character(x) || is.logical(x) || !sort || length(x) < 500L)
-                 hashfact(x, sort, ordered, TRUE, !na.exclude, keep.attr) else # .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, 1L)
-                 radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),
+         auto  = if(is.double(x) && sort) # is.character(x) || is.logical(x) || !sort || length(x) < 500L
+                 radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr) else # .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, 1L)
+                 hashfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),
          radix = radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),
          hash  = hashfact(x, sort, ordered, TRUE, !na.exclude, keep.attr), # .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, 1L),
+         rcpp_hash = .Call(Cpp_qF, x, ordered, na.exclude, keep.attr, 1L),
          stop("Unknown method:", method))
 }
 
@@ -703,11 +734,12 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
     return(`attributes<-`(x, ax))
   }
   switch(method, # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
-         auto  = if(is.character(x) || is.logical(x) || !sort || length(x) < 500L)
-           hashfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups) else # .Call(Cpp_qF, x, sort, ordered, na.exclude, FALSE, 2L+return.groups)
-           radixfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups),
+         auto  = if(is.double(x) && sort) # is.character(x) || is.logical(x) || !sort || length(x) < 500L
+           radixfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups) else # .Call(Cpp_qF, x, sort, ordered, na.exclude, FALSE, 2L+return.groups)
+           hashfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups),
          radix = radixfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups),
          hash  = hashfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups), # .Call(Cpp_qF, x, sort, ordered, na.exclude, FALSE, 2L+return.groups),
+         rcpp_hash = .Call(Cpp_qF, x, ordered, na.exclude, FALSE, 2L+return.groups),
          stop("Unknown method:", method))
 }
 

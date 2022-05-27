@@ -1,6 +1,10 @@
+# collapse 1.8.3
+
+* Significant speed improvement for character data in `qF/qG` (factor-generation) if `sort = TRUE` (the default). For details see the `method` argument of `?qF`. 
+
 # collapse 1.8.2
 
-* Fixing some rchk issues found by Thomas Kalibera from CRAN. 
+* Fixed some rchk issues found by Thomas Kalibera from CRAN. 
 
 * faster `funique.default` method. 
 
@@ -91,7 +95,7 @@
 
 * `whichv` (and operators `%==%`, `%!=%`) now also support comparisons of equal-length arguments e.g. `1:3 %==% 1:3`. Note that this should not be used to compare 2 factors. 
 
-* Added some code to the `.onLoad` function that checks for the existence of a `.fastverse` configuration file containing a setting for `_opt_collapse_mask`: If found the code makes sure that the option takes effect before the package is loaded. This means that inside projects using the *fastverse* and `options("collapse_mask")` to replace base R / *dplyr* functions, *collapse* cannot be loaded without the masking being applied, making it more secure to utilize this feature. For more information about function masking see `help("collapse-options")` and for `.fastverse` configuration files see the [fastverse vignette](https://sebkrantz.github.io/fastverse/articles/fastverse_intro.html#custom-fastverse-configurations-for-projects). 
+* Added some code to the `.onLoad` function that checks for the existence of a `.fastverse` configuration file containing a setting for `_opt_collapse_mask`: If found the code makes sure that the option takes effect before the package is loaded. This means that inside projects using the *fastverse* and `options("collapse_mask")` to replace base R / *dplyr* functions, *collapse* cannot be loaded without the masking being applied, making it more secure to utilize this feature. For more information about function masking see `help("collapse-options")` and for `.fastverse` configuration files see the [fastverse vignette](https://fastverse.github.io/fastverse/articles/fastverse_intro.html#custom-fastverse-configurations-for-projects). 
 
 * Added hidden `.list` methods for `fhdwithin/HDW` and `fhdbetween/HDB`. As for the other `.FAST_FUN` this is just a wrapper for the data frame method and meant to be used on unclassed data frames. 
 

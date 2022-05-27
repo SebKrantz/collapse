@@ -1,6 +1,6 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.8.2
+Version: 1.8.3
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
