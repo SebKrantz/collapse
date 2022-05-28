@@ -104,10 +104,10 @@ test_that("GRP works as intended", {
  expect_equal(GRP(wlddev2$country)[[1]], attributes(qG(wlddev2$country))[[1]])
  expect_equal(GRP(wlddev2$PCGDP)[[1]], attributes(qG(wlddev2$PCGDP, na.exclude = FALSE))[[1]])
 
- expect_equal(GRP(mtcars$mpg)[[4]][[1]], attributes(qG(mtcars$mpg, return.groups = TRUE))[[2]])
- expect_equal(GRP(mtcars$cyl)[[4]][[1]], attributes(qG(mtcars$cyl, return.groups = TRUE))[[2]])
- expect_equal(GRP(wlddev2$country)[[4]][[1]], attributes(qG(wlddev2$country, return.groups = TRUE))[[2]])
- expect_equal(GRP(wlddev2$PCGDP)[[4]][[1]], attributes(qG(wlddev2$PCGDP, na.exclude = FALSE, return.groups = TRUE))[[2]])
+ expect_equal(GRP(mtcars$mpg)[[4]][[1]], attributes(qG(mtcars$mpg, return.groups = TRUE))[["groups"]])
+ expect_equal(GRP(mtcars$cyl)[[4]][[1]], attributes(qG(mtcars$cyl, return.groups = TRUE))[["groups"]])
+ expect_equal(GRP(wlddev2$country)[[4]][[1]], attributes(qG(wlddev2$country, return.groups = TRUE))[["groups"]])
+ expect_equal(GRP(wlddev2$PCGDP)[[4]][[1]], attributes(qG(wlddev2$PCGDP, na.exclude = FALSE, return.groups = TRUE))[["groups"]])
 
  expect_visible(GRP(1:10))
  expect_visible(GRP(1:10, decreasing = TRUE))
