@@ -630,7 +630,7 @@ groupfact_sorted <- function(x, ord, fact, naincl, keep, retgrp = FALSE) {
   st <- attr(g, "starts")
   ng <- length(st)
   lev <- if(ng == length(x)) x else Csv(x, st)
-  o <- forder.int(lev, na.last = TRUE)
+  o <- forder.int(lev)
   # TODO: keep always add class na.included?? -> Could add anyNA attribute as output from groupat... also for groupfact...
   if(!attr(o, "sorted")) {
     if(fact || retgrp) lev <- Csv(lev, o)
