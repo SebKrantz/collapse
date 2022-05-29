@@ -693,7 +693,7 @@ qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
   if(is_qG(x)) return(as_factor_qG(x, ordered, na.exclude)) #  && sort??
   switch(method, # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
          auto  = if(is.double(x) && sort) # is.character(x) || is.logical(x) || !sort || length(x) < 500L
-                   radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr) else if(sort && length(x) < 100000L)
+                   radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr) else if(sort && length(x) < 100000L && !is.object(x))
                      .Call(Cpp_qF, x, ordered, na.exclude, keep.attr, 1L) else
                  hashfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),
          radix = radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),
