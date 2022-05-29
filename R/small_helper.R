@@ -465,8 +465,8 @@ seq_row <- function(X) if(is.list(X)) seq_along(.subset2(X, 1L)) else seq_len(di
 
 seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(dim(X)[2L])
 
-# na.last is false (needed for timeid)
-forder.int <- function(x, na.last = FALSE, decreasing = FALSE) .Call(C_radixsort, na.last, decreasing, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
+# na.last = TRUE, same default as order():
+forder.int <- function(x, na.last = TRUE, decreasing = FALSE) .Call(C_radixsort, na.last, decreasing, FALSE, FALSE, TRUE, pairlist(x)) # if(is.unsorted(x)) .Call(C_forder, x, NULL, FALSE, TRUE, 1L, TRUE) else seq_along(x) # since forder gives integer(0) if sorted !
 
 fsetdiff <- function(x, y) x[match(x, y, 0L) == 0L] # not unique !
 
