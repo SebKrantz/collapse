@@ -567,7 +567,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
                         call = if(call) match.call() else NULL), "GRP"))
 }
 
-is_qG <- function(x) inherits(x, "qG")
+is_qG <- function(x) is.integer(x) && inherits(x, "qG")
 is.qG <- function(x) {
   message("Note that 'is.qG' was renamed to 'is_qG'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
   inherits(x, "qG")
@@ -693,7 +693,8 @@ qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
   if(is_qG(x)) return(as_factor_qG(x, ordered, na.exclude)) #  && sort??
   switch(method, # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
          auto  = if(is.double(x) && sort) # is.character(x) || is.logical(x) || !sort || length(x) < 500L
-                 radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr) else # .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, 1L)
+                   radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr) else if(sort && length(x) < 100000L && !is.object(x))
+                     .Call(Cpp_qF, x, ordered, na.exclude, keep.attr, 1L) else
                  hashfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),
          radix = radixfact(x, sort, ordered, TRUE, !na.exclude, keep.attr),
          hash  = hashfact(x, sort, ordered, TRUE, !na.exclude, keep.attr), # .Call(Cpp_qF, x, sort, ordered, na.exclude, keep.attr, 1L),
@@ -735,7 +736,8 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
   }
   switch(method, # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
          auto  = if(is.double(x) && sort) # is.character(x) || is.logical(x) || !sort || length(x) < 500L
-           radixfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups) else # .Call(Cpp_qF, x, sort, ordered, na.exclude, FALSE, 2L+return.groups)
+           radixfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups) else if(sort && length(x) < 100000L)
+             .Call(Cpp_qF, x, ordered, na.exclude, FALSE, 2L+return.groups) else
            hashfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups),
          radix = radixfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups),
          hash  = hashfact(x, sort, ordered, FALSE, !na.exclude, FALSE, return.groups), # .Call(Cpp_qF, x, sort, ordered, na.exclude, FALSE, 2L+return.groups),
