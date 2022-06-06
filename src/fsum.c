@@ -4,7 +4,7 @@
 #include <omp.h>
 #endif
 
-void fsum_double_impl(double *pout, double *px, int narm, int l) {
+void fsum_double_impl(double *restrict pout, const double *restrict px, const int narm, const int l) {
   double sum;
   if(narm) {
     int j = l-1;
@@ -27,7 +27,7 @@ void fsum_double_impl(double *pout, double *px, int narm, int l) {
   pout[0] = sum;
 }
 
-void fsum_double_g_impl(double *pout, double *px, int ng, int *pg, int narm, int l) {
+void fsum_double_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const int narm, const int l) {
   if(narm) {
     for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
     --pout;
@@ -44,7 +44,7 @@ void fsum_double_g_impl(double *pout, double *px, int ng, int *pg, int narm, int
   }
 }
 
-void fsum_double_omp_impl(double *pout, double *px, int narm, int l, int nth) {
+void fsum_double_omp_impl(double *restrict pout, const double *restrict px, const int narm, const int l, const int nth) {
   double sum;
   if(narm) {
     int j = 1;
@@ -63,7 +63,7 @@ void fsum_double_omp_impl(double *pout, double *px, int narm, int l, int nth) {
 }
 
 // This is unsafe...
-// void fsum_double_g_omp_impl(double *pout, double *px, int ng, int *pg, int narm, int l, int nth) {
+// void fsum_double_g_omp_impl(double *restrict pout, double *restrict px, int ng, int *restrict pg, int narm, int l, int nth) {
 //   if(narm) {
 //     for(int i = ng; i--; ) pout[i] = NA_REAL;
 //     #pragma omp parallel for num_threads(nth) reduction(+:pout[:ng])
@@ -83,7 +83,7 @@ void fsum_double_omp_impl(double *pout, double *px, int narm, int l, int nth) {
 //   }
 // }
 
-void fsum_weights_impl(double *pout, double *px, double *pw, int narm, int l) {
+void fsum_weights_impl(double *restrict pout, const double *restrict px, const double *restrict pw, const int narm, const int l) {
   double sum;
   if(narm) {
     int j = l-1;
@@ -107,7 +107,7 @@ void fsum_weights_impl(double *pout, double *px, double *pw, int narm, int l) {
   pout[0] = sum;
 }
 
-void fsum_weights_g_impl(double *pout, double *px, int ng, int *pg, double *pw, int narm, int l) {
+void fsum_weights_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const double *restrict pw, const int narm, const int l) {
   if(narm) {
     for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
     --pout;
@@ -124,7 +124,7 @@ void fsum_weights_g_impl(double *pout, double *px, int ng, int *pg, double *pw, 
 }
 
 
-void fsum_weights_omp_impl(double *pout, double *px, double *pw, int narm, int l, int nth) {
+void fsum_weights_omp_impl(double *restrict pout, const double *restrict px, const double *restrict pw, const int narm, const int l, const int nth) {
   double sum;
   if(narm) {
     int j = 0;
@@ -146,7 +146,7 @@ void fsum_weights_omp_impl(double *pout, double *px, double *pw, int narm, int l
 }
 
 // This is unsafe...
-// void fsum_weights_g_omp_impl(double *pout, double *px, int ng, int *pg, double *pw, int narm, int l, int nth) {
+// void fsum_weights_g_omp_impl(double *restrict pout, double *restrict px, int ng, int *restrict pg, double *restrict pw, int narm, int l, int nth) {
 //   if(narm) {
 //     for(int i = ng; i--; ) pout[i] = NA_REAL;
 //     #pragma omp parallel for num_threads(nth) reduction(+:pout[:ng])
@@ -164,7 +164,7 @@ void fsum_weights_omp_impl(double *pout, double *px, double *pw, int narm, int l
 
 
 // using long long internally is substantially faster than using doubles !!
-double fsum_int_impl(int *px, int narm, int l) {
+double fsum_int_impl(const int *restrict px, const int narm, const int l) {
   long long sum;
   if(narm) {
     int j = l-1;
@@ -182,7 +182,7 @@ double fsum_int_impl(int *px, int narm, int l) {
   return (double)sum;
 }
 
-void fsum_int_g_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
+void fsum_int_g_impl(int *restrict pout, const int *restrict px, const int ng, const int *restrict pg, const int narm, const int l) {
   long long ckof;
   if(narm) {
     for(int i = ng; i--; ) pout[i] = NA_INTEGER;
@@ -216,7 +216,7 @@ void fsum_int_g_impl(int *pout, int *px, int ng, int *pg, int narm, int l) {
   }
 }
 
-double fsum_int_omp_impl(int *px, int narm, int l, int nth) {
+double fsum_int_omp_impl(const int *restrict px, const int narm, const int l, const int nth) {
   long long sum;
   if(narm) {
     int j = 0;
@@ -234,7 +234,7 @@ double fsum_int_omp_impl(int *px, int narm, int l, int nth) {
 }
 
 // This is unsafe...
-// void fsum_int_g_omp_impl(int *pout, int *px, int ng, int *pg, int narm, int l, int nth) {
+// void fsum_int_g_omp_impl(int *restrict pout, int *restrict px, int ng, int *restrict pg, int narm, int l, int nth) {
 //   long long ckof;
 //   if(narm) {
 //     for(int i = ng; i--; ) pout[i] = NA_INTEGER;
@@ -327,7 +327,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
     if(l != length(w)) error("length(w) must match length(x)");
     int tw = TYPEOF(w);
     SEXP xr, wr;
-    double *px, *pw;
+    double *restrict px, *restrict pw;
     if(tw != REALSXP) {
       if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
@@ -354,7 +354,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
 SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
-  int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g),
+  int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g),
       ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
       narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
       nth = asInteger(Rnth); // , cmth = nth > 1 && col >= nth;
@@ -399,7 +399,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
             for(int j = 0; j < col; ++j) fsum_int_g_impl(pout + j*ng, px + j*l, ng, pg, narm, l);
           }
         } else {
-          double *pout = REAL(out);
+          double *restrict pout = REAL(out);
           int anyoutl = 0;
           if(nth <= 1) {
             for(int j = 0; j != col; ++j) {
@@ -436,7 +436,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
     if(l != length(w)) error("length(w) must match nrow(x)");
     int tw = TYPEOF(w);
     SEXP xr, wr;
-    double *px, *pw, *pout = REAL(out);
+    double *px, *restrict pw, *pout = REAL(out);
     if(tw != REALSXP) {
       if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
@@ -478,8 +478,8 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
   // TODO: Disable multithreading if overall data size is small?
   if(l < 1) return x; // needed ??
   if(ng == 0 && asLogical(Rdrop)) {
-    SEXP out = PROTECT(allocVector(REALSXP, l)), *px = SEXPPTR(x);
-    double *pout = REAL(out);
+    SEXP out = PROTECT(allocVector(REALSXP, l)), *restrict px = SEXPPTR(x);
+    double *restrict pout = REAL(out);
     if(nth > 1 && l >= nth) { // If high-dimensional: column-level parallelism
       SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect;
       #pragma omp parallel for num_threads(nth)
@@ -491,7 +491,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
     UNPROTECT(nprotect);
     return out;
   }
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
   if((ng > 0 && nth > 1 && l > 1) || (ng == 0 && nth > 1 && nth >= l)) {
     if(nth > l) nth = l;
     SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect; // Needed if ng == 0, otherwise double multithreading
@@ -510,7 +510,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
 // SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
 //   SEXP dim = getAttrib(x, R_DimSymbol);
 //   if(isNull(dim)) error("x is not a matrix");
-//   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g),
+//   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g),
 //     ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
 //     narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
 //     nth = asInteger(Rnth), cmth = nth > 1 && col >= nth;

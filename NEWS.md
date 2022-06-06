@@ -1,6 +1,8 @@
 # collapse 1.8.3
 
-* Significant speed improvement for character data in `qF/qG` (factor-generation) if `sort = TRUE` (the default). For details see the `method` argument of `?qF`. 
+* Significant speed improvement in `qF/qG` (factor-generation) for character vectors with more than 100,000 obs and many levels if `sort = TRUE` (the default). For details see the `method` argument of `?qF`. 
+
+* Optimizations in `fmode` and `fndistinct` for singleton groups. 
 
 # collapse 1.8.2
 

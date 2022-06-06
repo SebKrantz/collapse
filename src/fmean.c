@@ -5,7 +5,7 @@
 #endif
 
 
-void fmean_double_impl(double *pout, double *px, int narm, int l) {
+void fmean_double_impl(double *restrict pout, const double *restrict px, const int narm, const int l) {
   if(narm) {
     int j = l-1, n = 1;
     double mean = px[j];
@@ -29,7 +29,7 @@ void fmean_double_impl(double *pout, double *px, int narm, int l) {
   }
 }
 
-void fmean_double_omp_impl(double *pout, double *px, int narm, int l, int nth) {
+void fmean_double_omp_impl(double *restrict pout, const double *restrict px, const int narm, const int l, const int nth) {
   double mean = 0;
   if(narm) {
     int n = 0;
@@ -48,9 +48,9 @@ void fmean_double_omp_impl(double *pout, double *px, int narm, int l, int nth) {
   }
 }
 
-void fmean_double_g_impl(double *pout, double *px, int ng, int *pg, int *pgs, int narm, int l) {
+void fmean_double_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const int *restrict pgs, const int narm, const int l) {
   if(narm) {
-    int *n = (int*)Calloc(ng, int);
+    int *restrict n = (int*)Calloc(ng, int);
     for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
     for(int i = l, gi; i--; ) {
       if(NISNAN(px[i])) { // faster way to code this ? -> Not Bad at all
@@ -75,7 +75,7 @@ void fmean_double_g_impl(double *pout, double *px, int ng, int *pg, int *pgs, in
   }
 }
 
-void fmean_weights_impl(double *pout, double *px, double *pw, int narm, int l) {
+void fmean_weights_impl(double *restrict pout, const double *restrict px, const double *restrict pw, const int narm, const int l) {
   double mean, sumw;
   if(narm) {
     int j = l-1;
@@ -102,7 +102,7 @@ void fmean_weights_impl(double *pout, double *px, double *pw, int narm, int l) {
   pout[0] = mean / sumw;
 }
 
-void fmean_weights_omp_impl(double *pout, double *px, double *pw, int narm, int l, int nth) {
+void fmean_weights_omp_impl(double *restrict pout, const double *restrict px, const double *restrict pw, const int narm, const int l, const int nth) {
   double mean = 0, sumw = 0;
   if(narm) {
     #pragma omp parallel for num_threads(nth) reduction(+:mean,sumw)
@@ -122,8 +122,8 @@ void fmean_weights_omp_impl(double *pout, double *px, double *pw, int narm, int 
   pout[0] = mean / sumw;
 }
 
-void fmean_weights_g_impl(double *pout, double *px, int ng, int *pg, double *pw, int narm, int l) {
-  double *sumw = (double*)Calloc(ng, double);
+void fmean_weights_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const double *restrict pw, const int narm, const int l) {
+  double *restrict sumw = (double*)Calloc(ng, double);
   if(narm) {
     for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
     for(int i = l, gi; i--; ) {
@@ -149,7 +149,7 @@ void fmean_weights_g_impl(double *pout, double *px, int ng, int *pg, double *pw,
   Free(sumw);
 }
 
-double fmean_int_impl(int *px, int narm, int l) {
+double fmean_int_impl(const int *restrict px, const int narm, const int l) {
   long long mean;
   double dmean;
   if(narm) {
@@ -175,7 +175,7 @@ double fmean_int_impl(int *px, int narm, int l) {
   return dmean;
 }
 
-double fmean_int_omp_impl(int *px, int narm, int l, int nth) {
+double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, const int nth) {
   long long mean = 0;
   double dmean;
   if(narm) {
@@ -196,9 +196,9 @@ double fmean_int_omp_impl(int *px, int narm, int l, int nth) {
   return dmean;
 }
 
-void fmean_int_g_impl(double *pout, int *px, int ng, int *pg, int *pgs, int narm, int l) {
+void fmean_int_g_impl(double *restrict pout, const int *restrict px, const int ng, const int *restrict pg, const int *restrict pgs, const int narm, const int l) {
   if(narm) {
-    int *n = (int*)Calloc(ng, int);
+    int *restrict n = (int*)Calloc(ng, int);
     for(int i = ng; i--; ) pout[i] = NA_REAL;
     for(int i = l, gi; i--; ) {
       if(px[i] != NA_INTEGER) {
@@ -225,8 +225,8 @@ void fmean_int_g_impl(double *pout, int *px, int ng, int *pg, int *pgs, int narm
 
 
 SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth) {
-  int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng), narm = asLogical(Rnarm),
-    nth = asInteger(Rnth), nprotect = 1, nwl = isNull(w), *pgs = &l;
+  const int l = length(x), ng = asInteger(Rng), narm = asLogical(Rnarm), nwl = isNull(w);
+  int tx = TYPEOF(x), nth = asInteger(Rnth), nprotect = 1, *restrict pgs = &nprotect;
   // ALTREP methods for compact sequences: not safe yet and not part of the API.
   // if(ALTREP(x) && ng == 0 && nwl) {
   // switch(tx) {
@@ -236,7 +236,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth) {
   // default: error("ALTREP object must be integer or real typed");
   // }
   // }
-  if (l < 1) return tx == REALSXP ? x : ScalarReal(asReal(x)); // Prevents seqfault for numeric(0) #101
+  if(l < 1) return tx == REALSXP ? x : ScalarReal(asReal(x)); // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(l < 100000) nth = 1; // No improvements from multithreading on small data.
   if(tx == LGLSXP) tx = INTSXP;
@@ -248,7 +248,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth) {
         SEXP gs_ = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
         pgs = INTEGER(gs_);
         memset(pgs, 0, sizeof(int) * ng);
-        for(int i = 0, *pg = INTEGER(g); i != l; ++i) ++pgs[pg[i]-1];
+        for(int i = 0, *restrict pg = INTEGER(g); i != l; ++i) ++pgs[pg[i]-1];
       }
     }
     switch(tx) {
@@ -269,7 +269,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth) {
     if(l != length(w)) error("length(w) must match length(x)");
     int tw = TYPEOF(w);
     SEXP xr, wr;
-    double *px, *pw;
+    const double *restrict px, *restrict pw;
     if(tw != REALSXP) {
       if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
@@ -296,14 +296,14 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth) {
 SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
-  int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *pg = INTEGER(g),
-    ng = asInteger(Rng), narm = asLogical(Rnarm), nth = asInteger(Rnth), nprotect = 1, *pgs = &l;
-  if (l < 1) return x; // Prevents seqfault for numeric(0) #101
+  const int l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g), ng = asInteger(Rng), narm = asLogical(Rnarm);
+  int tx = TYPEOF(x), nth = asInteger(Rnth), nprotect = 1, *restrict pgs = &nprotect;
+  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
   if(l*col < 100000) nth = 1; // No gains from multithreading on small data
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(REALSXP, ng == 0 ? col : col * ng));
-  double *pout = REAL(out);
+  double *restrict pout = REAL(out);
   if(isNull(w)) {
     if(ng && !narm) {
       if(length(gs) == ng) pgs = INTEGER(gs);
@@ -311,12 +311,12 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
         SEXP gs_ = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
         pgs = INTEGER(gs_);
         memset(pgs, 0, sizeof(int) * ng);
-        for(int i = 0, *pg = INTEGER(g); i != l; ++i) ++pgs[pg[i]-1];
+        for(int i = 0, *restrict pg = INTEGER(g); i != l; ++i) ++pgs[pg[i]-1];
       }
     }
     switch(tx) {
       case REALSXP: {
-        double *px = REAL(x);
+        const double *px = REAL(x);
         if(ng == 0) {
           if(nth <= 1) {
             for(int j = 0; j != col; ++j) fmean_double_impl(pout + j, px + j*l, narm, l);
@@ -338,7 +338,7 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
         break;
       }
       case INTSXP: {
-        int *px = INTEGER(x);
+        const int *px = INTEGER(x);
         if(ng > 0) {
           if(nth <= 1 || col == 1) {
             for(int j = 0; j != col; ++j) fmean_int_g_impl(pout + j*ng, px + j*l, ng, pg, pgs, narm, l);
@@ -365,7 +365,7 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
     if(l != length(w)) error("length(w) must match nrow(x)");
     int tw = TYPEOF(w);
     SEXP xr, wr;
-    double *px, *pw;
+    const double *px, *restrict pw;
     if(tw != REALSXP) {
       if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
@@ -403,11 +403,12 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
 }
 
 SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
-  int l = length(x), ng = asInteger(Rng), nth = asInteger(Rnth), nprotect = 1;
+  const int l = length(x), ng = asInteger(Rng);
+  int nth = asInteger(Rnth), nprotect = 1;
   if(l < 1) return x; // needed ??
   if(ng == 0 && asLogical(Rdrop)) {
-    SEXP out = PROTECT(allocVector(REALSXP, l)), *px = SEXPPTR(x);
-    double *pout = REAL(out);
+    SEXP out = PROTECT(allocVector(REALSXP, l)), *restrict px = SEXPPTR(x);
+    double *restrict pout = REAL(out);
     if(nth > 1 && l >= nth) { // If high-dimensional: column-level parallelism
       SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect;
       #pragma omp parallel for num_threads(nth)
@@ -419,7 +420,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
     UNPROTECT(nprotect);
     return out;
   }
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
   if((ng > 0 && nth > 1 && l > 1) || (ng == 0 && nth > 1 && nth >= l)) {
     if(nth > l) nth = l;
     SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect; // Needed if ng == 0, otherwise double multithreading

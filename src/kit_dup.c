@@ -29,7 +29,7 @@ SEXP dupVecIndex(SEXP x) {
       M = isFactor(x) ? (size_t)nlevels(x) + 2 : (size_t)asInteger(getAttrib(x, install("N.groups"))) + 2;
       anyNA = !inherits(x, "na.included");
     } else {
-      int *p = INTEGER(x);
+      int *restrict p = INTEGER(x);
       // Old:
       if(n < 10 || NOGE(p[0], n) || NOGE(p[n/2], n) || NOGE(p[n-1], n)) {
         // This loop is highly optimized...
@@ -51,15 +51,15 @@ SEXP dupVecIndex(SEXP x) {
   } else if (tx == LGLSXP) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   SEXP ans_i = PROTECT(allocVector(INTSXP, n));
-  int *pans_i = INTEGER(ans_i), g = 0;
+  int *restrict pans_i = INTEGER(ans_i), g = 0;
   size_t id = 0;
   switch (tx) {
   case LGLSXP:
   case 1000: // This is for factors or logical vectors where the size of the table is known
   {
-    const int *px = INTEGER(x);
+    const int *restrict px = INTEGER(x);
     if(tx == 1000 && !anyNA) {
       for(int i = 0, j; i != n; ++i) {
         j = px[i];
@@ -75,7 +75,7 @@ SEXP dupVecIndex(SEXP x) {
     }
   } break;
   case INTSXP: {
-    const int *px = INTEGER(x);
+    const int *restrict px = INTEGER(x);
     // Old:
     if(x_max == INT_MIN && M == (size_t)n) { // Faster version based on division hash...
       unsigned int iid = 0, nu = (unsigned)n;
@@ -125,7 +125,7 @@ SEXP dupVecIndex(SEXP x) {
     }
   } break;
   case REALSXP: {
-    const double *px = REAL(x);
+    const double *restrict px = REAL(x);
     union uno tpv;
     for (int i = 0; i != n; ++i) {
       tpv.d = px[i]; // R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN : px[i]);
@@ -143,7 +143,7 @@ SEXP dupVecIndex(SEXP x) {
     }
   } break;
   case CPLXSXP: {
-    const Rcomplex *px = COMPLEX(x);
+    const Rcomplex *restrict px = COMPLEX(x);
     unsigned int u;
     union uno tpv;
     Rcomplex tmp;
@@ -172,7 +172,7 @@ SEXP dupVecIndex(SEXP x) {
     }
   } break;
   case STRSXP: {
-    const SEXP *px = STRING_PTR(x);
+    const SEXP *restrict px = STRING_PTR(x);
     for (int i = 0; i != n; ++i) {
       id = HASH(((intptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
@@ -222,15 +222,15 @@ SEXP dupVecIndexKeepNA(SEXP x) {
   } else if (tx == LGLSXP) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   SEXP ans_i = PROTECT(allocVector(INTSXP, n));
-  int *pans_i = INTEGER(ans_i), g = 0;
+  int *restrict pans_i = INTEGER(ans_i), g = 0;
   size_t id = 0;
   switch (tx) {
   case LGLSXP:
   case 1000: // This is for factors or logical vectors where the size of the table is known
   {
-    const int *px = INTEGER(x);
+    const int *restrict px = INTEGER(x);
     for (int i = 0, j; i != n; ++i) {
       if(px[i] == NA_INTEGER) {
         pans_i[i] = NA_INTEGER;
@@ -242,7 +242,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     }
   } break;
   case INTSXP: {
-    const int *px = INTEGER(x);
+    const int *restrict px = INTEGER(x);
     if(M == (size_t)n) { // Faster version based on division hash...
       unsigned int iid = 0, nu = (unsigned)n;
       for (int i = 0; i != n; ++i) {
@@ -285,7 +285,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     }
   } break;
   case REALSXP: {
-    const double *px = REAL(x);
+    const double *restrict px = REAL(x);
     union uno tpv;
     for (int i = 0; i != n; ++i) {
       if(ISNAN(px[i])) {
@@ -307,7 +307,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     }
   } break;
   case CPLXSXP: {
-    const Rcomplex *px = COMPLEX(x);
+    const Rcomplex *restrict px = COMPLEX(x);
     unsigned int u;
     union uno tpv;
     Rcomplex tmp;
@@ -335,7 +335,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     }
   } break;
   case STRSXP: {
-    const SEXP *px = STRING_PTR(x);
+    const SEXP *restrict px = STRING_PTR(x);
     for (int i = 0; i != n; ++i) {
       if(px[i] == NA_STRING) {
         pans_i[i] = NA_INTEGER;
@@ -368,7 +368,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
 // **************************************************
 // This function adds a second vector to the grouping
 // **************************************************
-int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
+int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, const int ng) {
 
   if(length(x) != n) error("Unequal length columns");
   int K = 0, tx = TYPEOF(x), anyNA = 1;
@@ -395,12 +395,12 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
   } else if (tx == LGLSXP) {
     M = (size_t)ng * 3 + 1;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *h = (int*)Calloc(M, int), g = 0, hid = 0; // Table to save the hash values, table has size M
+  int *restrict h = (int*)Calloc(M, int), g = 0, hid = 0; // Table to save the hash values, table has size M
   size_t id = 0;
   switch (tx) {
   case LGLSXP:
   {
-    const int *px = LOGICAL(x);
+    const int *restrict px = LOGICAL(x);
     for (int i = 0; i != n; ++i) {
       id = (px[i] == NA_LOGICAL) ? pidx[i] : pidx[i] + (px[i] + 1) * ng;
       if(h[id]) pans_i[i] = h[id];
@@ -409,7 +409,7 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
   } break;
   case 1000: // This is for factors if feasible...
   {
-    const int *px = INTEGER(x);
+    const int *restrict px = INTEGER(x);
     if(anyNA) {
       for (int i = 0; i != n; ++i) {
         id = (px[i] == NA_INTEGER) ? pidx[i] : pidx[i] + px[i] * ng;
@@ -429,7 +429,7 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
 
   // Note: In general, combining bitwise i.e. px[i] ^ pidx[i] seems slightly faster than multiplying (px[i] * pidx[i])...
   case INTSXP: {
-    const int *px = INTEGER(x);
+    const int *restrict px = INTEGER(x);
     for (int i = 0; i != n; ++i) {
       id = HASH(px[i] * pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
       while(h[id]) {
@@ -446,7 +446,7 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
     }
   } break;
   case REALSXP: {
-    const double *px = REAL(x);
+    const double *restrict px = REAL(x);
     union uno tpv;
     for (int i = 0; i != n; ++i) {
       tpv.d = px[i]; // R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN :px[i]);
@@ -465,7 +465,7 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
     }
   } break;
   case CPLXSXP: {
-    const Rcomplex *px = COMPLEX(x);
+    const Rcomplex *restrict px = COMPLEX(x);
     unsigned int u;
     union uno tpv;
     Rcomplex tmp;
@@ -495,7 +495,7 @@ int dupVecSecond(int *pidx, int *pans_i, SEXP x, const int n, const int ng) {
     }
   } break;
   case STRSXP: {
-    const SEXP *px = STRING_PTR(x);
+    const SEXP *restrict px = STRING_PTR(x);
     for (int i = 0; i != n; ++i) {
       id = HASH(((intptr_t) px[i] & 0xffffffff) ^ pidx[i], K) + pidx[i];
       while(h[id]) {
@@ -644,8 +644,8 @@ SEXP funiqueC(SEXP x) {
   } else if (tx == LGLSXP) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
-  int *st = (int*)R_alloc((tx == LGLSXP || tx == 1000) ? (int)M : n, sizeof(int));
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict st = (int*)R_alloc((tx == LGLSXP || tx == 1000) ? (int)M : n, sizeof(int));
   int g = 0;
   size_t id = 0;
   SEXP res;
@@ -653,7 +653,7 @@ SEXP funiqueC(SEXP x) {
   case LGLSXP:
   case 1000: // This is for factors or logical vectors where the size of the table is known
   {
-    const int *px = INTEGER(x);
+    const int *restrict px = INTEGER(x);
     if(tx == 1000 && inherits(x, "na.included")) {
       for(int i = 0, k = (int)M-1, ng = k-1; i != n; ++i) {
         if(h[px[i]]) continue;
@@ -674,11 +674,11 @@ SEXP funiqueC(SEXP x) {
     Free(h);
     if(g == n) return x;
     res = PROTECT(allocVector(tx == LGLSXP ? LGLSXP : INTSXP, g));
-    int *pres = INTEGER(res);
+    int *restrict pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   case INTSXP: {
-    const int *px = INTEGER(x);
+    const int *restrict px = INTEGER(x);
     if(M == (size_t)n) { // Faster version based on division hash...
       unsigned int iid = 0, nu = (unsigned)n;
       for (int i = 0; i != n; ++i) {
@@ -707,11 +707,11 @@ SEXP funiqueC(SEXP x) {
     Free(h);
     if(g == n) return x;
     res = PROTECT(allocVector(INTSXP, g));
-    int *pres = INTEGER(res);
+    int *restrict pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   case REALSXP: {
-    const double *px = REAL(x);
+    const double *restrict px = REAL(x);
     union uno tpv;
     for (int i = 0; i != n; ++i) {
       tpv.d = px[i];
@@ -727,11 +727,11 @@ SEXP funiqueC(SEXP x) {
     Free(h);
     if(g == n) return x;
     res = PROTECT(allocVector(REALSXP, g));
-    double *pres = REAL(res);
+    double *restrict pres = REAL(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   case CPLXSXP: {
-    const Rcomplex *px = COMPLEX(x);
+    const Rcomplex *restrict px = COMPLEX(x);
     unsigned int u;
     union uno tpv;
     Rcomplex tmp;
@@ -758,11 +758,11 @@ SEXP funiqueC(SEXP x) {
     Free(h);
     if(g == n) return x;
     res = PROTECT(allocVector(CPLXSXP, g));
-    Rcomplex *pres = COMPLEX(res);
+    Rcomplex *restrict pres = COMPLEX(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   case STRSXP: {
-    const SEXP *px = STRING_PTR(x);
+    const SEXP *restrict px = STRING_PTR(x);
     for (int i = 0; i != n; ++i) {
       id = HASH(((intptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
@@ -776,7 +776,7 @@ SEXP funiqueC(SEXP x) {
     Free(h);
     if(g == n) return x;
     res = PROTECT(allocVector(STRSXP, g));
-    SEXP *pres = STRING_PTR(res);
+    SEXP *restrict pres = STRING_PTR(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   }
