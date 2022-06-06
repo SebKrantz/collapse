@@ -8,7 +8,8 @@
 // TODO: outsource and memset hash table and count vector?
 // Problem: does not work in parallel, each thread needs own intermediate vectors
 
-int mode_int(const int *px, const int *po, const int l, const int sorted, const int narm, const int ret) {
+int mode_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
+  if(l == 1) return px[0];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, val, mode, max = 1, i = 0, end = l-1,
@@ -17,8 +18,8 @@ int mode_int(const int *px, const int *po, const int l, const int sorted, const 
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values
-  int *n = (int*)Calloc(l, int); // Table to count frequency of values
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
+  int *restrict n = (int*)Calloc(l, int); // Table to count frequency of values
 
   if(sorted) {
     mode = px[0];
@@ -83,7 +84,8 @@ int mode_int(const int *px, const int *po, const int l, const int sorted, const 
   return mode;
 }
 
-int w_mode_int(const int *px, const double *pw, const int *po, const int l, const int sorted, const int narm, const int ret) {
+int w_mode_int(const int *restrict px, const double *restrict pw, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
+  if(l == 1) return ISNAN(pw[0]) ? NA_INTEGER : px[0];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, val, mode, i = 0, end = l-1,
@@ -92,8 +94,8 @@ int w_mode_int(const int *px, const double *pw, const int *po, const int l, cons
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values
-  double *sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
+  double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
   double max = DBL_MIN;
 
   if(sorted) {
@@ -163,10 +165,11 @@ int w_mode_int(const int *px, const double *pw, const int *po, const int l, cons
 }
 
 
-int mode_fct_logi(const int *px, const int *po, const int l, const int nlev, const int sorted, const int narm, const int ret) {
+int mode_fct_logi(const int *restrict px, const int *restrict po, const int l, const int nlev, const int sorted, const int narm, const int ret) {
+  if(l == 1) return px[0];
   int val, mode, max = 1, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
-  int *n = (int*)Calloc(nlevp+1, int); // Table to count frequency of values
+  int *restrict n = (int*)Calloc(nlevp+1, int); // Table to count frequency of values
 
   if(sorted) {
     mode = px[0];
@@ -218,10 +221,11 @@ int mode_fct_logi(const int *px, const int *po, const int l, const int nlev, con
   return mode;
 }
 
-int w_mode_fct_logi(const int *px, const double *pw, const int *po, const int l, const int nlev, const int sorted, const int narm, const int ret) {
+int w_mode_fct_logi(const int *restrict px, const double *restrict pw, const int *restrict po, const int l, const int nlev, const int sorted, const int narm, const int ret) {
+  if(l == 1) return ISNAN(pw[0]) ? NA_INTEGER : px[0];
   int val, mode, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
-  double *sumw = (double*)Calloc(nlevp+1, double); // Table to save each values sum of weights
+  double *restrict sumw = (double*)Calloc(nlevp+1, double); // Table to save each values sum of weights
   double max = DBL_MIN;
 
   if(sorted) {
@@ -280,7 +284,8 @@ int w_mode_fct_logi(const int *px, const double *pw, const int *po, const int l,
 }
 
 
-double mode_double(const double *px, const int *po, const int l, const int sorted, const int narm, const int ret) {
+double mode_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
+  if(l == 1) return px[0];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, max = 1, i = 0, end = l-1,
@@ -289,8 +294,8 @@ double mode_double(const double *px, const int *po, const int l, const int sorte
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values
-  int *n = (int*)Calloc(l, int); // Table to count frequency of values
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
+  int *restrict n = (int*)Calloc(l, int); // Table to count frequency of values
   double val, mode;
   union uno tpv;
 
@@ -359,7 +364,8 @@ double mode_double(const double *px, const int *po, const int l, const int sorte
   return mode;
 }
 
-double w_mode_double(const double *px, const double *pw, const int *po, const int l, const int sorted, const int narm, const int ret) {
+double w_mode_double(const double *restrict px, const double *restrict pw, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
+  if(l == 1) return ISNAN(pw[0]) ? NA_REAL : px[0];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, i = 0, end = l-1, minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
@@ -367,8 +373,8 @@ double w_mode_double(const double *px, const double *pw, const int *po, const in
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values
-  double *sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
+  double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
   double val, mode, max = DBL_MIN;
   union uno tpv;
 
@@ -441,7 +447,8 @@ double w_mode_double(const double *px, const double *pw, const int *po, const in
 }
 
 
-SEXP mode_string(const SEXP *px, const int *po, const int l, const int sorted, const int narm, const int ret) {
+SEXP mode_string(const SEXP *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
+  if(l == 1) return px[0];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, max = 1, i = 0, end = l-1,
@@ -450,8 +457,8 @@ SEXP mode_string(const SEXP *px, const int *po, const int l, const int sorted, c
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values
-  int *n = (int*)Calloc(l, int); // Table to count frequency of values
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
+  int *restrict n = (int*)Calloc(l, int); // Table to count frequency of values
   SEXP val, mode;
 
   if(sorted) {
@@ -517,7 +524,8 @@ SEXP mode_string(const SEXP *px, const int *po, const int l, const int sorted, c
   return mode;
 }
 
-SEXP w_mode_string(const SEXP *px, const double *pw, const int *po, const int l, const int sorted, const int narm, const int ret) {
+SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
+  if(l == 1) return ISNAN(pw[0]) ? NA_STRING : px[0];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, i = 0, end = l-1, minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
@@ -525,8 +533,8 @@ SEXP w_mode_string(const SEXP *px, const double *pw, const int *po, const int l,
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values
-  double *sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
+  double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
   double max = DBL_MIN;
   SEXP val, mode;
 
