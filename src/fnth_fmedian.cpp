@@ -529,7 +529,31 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
 
 
 
+// double median_narm_single(const NumericVector& colj, NumericVector& column, const bool lower, const bool tiesmean, const double Q) {
+//   double *begin = column.begin(), *pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
+//   int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
+//   if(sz == 0) return colj[0];
+//   std::nth_element(begin, begin+nth, pend);
+//   return (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
+// }
 
+double median_narm(const NumericVector& colj, const bool lower, const bool tiesmean, const double Q) {
+  NumericVector column = no_init_vector(colj.size());
+  double *begin = column.begin(), *pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
+  int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
+  if(sz == 0) return colj[0];
+  std::nth_element(begin, begin+nth, pend);
+  return (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
+}
+
+double median_keepna(const NumericVector& colj, const bool lower, const bool tiesmean, const double Q) {
+  int row = colj.size(), nth = lower ? (row-1)*Q : row*Q;
+  for(int i = 0; i != row; ++i) if(isnan2(colj[i])) return NA_REAL;
+  NumericVector column = Rf_duplicate(colj);
+  double *begin = column.begin();
+  std::nth_element(begin, begin+nth, column.end());
+  return (tiesmean && row%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, column.end())))*0.5 : column[nth];
+}
 
 //[[Rcpp::export]]
 SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g = 0,
@@ -565,38 +589,27 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
       if(nthreads > l) nthreads = l;
       NumericVector out = no_init_vector(l);
       if(narm) {
-        #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) {
-          NumericVector colj = x[j];
-          NumericVector column = no_init_vector(colj.size());
-          double *begin = column.begin(), *pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
-          int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
-          if(sz == 0) {
-            out[j] = colj[0];
-          } else {
-            std::nth_element(begin, begin+nth, pend);
-            out[j] = (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
+        if(nthreads == 1) {
+          NumericVector column = no_init_vector(lx1);
+          for(int j = 0; j < l; ++j) {
+            //out[j] = median_narm_single(x[j], column, lower, tiesmean, Q);
+            NumericVector colj = x[j];
+            double *begin = column.begin(), *pend = std::remove_copy_if(colj.begin(), colj.end(), begin, isnan2);
+            int sz = pend - begin, nth = lower ? (sz-1)*Q : sz*Q;
+            if(sz == 0) {
+              out[j] = colj[0];
+            } else {
+              std::nth_element(begin, begin+nth, pend);
+              out[j] = (tiesmean && sz%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, pend)))*0.5 : column[nth];
+            }
           }
+        } else {
+          #pragma omp parallel for num_threads(nthreads)
+          for(int j = 0; j < l; ++j) out[j] = median_narm(x[j], lower, tiesmean, Q);
         }
       } else {
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) {
-          {
-            NumericVector colj = x[j];
-            int row = colj.size(), nth = lower ? (row-1)*Q : row*Q;
-            for(int i = 0; i != row; ++i) {
-              if(isnan2(colj[i])) {
-                out[j] = colj[i];
-                goto endloop;
-              }
-            }
-            NumericVector column = Rf_duplicate(colj);
-            double *begin = column.begin();
-            std::nth_element(begin, begin+nth, column.end());
-            out[j] = (tiesmean && row%2 == 0) ? (column[nth] + *(std::min_element(begin+nth+1, column.end())))*0.5 : column[nth];
-          }
-          endloop:;
-        }
+        for(int j = 0; j < l; ++j) out[j] = median_keepna(x[j], lower, tiesmean, Q);
       }
       if(drop) {
         Rf_setAttrib(out, R_NamesSymbol, Rf_getAttrib(x, R_NamesSymbol));
