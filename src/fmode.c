@@ -854,7 +854,7 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   int nullg = isNull(g), nullw = isNull(w), l = length(x), nprotect = 0;
   if(l <= 1) return x;
   if(nullg && nullw) return mode_impl(x, asLogical(Rnarm), asInteger(Rret));
-  double tmp = 0.0, *pw = &tmp;
+  double tmp = 0.0, *restrict pw = &tmp;
   if(!nullw) {
     if(length(w) != l) error("length(w) must match length(x)");
     if(TYPEOF(w) != REALSXP) {
@@ -868,16 +868,16 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     return w_mode_impl(x, pw, asLogical(Rnarm), asInteger(Rret));
   }
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-  const SEXP *pg = SEXPPTR(g), o = pg[6];
-  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst;
+  const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
+  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst;
   if(l != length(pg[1])) error("length(g) must match length(x)");
   if(isNull(o)) {
-    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
+    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
     for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
     pst = cgs + 1;
     if(sorted) po = &l;
     else {
-      int *count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
       ++po; Free(count);
@@ -896,14 +896,14 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0, nprotect = 1,
     narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads);
   if(l < 1) return x;
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
   if(nullg && nthreads > l) nthreads = l;
   if(nullg && nullw) {
     #pragma omp parallel for num_threads(nthreads)
     for(int j = 0; j < l; ++j) pout[j] = mode_impl(px[j], narm, ret);
   } else {
     int nrx = length(px[0]);
-    double tmp = 0.0, *pw = &tmp;
+    double tmp = 0.0, *restrict pw = &tmp;
     if(!nullw) {
       if(length(w) != nrx) error("length(w) must match nrow(x)");
       if(TYPEOF(w) != REALSXP) {
@@ -917,17 +917,17 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
       for(int j = 0; j < l; ++j) pout[j] = w_mode_impl(px[j], pw, narm, ret);
     } else {
       if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-      const SEXP *pg = SEXPPTR(g), o = pg[6];
+      const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
       ng = INTEGER(pg[0])[0];
-      int sorted = LOGICAL(pg[5])[1] == 1, *pgs = INTEGER(pg[2]), *po, *pst;
+      int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst;
       if(nrx != length(pg[1])) error("length(g) must match nrow(x)");
       if(isNull(o)) {
-        int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
+        int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
         for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
         pst = cgs + 1;
         if(sorted) po = &l;
         else {
-          int *count = (int *) Calloc(ng+1, int);
+          int *restrict count = (int *) Calloc(ng+1, int);
           po = (int *) R_alloc(nrx, sizeof(int)); --po;
           for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
           ++po; Free(count);
@@ -957,7 +957,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
   if(l <= 1) return x; // Prevents seqfault for numeric(0) #101
   if(nthreads > col) nthreads = col;
 
-  double tmp = 0.0, *pw = &tmp;
+  double tmp = 0.0, *restrict pw = &tmp;
   if(!nullw) {
     if(length(w) != l) error("length(w) must match nrow(x)");
     if(TYPEOF(w) != REALSXP) {
@@ -972,7 +972,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
 
     switch(tx) {
       case REALSXP: {
-        double *px = REAL(x), *pres = REAL(res);
+        double *px = REAL(x), *restrict pres = REAL(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) pres[j] = mode_double(px + j*l, &l, l, 1, narm, ret);
@@ -983,7 +983,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case INTSXP: {  // Factor matrix not well defined object...
-        int *px = INTEGER(x), *pres = INTEGER(res);
+        int *px = INTEGER(x), *restrict pres = INTEGER(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) pres[j] = mode_int(px + j*l, &l, l, 1, narm, ret);
@@ -994,7 +994,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case LGLSXP: {
-        int *px = LOGICAL(x), *pres = LOGICAL(res);
+        int *px = LOGICAL(x), *restrict pres = LOGICAL(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) pres[j] = mode_fct_logi(px + j*l, &l, l, 1, 1, narm, ret);
@@ -1005,7 +1005,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pres = STRING_PTR(res);
+        SEXP *px = STRING_PTR(x), *restrict pres = STRING_PTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) pres[j] = mode_string(px + j*l, &l, l, 1, narm, ret);
@@ -1025,18 +1025,18 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
 
   // With groups
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-  const SEXP *pg = SEXPPTR(g), o = pg[6];
-  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, gl = length(pg[1]);
+  const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
+  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, gl = length(pg[1]);
   if(l != gl) error("length(g) must match nrow(x)");
   SEXP res = PROTECT(allocVector(tx, ng * col));
 
   if(isNull(o)) {
-    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
+    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
     for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
     pst = cgs + 1;
     if(sorted) po = &l;
     else {
-      int *count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
       ++po; Free(count);
@@ -1049,7 +1049,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
   if(sorted) { // Sorted
     switch(tx) {
       case REALSXP: {
-        double *px = REAL(x), *pres = REAL(res);
+        double *px = REAL(x), *restrict pres = REAL(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
@@ -1068,7 +1068,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case INTSXP: { // Factor matrix not well defined object...
-        int *px = INTEGER(x), *pres = INTEGER(res);
+        int *px = INTEGER(x), *restrict pres = INTEGER(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
@@ -1085,7 +1085,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case LGLSXP: {
-        int *px = LOGICAL(x), *pres = LOGICAL(res);
+        int *px = LOGICAL(x), *restrict pres = LOGICAL(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
@@ -1102,7 +1102,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pres = STRING_PTR(res);
+        SEXP *px = STRING_PTR(x), *restrict pres = STRING_PTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
@@ -1125,7 +1125,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
   } else { // Not sorted
     switch(tx) {
       case REALSXP: {
-        double *px = REAL(x), *pres = REAL(res);
+        double *px = REAL(x), *restrict pres = REAL(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
@@ -1144,7 +1144,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case INTSXP: {
-        int *px = INTEGER(x), *pres = INTEGER(res);
+        int *px = INTEGER(x), *restrict pres = INTEGER(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
@@ -1161,7 +1161,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case LGLSXP: {
-        int *px = LOGICAL(x), *pres = LOGICAL(res);
+        int *px = LOGICAL(x), *restrict pres = LOGICAL(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
@@ -1178,7 +1178,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pres = STRING_PTR(res);
+        SEXP *px = STRING_PTR(x), *restrict pres = STRING_PTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {

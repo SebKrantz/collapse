@@ -8,7 +8,8 @@
 // TODO: outsource and memset hash table?
 // Problem: does not work in parallel, each thread needs own hash table...
 
-int ndistinct_int(const int *px, const int *po, const int l, const int sorted, const int narm) {
+int ndistinct_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm) {
+  if(l == 1) return !(narm && px[0] == NA_INTEGER);
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;
@@ -16,7 +17,7 @@ int ndistinct_int(const int *px, const int *po, const int l, const int sorted, c
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
 
   if(sorted) {
     for (int i = 0; i != l; ++i) {
@@ -56,8 +57,9 @@ int ndistinct_int(const int *px, const int *po, const int l, const int sorted, c
   return ndist;
 }
 
-int ndistinct_fct(const int *px, const int *po, const int l, const int nlev, const int sorted, const int narm) {
-  int *h = (int*)Calloc(nlev+1, int);
+int ndistinct_fct(const int *restrict px, const int *restrict po, const int l, const int nlev, const int sorted, const int narm) {
+  if(l == 1) return !(narm && px[0] == NA_INTEGER);
+  int *restrict h = (int*)Calloc(nlev+1, int);
   int ndist = 0, anyNA = narm; // Ensures breaking works if narm = TRUE or FALSE
   if(sorted) {
     for (int i = 0, xi; i != l; ++i) {
@@ -89,7 +91,8 @@ int ndistinct_fct(const int *px, const int *po, const int l, const int nlev, con
   return ndist;
 }
 
-int ndistinct_logi(const int *px, const int *po, const int l, const int sorted, const int narm) {
+int ndistinct_logi(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm) {
+  if(l == 1) return !(narm && px[0] == NA_LOGICAL);
   int seenT = 0, seenF = 0, anyNA = narm; // Ensures breaking works if narm = TRUE or FALSE
   if(sorted) {
     for (int i = 0, xi; i != l; ++i) {
@@ -127,7 +130,8 @@ int ndistinct_logi(const int *px, const int *po, const int l, const int sorted, 
   return seenT + seenF;
 }
 
-int ndistinct_double(const double *px, const int *po, const int l, const int sorted, const int narm) {
+int ndistinct_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm) {
+  if(l == 1) return !(narm && ISNAN(px[0]));
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;
@@ -135,7 +139,7 @@ int ndistinct_double(const double *px, const int *po, const int l, const int sor
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   union uno tpv;
   double xi;
 
@@ -180,7 +184,8 @@ int ndistinct_double(const double *px, const int *po, const int l, const int sor
   return ndist;
 }
 
-int ndistinct_string(const SEXP *px, const int *po, const int l, const int sorted, const int narm) {
+int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int l, const int sorted, const int narm) {
+  if(l == 1) return !(narm && px[0] == NA_STRING);
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;
@@ -188,7 +193,7 @@ int ndistinct_string(const SEXP *px, const int *po, const int l, const int sorte
     M *= 2;
     K++;
   }
-  int *h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   SEXP xi;
 
   if(sorted) {
@@ -255,10 +260,10 @@ SEXP ndistinct_impl(SEXP x, int narm) {
 }
 
 // TODO: Optimize grouped distinct value count for logical vectors??
-SEXP ndistinct_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int nthreads) {
+SEXP ndistinct_g_impl(SEXP x, const int ng, const int *restrict pgs, const int *restrict po, const int *restrict pst, const int sorted, const int narm, int nthreads) {
 
   SEXP res = PROTECT(allocVector(INTSXP, ng));
-  int l = length(x), *pres = INTEGER(res);
+  int l = length(x), *restrict pres = INTEGER(res);
   if(nthreads > ng) nthreads = ng;
 
   if(sorted) { // Sorted: could compute cumulative group size (= starts) on the fly... but doesn't work multithreaded...
@@ -352,17 +357,17 @@ SEXP ndistinct_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, i
 SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
   if(isNull(g)) return ndistinct_impl(x, asLogical(Rnarm));
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-  const SEXP *pg = SEXPPTR(g), o = pg[6];
+  const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
   SEXP res;
-  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, l = length(x);
+  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, l = length(x);
   if(l != length(pg[1])) error("length(g) must match length(x)");
   if(isNull(o)) {
-    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
+    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
     for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
     pst = cgs + 1;
     if(sorted) po = &l;
     else {
-      int *count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
       ++po; Free(count);
@@ -383,10 +388,10 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
 
 SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
   int l = length(x), narm = asLogical(Rnarm), nthreads = asInteger(Rnthreads);
-  if(l < 1) return x;
+  if(l < 1) return ScalarInteger(0);
   if(isNull(g) && asLogical(Rdrop)) {
-    SEXP out = PROTECT(allocVector(INTSXP, l)), *px = SEXPPTR(x);
-    int *pout = INTEGER(out);
+    SEXP out = PROTECT(allocVector(INTSXP, l)), *restrict px = SEXPPTR(x);
+    int *restrict pout = INTEGER(out);
     if(nthreads > l) nthreads = l;
     #pragma omp parallel for num_threads(nthreads)
     for(int j = 0; j < l; ++j) pout[j] = INTEGER(ndistinct_impl(px[j], narm))[0];
@@ -395,7 +400,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
     return out;
   } else {
     SEXP out = PROTECT(allocVector(VECSXP, l)), sym_label = PROTECT(install("label")),
-      *pout = SEXPPTR(out), *px = SEXPPTR(x);
+      *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
     if(isNull(g)) {
       if(nthreads > l) nthreads = l;
       #pragma omp parallel for num_threads(nthreads)
@@ -408,15 +413,15 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       DFcopyAttr(out, x, /*ng=*/0);
     } else {
       if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-      const SEXP *pg = SEXPPTR(g), o = pg[6];
-      int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, gl = length(pg[1]);
+      const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
+      int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, gl = length(pg[1]);
       if(isNull(o)) {
-        int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
+        int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
         for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
         pst = cgs + 1;
         if(sorted) po = &l;
         else {
-          int *count = (int *) Calloc(ng+1, int);
+          int *restrict count = (int *) Calloc(ng+1, int);
           po = (int *) R_alloc(gl, sizeof(int)); --po;
           for(int i = 0; i != gl; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
           ++po; Free(count);
@@ -444,11 +449,11 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1],
       narm = asLogical(Rnarm), nthreads = asInteger(Rnthreads);
-  if(l < 1) return x; // Prevents seqfault for numeric(0) #101
+  if(l < 1) return ScalarInteger(0); // Prevents seqfault for numeric(0) #101
 
   if(isNull(g)) {
     SEXP res = PROTECT(allocVector(INTSXP, col));
-    int *pres = INTEGER(res);
+    int *restrict pres = INTEGER(res);
     if(nthreads > col) nthreads = col;
 
     switch(tx) {
@@ -487,21 +492,21 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
     return res;
   } else { // With groups
     if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-    const SEXP *pg = SEXPPTR(g), o = pg[6];
-    int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *pgs = INTEGER(pg[2]), *po, *pst, gl = length(pg[1]);
+    const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
+    int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, gl = length(pg[1]);
     if(l != gl) error("length(g) must match nrow(x)");
 
     SEXP res = PROTECT(allocVector(INTSXP, col * ng));
-    int *pres = INTEGER(res);
+    int *restrict pres = INTEGER(res);
     if(nthreads > col) nthreads = col; // column-level sufficient? or do sub-column level??
 
     if(isNull(o)) {
-      int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *pgv = INTEGER(pg[1]); cgs[1] = 1;
+      int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
       for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
       pst = cgs + 1;
       if(sorted) po = &l;
       else {
-        int *count = (int *) Calloc(ng+1, int);
+        int *restrict count = (int *) Calloc(ng+1, int);
         po = (int *) R_alloc(l, sizeof(int)); --po;
         for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
         ++po; Free(count);
