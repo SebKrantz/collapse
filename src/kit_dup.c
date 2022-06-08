@@ -11,7 +11,7 @@
 // ****************************************
 SEXP dupVecIndex(SEXP x) {
   const int n = length(x);
-  int K, tx = TYPEOF(x), x_min = INT_MAX, x_max = INT_MIN, anyNA = 0;
+  int K = 0, tx = TYPEOF(x), x_min = INT_MAX, x_max = INT_MIN, anyNA = 0;
   size_t M;
   // if(n >= INT_MAX) error("Length of 'x' is too large. (Long vector not supported yet)"); // 1073741824
   if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP ) {
@@ -198,7 +198,7 @@ SEXP dupVecIndex(SEXP x) {
 
 SEXP dupVecIndexKeepNA(SEXP x) {
   const int n = length(x);
-  int K, tx = TYPEOF(x);
+  int K = 0, tx = TYPEOF(x);
   size_t M;
   // if(n >= INT_MAX) error("Length of 'x' is too large. (Long vector not supported yet)"); // 1073741824
   if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP ) {
@@ -620,7 +620,7 @@ SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl) {
 SEXP funiqueC(SEXP x) {
   const int n = length(x);
   if(n <= 1) return x;
-  int K, tx = TYPEOF(x);
+  int K = 0, tx = TYPEOF(x);
   size_t M;
   // if(n >= INT_MAX) error("Length of 'x' is too large. (Long vector not supported yet)"); // 1073741824
   if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP) {
@@ -648,7 +648,7 @@ SEXP funiqueC(SEXP x) {
   int *restrict st = (int*)R_alloc((tx == LGLSXP || tx == 1000) ? (int)M : n, sizeof(int));
   int g = 0;
   size_t id = 0;
-  SEXP res;
+  SEXP res = R_NilValue;
   switch (tx) {
   case LGLSXP:
   case 1000: // This is for factors or logical vectors where the size of the table is known
@@ -673,7 +673,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    res = PROTECT(allocVector(tx == LGLSXP ? LGLSXP : INTSXP, g));
+    PROTECT(res = allocVector(tx == LGLSXP ? LGLSXP : INTSXP, g));
     int *restrict pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
@@ -706,7 +706,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    res = PROTECT(allocVector(INTSXP, g));
+    PROTECT(res = allocVector(INTSXP, g));
     int *restrict pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
@@ -726,7 +726,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    res = PROTECT(allocVector(REALSXP, g));
+    PROTECT(res = allocVector(REALSXP, g));
     double *restrict pres = REAL(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
@@ -757,7 +757,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    res = PROTECT(allocVector(CPLXSXP, g));
+    PROTECT(res = allocVector(CPLXSXP, g));
     Rcomplex *restrict pres = COMPLEX(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
@@ -775,7 +775,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    res = PROTECT(allocVector(STRSXP, g));
+    PROTECT(res = allocVector(STRSXP, g));
     SEXP *restrict pres = STRING_PTR(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
