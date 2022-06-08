@@ -1,3 +1,7 @@
+# collapse 1.8.4
+
+* Makevars text substitution hack to have CRAN accept a package that combines C, C++ and OpenMP. Thanks also to @MichaelChirico for pointing me in the right direction. 
+
 # collapse 1.8.3
 
 * Significant speed improvement in `qF/qG` (factor-generation) for character vectors with more than 100,000 obs and many levels if `sort = TRUE` (the default). For details see the `method` argument of `?qF`. 
