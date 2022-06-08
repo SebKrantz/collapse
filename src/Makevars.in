@@ -7,4 +7,4 @@ all: $(SHLIB)
 	@echo PKG_CXXFLAGS = $(PKG_CXXFLAGS) -DSTRICT_R_HEADERS
 	@echo PKG_LIBS = $(PKG_LIBS)
 	if [ "$(SHLIB)" != "collapse$(SHLIB_EXT)" ]; then mv $(SHLIB) collapse$(SHLIB_EXT); fi
-	if [ "$(OS)" != "Windows_NT" ] && [ `uname -s` = 'Darwin' ]; then install_name_tool -id data_table$(SHLIB_EXT) data_table$(SHLIB_EXT); fi
+	if [ "$(OS)" != "Windows_NT" ] && [ `uname -s` = 'Darwin' ]; then install_name_tool -id collapse$(SHLIB_EXT) collapse$(SHLIB_EXT); fi
