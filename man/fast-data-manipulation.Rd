@@ -34,7 +34,7 @@
                  \code{\link[=fselect]{fselect(<-)}} \tab\tab No methods, for data frames  \tab\tab Fast select or replace columns (non-standard evaluation) \cr
                  \code{\link[=get_vars]{get_vars(<-)}}, \code{\link[=num_vars]{num_vars(<-)}}, \code{\link[=cat_vars]{cat_vars(<-)}}, \code{\link[=char_vars]{char_vars(<-)}}, \code{\link[=fact_vars]{fact_vars(<-)}}, \code{\link[=logi_vars]{logi_vars(<-)}}, \code{\link[=date_vars]{date_vars(<-)}} \tab\tab No methods, for data frames  \tab\tab Fast select or replace columns \cr
                  \code{\link[=add_vars]{add_vars(<-)}} \tab\tab No methods, for data frames  \tab\tab Fast add columns \cr
-                 \code{\link{fsubset}} \tab\tab \code{default, matrix, data.frame} \tab\tab Fast subset data (non-standard evaluation) \cr
+                 \code{\link{fsubset}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab Fast subset data (non-standard evaluation) \cr
                  \code{\link{ss}} \tab\tab No methods, for data frames \tab\tab Fast subset data frames \cr
 
                  \code{\link{fsummarise}} \tab\tab No methods, for data frames \tab\tab Fast data aggregation \cr
@@ -42,7 +42,7 @@
                 \code{\link{fmutate}}, \code{\link[=ftransform]{(f/set)ftransform(<-)}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns (non-standard evaluation) \cr
                  %\code{\link{settransform}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns by reference (non-standard evaluation) \cr
                  \code{\link[=fcompute]{fcompute(v)}} \tab\tab No methods, for data frames \tab\tab Compute or modify columns, returned in a new data frame (non-standard evaluation) \cr
-                 \code{\link[=roworder]{roworder(v)}} \tab\tab No methods, for data frames \tab\tab Reorder rows and return data frame (standard and non-standard evaluation) \cr
+                 \code{\link[=roworder]{roworder(v)}} \tab\tab No methods, for data frames incl. pdata.frame \tab\tab Reorder rows and return data frame (standard and non-standard evaluation) \cr
                  \code{\link[=colorder]{colorder(v)}} \tab\tab No methods, for data frames \tab\tab Reorder columns and return data frame (standard and non-standard evaluation) \cr
                  \code{\link[=frename]{(f/set)rename}}, \code{\link[=frename]{(set)relabel}} \tab\tab No methods, for all objects with 'names' attribute \tab\tab Rename and return object / relabel columns in a data frame. \cr
 }
