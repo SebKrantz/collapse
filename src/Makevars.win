@@ -1,5 +1,6 @@
 ## -- compiling for OpenMP
 PKG_CFLAGS = -fopenmp -O3
 PKG_CXXFLAGS = -fopenmp -DSTRICT_R_HEADERS
+# CXX_STD = CXX11
 ## -- linking for OpenMP
 PKG_LIBS = -fopenmp -lgomp
