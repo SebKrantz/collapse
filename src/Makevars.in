@@ -3,7 +3,7 @@ PKG_CXXFLAGS = @PKG_CFLAGS@ @openmp_cxxflags@
 PKG_LIBS = @PKG_LIBS@ @openmp_cxxflags@
 
 all: $(SHLIB)
-	@echo PKG_CFLAGS = $(PKG_CFLAGS) -O3
+	@echo PKG_CFLAGS = $(PKG_CFLAGS)
 	@echo PKG_CXXFLAGS = $(PKG_CXXFLAGS) -DSTRICT_R_HEADERS
 	@echo PKG_LIBS = $(PKG_LIBS)
 	mv $(SHLIB) collapse$(SHLIB_EXT)
