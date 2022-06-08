@@ -1,4 +1,3 @@
-// [[Rcpp::plugins(cpp11)]]
 #include <numeric>
 // #define STRICT_R_HEADERS // Now defined globally in Makevars
 #include <cfloat>

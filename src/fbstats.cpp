@@ -1,4 +1,3 @@
-// [[Rcpp::plugins(cpp11)]]
 #include <Rcpp.h>
 using namespace Rcpp;
 
@@ -977,7 +976,6 @@ SEXP fbstatslCpp(const List& x, bool ext = false, int ng = 0, const IntegerVecto
 //
 
 
-// // [[Rcpp::plugins(cpp11)]]
 // #include <Rcpp.h>
 // #include <unordered_set>
 // using namespace Rcpp;
