@@ -1,10 +1,10 @@
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 #include <numeric>
 // #define STRICT_R_HEADERS // Now defined globally in Makevars
 #include <cfloat>
 #include <Rcpp.h>
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 using namespace Rcpp;
 
 extern "C" {

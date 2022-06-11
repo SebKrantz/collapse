@@ -1,9 +1,8 @@
-#include "collapse_c.h"
-// #include <R_ext/Altrep.h>
 #ifdef _OPENMP
 #include <omp.h>
 #endif
-
+#include "collapse_c.h"
+// #include <R_ext/Altrep.h>
 
 void fmean_double_impl(double *restrict pout, const double *restrict px, const int narm, const int l) {
   if(narm) {
