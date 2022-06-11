@@ -83,21 +83,21 @@ void fprod_weights_impl(double *pout, double *px, int ng, int *pg, double *pw, i
 
 // using long long internally is substantially faster than using doubles !!
 double fprod_int_impl(int *px, int narm, int l) {
-  long long prod;
+  double prod;
   if(narm) {
     int j = l-1;
     while(px[j] == NA_INTEGER && j!=0) --j;
-    prod = (long long)px[j];
+    prod = px[j];
     if(j == 0 && (l > 1 || px[j] == NA_INTEGER)) return NA_REAL;
-    for(int i = j; i--; ) if(px[i] != NA_INTEGER) prod *= (long long)px[i];
+    for(int i = j; i--; ) if(px[i] != NA_INTEGER) prod *= px[i];
   } else {
     prod = 1;
     for(int i = 0; i != l; ++i) {
       if(px[i] == NA_INTEGER) return NA_REAL;
-      prod *= (long long)px[i];
+      prod *= px[i];
     }
   }
-  return (double)prod;
+  return prod;
 }
 
 void fprod_int_g_impl(double *pout, int *px, int ng, int *pg, int narm, int l) {
