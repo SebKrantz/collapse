@@ -38,7 +38,7 @@ setTRA(x, STATS, FUN = "-", ...) # Shorthand for invisible(TRA(..., set = TRUE))
                  7 \tab\tab "+" \tab\tab add \cr
                  8 \tab\tab "*" \tab\tab multiply \cr
                  9 \tab\tab "\%\%" \tab\tab modulus (i.e. remainder from division by  \code{STATS}) \cr
-                 10 \tab\tab "-\%\%" \tab\tab subtract modulus (i.e. floor data by \code{STATS})
+                 10 \tab\tab "-\%\%" \tab\tab subtract modulus (i.e. make data divisible by \code{STATS})
   }
   }
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}. Number of groups must match rows of \code{STATS}. See Details.}

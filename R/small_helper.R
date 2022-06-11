@@ -8,20 +8,15 @@ bmax <- base::max
 # or wirhout r ??? look for %+% function on Rducumentation.. rdio.
 
 "%rr%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "replace_fill") else # outer(rep.int(1L, dim(X)[2L]), v)
-  duplAttributes(mapply(function(x, y) TRA(x, y, "replace_fill"), unattrib(X), unattrib(v),
-                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+  duplAttributes(.mapply(function(x, y) TRA(x, y, "replace_fill"), list(unattrib(X), unattrib(v)), NULL), X)
 "%r+%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "+") else
-  duplAttributes(mapply(function(x, y) TRA(x, y, "+"), unattrib(X), unattrib(v),
-                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+  duplAttributes(.mapply(function(x, y) TRA(x, y, "+"), list(unattrib(X), unattrib(v)), NULL), X)
 "%r-%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "-") else
-  duplAttributes(mapply(function(x, y) TRA(x, y, "-"), unattrib(X), unattrib(v),
-                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+  duplAttributes(.mapply(function(x, y) TRA(x, y, "-"), list(unattrib(X), unattrib(v)), NULL), X)
 "%r*%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "*") else
-  duplAttributes(mapply(function(x, y) TRA(x, y, "*"), unattrib(X), unattrib(v),
-                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+  duplAttributes(.mapply(function(x, y) TRA(x, y, "*"), list(unattrib(X), unattrib(v)), NULL), X)
 "%r/%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "/") else
-  duplAttributes(mapply(function(x, y) TRA(x, y, "/"), unattrib(X), unattrib(v),
-                        USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+  duplAttributes(.mapply(function(x, y) TRA(x, y, "/"), list(unattrib(X), unattrib(v)), NULL), X)
 
 
 
@@ -31,16 +26,16 @@ bmax <- base::max
     copyAttrib(V, X) # copyAttrib first makes a shallow copy of V
 "%c+%" <- function(X, V) if(is.atomic(X)) return(X + V) else
   duplAttributes(if(is.atomic(V)) lapply(unattrib(X), `+`, V) else
-    mapply(`+`, unattrib(X), unattrib(V), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+    .mapply(`+`, list(unattrib(X), unattrib(V)), NULL), X)
 "%c-%" <- function(X, V) if(is.atomic(X)) return(X - V) else
   duplAttributes(if(is.atomic(V)) lapply(unattrib(X), `-`, V) else
-    mapply(`-`, unattrib(X), unattrib(V), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+    .mapply(`-`, list(unattrib(X), unattrib(V)), NULL), X)
 "%c*%" <- function(X, V) if(is.atomic(X)) return(X * V) else
   duplAttributes(if(is.atomic(V)) lapply(unattrib(X), `*`, V) else
-    mapply(`*`, unattrib(X), unattrib(V), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+    .mapply(`*`, list(unattrib(X), unattrib(V)), NULL), X)
 "%c/%" <- function(X, V) if(is.atomic(X)) return(X / V) else  # or * 1L/V ??
   duplAttributes(if(is.atomic(V)) lapply(unattrib(X), `/`, V) else
-    mapply(`/`, unattrib(X), unattrib(V), USE.NAMES = FALSE, SIMPLIFY = FALSE), X)
+    .mapply(`/`, list(unattrib(X), unattrib(V)), NULL), X)
 
 
 # Multiple-assignment
@@ -355,8 +350,8 @@ allv <- function(x, value) .Call(C_anyallv, x, value, TRUE)
 copyv <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE) {
   if(is.list(X, ...)) { # Making sure some error is produced if dots are used
     if(is.list(R)) {
-      res <- mapply(function(x, r) .Call(C_setcopyv, x, v, r, invert, FALSE, vind1),
-                    unattrib(X), unattrib(R), USE.NAMES = FALSE, SIMPLIFY = FALSE)
+      res <- .mapply(function(x, r) .Call(C_setcopyv, x, v, r, invert, FALSE, vind1),
+                     list(unattrib(X), unattrib(R)), NULL)
     } else {
       res <- lapply(unattrib(X), function(x) .Call(C_setcopyv, x, v, R, invert, FALSE, vind1))
     }
@@ -367,8 +362,8 @@ copyv <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE) {
 setv  <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE) {
   if(is.list(X, ...)) { # Making sure some error is produced if dots are used
     if(is.list(R)) {
-      mapply(function(x, r) .Call(C_setcopyv, x, v, r, invert, TRUE, vind1),
-             unattrib(X), unattrib(R), USE.NAMES = FALSE, SIMPLIFY = FALSE)
+      .mapply(function(x, r) .Call(C_setcopyv, x, v, r, invert, TRUE, vind1),
+              list(unattrib(X), unattrib(R)), NULL)
     } else {
       lapply(unattrib(X), function(x) .Call(C_setcopyv, x, v, R, invert, TRUE, vind1))
     }

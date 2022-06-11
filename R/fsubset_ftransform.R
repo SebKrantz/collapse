@@ -526,30 +526,16 @@ mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is 
 dots_apply_grouped <- function(d, g, f, dots) {
   attributes(d) <- NULL
   n <- length(d[[1L]])
-  if(any(ln <- vlengths(dots, FALSE) == n)) {
-    ln <- which(ln)
-    if(length(ln) > 1L) { # multiple arguments to be split
-      asl <- lapply(dots[ln], gsplit, g)
-      if(length(dots) > length(ln)) {
-        mord <- dots[-ln]
-        # TODO: use .mapply() everywhere... if does not bump up R dependency??
-        FUN <- function(x) do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE, MoreArgs = mord), asl))
-      } else
-        FUN <- function(x) do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE), asl))
-    } else { # Only one argument to be split
-      nam <- names(dots)
-      as <- gsplit(dots[[ln]], g)
-      FUN <- quote(function(x) mapply(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE))
-      FUN[[3L]][[if(length(nam) && nzchar(nam[ln])) nam[ln] else 6L]] <- quote(as)
-      if(length(dots) > 1L) {
-        mord <- dots[-ln]
-        FUN[[3L]]$MoreArgs <- quote(mord)
-      }
-      FUN <- eval(FUN)
-    }
+  # Arguments same length as data
+  if(length(ln <- whichv(vlengths(dots, FALSE), n))) {
+    asl <- lapply(dots[ln], gsplit, g)
+    if(length(dots) > length(ln)) {
+      mord <- dots[-ln]
+      FUN <- function(x) .mapply(f, c(list(gsplit(x, g)), asl), mord) # do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE, MoreArgs = mord), asl))
+    } else FUN <- function(x) .mapply(f, c(list(gsplit(x, g)), asl), NULL) # do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE), asl))
     return(lapply(d, function(y) copyMostAttributes(unlist(FUN(y), FALSE, FALSE), y)))
   }
-  # No arguments to be split:
+  # No arguments to be split
   do.call(lapply, c(list(d, copysplaplfun, g, f), dots))
 }
 
@@ -557,25 +543,12 @@ dots_apply_grouped_bulk <- function(d, g, f, dots) {
   n <- fnrow2(d)
   dsp <- rsplit.data.frame(d, g, simplify = FALSE, flatten = TRUE, use.names = FALSE)
   if(is.null(dots)) return(lapply(dsp, f))
-  if(any(ln <- vlengths(dots, FALSE) == n)) {
-    ln <- which(ln)
-    if(length(ln) > 1L) { # multiple arguments to be split
-      asl <- lapply(dots[ln], gsplit, g)
-      return(do.call(mapply, c(list(f, dsp, SIMPLIFY = FALSE, USE.NAMES = FALSE,
-                             MoreArgs = if(length(dots) > length(ln)) dots[-ln] else NULL), asl)))
-    } else { # Only one argument to be split
-      nam <- names(dots)
-      as <- gsplit(dots[[ln]], g)
-      FUN <- quote(mapply(f, dsp, SIMPLIFY = FALSE, USE.NAMES = FALSE))
-      FUN[[if(length(nam) && nzchar(nam[ln])) nam[ln] else 6L]] <- quote(as)
-      if(length(dots) > 1L) {
-        mord <- dots[-ln]
-        FUN$MoreArgs <- quote(mord)
-      }
-      return(eval(FUN))
-    }
+  # Arguments withs ame length as data
+  if(length(ln <- whichv(vlengths(dots, FALSE), n))) {
+    asl <- lapply(dots[ln], gsplit, g)
+    return(.mapply(f, c(list(dsp), asl), if(length(dots) > length(ln)) dots[-ln] else NULL))
   }
-  # No arguments to be split:
+  # No arguments to be split
   do.call(lapply, c(list(dsp, f), dots))
 }
 

@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.5</span>
       </span>
     </div>
 
@@ -62,7 +62,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.8.4" id="collapse-184">collapse 1.8.4<a class="anchor" aria-label="anchor" href="#collapse-184"></a></h2>
+<h2 class="page-header" data-toc-text="1.8.5" id="collapse-185">collapse 1.8.5<a class="anchor" aria-label="anchor" href="#collapse-185"></a></h2>
+<ul><li>Fixed minor issues flagged by CRAN
+<ul><li>Installation on Solaris failed because omp.h was included after
+Rinternals.h</li>
+<li>Some integer overflows while running tests (causing UBSAN
+warnings)</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.8.4" id="collapse-184">collapse 1.8.4<small>2022-06-08</small><a class="anchor" aria-label="anchor" href="#collapse-184"></a></h2>
 <ul><li>Makevars text substitution hack to have CRAN accept a package that
 combines C, C++ and OpenMP. Thanks also to <a href="https://github.com/MichaelChirico" class="external-link">@MichaelChirico</a> for pointing
 me in the right direction.</li>
@@ -87,8 +96,8 @@ objects.</p></li>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.1" id="collapse-181">collapse 1.8.1<a class="anchor" aria-label="anchor" href="#collapse-181"></a></h2>
 <ul><li><p>Added function <code>fnunique</code> (yet another alternative to
-<code><a href="https://Rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">data.table::uniqueN</a></code>, <code><a href="https://rdrr.io/pkg/kit/man/funique.html" class="external-link">kit::uniqLen</a></code> or
-<code><a href="https://dplyr.tidyverse.org/reference/n_distinct.html" class="external-link">dplyr::n_distinct</a></code>, and principally a simple wrapper for
+<code><a href="https://rdrr.io/pkg/data.table/man/duplicated.html" class="external-link">data.table::uniqueN</a></code>, <code><a href="https://rdrr.io/pkg/kit/man/funique.html" class="external-link">kit::uniqLen</a></code> or
+<code><a href="https://rdrr.io/pkg/dplyr/man/n_distinct.html" class="external-link">dplyr::n_distinct</a></code>, and principally a simple wrapper for
 <code>attr(group(x), "N.groups")</code>). At present
 <code>fnunique</code> generally outperforms the others on data
 frames.</p></li>
@@ -479,7 +488,7 @@ happens internally.</li>
 <em>dplyr</em> 1.0.8 which involves an API change in
 <code>mutate</code>. <code>fmutate</code> will not take over these
 changes i.e. <code>fmutate(..., .keep = "none")</code> will continue to
-work like <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::transmute</a></code>. Furthermore, no more tests
+work like <code><a href="https://rdrr.io/pkg/dplyr/man/mutate.html" class="external-link">dplyr::transmute</a></code>. Furthermore, no more tests
 involving <em>dplyr</em> are run on CRAN, and I will also not follow
 along with any future <em>dplyr</em> API changes.</p></li>
 <li><p>The C-API macro <code>installTrChar</code> (used in the new
@@ -600,7 +609,7 @@ valid, i.e. if the data was originally sorted by the grouping columns
 (information recorded by <code>GRP.default(..., sort = TRUE)</code>,
 which is called internally on non-factor/GRP/qG objects). This is
 because <code>BY</code> does not reorder data after the
-split-apply-combine step (unlike <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate</a></code>); data are
+split-apply-combine step (unlike <code><a href="https://rdrr.io/pkg/dplyr/man/mutate.html" class="external-link">dplyr::mutate</a></code>); data are
 simply recombined in the order of the groups. Because of this, in
 general, <code>BY</code> should be used to compute summary statistics
 (unless data are sorted before grouping). The added security makes this
@@ -689,7 +698,7 @@ orders of magnitude slower than <code>%=%</code>)</p></li>
 <div class="section level5">
 <h5 id="high-level-features-1-7-0">High-Level Features<a class="anchor" aria-label="anchor" href="#high-level-features-1-7-0"></a></h5>
 <ul><li><p>Fully fledged <code>fmutate</code> function that provides
-functionality analogous to <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">dplyr::mutate</a></code> (sequential
+functionality analogous to <code><a href="https://rdrr.io/pkg/dplyr/man/mutate.html" class="external-link">dplyr::mutate</a></code> (sequential
 evaluation of arguments, including arbitrary tagged expressions and
 <code>across</code> statements). <code>fmutate</code> is optimized to
 work together with the packages <em>Fast Statistical and Data
@@ -1088,7 +1097,7 @@ frame.</p></li>
 <li><p><code>replace_NA</code> now has a <code>cols</code> argument, so
 we can do <code>replace_NA(data, cols = is.numeric)</code>, to replace
 <code>NA</code>’s in numeric columns. I note that for big numeric data
-<code><a href="https://Rdatatable.gitlab.io/data.table/reference/nafill.html" class="external-link">data.table::setnafill</a></code> is the most efficient
+<code><a href="https://rdrr.io/pkg/data.table/man/nafill.html" class="external-link">data.table::setnafill</a></code> is the most efficient
 solution.</p></li>
 <li><p><code>fhdbetween</code> and <code>fhdwithin</code> have an
 <code>effect</code> argument in <em>plm</em> methods, allowing centering
@@ -1207,7 +1216,7 @@ projecting / partialling out. To remedy the damage caused by the removal
 of <em>lfe</em>, I had to rewrite <code>fhdbetween / fhdwithin</code> to
 take advantage of the demeaning algorithm provided by <em>fixest</em>,
 which has some quite different mechanics. Beforehand, I made some
-significant changes to <code><a href="https://lrberge.github.io/fixest/reference/demean.html" class="external-link">fixest::demean</a></code> itself to make this
+significant changes to <code><a href="https://rdrr.io/pkg/fixest/man/demean.html" class="external-link">fixest::demean</a></code> itself to make this
 integration happen. The CRAN deadline was the 18th of December, and I
 realized too late that I would not make this. A request to CRAN for
 extension was declined, so <em>collapse</em> got archived on the 19th. I
@@ -1509,8 +1518,8 @@ uniqueness, and also allows computing and transforming
 list-columns.</p></li>
 <li><p>Added function <code>ftransformv</code> to facilitate
 transforming selected columns with function - a very efficient
-replacement for <code><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">dplyr::mutate_if</a></code> and
-<code><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">dplyr::mutate_at</a></code>.</p></li>
+replacement for <code><a href="https://rdrr.io/pkg/dplyr/man/mutate_all.html" class="external-link">dplyr::mutate_if</a></code> and
+<code><a href="https://rdrr.io/pkg/dplyr/man/mutate_all.html" class="external-link">dplyr::mutate_at</a></code>.</p></li>
 <li><p><code>frename</code> now allows additional arguments to be passed
 to a renaming function.</p></li>
 </ul></div>
@@ -1554,7 +1563,7 @@ fast row and column reordering.</p></li>
 <li><p>Added <code>frename</code> and <code>setrename</code> for fast
 and flexible renaming (by reference).</p></li>
 <li><p>Added function <code>fungroup</code>, as replacement for
-<code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::ungroup</a></code>, intended for use with
+<code><a href="https://rdrr.io/pkg/dplyr/man/group_by.html" class="external-link">dplyr::ungroup</a></code>, intended for use with
 <code>fgroup_by</code>.</p></li>
 <li><p><code>fmedian</code> now supports weights, computing a decently
 fast (grouped) weighted median based on radix ordering.</p></li>
@@ -1653,7 +1662,7 @@ group size error.</li>
 <p>Added a suite of functions for fast data manipulation:</p>
 <ul><li>
 <code>fselect</code> selects variables from a data frame and is
-equivalent but much faster than <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code>.</li>
+equivalent but much faster than <code><a href="https://rdrr.io/pkg/dplyr/man/select.html" class="external-link">dplyr::select</a></code>.</li>
 <li>
 <code>fsubset</code> is a much faster version of
 <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">base::subset</a></code> to subset vectors, matrices and data.frames.
@@ -1676,7 +1685,7 @@ existing one.</li>
 multi-type data.</li>
 </ul></li>
 <li><p>Added function <code>fgroup_by</code> as a much faster version of
-<code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a></code> based on <em>collapse</em> grouping. It
+<code><a href="https://rdrr.io/pkg/dplyr/man/group_by.html" class="external-link">dplyr::group_by</a></code> based on <em>collapse</em> grouping. It
 attaches a ‘GRP’ object to a data frame, but only works with
 <em>collapse</em>’s fast functions. This allows <em>dplyr</em> like
 manipulations that are fully <em>collapse</em> based and thus

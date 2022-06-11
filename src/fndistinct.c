@@ -1,8 +1,8 @@
-#include "kit.h"
-#include "collapse_c.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif
+#include "kit.h"
+#include "collapse_c.h"
 
 // C-implementations for different data types ----------------------------------
 // TODO: outsource and memset hash table?
