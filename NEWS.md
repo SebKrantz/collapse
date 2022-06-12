@@ -1,8 +1,9 @@
 # collapse 1.8.5
 
-* Fixed minor issues flagged by CRAN
-  - Installation on Solaris failed because omp.h was included after Rinternals.h
-  - Some integer overflows while running tests (causing UBSAN warnings)
+* Fixed some issues flagged by CRAN
+  - Installation on some linux distributions failed because omp.h was included after Rinternals.h
+  - Some signed integer overflows while running tests causing UBSAN warnings. (This happened inside a hash function where overflows are not a problem. I changed to unsigned int to avoid the UBSAN warning.)
+  - Ensured that package passes R CMD Check without suggested packages
   
 # collapse 1.8.4
 
