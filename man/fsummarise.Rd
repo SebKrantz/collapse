@@ -35,6 +35,7 @@ Since v1.7, \code{fsummarise} is fully featured, allowing expressions using func
 
 }
 \examples{
+\donttest{ % No code relying on suggested package
 library(magrittr) # Note: Used because |> is not available on older R versions
 ## Since v1.7, fsummarise supports arbitrary expressions, and expressions
 ## containing fast statistical functions receive vectorized execution:
@@ -77,7 +78,7 @@ fsummarise(mtcars, mean_mpg = fmean(mpg),
 # Using base functions (not a big difference without groups)
 fsummarise(mtcars, mean_mpg = mean(mpg),
                    sd_mpg = sd(mpg))
-\donttest{ % No code relying on suggested package or base Pipe
+
 # Grouped use
 mtcars \%>\% fgroup_by(cyl) \%>\%
   fsummarise(mean_mpg = fmean(mpg),
@@ -106,7 +107,5 @@ mtcars \%>\% group_by(cyl) \%>\%
              sd_mpg = sd(mpg))
 
 }
-
-
 }
 \keyword{manip}

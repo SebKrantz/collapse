@@ -34,7 +34,7 @@ across(.cols = NULL, .fns, ..., .names = NULL,
 \examples{
 # Basic (Weighted) Summaries
 fsummarise(wlddev, across(PCGDP:GINI, fmean, w = POP))
-
+\donttest{ % No code relying on suggested package
 library(magrittr) # Note: Used because |> is not available on older R versions
 wlddev \%>\% fgroup_by(region, income) \%>\%
     fsummarise(across(PCGDP:GINI, fmean, w = POP))
@@ -56,7 +56,7 @@ wlddev \%>\% fgroup_by(region, income) \%>\%
 # Note that the above still detects fmean as a fast function, the names of the list
 # are irrelevant, but the function name must be typed or passed as a character vector,
 # Otherwise functions will be executed by groups e.g. function(x) fmean(x) won't vectorize
-\donttest{
+
 # Or we want to do more advanced things..
 # Such as nesting data frames..
 qTBL(wlddev) \%>\% fgroup_by(region, income) \%>\%
@@ -72,7 +72,7 @@ qTBL(wlddev) \%>\% fgroup_by(region, income) \%>\%
 qTBL(wlddev) \%>\% fgroup_by(region, income) \%>\%
     fsummarise(across(c(PCGDP, LIFEEX, ODA),
       function(x) qDF(pwcor(x), "Variable"), .apply = FALSE))
-}
+
 # Here calculating 1- and 10-year lags and growth rates of these variables
 qTBL(wlddev) \%>\% fgroup_by(country) \%>\%
     fmutate(across(c(PCGDP, LIFEEX, ODA), list(L, G),
@@ -83,7 +83,7 @@ qTBL(wlddev) \%>\% fgroup_by(country) \%>\%
     fmutate(across(c(PCGDP, LIFEEX, ODA), list(L, G), n = c(1, 10),
                    t = year, .names = FALSE, .transpose = FALSE))
 
-
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

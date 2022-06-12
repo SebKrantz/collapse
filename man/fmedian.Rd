@@ -98,7 +98,7 @@ m <- qM(mtcars)
 fmedian(m)
 head(fmedian(m, TRA = "-"))
 fmedian(m, g) # etc..
-%\donttest{ % No code relying on suggested package
+\donttest{ % No code relying on suggested package
 library(dplyr)
 # grouped_df method
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian()
@@ -107,7 +107,7 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian()              # Faster grouping
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian(TRA = "-")     # De-median
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%    # Faster selecting
       fmedian(hp, "-")  # Weighted de-median mpg, using hp as weights
-%}
+}
 }
 \keyword{univar}
 \keyword{manip}

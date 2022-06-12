@@ -223,7 +223,7 @@ mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean()  # Grouped mean using dplyr group
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean() # Faster alternative with collapse grouping
 
 mtcars \%>\% fgroup_by(cyl,vs,am)            # Print method for grouped data frame
-}
+
 library(magrittr)
 ## Adding a column of group sizes.
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsummarise(Sizes = GRPN())
@@ -240,6 +240,6 @@ fgroup_by(GGDC10S, c("Variable", "Country")) \%>\% head(3)
 fgroup_by(GGDC10S, is.character) \%>\% head(3)
 fgroup_by(GGDC10S, Country:Variable, Year) \%>\% head(3)
 fgroup_by(GGDC10S, Country:Region, Var = Variable, Year) \%>\% head(3)
-
+}
 }
 \keyword{manip}

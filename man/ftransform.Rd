@@ -119,7 +119,7 @@ head(ftransformv(airquality, 1:3, fwithin, Month))
 
 # This calls fwithin.data.frame, and only groups one time -> 5x faster!
 head(ftransformv(airquality, 1:3, fwithin, Month, apply = FALSE))
-
+\donttest{ % No code relying on suggested package
 library(magrittr) # Pipe operators
 # This also works for grouped and panel data frames (calling fwithin.grouped_df)
 airquality \%>\% fgroup_by(Month) \%>\%
@@ -184,7 +184,7 @@ rm(airquality)
 ftransform(airquality) <- get_vars(airquality, 1:3) \%>\% fdiff \%>\% flag(0:2)
 head(airquality)
 rm(airquality)
-
+}
 ## fcompute only returns the modified / computed columns
 head(fcompute(airquality, Ozone = -Ozone))
 head(fcompute(airquality, new = -Ozone, Temp = (Temp-32)/1.8))
@@ -195,11 +195,11 @@ head(fcompute(airquality, new = -Ozone, new2 = 1, keep = 1:3))
 
 # If given same name as preserved columns, preserved columns are replaced in order...
 head(fcompute(airquality, Ozone = -Ozone, new = 1, keep = 1:3))
-
+\donttest{ % No code relying on suggested package
 # Same holds for fcomputev
 head(fcomputev(iris, is.numeric, log)) # Same as:
 iris \%>\% get_vars(is.numeric) \%>\% dapply(log) \%>\% head()
-
+}
 head(fcomputev(iris, is.numeric, log, keep = "Species"))   # Adds in front
 head(fcomputev(iris, is.numeric, log, keep = names(iris))) # Preserve order
 

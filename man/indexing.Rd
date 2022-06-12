@@ -149,7 +149,7 @@ POP[30:5000]                  # Subsetting indexed_series
 Dlog(POP[30:5000])            # Log-difference of subset
 psacf(identity(POP[30:5000])) # ACF of subset
 L(Dlog(POP[30:5000], c(1, 10)), -1:1) # Multiple computations on subset
-
+\donttest{ % No code relying on suggested package
 library(magrittr)
 # Fast Statistical Functions don't have dedicated methods
 # Thus for aggregation we need to unindex beforehand ...
@@ -257,7 +257,7 @@ microbenchmark(
   dplyr = fill_gaps(pedestrian) \%>\% group_by_key() \%>\% mutate(Lag_Count = lag(Count)),
   collapse = fmutate(pedi, Lag_Count = flag(Count)), times = 10)
 }
-
+}
 # Indexing Atomic objects ---------------------------------------------------------
 
 ## ts
@@ -271,7 +271,7 @@ findex(iAP)    # See the index
 iAP[-(20:30)]  # Subsetting
 G(iAP[-(20:30)], 12)                # Annual Growth Rate: Correct!
 L(G(iAP[-(20:30)], c(0,1,12)), 0:1) # Lagged level, period and annual growth rates...
-
+\donttest{ % No code relying on suggested package
 ## xts
 library(xts)
 library(zoo) # Needed for as.yearmon() and index() functions
@@ -289,7 +289,7 @@ X["1980/"]
 # Thus a better way is not to index and perform ad-hoc omputations on the xts index
 X <- unindex(X)
 X["1980/"] \%>\% fdiff(t = index(.)) # xts index is internally processed by timeid()
-
+}
 ## Of course you can also index plain vectors / matrices...
 
 }

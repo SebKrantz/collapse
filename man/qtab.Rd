@@ -63,7 +63,7 @@ An array of class 'qtab' that inherits from 'table'. Thus all 'table' methods ap
 qtab(iris$Species)
 with(mtcars, qtab(vs, am))
 qtab(mtcars[.c(vs, am)])
-
+\donttest{ % No code relying on suggested package
 library(magrittr)
 iris \%$\% qtab(Sepal.Length > mean(Sepal.Length), Species)
 iris \%$\% qtab(AMSL = Sepal.Length > mean(Sepal.Length), Species)
@@ -112,7 +112,7 @@ tab \%/=\% (sum(tab)/100)    # Another way (division by reference, preserves int
 tab
 
 rm(tab, wlda15)
-
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

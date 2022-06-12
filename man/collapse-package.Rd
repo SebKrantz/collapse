@@ -254,7 +254,7 @@ head(qDF(mtcarsM))                         # data.frame from matrix columns
 head(mrtl(mtcarsM, TRUE, "data.frame"))    # data.frame from matrix rows, etc..
 head(qDT(mtcarsM, "cars"))                 # Saving row.names when converting matrix to data.table
 head(qDT(mtcars, "cars"))                  # Same use a data.frame
-
+\donttest{ % No code relying on suggested package
 ## Now let's get some real data and see how we can use this power for data manipulation
 library(magrittr)
 head(wlddev) # World Bank World Development Data: 216 countries, 61 years, 5 series (columns 9-13)
@@ -321,15 +321,14 @@ fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars \%>\% head # fgroup_by is fast
 rm(wlddev)                                       # .. but only works with collapse functions
 
 ## Now lets start putting things together
-
 wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:ODA) \%>\%
   fgroup_by(region, income) \%>\% fmean            # Fast aggregation using the mean
-\donttest{
+
 # Same thing using dplyr manipulation verbs
 library(dplyr)
 wlddev \%>\% filter(year > 1990) \%>\% select(region, income, PCGDP:ODA) \%>\%
   group_by(region,income) \%>\% fmean       # This is already a lot faster than summarize_all(mean)
-}
+
 wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:POP) \%>\%
   fgroup_by(region, income) \%>\% fmean(POP)     # Weighted group means
 
@@ -420,12 +419,10 @@ wlddev \%>\% fsubset(year > 1990, country, region, income, PCGDP:ODA) \%>\%
 ## Additional flexibility for data transformation tasks is offerend by tidy transformation operators
 # Within-transformation (centering on overall mean)
 head(W(wlddev, ~ country, cols = 9:12, mean = "overall.mean"))
-\donttest{
 # Partialling out country and year fixed effects
 head(HDW(wlddev, PCGDP + LIFEEX ~ qF(country) + qF(year)))
 # Same, adding ODA as continuous regressor
 head(HDW(wlddev, PCGDP + LIFEEX ~ qF(country) + qF(year) + ODA))
-}
 # Standardizing (scaling and centering) by country
 head(STD(wlddev, ~ country, cols = 9:12))
 # Computing 1 lead and 3 lags of the 4 series
@@ -438,7 +435,7 @@ head(G(wlddev, c(1,10), 1, ~ country, ~year, cols = 9:12))
 # Adding growth rate variables to dataset
 add_vars(wlddev) <- G(wlddev, c(1, 10), 1, ~ country, ~year, cols = 9:12, keep.ids = FALSE)
 get_vars(wlddev, "G1.", regex = TRUE) <- NULL # Deleting again
-\donttest{ % No code relying on suggested package
+
 # These operators can conveniently be used in regression formulas:
 # Using a Mundlak (1978) procedure to estimate the effect of OECD on LIFEEX, controlling for PCGDP
 lm(LIFEEX ~ log(PCGDP) + OECD + B(log(PCGDP), country),
@@ -464,7 +461,6 @@ head(G(wldi$PCGDP))                      # Panel-Growth rates
 head(G(wldi, 1, 1, 9:12))
 
 lm(Dlog(PCGDP) ~ L(Dlog(LIFEEX), 0:3), wldi)   # Panel data regression
-
 rm(wldi)
 }
 # Remove all objects used in this example section

@@ -104,7 +104,7 @@ fmode(wlddev, wlddev$income)             # Grouped statistical modes ..
 m <- qM(mtcars)
 fsum(m)
 fsum(m, g) # ..
-\donttest{
+\donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg,carb) \%>\% fsum()
