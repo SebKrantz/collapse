@@ -1,5 +1,7 @@
 context("collap")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 bsum <- base::sum
 bmean <- base::mean
 

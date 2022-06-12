@@ -1,5 +1,7 @@
 context("fvar and fsd")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 bvar <- stats::var
 bsd <- stats::sd
 bsum <- base::sum

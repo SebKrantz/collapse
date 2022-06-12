@@ -1,5 +1,7 @@
 context("flag / L / F")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(list = ls())
 # TODO: test computations on irregular time series and panels
 set.seed(101)

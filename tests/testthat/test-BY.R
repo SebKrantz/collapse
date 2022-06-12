@@ -1,5 +1,7 @@
 context("BY")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 bmean <- base::mean
 bsd <- stats::sd
 bsum <- base::sum

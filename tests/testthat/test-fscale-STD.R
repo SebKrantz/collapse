@@ -1,5 +1,7 @@
 context("fscale / STD")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 bsum <- base::sum
 
 # TODO: Still a few uneccessary infinity values generated with weights when the sd is null. search replace_Inf to find them.

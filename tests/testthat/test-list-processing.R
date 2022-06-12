@@ -1,5 +1,8 @@
 context("list-processing")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+NCRAN <- Sys.getenv("NCRAN") == "TRUE"
+
 l <- lm(mpg ~cyl +  vs + am, mtcars)
 # str(l, give.attr = FALSE)
 
@@ -39,8 +42,8 @@ test_that("rapply2d works well", {
 
 test_that("get_elem works well", { # Could still add more tests..
 
-  expect_true(is.matrix(get_elem(list(list(list(l))), is.matrix)))
-  expect_false(is.matrix(get_elem(list(list(list(l))), is.matrix, keep.tree = TRUE)))
+  if(NCRAN) expect_true(is.matrix(get_elem(list(list(list(l))), is.matrix)))
+  if(NCRAN) expect_false(is.matrix(get_elem(list(list(list(l))), is.matrix, keep.tree = TRUE)))
 
   l2 <- list(list(2,list("a",1)),list(1,list("b",2)))
   expect_identical(get_elem(l2, is.character), list("a", "b"))
@@ -54,6 +57,7 @@ test_that("get_elem works well", { # Could still add more tests..
 
 })
 
+if(NCRAN)
 test_that("reg_elem and irreg_elem work well", {
   expect_true(is_unlistable(reg_elem(l)))
   expect_false(is_unlistable(irreg_elem(l)))
@@ -64,6 +68,7 @@ test_that("reg_elem and irreg_elem work well", {
 
 })
 
+if(NCRAN)
 test_that("has_elem works well", {
   expect_true(has_elem(l, is.matrix))
   expect_true(has_elem(l, is.data.frame))

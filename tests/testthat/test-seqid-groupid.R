@@ -1,5 +1,7 @@
 context("seqid, groupid")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(list = ls())
 
 x <- c(1:10, 1:10)

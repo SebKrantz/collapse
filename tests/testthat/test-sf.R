@@ -1,6 +1,10 @@
 context("collapse and sf")
 
-if(Sys.getenv("NMAC") == "TRUE") {
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
+expect_equal(1, 1)
+
+if(Sys.getenv("NMAC") == "TRUE" && requireNamespace("sf", quietly = TRUE)) {
 
 library(sf)
 nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)

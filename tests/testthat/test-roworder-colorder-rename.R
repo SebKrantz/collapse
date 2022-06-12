@@ -1,5 +1,7 @@
 context("roworder, colorder, frename")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 test_that("roworder works as intended", {
 
   expect_identical(roworder(mtcars, cyl, -hp), mtcars[with(mtcars, order(cyl, -hp)), ])
@@ -17,7 +19,7 @@ test_that("roworder works as intended", {
 
 })
 
-if(identical(Sys.getenv("NCRAN"), "TRUE")) {
+if(identical(Sys.getenv("NCRAN"), "TRUE") && requireNamespace("magrittr", quietly = TRUE)) {
 
 library(magrittr)
 test_that("colorder works as intended", {
@@ -58,6 +60,7 @@ test_that("frename works as intended", {
   expect_equal(frename(iris, tolower, cols = is.numeric), setNames(iris, c(tolower(names(iris)[1:4]), names(iris)[-(1:4)])))
   expect_equal(frename(iris, paste, "new", sep = "_", cols = 1:2), setNames(iris, c(paste(names(iris)[1:2], "new", sep = "_"), names(iris)[-(1:2)])))
 
+  if(requireNamespace("data.table", quietly = TRUE)) {
   ## Renaming by reference
   iris2 <- data.table::copy(iris)
   setrename(iris2, tolower)
@@ -72,5 +75,6 @@ test_that("frename works as intended", {
   setrename(iris2, paste, "new", sep = "_", cols = 1:2)
   expect_equal(iris2, setNames(iris, c(paste(names(iris)[1:2], "new", sep = "_"), names(iris)[-(1:2)])))
   rm(iris2)
+  }
 
 })

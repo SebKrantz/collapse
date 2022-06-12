@@ -1,5 +1,8 @@
 context("quick-conversion")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
+
 # rm(list = ls())
 set.seed(101)
 x <- rnorm(10)
@@ -97,7 +100,7 @@ test_that("qM keep.attr and class options work as intended", {
   expect_identical(qM(gmtcars, keep.attr = TRUE), `attr<-`(m, "groups", attr(gmtcars, "groups")))
   expect_identical(qM(gmtcars, keep.attr = TRUE, class = "matrix"), `oldClass<-`(`attr<-`(m, "groups", attr(gmtcars, "groups")), "matrix"))
   expect_identical(qM(gmtcars, class = "matrix"), `oldClass<-`(m, "matrix"))
-
+  if(NCRAN) {
   expect_identical(qM(EuStockMarkets, keep.attr = TRUE), EuStockMarkets)
   expect_identical(qM(EuStockMarkets), unclass(`attr<-`(EuStockMarkets, "tsp", NULL)))
   expect_false(identical(qM(EuStockMarkets), EuStockMarkets))
@@ -108,5 +111,5 @@ test_that("qM keep.attr and class options work as intended", {
   expect_identical(qM(tsl), unclass(`attr<-`(do.call(cbind, tsl), "tsp", NULL)))
   expect_false(identical(qM(tsl), do.call(cbind, tsl)))
   expect_false(identical(qM(tsl, keep.attr = TRUE, class = "matrix"), do.call(cbind, tsl)))
-
+  }
 })

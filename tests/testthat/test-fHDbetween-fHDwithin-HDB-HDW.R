@@ -1,5 +1,6 @@
 context("fhdbetween / HDB and fhdwithin / HDW")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
 # rm(list = ls())
 
 # TODO: Sort out why certain tests fail...
@@ -124,6 +125,7 @@ if(identical(Sys.getenv("LOCAL"), "TRUE"))
 
 tol <- if(identical(Sys.getenv("LOCAL"), "TRUE")) 1e-5 else 1e-4
 
+if(requireNamespace("fixest", quietly = TRUE)) {
 demean <- fixest::demean # eval(parse(text = paste0("fixest", ":", ":", "demean")))
 
 # lfe is back on CRAN: This now also seems to produce a warning !!!!!!!
@@ -194,7 +196,7 @@ test_that("fhdwithin with two factors performs like demean", {
 
 
 })
-
+}
 x2 <- 3 * x + rnorm(100)
 
 test_that("fhdbetween with only continuous variables performs like basefitted (defined above)", {
@@ -226,6 +228,8 @@ test_that("fhdwithin with only continuous variables performs like baseresid (def
   expect_equal(fhdwithin(mtcNA, mtcars, fill = TRUE, lm.method = "qr"), fhdwithin(mtcNA, m, fill = TRUE, lm.method = "qr"), tolerance = tol)
   expect_equal(fhdwithin(mtcNA, mtcars, variable.wise = TRUE), fhdwithin(mtcNA, m, variable.wise = TRUE), tolerance = tol)
 })
+
+if(requireNamespace("fixest", quietly = TRUE)) {
 
 data <- wlddev
 data$year <- qF(data$year)
@@ -324,6 +328,8 @@ test_that("fhdwithin with multiple variables performs like lm", {
   expect_equal(fhdwithin(data[5:6], data[7], ww, variable.wise = TRUE), fhdwithin(data[5:6], data$ODA, ww, variable.wise = TRUE), tolerance = tol)
 
 })
+
+}
 
 test_that("fhdbetween produces errors for wrong input", {
   expect_visible(fhdbetween(1:2,1:2))

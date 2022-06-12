@@ -1,5 +1,7 @@
 context("fcumsum")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(liso = ls())
 set.seed(101)
 x <- abs(1000*rnorm(100))
@@ -40,6 +42,8 @@ t2duo = seq_along(od)[od]
 od = order(od)
 
 bcumsum <- base::cumsum
+
+if(requireNamespace("data.table", quietly = TRUE)) {
 
 basecumsum <- function(x, na.rm = TRUE, fill = FALSE) {
   ax <- attributes(x)
@@ -94,6 +98,8 @@ test_that("fcumsum performs like basecumsum", {
   expect_equal(fcumsum(num_vars(dataNA), g, na.rm = FALSE), BY(num_vars(dataNA), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
   expect_equal(fcumsum(num_vars(dataNA), g, fill = TRUE), BY(num_vars(dataNA), g, basecumsum, fill = TRUE, use.g.names = FALSE))
 })
+
+}
 
 test_that("fcumsum correctly handles unordered time-series and panel-series computations", {
   # With ordering, no groups: 1
@@ -209,6 +215,8 @@ storage.mode(mNAuo) <- "integer"
 settransformv(datauo, is.numeric, as.integer)
 settransformv(dataNAuo, is.numeric, as.integer)
 
+if(requireNamespace("data.table", quietly = TRUE)) {
+
 test_that("fcumsum with integers performs like basecumsum", {
   # No groups, no ordering
   expect_identical(fcumsum(x), basecumsum(x))
@@ -249,6 +257,8 @@ test_that("fcumsum with integers performs like basecumsum", {
   expect_identical(fcumsum(num_vars(dataNA), g, na.rm = FALSE), BY(num_vars(dataNA), g, basecumsum, na.rm = FALSE, use.g.names = FALSE))
   expect_identical(fcumsum(num_vars(dataNA), g, fill = TRUE), BY(num_vars(dataNA), g, basecumsum, fill = TRUE, use.g.names = FALSE))
 })
+
+}
 
 test_that("fcumsum with integers correctly handles unordered time-series and panel-series computations", {
   # With ordering, no groups: 1
