@@ -1,6 +1,11 @@
 context("radixorder, GRP, qF, qG")
 
+# print(str(wlddev))
 # rm(list = ls())
+
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
+NCRAN <- Sys.getenv("NCRAN") == "TRUE"
 set.seed(101)
 mtcNA <- na_insert(mtcars)
 wlddev2 <- slt(wlddev, -date)
@@ -212,8 +217,8 @@ test_that("GRP <> factor conversions run seamlessly", {
   expect_identical(unclass(qF(intNA, na.exclude = FALSE)), unclass(as_factor_GRP(GRP(intNA))))
   expect_identical(unclass(qF(intNA, na.exclude = FALSE)), unclass(as_factor_GRP(GRP(qF(intNA)))))
   dblNA <- as.double(intNA)
-  expect_false(identical(unclass(qF(dblNA)), unclass(as_factor_GRP(GRP(dblNA))))) # qF with na.exclude = TRUE retains double NA's...
-  expect_false(identical(unclass(qF(dblNA)), unclass(as_factor_GRP(GRP(qF(dblNA))))))
+  if(NCRAN) expect_false(unattrib(identical(unclass(qF(dblNA)), unclass(as_factor_GRP(GRP(dblNA)))))) # qF with na.exclude = TRUE retains double NA's...
+  if(NCRAN) expect_false(unattrib(identical(unclass(qF(dblNA)), unclass(as_factor_GRP(GRP(qF(dblNA)))))))
   expect_identical(qF(dblNA, na.exclude = FALSE), as_factor_GRP(GRP(dblNA)))
   expect_identical(qF(dblNA, na.exclude = FALSE), as_factor_GRP(GRP(qF(dblNA))))
   expect_identical(qF(dblNA, na.exclude = FALSE), as_factor_GRP(GRP(qF(dblNA, na.exclude = FALSE))))

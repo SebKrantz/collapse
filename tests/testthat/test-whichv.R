@@ -1,5 +1,7 @@
 context("anyv, allv, whichv, setv, copyv etc.")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # d <- replace_NA(wlddev, cols = 9:13)
 
 test_that("whichv works well", {
@@ -26,9 +28,13 @@ test_that("anyv, allv and whichv work properly", {
     expect_identical(all(vecNA), allNA(vec))
     expect_identical(any(vecNA), anyNA(vec))
   }
+  if(identical(Sys.getenv("NCRAN"), "TRUE")) {
   expect_true(allv(rep(0.0004, 1000), 0.0004))
   expect_false(allv(rep(0.0004, 1000), 0.0005))
+  }
 })
+
+if(requireNamespace("data.table", quietly = TRUE)) {
 
 wldcopy <- data.table::copy(wlddev)
 mtccopy <- data.table::copy(mtcars)
@@ -91,3 +97,5 @@ test_that("setv and copyv work properly", {
 
 wlddev <- wldcopy
 mtcars <- mtccopy
+
+}

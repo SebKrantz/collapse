@@ -1,5 +1,7 @@
 context("setop")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 d <- mtcars$mpg
 dc <- copyv(d, 0, 0)
 i <- as.integer(mtcars$cyl)
@@ -104,13 +106,14 @@ test_that("setop works in scalar-vector-matrix operations", {
   for(o in ops) setop(im, o, ir, rowwise = TRUE); expect_identical(im, imc)
   for(o in ops) setop(dm, o, ir, rowwise = TRUE); expect_equal(dm, dmc)
   # Comparison with TRA (only for doubles)
+  if(requireNamespace("data.table", quietly = TRUE)) {
   for(o in ops) {
     expect_equal(setop(dm, o, dr, rowwise = TRUE), TRA(dmc, dr, o))
     dm <- data.table::copy(dmc)
     expect_equal(setop(dm, o, ir, rowwise = TRUE), TRA(dmc, ir, o))
     dm <- data.table::copy(dmc)
   }
-
+  }
 })
 
 test_that("setop works in operations involving data frames", {
@@ -167,11 +170,12 @@ test_that("setop works in operations involving data frames", {
   for(o in ops) setop(idf, o, ir, rowwise = TRUE); expect_identical(idf, idfc)
   for(o in ops) setop(ddf, o, ir, rowwise = TRUE); expect_equal(ddf, ddfc)
   # Comparison with TRA (only for doubles)
+  if(requireNamespace("data.table", quietly = TRUE)) {
   for(o in ops) {
     expect_equal(setop(ddf, o, dr, rowwise = TRUE), TRA(ddfc, dr, o))
     ddf <- data.table::copy(ddfc)
     expect_equal(setop(ddf, o, ir, rowwise = TRUE), TRA(ddfc, ir, o))
     ddf <- data.table::copy(ddfc)
   }
-
+  }
 })

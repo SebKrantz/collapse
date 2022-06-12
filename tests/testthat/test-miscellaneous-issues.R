@@ -1,5 +1,7 @@
 context("miscellaneous issues")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(list = ls())
 
 options(warn = -1)
@@ -121,7 +123,7 @@ test_that("Using a factor with unused levels does not pose a problem to statisti
     }
 })
 
-
+if(requireNamespace("magrittr", quietly = TRUE)) {
 library(magrittr)
 test_that("Testing grouped_df methods", {
   gdf <- wlddev %>% fsubset(year > 1990, region, income, PCGDP:ODA) %>% fgroup_by(region, income)
@@ -209,7 +211,7 @@ test_that("Testing grouped_df methods", {
   expect_visible(gdf %>% fgrowth(-2:2, 1:2, logdiff = TRUE, scale = 1))
   expect_equal(BY(gby(iris,Species), sum), BY(nv(gby(iris,Species)), sum))
 })
-
+}
 
 # Also better not run on CRAN...
 test_that("0-length vectors give expected output", {

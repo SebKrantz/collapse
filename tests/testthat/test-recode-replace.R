@@ -1,5 +1,7 @@
 context("recode, replace")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 gmtc <- fgroup_by(mtcars, cyl)
 
 test_that("replace_NA and replace_Inf work well", {

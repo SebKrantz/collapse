@@ -1,5 +1,7 @@
 context("fmin and fmax")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 bmin <- base::min
 bmax <- base::max
 

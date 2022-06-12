@@ -1,7 +1,8 @@
 context("indexing")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 wldi <- iby(wlddev, country, year)
-library(magrittr)
 
 test_that("unindexing and reindexing work well", {
   expect_equal(wlddev, unindex(wldi))
@@ -17,6 +18,9 @@ test_that("unindexing and reindexing work well", {
   expect_equal(wldi$region, reindex(wldi$region, ix(wldi$region)))
 
 })
+
+if(requireNamespace("magrittr", quietly = TRUE)) {
+library(magrittr)
 
 test_that("subsetting works well", {
 
@@ -39,6 +43,7 @@ test_that("subsetting works well", {
 
 })
 
+if(requireNamespace("data.table", quietly = TRUE)) {
 library(data.table)
 wlddt <- qDT(wlddev)
 wldidt <- wlddt %>% findex_by(iso3c, year)
@@ -70,7 +75,8 @@ test_that("indexed data.table works well", {
                unclass(wlddt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := lapply(slt(.SD, PCGDP, LIFEEX), G, 5, 1, iso3c, year, power = 1/5)]))
 
 })
-
+}
+}
 
 test_that("data selection by type works well", {
   for (FUN in list(num_vars, cat_vars, char_vars, logi_vars, fact_vars, date_vars))

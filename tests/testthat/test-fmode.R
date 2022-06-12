@@ -1,5 +1,7 @@
 context("fmode")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(list = ls())
 set.seed(101)
 x <- round(abs(10*rnorm(100)))

@@ -1,5 +1,7 @@
 context("fmean")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 bmean <- base::mean
 bsum <- base::sum
 

@@ -1,12 +1,16 @@
 context("collapse and data.table integration")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 bmean <- base::mean
 
 # TODO: Check memory allocation, particularly where names<- and attr<- are used.
 # Also check attribute handling helpers with atomic and S4 objects !!
+expect_equal(1, 1)
+
+if(requireNamespace("data.table", quietly = TRUE) && requireNamespace("magrittr", quietly = TRUE)) {
 
 options(warn = -1L)
-
 library(data.table)
 library(magrittr)
 mtcDT <- qDT(roworderv(mtcars))
@@ -489,4 +493,6 @@ test_that("creating columns and printing works after passing a data.table throug
   }
 
 })
+
+}
 

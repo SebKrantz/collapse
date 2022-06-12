@@ -97,14 +97,14 @@ fsum(m)
 fsum(m, TRA = "\%")
 fsum(m, g)
 fsum(m, g, TRA = "\%")
-%\donttest{ % No code relying on suggested package
+% \donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent and faster !!
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fsum()
-%}
+% }
 }
 }
 \section{Benchmark}{\preformatted{

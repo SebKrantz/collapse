@@ -1,5 +1,7 @@
 context("fsubset and ftransform")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(list = ls())
 set.seed(101)
 v <- na_insert(mtcars$mpg)

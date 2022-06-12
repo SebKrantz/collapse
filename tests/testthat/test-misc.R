@@ -1,5 +1,7 @@
 context("Misc")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(list = ls())
 set.seed(101)
 m <- na_insert(qM(mtcars))
@@ -304,7 +306,7 @@ test_that("operator methods column selection since v1.8.1 works as intended", {
     expect_equal(names(op(wlddev, wlddev$iso3c, stub = FALSE)), nnvw)
     expect_equal(names(op(wlddev, ~ iso3c, stub = FALSE)), nnvw)
     expect_equal(names(op(wlddev, ~ year, stub = FALSE)), nnvw[-1])
-    expect_equal(names(op(wldi, stub = FALSE)), nnvw[-1])
+    if(identical(Sys.getenv("NCRAN"), "TRUE")) expect_equal(names(op(wldi, stub = FALSE)), nnvw[-1])
   }
 })
 options(warn = 1)

@@ -1,5 +1,7 @@
 context("varying")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(list = ls())
 
 if(identical(Sys.getenv("NCRAN"), "TRUE")) pwlddev <- eval(parse(text = paste0("plm", ":", ":", "pdata.frame(wlddev, index = c('iso3c', 'year'))")))
@@ -19,11 +21,11 @@ test_that("vector, matrix and data.frame methods work as intended", {
 
   expect_true(all_identical(dapply(wlddev, varying), varying(wlddev), varying(wdm)))
   expect_true(all_identical(dapply(wlddev, varying, drop = FALSE), varying(wlddev, drop = FALSE), qDF(varying(wdm, drop = FALSE))))
-
+  if(identical(Sys.getenv("NCRAN"), "TRUE")) {
   expect_equal(dapply(unattrib(wlddev), varying, wlddev$iso3c), c(FALSE,FALSE,TRUE,TRUE,TRUE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE))
   expect_true(all_identical(dapply(wlddev, varying, wlddev$iso3c), varying(wlddev, wlddev$iso3c),  varying(wdm, wlddev$iso3c)))
   expect_true(all_identical(dapply(wlddev, varying, wlddev$iso3c, drop = FALSE), varying(wlddev, wlddev$iso3c, drop = FALSE),  qDF(varying(wdm, wlddev$iso3c, drop = FALSE))))
-
+  }
   expect_true(all_identical(qM(dapply(wlddev, varying, wlddev$iso3c, any_group = FALSE)),
                             qM(varying(wlddev,  wlddev$iso3c, any_group = FALSE)),
                             varying(wdm,  wlddev$iso3c, any_group = FALSE)))
@@ -41,10 +43,11 @@ test_that("vector, matrix and data.frame methods work as intended", {
                             varying(wdm,  wlddev$iso3c, any_group = FALSE, use.g.names = FALSE, drop = FALSE)))
 
   # With grouping objects...
+  if(identical(Sys.getenv("NCRAN"), "TRUE")) {
   expect_equal(dapply(unattrib(wlddev), varying, g), c(TRUE,TRUE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE,TRUE))
   expect_true(all_identical(dapply(wlddev, varying, g), varying(wlddev, g),  varying(wdm, g)))
   expect_true(all_identical(dapply(wlddev, varying, g, drop = FALSE), varying(wlddev, g, drop = FALSE),  qDF(varying(wdm, g, drop = FALSE))))
-
+  }
   expect_true(all_identical(qM(dapply(wlddev, varying, g, any_group = FALSE)),
                             qM(varying(wlddev,  g, any_group = FALSE)),
                             varying(wdm,  g, any_group = FALSE)))

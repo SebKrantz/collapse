@@ -1,5 +1,9 @@
 context("fsummarise and fmutate")
 
+if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+expect_equal(1, 1)
+
+if(requireNamespace("magrittr", quietly = TRUE) && requireNamespace("dplyr", quietly = TRUE)) {
 library(magrittr)
 
 bmean <- base::mean
@@ -286,13 +290,14 @@ test_that("fsummarise miscellaneous things", {
       unlist2d("cyl", "var") %>% tfm(cyl = as.numeric(cyl))
   )
 
+  if(requireNamespace("data.table", quietly = TRUE)) {
   lmest <- function(x) list(Mods = list(lm(disp~., x)))
   expect_equal(
     qDT(mtcars) %>% gby(cyl) %>% smr(acr(disp:hp, lmest, .apply = FALSE)),
     qDT(mtcars) %>% rsplit(disp + hp ~ cyl) %>% lapply(lmest) %>% data.table::rbindlist(idcol = "cyl") %>%
       tfm(cyl = as.numeric(cyl))
   )
-
+  }
 })
 
 if(NCRAN) {
@@ -463,5 +468,7 @@ if(FALSE) {
   # TODO: Test all potential issues with environemtns etc. See if there are smarter ways to
   # incorporate internal functions, data and objects in the global environment.
 
+
+}
 
 }
