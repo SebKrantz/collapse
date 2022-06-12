@@ -647,7 +647,7 @@ SEXP funiqueC(SEXP x) {
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
   int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   int *restrict st = (int*)R_alloc((tx == LGLSXP || tx == 1000) ? (int)M : n, sizeof(int));
-  int g = 0;
+  int g = 0, nprotect = 0;
   size_t id = 0;
   SEXP res = R_NilValue;
   switch (tx) {
@@ -674,7 +674,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    PROTECT(res = allocVector(tx == LGLSXP ? LGLSXP : INTSXP, g));
+    PROTECT(res = allocVector(tx == LGLSXP ? LGLSXP : INTSXP, g)); ++nprotect;
     int *restrict pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
@@ -707,7 +707,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    PROTECT(res = allocVector(INTSXP, g));
+    PROTECT(res = allocVector(INTSXP, g)); ++nprotect;
     int *restrict pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
@@ -727,7 +727,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    PROTECT(res = allocVector(REALSXP, g));
+    PROTECT(res = allocVector(REALSXP, g)); ++nprotect;
     double *restrict pres = REAL(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
@@ -758,7 +758,7 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    PROTECT(res = allocVector(CPLXSXP, g));
+    PROTECT(res = allocVector(CPLXSXP, g)); ++nprotect;
     Rcomplex *restrict pres = COMPLEX(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
@@ -776,13 +776,13 @@ SEXP funiqueC(SEXP x) {
     }
     Free(h);
     if(g == n) return x;
-    PROTECT(res = allocVector(STRSXP, g));
+    PROTECT(res = allocVector(STRSXP, g)); ++nprotect;
     SEXP *restrict pres = STRING_PTR(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   }
   copyMostAttrib(x, res);
-  UNPROTECT(1);
+  if(g != n) UNPROTECT(nprotect); // The condition and nprotect variable is not necessary here, just an attempt to appease rchk
   return res;
 }
 
