@@ -15,7 +15,7 @@
 // 10- Subtract Modulus
 
 // int(x * (1/y)) -> This gave the UBSAN error if NaN !!!
-inline double modulus_impl(double x, double y) {
+static inline double modulus_impl(double x, double y) {
   double z = x * (1/y);
   return (z == z) ? x - (int)(z) * y : z; // faster than x - (int)(x/y) * y;
 }
@@ -29,7 +29,7 @@ inline double modulus_impl(double x, double y) {
 // }
 
 // int(x * (1/y)) -> This gave the UBSAN error if NaN !!!
-inline double remainder_impl(double x, double y) {
+static inline double remainder_impl(double x, double y) {
   double z = x * (1/y);
   return (z == z) ? (int)(z) * y : z; //   (int)(x * (1/y)) * y; <- This would be enough, but doesn't keep missing values in x!
 }
