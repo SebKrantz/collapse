@@ -36,6 +36,8 @@ A factor or '\code{\link{qG}}' object, optionally with additional attributes att
 \code{\link{seqid}}, \link[=indexing]{Indexing}, \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
+oldopts <- options(max.print = 30)
+
 # A normal use case
 timeid(wlddev$decade)
 timeid(wlddev$decade, factor = TRUE)
@@ -51,10 +53,14 @@ diff(attr(tid, "unique"))
 
 # So in this case simple factor generation gives a better result
 qF(wlddev$date, ordered = TRUE, na.exclude = FALSE)
-
+\donttest{
 # The best way to deal with this data would be to convert it
 # to zoo::yearmon and then use timeid:
 timeid(zoo::as.yearmon(wlddev$date), factor = TRUE, extra = TRUE)
+}
+
+options(oldopts)
+rm(oldopts, tid)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

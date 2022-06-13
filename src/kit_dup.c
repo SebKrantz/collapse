@@ -41,7 +41,8 @@ SEXP dupVecIndex(SEXP x) {
             else x_min = x_tmp;
           }
         }
-        if((unsigned)(x_max - x_min) > INT_MAX) goto bigint; // To avoid overflows (UBSAN errors)
+        double x_diff = (double)x_max - x_min;
+        if(x_diff >= INT_MAX || x_diff <= INT_MIN) goto bigint; // To avoid overflows (UBSAN errors)
         x_max -= x_min;
         if(++x_max > 3 * n) goto bigint;
         M = (size_t)(x_max + 2);
