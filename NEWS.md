@@ -1,6 +1,12 @@
+# collapse 1.8.6
+
+* Fixed further minor issues: 
+  - inline function 'mymod' in TRA.c seems to conflict with some C-level macro on some MacOS versions (#275) and was renamed to 'modulus_impl'
+  - timeid.Rd now uses *zoo* package conditionally and limits size of printout
+
 # collapse 1.8.5
 
-* Fixed some issues flagged by CRAN
+* Fixed some issues flagged by CRAN:
   - Installation on some linux distributions failed because omp.h was included after Rinternals.h
   - Some signed integer overflows while running tests caused UBSAN warnings. (This happened inside a hash function where overflows are not a problem. I changed to unsigned int to avoid the UBSAN warning.)
   - Ensured that package passes R CMD Check without suggested packages

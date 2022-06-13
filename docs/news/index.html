@@ -62,8 +62,18 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.8.6" id="collapse-186">collapse 1.8.6<a class="anchor" aria-label="anchor" href="#collapse-186"></a></h2>
+<ul><li>Fixed further minor issues:
+<ul><li>inline function ‘mymod’ in TRA.c seems to conflict with some C-level
+macro on some MacOS versions (<a href="https://github.com/SebKrantz/collapse/issues/275" class="external-link">#275</a>) and was renamed to
+‘modulus_impl’</li>
+<li>timeid.Rd now uses <em>zoo</em> package conditionally and limits
+size of printout</li>
+</ul></li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.5" id="collapse-185">collapse 1.8.5<a class="anchor" aria-label="anchor" href="#collapse-185"></a></h2>
-<ul><li>Fixed some issues flagged by CRAN
+<ul><li>Fixed some issues flagged by CRAN:
 <ul><li>Installation on some linux distributions failed because omp.h was
 included after Rinternals.h</li>
 <li>Some signed integer overflows while running tests caused UBSAN
