@@ -15,21 +15,21 @@
 // 10- Subtract Modulus
 
 // int(x * (1/y)) -> This gave the UBSAN error if NaN !!!
-inline double mymod(double x, double y) {
+inline double modulus_impl(double x, double y) {
   double z = x * (1/y);
-  return (z == z) ? x - (int)(z) * y : z; // faster than x - (int)(x/y) * y; // also C-style conversions seem to be faster ?
+  return (z == z) ? x - (int)(z) * y : z; // faster than x - (int)(x/y) * y;
 }
 
-// #define mymod(x, y) (x - ((int)(x/y) * y)) // Macro: not faster !
+// #define modulus_impl(x, y) (x - ((int)(x/y) * y)) // Macro: not faster !
 
 // template<typename T, typename U>
-// constexpr double mymod (T x, U mod)
+// constexpr double modulus_impl (T x, U mod)
 // {
 //   return !mod ? x : x - mod * static_cast<long long>(x / mod);
 // }
 
 // int(x * (1/y)) -> This gave the UBSAN error if NaN !!!
-inline double myremain(double x, double y) {
+inline double remainder_impl(double x, double y) {
   double z = x * (1/y);
   return (z == z) ? (int)(z) * y : z; //   (int)(x * (1/y)) * y; <- This would be enough, but doesn't keep missing values in x!
 }
@@ -469,10 +469,10 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
         for(int i = 0; i != l; ++i) pout[i] = px[i] * AGx;                             \
         break;                                                                         \
       case 9:                                                                          \
-        for(int i = 0; i != l; ++i) pout[i] = mymod(px[i], AGx);                       \
+        for(int i = 0; i != l; ++i) pout[i] = modulus_impl(px[i], AGx);                       \
         break;                                                                         \
       case 10:                                                                         \
-        for(int i = 0; i != l; ++i) pout[i] = myremain(px[i], AGx);                    \
+        for(int i = 0; i != l; ++i) pout[i] = remainder_impl(px[i], AGx);                    \
         break;                                                                         \
       default: error("Unknown Transformation");                                        \
       }
@@ -541,10 +541,10 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
           for(int i = 0; i != l; ++i) pout[i] = px[i] * pAG[pg[i]];           \
           break;                                                              \
         case 9:                                                               \
-          for(int i = 0; i != l; ++i) pout[i] = mymod(px[i], pAG[pg[i]]);     \
+          for(int i = 0; i != l; ++i) pout[i] = modulus_impl(px[i], pAG[pg[i]]);     \
           break;                                                              \
         case 10:                                                              \
-          for(int i = 0; i != l; ++i) pout[i] = myremain(px[i], pAG[pg[i]]);  \
+          for(int i = 0; i != l; ++i) pout[i] = remainder_impl(px[i], pAG[pg[i]]);  \
           break;                                                              \
         default: error("Unknown Transformation");                             \
       }
@@ -1234,13 +1234,13 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row, e = s + row;                                              \
         double AGj = pAG[j];                                                       \
-        for(int i = s; i != e; ++i) pout[i] = mymod(px[i], AGj);                   \
+        for(int i = s; i != e; ++i) pout[i] = modulus_impl(px[i], AGj);                   \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
-        for(int i = 0; i != row; ++i) pout[i + s] = mymod(px[i + s], AG[pg[i]]);   \
+        for(int i = 0; i != row; ++i) pout[i + s] = modulus_impl(px[i + s], AG[pg[i]]);   \
       }                                                                            \
     }                                                                              \
     break;                                                                         \
@@ -1250,13 +1250,13 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row, e = s + row;                                              \
         double AGj = pAG[j];                                                       \
-        for(int i = s; i != e; ++i) pout[i] = myremain(px[i], AGj);                \
+        for(int i = s; i != e; ++i) pout[i] = remainder_impl(px[i], AGj);                \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
-        for(int i = 0; i != row; ++i) pout[i + s] = myremain(px[i + s], AG[pg[i]]);\
+        for(int i = 0; i != row; ++i) pout[i + s] = remainder_impl(px[i + s], AG[pg[i]]);\
       }                                                                            \
     }                                                                              \
     break;                                                                         \
