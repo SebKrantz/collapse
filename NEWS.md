@@ -1,7 +1,7 @@
 # collapse 1.8.6
 
 * Fixed further minor issues: 
-  - inline function 'mymod' in TRA.c seems to conflict with some C-level macro on some MacOS versions (#275) and was renamed to 'modulus_impl'
+  - some inline functions in TRA.c needed to be declared 'static' to be local in scope (#275)
   - timeid.Rd now uses *zoo* package conditionally and limits size of printout
 
 # collapse 1.8.5
