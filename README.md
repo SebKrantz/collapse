@@ -97,6 +97,7 @@ In addition, *collapse* provides 5 vignettes (available online):
 
 ### Presentation at [useR 2022](https://user2022.r-project.org)
 
+[**Video Recording**](<https://www.youtube.com/watch?v=OwWT1-dSEts>) | 
 [**Slides**](<https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>)
 
 ## Example Usage
