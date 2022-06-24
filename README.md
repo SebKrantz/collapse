@@ -95,6 +95,10 @@ In addition, *collapse* provides 5 vignettes (available online):
 
 <a href="https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/pngs/collapse.png" width="330" height="227"/></a> <!-- 294 -->
 
+### Presentation at [useR 2022](https://user2022.r-project.org)
+
+[**Slides**](<https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>)
+
 ## Example Usage
 This provides a simple set of examples introducing some important features of *collapse*. It should be easy to follow for readers familiar with R. 
 
