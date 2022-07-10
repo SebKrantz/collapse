@@ -35,6 +35,8 @@ na20 <- function(x) {
   x
 }
 
+condan20 <- function(x, cond) if(cond) dapply(x, na20) else x
+
 wsum <- function(x, w, na.rm = FALSE) {
   if(na.rm) {
     cc <- complete.cases(x, w)
@@ -60,8 +62,12 @@ for (nth in 1:2) {
     } else break
   }
 
+for(fill_arg in 1:2) {
+
+ if(fill_arg == 2L) fsum <- function(x, ...) collapse::fsum(x, ..., fill = TRUE)
+
 test_that("fsum performs like base::sum and base::colSums", {
-  expect_equal(fsum(NA), bsum(NA))
+  expect_equal(fsum(NA), if(fill_arg == 1L) NA_real_ else 0)
   expect_equal(fsum(NA, na.rm = FALSE), bsum(NA))
   expect_equal(fsum(1), bsum(1, na.rm = TRUE))
   expect_identical(fsum(1:3), bsum(1:3, na.rm = TRUE))
@@ -98,7 +104,7 @@ test_that("fsum performs like base::sum and base::colSums", {
 
 test_that("fsum with weights performs like wsum (defined above)", {
   # complete weights
-  expect_equal(fsum(NA, w = 1), wsum(NA, 1))
+  expect_equal(fsum(NA, w = 1), if(fill_arg == 1L) NA_real_ else 0)
   expect_equal(fsum(NA, w = 1, na.rm = FALSE), wsum(NA, 1))
   expect_equal(fsum(1, w = 1), wsum(1, w = 1))
   expect_equal(fsum(1:3, w = 1:3), wsum(1:3, 1:3))
@@ -126,15 +132,15 @@ test_that("fsum with weights performs like wsum (defined above)", {
   expect_equal(fsum(m, g, wdat), wBY(m, gf, wsum, wdat))
   expect_equal(fsum(m, g, wdat, na.rm = FALSE), wBY(m, gf, wsum, wdat))
   expect_equal(fsum(mNA, g, wdat, na.rm = FALSE),  wBY(mNA, gf, wsum, wdat))
-  expect_equal(fsum(mNA, g, wdat), wBY(mNA, gf, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(mNA, g, wdat), condan20(wBY(mNA, gf, wsum, wdat, na.rm = TRUE), fill_arg == 2L))
   expect_equal(fsum(mtcars, g, wdat), wBY(mtcars, gf, wsum, wdat))
   expect_equal(fsum(mtcars, g, wdat, na.rm = FALSE), wBY(mtcars, gf, wsum, wdat))
   expect_equal(fsum(mtcNA, g, wdat, na.rm = FALSE), wBY(mtcNA, gf, wsum, wdat))
-  expect_equal(fsum(mtcNA, g, wdat), wBY(mtcNA, gf, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(mtcNA, g, wdat), condan20(wBY(mtcNA, gf, wsum, wdat, na.rm = TRUE), fill_arg == 2L))
   # missing weights
-  expect_equal(fsum(NA, w = NA), wsum(NA, NA))
+  expect_equal(fsum(NA, w = NA), if(fill_arg == 1L) NA_real_ else 0)
   expect_equal(fsum(NA, w = NA, na.rm = FALSE), wsum(NA, NA))
-  expect_equal(fsum(1, w = NA), wsum(1, w = NA))
+  expect_equal(fsum(1, w = NA), if(fill_arg == 1L) NA_real_ else 0)
   expect_equal(fsum(1:3, w = c(NA,1:2)), wsum(1:3, c(NA,1:2), na.rm = TRUE))
   expect_equal(fsum(-1:1, w = c(NA,1:2)), wsum(-1:1, c(NA,1:2), na.rm = TRUE))
   expect_equal(fsum(1, w = NA, na.rm = FALSE), wsum(1, NA))
@@ -160,11 +166,11 @@ test_that("fsum with weights performs like wsum (defined above)", {
   expect_equal(fsum(m, g, wdatNA), wBY(m, gf, wsum, wdatNA, na.rm = TRUE))
   expect_equal(fsum(m, g, wdatNA, na.rm = FALSE), wBY(m, gf, wsum, wdatNA))
   expect_equal(fsum(mNA, g, wdatNA, na.rm = FALSE),  wBY(mNA, gf, wsum, wdatNA))
-  expect_equal(fsum(mNA, g, wdatNA), wBY(mNA, gf, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(mNA, g, wdatNA), condan20(wBY(mNA, gf, wsum, wdatNA, na.rm = TRUE), fill_arg == 2L))
   expect_equal(fsum(mtcars, g, wdatNA), wBY(mtcars, gf, wsum, wdatNA, na.rm = TRUE))
   expect_equal(fsum(mtcars, g, wdatNA, na.rm = FALSE), wBY(mtcars, gf, wsum, wdatNA))
   expect_equal(fsum(mtcNA, g, wdatNA, na.rm = FALSE), wBY(mtcNA, gf, wsum, wdatNA))
-  expect_equal(fsum(mtcNA, g, wdatNA), wBY(mtcNA, gf, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(mtcNA, g, wdatNA), condan20(wBY(mtcNA, gf, wsum, wdatNA, na.rm = TRUE), fill_arg == 2L))
 })
 
 test_that("fsum performs numerically stable", {
@@ -258,8 +264,8 @@ test_that("fsum with missing weights performs numerically stable", {
 })
 
 test_that("fsum handles special values in the right way", {
-  expect_equal(fsum(NA), NA_real_)
-  expect_equal(fsum(NaN), NaN)
+  expect_equal(fsum(NA), if(fill_arg == 1L) NA_real_ else 0)
+  expect_equal(fsum(NaN), if(fill_arg == 1L) NaN else 0)
   expect_equal(fsum(Inf), Inf)
   expect_equal(fsum(-Inf), -Inf)
   expect_equal(fsum(TRUE), 1)
@@ -283,8 +289,8 @@ test_that("fsum handles special values in the right way", {
 })
 
 test_that("fsum with weights handles special values in the right way", {
-  expect_equal(fsum(NA, w = 1), NA_real_)
-  expect_equal(fsum(NaN, w = 1), NaN)
+  expect_equal(fsum(NA, w = 1), if(fill_arg == 1L) NA_real_ else 0)
+  expect_equal(fsum(NaN, w = 1), if(fill_arg == 1L) NaN else 0)
   expect_equal(fsum(Inf, w = 1), Inf)
   expect_equal(fsum(-Inf, w = 1), -Inf)
   expect_equal(fsum(TRUE, w = 1), 1)
@@ -295,12 +301,12 @@ test_that("fsum with weights handles special values in the right way", {
   expect_equal(fsum(-Inf, w = 1, na.rm = FALSE), -Inf)
   expect_equal(fsum(TRUE, w = 1, na.rm = FALSE), 1)
   expect_equal(fsum(FALSE, w = 1, na.rm = FALSE), 0)
-  expect_equal(fsum(NA, w = NA), NA_real_)
-  expect_equal(fsum(NaN, w = NA), NA_real_)
-  expect_equal(fsum(Inf, w = NA), NA_real_)
-  expect_equal(fsum(-Inf, w = NA), NA_real_)
-  expect_equal(fsum(TRUE, w = NA), NA_real_)
-  expect_equal(fsum(FALSE, w = NA), NA_real_)
+  expect_equal(fsum(NA, w = NA), if(fill_arg == 1L) NA_real_ else 0)
+  expect_equal(fsum(NaN, w = NA), if(fill_arg == 1L) NA_real_ else 0)
+  expect_equal(fsum(Inf, w = NA), if(fill_arg == 1L) NA_real_ else 0)
+  expect_equal(fsum(-Inf, w = NA), if(fill_arg == 1L) NA_real_ else 0)
+  expect_equal(fsum(TRUE, w = NA), if(fill_arg == 1L) NA_real_ else 0)
+  expect_equal(fsum(FALSE, w = NA), if(fill_arg == 1L) NA_real_ else 0)
   expect_equal(fsum(NA, w = NA, na.rm = FALSE), NA_real_)
   expect_equal(fsum(NaN, w = NA, na.rm = FALSE), NA_real_)
   expect_equal(fsum(Inf, w = NA, na.rm = FALSE), NA_real_)
@@ -352,7 +358,6 @@ toint <- function(x) {
   x
 }
 
-
 test_that("fsum with integers performs like base::sum and base::colSums", {
   expect_identical(fsum(x), bsum(x, na.rm = TRUE))
   expect_identical(fsum(x, na.rm = FALSE), bsum(x))
@@ -403,11 +408,11 @@ test_that("fsum with integers and weights performs like wsum (defined above)", {
   expect_equal(fsum(m, g, wdat), wBY(m, gf, wsum, wdat))
   expect_equal(fsum(m, g, wdat, na.rm = FALSE), wBY(m, gf, wsum, wdat))
   expect_equal(fsum(mNA, g, wdat, na.rm = FALSE),  wBY(mNA, gf, wsum, wdat))
-  expect_equal(fsum(mNA, g, wdat), wBY(mNA, gf, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(mNA, g, wdat), condan20(wBY(mNA, gf, wsum, wdat, na.rm = TRUE), fill_arg == 2L))
   expect_equal(fsum(mtcars, g, wdat), wBY(mtcars, gf, wsum, wdat))
   expect_equal(fsum(mtcars, g, wdat, na.rm = FALSE), wBY(mtcars, gf, wsum, wdat))
   expect_equal(fsum(mtcNA, g, wdat, na.rm = FALSE), wBY(mtcNA, gf, wsum, wdat))
-  expect_equal(fsum(mtcNA, g, wdat), wBY(mtcNA, gf, wsum, wdat, na.rm = TRUE))
+  expect_equal(fsum(mtcNA, g, wdat), condan20(wBY(mtcNA, gf, wsum, wdat, na.rm = TRUE), fill_arg == 2L))
   # missing weights
   expect_equal(fsum(x, w = wNA), wsum(x, wNA, na.rm = TRUE))
   expect_equal(fsum(x, w = wNA, na.rm = FALSE), wsum(x, wNA))
@@ -429,11 +434,11 @@ test_that("fsum with integers and weights performs like wsum (defined above)", {
   expect_equal(fsum(m, g, wdatNA), wBY(m, gf, wsum, wdatNA, na.rm = TRUE))
   expect_equal(fsum(m, g, wdatNA, na.rm = FALSE), wBY(m, gf, wsum, wdatNA))
   expect_equal(fsum(mNA, g, wdatNA, na.rm = FALSE),  wBY(mNA, gf, wsum, wdatNA))
-  expect_equal(fsum(mNA, g, wdatNA), wBY(mNA, gf, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(mNA, g, wdatNA), condan20(wBY(mNA, gf, wsum, wdatNA, na.rm = TRUE), fill_arg == 2L))
   expect_equal(fsum(mtcars, g, wdatNA), wBY(mtcars, gf, wsum, wdatNA, na.rm = TRUE))
   expect_equal(fsum(mtcars, g, wdatNA, na.rm = FALSE), wBY(mtcars, gf, wsum, wdatNA))
   expect_equal(fsum(mtcNA, g, wdatNA, na.rm = FALSE), wBY(mtcNA, gf, wsum, wdatNA))
-  expect_equal(fsum(mtcNA, g, wdatNA), wBY(mtcNA, gf, wsum, wdatNA, na.rm = TRUE))
+  expect_equal(fsum(mtcNA, g, wdatNA), condan20(wBY(mtcNA, gf, wsum, wdatNA, na.rm = TRUE), fill_arg == 2L))
 })
 
 test_that("fsum performs numerically stable", {
@@ -527,9 +532,9 @@ test_that("fsum with integers produces errors for wrong input", {
 })
 
 test_that("Miscellaneous Issues with Integers", {
-  expect_identical(fsum(NA_integer_), NA_integer_)
+  expect_identical(fsum(NA_integer_), if(fill_arg == 1L) NA_integer_ else 0L)
   expect_identical(fsum(NA_integer_, na.rm = FALSE), NA_integer_)
-  expect_identical(fsum(c(NA_integer_, NA_integer_)), NA_integer_)
+  expect_identical(fsum(c(NA_integer_, NA_integer_)), if(fill_arg == 1L) NA_integer_ else 0L)
   expect_identical(fsum(c(NA_integer_, NA_integer_), na.rm = FALSE), NA_integer_)
   expect_identical(fsum(c(NA_integer_, 1L)), 1L)
   expect_identical(fsum(c(NA_integer_, 1L), na.rm = FALSE), NA_integer_)
@@ -551,4 +556,31 @@ test_that("Integer overflow errors", {
   expect_error(fsum(zNA, gz, na.rm = FALSE))
 })
 
+# Recreating doubles before next iteration...
+set.seed(101)
+x <- rnorm(100) * 1000
+xNA <- x
+xNA[sample.int(100,20)] <- NA
+rm(mtcars)
+mtcNA <- na_insert(mtcars)
+mtcNA[27,1] <- NA # single group NA !!
+m <- as.matrix(mtcars)
+mNA <- as.matrix(mtcNA)
+
+if(fill_arg == 2L) rm(fsum)
 }
+
+}
+
+
+test_that("fill arg works as intended", {
+  expect_equal(fsum(NA, fill = TRUE), 0)
+  expect_equal(fsum(c(NA, NA), fill = TRUE), 0)
+  expect_equal(fsum(NA, w = 1, fill = TRUE), 0)
+  expect_equal(fsum(c(NA, NA), w = 1:2, fill = TRUE), 0)
+
+  expect_equal(unattrib(fsum(NA, 1, fill = TRUE)), 0)
+  expect_equal(unattrib(fsum(c(NA, NA), 1:2, fill = TRUE)), c(0, 0))
+  expect_equal(unattrib(fsum(NA, 1, 1, fill = TRUE)), 0)
+  expect_equal(unattrib(fsum(c(NA, NA), 1:2, 1:2, fill = TRUE)), c(0, 0))
+})

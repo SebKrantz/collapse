@@ -38,6 +38,8 @@ fsum(x, \dots)
 
 \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s.}
 
+\item{fill}{logical. Initialize result with \code{0} instead of \code{NA} when \code{na.rm = TRUE} e.g. \code{fsum(NA, fill = TRUE)} returns \code{0} instead of \code{NA}. }
+
 \item{nthreads}{integer. The number of threads to utilize. See Details. }
 
 \item{drop}{\emph{matrix and data.frame method:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}.}

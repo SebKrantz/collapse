@@ -6,41 +6,47 @@
 
 void fsum_double_impl(double *restrict pout, const double *restrict px, const int narm, const int l) {
   double sum;
-  if(narm) {
+  if(narm == 1) {
+    // Somehow this is faster than forward loop...
     int j = l-1;
     sum = px[j];
     while(ISNAN(sum) && j!=0) sum = px[--j];
     if(j != 0) for(int i = j; i--; ) {
-      if(NISNAN(px[i])) sum += px[i]; // Fastest ?
+      if(ISNAN(px[i])) continue;
+      sum += px[i];
     }
   } else {
     sum = 0;
-    for(int i = 0; i != l; ++i) {
-      if(ISNAN(px[i])) {
-        sum = px[i];
-        break;
-      } else {
+    if(narm) {
+      for(int i = l; i--; ) {
+        if(ISNAN(px[i])) continue; // Somehow continue statements with backwards loops are faster...
         sum += px[i];
       }
+    } else {
+     // Should just be fast, don't stop for NA's
+      for(int i = 0; i != l; ++i) sum += px[i];
     }
   }
   pout[0] = sum;
 }
 
 void fsum_double_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const int narm, const int l) {
-  if(narm) {
+  if(narm == 1) {
     for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
     --pout;
     for(int i = l; i--; ) {
-      if(NISNAN(px[i])) { // faster way to code this ? -> Not Bad at all
-        if(ISNAN(pout[pg[i]])) pout[pg[i]] = px[i];
-        else pout[pg[i]] += px[i];
-      }
+      if(ISNAN(px[i])) continue; // faster way to code this ? -> Not Bad at all
+      if(ISNAN(pout[pg[i]])) pout[pg[i]] = px[i];
+      else pout[pg[i]] += px[i];
     }
   } else {
     memset(pout, 0.0, sizeof(double) * ng);
     --pout;
-    for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+    if(narm == 2) {
+      for(int i = l; i--; ) if(NISNAN(px[i])) pout[pg[i]] += px[i];
+    } else {
+      for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+    }
   }
 }
 
@@ -53,7 +59,7 @@ void fsum_double_omp_impl(double *restrict pout, const double *restrict px, cons
     if(j != l) {
       #pragma omp parallel for num_threads(nth) reduction(+:sum)
       for(int i = j; i < l; ++i) if(NISNAN(px[i])) sum += px[i]; // Fastest ?
-    }
+    } else if(narm == 2) sum = 0;
   } else {
     sum = 0;
     #pragma omp parallel for num_threads(nth) reduction(+:sum)
@@ -85,30 +91,27 @@ void fsum_double_omp_impl(double *restrict pout, const double *restrict px, cons
 
 void fsum_weights_impl(double *restrict pout, const double *restrict px, const double *restrict pw, const int narm, const int l) {
   double sum;
-  if(narm) {
+  if(narm == 1) {
     int j = l-1;
     while((ISNAN(px[j]) || ISNAN(pw[j])) && j!=0) --j;
     sum = px[j] * pw[j];
-    if(j != 0) for(int i = j; i--; ) {
-      if(ISNAN(px[i]) || ISNAN(pw[i])) continue;
-      sum += px[i] * pw[i];
+    if(j != 0) {
+      for(int i = j; i--; ) if(NISNAN(px[i]) && NISNAN(pw[i])) sum += px[i] * pw[i];
     }
   } else {
     sum = 0;
-    for(int i = 0; i != l; ++i) {
-      if(ISNAN(px[i]) || ISNAN(pw[i])) {
-        sum = px[i] + pw[i];
-        break;
-      } else {
-        sum += px[i] * pw[i];
-      }
+    if(narm) {
+      for(int i = 0; i != l; ++i) if(NISNAN(px[i]) && NISNAN(pw[i])) sum += px[i] * pw[i];
+    } else {
+      // Also here speed is key...
+      for(int i = 0; i != l; ++i) sum += px[i] * pw[i];
     }
   }
   pout[0] = sum;
 }
 
 void fsum_weights_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const double *restrict pw, const int narm, const int l) {
-  if(narm) {
+  if(narm == 1) {
     for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
     --pout;
     for(int i = l; i--; ) {
@@ -119,7 +122,11 @@ void fsum_weights_g_impl(double *restrict pout, const double *restrict px, const
   } else {
     memset(pout, 0.0, sizeof(double) * ng);
     --pout;
-    for(int i = l; i--; ) pout[pg[i]] += px[i] * pw[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+    if(narm == 2) {
+      for(int i = l; i--; ) if(NISNAN(px[i]) && NISNAN(pw[i])) pout[pg[i]] += px[i] * pw[i];
+    } else {
+      for(int i = l; i--; ) pout[pg[i]] += px[i] * pw[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+    }
   }
 }
 
@@ -133,10 +140,9 @@ void fsum_weights_omp_impl(double *restrict pout, const double *restrict px, con
       sum = px[j] * pw[j];
       #pragma omp parallel for num_threads(nth) reduction(+:sum)
       for(int i = j+1; i < l; ++i) {
-        if(ISNAN(px[i]) || ISNAN(pw[i])) continue;
-        sum += px[i] * pw[i];
+        if(NISNAN(px[i]) && NISNAN(pw[i])) sum += px[i] * pw[i];
       }
-    } else sum = NA_REAL;
+    } else sum = narm == 1 ? NA_REAL : 0;
   } else {
     sum = 0;
     #pragma omp parallel for num_threads(nth) reduction(+:sum)
@@ -170,12 +176,12 @@ double fsum_int_impl(const int *restrict px, const int narm, const int l) {
     int j = l-1;
     while(px[j] == NA_INTEGER && j!=0) --j;
     sum = (long long)px[j];
-    if(j == 0 && (l > 1 || px[j] == NA_INTEGER)) return NA_REAL;
+    if(j == 0 && (l > 1 || px[j] == NA_INTEGER)) return narm == 1 ? NA_REAL : 0;
     for(int i = j; i--; ) if(px[i] != NA_INTEGER) sum += (long long)px[i];
   } else {
     sum = 0;
     for(int i = 0; i != l; ++i) {
-      if(px[i] == NA_INTEGER) return NA_REAL;
+      if(px[i] == NA_INTEGER) return NA_REAL; // Need this, otherwise result is incorrect !!
       sum += (long long)px[i];
     }
   }
@@ -184,7 +190,7 @@ double fsum_int_impl(const int *restrict px, const int narm, const int l) {
 
 void fsum_int_g_impl(int *restrict pout, const int *restrict px, const int ng, const int *restrict pg, const int narm, const int l) {
   long long ckof;
-  if(narm) {
+  if(narm == 1) {
     for(int i = ng; i--; ) pout[i] = NA_INTEGER;
     --pout;
     for(int i = l, lsi; i--; ) {
@@ -201,16 +207,26 @@ void fsum_int_g_impl(int *restrict pout, const int *restrict px, const int ng, c
   } else {
     memset(pout, 0, sizeof(int) * ng);
     --pout;
-    for(int i = l, lsi; i--; ) {
-      if(px[i] == NA_INTEGER) {
-        pout[pg[i]] = NA_INTEGER;
-        continue;
+    if(narm == 2) {
+      for(int i = l; i--; ) {
+        if(px[i] != NA_INTEGER) {
+          ckof = (long long)pout[pg[i]] + px[i];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          pout[pg[i]] = (int)ckof;
+        }
       }
-      lsi = pout[pg[i]];
-      if(lsi != NA_INTEGER) { // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
-        ckof = (long long)lsi + px[i];
-        if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
-        pout[pg[i]] = (int)ckof;
+    } else {
+      for(int i = l, lsi; i--; ) {
+        if(px[i] == NA_INTEGER) {
+          pout[pg[i]] = NA_INTEGER;
+          continue;
+        }
+        lsi = pout[pg[i]];
+        if(lsi != NA_INTEGER) { // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+          ckof = (long long)lsi + px[i];
+          if(ckof > INT_MAX || ckof <= INT_MIN) error("Integer overflow in one or more groups. Integers in R are bounded between 2,147,483,647 and -2,147,483,647. The sum within each group should be in that range.");
+          pout[pg[i]] = (int)ckof;
+        }
       }
     }
   }
@@ -221,14 +237,15 @@ double fsum_int_omp_impl(const int *restrict px, const int narm, const int l, co
   if(narm) {
     int j = 0;
     while(px[j] == NA_INTEGER && j!=l) ++j;
-    if(j == l && (l > 1 || px[j-1] == NA_INTEGER)) return NA_REAL;
+    if(j == l && (l > 1 || px[j-1] == NA_INTEGER)) return narm == 1 ? NA_REAL : 0;
     sum = (long long)px[j];
     #pragma omp parallel for num_threads(nth) reduction(+:sum)
     for(int i = j+1; i < l; ++i) if(px[i] != NA_INTEGER) sum += (long long)px[i];
   } else {
     sum = 0;
     #pragma omp parallel for num_threads(nth) reduction(+:sum)
-    for(int i = 0; i < l; ++i) sum += (long long)px[i];
+    for(int i = 0; i < l; ++i) if(px[i] != NA_INTEGER) sum += (long long)px[i]; // Need this, else wrong result
+    if(sum == 0 && px[0] == NA_INTEGER) return NA_REAL; // Problem here, could be NA_INTEGER mixed with 0's, but very rare...
   }
   return (double)sum;
 }
@@ -271,9 +288,10 @@ double fsum_int_omp_impl(const int *restrict px, const int narm, const int l, co
 // }
 
 
-SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
+SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
     narm = asLogical(Rnarm), nth = asInteger(Rnth), nprotect = 0, nwl = isNull(w);
+  if(narm) narm += asLogical(fill);
   // ALTREP methods for compact sequences: not safe yet and not part of the API.
   // if(ALTREP(x) && ng == 0 && nwl) {
   // switch(tx) {
@@ -351,13 +369,14 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rnth) {
   return out;
 }
 
-SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
+SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop, SEXP Rnth) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g),
       ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
-      narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
+      narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w),
       nth = asInteger(Rnth); // , cmth = nth > 1 && col >= nth;
+  if(narm) narm += asLogical(fill);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(l*col < 100000) nth = 1; // No gains from multithreading on small data
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
@@ -473,7 +492,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
   return out;
 }
 
-SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
+SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop, SEXP Rnth) {
   int l = length(x), ng = asInteger(Rng), nth = asInteger(Rnth), nprotect = 1;
   // TODO: Disable multithreading if overall data size is small?
   if(l < 1) return x; // needed ??
@@ -483,9 +502,9 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
     if(nth > 1 && l >= nth) { // If high-dimensional: column-level parallelism
       SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect;
       #pragma omp parallel for num_threads(nth)
-      for(int j = 0; j < l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, Rnth1));
+      for(int j = 0; j < l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth1));
     } else {
-      for(int j = 0; j != l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, Rnth));
+      for(int j = 0; j != l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth));
     }
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
     UNPROTECT(nprotect);
@@ -496,9 +515,9 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
     if(nth > l) nth = l;
     SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect; // Needed if ng == 0, otherwise double multithreading
     #pragma omp parallel for num_threads(nth)
-    for(int j = 0; j < l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth1);
+    for(int j = 0; j < l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth1);
   } else {
-    for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth);
+    for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth);
   }
   // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
   DFcopyAttr(out, x, ng);
@@ -512,7 +531,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth)
 //   if(isNull(dim)) error("x is not a matrix");
 //   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g),
 //     ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
-//     narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
+//     narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w),
 //     nth = asInteger(Rnth), cmth = nth > 1 && col >= nth;
 //   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
 //   if(nth < 100000) nth = 1; // No gains from multithreading on small data
