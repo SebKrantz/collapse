@@ -113,8 +113,8 @@ fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, 
     .Call(Cpp_fscalel, x, ng, g, w, narm, set_mean, set_sd)
 }
 
-fsumC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, nthreads = 1L) {
-    .Call(C_fsum, x, ng, g, w, narm, nthreads)
+fsumC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, fill = FALSE, nthreads = 1L) {
+    .Call(C_fsum, x, ng, g, w, narm, fill, nthreads)
 }
 
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {
