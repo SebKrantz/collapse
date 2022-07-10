@@ -3,7 +3,7 @@ New development version, might become 1.9.0.
 
 * `fsum` has an additional argument `fill = TRUE` (default `FALSE`) that initializes the result vector with `0` instead of `NA` when `na.rm = TRUE`, so that `fsum(NA, fill = TRUE)` gives `0` like `base::sum(NA, na.rm = TRUE)`. 
 
-* Slight performance increase in `fmean` with groups. 
+* Slight performance increase in `fmean` with groups if `na.rm = TRUE` (the default). 
 
 # collapse 1.8.6
 

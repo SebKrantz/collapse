@@ -12,17 +12,17 @@
 fsum(x, \dots)
 
 \method{fsum}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, nthreads = 1L, \dots)
+     use.g.names = TRUE, fill = FALSE, nthreads = 1L, \dots)
 
 \method{fsum}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
+     use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = 1L, \dots)
 
 \method{fsum}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
+     use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = 1L, \dots)
 
 \method{fsum}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE,
-     keep.w = TRUE, nthreads = 1L, \dots)
+     keep.w = TRUE, fill = FALSE, nthreads = 1L, \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
