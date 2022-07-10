@@ -34,10 +34,9 @@ void fmean_double_omp_impl(double *restrict pout, const double *restrict px, con
     int n = 0;
     #pragma omp parallel for num_threads(nth) reduction(+:mean,n)
     for(int i = 0; i < l; ++i) {
-      if(NISNAN(px[i])) {
-        mean += px[i];
-        ++n;
-      }
+      if(ISNAN(px[i])) continue;
+      mean += px[i];
+      ++n;
     }
     pout[0] = n == 0 ? NA_REAL : mean / n;
   } else {
@@ -48,25 +47,21 @@ void fmean_double_omp_impl(double *restrict pout, const double *restrict px, con
 }
 
 void fmean_double_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const int *restrict pgs, const int narm, const int l) {
+  memset(pout, 0.0, sizeof(double) * ng);
   if(narm) {
     int *restrict n = (int*)Calloc(ng, int);
-    for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
-    for(int i = l, gi; i--; ) {
-      if(NISNAN(px[i])) { // faster way to code this ? -> Not Bad at all
-        gi = pg[i]-1;
-        if(ISNAN(pout[gi])) {
-          pout[gi] = px[i];
-          n[gi] = 1;
-        } else {
-          pout[gi] += px[i];
-          ++n[gi];
-        }
-      }
+    for(int i = 0, gi; i != l; ++i) {
+      if(ISNAN(px[i])) continue;
+      gi = pg[i]-1;
+      pout[gi] += px[i];
+      ++n[gi];
     }
-    for(int i = ng; i--; ) pout[i] /= n[i]; // could use R_alloc above, but what about this loop?
+    for(int i = ng; i--; ) {
+      if(n[i] == 0) pout[i] = NA_REAL;
+      else pout[i] /= n[i];
+    }
     Free(n);
   } else {
-    memset(pout, 0.0, sizeof(double) * ng);
     --pout;
     for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     ++pout;
@@ -92,10 +87,9 @@ void fmean_weights_impl(double *restrict pout, const double *restrict px, const 
       if(ISNAN(px[i]) || ISNAN(pw[i])) {
         mean = px[i] + pw[i];
         break;
-      } else {
-        mean += px[i] * pw[i];
-        sumw += pw[i];
       }
+      mean += px[i] * pw[i];
+      sumw += pw[i];
     }
   }
   pout[0] = mean / sumw;
@@ -123,28 +117,26 @@ void fmean_weights_omp_impl(double *restrict pout, const double *restrict px, co
 
 void fmean_weights_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const double *restrict pw, const int narm, const int l) {
   double *restrict sumw = (double*)Calloc(ng, double);
+  memset(pout, 0.0, sizeof(double) * ng);
   if(narm) {
-    for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
-    for(int i = l, gi; i--; ) {
+    for(int i = 0, gi; i != l; ++i) {
       if(ISNAN(px[i]) || ISNAN(pw[i])) continue;
       gi = pg[i]-1;
-      if(ISNAN(pout[gi])) {
-        pout[gi] = px[i] * pw[i];
-        sumw[gi] = pw[i];
-      } else {
-        pout[gi] += px[i] * pw[i];
-        sumw[gi] += pw[i];
-      }
+      pout[gi] += px[i] * pw[i];
+      sumw[gi] += pw[i];
+    }
+    for(int i = ng; i--; ) {
+      if(sumw[i] == 0) pout[i] = NA_REAL;
+      else pout[i] /= sumw[i];
     }
   } else {
-    memset(pout, 0.0, sizeof(double) * ng);
-    for(int i = l, gi; i--; ) {
+    for(int i = 0, gi; i != l; ++i) {
       gi = pg[i]-1;
       pout[gi] += px[i] * pw[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
       sumw[gi] += pw[i];
     }
+    for(int i = ng; i--; ) pout[i] /= sumw[i];
   }
-  for(int i = ng; i--; ) pout[i] /= sumw[i];
   Free(sumw);
 }
 
@@ -157,10 +149,9 @@ double fmean_int_impl(const int *restrict px, const int narm, const int l) {
     mean = px[j];
     if(j == 0 && (l > 1 || px[j] == NA_INTEGER)) return NA_REAL;
     for(int i = j; i--; ) {
-      if(px[i] != NA_INTEGER) {
-        mean += px[i];
-        ++k;
-      }
+      if(px[i] == NA_INTEGER) continue;
+      mean += px[i];
+      ++k;
     }
     dmean = (double)mean / k;
   } else {
@@ -181,10 +172,9 @@ double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, c
     int n = 0;
     #pragma omp parallel for num_threads(nth) reduction(+:mean,n)
     for(int i = 0; i < l; ++i) {
-      if(px[i] != NA_INTEGER) {
-        mean += px[i];
-        ++n;
-      }
+      if(px[i] == NA_INTEGER) continue;
+      mean += px[i];
+      ++n;
     }
     dmean = n == 0 ? NA_REAL : (double)mean / n;
   } else {
@@ -196,25 +186,21 @@ double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, c
 }
 
 void fmean_int_g_impl(double *restrict pout, const int *restrict px, const int ng, const int *restrict pg, const int *restrict pgs, const int narm, const int l) {
+  memset(pout, 0.0, sizeof(double) * ng);
   if(narm) {
     int *restrict n = (int*)Calloc(ng, int);
-    for(int i = ng; i--; ) pout[i] = NA_REAL;
-    for(int i = l, gi; i--; ) {
-      if(px[i] != NA_INTEGER) {
-        gi = pg[i]-1;
-        if(ISNAN(pout[gi])) {
-          pout[gi] = (double)px[i];
-          n[gi] = 1;
-        } else {
-          pout[gi] += px[i];
-          ++n[gi];
-        }
-      }
+    for(int i = 0, gi; i != l; ++i) {
+      if(px[i] == NA_INTEGER) continue;
+      gi = pg[i]-1;
+      pout[gi] += px[i];
+      ++n[gi];
     }
-    for(int i = ng; i--; ) pout[i] /= n[i];
+    for(int i = ng; i--; ) {
+      if(n[i] == 0) pout[i] = NA_REAL;
+      else pout[i] /= n[i];
+    }
     Free(n);
   } else {
-    memset(pout, 0.0, sizeof(double) * ng);
     --pout;
     for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     ++pout;
