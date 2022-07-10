@@ -324,7 +324,7 @@ case STRSXP:
 {
   SEXP *px = set ? STRING_PTR(x) : STRING_PTR(ans);
   if(lv == 1 && ind1 == 0) {
-    const SEXP v = asChar(val);
+    const SEXP v = PROTECT(asChar(val));
     if(lr == 1) {
       const SEXP r = asChar(rep);
       setcopyvLOOP(r)
@@ -332,6 +332,7 @@ case STRSXP:
       const SEXP *pr = STRING_PTR(rep);
       setcopyvLOOP(pr[i])
     }
+    UNPROTECT(1);
   } else {
     const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val);
     const SEXP *pr = STRING_PTR(rep);

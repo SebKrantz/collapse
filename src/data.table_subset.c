@@ -557,11 +557,13 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
 
   SEXP colnam = getAttrib(x, R_NamesSymbol);
   if(TYPEOF(colnam) == STRSXP) {
+    PROTECT(colnam);
     SEXP tmp = PROTECT(allocVector(STRSXP, ncol)); nprotect++;
     // SET_TRUELENGTH(tmp, LENGTH(tmp));
     // SETLENGTH(tmp, LENGTH(cols));
     setAttrib(ans, R_NamesSymbol, tmp);
     subsetVectorRaw(tmp, colnam, cols, /*anyNA=*/false);
+    UNPROTECT(1);
   }
 
   if(oxl) {
