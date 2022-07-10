@@ -62,6 +62,19 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="1.8.7.9000" id="collapse-1879000">collapse 1.8.7.9000<a class="anchor" aria-label="anchor" href="#collapse-1879000"></a></h2>
+<p>New development version, might become 1.9.0.</p>
+<ul><li><p><code>fsum</code> has an additional argument
+<code>fill = TRUE</code> (default <code>FALSE</code>) that initializes
+the result vector with <code>0</code> instead of <code>NA</code> when
+<code>na.rm = TRUE</code>, so that <code>fsum(NA, fill = TRUE)</code>
+gives <code>0</code> like
+<code>base::sum(NA, na.rm = TRUE)</code>.</p></li>
+<li><p>Slight performance increase in <code>fmean</code> with groups if
+<code>na.rm = TRUE</code> (the default).</p></li>
+</ul></div>
+
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.6" id="collapse-186">collapse 1.8.6<a class="anchor" aria-label="anchor" href="#collapse-186"></a></h2>
 <ul><li>Fixed further minor issues:
 <ul><li>some inline functions in TRA.c needed to be declared ‘static’ to be
