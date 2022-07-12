@@ -374,7 +374,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g),
       ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
-      narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w),
+      narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
       nth = asInteger(Rnth); // , cmth = nth > 1 && col >= nth;
   if(narm) narm += asLogical(fill);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
@@ -531,7 +531,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 //   if(isNull(dim)) error("x is not a matrix");
 //   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g),
 //     ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
-//     narm = asInteger(Rnarm), nprotect = 1, nwl = isNull(w),
+//     narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
 //     nth = asInteger(Rnth), cmth = nth > 1 && col >= nth;
 //   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
 //   if(nth < 100000) nth = 1; // No gains from multithreading on small data

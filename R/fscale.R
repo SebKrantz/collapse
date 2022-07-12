@@ -69,7 +69,7 @@ fscale.list <- function(x, ...) fscale.data.frame(x, ...)
 fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
-  .Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
+  .Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
 }
 
 
