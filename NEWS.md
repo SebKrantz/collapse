@@ -5,6 +5,8 @@ New development version, might become 1.9.0.
 
 * Slight performance increase in `fmean` with groups if `na.rm = TRUE` (the default). 
 
+* Fixed a bug in `fscale.pdata.frame` where the default C++ method was being called instead of the list method (i.e. the method didn't work at all).
+
 # collapse 1.8.6
 
 * Fixed further minor issues: 
