@@ -66,10 +66,10 @@ greorder(x, g, \dots)
 
 # Fast, class-agnostic pendant to dplyr::group_by for use with fast functions, see details
 fgroup_by(.X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
-          return.order = sort, method = "auto")
+          return.groups = TRUE, return.order = sort, method = "auto")
 # Shorthand for fgroup_by
       gby(.X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
-          return.order = sort, method = "auto")
+          return.groups = TRUE, return.order = sort, method = "auto")
 
 # Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by
 fgroup_vars(X, return = "data")
@@ -240,6 +240,14 @@ fgroup_by(GGDC10S, c("Variable", "Country")) \%>\% head(3)
 fgroup_by(GGDC10S, is.character) \%>\% head(3)
 fgroup_by(GGDC10S, Country:Variable, Year) \%>\% head(3)
 fgroup_by(GGDC10S, Country:Region, Var = Variable, Year) \%>\% head(3)
+
+## Note that you can create a grouped data frame without materializing the unique grouping columns
+fgroup_by(GGDC10S, Variable, Country, return.groups = FALSE) \%>\% fmutate(across(AGR:SUM, fscale))
+fgroup_by(GGDC10S, Variable, Country, return.groups = FALSE) \%>\% fselect(AGR:SUM) \%>\% fmean()
+
+## Note also that setting sort = FALSE on unsorted data can be much faster... if not required...
+library(microbenchmark)
+microbenchmark(gby(GGDC10S, Variable, Country), gby(GGDC10S, Variable, Country, sort = FALSE))
 }
 }
 \keyword{manip}

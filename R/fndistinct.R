@@ -43,6 +43,7 @@ fndistinct.list <- function(x, ...) fndistinct.data.frame(x, ...)
 
 fndistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, nthreads = 1L, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
+  if(is.null(g[[4L]])) keep.group_vars <- FALSE
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)

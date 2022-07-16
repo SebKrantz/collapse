@@ -533,6 +533,7 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
                     keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE, parallel = FALSE, mc.cores = 2L,
                     return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
   by <- GRP.grouped_df(X, return.groups = keep.group_vars, call = FALSE)
+  if(is.null(by[[4L]])) keep.group_vars <- FALSE
   if(is.null(custom)) ngn <- attr(X, "names") %!in% by[[5L]] # Note: this always leaves grouping columns on the left still !
   # clx <- oldClass(X)
   attr(X, "groups") <- NULL
