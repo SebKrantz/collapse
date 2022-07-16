@@ -50,6 +50,7 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
                              keep.group_vars = TRUE, keep.w = TRUE, ties = "first", nthreads = 1L, ...) {
   r <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   g <- GRP.grouped_df(x, call = FALSE)
+  if(is.null(g[[4L]])) keep.group_vars <- FALSE
   wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])

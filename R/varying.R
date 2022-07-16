@@ -104,6 +104,7 @@ varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = 
     if(!all(ngn)) x <- if(drop) .subset(x, ngn) else fcolsubset(x, ngn)
     return(.Call(Cpp_varyingl,x,g[[1L]],g[[2L]],any_group,drop))
   }
+  if(is.null(g[[4L]])) keep.group_vars <- FALSE
   ax <- attributes(x)
   ax[["groups"]] <- NULL
   ax[["class"]] <- fsetdiff(ax[["class"]], c("GRP_df", "grouped_df"))

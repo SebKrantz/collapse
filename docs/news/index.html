@@ -72,6 +72,27 @@ gives <code>0</code> like
 <code>base::sum(NA, na.rm = TRUE)</code>.</p></li>
 <li><p>Slight performance increase in <code>fmean</code> with groups if
 <code>na.rm = TRUE</code> (the default).</p></li>
+<li><p>Fixed a bug in <code>fscale.pdata.frame</code> where the default
+C++ method was being called instead of the list method (i.e. the method
+didn’t work at all).</p></li>
+<li><p>Significant performance improvement when using base R expressions
+involving multiple functions and one column
+e.g. <code>mid_col = (min(col) + max(col)) / 2</code> or
+<code>lorentz_col = cumsum(sort(col)) / sum(col)</code> etc. inside
+<code>fsummarise</code> and <code>fmutate</code>. Instead of evaluating
+such expressions on a data subset of one column for each group, they are
+now turned into a function
+e.g. <code>function(x) cumsum(sort(x)) / sum(x)</code> which is applied
+to a single vector split by groups.</p></li>
+<li><p>Argument <code>return.groups</code> from <code>GRP.default</code>
+is now also available in <code>fgroup_by</code>, allowing grouped data
+frames without materializing the unique grouping columns. This allows
+more efficient mutate-only operations
+e.g. <code>mtcars |&gt; fgroup_by(cyl, return.groups = FALSE) |&gt; fmutate(across(hp:carb, fscale))</code>.
+Similarly for aggregation with dropping of grouping columns
+<code>mtcars |&gt; fgroup_by(cyl, return.groups = FALSE) |&gt; fmean()</code>
+is equivalent and faster than
+<code>mtcars |&gt; fgroup_by(cyl) |&gt; fmean(keep.group_vars = FALSE)</code>.</p></li>
 </ul></div>
 
     <div class="section level2">

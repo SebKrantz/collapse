@@ -328,8 +328,18 @@ fFUN_mutate_add_groups <- function(z) {
   z
 }
 
-gsplit_single_apply <- function(x, g, ex, v, encl)
-  copyMostAttributes(unlist(lapply(gsplit(x, g), function(i) eval(ex, `names<-`(list(i), v), encl)), FALSE, FALSE), x)
+
+gsplit_single_apply <- function(x, g, ex, v, encl) {
+  funexpr <- quote(function(.x_yz_) .x_yz_)
+  funexpr[[3]] <- eval(call("substitute", ex, `names<-`(list(quote(.x_yz_)), v)), NULL, NULL)
+  funexpr[[4]] <- NULL
+  fun <- eval(funexpr, encl, baseenv())
+  copyMostAttributes(unlist(lapply(gsplit(x, g), fun), FALSE, FALSE), x)
+}
+
+# Old version: more expensive...
+# gsplit_single_apply <- function(x, g, ex, v, encl)
+#   copyMostAttributes(unlist(lapply(gsplit(x, g), function(i) eval(ex, `names<-`(list(i), v), encl)), FALSE, FALSE), x)
 
 gsplit_multi_apply <- function(x, g, ex, encl) {
   sx <- seq_along(x)
@@ -602,7 +612,7 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
 
 
 do_grouped_expr <- function(ei, eiv, .data, g, pe) {
-  v <- all.vars(ei, unique = FALSE)
+  v <- all.vars(ei) # unique = FALSE -> not needed anymore... can turn expressions into functions...
   if(length(v) > 1L) {
     # Could include global environemntal variables e.g. fmutate(data, new = mean(var) + q)
     namd <- names(.data)

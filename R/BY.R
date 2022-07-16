@@ -299,6 +299,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
 
 BY.grouped_df <- function(x, FUN, ..., reorder = TRUE, keep.group_vars = TRUE, use.g.names = FALSE) {
   g <- GRP.grouped_df(x, call = FALSE)
+  if(is.null(g[[4L]])) keep.group_vars <- FALSE
   gn <- which(attr(x, "names") %in% g[[5L]])
 
   res <- BY.data.frame(if(length(gn)) fcolsubset(x, -gn) else x, g, FUN, ..., reorder = reorder, use.g.names = use.g.names)

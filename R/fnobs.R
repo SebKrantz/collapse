@@ -78,6 +78,7 @@ fnobs.list <- function(x, ...) fnobs.data.frame(x, ...)
 
 fnobs.grouped_df <- function(x, TRA = NULL, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
+  if(is.null(g[[4L]])) keep.group_vars <- FALSE
   nam <- attr(x, "names")
   gn <- which(nam %in% g[[5L]])
   nTRAl <- is.null(TRA)

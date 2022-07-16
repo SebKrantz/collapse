@@ -80,6 +80,7 @@ fsd.list <- function(x, ...) fsd.data.frame(x, ...)
 fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                              keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
+  if(is.null(g[[4L]])) keep.group_vars <- FALSE
   wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
@@ -208,6 +209,7 @@ fvar.list <- function(x, ...) fvar.data.frame(x, ...)
 fvar.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
                            keep.group_vars = TRUE, keep.w = TRUE, stable.algo = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
+  if(is.null(g[[4L]])) keep.group_vars <- FALSE
   wsym <- substitute(w)
   nam <- attr(x, "names")
   gn2 <- gn <- which(nam %in% g[[5L]])
