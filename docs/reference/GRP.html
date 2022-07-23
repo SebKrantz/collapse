@@ -22,7 +22,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.7</span>
       </span>
     </div>
 
@@ -115,10 +115,10 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 
 <span class="co"># Fast, class-agnostic pendant to dplyr::group_by for use with fast functions, see details</span>
 <span class="fu">fgroup_by</span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,
-          return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
+          return.groups <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
 <span class="co"># Shorthand for fgroup_by</span>
       <span class="fu">gby</span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,
-          return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
+          return.groups <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
 
 <span class="co"># Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by</span>
 <span class="fu">fgroup_vars</span><span class="op">(</span><span class="va">X</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>
@@ -340,8 +340,8 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:collapse’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     between, compute, first, group_by, group_vars, lag, last, mutate,</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     n, nth, rename, select, summarise, ungroup</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     compute, group_by, group_vars, mutate, rename, select, summarise,</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     ungroup</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:testthat’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     matches</span>
@@ -404,6 +404,11 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘magrittr’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:testthat’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     equals, is_less_than, not</span>
 <span class="r-in"><span class="co">## Adding a column of group sizes.</span></span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fgroup_by</span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsummarise.html">fsummarise</a></span><span class="op">(</span>Sizes <span class="op">=</span> <span class="fu">GRPN</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am Sizes</span>
@@ -501,6 +506,50 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  NA   NA  NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  NA   NA  NA  NA  NA</span>
 <span class="r-in"></span>
+<span class="r-in"><span class="co">## Note that you can create a grouped data frame without materializing the unique grouping columns</span></span>
+<span class="r-in"><span class="fu">fgroup_by</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, return.groups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="ftransform.html">fmutate</a></span><span class="op">(</span><span class="fu"><a href="across.html">across</a></span><span class="op">(</span><span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span>, <span class="va">fscale</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Regioncode             Region Variable Year AGR MIN MAN PU CON WRT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     BWA        SSA Sub-saharan Africa       VA 1960  NA  NA  NA NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     BWA        SSA Sub-saharan Africa       VA 1961  NA  NA  NA NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     BWA        SSA Sub-saharan Africa       VA 1962  NA  NA  NA NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     BWA        SSA Sub-saharan Africa       VA 1963  NA  NA  NA NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   TRA FIRE GOV OTH SUM</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  NA   NA  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  NA   NA  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  NA   NA  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  NA   NA  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 5023 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65] </span>
+<span class="r-in"><span class="fu">fgroup_by</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, return.groups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           AGR        MIN         MAN          PU         CON         WRT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1419.8013   52.08903  1931.76020  101.720936   742.40444  1982.17750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    964.2103   56.03295   235.03321    5.346433   122.78267   281.51638</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  17191.3529  206.02389  6991.37096  364.573404  3524.73837  8509.46124</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    188.0574   10.47964    18.05585    3.093238    25.34108    36.32971</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    701.9112  101.41742   624.90303   29.358568   296.00226   694.66129</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 287744.2384 7049.52662 67143.63401 1606.064456 20851.66641 28908.10661</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            TRA       FIRE         GOV         OTH         SUM</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   648.511948  627.79291  2043.47128   992.44753  10542.1770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   115.472843   44.56442          NA   395.56503   2220.5242</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2054.373148 4413.54448  5307.28010  5710.26650  54272.9850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     8.362217   15.33622    61.10484    27.60635    393.7666</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   258.240876  272.43836          NA  1003.43964   3982.3726</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 13928.607381 4929.26308 22669.24815 30990.11860 485820.4737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 79 rows ]</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co">## Note also that setting sort = FALSE on unsorted data can be much faster... if not required...</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, <span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>less accurate nanosecond times to avoid potential integer overflows</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr    min       lq      mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 99.630 103.0945 106.12481</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE) 33.128  34.8910  36.67819</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   median       uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  104.714 106.8255 166.501   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   36.654  37.9660  47.273   100</span>
+<span class="r-in"></span>
 </code></pre></div>
     </div>
   </div>
@@ -515,7 +564,8 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer></div>
