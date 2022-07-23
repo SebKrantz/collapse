@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.7</span>
       </span>
     </div>
 
@@ -71,20 +71,20 @@
 
 <span class="co"># S3 method for default</span>
 <span class="fu">fsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span>
+     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, nthreads <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for matrix</span>
 <span class="fu">fsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span>
+     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, nthreads <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for data.frame</span>
 <span class="fu">fsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span>
+     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, nthreads <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for grouped_df</span>
 <span class="fu">fsum</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>,
      use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>,
-     keep.w <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+     keep.w <span class="op">=</span> <span class="cn">TRUE</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, nthreads <span class="op">=</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -102,6 +102,8 @@
 <dd><p>logical. Skip missing values in <code>x</code>. Defaults to <code>TRUE</code> and implemented at very little computational cost. If <code>na.rm = FALSE</code> a <code>NA</code> is returned when encountered.</p></dd>
 <dt>use.g.names</dt>
 <dd><p>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s.</p></dd>
+<dt>fill</dt>
+<dd><p>logical. Initialize result with <code>0</code> instead of <code>NA</code> when <code>na.rm = TRUE</code> e.g. <code>fsum(NA, fill = TRUE)</code> returns <code>0</code> instead of <code>NA</code>.</p></dd>
 <dt>nthreads</dt>
 <dd><p>integer. The number of threads to utilize. See Details.</p></dd>
 <dt>drop</dt>
@@ -212,7 +214,8 @@ microbenchmark(tdata[, lapply(.SD, sum), by = f],
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.</p>
 </div>
 
       </footer></div>

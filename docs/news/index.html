@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.7</span>
       </span>
     </div>
 
@@ -62,9 +62,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.8.7.9000" id="collapse-1879000">collapse 1.8.7.9000<a class="anchor" aria-label="anchor" href="#collapse-1879000"></a></h2>
-<p>New development version, might become 1.9.0.</p>
-<ul><li><p><code>fsum</code> has an additional argument
+<h2 class="page-header" data-toc-text="1.8.7" id="collapse-187">collapse 1.8.7<a class="anchor" aria-label="anchor" href="#collapse-187"></a></h2>
+<ul><li><p>Fixed a bug in <code>fscale.pdata.frame</code> where the default
+C++ method was being called instead of the list method (i.e. the method
+didn’t work at all).</p></li>
+<li><p>Fixed 2 minor rchk issues (the remaining ones are
+spurious).</p></li>
+<li><p><code>fsum</code> has an additional argument
 <code>fill = TRUE</code> (default <code>FALSE</code>) that initializes
 the result vector with <code>0</code> instead of <code>NA</code> when
 <code>na.rm = TRUE</code>, so that <code>fsum(NA, fill = TRUE)</code>
@@ -72,9 +76,6 @@ gives <code>0</code> like
 <code>base::sum(NA, na.rm = TRUE)</code>.</p></li>
 <li><p>Slight performance increase in <code>fmean</code> with groups if
 <code>na.rm = TRUE</code> (the default).</p></li>
-<li><p>Fixed a bug in <code>fscale.pdata.frame</code> where the default
-C++ method was being called instead of the list method (i.e. the method
-didn’t work at all).</p></li>
 <li><p>Significant performance improvement when using base R expressions
 involving multiple functions and one column
 e.g. <code>mid_col = (min(col) + max(col)) / 2</code> or
@@ -94,9 +95,8 @@ Similarly for aggregation with dropping of grouping columns
 is equivalent and faster than
 <code>mtcars |&gt; fgroup_by(cyl) |&gt; fmean(keep.group_vars = FALSE)</code>.</p></li>
 </ul></div>
-
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.8.6" id="collapse-186">collapse 1.8.6<a class="anchor" aria-label="anchor" href="#collapse-186"></a></h2>
+<h2 class="page-header" data-toc-text="1.8.6" id="collapse-186">collapse 1.8.6<small>2022-06-14</small><a class="anchor" aria-label="anchor" href="#collapse-186"></a></h2>
 <ul><li>Fixed further minor issues:
 <ul><li>some inline functions in TRA.c needed to be declared ‘static’ to be
 local in scope (<a href="https://github.com/SebKrantz/collapse/issues/275" class="external-link">#275</a>)</li>
@@ -166,10 +166,10 @@ the lhs of a formula passed to <code>by</code>.</p></li>
 <p>Further efforts to facilitate adding the group-count in
 <code>fsummarise</code> and <code>fmutate</code>:</p>
 <ul><li>if <code>options(collapse_mask = "all")</code> before loading the
-package, an additional function <code>n()</code> is exported that works
+package, an additional function <code><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n()</a></code> is exported that works
 just like <code>dplyr:::n()</code>. (Note that internal optimization
 flags for <code>n</code> are always on, so if you really want the
-function to be called <code>n()</code> without setting
+function to be called <code><a href="https://dplyr.tidyverse.org/reference/context.html" class="external-link">n()</a></code> without setting
 <code>options(collapse_mask = "all")</code>, you could also do
 <code>n &lt;- GRPN</code> or <code>n &lt;- collapse:::n</code>)</li>
 <li>otherwise the same can now always be done using <code><a href="../reference/GRP.html">GRPN()</a></code>.
