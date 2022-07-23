@@ -230,14 +230,15 @@ wldidt[, .c(PCGDP_gr_5Y, LIFEEX_gr_5Y) := G(slt(.SD, PCGDP, LIFEEX), 5, power = 
 # This gives the correct outcome
 wldidt[, .c(PCGDP_gr_5Y, LIFEEX_gr_5Y) := lapply(slt(.SD, PCGDP, LIFEEX), G, 5, power = 1/5)]
 %# wldidt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := G(slt(reindex(.SD, ix(wldidt)), PCGDP, LIFEEX), 5, power = 1/5)] # Works !!
+\dontrun{
 library(sf)
 nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
 nci <- findex_by(nc, SID74)
 nci[1:10, "AREA"]
 st_centroid(nci) # The geometry column is never indexed, thus sf computations work normally
 st_coordinates(nci)
-fmean(sf::st_area(nci))
-\dontrun{
+fmean(st_area(nci))
+
 library(tsibble)
 pedi <- findex_by(pedestrian, Sensor, Date_Time)
 pedi[1:5, ]
