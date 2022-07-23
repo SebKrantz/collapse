@@ -1,6 +1,6 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.8.7.9000
+Version: 1.8.7
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -52,7 +52,7 @@ LazyData: true
 Depends: R (>= 3.3.0)
 Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
-Suggests: fastverse, data.table, magrittr, kit, sf, xts, zoo, plm, fixest, vars, 
+Suggests: fastverse, data.table, magrittr, kit, xts, zoo, plm, fixest, vars, 
           RcppArmadillo, RcppEigen, tibble, dplyr, ggplot2, scales, microbenchmark, 
           testthat, covr, knitr, rmarkdown
 SystemRequirements: C++11

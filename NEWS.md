@@ -1,11 +1,12 @@
-# collapse 1.8.7.9000
-New development version, might become 1.9.0. 
+# collapse 1.8.7
+
+* Fixed a bug in `fscale.pdata.frame` where the default C++ method was being called instead of the list method (i.e. the method didn't work at all).
+
+* Fixed 2 minor rchk issues (the remaining ones are spurious).
 
 * `fsum` has an additional argument `fill = TRUE` (default `FALSE`) that initializes the result vector with `0` instead of `NA` when `na.rm = TRUE`, so that `fsum(NA, fill = TRUE)` gives `0` like `base::sum(NA, na.rm = TRUE)`. 
 
 * Slight performance increase in `fmean` with groups if `na.rm = TRUE` (the default). 
-
-* Fixed a bug in `fscale.pdata.frame` where the default C++ method was being called instead of the list method (i.e. the method didn't work at all).
 
 * Significant performance improvement when using base R expressions involving multiple functions and one column e.g. `mid_col = (min(col) + max(col)) / 2` or `lorentz_col = cumsum(sort(col)) / sum(col)` etc. inside `fsummarise` and `fmutate`. Instead of evaluating such expressions on a data subset of one column for each group, they are now turned into a function e.g. `function(x) cumsum(sort(x)) / sum(x)` which is applied to a single vector split by groups. 
 
