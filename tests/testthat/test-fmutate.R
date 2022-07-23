@@ -86,6 +86,19 @@ test_that("fsummarise works like dplyr::summarise for tagged vector expressions"
  expect_false(all_obj_equal(smr(gmtc, mpg = fmean(log(mpg)) + bmax(qsec)),
               dplyr::summarise(gmtc, mpg = bmean(log(mpg)) + bmax(qsec), .groups = "drop")))
 
+ # Testing expressions turned into functions:
+ mid_fun <- function(x) (bmin(x) + bmax(x)) / 2
+ expect_true(all_obj_equal(smr(gmtc, mid_mpg = (bmin(mpg) + bmax(mpg)) / 2),
+                           smr(gmtc, mid_mpg = (fmin(mpg) + fmax(mpg)) / 2),
+                           smr(gmtc, mid_mpg = mid_fun(mpg)),
+              dplyr::summarise(gmtc, mid_mpg = (bmin(mpg) + bmax(mpg)) / 2, .groups = "drop")))
+
+ # Adding global variable:
+ expect_true(all_obj_equal(smr(gmtc, mid_mpg = (bmin(mpg) + bmax(mpg)) / 2 + q),
+                           smr(gmtc, mid_mpg = (fmin(mpg) + fmax(mpg)) / 2 + q),
+                           smr(gmtc, mid_mpg = mid_fun(mpg) + q),
+                           dplyr::summarise(gmtc, mid_mpg = (bmin(mpg) + bmax(mpg)) / 2 + q, .groups = "drop")))
+
  # Weighted computations
  expect_equal(smr(gmtc, mpg = weighted.mean(mpg, wt)), dplyr::summarise(gmtc, mpg = weighted.mean(mpg, wt), .groups = "drop"))
  expect_equal(smr(gmtc, mpg = fmean(mpg, wt)), dplyr::summarise(gmtc, mpg = fmean(mpg, w = wt), .groups = "drop"))
@@ -443,6 +456,22 @@ test_that("fmutate miscellaneous", {
     fmutate(mtcars, across(cyl:vs, data.table::shift, .apply = FALSE, .names = FALSE)),
     fmutate(mtcars, across(cyl:vs, data.table::shift))
   )
+
+  # Testing expressions turned into functions:
+  bcumsum = base::cumsum
+  lorentz_fun <- function(x) bcumsum(x) / bsum(x)
+  gmtc = mtc %>% roworder(mpg) %>% dplyr::group_by(cyl, vs, am)
+  expect_true(all_obj_equal(mtt(gmtc, lorentz_mpg = bcumsum(mpg) / bsum(mpg)),
+                            mtt(gmtc, lorentz_mpg = lorentz_fun(mpg)),
+                            mtt(gmtc, lorentz_mpg = fcumsum(mpg) / fsum(mpg)), # doesn't work because of global sorting...
+                            dplyr::mutate(gmtc, lorentz_mpg = bcumsum(mpg) / bsum(mpg))))
+
+  # Adding global variable:
+  q = 5
+  expect_true(all_obj_equal(mtt(gmtc, lorentz_mpg = bcumsum(mpg) / bsum(mpg) + q),
+                            mtt(gmtc, lorentz_mpg = lorentz_fun(mpg) + q),
+                            mtt(gmtc, lorentz_mpg = fcumsum(mpg) / fsum(mpg) + q),
+                            dplyr::mutate(gmtc, lorentz_mpg = bcumsum(mpg) / bsum(mpg) + q)))
 
 })
 

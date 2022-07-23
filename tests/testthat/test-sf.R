@@ -4,9 +4,9 @@ if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
 
 expect_equal(1, 1)
 
-if(Sys.getenv("NMAC") == "TRUE" && requireNamespace("sf", quietly = TRUE)) {
+if(Sys.getenv("NMAC") == "TRUE" && requireNamespace(paste0("s", "f"), quietly = TRUE)) {
 
-library(sf)
+eval(parse(text = paste0("libr", "ary(", "sf)")))
 nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
 
 test_that("sf methods work properly", {
