@@ -8,9 +8,9 @@
 fFUN_smr_add_groups <- function(z) {
   if(!is.call(z)) return(z)
   cz <- l1orlst(as.character(z[[1L]])) # needed if collapse::fmean etc..
-  if(any(cz == .FAST_STAT_FUN_POLD)) {
+  if(any(cz == .FAST_FUN_MOPS)) {
     z$g <- quote(.g_)
-    z$use.g.names <- FALSE
+    if(any(cz == .FAST_STAT_FUN_POLD)) z$use.g.names <- FALSE
   } # This works for nested calls (nothing more required, but need to put at the end..)
   if(length(z) > 2L || is.call(z[[2L]])) return(as.call(lapply(z, fFUN_smr_add_groups)))
   z
