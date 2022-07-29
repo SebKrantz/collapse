@@ -6,11 +6,11 @@
 Advanced and Fast Data Transformation
 }
 \description{
-\emph{collapse} is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
+\emph{collapse} is a C/C++ based package for data transformation and statistical computing in R. Its aims are:
 \itemize{
 \item To facilitate complex data transformation, exploration and computing tasks in R.
 \item To help make R code fast, flexible, parsimonious and programmer friendly. % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter,
-% collapse provides a broad set.. -> Nah, it's not a misc package
+% collapse provides a broad set.. -> Nah, its not a misc package
 }
 It is made compatible with \emph{dplyr}, \emph{data.table}, \emph{sf} and the \emph{plm} approach to panel data, and non-destructively handles other classes such as \emph{xts}.
 

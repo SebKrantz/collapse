@@ -74,7 +74,7 @@ An object of class 'acf', see \code{\link{acf}}. The result is returned invisibl
 %%  ~~who you are~~
 % }
 %\note{
-% \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{\link{cor} to correlate \code{x} with it's lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and it's lag).
+% \code{psacf} does not compute the true ACF defined as dividing the autocorvariance function of \code{x} by the variance of \code{x}. Rather, for reasons having to do with computational efficiency and assuming use on larger panel-vectors, \code{psacf} simply uses \code{\link{cor} to correlate \code{x} with its lags (thus dividing the autocovariance by the product of the standard deviations of \code{x} and its lag).
 
 % For \code{plm::pseries} and \code{plm::pdata.frame}, the first index variable is assumed to be the group-id and the second the time variable. If more than 2 index variables are attached to \code{plm::pseries}, the last one is taken as the time variable and the others are taken as group-id's and interacted.
 

@@ -12,7 +12,9 @@
 #     list(dim = c(dim(X)[2L], 1L), dimnames = list(dimnames(X)[[2L]], NULL))
 # }
 
-flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
+flm <- function(...) if(is.atomic(..1)) flm.default(...) else flm.formula(...)
+
+flm.default <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
                 return.raw = FALSE, # only.coef
                 method = c("lm", "solve", "qr", "arma", "chol", "eigen"),
                 eigen.method = 3L, ...) {
@@ -78,6 +80,18 @@ flm <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
   # res
 }
 
+flm.formula <- function(formula, data, weights = NULL, add.icpt = TRUE, ...) {
+  w <- substitute(weights)
+  tms <- attributes(terms.formula(formula, data = data))
+  pe <- tms[[".Environment"]]
+  mf <- eval(tms$variables, data, pe)
+  y <- mf[[1L]]
+  X <- mf[-1L]
+  if(length(w)) w <- eval(w, data, pe)
+  names(X) <- tms$term.labels
+  if(add.icpt) X <- c(list(`(Intercept)` = alloc(1, NROW(y))), X) # y could be matrix
+  flm.default(y, do.call(cbind, X), w, FALSE, ...)
+}
 
 
 

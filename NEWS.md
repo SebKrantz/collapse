@@ -9,8 +9,14 @@
 * Slight performance increase in `fmean` with groups if `na.rm = TRUE` (the default). 
 
 * Significant performance improvement when using base R expressions involving multiple functions and one column e.g. `mid_col = (min(col) + max(col)) / 2` or `lorentz_col = cumsum(sort(col)) / sum(col)` etc. inside `fsummarise` and `fmutate`. Instead of evaluating such expressions on a data subset of one column for each group, they are now turned into a function e.g. `function(x) cumsum(sort(x)) / sum(x)` which is applied to a single vector split by groups. 
+* `fsummarise` now also adds groupings to transformation functions and operators, which allows full vectorization of more complex tasks involving transformations which are subsequently aggregated. A prime example is grouped bivariate linear model fitting, which can now be done using `mtcars |> fgroup_by(cyl) |> fsummarise(slope = fsum(W(mpg), hp) / fsum(W(mpg)^2))`. Before 1.8.7 it was necessary to do a mutate step first e.g. `mtcars |> fgroup_by(cyl) |> fmutate(dm_mpg = W(mpg)) |> fsummarise(slope = fsum(dm_mpg, hp) / fsum(dm_mpg^2))`, because `fsummarise` did not add groupings to transformation functions like `fwithin/W`. Thanks to Brodie Gaslam for making me aware of this. 
 
 * Argument `return.groups` from `GRP.default` is now also available in `fgroup_by`, allowing grouped data frames without materializing the unique grouping columns. This allows more efficient mutate-only operations e.g. `mtcars |> fgroup_by(cyl, return.groups = FALSE) |> fmutate(across(hp:carb, fscale))`. Similarly for aggregation with dropping of grouping columns `mtcars |> fgroup_by(cyl, return.groups = FALSE) |> fmean()` is equivalent and faster than `mtcars |> fgroup_by(cyl) |> fmean(keep.group_vars = FALSE)`.
+
+* `flm` is now internal generic and has an added formula method e.g. it is now possible to `flm(mpg ~ hp + carb, mtcars, weights = wt)` in addition to the matrix interface. Thanks to Grant McDermott for suggesting. 
+
+* Added method `as.data.frame.qsu`, to efficiently turn the default array outputs from `qsu()` into tidy data frames. 
+
 
 # collapse 1.8.6
 
@@ -203,7 +209,7 @@
 
 # collapse 1.7.0
 
-*collapse* 1.7.0, released mid January 2022, brings major improvements in the computational backend of the package, it's data manipulation capabilities, and a whole set of new functions that enable more flexible and memory efficient R programming - significantly enhancing the language itself. For the vast majority of codes, updating to 1.7 should not cause any problems. 
+*collapse* 1.7.0, released mid January 2022, brings major improvements in the computational backend of the package, its data manipulation capabilities, and a whole set of new functions that enable more flexible and memory efficient R programming - significantly enhancing the language itself. For the vast majority of codes, updating to 1.7 should not cause any problems. 
 
 
 
@@ -242,7 +248,7 @@
 
 #### Basic Computational Infrastructure
 
-* Function `group` was added, providing a low-level interface to a new unordered grouping algorithm based on hashing in C and optimized for R's data structures. The algorithm was heavily inspired by the great `kit` package of Morgan Jacob, and now feeds into the package through multiple central functions (including `GRP` / `fgroup_by`, `funique` and `qF`) when invoked with argument `sort = FALSE`. It is also used in internal groupings performed in data transformation functions such as `fwithin` (when no factor or 'GRP' object is provided to the `g` argument). The speed of the algorithm is very promising (often superior to `radixorder`), and it could be used in more places still. I welcome any feedback on it's performance on different datasets.    
+* Function `group` was added, providing a low-level interface to a new unordered grouping algorithm based on hashing in C and optimized for R's data structures. The algorithm was heavily inspired by the great `kit` package of Morgan Jacob, and now feeds into the package through multiple central functions (including `GRP` / `fgroup_by`, `funique` and `qF`) when invoked with argument `sort = FALSE`. It is also used in internal groupings performed in data transformation functions such as `fwithin` (when no factor or 'GRP' object is provided to the `g` argument). The speed of the algorithm is very promising (often superior to `radixorder`), and it could be used in more places still. I welcome any feedback on its performance on different datasets.    
 
 * Function `gsplit` provides an efficient alternative to `split` based on grouping objects. It is used as a new backend to `rsplit` (which also supports data frame) as well as `BY`, `collap`, `fsummarise` and `fmutate` - for more efficient grouped operations with functions external to the package. 
 

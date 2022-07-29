@@ -8,7 +8,7 @@
 % \docType{package}
 \title{Collapse Documentation & Overview}
 \description{
-The following table fully summarizes the contents of \emph{\link{collapse}}. The documentation is structured hierarchically: This is the main overview page, linking to topical overview pages and associated function pages (unless functions are documented on the topic page). % Calling \code{?FUN} brings up the documentation page for \code{FUN}, with links to associated topic pages and closely related functions. % Calling \code{help(FUN)} still brings up the right / most relevant page documenting the function. %  % Functions with separate documentation entries (apart from the topic page) are linked. % Each topic further has it's own overview page in the documentation. % , linking to functions % , i.e. only functions with separate pages are linked here
+The following table fully summarizes the contents of \emph{\link{collapse}}. The documentation is structured hierarchically: This is the main overview page, linking to topical overview pages and associated function pages (unless functions are documented on the topic page). % Calling \code{?FUN} brings up the documentation page for \code{FUN}, with links to associated topic pages and closely related functions. % Calling \code{help(FUN)} still brings up the right / most relevant page documenting the function. %  % Functions with separate documentation entries (apart from the topic page) are linked. % Each topic further has its own overview page in the documentation. % , linking to functions % , i.e. only functions with separate pages are linked here
 }
 
 \section{Topics and Functions}{

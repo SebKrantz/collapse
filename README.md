@@ -15,7 +15,7 @@
 [![status](https://tinyverse.netlify.com/badge/collapse)](https://CRAN.R-project.org/package=collapse)
 <!-- badges: end -->
 
-*collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
+*collapse* is a C/C++ based package for data transformation and statistical computing in R. Its aims are:
 
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 

@@ -7,6 +7,7 @@
 \alias{qsu.pdata.frame}
 \alias{qsu.sf}
 \alias{print.qsu}
+\alias{as.data.frame.qsu}
 % - Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel Data
@@ -42,6 +43,8 @@ qsu(x, \dots)
     array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
 
 
+\method{as.data.frame}{qsu}(x, ..., gid = "Group", stringsAsFactors = TRUE)
+
 \method{print}{qsu}(x, digits = 4, nonsci.digits = 9, na.print = "-",
       return = FALSE, print.gap = 2, \dots)
 }
@@ -60,6 +63,8 @@ qsu(x, \dots)
   \item{vlabels}{logical \code{TRUE} or a function: to display variable labels in the summary. See Details.}
   \item{effect}{\emph{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
   \item{\dots}{arguments to be passed to or from other methods.}
+  \item{gid}{character. Name assigned to the group-id column, when summarising variables by groups.}
+  \item{stringsAsFactors}{logical. Make factors from dimension names of 'qsu' array. Same as option to \code{\link{as.data.frame.table}}.}
   \item{digits}{the number of digits to print after the comma/dot.}
   \item{nonsci.digits}{the number of digits to print before resorting to scientific notation (default is to print out numbers with up to 9 digits and print larger numbers scientifically).}
   \item{na.print}{character string to substitute for missing values.}
@@ -81,7 +86,7 @@ Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on bet
 
 For data frame methods, if \code{vlabels = TRUE}, \code{qsu} uses \code{function(x) paste(names(x), setv(vlabels(x), NA, ""), sep = ": ")} to combine variable names and labels for display. Alternatively, the user can pass a custom function which will be applied to the data frame, e.g. using \code{vlabels = vlabels} just displays the labels. See also \code{\link{vlabels}}.
 
-\code{qsu} comes with it's own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, an apostrophe (') is placed after the 6th digit to designate the millions. Missing values are printed using '-'.
+\code{qsu} comes with its own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, an apostrophe (') is placed after the 6th digit to designate the millions. Missing values are printed using '-'.
 
 The \emph{sf} method simply ignores the geometry column.
 }
@@ -175,13 +180,6 @@ r
 # Proof:
 qsu(wlddev, PCGDP ~ region, ~ iso3c)
 
-# Same as above, but output as nested list
-psrl <- qsu(wlddev, ~ region, ~ iso3c,
-            cols = 9:12, array = FALSE)
-psrl                                        # We can use unlist2d to create a tidy data.frame
-head(unlist2d(psrl, c("Variable","Trans"),
-                    row.names = "Region"))
-
 # Weighted Summaries -----------------------
 n <- nrow(wlddev)
 weights <- abs(rnorm(n))                    # Generate random weights
@@ -190,7 +188,24 @@ weightsNA <- weights                        # Weights may contain missing values
 weightsNA[sample.int(n, 1000)] <- NA
 qsu(wlddev, w = weightsNA, higher = TRUE)   # But now these values are removed from all variables
 
-# Grouped and panel-summaries can also be weighted in the same manor
+# Grouped and panel-summaries can also be weighted in the same manner
+
+# Alternative Output Formats ---------------
+# Simple case
+as.data.frame(qsu(mtcars))
+# For matrices can also use qDF/qDT/qTBL to assign custom name and get a character-id
+qDF(qsu(mtcars), "car")
+# DF from 3D array: do not combine with aperm(), might introduce wrong column labels
+as.data.frame(stats, gid = "Region_Income")
+# DF from 4D array: also no aperm()
+as.data.frame(qsu(wlddev, ~ income, ~ iso3c, cols = 9:10), gid = "Region")
+
+# Output as nested list
+psrl <- qsu(wlddev, ~ income, ~ iso3c, cols = 9:10, array = FALSE)
+psrl
+
+# We can now use unlist2d to create a tidy data frame
+unlist2d(psrl, c("Variable", "Trans"), row.names = "Income")
 }
 % View(psrdat)
 %                                            # We've gotten this far, let's give it a ggplot2 finish:

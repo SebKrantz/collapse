@@ -142,7 +142,7 @@ tsp(EuStockMarkets)                                     # Data is recorded on 26
 freq <- frequency(EuStockMarkets)
 plot(stl(EuStockMarkets[,"DAX"], freq))                 # There is some obvious seasonality
 head(L(EuStockMarkets, -1:3 * freq))                    # 1 annual lead and 3 annual lags
-summary(lm(DAX ~., data = L(EuStockMarkets,-1:3*freq))) # DAX regressed on it's own annual lead,
+summary(lm(DAX ~., data = L(EuStockMarkets,-1:3*freq))) # DAX regressed on its own annual lead,
                                                         # lags and the lead/lags of the other series
 ## World Development Panel Data
 head(flag(wlddev, 1, wlddev$iso3c, wlddev$year))        # This lags all variables,
@@ -153,7 +153,7 @@ head(L(wlddev, 0:2, ~ iso3c, ~year, cols = 9:10))       # Same, also retaining o
 head(L(wlddev, 1:2, PCGDP + LIFEEX ~ iso3c, ~year,      # Two lags, dropping id columns
        keep.ids = FALSE))
 
-# Regressing GDP on its's lags and life-Expectancy and it's lags
+# Regressing GDP on its's lags and life-Expectancy and its lags
 summary(lm(PCGDP ~ ., L(wlddev, 0:2, ~iso3c, ~year, 9:10, keep.ids = FALSE)))
 
 ## Indexing the data: facilitates time-based computations
