@@ -80,7 +80,7 @@ flm.default <- function(y, X, w = NULL, add.icpt = FALSE, #  sparse = FALSE,
   # res
 }
 
-flm.formula <- function(formula, data, weights = NULL, add.icpt = TRUE, ...) {
+flm.formula <- function(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...) {
   w <- substitute(weights)
   tms <- attributes(terms.formula(formula, data = data))
   pe <- tms[[".Environment"]]

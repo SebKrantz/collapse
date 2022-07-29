@@ -16,7 +16,7 @@ flm(...)  # Internal method dispatch: default if is.atomic(..1)
     method = c("lm", "solve", "qr", "arma", "chol", "eigen"),
     eigen.method = 3L, ...)
 
-\method{flm}{formula}(formula, data, weights = NULL, add.icpt = TRUE, ...)
+\method{flm}{formula}(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -25,7 +25,7 @@ flm(...)  # Internal method dispatch: default if is.atomic(..1)
   \item{X}{a matrix of regressors.}
   \item{w}{a weight vector.}
   \item{add.icpt}{logical. \code{TRUE} adds an intercept column named '(Intercept)' to \code{X}.}
-  \item{formula}{a \code{\link{lm}} formula, without factors or interaction terms, may include ad-hoc transformations.}
+  \item{formula}{a \code{\link{lm}} formula, without factors, interaction terms or other operators (\code{:}, \code{*}, \code{^}, \code{-}, etc.), may include regular transformations e.g. \code{log(var)}, \code{cbind(y1, y2)}, \code{magrittr::multiply_by(var1, var2)}, \code{magrittr::raise_to_power(var, 2)}.}
   \item{data}{a named list or data frame.}
   \item{weights}{a weights vector or expression that results in a vector when evaluated in the \code{data} environment.}
 
@@ -79,19 +79,26 @@ Method "qr" supports sparse matrices, so for an \code{X} matrix with many dummy 
 \code{\link[=HDW]{fhdwithin/HDW}}, \code{\link{fFtest}}, \link[=data-transformations]{Data Transformations}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
-coef <- flm(mtcars$mpg, qM(mtcars[c("hp","carb")]),
-            mtcars$wt, add.icpt = TRUE)
-coef
+# Simple usage
+coef <- flm(mpg ~ hp + carb, mtcars, w = wt)
 
+# Same thing in programming usage
+flm(mtcars$mpg, qM(mtcars[c("hp","carb")]), mtcars$wt, add.icpt = TRUE)
+
+# Check this is correct
 lmcoef <- coef(lm(mpg ~ hp + carb, weights = wt, mtcars))
-lmcoef
-
 all.equal(drop(coef), lmcoef)
 
+# Multi-dependent variable (only some methods)
+flm(cbind(mpg, qsec) ~ hp + carb, mtcars, w = wt)
+
+# Returning raw results from solver: different for different methods
+flm(mpg ~ hp + carb, mtcars, return.raw = TRUE)
+flm(mpg ~ hp + carb, mtcars, method = "qr", return.raw = TRUE)
 \donttest{ % Need RcppArmadillo and RcppEigen
+# Test that all methods give the same result
 all_obj_equal(lapply(1:6, function(i)
-  flm(mtcars$mpg, qM(mtcars[c("hp","carb")]),
-      mtcars$wt, add.icpt = TRUE, method = i)))
+  flm(mpg ~ hp + carb, mtcars, w = wt, method = i)))
 }
 }
 

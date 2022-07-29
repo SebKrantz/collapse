@@ -4,8 +4,9 @@ getdf <- function(x) {
   bsum(vapply(unattrib(x), function(i) if(is.factor(i)) fnlevels(i)-1L else 1L, 1L))
 }
 
+fFtest <- function(...) if(is.call(..1) || is.call(..2)) fFtest.formula(...) else fFtest.default(...)
 
-fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
+fFtest.default <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
   if(!is.numeric(y)) stop("y needs to be a numeric vector")
   if(!is.null(X)) {
     Xn <- fNCOL(X)
@@ -89,6 +90,26 @@ fFtest <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
     oldClass(res) <- "fFtest"
   }
   res
+}
+
+fFtest.formula <- function(formula, data, weights = NULL, ...) {
+  w <- substitute(weights)
+  pe <- parent.frame()
+  if(length(w)) w <- eval(w, data, pe)
+  if(!any(all.names(formula) == "|")) { # Standard formula (no X term)
+    tms <- attributes(terms.formula(formula, data = data))
+    mf <- eval(tms$variables, data, pe)
+    exc <- mf[-1L]
+    names(exc) <- tms$term.labels
+    return(fFtest.default(mf[[1L]], exc, NULL, w, ...))
+  }
+  y <- eval(formula[[2L]], data, pe)
+  fml <- formula[[3L]]
+  exc <- attributes(terms.formula(call("~", fml[[2L]]), data = data))
+  exc <- eval(exc$variables, data, pe)
+  X <- attributes(terms.formula(call("~", fml[[3L]]), data = data))
+  X <- eval(X$variables, data, pe)
+  fFtest.default(y, exc, X, w, ...)
 }
 
 print.fFtest <- function(x, digits = 3, ...) {

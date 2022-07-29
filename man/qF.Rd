@@ -4,6 +4,7 @@
 \alias{is_qG}
 \alias{as_factor_qG}
 \alias{finteraction}
+\alias{itn}
 \title{
 Fast Factor Generation, Interactions and Vector Grouping
 }
@@ -29,6 +30,7 @@ as_factor_qG(x, ordered = FALSE, na.exclude = TRUE)
 
 finteraction(\dots, factor = TRUE, ordered = FALSE, sort = factor,
              method = "auto")
+itn(\dots) # Shorthand for finteraction
 }
 \arguments{
   \item{x}{a atomic vector, factor or quick-group.}
