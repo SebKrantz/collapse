@@ -13,7 +13,7 @@
 
 * Argument `return.groups` from `GRP.default` is now also available in `fgroup_by`, allowing grouped data frames without materializing the unique grouping columns. This allows more efficient mutate-only operations e.g. `mtcars |> fgroup_by(cyl, return.groups = FALSE) |> fmutate(across(hp:carb, fscale))`. Similarly for aggregation with dropping of grouping columns `mtcars |> fgroup_by(cyl, return.groups = FALSE) |> fmean()` is equivalent and faster than `mtcars |> fgroup_by(cyl) |> fmean(keep.group_vars = FALSE)`.
 
-* `flm` is now internal generic and has an added formula method e.g. it is now possible to `flm(mpg ~ hp + carb, mtcars, weights = wt)` in addition to the matrix interface. Thanks to Grant McDermott for suggesting. 
+* `flm` and `fFtest` are now internal generic with an added formula method e.g. `flm(mpg ~ hp + carb, mtcars, weights = wt)` or `fFtest(mpg ~ hp + carb | vs + am, mtcars, weights = wt)` in addition to the programming interface. Thanks to Grant McDermott for suggesting. 
 
 * Added method `as.data.frame.qsu`, to efficiently turn the default array outputs from `qsu()` into tidy data frames. 
 
