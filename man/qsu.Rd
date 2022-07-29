@@ -86,7 +86,7 @@ Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on bet
 
 For data frame methods, if \code{vlabels = TRUE}, \code{qsu} uses \code{function(x) paste(names(x), setv(vlabels(x), NA, ""), sep = ": ")} to combine variable names and labels for display. Alternatively, the user can pass a custom function which will be applied to the data frame, e.g. using \code{vlabels = vlabels} just displays the labels. See also \code{\link{vlabels}}.
 
-\code{qsu} comes with it's own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, an apostrophe (') is placed after the 6th digit to designate the millions. Missing values are printed using '-'.
+\code{qsu} comes with its own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, an apostrophe (') is placed after the 6th digit to designate the millions. Missing values are printed using '-'.
 
 The \emph{sf} method simply ignores the geometry column.
 }

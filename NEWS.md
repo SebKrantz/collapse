@@ -209,7 +209,7 @@
 
 # collapse 1.7.0
 
-*collapse* 1.7.0, released mid January 2022, brings major improvements in the computational backend of the package, it's data manipulation capabilities, and a whole set of new functions that enable more flexible and memory efficient R programming - significantly enhancing the language itself. For the vast majority of codes, updating to 1.7 should not cause any problems. 
+*collapse* 1.7.0, released mid January 2022, brings major improvements in the computational backend of the package, its data manipulation capabilities, and a whole set of new functions that enable more flexible and memory efficient R programming - significantly enhancing the language itself. For the vast majority of codes, updating to 1.7 should not cause any problems. 
 
 
 
@@ -248,7 +248,7 @@
 
 #### Basic Computational Infrastructure
 
-* Function `group` was added, providing a low-level interface to a new unordered grouping algorithm based on hashing in C and optimized for R's data structures. The algorithm was heavily inspired by the great `kit` package of Morgan Jacob, and now feeds into the package through multiple central functions (including `GRP` / `fgroup_by`, `funique` and `qF`) when invoked with argument `sort = FALSE`. It is also used in internal groupings performed in data transformation functions such as `fwithin` (when no factor or 'GRP' object is provided to the `g` argument). The speed of the algorithm is very promising (often superior to `radixorder`), and it could be used in more places still. I welcome any feedback on it's performance on different datasets.    
+* Function `group` was added, providing a low-level interface to a new unordered grouping algorithm based on hashing in C and optimized for R's data structures. The algorithm was heavily inspired by the great `kit` package of Morgan Jacob, and now feeds into the package through multiple central functions (including `GRP` / `fgroup_by`, `funique` and `qF`) when invoked with argument `sort = FALSE`. It is also used in internal groupings performed in data transformation functions such as `fwithin` (when no factor or 'GRP' object is provided to the `g` argument). The speed of the algorithm is very promising (often superior to `radixorder`), and it could be used in more places still. I welcome any feedback on its performance on different datasets.    
 
 * Function `gsplit` provides an efficient alternative to `split` based on grouping objects. It is used as a new backend to `rsplit` (which also supports data frame) as well as `BY`, `collap`, `fsummarise` and `fmutate` - for more efficient grouped operations with functions external to the package. 
 
