@@ -1,5 +1,5 @@
-pandoc: 2.11.4
-pkgdown: 1.6.1
+pandoc: 2.17.1.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   collapse_and_data.table: collapse_and_data.table.html
@@ -8,5 +8,5 @@ articles:
   collapse_and_sf: collapse_and_sf.html
   collapse_documentation: collapse_documentation.html
   collapse_intro: collapse_intro.html
-last_built: 2022-05-10T23:09Z
+last_built: 2022-07-29T15:38Z
 
