@@ -7,7 +7,7 @@
 Fast (Weighted) F-test for Linear Models (with Factors)
 }
 \description{
-\code{fFtest} computes an R-squared based F-test for the exclusion of the variables in \code{exc}, where the full (unrestricted) model is defined by variables supplied to both \code{exc} and \code{X}. The test is efficient and designed for cases where both \code{exc} and \code{X} may contain multiple factors and continuous variables. There also a 2-part formula method.
+\code{fFtest} computes an R-squared based F-test for the exclusion of the variables in \code{exc}, where the full (unrestricted) model is defined by variables supplied to both \code{exc} and \code{X}. The test is efficient and designed for cases where both \code{exc} and \code{X} may contain multiple factors and continuous variables. There is also an efficient 2-part formula method.
 }
 \usage{
 fFtest(...) # Internal method dispatch: formula if is.call(..1) || is.call(..2)
