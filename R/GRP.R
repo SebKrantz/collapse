@@ -273,6 +273,8 @@ finteraction <- function(..., factor = TRUE, ordered = FALSE, sort = factor, met
   res
 }
 
+itn <- function(...) finteraction(...)
+
 GRP.qG <- function(X, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   gvars <- l1orlst(as.character(substitute(X))) # paste(all.vars(call), collapse = ".") # good in all circumstances ?
