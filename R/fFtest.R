@@ -92,7 +92,7 @@ fFtest.default <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
   res
 }
 
-fFtest.formula <- function(formula, data, weights = NULL, ...) {
+fFtest.formula <- function(formula, data = NULL, weights = NULL, ...) {
   w <- substitute(weights)
   pe <- parent.frame()
   if(length(w)) w <- eval(w, data, pe)
