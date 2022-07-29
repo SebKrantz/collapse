@@ -195,7 +195,58 @@ aperm.qsu <- function(a, perm = NULL, resize = TRUE, keep.class = TRUE, ...) {
 `[.qsu` <- function(x, i, j, ..., drop = TRUE) `oldClass<-`(NextMethod(), oldClass(x))
 
 
-
+as.data.frame.qsu <- function(x, ..., gid = "Group", stringsAsFactors = TRUE) {
+  d <- dim(x)
+  dn <- dimnames(x)
+  stnam <- dn[[2L]]
+  if(is.null(d)) {
+    res <- as.vector(x, "list")
+    attr(res, "row.names") <- 1L
+    # res <- list(Statistic = names(x), Value = unattrib(x))
+    # attr(res, "row.names") <- .set_row_names(length(x))
+  } else if(length(d) == 2L) {
+    varl <- if(stringsAsFactors) list(`attributes<-`(seq_len(d[1L]), list(levels = dn[[1L]], class = "factor"))) else dn[1L]
+    res <- c(varl,  mctl(x))
+    names(res) <- c(if(stnam[1L] == "N") "Variable" else "Trans", stnam)
+    attr(res, "row.names") <- .set_row_names(d[1L])
+  } else if(length(d) == 3L) {
+    dimnames(x) <- NULL
+    # Special case: qsu(wlddev, PCGDP ~ region, ~ iso3c)
+    if(d[3L] == 3L && dn[[3L]][1L] == "Overall") {
+      res <- aperm.default(x, c(3L,1L,2L))
+      d[c(1L, 3L)] <- d[c(3L, 1L)]
+      dn[c(1L, 3L)] <- dn[c(3L, 1L)]
+      vn <- gid
+    } else {
+      vn <- "Variable"
+      res <- aperm.default(x, c(1L,3L,2L))
+    }
+    attributes(res) <- NULL
+    dim(res) <- c(d[1L]*d[3L], d[2L])
+    varsl <- if(stringsAsFactors) list(`attributes<-`(rep(seq_len(d[3L]), each = d[1L]), list(levels =  dn[[3L]], class = "factor")),
+                                `attributes<-`(rep(seq_len(d[1L]), d[3L]), list(levels = dn[[1L]], class = "factor"))) else
+                           list(rep(dn[[3L]], each = d[1L]), rep(dn[[1L]], d[3L]))
+    res <- c(varsl, mctl(res))
+    names(res) <- c(vn, if(stnam[1L] == "N") gid else "Trans", stnam)
+    attr(res, "row.names") <- .set_row_names(d[1L]*d[3L])
+  } else {
+    dimnames(x) <- NULL
+    res <- aperm.default(x, c(3L,1L,4L,2L))
+    attributes(res) <- NULL
+    nr <- d[1L]*3L*d[4L]
+    dim(res) <- c(nr, d[2L])
+    varsl <- if(stringsAsFactors)
+              list(`attributes<-`(rep(seq_len(d[4L]), each = 3L*d[1L]), list(levels = dn[[4L]], class = "factor")),
+                   `attributes<-`(rep(seq_len(d[1L]), d[4L], each = 3L), list(levels = dn[[1L]], class = "factor")),
+                   `attributes<-`(rep(seq_len(d[3L]), d[1L]*d[4L]), list(levels = dn[[3L]], class = "factor"))) else
+              list(rep(dn[[4L]], each = 3L*d[1L]), rep(dn[[1L]], d[4L], each = 3L), rep(dn[[3L]], d[1L]*d[4L]))
+    res <- c(varsl,  mctl(res))
+    names(res) <- c("Variable", gid, "Trans", stnam)
+    attr(res, "row.names") <- .set_row_names(nr)
+  }
+  class(res) <- "data.frame"
+  res
+}
 
 # testing formula inputs:
 
