@@ -1,5 +1,6 @@
 
   ``` r
+# System: M1 MAC (2020), 16GB, CRAN Binaries
 library(fastverse)
 #> -- Attaching packages --------------------------------------- fastverse 0.2.4 --
 #> collapse       1.8.7      testthat       3.1.4
