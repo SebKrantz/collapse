@@ -1,5 +1,6 @@
 reprex::reprex({
 
+# System: M1 MAC (2020), 16GB, CRAN Binaries
 library(fastverse)
 fastverse_extend(dplyr, arrow, microbenchmark)
 
