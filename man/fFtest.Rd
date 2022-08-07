@@ -26,7 +26,7 @@ fFtest(...) # Internal method dispatch: formula if is.call(..1) || is.call(..2)
  \item{data}{a named list or data frame.}
 \item{weights}{a weights vector or expression that results in a vector when evaluated in the \code{data} environment.}
   \item{full.df}{logical. If \code{TRUE} (default), the degrees of freedom are calculated as if both restricted and unrestricted models were estimated using \code{lm()} (i.e. as if factors were expanded to matrices of dummies). \code{FALSE} only uses one degree of freedom per factor.  }
-\item{\dots}{other arguments passed to \code{fhdwithin}. Sensible options might be the \code{lm.method} argument or further control parameters to \code{fixest::demean}, the workhorse function underlying \code{fhdwithin} for higher-order centering tasks. }
+\item{\dots}{other arguments passed to \code{fFtest.default} or to \code{fhdwithin}. Sensible options might be the \code{lm.method} argument or further control parameters to \code{fixest::demean}, the workhorse function underlying \code{fhdwithin} for higher-order centering tasks. }
 
 }
 \details{
