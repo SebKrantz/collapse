@@ -59,11 +59,24 @@
       }
     }
     if(!all(m <- mask %in% names(clpns))) stop("Unknown collapse functions supplied to option 'collapse_mask': ", paste(mask[!m], collapse = ", "))
-    if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f'. You supplied: ", paste(mask[!m], collapse = ", "))
+    unmask_special <- NULL
+    # Special Cases
+    if(mask_all || any(mask == "n")) {
+      unmask_special <- "n"
+      mask <- mask[mask != "n"]
+      assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, "n"), envir = clpns)
+      assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, "n"), envir = clpns)
+      assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, "n"), envir = clpns)
+    }
+    if(mask_all || any(mask %in% c("qtab", "qtable"))) {
+      assign("table", clpns[["qtab"]], envir = clpns)
+      unmask_special <- c(unmask_special, "table")
+      mask <- mask[!mask %in% c("qtab", "qtable")]
+    }
+    if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f', except for 'n' and 'qtab'. You supplied: ", paste(mask[!m], collapse = ", "))
     unmask <- substr(mask, 2L, 100L)
     for(i in seq_along(mask)) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
-    if(mask_all) unmask <- c(unmask, "n")
-    namespaceExport(clpns, unmask)
+    namespaceExport(clpns, c(unmask, unmask_special))
   }
 
   if(isTRUE(getOption("collapse_F_to_FALSE"))) assign("F", FALSE, envir = clpns)

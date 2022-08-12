@@ -4,7 +4,9 @@
 
 * Added method `as.data.frame.qsu`, to efficiently turn the default array outputs from `qsu()` into tidy data frames. 
 
-* Major improvements to `setv` and `copyv`, generalizing the scope of operations that can be performed by the functions to all common cases. This means that even simply base R operations such as `X[v] <- R` can now be done significantly faster using `setv(X, v, R)`. 
+* Major improvements to `setv` and `copyv`, generalizing the scope of operations that can be performed by the functions to all common cases. This means that even simple base R operations such as `X[v] <- R` can now be done significantly faster using `setv(X, v, R)`. 
+
+* `n` and `qtab` can now be added to `options("collapse_mask")` e.g. `options(collapse_mask = c("manip", "helper", "n", "qtab"))`. This will export a function `n()` to get the (group) count in `fsummarise` and `fmutate` (which can also always be done using `GRPN()` but `n()` is more familiar to *dplyr* users), and will mask `table()` with `qtab()`, which is principally a fast drop-in replacement, but with some different further arguments. 
 
 
 # collapse 1.8.7
@@ -62,7 +64,7 @@
 * Operators (see `.OPERATOR_FUN`) have been improved a bit such that id-variables selected in the `.data.frame` (`by`, `w` or `t` arguments) or `.pdata.frame` methods (variables in the index) are not computed upon even if they are numeric (since the default is `cols = is.numeric`). In general, if `cols` is a function used to select columns of a certain data type, id variables are excluded from computation even if they are of that data type. It is still possible to compute on id variables by explicitly selecting them using names or indices passed to `cols`, or including them in the lhs of a formula passed to `by`. 
 
 * Further efforts to facilitate adding the group-count in `fsummarise` and `fmutate`: 
-  - if `options(collapse_mask = "all")` before loading the package, an additional function `n()` is exported that works just like `dplyr:::n()`. (Note that internal optimization flags for `n` are always on, so if you really want the function to be called `n()` without setting `options(collapse_mask = "all")`, you could also do `n <- GRPN` or `n <- collapse:::n`)
+  - if `options(collapse_mask = "all")` before loading the package, an additional function `n()` is exported that works just like `dplyr:::n()`. 
   - otherwise the same can now always be done using `GRPN()`. The previous uses of `GRPN` are unaltered i.e. `GRPN` can also:
     + fetch group sizes directly grouping object or grouped data frame i.e. `data |> gby(id) |> GRPN()` or `data %>% gby(id) %>% ftransform(N = GRPN(.))` (note the dot). 
     + compute group sizes on the fly, for example `fsubset(data, GRPN(id) > 10L)` or `fsubset(data, GRPN(list(id1, id2)) > 10L)` or `GRPN(data, by = ~ id1 + id2)`.
