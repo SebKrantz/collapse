@@ -347,8 +347,8 @@ anyv <- function(x, value) .Call(C_anyallv, x, value, FALSE)
 allv <- function(x, value) .Call(C_anyallv, x, value, TRUE)
 
 
-copyv <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE) {
-  if(is.list(X, ...)) { # Making sure some error is produced if dots are used
+copyv <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE, xlist = FALSE) {
+  if(is.list(X, ...) && !xlist) { # Making sure some error is produced if dots are used
     if(is.list(R)) {
       res <- .mapply(function(x, r) .Call(C_setcopyv, x, v, r, invert, FALSE, vind1),
                      list(unattrib(X), unattrib(R)), NULL)
@@ -359,8 +359,8 @@ copyv <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE) {
   }
   .Call(C_setcopyv, X, v, R, invert, FALSE, vind1)
 }
-setv  <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE) {
-  if(is.list(X, ...)) { # Making sure some error is produced if dots are used
+setv  <- function(X, v, R, ..., invert = FALSE, vind1 = FALSE, xlist = FALSE) {
+  if(is.list(X, ...) && !xlist) { # Making sure some error is produced if dots are used
     if(is.list(R)) {
       .mapply(function(x, r) .Call(C_setcopyv, x, v, r, invert, TRUE, vind1),
               list(unattrib(X), unattrib(R)), NULL)

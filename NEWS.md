@@ -1,3 +1,12 @@
+# collapse 1.8.8
+
+* `flm` and `fFtest` are now internal generic with an added formula method e.g. `flm(mpg ~ hp + carb, mtcars, weights = wt)` or `fFtest(mpg ~ hp + carb | vs + am, mtcars, weights = wt)` in addition to the programming interface. Thanks to Grant McDermott for suggesting. 
+
+* Added method `as.data.frame.qsu`, to efficiently turn the default array outputs from `qsu()` into tidy data frames. 
+
+* Major improvements to `setv` and `copyv`, generalizing the scope of operations that can be performed by the functions to all common cases. This means that even simply base R operations such as `X[v] <- R` can now be done significantly faster using `setv(X, v, R)`. 
+
+
 # collapse 1.8.7
 
 * Fixed a bug in `fscale.pdata.frame` where the default C++ method was being called instead of the list method (i.e. the method didn't work at all).
@@ -12,11 +21,6 @@
 * `fsummarise` now also adds groupings to transformation functions and operators, which allows full vectorization of more complex tasks involving transformations which are subsequently aggregated. A prime example is grouped bivariate linear model fitting, which can now be done using `mtcars |> fgroup_by(cyl) |> fsummarise(slope = fsum(W(mpg), hp) / fsum(W(mpg)^2))`. Before 1.8.7 it was necessary to do a mutate step first e.g. `mtcars |> fgroup_by(cyl) |> fmutate(dm_mpg = W(mpg)) |> fsummarise(slope = fsum(dm_mpg, hp) / fsum(dm_mpg^2))`, because `fsummarise` did not add groupings to transformation functions like `fwithin/W`. Thanks to Brodie Gaslam for making me aware of this. 
 
 * Argument `return.groups` from `GRP.default` is now also available in `fgroup_by`, allowing grouped data frames without materializing the unique grouping columns. This allows more efficient mutate-only operations e.g. `mtcars |> fgroup_by(cyl, return.groups = FALSE) |> fmutate(across(hp:carb, fscale))`. Similarly for aggregation with dropping of grouping columns `mtcars |> fgroup_by(cyl, return.groups = FALSE) |> fmean()` is equivalent and faster than `mtcars |> fgroup_by(cyl) |> fmean(keep.group_vars = FALSE)`.
-
-* `flm` and `fFtest` are now internal generic with an added formula method e.g. `flm(mpg ~ hp + carb, mtcars, weights = wt)` or `fFtest(mpg ~ hp + carb | vs + am, mtcars, weights = wt)` in addition to the programming interface. Thanks to Grant McDermott for suggesting. 
-
-* Added method `as.data.frame.qsu`, to efficiently turn the default array outputs from `qsu()` into tidy data frames. 
-
 
 # collapse 1.8.6
 
