@@ -14,7 +14,7 @@
 \item \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}.
 \item \code{"fast-stat-fun"} adds the functions contained in the macro: \code{.FAST_STAT_FUN}.
 \item \code{"fast-trfm-fun"} adds the functions contained in: \code{setdiff(.FAST_FUN, .FAST_STAT_FUN)}.
-\item \code{"all"} turns on all of the above, and additionally exports a function \code{n()} for use in \code{summarise} and \code{mutate}, and masks \code{base::table()} by the buch faster \code{qtab()} function.
+\item \code{"all"} turns on all of the above, and additionally exports a function \code{n()} for use in \code{summarise} and \code{mutate}, and masks \code{base::table()} by the much faster \code{qtab()} function.
 \item Since v1.8.8 it is also possible to pass \code{"n"} and \code{"qtab"} directly to the option.
 }
 Note that none of these options will impact internal \emph{collapse} code, but they may change the way your programs run. \code{"manip"} is probably the safest option to start with.

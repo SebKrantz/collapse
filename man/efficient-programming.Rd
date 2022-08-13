@@ -179,7 +179,7 @@ rm(x, xm, xd)
 
 ## setv() and copyv()
 x <- rnorm(100)
-y <- sample.int(10, 100, replace = TRUR)
+y <- sample.int(10, 100, replace = TRUE)
 setv(y, 5, 0)            # Faster than y[y == 5] <- 0
 setv(y, 4, x)            # Faster than y[y == 4] <- x[y == 4]
 setv(y, 20:30, y[40:50]) # Faster than y[20:30] <- y[40:50]

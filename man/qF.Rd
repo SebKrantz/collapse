@@ -61,7 +61,7 @@ There are 3 internal methods of computation: radix ordering, hashing, and Rcpp s
 
 Regarding speed: In general \code{qF} is around 5x faster than \code{as.factor} on character data and about 30x faster on numeric data. Automatic method dispatch typically does a good job delivering optimal performance.
 
-\code{qG} is in the first place a programmers function. It generates a factor-'light' class 'qG' consisting of only an integer grouping vector and an attribute providing the number of groups. It is slightly faster and more memory efficient than \code{\link{GRP}} for grouping atomic vectors, and also convient as it can be stored in a data frame column, which are the main reasons for its existance. %The fact that it (optionally) returns the unique groups / levels without converting them to character is an added bonus (this also provides a small performance gain compared to \code{qF}). Since v1.7, you can also call a C-level function \code{\link{group}} directly, which works for multivariate data as well, but does not sort the data and does not preserve missing values.
+\code{qG} is in the first place a programmers function. It generates a factor-'light' class 'qG' consisting of only an integer grouping vector and an attribute providing the number of groups. It is slightly faster and more memory efficient than \code{\link{GRP}} for grouping atomic vectors, and also convenient as it can be stored in a data frame column, which are the main reasons for its existance. %The fact that it (optionally) returns the unique groups / levels without converting them to character is an added bonus (this also provides a small performance gain compared to \code{qF}). Since v1.7, you can also call a C-level function \code{\link{group}} directly, which works for multivariate data as well, but does not sort the data and does not preserve missing values.
 
 \code{finteraction} is simply a wrapper around \code{as_factor_GRP(GRP.default(X))}, where X is replaced by the arguments in '\dots' combined in a list (so its not really an interaction function but just a multivariate grouping converted to factor, see \code{\link{GRP}} for computational details). In general: All vectors, factors, or lists of vectors / factors passed can be interacted. Interactions always create a level for missing values and always drop unused levels.
 }
@@ -69,7 +69,7 @@ Regarding speed: In general \code{qF} is around 5x faster than \code{as.factor} 
 \code{qF} returns an (ordered) factor. \code{qG} returns an object of class 'qG': an integer grouping vector with an attribute \code{"N.groups"} indicating the number of groups, and, if \code{return.groups = TRUE}, an attribute \code{"groups"} containing the vector of unique groups / elements in \code{x} corresponding to the integer-id. \code{finteraction} can return either.
 }
 \note{
-An effient alternative for character vectors with multithreading support is provided by \code{kit::charToFact}.
+An efficient alternative for character vectors with multithreading support is provided by \code{kit::charToFact}.
 
 \code{qG(x, sort = FALSE, na.exclude = FALSE, method = "hash")} internally calls \code{\link[=group]{group(x)}} which can also be used directly and also supports multivariate groupings where \code{x} can be a list of vectors.
 
