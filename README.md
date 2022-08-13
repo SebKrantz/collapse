@@ -1,4 +1,4 @@
-# collapse <img src='misc/figures/collapse_logo_small.png' width="150px" align="right" />
+# collapse <img src='man/figures/logo.png' width="150px" align="right" />
 
 
 <!-- badges: start -->

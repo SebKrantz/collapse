@@ -57,7 +57,7 @@ ckmatch(x, table,             # Check-match: throws an informative error if non-
      e = "Unknown columns:")
 all_identical(\dots)            # Check exact equality of multiple objects or list-elements
 all_obj_equal(\dots)            # Check near equality of multiple objects or list-elements
-all_funs(expr)           # Find all functions called in an R language expression
+all_funs(expr)                # Find all functions called in an R language expression
 setRownames(object,
  nm = if(is.atomic(object))   # Set rownames of object and return object
  seq_row(object) else NULL)
