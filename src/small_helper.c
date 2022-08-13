@@ -493,7 +493,7 @@ static void funswalk(SEXP s, FunsWalkData *d) {
   }
 }
 
-SEXP all_functions(SEXP x) {
+SEXP all_funs(SEXP x) {
 
   if(TYPEOF(x) != LANGSXP) return allocVector(STRSXP, 0);
   SEXP expr = x;
