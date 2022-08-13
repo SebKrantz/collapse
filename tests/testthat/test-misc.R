@@ -310,3 +310,18 @@ test_that("operator methods column selection since v1.8.1 works as intended", {
   }
 })
 options(warn = 1)
+
+test_that("all_functions works properly", {
+  expect_identical(all_functions(quote(fmean(vars, na.rm = FALSE))), "fmean")
+  expect_identical(all_functions(quote(fmean(vars, g = col, w = col, na.rm = FALSE))), "fmean")
+  expect_identical(all_functions(quote(fmean(vars, g = col, w = col, na.rm = FALSE)- fmode(var2))), c("-", "fmean", "fmode"))
+  expect_identical(all_functions(quote(q/p)), "/")
+  expect_identical(all_functions(quote(q-p)), "-")
+  expect_identical(all_functions(quote(b-c/i(u))), c("-", "/", "i"))
+  expect_identical(all_functions(quote(i/f(j/p(k/g(h))))), c("/", "f", "/", "p", "/", "g"))
+  expect_identical(all_functions(quote(1-f(1-j/p(1-k/g(h))))), c("-","f", "-", "/", "p", "-", "/", "g"))
+  expect_identical(all_functions(quote(i(u)-b/p(z-u/log(a)))), c("-", "i", "/", "p", "-", "/", "log"))
+  expect_identical(all_functions(quote(sum(x) + fmean(x) * e - 1 / fmedian(z))), c("-", "+", "sum", "*", "fmean", "/", "fmedian"))
+  expect_identical(all_functions(quote(sum(z)/2+4+e+g+h+(p/sum(u))+(q-y))), c("+", "+", "+", "+", "+", "+", "/", "sum", "(", "/", "sum", "(", "-"))
+  expect_identical(all_functions(quote(mean(fmax(min(fmode(mpg))))/fmean(mpg) + e + f + 1 + fsd(hp) + sum(bla) / 20)), c("+", "+", "+", "+", "+", "/", "mean", "fmax", "min", "fmode", "fmean", "fsd", "/", "sum"))
+})
