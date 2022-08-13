@@ -657,7 +657,7 @@ fmutate <- function(.data, ..., .keep = "all") {
           .data[[nam[i]]] <- NULL
           next
         }
-        eif <- all_functions(ei)
+        eif <- all_funs(ei)
         if(any(eif %in% .FAST_FUN_MOPS)) {
           .data[[nam[i]]] <- eval(fFUN_mutate_add_groups(ei), .data, pe)
         } else {

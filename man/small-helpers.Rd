@@ -15,7 +15,7 @@
 \alias{ckmatch}
 \alias{all_identical}
 \alias{all_obj_equal}
-\alias{all_functions}
+\alias{all_funs}
 \alias{setRownames}
 \alias{setColnames}
 \alias{setDimnames}
@@ -57,7 +57,7 @@ ckmatch(x, table,             # Check-match: throws an informative error if non-
      e = "Unknown columns:")
 all_identical(\dots)            # Check exact equality of multiple objects or list-elements
 all_obj_equal(\dots)            # Check near equality of multiple objects or list-elements
-all_functions(expr)           # Find all functions called in an R language expression
+all_funs(expr)           # Find all functions called in an R language expression
 setRownames(object,
  nm = if(is.atomic(object))   # Set rownames of object and return object
  seq_row(object) else NULL)
@@ -98,7 +98,7 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
  \item{\dots}{for \code{.c}: Comma-separated expressions. For \code{all_identical / all_obj_equal}: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality. For \code{rm_stub}: further arguments passed to \code{\link{gsub}}.}
 }
 \details{
-\code{all_functions} is the opposite of \code{\link{all.vars}}, to return the functions called rather than the variables in an expression. See Examples.
+\code{all_funs} is the opposite of \code{\link{all.vars}}, to return the functions called rather than the variables in an expression. See Examples.
 
   \code{copyAttrib} and \code{copyMostAttrib} take a shallow copy of the attribute list, i.e. they don't duplicate in memory the attributes themselves. They also, along with \code{setAttrib}, take a shallow copy of lists passed to the \code{to} argument, so that lists are not modified by reference. Atomic \code{to} arguments are however modified by reference.
 
@@ -168,7 +168,7 @@ rm(l)
 ex = quote(sum(x) + mean(y) / z)
 all.names(ex)
 all.vars(ex)
-all_functions(ex)
+all_funs(ex)
 rm(ex)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

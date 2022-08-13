@@ -61,7 +61,7 @@ SEXP geteptr(SEXP x);
 SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna);
 SEXP fwtabulate(SEXP x, SEXP w, SEXP ngp, SEXP ckna);
 SEXP vecgcd(SEXP x);
-SEXP all_functions(SEXP x);
+SEXP all_funs(SEXP x);
 // fnobs rewritten in C:
 SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
