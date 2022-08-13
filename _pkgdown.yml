@@ -4,8 +4,9 @@ home:
   title: Advanced and Fast Data Transformation in R
 
 # template:
-#   params:
-#     bootswatch: cyborg
+#   bootstrap: 5
+#   bootswatch: cyborg
+#   theme: arrow-dark
 
 development:
   mode: auto
@@ -30,6 +31,11 @@ navbar:
      href: https://github.com/SebKrantz/collapse
 
 articles:
+- title: collapse Documentation and Resources
+  desc: Provides an overview of all available package documentation
+  navbar: collapse Documentation and Resources
+  contents:
+  - collapse_documentation
 - title: Introduction to collapse
   desc: Introduces all main features in a structured way
   navbar: Introduction to collapse
@@ -55,7 +61,8 @@ articles:
   - collapse_and_sf
 
 reference:
-- contents: "collapse-package"
+- contents:
+  - "collapse-package"
 - title: "Fast Statistical Functions"
   desc: "Fast (grouped and weighted) statistical functions for vector, matrix, data frame and grouped tibble (class 'grouped_df', dplyr compatible)."
 - contents:
@@ -109,7 +116,7 @@ reference:
 - title: "Data Transformations"
   desc: "Fast row / column arithmetic, efficient row / column apply to data objects and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional centering, linear prediction / partialling-out."
 - contents:
-  - "A6-data-transformations"
+  - "data-transformations"
   - arithmetic
   - dapply
   - BY
@@ -164,7 +171,7 @@ reference:
 - contents:
   - "efficient-programming"
 - title: "Small (Helper) Functions"
-  desc: "Convenience functions to perform multiple-assignment, nonstandard concatenation, and deal with variable names, labels, other attributes, matching and object checking."
+  desc: "Convenience functions to perform multiple-assignment, nonstandard concatenation, and deal with variable names, labels, other attributes, matching and object checking, and help with metaprogramming."
 - contents:
   - "small-helpers"
 - title: "Data"
@@ -176,6 +183,13 @@ reference:
   desc: "Global options affecting package operation."
 - contents:
   - "collapse-options"
-
+- title: internal
+- contents:
+  - "collapse-documentation"
+  - "collapse-renamed"
+# - title: "Legacy Features"
+#   desc: "Functions and features in a process of depreciation."
+# - contents:
+#   - "collapse-renamed"
 
 
