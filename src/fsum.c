@@ -502,7 +502,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
     if(nth > 1 && l >= nth) { // If high-dimensional: column-level parallelism
       SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect;
       #pragma omp parallel for num_threads(nth)
-      for(int j = 0; j < l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth1));
+      for(int j = 0; j < l; j++) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth1));
     } else {
       for(int j = 0; j != l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth));
     }
@@ -515,7 +515,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
     if(nth > l) nth = l;
     SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect; // Needed if ng == 0, otherwise double multithreading
     #pragma omp parallel for num_threads(nth)
-    for(int j = 0; j < l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth1);
+    for(int j = 0; j < l; j++) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth1);
   } else {
     for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth);
   }
