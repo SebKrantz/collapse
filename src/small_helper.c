@@ -459,3 +459,63 @@ SEXP vecgcd(SEXP x) {
   }
   return R_NilValue;
 }
+
+// Adapted from https://github.com/wch/r-source/blob/79298c499218846d14500255efd622b5021c10ec/src/main/list.c
+/* The following code is used to recursive traverse a block */
+/* of code and extract all the function calls present in that code. */
+
+typedef struct {
+  SEXP ans;
+  int	StoreValues;
+  int	ItemCounts;
+} FunsWalkData;
+
+static void funswalk(SEXP s, FunsWalkData *d) {
+  SEXP name;
+  switch(TYPEOF(s)) {
+  case SYMSXP:
+    name = PRINTNAME(s);
+    if(CHAR(name)[0] != '\0') { /* skip blank symbols */
+      if(d->StoreValues) SET_STRING_ELT(d->ans, d->ItemCounts, name);
+      d->ItemCounts++;
+    }
+    break;
+  case LANGSXP: // https://github.com/hadley/r-internals/blob/ea892fa79bbffe961e78dbe9c90ce4ca3bf2d9bc/pairlists.md
+    while(s != R_NilValue) {
+      funswalk(CAR(s), d);
+      if(TYPEOF(CADR(s)) != LANGSXP) s = CDR(s);
+      if(TYPEOF(CADR(s)) != LANGSXP) break;
+      s = CDR(s);
+    }
+    break;
+  default: /* it seems the intention is to do nothing here! */
+    break;
+  }
+}
+
+SEXP all_functions(SEXP x) {
+
+  if(TYPEOF(x) != LANGSXP) return allocVector(STRSXP, 0);
+  SEXP expr = x;
+  int i, savecount;
+  FunsWalkData data = {NULL, 0, 0};
+
+  funswalk(expr, &data);
+  savecount = data.ItemCounts;
+
+  data.ans = allocVector(STRSXP, data.ItemCounts);
+
+  data.StoreValues = 1;
+  data.ItemCounts = 0;
+  funswalk(expr, &data);
+
+  if(data.ItemCounts != savecount) {
+    PROTECT(expr = data.ans);
+    data.ans = allocVector(STRSXP, data.ItemCounts);
+    for(i = 0 ; i < data.ItemCounts ; i++)
+      SET_STRING_ELT(data.ans, i, STRING_ELT(expr, i));
+    UNPROTECT(1);
+  }
+
+  return data.ans;
+}

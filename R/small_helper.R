@@ -275,6 +275,8 @@ all_obj_equal <- function(...) {
   is.logical(r)
 }
 
+all_functions <- function(expr) .Call(C_all_funs, expr)
+
 cinv <- function(x) chol2inv(chol(x))
 
 interact_names <- function(l) {

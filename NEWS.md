@@ -4,10 +4,15 @@
 
 * Added method `as.data.frame.qsu`, to efficiently turn the default array outputs from `qsu()` into tidy data frames. 
 
-* Major improvements to `setv` and `copyv`, generalizing the scope of operations that can be performed by the functions to all common cases. This means that even simple base R operations such as `X[v] <- R` can now be done significantly faster using `setv(X, v, R)`. 
+* Major improvements to `setv` and `copyv`, generalizing the scope of operations that can be performed to all common cases. This means that even simple base R operations such as `X[v] <- R` can now be done significantly faster using `setv(X, v, R)`. 
 
 * `n` and `qtab` can now be added to `options("collapse_mask")` e.g. `options(collapse_mask = c("manip", "helper", "n", "qtab"))`. This will export a function `n()` to get the (group) count in `fsummarise` and `fmutate` (which can also always be done using `GRPN()` but `n()` is more familiar to *dplyr* users), and will mask `table()` with `qtab()`, which is principally a fast drop-in replacement, but with some different further arguments. 
 
+* Added C-level helper function `all_functions`, which fetches all the functions called in an expression, similar to `setdiff(all.names(x), all.vars(x))` but better because it takes account of the syntax. For example let `x = quote(sum(sum))` i.e. we are summing a column named `sum`. Then `all.names(x) = c("sum", "sum")` and `all.vars(x) = "sum"` so that the difference is `character(0)`, whereas `all_functions(x)` returns `"sum"`. This function makes *collapse* smarter when parsing expressions in `fsummarise` and `fmutate` and deciding which ones to vectorize. 
+
+<!--
+For example, take the `.OPERATOR_FUN` such as `W()` for within-transforming/centering data. These receive vectorized execution in `fmutate` e.g. `mtcars |> gby(cyl) |> fmutate(mpg = W(mpg))` executes `W(mpg, g = GRP(.))`. Now suppose you have a column called `W` 
+-->
 
 # collapse 1.8.7
 
