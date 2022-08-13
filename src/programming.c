@@ -230,7 +230,8 @@ default: error("Unsupported type '%s' passed to allv() / anyv()", type2char(TYPE
 SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
 
   const int n = length(x), lv = length(val), lr = length(rep), tv = TYPEOF(val),
-    ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
+    tx = TYPEOF(x), tr = TYPEOF(rep), ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
+  int nprotect = 0;
 
   if(lv > 1 || ind1) {
     if(tv == LGLSXP) {
@@ -246,9 +247,20 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
     } else error("If length(v) > 1, v must be an integer or logical vector");
   } else if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
 
+  if(lr > 1 && lr == n && tr != tx) {
+    if(!((tx == INTSXP && tr == LGLSXP) || (tx == LGLSXP && tr == INTSXP))) {
+      PROTECT_INDEX ipx;
+      PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
+      ++nprotect;
+    } // error("typeof(x) needs to match typeof(r)");
+  }
+
 
   SEXP ans = R_NilValue;
-  if(set == 0) PROTECT(ans = duplicate(x)); // Fastest?? // copies attributes ?? -> Yes
+  if(set == 0) {
+    PROTECT(ans = duplicate(x)); // Fastest?? // copies attributes ?? -> Yes
+    ++nprotect;
+  }
 
   #define setcopyvLOOP(e)                                     \
   if(invert) {                                                \
@@ -279,7 +291,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
     for(int i = 0; i != n; ++i) if(pv[i] == 0) px[i] = pr[i];   \
   }
 
-  switch(TYPEOF(x)) {
+  switch(tx) {
   case INTSXP:
   case LGLSXP:
   {
@@ -287,7 +299,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
     if(lv == 1 && ind1 == 0) {
       int v;
       if(tv == STRSXP) {
-        if(!isFactor(x)) error("Type mismatch: if value is character, x must be character or factor.");
+        if(!isFactor(x)) error("Type mismatch: if v is character, x must be character or factor.");
         v = fchmatch(getAttrib(x, R_LevelsSymbol), val, 0);
       } else v = asInteger(val);
       if(lr == 1) {
@@ -378,7 +390,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   {
     SEXP *restrict px = set ? SEXPPTR(x) : SEXPPTR(ans);
     if(lv == 1 && ind1 == 0) error("Cannot compare lists to a value");
-    if(TYPEOF(rep) != VECSXP) error("If X is a list and xlist = TRUE, R also needs to be a list");
+    if(tr != VECSXP) error("If X is a list and xlist = TRUE, R also needs to be a list");
     const int *restrict pv = INTEGER(val); // ALTREP(val) ? (const int *)ALTVEC_DATAPTR(val) :
     if(lr == 1) {
       const SEXP r = VECTOR_ELT(rep, 0);
@@ -413,12 +425,11 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
     }
     break;
   }
-  default: error("Unsupported type '%s' passed to setv() / copyv()", type2char(TYPEOF(x)));
+  default: error("Unsupported type '%s' passed to setv() / copyv()", type2char(tx));
   }
-  if(set == 0) {
-    UNPROTECT(1);
-    return(ans);
-  }
+
+  if(nprotect) UNPROTECT(nprotect);
+  if(set == 0) return(ans);
   return(x);
 }
 
