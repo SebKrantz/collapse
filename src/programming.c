@@ -247,7 +247,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
     } else error("If length(v) > 1, v must be an integer or logical vector");
   } else if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
 
-  if(lr > 1 && lr == n && tr != tx) {
+  if(lr > 1 && tr != tx) { // lr == n &&
     if(!((tx == INTSXP && tr == LGLSXP) || (tx == LGLSXP && tr == INTSXP))) {
       PROTECT_INDEX ipx;
       PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
@@ -390,7 +390,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   {
     SEXP *restrict px = set ? SEXPPTR(x) : SEXPPTR(ans);
     if(lv == 1 && ind1 == 0) error("Cannot compare lists to a value");
-    if(tr != VECSXP) error("If X is a list and xlist = TRUE, R also needs to be a list");
+    // if(tr != VECSXP) error("If X is a list and xlist = TRUE, R also needs to be a list");
     const int *restrict pv = INTEGER(val); // ALTREP(val) ? (const int *)ALTVEC_DATAPTR(val) :
     if(lr == 1) {
       const SEXP r = VECTOR_ELT(rep, 0);
