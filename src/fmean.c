@@ -397,9 +397,9 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
     if(nth > 1 && l >= nth) { // If high-dimensional: column-level parallelism
       SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect;
       #pragma omp parallel for num_threads(nth)
-      for(int j = 0; j < l; ++j) pout[j] = REAL(fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth1))[0];
+      for(int j = 0; j < l; j++) pout[j] = asReal(fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth1)); // REAL()[0] should work here (result is always double), but seems to cause problems on some systems.
     } else {
-      for(int j = 0; j != l; ++j) pout[j] = REAL(fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth))[0];
+      for(int j = 0; j != l; ++j) pout[j] = asReal(fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth)); // REAL()[0]
     }
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
     UNPROTECT(nprotect);
@@ -410,7 +410,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
     if(nth > l) nth = l;
     SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect; // Needed if ng == 0, otherwise double multithreading
     #pragma omp parallel for num_threads(nth)
-    for(int j = 0; j < l; ++j) pout[j] = fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth1);
+    for(int j = 0; j < l; j++) pout[j] = fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth1);
   } else {
     for(int j = 0; j != l; ++j) pout[j] = fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth);
   }

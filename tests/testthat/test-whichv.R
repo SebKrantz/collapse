@@ -51,13 +51,15 @@ test_that("setv and copyv work properly", {
       nvl <- vec != v
       vna <- is.na(vec)
       expect_identical(FUN(vec, v, r), replace(vec, vl, r))
+      expect_identical(FUN(vec, which(vl), r, vind1 = TRUE), replace(vec, which(vl), r))
+      expect_identical(FUN(vec, 10:1000, r), replace(vec, 10:1000, r))
       expect_identical(FUN(vec, NA, r), replace(vec, vna, r))
-      expect_error(FUN(vec, vl, r))
-      expect_error(FUN(vec, 258L, r, vind1 = TRUE))
-      expect_error(FUN(vec, vl, r, invert = TRUE))
-      expect_error(FUN(vec, which(nvl), r))
+      expect_identical(FUN(vec, vl, r), replace(vec, vl, r))
+      expect_identical(FUN(vec, 258L, r, vind1 = TRUE), replace(vec, 258L, r))
+      expect_identical(FUN(vec, vl, r, invert = TRUE), replace(vec, !vl, r))
+      expect_identical(FUN(vec, which(nvl), r), replace(vec, which(nvl), r))
       expect_error(FUN(vec, which(vl), r, invert = TRUE, vind1 = TRUE))
-      expect_error(FUN(vec, which(nvl), r, invert = TRUE))
+      # expect_error(FUN(vec, which(nvl), r, invert = TRUE))
       if(anyNA(vl)) {
         setv(vl, NA, FALSE)
         setv(nvl, NA, FALSE)
@@ -68,7 +70,7 @@ test_that("setv and copyv work properly", {
       expect_identical(FUN(vec, vl, vec, invert = TRUE), replace(vec, nvl, vec[nvl]))
       expect_identical(FUN(vec, which(vl), vec), replace(vec, vl, vec[vl]))
       expect_identical(FUN(vec, which(nvl), vec), replace(vec, nvl, vec[nvl]))
-      expect_error(FUN(vec, which(nvl), vec, invert = TRUE))
+      # expect_error(FUN(vec, which(nvl), vec, invert = TRUE))
     }
     replr <- function(x, i, v) {
       x[i, ] <- v

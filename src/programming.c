@@ -229,140 +229,208 @@ default: error("Unsupported type '%s' passed to allv() / anyv()", type2char(TYPE
 
 SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
 
-  int n = length(x), lv = length(val), lr = length(rep),
-    ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
+  const int n = length(x), lv = length(val), lr = length(rep), tv = TYPEOF(val),
+    tx = TYPEOF(x), tr = TYPEOF(rep), ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
+  int nprotect = 0;
 
   if(lv > 1 || ind1) {
-    if(lr != n) error("If length(v) > 1, length(r) must match length(x). Note that x[v] <- r is efficient in base R, only x[v] <- r[v] is optimized here.");
-    if(TYPEOF(val) == LGLSXP) {
-      if(lv != n) error("If v is a logical vector, length(v) needs to be equal to length(x). Note that x[v] <- r is efficient in base R, only x[v] <- r[v] is optimized here.");
-    } else if(TYPEOF(val) == INTSXP) {
+    if(tv == LGLSXP) {
+      if(lv != n) error("If v is a logical vector, length(v) needs to be equal to length(x)");
+      if(lr != 1 && lr != n) error("If v is a logical vector, length(r) needs to be 1 or length(x)");
+    } else if(tv == INTSXP) {
       if(invert) error("invert = TRUE is only possible if v is a logical vector");
-    } else error("If length(v) > 1, v must be an integer or logical vector used to subset both x and r");
+      if(lv > n) error("length(v) must be <= length(x)");
+      if(!(lr == 1 || lr == n || lr == lv)) error("length(r) must be either 1, length(v) or length(x)");
+      // Just some heuristic checking as this is a programmers function
+      const int v1 = INTEGER_ELT(val, 0), vn = INTEGER_ELT(val, lv-1);
+      if(v1 < 1 || v1 > n || vn < 1 || vn > n) error("Detected index (v) outside of range [1, length(x)]");
+    } else error("If length(v) > 1, v must be an integer or logical vector");
   } else if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
+
+  if(lr > 1 && tr != tx) { // lr == n &&
+    if(!((tx == INTSXP && tr == LGLSXP) || (tx == LGLSXP && tr == INTSXP))) {
+      PROTECT_INDEX ipx;
+      PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
+      ++nprotect;
+    } // error("typeof(x) needs to match typeof(r)");
+  }
 
 
   SEXP ans = R_NilValue;
-  if(set == 0) PROTECT(ans = duplicate(x)); // Fastest?? // copies attributes ?? -> Yes
-
-#define setcopyvLOOP(e)                                     \
-  if(invert) {                                              \
-    for(int i = 0; i != n; ++i) if(px[i] != v) px[i] = e;   \
-  } else {                                                  \
-    for(int i = 0; i != n; ++i) if(px[i] == v) px[i] = e;   \
+  if(set == 0) {
+    PROTECT(ans = duplicate(x)); // Fastest?? // copies attributes ?? -> Yes
+    ++nprotect;
   }
 
-#define setcopyvLOOPLVEC                                      \
-if(tv == INTSXP) {                                            \
-  for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[pv[i]-1];     \
-} else if(invert == 0) {                                      \
-  for(int i = 0; i != n; ++i) if(pv[i]) px[i] = pr[i];        \
-} else {                                                      \
-  for(int i = 0; i != n; ++i) if(pv[i] == 0) px[i] = pr[i];   \
-}
-
-switch(TYPEOF(x)) {
-case INTSXP:
-case LGLSXP:
-{
-  int *px = set ? INTEGER(x) : INTEGER(ans);
-  if(lv == 1 && ind1 == 0) {
-    int v;
-    if(TYPEOF(val) == STRSXP) {
-      if(!isFactor(x)) error("Type mismatch: if value is character, x must be character or factor.");
-      v = fchmatch(getAttrib(x, R_LevelsSymbol), val, 0);
-    } else v = asInteger(val);
-    if(lr == 1) {
-      const int r = asInteger(rep);
-      setcopyvLOOP(r)
-    } else {
-      const int *pr = INTEGER(rep);
-      setcopyvLOOP(pr[i])
-    }
-  } else {
-    const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val), *pr = INTEGER(rep);
-    setcopyvLOOPLVEC
+  #define setcopyvLOOP(e)                                     \
+  if(invert) {                                                \
+    for(int i = 0; i != n; ++i) if(px[i] != v) px[i] = e;     \
+  } else {                                                    \
+    for(int i = 0; i != n; ++i) if(px[i] == v) px[i] = e;     \
   }
-  break;
-}
-case REALSXP:
-{
-  double *px = set ? REAL(x) : REAL(ans);
-  if(lv == 1 && ind1 == 0) {
-    const double v = asReal(val);
-    if(lr == 1) {
-      const double r = asReal(rep);
-      if(ISNAN(v)) {
-        if(invert) {
-          for(int i = 0; i != n; ++i) if(NISNAN(px[i])) px[i] = r;
-        } else {
-          for(int i = 0; i != n; ++i) if(ISNAN(px[i])) px[i] = r;
-        }
-      } else {
+
+  #define setcopyvLOOPLVEC1                                     \
+  if(tv == INTSXP) {                                            \
+    for(int i = 0; i != lv; ++i) px[pv[i]-1] = r;               \
+  } else if(invert == 0) {                                      \
+    for(int i = 0; i != n; ++i) if(pv[i] > 0) px[i] = r;        \
+  } else {                                                      \
+    for(int i = 0; i != n; ++i) if(pv[i] == 0) px[i] = r;       \
+  }
+
+  #define setcopyvLOOPLVEC                                      \
+  if(tv == INTSXP) {                                            \
+    if(lr == n) {                                               \
+      for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[pv[i]-1];   \
+    } else {                                                    \
+      for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[i];         \
+    }                                                           \
+  } else if(invert == 0) {                                      \
+    for(int i = 0; i != n; ++i) if(pv[i] > 0) px[i] = pr[i];    \
+  } else {                                                      \
+    for(int i = 0; i != n; ++i) if(pv[i] == 0) px[i] = pr[i];   \
+  }
+
+  switch(tx) {
+  case INTSXP:
+  case LGLSXP:
+  {
+    int *restrict px = set ? INTEGER(x) : INTEGER(ans);
+    if(lv == 1 && ind1 == 0) {
+      int v;
+      if(tv == STRSXP) {
+        if(!isFactor(x)) error("Type mismatch: if v is character, x must be character or factor.");
+        v = fchmatch(getAttrib(x, R_LevelsSymbol), val, 0);
+      } else v = asInteger(val);
+      if(lr == 1) {
+        const int r = asInteger(rep);
         setcopyvLOOP(r)
-      }
-    } else {
-      const double *pr = REAL(rep);
-      if(ISNAN(v)) {
-        if(invert) {
-          for(int i = 0; i != n; ++i) if(NISNAN(px[i])) px[i] = pr[i];
-        } else {
-          for(int i = 0; i != n; ++i) if(ISNAN(px[i])) px[i] = pr[i];
-        }
       } else {
+        const int *restrict pr = INTEGER(rep);
         setcopyvLOOP(pr[i])
       }
-    }
-  } else {
-    const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val);
-    const double *pr = REAL(rep);
-    setcopyvLOOPLVEC
-  }
-  break;
-}
-case STRSXP:
-{
-  SEXP *px = set ? STRING_PTR(x) : STRING_PTR(ans);
-  if(lv == 1 && ind1 == 0) {
-    const SEXP v = PROTECT(asChar(val));
-    if(lr == 1) {
-      const SEXP r = asChar(rep);
-      setcopyvLOOP(r)
     } else {
-      const SEXP *pr = STRING_PTR(rep);
-      setcopyvLOOP(pr[i])
+      const int *restrict pv = INTEGER(val); // ALTREP(val) ? (const int *)ALTVEC_DATAPTR(val) :
+      if(lr == 1) {
+        const int r = asInteger(rep);
+        setcopyvLOOPLVEC1
+      } else {
+        const int *restrict pr = INTEGER(rep);
+        setcopyvLOOPLVEC
+      }
     }
-    UNPROTECT(1);
-  } else {
-    const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val);
-    const SEXP *pr = STRING_PTR(rep);
-    setcopyvLOOPLVEC
-  }
-  break;
-}
-case VECSXP:
-{
-  SEXP *px = set ? SEXPPTR(x) : SEXPPTR(ans);
-  if(lv == 1 && ind1 == 0) error("Cannot compare lists to a value");
-  const int tv = TYPEOF(val), *pv = tv == INTSXP ? INTEGER(val) : LOGICAL(val);
-  const SEXP *pr = SEXPPTR(rep);
-  setcopyvLOOPLVEC
     break;
-}
-  // case RAWSXP:
-  // {
-  //   Rbyte *px = set ? RAW(x) : RAW(ans);
-  //   const Rbyte v = RAW(val)[0], r = RAW(rep)[0];
-  //   setcopyvLOOP
-  //   break;
-  // }
-default: error("Unsupported type '%s' passed to setv() / copyv()", type2char(TYPEOF(x)));
-}
-if(set == 0) {
-  UNPROTECT(1);
-  return(ans);
-}
-return(x);
+  }
+  case REALSXP:
+  {
+    double *restrict px = set ? REAL(x) : REAL(ans);
+    if(lv == 1 && ind1 == 0) {
+      const double v = asReal(val);
+      if(lr == 1) {
+        const double r = asReal(rep);
+        if(ISNAN(v)) {
+          if(invert) {
+            for(int i = 0; i != n; ++i) if(NISNAN(px[i])) px[i] = r;
+          } else {
+            for(int i = 0; i != n; ++i) if(ISNAN(px[i])) px[i] = r;
+          }
+        } else {
+          setcopyvLOOP(r)
+        }
+      } else {
+        const double *restrict pr = REAL(rep);
+        if(ISNAN(v)) {
+          if(invert) {
+            for(int i = 0; i != n; ++i) if(NISNAN(px[i])) px[i] = pr[i];
+          } else {
+            for(int i = 0; i != n; ++i) if(ISNAN(px[i])) px[i] = pr[i];
+          }
+        } else {
+          setcopyvLOOP(pr[i])
+        }
+      }
+    } else {
+      const int *restrict pv = INTEGER(val); // ALTREP(val) ? (const int *)ALTVEC_DATAPTR(val) :
+      if(lr == 1) {
+        const double r = asReal(rep);
+        setcopyvLOOPLVEC1
+      } else {
+        const double *restrict pr = REAL(rep);
+        setcopyvLOOPLVEC
+      }
+    }
+    break;
+  }
+  case STRSXP:
+  {
+    SEXP *restrict px = set ? STRING_PTR(x) : STRING_PTR(ans);
+    if(lv == 1 && ind1 == 0) {
+      const SEXP v = PROTECT(asChar(val));
+      if(lr == 1) {
+        const SEXP r = asChar(rep);
+        setcopyvLOOP(r)
+      } else {
+        const SEXP *restrict pr = STRING_PTR(rep);
+        setcopyvLOOP(pr[i])
+      }
+      UNPROTECT(1);
+    } else {
+      const int *restrict pv = INTEGER(val); // ALTREP(val) ? (const int *)ALTVEC_DATAPTR(val) :
+      if(lr == 1) {
+        const SEXP r = asChar(rep);
+        setcopyvLOOPLVEC1
+      } else {
+        const SEXP *restrict pr = STRING_PTR(rep);
+        setcopyvLOOPLVEC
+      }
+    }
+    break;
+  }
+  case VECSXP:
+  {
+    SEXP *restrict px = set ? SEXPPTR(x) : SEXPPTR(ans);
+    if(lv == 1 && ind1 == 0) error("Cannot compare lists to a value");
+    // if(tr != VECSXP) error("If X is a list and xlist = TRUE, R also needs to be a list");
+    const int *restrict pv = INTEGER(val); // ALTREP(val) ? (const int *)ALTVEC_DATAPTR(val) :
+    if(lr == 1) {
+      const SEXP r = VECTOR_ELT(rep, 0);
+      setcopyvLOOPLVEC1
+    } else {
+      const SEXP *restrict pr = SEXPPTR(rep);
+      setcopyvLOOPLVEC
+    }
+    break;
+  }
+  case RAWSXP:
+  {
+    Rbyte *restrict px = set ? RAW(x) : RAW(ans);
+    if(lv == 1 && ind1 == 0) {
+      const Rbyte v = RAW(val)[0];
+      if(lr == 1) {
+        const Rbyte r = RAW(rep)[0];
+        setcopyvLOOP(r)
+      } else {
+        const Rbyte *restrict pr = RAW(rep);
+        setcopyvLOOP(pr[i])
+      }
+    } else {
+      const int *restrict pv = INTEGER(val); // ALTREP(val) ? (const int *)ALTVEC_DATAPTR(val) :
+      if(lr == 1) {
+        const Rbyte r = RAW(rep)[0];
+        setcopyvLOOPLVEC1
+      } else {
+        const Rbyte *restrict pr = RAW(rep);
+        setcopyvLOOPLVEC
+      }
+    }
+    break;
+  }
+  default: error("Unsupported type '%s' passed to setv() / copyv()", type2char(tx));
+  }
+
+  if(nprotect) UNPROTECT(nprotect);
+  if(set == 0) return(ans);
+  return(x);
 }
 
 SEXP setop_core(SEXP x, SEXP val, SEXP op, SEXP roww) {

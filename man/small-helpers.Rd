@@ -15,6 +15,7 @@
 \alias{ckmatch}
 \alias{all_identical}
 \alias{all_obj_equal}
+\alias{all_functions}
 \alias{setRownames}
 \alias{setColnames}
 \alias{setDimnames}
@@ -30,7 +31,7 @@
 Small (Helper) Functions % \emph{collapse}
 }
 \description{
-Convenience functions in the \emph{collapse} package that help to deal with object attributes such as variable names and labels, matching and object checking, and that improve the workflow. % Some functions are performance improved replacements for base R functions. % For recoding and replacing values see \code{\link{Recode}}. % for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}.
+Convenience functions in the \emph{collapse} package that help to deal with object attributes such as variable names and labels, matching and object checking, metaprogramming, and that improve the workflow. % Some functions are performance improved replacements for base R functions. % For recoding and replacing values see \code{\link{Recode}}. % for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}.
 }
 \usage{
 .c(\dots)                       # Non-standard concatenation i.e. .c(a, b) == c("a", "b")
@@ -56,6 +57,7 @@ ckmatch(x, table,             # Check-match: throws an informative error if non-
      e = "Unknown columns:")
 all_identical(\dots)            # Check exact equality of multiple objects or list-elements
 all_obj_equal(\dots)            # Check near equality of multiple objects or list-elements
+all_functions(expr)           # Find all functions called in an R language expression
 setRownames(object,
  nm = if(is.atomic(object))   # Set rownames of object and return object
  seq_row(object) else NULL)
@@ -74,6 +76,7 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
 \arguments{
   \item{X}{a matrix or data frame (some functions also support vectors and arrays although that is less common).}
   \item{x, table}{a (atomic) vector.}
+  \item{expr}{an expression of type "language" e.g. \code{quote(x / sum(x))}.}
   \item{object, to, from}{a suitable R object.}
   \item{a}{a suitable list of attributes.}
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
@@ -95,6 +98,8 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
  \item{\dots}{for \code{.c}: Comma-separated expressions. For \code{all_identical / all_obj_equal}: Either multiple comma-separated objects or a single list of objects in which all elements will be checked for exact / numeric equality. For \code{rm_stub}: further arguments passed to \code{\link{gsub}}.}
 }
 \details{
+\code{all_functions} is the opposite of \code{\link{all.vars}}, to return the functions called rather than the variables in an expression. See Examples.
+
   \code{copyAttrib} and \code{copyMostAttrib} take a shallow copy of the attribute list, i.e. they don't duplicate in memory the attributes themselves. They also, along with \code{setAttrib}, take a shallow copy of lists passed to the \code{to} argument, so that lists are not modified by reference. Atomic \code{to} arguments are however modified by reference.
 
 \code{copyMostAttrib} copies all attributes except for \code{"names"}, \code{"dim"} and \code{"dimnames"} (like the corresponding C-API function), and further only copies the \code{"row.names"} attribute of data frames if known to be valid. Thus it is a suitable choice if objects should be of the same type but are not of equal dimensions.
@@ -158,6 +163,13 @@ all_identical(iris, iris, iris, iris)
 l <- replicate(100, fmean(num_vars(iris), iris$Species), simplify = FALSE)
 all_identical(l)
 rm(l)
+
+## Function names from expressions
+ex = quote(sum(x) + mean(y) / z)
+all.names(ex)
+all.vars(ex)
+all_functions(ex)
+rm(ex)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

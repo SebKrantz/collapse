@@ -120,6 +120,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_fwtabulate", (DL_FUNC) &fwtabulate, 4},
   {"C_vecgcd", (DL_FUNC) &vecgcd, 1},
   {"C_issorted", (DL_FUNC) &Cissorted, 2},
+  {"C_all_funs", (DL_FUNC) &all_functions, 1},
   // {"C_aschar", (DL_FUNC) &CasChar, 1},
   {"C_subsetDT", (DL_FUNC) &subsetDT, 4},
   {"C_subsetVector", (DL_FUNC) &subsetVector, 3},

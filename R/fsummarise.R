@@ -15,7 +15,12 @@ fFUN_smr_add_groups <- function(z) {
   if(length(z) > 2L || is.call(z[[2L]])) return(as.call(lapply(z, fFUN_smr_add_groups)))
   z
 }
-# Works: fFUN_smr_add_groups(quote(mean(fmax(min(fmode(mpg))))/fmean(mpg) + fsd(hp) + sum(bla) / 20))
+# Works: fFUN_smr_add_groups(quote(mean(fmax(min(fmode(mpg))))/fmean(mpg) + e + f + 1 + fsd(hp) + sum(bla) / 20))
+# Also: quote(sum(x) + fmean(x) + e - 1 / fmedian(z))
+# Also: quote(sum(z)/2+4+e+g+h+(p/sum(u))+(q-y))
+# Also: quote(b-c/i(u))
+# Also: quote(i(u)-b/p(z-u/log(a)))
+# Also: q/p
 
 # Old version...
 # othFUN_compute <- function(x) {
@@ -102,10 +107,10 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
         # return(eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe))
         res[[i]] <- eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe)
       } else { # Tagged vector expressions
-        eiv <- all.names(ei)
-        res[[i]] <- list(if(any(eiv %in% .FAST_STAT_FUN_POLD))  # startsWith(eiv, .FAST_STAT_FUN_POLD) Note: startsWith does not reliably capture expressions e.g. e <- quote(list(b = fmean(log(mpg)) + max(qsec))) does not work !!
+        eif <- all_functions(ei)
+        res[[i]] <- list(if(any(eif %in% .FAST_STAT_FUN_POLD))  # startsWith(eif, .FAST_STAT_FUN_POLD) Note: startsWith does not reliably capture expressions e.g. e <- quote(list(b = fmean(log(mpg)) + max(qsec))) does not work !!
                          eval(fFUN_smr_add_groups(ei), .data, pe) else
-                         do_grouped_expr(ei, eiv, .data, g, pe))
+                         do_grouped_expr(ei, length(eif), .data, g, pe))
       }
     }
     names(res) <- nam

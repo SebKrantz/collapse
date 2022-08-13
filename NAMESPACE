@@ -13,6 +13,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(rm_stub)
  export(all_identical)
  export(all_obj_equal)
+ export(all_functions)
  # export(as.factor.GRP)
  export(as_factor_GRP)
  export(as.factor_GRP)

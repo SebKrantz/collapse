@@ -77,12 +77,12 @@
 
 .OPERATOR_FUN <- c("STD","B","W","HDB","HDW","L","F","D","Dlog","G")
 
-.FAST_STAT_FUN_POLD <- c(.FAST_STAT_FUN, "fNobs","fNdistinct", "GRPN", "n")
+.FAST_STAT_FUN_POLD <- c(.FAST_STAT_FUN, "fNobs","fNdistinct", "GRPN") # "n"
 
 .FAST_FUN_MOPS <- c(.FAST_STAT_FUN_POLD, "fcumsum","fscale","fbetween","fwithin",
                     "flag","fdiff","fgrowth","STD","B","W","L","F","D","Dlog","G")
 
-.FAST_STAT_FUN_EXT <- c(.FAST_STAT_FUN_POLD, paste0(setdiff(.FAST_STAT_FUN_POLD, c("GRPN", "n")), "_uw"))
+.FAST_STAT_FUN_EXT <- c(.FAST_STAT_FUN_POLD, paste0(setdiff(.FAST_STAT_FUN_POLD, "GRPN"), "_uw")) # "n"
 
 
 
