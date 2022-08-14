@@ -46,7 +46,8 @@ jobs:
       - name: Test coverage
         run: |
           library(covr)
-          options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS=""))
+          options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS=""),
+                  collapse_unused_arg_action = "none", warn = -1)
           Sys.setenv(NCRAN = TRUE, NMAC = TRUE)
           codecov(type = "all")
         shell: Rscript {0}
