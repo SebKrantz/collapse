@@ -10,7 +10,6 @@
 ^testing$
 ^\.travis\.yml$
 ^\.build\.timestamp$
-^doc$
 ^\.RData
 ^Meta$
 ^CRAN-RELEASE$
@@ -22,5 +21,6 @@ man/figures
 ^codecov\.yml$
 ^\.covignore$
 ^\.github$
+^\.fastverse$
 \.log$
 _cache$
