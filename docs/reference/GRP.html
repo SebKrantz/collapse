@@ -128,7 +128,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">6</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for GRP</span>
-<span class="fu"><a href="https://rdrr.io/pkg/urca/man/plot-methods.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, breaks <span class="op">=</span> <span class="st">"auto"</span>, type <span class="op">=</span> <span class="st">"s"</span>, horizontal <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, breaks <span class="op">=</span> <span class="st">"auto"</span>, type <span class="op">=</span> <span class="st">"s"</span>, horizontal <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -209,7 +209,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 
 
   <dt>use.g.names</dt>
-<dd><p>logical. <code>TRUE</code> returns a named list, like <code><a href="https://Rdatatable.gitlab.io/data.table/reference/split.html" class="external-link">split</a></code>. <code>FALSE</code> is slightly more efficient.</p></dd>
+<dd><p>logical. <code>TRUE</code> returns a named list, like <code><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></code>. <code>FALSE</code> is slightly more efficient.</p></dd>
 
 
  </dl><p><!-- %  \item{untibble}{logical. \code{TRUE} also removes classes \code{c("tbl_df", "tbl")} from \code{X}. \code{fgroup_by} attaches an attribute \code{"was.tibble"} indicating if \code{X} was a tibble prior to grouping. The argument thus defaults to \code{TRUE} if this attribute is attached and equal to \code{FALSE}, so that \code{identical(X, X |&gt; fgroup_by(...) |&gt; fungroup())}, regardless of the nature of \code{X}. } --></p>
@@ -304,7 +304,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-out co"><span class="r-pr">#&gt;</span> Groups with sizes: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     1     3     7     3     4    12     2 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/urca/man/plot-methods.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>                            <span class="co"># Plotting it</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>                            <span class="co"># Plotting it</span></span>
 <span class="r-plt img"><img src="GRP-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span class="fu">GRPnames</span><span class="op">(</span><span class="va">g</span><span class="op">)</span>                        <span class="co"># Retain group names</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "4.0.1" "4.1.0" "4.1.1" "6.0.1" "6.1.0" "8.0.0" "8.0.1"</span>
@@ -459,8 +459,8 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 27 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"><span class="co"># Note: can also use n &lt;- GRPN, or set options(collapse_mask = "all") to use n()</span></span>
-<span class="r-in"><span class="co"># Other options:</span></span>
+<span class="r-in"><span class="co"># Note: can also set options(collapse_mask = "n") to use n() instead, see help("collapse-options")</span></span>
+<span class="r-in"><span class="co"># Other usage modes:</span></span>
 <span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fgroup_by</span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>Sizes <span class="op">=</span> <span class="fu">GRPN</span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp drat    wt  qsec vs am gear carb Sizes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4     3</span>
@@ -572,12 +572,12 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, <span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr     min       lq      mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 103.525 108.0965 133.59399</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE)  34.604  37.9865  61.16831</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    median       uq      max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  111.2330 115.2510  905.895   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   40.4875  43.3165 1659.885   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr     min      lq      mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 100.491 103.361 110.98577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE)  35.957  38.499  44.10206</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    median      uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  107.5225 113.611 263.015   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   41.1025  46.699 118.613   100</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>
