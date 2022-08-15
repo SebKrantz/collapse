@@ -258,7 +258,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
 
   SEXP ans = R_NilValue;
   if(set == 0) {
-    PROTECT(ans = duplicate(x)); // Fastest?? // copies attributes ?? -> Yes
+    PROTECT(ans = shallow_duplicate(x)); // Fastest?? // copies attributes ?? -> Yes
     ++nprotect;
   }
 
