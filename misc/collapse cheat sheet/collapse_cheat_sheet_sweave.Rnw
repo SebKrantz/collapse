@@ -1,0 +1,565 @@
+\documentclass[8pt,a4paper,landscape]{extarticle}
+
+%% Language and font encodings
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+% \usepackage[T1]{fontenc}
+
+%% Sets page size and margins
+\usepackage[landscape,top=0.8cm,bottom=0.5cm,left=0.5cm,right=0.5cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{multicol} % # ,multirow
+\setlength{\columnsep}{0.5cm}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+% \usepackage[colorinlistoftodos]{todonotes}
+\usepackage[colorlinks=true, allcolors=NavyBlue]{hyperref}
+%\usepackage[section]{placeins}
+\usepackage{booktabs}
+\usepackage[scaled=1]{helvet}
+\renewcommand\familydefault{\sfdefault}
+\renewcommand\bfdefault{sb}
+% \renewcommand\bfdefault{md}
+%\usepackage{fontspec}
+% \usepackage{enumitem}
+\usepackage{scrextend} % https://tex.stackexchange.com/questions/37080/how-can-i-indent-a-block-of-text-for-a-specified-amount
+\usepackage{anyfontsize} % \usepackage{moresize} % https://texblog.org/2012/08/29/changing-the-font-size-in-latex/
+
+\usepackage{setspace} % \linespread{1.3}
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.02em}%Length of space between paragraphs
+% \setlength{\columnsep}{6mm}
+\setlength{\itemsep}{0.2em}
+\pagestyle{empty}
+
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-2ex plus -.5ex minus -.2ex}%before -1
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries\textcolor{WildStrawberry}}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-2explus -.5ex minus -.2ex}%before -1
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries\textcolor{WildStrawberry}}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-2ex plus -.5ex minus -.2ex}%set spaces around sections
+                                {0.3ex plus .2ex}%normally 1
+                                {\normalfont\small\bfseries\textcolor{WildStrawberry}}}
+\makeatother
+
+% https://tex.stackexchange.com/questions/36030/how-to-make-a-single-word-look-as-some-code
+%\definecolor{light-gray}{gray}{0.95}
+%\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\hrrule}{\vspace{2mm}\textcolor{gray}{\hrulefill}\vspace{-2.5mm}} % darkgray
+\newcommand{\itxt}[1]{\textcolor{gray}{\textbf{#1}}}
+
+
+% https://groups.google.com/g/knitr/c/mgtuTyBzkaA
+\renewenvironment{knitrout}{\setlength{\topsep}{0mm}}{}
+
+% -----------------------------------------------------------------------
+
+
+\begin{document}
+
+<<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = TRUE, size = "scriptsize")
+library(collapse)
+library(magrittr)
+library(tibble)
+library(microbenchmark)
+options(width=80)
+
+iris2 <- copyv(iris, NA, NA)
+@
+
+\raggedright
+% \footnotesize
+\small
+
+{
+     {\fontsize{22}{30}\selectfont \textcolor{Gray}{Advanced and Fast Data Transformation with \textit{collapse}}}{\Huge\ : : CHEAT SHEET} %\\%\small{by Sebastian Krantz} %
+     \vspace{2mm}
+}
+
+\begin{multicols*}{4}
+%\setlength{\premulticols}{1pt}
+%\setlength{\postmulticols}{1pt}
+%\setlength{\multicolsep}{1pt}
+%\setlength{\columnsep}{2pt}
+
+\section{\textcolor{WildStrawberry}{Introduction}} % Basics /
+%\colorbox{gray}{
+\textbf{\textit{collapse}} is a C/C++ based package supporting advanced (grouped, weighted, time series, panel data and recursive) statistical operations in R, with very efficient low-level vectorizations across both groups and columns. \newline
+
+It also offers an efficient class-agnostic approach to data transformation in R: handling matrix and data frame based objects in a uniform, object preserving, way, while ensuring seamless compatibility with \textit{dplyr} / (grouped) \textit{tibble}, \textit{data.table}, \textit{xts}, \textit{sf} and \textit{plm} classes for panel data.  \newline
+
+\textit{collapse} provides full flexibility and control to the user for statistical programming - with multiple ways to achieve the same outcome. The package-wide default is \code{na.rm = TRUE}, and implemented at very low cost at the algorithm level.  \newline
+
+See the documentation at \code{help("collapse-documentation")} or \href{https://sebkrantz.github.io/collapse/reference/index.html}{online}. See also the \href{https://fastverse.github.io/fastverse/}{\textit{fastverse}} package/project for a recommended set of complimentary packages.
+%}
+
+\hrrule
+\section{Row/Column Arithmetic (by Reference)}
+\setstretch{1.5}
+Column-wise sweeping out of vectors/matrices/DFs/lists\\
+\quad \code{\%cr\%}, \code{\%c+\%}, \code{\%c-\%}, \code{\%c*\%}, \code{\%c/\%} e.g. \code{Z = X \%c/\% rowSums(X)}\\
+Row-wise sweeping vectors from vectors/matrices/DFs/lists\\
+\quad \code{\%rr\%}, \code{\%r+\%}, \code{\%r-\%}, \code{\%r*\%}, \code{\%r/\%} e.g. \code{Z = X \%r/\% colSums(X)}\\
+Standard (column-wise) math by reference (returns invisibly)\\
+\quad \code{\%+=\%}, \code{\%-=\%}, \code{\%*=\%}, \code{\%/=\%} \quad e.g. \quad \code{X \%-=\% rowSums(X)}\\
+Same thing, also supporting row-wise operations by reference\\
+\quad \code{setop(X, "/", rowSums(X))}\\
+\setstretch{1}
+\quad \code{setop(X, "/", colSums(X), rowwise = TRUE)}\\
+
+
+\hrrule
+\section{\fontsize{9}{11}\selectfont Transform Data by (Grouped) Replacing or
+Sweeping out Statistics (by Reference)}
+%\vspace{1mm}
+\itxt{A generalisation of rowwise operations, that also supports sweeping by groups e.g. aggregate statistics}\newline
+
+\qquad \code{TRA(x, STATS, FUN = "-", g = NULL, set = FALSE)}\\
+\ \code{setTRA(x, STATS, FUN = "-", g = NULL)}\newline
+
+\begin{addmargin}[1em]{0em}% 2em left, 2em right
+\begin{itemize}
+\item[\code{STATS}] statistics matching columns of \code{x}  (i.e. aggregated vector, matrix or data frame / list)
+\item[\code{FUN}] integer/string indicating transformation to perform: \\\vspace{1mm}
+\resizebox{0.2\textwidth}{!}{
+\hspace{-13mm}
+\begin{tabular}{lll}
+    \emph{Int.} & \emph{String} & \emph{Description}  \\
+      0 & \code{"replace\_NA"}   & replace missing values in \code{x} \\
+      1 & \code{"replace\_fill"}   & replace data and missing values in \code{x} \\
+      2 & \code{"replace"} & replace data but preserve missing values in \code{x} \\
+      3 & \code{"-"}   & subtract: \code{x - STATS(g)} \\
+      4 & \code{"-+"}  & \code{x - STATS(g) + fmean(STATS, w = GRPN)} \\
+      5 & \code{"/"}   & divide: \code{x / STATS(g)} \\
+      6 & \code{"\%"}  & compute percentages: \code{x * 100/STATS(g)} \\
+      7 & \code{"+"} & add: \code{x + STATS(g)} \\
+      8 & \code{"*"} & multiply: \code{x * STATS(g)}  \\
+      9 & \code{"\%\%"} & modulus: \code{x \%\% STATS(g)}  \\
+     10 & \code{"-\%\%"} & subtract modulus: \code{x - x \%\% STATS(g)}
+\end{tabular}
+}
+\item[\code{g}] [optional] (list of) vectors / factors or \code{GRP()} object
+\item[\code{set}] TRUE transforms \code{x} by reference. \code{setTRA} is equivalent to \code{invisible(TRA(..., set = TRUE))}
+\end{itemize}
+\end{addmargin}
+
+% \vfill\null
+\columnbreak
+% \hrrule
+\section{Fast Statistical Functions}
+%\vspace{1mm}
+\itxt{Fast functions to perform column–wise grouped and weighted computations on matrix-like objects:}
+\newline
+
+\quad \code{fmean, fmedian, fmode, fsum, fprod, fsd, fvar} \\
+\quad \code{fmin, fmax, fnth, ffirst, flast, fnobs, fndistinct} \newline
+
+\textbf{Syntax} \newline
+
+\quad \code{FUN(x, g = NULL, [w = NULL], TRA = NULL,} \\
+\quad\qquad \code{[na.rm = TRUE], use.g.names = TRUE, }\\
+\quad\qquad \code{[drop = TRUE], [nthreads = 1L])} \newline
+
+\begin{addmargin}[1em]{0em}% 2em left, 0em right
+\begin{itemize}
+\item[\code{x}] vector, matrix, or (grouped) data frame / list
+\item[\code{g}] [optional] (list of) vectors / factors or GRP() object
+\item[\code{w}] [optional] vector of (frequency) weights
+\item[\code{TRA}] [optional] operation to transform data with computed statistics (see \code{FUN} argument to \code{TRA()} and Examples)
+\item[\code{drop}] drop matrix / data frame dimensions. default \code{TRUE}
+% \item[\code{na.rm}] default \code{TRUE}: algorithms have branches to skip \code{NA's}
+\end{itemize}
+\end{addmargin}
+
+\vspace{2mm}
+\textbf{Examples}
+<<>>=
+fmean(AirPassengers)  # Vector
+fmean(AirPassengers, w = cycle(AirPassengers))  # Weighted mean
+fmean(EuStockMarkets) # Matrix
+fmean(EuStockMarkets, drop = FALSE) # Don't drop dimensions
+fmean(airquality)     # Data Frame (can also use drop = FALSE)
+fmean(iris[1:4], g = iris$Species) # Grouped
+X = iris[1:4]; g = iris$Species; w <- abs(rnorm(nrow(X)))
+fmean(X, g, w)  # Grouped and weighted (random weights)
+## Transfomrations: here centering data on the weighted group median
+TRA(X, fmedian(X, g, w), "-", g) |> head(3)
+fmedian(X, g, w, TRA = "-") |> head(3) # Same thing: more compact
+fmedian(X, g, w, "-", set = TRUE) # Modify in-place (same as setTRA())
+head(iris, 3) # Changed iris too, as X = iris[1:4] did a shallow copy
+@
+
+% \begin{addmargin}[2em]{0em}
+% \code{fmean(data[3:5], data\$grp1, data\$weights)\\
+% data \%>\% fgroup\_by(grp1) \%>\% fmean(weights)\\
+% TRA(mat, fmedian(mat, g), "-", g)\\
+% fmedian(mat, g, TRA = "-")  \# same thing
+% }
+% \end{addmargin}
+
+<<echo=FALSE, include=FALSE>>=
+iris <- iris2
+@
+\vspace{-1mm}
+
+\hrrule
+\section{Basic Computing with R Functions}
+% \vspace{1mm}
+\itxt{Apply R functions to rows or columns (by groups)}\\
+\setstretch{1.5}
+\code{dapply(x, FUN, ..., MARGIN = 2)} - column/row apply\\
+\code{BY(x, g, FUN, ...)} - split-apply-combine computing\\
+\setstretch{1}
+
+%\vfill\null
+% \columnbreak
+
+\section{Grouping and Ordering}
+% \vspace{1mm}
+\itxt{Optimized functions for grouping, ordering, unique values, and for creating and interacting factors}
+\newline
+
+\code{GRP()} - create a grouping object (class 'GRP'): pass to \code{g} arg. %\newline
+<<>>=
+g <- GRP(iris, ~ Species) # or GRP(iris$Species) or GRP(iris["Species"])
+fndistinct(iris[1:4], g)  # Pure computation without grouping overhead
+@
+
+\code{fgroup\_by()} - attach 'GRP' object to data: a class-agnostic\\ \hphantom{\code{fgroup\_by()} -} grouped frame supporting fast computations
+
+<<>>=
+mtcars |> fgroup_by(cyl, vs, am) |> ss(1:2)
+# Group Stats: [N. groups | mean (sd) min-max of group sizes]
+# Fast Statistical Functions also have a grouped_df method
+mtcars |> fgroup_by(cyl, vs, am) |> fmedian() |> head(3)
+@
+%\qquad {\scriptsize \textcolor{darkgray}{\emph{Group Stats:} N. groups $|$ Mean (Std. Dev.) Min-Max of group sizes}} \newline
+
+\code{GRPN(), fgroup\_vars(), fungroup()} - get group count,\\ \qquad grouping columns/variables, and ungroup data\\ [0.5em]
+\code{qF(), qG()} - quick \code{as.factor}, and vector grouping object\\ \qquad of class 'qG': a factor-light without levels attribute\\
+\setstretch{1.5}
+\code{group()} - (multivariate) group id ('qG') in appearance order\\
+\code{groupid()} - run-length-type group id ('qG')\\
+\code{seqid()} - group-id from integer-sequences ('qG')\\
+% \code{timeid()} - time variable to integer by GCD (class 'qG')\\
+\code{radixorder[v]()} - (multivariate) radix-based ordering\\
+\code{finteraction()} - fast factor interactions (or return 'qG')\\
+\code{fdroplevels()} - fast removal of unused factor levels\\
+\code{f[n]unique()} - fast unique values / rows (by \code{cols})\\
+\code{gsplit()} - fast  splitting vector based on 'GRP' objects\\
+\code{greorder()} - efficiently reorder \code{y = unlist(gsplit(x, g))}\\ \qquad such that \code{identical(greorder(y, g), x)}
+\setstretch{1}
+\newline
+
+\textsl{collapse} optimizes grouping using both factors / 'qG' objects and 'GRP' objects. 'GRP' objects contain most information and are thus most efficient for complex computations.
+
+<<>>=
+X <- iris[1:4]; v <- as.character(iris$Species)
+f <- qF(v, na.exclude = FALSE) # Adds 'na.included' class: no NA checks
+gv <- group(v) # 'qG' object: first appearance order, with 'na.included'
+microbenchmark(fmode(X, v), fmode(X, f), fmode(X, gv), fmode(X, g))
+@
+\vspace{-2mm}
+
+\hrrule
+\section{Quick Conversions}
+% \vspace{1mm}
+\itxt{Fast and exact conversion of common data objects} \\ [0.5em]
+\code{qM(), qDF(), qDT(), qTBL()} - convert vectors, arrays, data.frames or lists to matrix, data.frame, data.table or tibble\\ [0.5em]
+\code{m[r|c]tl()} - matrix rows/cols to list, data.frame or data.table\\ [0.5em]
+\code{qF(), as\_numeric\_factor(), as\_character\_factor()} - convert to/from factors or all factors in a list / data.frame
+
+% \vfill\null
+% \columnbreak
+% \newpage
+
+\section{Fast Data Manipulation}
+\itxt{Efficient implementations of data manipulation functions}\newline
+\setstretch{1.5}
+\code{fselect[<-]()} - select/replace columns\\
+\code{fsubset()} - subset data (rows and columns)\\
+\code{ss()} - fast alternative to \code{[}, particularly for data frames\\
+\code{[row|col]order[v]()} - reorder (sort) rows and columns\\
+\code{fmutate(), fsummarise()} - dplyr-like, incl. \code{across()} feature\\
+\code{[f|set]transform[v][<-]()} – transform cols (by reference)\\
+\code{fcompute[v]()} - compute new cols dropping existing ones\\
+\code{[f|set]rename()} - rename (any object with 'names' attribute)\\
+\code{[set]relabel()} - assign/change variable labels ('label' attr.)\\
+\code{get\_vars[<-]()} – select/replace columns (standard eval.)\\ [0.5em]
+\setstretch{1}
+\code{[num|cat|char|fact|logi|date]\_vars[<-]()} - select/\\ \qquad replace columns by data type or retrieve names/indices\\ [0.5em]
+\code{add\_vars[<-]()} - add or column-bind columns \newline
+
+
+\textbf{Examples}
+<<>>=
+mtcars |> fsubset(mpg > fnth(mpg, 0.95), disp:wt, cylinders = cyl)
+mtcars |> colorder(cyl, vs, am, pos = 'after') |> head(2)
+mtcars |> ftransformv(disp:drat, fsd, w = wt) |> ss(1:2, 1:5)
+mtcars |> fcomputev(disp:drat, fsd, g = cyl, w = wt, TRA = 1,
+                    keep = .c(cyl, wt)) |> head(2)
+mtcars |> fgroup_by(cyl) |> fsummarise(across(disp:drat, fsd, w = wt))
+qTBL(mtcars) |> fgroup_by(cyl) |> fsummarise(across(disp:drat,
+     function(x) list(Models = list(lm(disp ~., x))), .apply = FALSE))
+add_vars(iris) <- num_vars(iris) |> fsum(TRA = '%') |> add_stub("pc_")
+@
+<<echo=FALSE, include=FALSE>>=
+iris <- iris2
+@
+
+\vspace{-1mm}
+
+
+\hrrule
+\section{Multi-Type Aggregation}
+\itxt{Convenient interface to complex multi-type aggregations}\\ \vspace{1mm}
+\code{collap(data, by, FUN = fmean, catFUN = fmode, \\
+\quad\qquad\ cols = NULL, w = NULL, wFUN = fsum,\\
+\quad\qquad\ custom = NULL, keep.col.order = TRUE, ...)}\newline
+
+%\textbf{Example} \\
+
+<<>>=
+# Population weighted aggregates: mean (numeric) and mode (categorical)
+collap(wlddev, country + PCGDP + LIFEEX ~ income, w = ~ POP)
+@
+
+\newpage
+
+% \hrrule
+\section{Advanced Transformations}
+\itxt{Common transformations in (panel data) econometrics} \newline
+
+Scaling, Centering and Averaging\\
+\code{fscale(x, g, w, na.rm = TRUE, mean = 0, sd = 1, ...)}\\
+\code{fwithin(x, g, w, na.rm = TRUE, mean = 0, theta = 1,)}\\
+\code{fbetween(x, g, w, na.rm = TRUE, fill = FALSE, ...)}\newline
+
+Higher-Dimensional Centering/Avg. and Linear Prediction\\
+\code{fhdwithin(x, fl, w, na.rm = TRUE,\\
+\hspace{11mm}\ \      variable.wise = FALSE, ...)}\\
+\code{fhdbetween(x, fl, w, na.rm = TRUE, fill = FALSE,\\
+\hspace{13mm} variable.wise = FALSE, ...)}\newline
+
+Operators (function shortcuts with extra features) \\
+
+ \code{STD(), W(), B(), HDW(), HDB()}\newline
+
+\textbf{Examples}
+
+<<>>=
+# Grouped scaling
+iris |> fgroup_by(Species) |> fscale() |> head(3)
+STD(iris, ~ Species, stub = FALSE) |> head(3) # Same thing
+# Fitting country-level cubic polynomials for PCGDP, LIFEEX and POP
+HDW(wlddev, PCGDP + LIFEEX + POP ~ iso3c * poly(year, 3)) |> head(3)
+@
+
+% Such as Formula input:
+% STD(mtcars, mpg + carb ~ cyl, w = ~ wt)
+%
+% Examples:
+% lm(mpg ~ hp + B(hp, cyl), mtcars) – FE lm
+% STD(mtcars, by = ~ cyl, w = ~wt, stub = FALSE)
+% HDW(wlddev, PCGDP ~ qF(country)*poly(year, 3))
+%
+% Fast grouped  bivariate regression slopes:
+% mtcars |> fgroup_by(cyl) |>
+%  fmutate(dmx = W(mpg)) |>
+%  fsummarise(beta = fsum(dmx, hp) %/=%
+%                    fsum(dmx^2))
+
+
+\hrrule
+\section{Linear Models}
+Fast (barebones) linear model fitting with 6 different solvers\\
+\code{flm(y, X, w = NULL, add.icpt = FALSE, method = "lm")}\\ [0.5em]
+Fast $R^2$-based F-test of exclusion restrictions for lm's (with FE)\\
+\code{fFtest(y, exc, X = NULL, w = NULL, ...)}\\ [0.5em]
+Both functions also have formula interfaces:
+<<>>=
+flm(cbind(mpg, disp) ~ hp + carb, weights = wt, mtcars)
+# Test the exclusion of cyl-dummies and hp.
+fFtest(mpg ~ qF(cyl) + hp | carb + qF(am), weights = wt, mtcars)
+@
+
+<<echo=FALSE>>=
+vlabels(wlddev) <- NULL
+options(width = 65)
+@
+
+\hrrule
+\section{Time Series and Panel Series}
+\itxt{Fast and flexible indexed series and data frames}\newline
+
+Turn DF into an 'indexed\_frame' using id and/or time vars\\
+\code{data\_ix = findex\_by(data, id1, ..., time)}\\ [0.5em]
+\code{data\_ix\$indexed\_series} - contains 'indexed\_series' \\ [0.5em]
+\code{index\_df = findex(data\_ix)} - retrieve 'index\_df': DF of id's \\ [0.5em]
+\code{with(data\_ix, findex(indexed\_series))} - deep indexation: 'index\_df' can always be retrieved from 'indexed\_series'\\ [0.5em]
+\code{is\_irregular(data\_ix)} - check for irregularity in ts/panel\\ [0.5em]
+\code{data = unindex(data\_ix)} - remove index\\ [0.5em]
+\code{reindex(data, index = index\_df)} - reindexing\\ [0.5em] % (e.g. after \code{readRDS})\\
+'indexed\_series' can be 1-or-2D atomic objects. All vectors / time series / matrices can be indexed: \\
+\code{reindex(vec/mat, index = vec/index\_df)}\\ [0.5em]
+\textbf{Example} \\
+% , drop.index.levels = "none"
+<<>>=
+wldi <- wlddev |> findex_by(iso3c, year) # Balanced: 216 countries
+fsubset(wldi, 1:2, iso3c, year, PCGDP:POP)
+# Index stats: [N. ids] | [N. periods (tot.N. periods: (max-min)/GCD)]
+LIFEEXi = wldi$LIFEEX # Indexed series
+str(LIFEEXi, strict.width = "cut")
+LIFEEXi[1:7] # Subsetting indexed series
+c(is_irregular(LIFEEXi), is_irregular(LIFEEXi[-5])) # Irregular?
+@
+
+\vspace{2mm}
+\itxt{Fast functions to perform time-based computations on (irregular) time series and (unbalanced) panel data}\newline
+
+Lags/Leads, Differences, Growth Rates and Cumulative Sums\\
+\code{flag(x, n = 1, g = NULL, t = NULL, fill = NA, ...)}\\
+\code{fdiff(x, n = 1, diff = 1, ..., log = FALSE, rho = 1)}\\
+\code{fgrowth(x, n = 1, diff = 1,, scale = 100, power = 1)}\\
+\code{fcumsum(x, g, o, na.rm = TRUE, fill = FALSE)}\newline
+
+Operators:   \code{L(), F(), D(), Dlog(), G()} \newline
+
+\textbf{Example: Computing Growth Rates} \\
+<<echo=FALSE>>=
+options(width = 70)
+@
+
+<<>>=
+# Ad-hoc use: note that G() supports formulas which fgrowth() doesn't
+fgrowth(AirPassengers) |> head()
+G(wlddev, c(1, 10), by = PCGDP ~ iso3c, t = ~ year) |> ss(11:12)
+wlddev |> fgroup_by(iso3c) |> fselect(iso3c, year, PCGDP, LIFEEX) |>
+  fmutate(PCGDP_growth = fgrowth(PCGDP, t = year)) |> head(2)
+settransform(wlddev, PCGDP_growth = G(PCGDP, g = iso3c, t = year))
+# Note: can omit t -> requires consecutive observations and groups
+# Usage with indexed series / frames:
+G(wldi) |> head(2) # default: compute growth of num_vars(), keep ids
+settransform(wldi, PCGDP_growth = fgrowth(PCGDP))
+lm(G(PCGDP) ~ L(G(LIFEEX), 0:3), wldi) |> summary() |> coef() |> round(3)
+@
+
+% flag(vec/mat/DF, n = -1:3, g = id, t = time)
+% L(DF, n = -1:2, by = ~ id1 + id2, t = ~ time)
+% Use with indexed data or grouped data:
+% data_ix |> L(); data_ix |> fmutate(L_var = L(var))
+% lm(G(var1) ~ L(G(var2), 0:2), data_ix)
+% data |> fgroup_by(id) |> flag(t = time)
+% data |> gby(id) |> fmutate(Lv = L(var, t = time))
+%
+% Cumulative Sums:
+% fcumsum(x, g = NULL, o = NULL, fill = FALSE, )
+\vspace{2mm}
+\code{psacf(), pspacf(), psccf()} - panel series ACF/PACF/CCF\\ [0.5em]
+\code{psmat()} - panel data to array conversion/reshaping\\ % \newpage
+% \vspace{-5mm}
+% <<fig.height=5>>=
+% psacf(G(LIFEEXi), main = NA) # ACF of growth rate of life expectancy
+% @
+%
+% <<fig.height=5>>=
+% psmat(LIFEEXi) |> plot(colours = TRUE)
+% @
+%
+
+\hrrule
+\section{Summary Statistics}
+\code{qsu()} - fast (grouped, weighted, panel-decomposed)\\
+\qquad summary statistics for cross-sectional and panel data\\ [0.5em]
+\code{qtab()} - faster table() function, incl. weights\\ [0.5em]
+\code{descr()} - detailed statistical description of data.frame\\ [0.5em]
+\code{varying()} - check variation within groups (panel-ids)\\ [0.5em]
+\code{pwcor(), pwcov(), pwnobs()} - pairwise correlations,\\ \qquad covariance and obs. (with P-value and pretty printing)
+
+
+\hrrule
+\section{List-Processing}
+%\vspace{1mm}
+\itxt{Functions to process (nested) lists (of data objects)}\\ [0.5em]
+%\setstretch{1.5}
+\code{ldepth()} - level of nesting of list\\ [0.5em]
+\code{is\_unlistable()} - is list composed of atomic objects\\ [0.5em]
+\code{has\_elem()} - search if list contains certain elements\\ [0.5em]
+\code{get\_elem()} - pull out elements from list / subset list\\ [0.5em]
+\code{atomic\_elem[<-](), list\_elem[<-]()} - get list with atomic /\\ \qquad sub-list elements, examining only first level of list\\ [0.5em]
+\code{reg\_elem(), irreg\_elem()} - get full list tree leading to atomic\\ \qquad ('regular') or non-atomic ('irregular') elements\\ [0.5em]
+\code{rsplit()} - efficient (recursive) splitting\\ [0.5em]
+\code{t\_list()} - efficient list transpose (transpose lists of lists)\\ [0.5em]
+\code{rapply2d()} - recursive apply to lists of data objects\\ [0.5em]
+\code{unlist2d()} - recursive row-binding to data.frame\\
+%\setstretch{1}
+
+\hrrule
+\section{Recode and Replace Values}
+\code{recode\_num(), recode\_char()} - recode numeric / character values (+ regex recoding) in matrix-like objects
+\code{replace\_NA(), replace\_Inf(), replace\_outliers()} - replace special values   \code{pad()} -  add observations / rows.
+
+\hrrule
+\section{(Memory) Efficient Programming}
+\itxt{Functions to make R programming more (memory) efficient}\\
+\code{anyv}, \code{allv}, \code{allNA}, \code{whichv}, \code{whichNA}, \code{\%==\%},
+\code{\%!=\%}, \code{copyv}, \code{setv}, \code{alloc}, \code{setop}, \code{\%+=\%}, \code{\%-=\%}, \code{\%*=\%}, \code{\%/=\%}, \code{missing\_cases}, \code{na\_insert}, \code{na\_rm}, \code{na\_omit}, \code{vlengths}, \code{vtypes}, \code{vgcd}, \code{frange}, \code{fnlevels}, \code{fnrow}, \code{fncol}, \code{fdim}, \code{seq\_row}, \code{seq\_col}, \code{cinv}
+
+\hrrule
+\section{Small (Helper) Functions}
+\itxt{Functions for (meta-)programming and dealing with attributes}\\
+\code{massign}, \code{\%=\%}, \code{.c}, \code{vlabels(<-)}, \code{setLabels}, \code{vclasses}, \code{namlab}, \code{add\_stub}, \code{rm\_stub}, \code{\%!in\%}, \code{ckmatch}, \code{all\_identical}, \code{all\_obj\_equal}, \code{all\_funs}, \code{setDimnames}, \code{setRownames}, \code{setColnames}, \code{unattrib}, \code{setAttrib}, \code{copyAttrib}, \code{copyMostAttrib}, \code{is\_categorical}, \code{is\_date}
+
+\hrrule
+\section{Alternative APIs and Global Options}
+\itxt{Shorthands for frequently used functions}\\ [0.5em]
+\code{fselect -> slt, fsubset -> sbt, fmutate -> mtt, [f/set]transform[v] -> [set]tfm[v], fsummarise -> smr,
+across -> acr, fgroup\_by -> gby, findex\_by -> iby, findex -> ix, frename -> rnm, get\_vars -> gv, num\_vars -> nv,
+add\_vars -> av} \newline
+
+\itxt{Namespace Masking}\\ [0.5em]
+Can set \code{option(collpse\_mask = ...)} with functions starting with f-, masking any like-named base R or \emph{dplyr} functions. A few keywords exist to mask multiple functions: \code{"manip", "helper", "fast-fun", "fast-stat-fun", "fast-tfrm-fun"} and \code{"all"}. This allows you to write cleaner code with \emph{collapse}, but poses additional namespace challenges:
+
+<<eval = FALSE>>=
+options(collapse_mask = "all")
+library(collapse)
+# The folowing is 100% collapse code, apart from the base pipe
+
+wlddev |>
+  subset(year >= 1990) |>
+  group_by(year) |>
+  summarise(across(PCGDP:GINI, mean, w = POP),
+            n = n())
+
+sum(mtcars)
+diff(EuStockMarkets)
+droplevels(wlddev)
+mean(nv(iris), g = iris$Species)
+scale(nv(GGDC10S), g = GGDC10S$Variable)
+unique(GGDC10S, cols = c("Variable", "Country"))
+range(wlddev$date)
+
+wlddev |>
+  index_by(iso3c, year) |>
+  mutate(PCGDP_lag = lag(PCGDP),
+         PCGDP_diff = PCGDP - PCGDP_lag,
+         PCGDP_growth = growth(PCGDP)) |>
+  unindex()
+
+@
+The best way to set this option is inside an \code{.Rprofile} file placed in the user or project directory.\newline
+
+For more information see \code{help("collapse-options")}.
+
+\end{multicols*}
+\end{document}
