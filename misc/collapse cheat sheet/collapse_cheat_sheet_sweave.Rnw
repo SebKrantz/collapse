@@ -6,7 +6,7 @@
 % \usepackage[T1]{fontenc}
 
 %% Sets page size and margins
-\usepackage[landscape,top=0.8cm,bottom=0.5cm,left=0.5cm,right=0.5cm,marginparwidth=1.75cm]{geometry}
+\usepackage[landscape,top=0.5cm,bottom=0.6cm,left=0.5cm,right=0.5cm,marginparwidth=1.75cm]{geometry}
 
 %% Useful packages
 \usepackage{amsmath}
@@ -54,7 +54,7 @@
 %\definecolor{light-gray}{gray}{0.95}
 %\newcommand{\code}[1]{\colorbox{light-gray}{\texttt{#1}}}
 \newcommand{\code}[1]{\texttt{#1}}
-\newcommand{\hrrule}{\vspace{2mm}\textcolor{gray}{\hrulefill}\vspace{-2.5mm}} % darkgray
+\newcommand{\hrrule}{\vspace{1mm}\textcolor{gray}{\hrulefill}\vspace{-2.5mm}} % darkgray
 \newcommand{\itxt}[1]{\textcolor{gray}{\textbf{#1}}}
 
 
@@ -67,7 +67,7 @@
 \begin{document}
 
 <<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = TRUE, size = "scriptsize")
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = FALSE, size = "scriptsize")
 library(collapse)
 library(magrittr)
 library(tibble)
@@ -82,7 +82,7 @@ iris2 <- copyv(iris, NA, NA)
 \small
 
 {
-     {\fontsize{22}{30}\selectfont \textcolor{Gray}{Advanced and Fast Data Transformation with \textit{collapse}}}{\Huge\ : : CHEAT SHEET} %\\%\small{by Sebastian Krantz} %
+     {\fontsize{22}{30}\selectfont \textcolor{Gray}{Advanced and Fast Data Transformation with \emph{collapse}}}{\Huge\ : : CHEAT SHEET} %\\%\small{by Sebastian Krantz} %
      \vspace{2mm}
 }
 
@@ -94,13 +94,13 @@ iris2 <- copyv(iris, NA, NA)
 
 \section{\textcolor{WildStrawberry}{Introduction}} % Basics /
 %\colorbox{gray}{
-\textbf{\textit{collapse}} is a C/C++ based package supporting advanced (grouped, weighted, time series, panel data and recursive) statistical operations in R, with very efficient low-level vectorizations across both groups and columns. \\ [0.8em]
+\textbf{\emph{collapse}} is a C/C++ based package supporting advanced (grouped, weighted, time series, panel data and recursive) statistical operations in R, with very efficient low-level vectorizations across both groups and columns. \\ [0.8em]
 
-It also offers a flexible, class-agnostic, approach to data transformation in R: handling matrix and data frame based objects in a uniform, attribute preserving, way, and ensuring seamless compatibility with \textit{dplyr} / (grouped) \textit{tibble}, \textit{data.table}, \textit{xts}, \textit{sf} and \textit{plm} classes for panel data ('pseries', 'pdata.frame').  \\ [0.8em]
+It also offers a flexible, class-agnostic, approach to data transformation in R: handling matrix and data frame based objects in a uniform, attribute preserving, way, and ensuring seamless compatibility with \emph{dplyr} / (grouped) \emph{tibble}, \emph{data.table}, \emph{xts}, \emph{sf} and \emph{plm} classes for panel data ('pseries', 'pdata.frame').  \\ [0.8em]
 
-\textit{collapse} provides full control to the user for statistical programming - with several ways to reach the same outcome and rich optimization possibilities. The default is \code{na.rm = TRUE}, and implemented at low cost at the algorithm level.  \\ [0.8em]
+\emph{collapse} provides full control to the user for statistical programming - with several ways to reach the same outcome and rich optimization possibilities. The default is \code{na.rm = TRUE}, and implemented at low cost at the algorithm level.  \\ [0.8em]
 
-Calling \code{help("collapse-documentation")} brings up a detailed documentation, which is also available \href{https://sebkrantz.github.io/collapse/reference/index.html}{online}. See also the \href{https://fastverse.github.io/fastverse/}{\textit{fastverse}} package/project for a recommended set of complimentary packages and easy package management.
+Calling \code{help("collapse-documentation")} brings up a detailed documentation, which is also available \href{https://sebkrantz.github.io/collapse/reference/index.html}{online}. See also the \href{https://fastverse.github.io/fastverse/}{\emph{fastverse}} package/project for a recommended set of complimentary packages and easy package management.
 %}
 
 \hrrule
@@ -155,8 +155,9 @@ Sweeping out Statistics (by Reference)}
 \end{addmargin}
 
 % \vfill\null
-\columnbreak
+% \columnbreak
 % \hrrule
+
 \section{Fast Statistical Functions}
 %\vspace{1mm}
 \itxt{Fast functions to perform column–wise grouped and weighted computations on matrix-like objects}
@@ -211,7 +212,7 @@ head(iris, 3) # Changed iris too, as X = iris[1:4] did a shallow copy
 <<echo=FALSE, include=FALSE>>=
 iris <- iris2
 @
-\vspace{-1mm}
+% \vspace{-1mm}
 
 \hrrule
 \section{Basic Computing with R Functions}
@@ -262,15 +263,15 @@ mtcars |> fgroup_by(cyl, vs, am) |> fmedian(wt) |> head(3)
 \setstretch{1}
 \newline
 
-\textsl{collapse} optimizes grouping using both factors / 'qG' objects and 'GRP' objects. 'GRP' objects contain most information and are thus most efficient for complex computations.
+\emph{collapse} optimizes grouping using both factors / 'qG' objects and 'GRP' objects. 'GRP' objects contain most information and are thus most efficient for complex computations.
 
-<<>>=
+<<cache=TRUE>>=
 X <- iris[1:4]; v <- as.character(iris$Species)
 f <- qF(v, na.exclude = FALSE) # Adds 'na.included' class: no NA checks
 gv <- group(v) # 'qG' object: first appearance order, with 'na.included'
 microbenchmark(fmode(X, v), fmode(X, f), fmode(X, gv), fmode(X, g))
 @
-\vspace{-2mm}
+% \vspace{-2mm}
 
 \hrrule
 \section{Quick Conversions}
@@ -292,7 +293,7 @@ microbenchmark(fmode(X, v), fmode(X, f), fmode(X, gv), fmode(X, g))
 \code{fsubset()} - subset data (rows and columns)\\
 \code{ss()} - fast alternative to \code{[}, particularly for data frames\\
 \code{[row|col]order[v]()} - reorder (sort) rows and columns\\
-\code{fmutate(), fsummarise()} - dplyr-like, incl. \code{across()} feature\\
+\code{fmutate(), fsummarise()} - \emph{dplyr}-like, incl. \code{across()} feature\\
 \code{[f|set]transform[v][<-]()} - transform cols (by reference)\\
 \code{fcompute[v]()} - compute new cols dropping existing ones\\
 \code{[f|set]rename()} - rename (any object with 'names' attribute)\\
@@ -301,7 +302,6 @@ microbenchmark(fmode(X, v), fmode(X, f), fmode(X, gv), fmode(X, g))
 \setstretch{1}
 \code{[num|cat|char|fact|logi|date]\_vars[<-]()} - select/\\ \qquad replace columns by data type or retrieve names/indices\\ [0.5em]
 \code{add\_vars[<-]()} - add or column-bind columns \newline
-
 
 \textbf{Examples}
 <<>>=
@@ -330,7 +330,7 @@ add_vars(iris) <- num_vars(iris) |> fsum(TRA = '%') |> add_stub("perc_")
 <<echo=FALSE, include=FALSE>>=
 iris <- iris2
 @
-\vspace{-2mm}
+% \vspace{-2mm}
 
 
 \hrrule
@@ -348,7 +348,7 @@ collap(wlddev, country + PCGDP + LIFEEX ~ income, w = ~ POP)
 @
 %\vspace{-10mm}
 
-\newpage
+% \newpage
 
 % ------------------------------------------------------------------
 % Second Page
@@ -357,8 +357,7 @@ collap(wlddev, country + PCGDP + LIFEEX ~ income, w = ~ POP)
 
 % \hrrule
 \section{Advanced Transformations}
-\itxt{Common transformations (in econometrics)} \newline
-
+\itxt{Common transformations (in econometrics)} \\ [0.7em]
 Scaling, Centering and Averaging\\
 \code{fscale(x, g = NULL, w = NULL, na.rm = TRUE,\\
 \hphantom{fscaleb}mean = 0, sd = 1, ...)}\\
@@ -381,10 +380,10 @@ Statistical Operators (function shorthands with extra features) \\
 <<>>=
 # Grouped scaling
 iris |> fgroup_by(Species) |> fscale() |> head(2)
-STD(iris, ~ Species, stub = FALSE) |> invisible() # Same thing: faster
+STD(iris, ~ Species, stub = FALSE) |> invisible() # Same thing + faster
 # Grouped and weighted scaling. Operators support formulas and keep ids
 STD(mtcars, mpg + carb ~ cyl, w = ~ wt) |> head(2)
-# Much shorter than fsubset(mpg > fmean(mpg, cyl, TRA = 1))
+# Much shorter than fsubset(mpg > fmean(mpg, cyl, TRA = "replace"))
 mtcars |> fsubset(mpg > B(mpg, cyl)) |> head(2)
 # Regression with cyl fixed effects - a la Mundlak (1978)
 lm(mpg ~ carb + B(carb, cyl), data = mtcars) |> coef()
@@ -395,17 +394,19 @@ mtcars |> fgroup_by(vs) |> fmutate(dm_carb = W(carb)) |>
 fhdwithin(iris[1:2], iris[3:5]) |> head(2)
 # Detrending with country-level cubic polynomials
 HDW(wlddev, PCGDP + LIFEEX + POP ~ iso3c * poly(year, 3)) |> head(2)
-# Note: higher-dimensional centering and polynomials requires fixest
+# Note: HD centering/prediction and polynomials requires package 'fixest'
 @
  % \emph{Note}: for higher-dimensional centerig / averaging, \emph{collapse} imports \emph{fixest}'s C++ demeaning algorithm, if available.
-\vspace{-2mm}
+% \vspace{-2mm}
 
 \hrrule
 \section{Linear Models}
+\vspace{1mm}
 Fast (barebones) linear model fitting with 6 different solvers\\
 \code{flm(y, X, w = NULL, add.icpt = FALSE, method = "lm")}\\ [0.5em]
 Fast $R^2$-based F-test of exclusion restrictions for lm's (with FE)\\
-\code{fFtest(y, exc, X = NULL, w = NULL, ...)}\\ [0.5em]
+\code{fFtest(y, exc, X = NULL, w = NULL, full.df = TRUE)}\newline
+
 Both functions also have formula interfaces:
 <<>>=
 flm(cbind(mpg, disp) ~ hp + carb, weights = wt, mtcars)
@@ -414,54 +415,58 @@ fFtest(mpg ~ qF(cyl) + hp | carb + qF(am), weights = wt, mtcars)
 @
 
 <<echo=FALSE>>=
+wlddev2 <- data.table::copy(wlddev)
 vlabels(wlddev) <- NULL
-options(width = 65)
+options(width = 70)
 @
 
 % \hrrule
 \section{Time Series and Panel Series}
-\itxt{Fast and flexible indexed series and data frames}\newline
+\itxt{Fast and flexible indexed series and data frames: a modern upgrade of \emph{plm}'s 'pseries' and 'pdata.frame'}\newline
 
 Turn DF into an 'indexed\_frame' using id and/or time vars\\
 \code{data\_ix = findex\_by(data, id1, ..., time)}\\ [0.5em]
-\code{data\_ix\$indexed\_series} - contains 'indexed\_series' \\ [0.5em]
-\code{index\_df = findex(data\_ix)} - retrieve 'index\_df': DF of id's \\ [0.5em]
-\code{with(data\_ix, findex(indexed\_series))} - deep indexation: 'index\_df' can always be retrieved from 'indexed\_series'\\ [0.5em]
-\code{is\_irregular(data\_ix)} - check for irregularity in ts/panel\\ [0.5em]
-\code{data = unindex(data\_ix)} - remove index\\ [0.5em]
-\code{reindex(data, index = index\_df)} - reindexing\\ [0.5em] % (e.g. after \code{readRDS})\\
-'indexed\_series' can be 1-or-2D atomic objects. All vectors / time series / matrices can be indexed: \\
+\code{data\_ix\$indexed\_series} - columns are 'indexed\_series' \\ [0.5em]
+\code{index\_df = findex(data\_ix)} - retrieve 'index\_df': DF of ids \\ [0.5em]
+\code{index\_df = with(data\_ix, findex(indexed\_series))} - can fetch 'index\_df' from 'indexed\_series' in any caller environment \\ [0.5em]
+\code{data = unindex(data\_ix)} - unindex (also 'indexed\_series') \\ [0.5em]
+\code{reindex(data, index = index\_df)} - reindex / new pointers\\ [0.5em] % (e.g. after \code{readRDS})\\
+'indexed\_series' can be 1-or-2D atomic objects. Vectors / time series / matrices can also be indexed directly using: \\
 \code{reindex(vec/mat, index = vec/index\_df)}\\ [0.5em]
-\textbf{Example} \\
+\code{is\_irregular()} - irregularity in any index[ed] obj. or time vec\newline
+
+\textbf{Example: Indexing Panel Data} \\
 % , drop.index.levels = "none"
-<<cache=FALSE>>=
+<<>>=
 wldi <- wlddev |> findex_by(iso3c, year) # Balanced: 216 countries
 fsubset(wldi, 1:2, iso3c, year, PCGDP:POP)
 # Index stats: [N. ids] | [N. periods (tot.N. periods: (max-min)/GCD)]
 LIFEEXi = wldi$LIFEEX # Indexed series
 str(LIFEEXi, strict.width = "cut")
 LIFEEXi[1:7] # Subsetting indexed series
-c(is_irregular(LIFEEXi), is_irregular(LIFEEXi[-5])) # Irregular?
+c(is_irregular(LIFEEXi), is_irregular(LIFEEXi[-5])) # Is irregular?
 @
+\emph{Note}: 'indexed\_series' and frames are supported via existing 'pseries'/'pdata.frame' methods for time series/panel functions. \newline
 
-\vspace{2mm}
+% \vspace{2mm}
 \itxt{Fast functions to perform time-based computations on (irregular) time series and (unbalanced) panel data}\newline
 
 Lags/Leads, Differences, Growth Rates and Cumulative Sums\\
 \code{flag(x, n = 1, g = NULL, t = NULL, fill = NA, ...)}\\
-\code{fdiff(x, n = 1, diff = 1, ..., log = FALSE, rho = 1)}\\
-\code{fgrowth(x, n = 1, diff = 1,, scale = 100, power = 1)}\\
-\code{fcumsum(x, g, o, na.rm = TRUE, fill = FALSE)}\newline
+\code{fdiff(x, n = 1, diff = 1, g = NULL, t = NULL,\\
+\hphantom{fdiffd}fill = NA, log = FALSE, rho = 1, ...)}\\
+\code{fgrowth(x, n = 1, diff = 1, g = NULL, t = NULL, fill\\ \ = NA, logdiff = FALSE, scale = 100, power = 1, ...)}\\
+\code{fcumsum(x, g = NULL, o = NULL, na.rm = TRUE,\\
+\hphantom{fcumsumd}fill = FALSE, check.o = TRUE, ...)}\\ [0.7em]
 
-Operators:   \code{L(), F(), D(), Dlog(), G()} \newline
+Statistical Operators:   \code{L(), F(), D(), Dlog(), G()} \newline
 
 \textbf{Example: Computing Growth Rates} \\
-<<echo=FALSE, include=FALSE, cache=FALSE>>=
-options(width = 70)
+<<echo=FALSE, include=FALSE>>=
+# options(width = 70)
 wldi = reindex(wldi)
 @
-
-<<cache=FALSE>>=
+<<>>=
 # Ad-hoc use: note that G() supports formulas which fgrowth() doesn't
 fgrowth(AirPassengers) |> head()
 G(wlddev, c(1, 10), by = PCGDP ~ iso3c, t = ~ year) |> ss(11:12)
@@ -470,9 +475,11 @@ wlddev |> fgroup_by(iso3c) |> fselect(iso3c, year, PCGDP, LIFEEX) |>
 settransform(wlddev, PCGDP_growth = G(PCGDP, g = iso3c, t = year))
 # Note: can omit t -> requires consecutive observations and groups
 # Usage with indexed series / frames:
+@
+<<>>=
 G(wldi) |> head(2) # default: compute growth of num_vars(), keep ids
 settransform(wldi, PCGDP_growth = fgrowth(PCGDP))
-lm(G(PCGDP) ~ L(G(LIFEEX), 0:3), wldi) |> summary() |> coef() |> round(3)
+lm(G(PCGDP) ~ L(G(LIFEEX), 0:2), wldi) |> summary() |> coef() |> round(3)
 @
 
 % lm(G(PCGDP) ~ L(G(LIFEEX), 0:3), wldi) |> summary() |> coef() |> round(3)
@@ -486,8 +493,8 @@ lm(G(PCGDP) ~ L(G(LIFEEX), 0:3), wldi) |> summary() |> coef() |> round(3)
 %
 % Cumulative Sums:
 % fcumsum(x, g = NULL, o = NULL, fill = FALSE, )
-\vspace{2mm}
-\code{psacf(), pspacf(), psccf()} - panel series ACF/PACF/CCF\\ [0.5em]
+% \vspace{2mm}
+\code{psacf(), pspacf(), psccf()} - panel series ACF/PACF/CCF\\ [0.3em]
 \code{psmat()} - panel data to array conversion/reshaping\\ % \newpage
 % \vspace{-5mm}
 % <<fig.height=5>>=
@@ -498,16 +505,20 @@ lm(G(PCGDP) ~ L(G(LIFEEX), 0:3), wldi) |> summary() |> coef() |> round(3)
 % psmat(LIFEEXi) |> plot(colours = TRUE)
 % @
 %
-
+% \vspace{-1mm}
 \hrrule
 \section{Summary Statistics}
 \code{qsu()} - fast (grouped, weighted, panel-decomposed)\\
-\qquad summary statistics for cross-sectional and panel data\\ [0.5em]
-\code{qtab()} - faster table() function, incl. weights\\ [0.5em]
+\qquad summary statistics for cross-sectional and panel data\\
+<<>>=
+# Panel data statistics: overall, on group-means and group-centered data
+qsu(iris, pid = Sepal.Length ~ Species, higher = TRUE)
+@
+\code{qtab()} - faster \code{table()} function, incl. weights \& custom funs\\ [0.5em]
 \code{descr()} - detailed statistical description of data.frame\\ [0.5em]
 \code{varying()} - check variation within groups (panel-ids)\\ [0.5em]
 \code{pwcor(), pwcov(), pwnobs()} - pairwise correlations,\\ \qquad covariance and obs. (with P-value and pretty printing)
-
+% \vspace{-1mm}
 
 \hrrule
 \section{List-Processing}
@@ -518,51 +529,82 @@ lm(G(PCGDP) ~ L(G(LIFEEX), 0:3), wldi) |> summary() |> coef() |> round(3)
 \code{is\_unlistable()} - is list composed of atomic objects\\ [0.5em]
 \code{has\_elem()} - search if list contains certain elements\\ [0.5em]
 \code{get\_elem()} - pull out elements from list / subset list\\ [0.5em]
-\code{atomic\_elem[<-](), list\_elem[<-]()} - get list with atomic /\\ \qquad sub-list elements, examining only first level of list\\ [0.5em]
+\code{atomic\_elem[<-](), list\_elem[<-]()} - get list with atomic /\\ \qquad sub-list elements, examining only first level of list\\ [0.3em]
 \code{reg\_elem(), irreg\_elem()} - get full list tree leading to atomic\\ \qquad ('regular') or non-atomic ('irregular') elements\\ [0.5em]
 \code{rsplit()} - efficient (recursive) splitting\\ [0.5em]
 \code{t\_list()} - efficient list transpose (transpose lists of lists)\\ [0.5em]
 \code{rapply2d()} - recursive apply to lists of data objects\\ [0.5em]
-\code{unlist2d()} - recursive row-binding to data.frame\\
+\code{unlist2d()} - recursive row-binding to data.frame\\ [0.5em]
 %\setstretch{1}
 
-\hrrule
+\textbf{Example: Nested Linear Models} \\ %\vspace{-1mm}
+<<>>=
+(dl <- mtcars |> rsplit(mpg + hp + carb ~ vs + am)) |> str(max.level = 2)
+nest_lm <- dl |> rapply2d(lm, formula = mpg ~ .)
+(nest_coef <- nest_lm |> rapply2d(summary, classes = "lm") |>
+     get_elem("coefficients")) |> str(give.attr = FALSE, strict = "cut")
+nest_coef |> unlist2d(c("vs", "am"), row.names = "variable") |> head(2)
+@
+% \vspace{-2mm}
+% \columnbreak
+
+% \hrrule
 \section{Recode and Replace Values}
-\code{recode\_num(), recode\_char()} - recode numeric / character values (+ regex recoding) in matrix-like objects
-\code{replace\_NA(), replace\_Inf(), replace\_outliers()} - replace special values   \code{pad()} -  add observations / rows.
+\code{recode\_num(), recode\_char()} - recode numeric / character values (+ regex recoding) in matrix-like objects\\ [0.5em]
+\code{replace\_[NA|Inf|outliers]()} - replace special values\\ [0.5em]
+\code{pad()} -  add (missing) observations / rows i.e. expand objects
+% \vspace{-1mm}
 
 \hrrule
 \section{(Memory) Efficient Programming}
-\itxt{Functions to make R programming more (memory) efficient}\\
-\code{anyv}, \code{allv}, \code{allNA}, \code{whichv}, \code{whichNA}, \code{\%==\%},
-\code{\%!=\%}, \code{copyv}, \code{setv}, \code{alloc}, \code{missing\_cases}, \code{na\_insert}, \code{na\_rm}, \code{na\_omit}, \code{vlengths}, \code{vtypes}, \code{vgcd}, \code{frange}, \code{fnlevels}, \code{fnrow}, \code{fncol}, \code{fdim}, \code{seq\_row}, \code{seq\_col}, \code{cinv}
+\itxt{Functions for (memory) efficient R programming}\\ [0.5em]
 
-<<>>=
-x <- na_insert(rnorm(1e7))
-microbenchmark(na_rm(x), x[!is.na(x)])
-microbenchmark(na.omit(wlddev), na_omit(wlddev, na.attr = TRUE))
-microbenchmark(fsubset(wlddev, year == 2010), fsubset(wlddev, year %==% 2010))
-# Efficient subassignment by reference
-with(wlddev, setv(POP, year %==% 2010, fmax(POP)))
+\code{any|all[v|NA]}, \code{which[v|NA]}, \code{\%[=|!]=\%}, \code{copyv}, \code{setv}, \code{alloc} \code{missing\_cases}, \code{na\_[insert|rm|omit]}, \code{vlengths}, \code{vtypes}, \code{vgcd}, \code{frange}, \code{fnlevels}, \code{fn[row|col]}, \code{fdim}, \code{seq\_[row|col]}\\
+<<eval = FALSE>>=
+fsubset(wlddev, year %==% 2010) # 2x faster fsubset(wlddev, year == 2010)
+attach(mtcars) # Efficient sub-assignment by reference, various options...
+setv(am, 0, vs); setv(am, 1:10, vs); setv(am, 1:10, vs[10:20])
 @
-
+% x <- na_insert(rnorm(1e7))
+% microbenchmark(na_rm(x), x[!is.na(x)])
+% microbenchmark(na.omit(wlddev), na_omit(wlddev, na.attr = TRUE))
+% # Efficient subassignment by reference
+% with(wlddev, setv(POP, year %==% 2010, fmax(POP)))
+% microbenchmark(A = fsubset(wlddev, year == 2010), B = fsubset(wlddev, year %==% 2010))
+% x <- rnorm(1e7); xNA <- na_insert(x)
+% microbenchmark(setv(xNA, NA, x), )
+% with(wlddev, setv(POP, year %==% 2010, fmax(POP)))
+% \vspace{-1mm}
 
 \hrrule
 \section{Small (Helper) Functions}
-\itxt{Functions for (meta-)programming and dealing with attributes}\\
-\code{massign}, \code{\%=\%}, \code{.c}, \code{vlabels(<-)}, \code{setLabels}, \code{vclasses}, \code{namlab}, \code{add\_stub}, \code{rm\_stub}, \code{\%!in\%}, \code{ckmatch}, \code{all\_identical}, \code{all\_obj\_equal}, \code{all\_funs}, \code{setDimnames}, \code{setRownames}, \code{setColnames}, \code{unattrib}, \code{setAttrib}, \code{copyAttrib}, \code{copyMostAttrib}, \code{is\_categorical}, \code{is\_date}
+\itxt{Functions for (meta-)programming and attributes}\\ [0.5em]
+\code{.c}, \code{massign}, \code{\%=\%}, \code{vlabels[<-]}, \code{setLabels}, \code{vclasses}, \code{namlab}, \code{[add|rm]\_stub}, \code{\%!in\%}, \code{ckmatch}, \code{all\_identical}, \code{all\_obj\_equal}, \code{all\_funs}, \code{set[Dim|Row|Col]names}, \code{unattrib}, \code{setAttrib}, \code{copyAttrib}, \code{copyMostAttrib} %, \code{is\_categorical}, \code{is\_date}
+
+<<include=FALSE, echo=FALSE>>=
+wlddev <- wlddev2
+@
+<<>>=
+.c(var1, var2, var3) # Non-standard concatenation
+.c(values, vectors) %=% eigen(cov(mtcars)) # Multiple Assignment
+# Variable labels: vlabels[<-], [set]relabel() etc. namlab() shows summary
+namlab(wlddev[c(2, 9)], N = TRUE, Ndist = TRUE, class = TRUE)
+@
+% \vspace{-1mm}
+
 
 \hrrule
-\section{Alternative APIs and Global Options}
+\section{API Extensions}
 \itxt{Shorthands for frequently used functions}\\ [0.5em]
 \code{fselect -> slt, fsubset -> sbt, fmutate -> mtt, [f/set]transform[v] -> [set]tfm[v], fsummarise -> smr,
-across -> acr, fgroup\_by -> gby, findex\_by -> iby, findex -> ix, frename -> rnm, get\_vars -> gv, num\_vars -> nv,
+across -> acr, fgroup\_by -> gby, finteraction -> itn, findex\_by -> iby, findex -> ix, frename -> rnm, get\_vars -> gv, num\_vars -> nv,
 add\_vars -> av} \newline
 
 \itxt{Namespace Masking}\\ [0.5em]
-Can set \code{option(collpse\_mask = ...)} with functions starting with f-, masking any like-named base R or \emph{dplyr} functions. A few keywords exist to mask multiple functions: \code{"manip", "helper", "fast-fun", "fast-stat-fun", "fast-tfrm-fun"} and \code{"all"}. This allows you to write cleaner code with \emph{collapse}, but poses additional namespace challenges:
+Can set \code{option(collpse\_mask = c(...))} with a vector of functions starting with f-, to export versions without f-, masking base R or \emph{dplyr}. A few keywords exist to mask multiple functions, see \code{help("collapse-options")}. This allows clean \& fast code, but poses additional namespace challenges:
 
 <<eval = FALSE>>=
+# Masking all f- functions and specials n = GRPN and table = qtab
 options(collapse_mask = "all")
 library(collapse)
 # The folowing is 100% collapse code, apart from the base pipe
@@ -570,9 +612,9 @@ library(collapse)
 wlddev |>
   subset(year >= 1990) |>
   group_by(year) |>
-  summarise(across(PCGDP:GINI, mean, w = POP),
-            n = n())
+  summarise(n = n(), across(PCGDP:GINI, mean, w = POP))
 
+with(mtcars, table(cyl, vs, am))
 sum(mtcars)
 diff(EuStockMarkets)
 droplevels(wlddev)
@@ -585,13 +627,10 @@ wlddev |>
   index_by(iso3c, year) |>
   mutate(PCGDP_lag = lag(PCGDP),
          PCGDP_diff = PCGDP - PCGDP_lag,
-         PCGDP_growth = growth(PCGDP)) |>
-  unindex()
+         PCGDP_growth = growth(PCGDP)) |> unindex()
 
 @
-The best way to set this option is inside an \code{.Rprofile} file placed in the user or project directory.\newline
-
-For more information see \code{help("collapse-options")}.
+The best way to set this option is inside an \code{.Rprofile} file placed in the user or project directory. Use it carefully.
 
 \end{multicols*}
 \end{document}
