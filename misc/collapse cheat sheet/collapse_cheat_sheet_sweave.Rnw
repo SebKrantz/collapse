@@ -98,7 +98,7 @@ iris2 <- copyv(iris, NA, NA)
 
 It also offers a flexible, class-agnostic, approach to data transformation in R: handling matrix and data frame based objects in a uniform, attribute preserving, way, and ensuring seamless compatibility with \emph{dplyr} / (grouped) \emph{tibble}, \emph{data.table}, \emph{xts}, \emph{sf} and \emph{plm} classes for panel data ('pseries', 'pdata.frame').  \\ [0.8em]
 
-\emph{collapse} provides full control to the user for statistical programming - with several ways to reach the same outcome and rich optimization possibilities. The default is \code{na.rm = TRUE}, and implemented at low cost at the algorithm level.  \\ [0.8em]
+\emph{collapse} provides full control to the user for statistical programming - with several ways to reach the same outcome and rich optimization possibilities. Its default is \code{na.rm = TRUE}, and implemented at very low cost at the algorithm level.  \\ [0.8em]
 
 Calling \code{help("collapse-documentation")} brings up a detailed documentation, which is also available \href{https://sebkrantz.github.io/collapse/reference/index.html}{online}. See also the \href{https://fastverse.github.io/fastverse/}{\emph{fastverse}} package/project for a recommended set of complimentary packages and easy package management.
 %}
