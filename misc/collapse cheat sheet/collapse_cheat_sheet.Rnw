@@ -65,8 +65,25 @@
 
 % -----------------------------------------------------------------------
 
+% https://tex.stackexchange.com/questions/46280/how-to-create-a-background-image-on-title-page-with-latex
+\usepackage{eso-pic}
+\newcommand\BackgroundPic{%
+\put(0,0){%
+\parbox[b][\paperheight]{\paperwidth}{%
+\vspace{-3mm} % \vfill
+\flushright
+\includegraphics[width=0.3\paperwidth,%
+keepaspectratio]{"background_cropped.png"}%
+\vfill
+}}}
+
 
 \begin{document}
+
+% \makebox[0pt][r]{%
+%   \raisebox{-\totalheight}[0pt][0pt]{%
+%     \includegraphics[width=4in]{background}}}%
+\AddToShipoutPicture*{\BackgroundPic}
 
 <<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = FALSE, size = "scriptsize")
@@ -647,7 +664,7 @@ The best way to set this option is inside an \code{.Rprofile} file placed in the
 
 \end{multicols}
 
-\vspace{-5mm}
+\vspace{-5.5mm}
 \textcolor{lightgray}{\hrulefill}\\
 {\scriptsize \vspace{-0.5mm}
  Page 2 of 2 \hfill \textcopyright\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 1.8.8\ \textbullet\ Updated: 2022-08
