@@ -93,7 +93,8 @@ In addition, *collapse* provides 5 vignettes (available online):
 
 ### Cheatsheet
 
-<a href="https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/pngs/collapse.png" width="330" height="227"/></a> <!-- 294 -->
+<a href="https://raw.githubusercontent.com/SebKrantz/collapse/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/misc/collapse%20cheat%20sheet/preview/page1.png" width="330"/></a>  <!-- height="227" 294 -->
+<a href="https://raw.githubusercontent.com/SebKrantz/collapse/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/misc/collapse%20cheat%20sheet/preview/page2.png" width="330"/></a> 
 
 ### Presentation at [useR 2022](https://user2022.r-project.org)
 
