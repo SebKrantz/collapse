@@ -6,7 +6,7 @@
 % \usepackage[T1]{fontenc}
 
 %% Sets page size and margins
-\usepackage[landscape,top=0.5cm,bottom=0.6cm,left=0.5cm,right=0.5cm,marginparwidth=1.75cm]{geometry}
+\usepackage[landscape,top=0.5cm,bottom=-1cm,left=0.5cm,right=0.5cm,marginparwidth=1.75cm]{geometry}
 
 %% Useful packages
 \usepackage{amsmath}
@@ -34,6 +34,8 @@
 % \setlength{\columnsep}{6mm}
 \setlength{\itemsep}{0.2em}
 \pagestyle{empty}
+% \usepackage{fancyhdr}
+% \rfoot{Page \thepage}
 
 \makeatletter
 \renewcommand{\section}{\@startsection{section}{1}{0mm}%
@@ -86,7 +88,9 @@ iris2 <- copyv(iris, NA, NA)
      \vspace{2mm}
 }
 
-\begin{multicols*}{4}
+%\begin{adjustbox}{totalheight=0.5\textheight} % -2\baselineskip
+% \resizebox*{!}{\textheight}{%
+\begin{multicols}{4}
 %\setlength{\premulticols}{1pt}
 %\setlength{\postmulticols}{1pt}
 %\setlength{\multicolsep}{1pt}
@@ -346,14 +350,23 @@ iris <- iris2
 # Population weighted mean (PCGDP, LIFEEX) & mode (country), and sum(POP)
 collap(wlddev, country + PCGDP + LIFEEX ~ income, w = ~ POP)
 @
-%\vspace{-10mm}
+\end{multicols} % \vspace{-20mm}
 
-% \newpage
+% \end{adjustbox}
+%}
+% \hrrule
+\vspace{-5mm}
+\textcolor{lightgray}{\hrulefill}\\
+{\scriptsize \vspace{-0.5mm}
+ Page 1 of 2 \hfill \textcopyright\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 1.8.8\ \textbullet\ Updated: 2022-08
+}
+
+\newpage
 
 % ------------------------------------------------------------------
 % Second Page
 % ------------------------------------------------------------------
-
+\begin{multicols}{4}
 
 % \hrrule
 \section{Advanced Transformations}
@@ -521,7 +534,7 @@ qsu(iris, pid = Sepal.Length ~ Species, higher = TRUE)
 % \vspace{-1mm}
 
 \hrrule
-\section{List-Processing}
+\section{List Processing}
 %\vspace{1mm}
 \itxt{Functions to process (nested) lists (of data objects)}\\ [0.5em]
 %\setstretch{1.5}
@@ -632,5 +645,12 @@ wlddev |>
 @
 The best way to set this option is inside an \code{.Rprofile} file placed in the user or project directory. Use it carefully.
 
-\end{multicols*}
+\end{multicols}
+
+\vspace{-5mm}
+\textcolor{lightgray}{\hrulefill}\\
+{\scriptsize \vspace{-0.5mm}
+ Page 2 of 2 \hfill \textcopyright\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 1.8.8\ \textbullet\ Updated: 2022-08
+}
+
 \end{document}
