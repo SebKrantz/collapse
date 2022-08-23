@@ -77,6 +77,16 @@ keepaspectratio]{"background_cropped.png"}%
 \vfill
 }}}
 
+\newcommand\Logo{%
+\put(0,0){%
+\parbox[b][\paperheight]{\paperwidth}{%
+\vspace{-1mm} % \vfill
+\flushright
+\includegraphics[width=0.08\paperwidth,%
+keepaspectratio]{"collapse_logo_vsmall.png"} \hspace{3mm} %
+\vfill
+}}}
+
 
 \begin{document}
 
@@ -84,6 +94,7 @@ keepaspectratio]{"background_cropped.png"}%
 %   \raisebox{-\totalheight}[0pt][0pt]{%
 %     \includegraphics[width=4in]{background}}}%
 \AddToShipoutPicture*{\BackgroundPic}
+\AddToShipoutPicture*{\Logo}
 
 <<setup, echo=FALSE, message=FALSE, warning=FALSE>>=
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = FALSE, size = "scriptsize")
@@ -101,7 +112,7 @@ iris2 <- copyv(iris, NA, NA)
 \small
 
 {
-     {\fontsize{22}{30}\selectfont \textcolor{Gray}{Advanced and Fast Data Transformation with \emph{collapse}}}{\Huge\ : : CHEAT SHEET} %\\%\small{by Sebastian Krantz} %
+     {\fontsize{22}{30}\selectfont \textcolor{Gray}{Advanced and Fast Data Transformation with \emph{collapse}}}{\Huge\ \textcolor{darkgray}{: : CHEAT SHEET}} %\\%\small{by Sebastian Krantz} %
      \vspace{2mm}
 }
 
@@ -308,7 +319,7 @@ microbenchmark(fmode(X, v), fmode(X, f), fmode(X, gv), fmode(X, g))
 
 \section{Fast Data Manipulation}
 \vspace{-1.4mm}
-\itxt{Efficient implementations of data manipulation functions} % \newline
+\itxt{Minimal overhead implementations} \newline
 \setstretch{1.5}
 \code{fselect[<-]()} - select/replace columns\\
 \code{fsubset()} - subset data (rows and columns)\\
@@ -630,7 +641,7 @@ namlab(wlddev[c(2, 9)], N = TRUE, Ndist = TRUE, class = TRUE)
 across -> acr, fgroup\_by -> gby, finteraction -> itn, findex\_by -> iby, findex -> ix, frename -> rnm, get\_vars -> gv, num\_vars -> nv,
 add\_vars -> av} \newline
 
-\itxt{Namespace Masking}\\ [0.5em]
+\itxt{Namespace masking}\\ [0.5em]
 Can set \code{option(collpse\_mask = c(...))} with a vector of functions starting with f-, to export versions without f-, masking base R or \emph{dplyr}. A few keywords exist to mask multiple functions, see \code{help("collapse-options")}. This allows clean \& fast code, but poses additional namespace challenges:
 
 <<eval = FALSE>>=
