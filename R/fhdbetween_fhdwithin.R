@@ -347,11 +347,13 @@ fhdwithin.pseries <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = 
       reix <- copyMostAttributes(c(.Call(C_subsetDT, ix, cc, toss, FALSE), g)[namix], ix)
     } else reix <- copyMostAttributes(g, ix)
     attr(reix, "row.names") <- .set_row_names(length(cc))
-    return(setAttributes(demean(xcc, g, w[cc], ...),
+    res <- setAttributes(demean(xcc, g, w[cc], ...),
                          c(attributes(xcc), list(index = reix,
-                                                 na.rm = seq_along(x)[-cc]))))
+                                                 na.rm = seq_along(x)[-cc])))
   }
-  demean(x, g, w, ...) # keeps attributes ?? -> Yes !!
+  res <- demean(x, g, w, ...) # keeps attributes ?? -> Yes !!
+  if(is.double(x)) return(res)
+  pseries_to_numeric(res)
 }
 
 # x = mNA; fl = m; lm.method = "qr"
