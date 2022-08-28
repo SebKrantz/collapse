@@ -29,9 +29,11 @@ fdiff.pseries <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1, s
   g <- index[[1L]]
   t <- switch(shift, time = index[[2L]], row = NULL, stop("'shift' must be either 'time' or 'row'"))
   if(length(t) && !inherits(x, "indexed_series")) t <- plm_check_time(t)
-  if(is.matrix(x))
+  res <- if(is.matrix(x))
     .Call(Cpp_fdiffgrowthm,x,n,diff,fill,fnlevels(g),g,NULL,t,1L+log,rho,stubs,1) else
       .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(g),g,NULL,t,1L+log,rho,stubs,1)
+  if(is.double(x)) return(res)
+  pseries_to_numeric(res)
 }
 
 fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, ...) {
@@ -107,9 +109,11 @@ fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scal
   g <- index[[1L]]
   t <- switch(shift, time = index[[2L]], row = NULL, stop("'shift' must be either 'time' or 'row'"))
   if(length(t) && !inherits(x, "indexed_series")) t <- plm_check_time(t)
-  if(is.matrix(x))
+  res <- if(is.matrix(x))
     .Call(Cpp_fdiffgrowthm,x,n,diff,fill,fnlevels(g),g,NULL,t,4L-logdiff,scale,stubs,power) else
       .Call(Cpp_fdiffgrowth,x,n,diff,fill,fnlevels(g),g,NULL,t,4L-logdiff,scale,stubs,power)
+  if(is.double(x)) return(res)
+  pseries_to_numeric(res)
 }
 
 fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, ...) {

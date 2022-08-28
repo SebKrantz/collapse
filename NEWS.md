@@ -1,3 +1,7 @@
+# collapse 1.8.9.9000
+
+* `.pseries` / `.indexed_series` methods also change the implicit class of the vector (attached after `"pseries"`), if the data type changed. e.g. calling a function like `fgrowth` on an integer pseries changed the data type to double, but the "integer" class was still attached after "pseries". 
+
 # collapse 1.8.8
 
 * `flm` and `fFtest` are now internal generic with an added formula method e.g. `flm(mpg ~ hp + carb, mtcars, weights = wt)` or `fFtest(mpg ~ hp + carb | vs + am, mtcars, weights = wt)` in addition to the programming interface. Thanks to Grant McDermott for suggesting. 

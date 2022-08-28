@@ -297,6 +297,13 @@ plm_check_time <- function(x) {
   x
 }
 
+pseries_to_numeric <- function(x) {
+  clx <- oldClass(x)
+  m <- clx %in% c("integer", "logical", "complex", "raw")
+  if(any(m)) oldClass(x) <- c(clx[!m], "numeric")
+  x
+}
+
 unindex <- function(x) {
   attr(x, "index_df") <- NULL
   clx <- oldClass(x)

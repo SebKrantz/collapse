@@ -16,9 +16,11 @@ fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta
 fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
-  if(is.matrix(x))
+  res <- if(is.matrix(x))
   .Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE) else
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE)
+  if(is.double(x)) return(res)
+  pseries_to_numeric(res)
 }
 
 fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
@@ -222,9 +224,11 @@ fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, 
 fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
-  if(is.matrix(x))
+  res <- if(is.matrix(x))
   .Call(Cpp_BWm,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill) else
   .Call(Cpp_BW,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill)
+  if(is.double(x)) return(res)
+  pseries_to_numeric(res)
 }
 
 fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {

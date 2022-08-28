@@ -18,9 +18,11 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1
 fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
-  if(is.matrix(x))
+  res <- if(is.matrix(x))
   .Call(Cpp_fscalem,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)) else
   .Call(Cpp_fscale,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
+  if(is.double(x)) return(res)
+  pseries_to_numeric(res)
 }
 
 fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
