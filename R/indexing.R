@@ -223,7 +223,7 @@ findex_by <- function(.X, ..., single = "auto", interact.ids = TRUE) { # pid = N
   nam <- names(ids)
 
   # If something else than NSE cols is supplied
-  if(length(ids) == 1L && length(ids[[1L]]) != length(.X[[1L]]) && is.null(nam)) {
+  if(length(ids) == 1L && (!is.symbol(dots[[2L]]) || length(ids[[1L]]) != length(.X[[1L]]) || is.function(ids[[1L]])) && is.null(nam)) { # Fixes #320
     ids <- .X[cols2int(ids[[1L]], .X, names(.X), FALSE)]
   } else {
     if(length(nam)) {
