@@ -1,6 +1,8 @@
 # collapse 1.8.9.9000
 
-* `.pseries` / `.indexed_series` methods also change the implicit class of the vector (attached after `"pseries"`), if the data type changed. e.g. calling a function like `fgrowth` on an integer pseries changed the data type to double, but the "integer" class was still attached after "pseries". 
+* `.pseries` / `.indexed_series` methods also change the implicit class of the vector (attached after `"pseries"`), if the data type changed. e.g. calling a function like `fgrowth` on an integer pseries changed the data type to double, but the "integer" class was still attached after "pseries".
+
+* Fixed bad testing for SE inputs in `fgroup_by()` and `findex_by()`. See #320. 
 
 # collapse 1.8.8
 
