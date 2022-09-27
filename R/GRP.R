@@ -372,7 +372,7 @@ fgroup_by <- function(.X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, 
     e <- eval(dots, .X, parent.frame())
     name <- names(e)
     # If something else than NSE cols is supplied
-    if(length(e) == 1L && (length(vars) == 0L || !any(vars == names(.X))) && is.null(name)) { # !is.symbol(dots[[2L]]) || length(e[[1L]]) != length(.X[[1L]]) || is.function(e[[1L]] # Fixes #320
+    if(length(e) == 1L && (length(vars) != 1L || !any(vars == names(.X))) && is.null(name)) { # !is.symbol(dots[[2L]]) || length(e[[1L]]) != length(.X[[1L]]) || is.function(e[[1L]] # Fixes #320
       e <- .X[cols2int(e[[1L]], .X, names(.X), FALSE)]
     } else {
       if(length(name)) {  # fgroup_by(mtcars, bla = round(mpg / cyl), vs, am)
