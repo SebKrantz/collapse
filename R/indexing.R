@@ -221,15 +221,16 @@ findex_by <- function(.X, ..., single = "auto", interact.ids = TRUE) { # pid = N
   dots <- substitute(list(...))
   ids <- eval(dots, .X, parent.frame())
   nam <- names(ids)
+  vars <- all.vars(dots, unique = FALSE)
 
   # If something else than NSE cols is supplied
-  if(length(ids) == 1L && (!is.symbol(dots[[2L]]) || length(ids[[1L]]) != length(.X[[1L]]) || is.function(ids[[1L]])) && is.null(nam)) { # Fixes #320
+  if(length(ids) == 1L && (length(vars) == 0L || !any(vars == names(.X))) && is.null(nam)) { # !is.symbol(dots[[2L]]) || length(ids[[1L]]) != length(.X[[1L]]) || is.function(ids[[1L]]) # Fixes #320
     ids <- .X[cols2int(ids[[1L]], .X, names(.X), FALSE)]
   } else {
     if(length(nam)) {
       nonmiss <- nzchar(nam)
       if(!all(nonmiss)) names(ids) <- `[<-`(as.character(dots[-1L]), nonmiss, value = nam[nonmiss])
-    } else names(ids) <- all.vars(dots, unique = FALSE)
+    } else names(ids) <- vars
   }
 
   # Single id
