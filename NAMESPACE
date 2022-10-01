@@ -526,6 +526,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  S3method(funique, list)
  S3method(funique, sf)
  S3method(funique, default)
+ # S3method(funique, grouped_df)
  S3method(funique, pseries)
  S3method(funique, pdata.frame)
  S3method(fnobs, data.frame)
