@@ -49,6 +49,10 @@ int TtI(SEXP x) {
   if(strcmp(r, "*") == 0) return 8;
   if(strcmp(r, "%%") == 0) return 9;
   if(strcmp(r, "-%%") == 0) return 10;
+  if(strcmp(r, "replace_na") == 0) return 0;
+  if(strcmp(r, "REPLACE_NA") == 0) return 0;
+  if(strcmp(r, "REPLACE_FILL") == 0) return 1;
+  if(strcmp(r, "REPLACE") == 0) return 2;
   error("Unknown transformation!");
 }
 

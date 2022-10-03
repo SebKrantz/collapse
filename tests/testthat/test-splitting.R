@@ -31,6 +31,18 @@ test_that("gsplit / rsplit work like split", {
   }
 })
 
+test_that("rsplit matrix method works as intended", {
+  m = qM(nv(GGDC10S))
+  fl = lapply(GGDC10S[c("Country", "Variable")], qF, sort = FALSE)
+  expect_equal(lapply(rsplit(m, GGDC10S$Country), unattrib), split(m, GGDC10S$Country))
+  expect_equal(lapply(rsplit(m, itn(fl), flatten = TRUE), unattrib), split(m, itn(fl)))
+
+  expect_equal(rsplit(m, fl, flatten = TRUE), unlist(rsplit(m, fl), FALSE))
+
+  expect_true(all(vapply(rsplit(m, c(fl, GGDC10S["Year"]), flatten = TRUE), is.matrix, TRUE)))
+  expect_true(!any(vapply(rsplit(m, c(fl, GGDC10S["Year"]), flatten = TRUE, drop.dim = TRUE), is.matrix, TRUE)))
+})
+
 test_that("rsplit data frame method works as intended", {
 
   expect_equal(rsplit(mtcars, mtcars$cyl), split(mtcars, mtcars$cyl))

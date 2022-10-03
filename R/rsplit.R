@@ -17,6 +17,7 @@ t_list <- function(l) {
 rsplit <- function(x, ...) UseMethod("rsplit")
 
 rsplit.default <- function(x, fl, drop = TRUE, flatten = FALSE, use.names = TRUE, ...) { # , check = TRUE
+  if(is.matrix(x) && !inherits(x, "matrix")) return(rsplit.matrix(x, fl, drop, flatten, use.names, ...))
   if(is.atomic(fl) || flatten || is_GRP(fl)) return(gsplit(x, fl, use.names, drop = drop, ...))
   attributes(fl) <- NULL
   # if(check) fl <- lapply(fl, qF) # necessary ? -> split.default is actually faster on non-factor variables !
@@ -28,6 +29,22 @@ rsplit.default <- function(x, fl, drop = TRUE, flatten = FALSE, use.names = TRUE
   rspl(x, fl)
 }
 
+# Matrix method: requested in https://github.com/ycroissant/plm/issues/33
+split_mat <- function(x, fl, dd, ...) {
+  ssfun <- if(dd) function(i) x[i, , drop = TRUE] else function(i) x[i, , drop = FALSE]
+  lapply(gsplit(NULL, fl, ...), ssfun)
+}
+
+rsplit.matrix <- function(x, fl, drop = TRUE, flatten = FALSE, use.names = TRUE, drop.dim = FALSE, ...) {
+  if(is.atomic(fl) || flatten || is_GRP(fl)) return(split_mat(x, fl, drop.dim, use.names, drop = drop, ...))
+  attributes(fl) <- NULL
+  rspl <- function(y, fly) {
+    if(length(fly) == 1L) return(split_mat(y, fly[[1L]], drop.dim, use.names, drop = drop, ...))
+    mapply(rspl, y = split_mat(y, fly[[1L]], drop.dim, use.names, drop = drop, ...),
+           fly = t_list2(lapply(fly[-1L], gsplit, fly[[1L]], use.names, drop = drop, ...)), SIMPLIFY = FALSE)
+  }
+  rspl(x, fl)
+}
 
 
 # From stackoverflow package:

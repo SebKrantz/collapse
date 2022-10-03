@@ -20,37 +20,36 @@ fsubset.matrix <- function(.x, subset, ..., drop = FALSE) {
 }
 
 # No lazy eval
-ss <- function(x, i, j) {
+ss <- function(x, i, j, check = TRUE) {
   if(is.atomic(x)) if(is.matrix(x)) return(if(missing(j)) x[i, , drop = FALSE] else if(missing(i)) x[, j, drop = FALSE] else x[i, j, drop = FALSE]) else return(x[i])
   mj <- missing(j)
   if(mj) j <- seq_along(unclass(x)) else if(is.integer(j)) { # if(missing(i)) stop("Need to supply either i or j or both")
     if(missing(i)) return(.Call(C_subsetCols, x, j, TRUE))
-    if(any(j < 0L)) j <- seq_along(unclass(x))[j]
+    if(check && any(j < 0L)) j <- seq_along(unclass(x))[j]
   } else {
     if(is.character(j)) {
       j <- ckmatch(j, attr(x, "names"))
     } else if(is.logical(j)) {
-      if(length(j) != length(unclass(x))) stop("If j is logical, it needs to be of length ncol(x)")
+      if(check && length(j) != length(unclass(x))) stop("If j is logical, it needs to be of length ncol(x)")
          j <- which(j)
     } else if(is.numeric(j)) {
-     j <- if(any(j < 0)) seq_along(unclass(x))[j] else as.integer(j)
+     j <- if(check && any(j < 0)) seq_along(unclass(x))[j] else as.integer(j)
     } else stop("j needs to be supplied integer indices, character column names, or a suitable logical vector")
     if(missing(i)) return(.Call(C_subsetCols, x, j, TRUE))
   }
-  checkrows <- TRUE
   if(!is.integer(i)) {
     if(is.numeric(i)) i <- as.integer(i) else if(is.logical(i)) {
       nr <- fnrow2(x)
-      if(length(i) != nr) stop("i needs to be integer or logical(nrow(x))") # which(r & !is.na(r)) not needed !
+      if(check && length(i) != nr) stop("i needs to be integer or logical(nrow(x))") # which(r & !is.na(r)) not needed !
       i <- which(i)
-      if(length(i) == nr) if(mj) return(x) else return(.Call(C_subsetCols, x, j, TRUE))
-      checkrows <- FALSE
+      if(length(i) == nr) return(if(mj) x else .Call(C_subsetCols, x, j, TRUE))
+      check <- FALSE
     } else stop("i needs to be integer or logical(nrow(x))")
   }
   rn <- attr(x, "row.names")
-  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, i, j, checkrows))
-  res <- .Call(C_subsetDT, x, i, j, checkrows)
-  attr(res, "row.names") <- .Call(C_subsetVector, rn, i, checkrows)
+  if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, i, j, check))
+  res <- .Call(C_subsetDT, x, i, j, check)
+  attr(res, "row.names") <- .Call(C_subsetVector, rn, i, check)
   res
 }
 

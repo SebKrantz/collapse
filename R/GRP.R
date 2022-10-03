@@ -22,7 +22,11 @@ switchGRP <- function(x, na.last = TRUE, decreasing = FALSE, starts = FALSE,
   .Call(C_radixsort, na.last, decreasing, starts, group.sizes, sort, z)
 }
 
-group <- function(x, starts = FALSE, group.sizes = FALSE) `oldClass<-`(.Call(C_group, x, starts, group.sizes), c("qG", "na.included"))
+group <- function(x, starts = FALSE, group.sizes = FALSE) {
+  g <- .Call(C_group, x, starts, group.sizes)
+  oldClass(g) <- c("qG", "na.included")
+  g
+}
 
 gsplit <- function(x = NULL, g, use.g.names = FALSE, ...) {
   if(!(is.list(g) && inherits(g, "GRP"))) g <- GRP(g, return.groups = use.g.names, call = FALSE, ...)
@@ -356,7 +360,7 @@ fgroup_by <- function(.X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, 
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
   dots <- substitute(list(...))
   vars <- all.vars(dots, unique = FALSE)
-  # In case sequences of columns are passed...
+  # In case sequences of columns are passed... Think: can enable fgroup_by(mtcars, 1:cyl) ??
   if(length(vars)+1L != length(dots) && any(all.names(dots) == ":")) {
   # Note that fgroup_by(mtcars, bla = round(mpg / cyl), vs:am) only groups by vs, and am. fselect(mtcars, bla = round(mpg / cyl), vs:am) also does the wrong thing.
     nl <- `names<-`(as.vector(seq_along(.X), "list"), names(.X))
@@ -372,7 +376,7 @@ fgroup_by <- function(.X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, 
     e <- eval(dots, .X, parent.frame())
     name <- names(e)
     # If something else than NSE cols is supplied
-    if(length(e) == 1L && (length(vars) != 1L || !any(vars == names(.X))) && is.null(name)) { # !is.symbol(dots[[2L]]) || length(e[[1L]]) != length(.X[[1L]]) || is.function(e[[1L]] # Fixes #320
+    if(length(e) == 1L && (length(vars) != 1L || !anyv(names(.X), vars)) && is.null(name)) { # !is.symbol(dots[[2L]]) || length(e[[1L]]) != length(.X[[1L]]) || is.function(e[[1L]] # Fixes #320
       e <- .X[cols2int(e[[1L]], .X, names(.X), FALSE)]
     } else {
       if(length(name)) {  # fgroup_by(mtcars, bla = round(mpg / cyl), vs, am)
@@ -782,6 +786,21 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", ..
   attr(res, "row.names") <- Csv(rn, st)
   res
 }
+
+## Problem: could be confused to mean unique values within groups. Also can use ffirst() to achieve something similar
+# funique.grouped_df <- function(x, ...) {
+#   g <- GRP.grouped_df(x, call = FALSE)
+#   if(g[[1L]] == length(g[[2L]])) return(fungroup(x))
+#   st <- if(length(g$group.starts)) g$group.starts else .Call(C_ffirst, seq_along(g[[2L]]), g[[1L]], g[[2L]], NULL, FALSE)
+#   rn <- attr(x, "row.names")
+#   attr(x, "groups") <- NULL
+#   oldClass(x) <- fsetdiff(oldClass(x), c("GRP_df", "grouped_df"))
+#   res <- .Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE)
+#   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(res)
+#   attr(res, "row.names") <- Csv(rn, st)
+#   res
+# }
+
 
 funique.list <- function(x, cols = NULL, sort = FALSE, method = "auto", ...) funique.data.frame(x, cols, sort, method, ...)
 

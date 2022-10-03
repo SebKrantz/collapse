@@ -13,7 +13,7 @@ Detailed Statistical Description of Data Frame
 }
 \usage{
 descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
-      Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99),
+      Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99),
       cols = NULL, label.attr = "label", \dots)
 
 \method{[}{descr}(x, ...)

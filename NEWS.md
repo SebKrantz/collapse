@@ -4,6 +4,14 @@
 
 * Fixed bad testing for SE inputs in `fgroup_by()` and `findex_by()`. See #320. 
 
+* Added `rsplit.matrix` method. 
+
+* `descr()` now by default also reports 10% and 90% quantiles for numeric variables (in line with STATA's detailed summary statistics), and can also be applied to 'pseries' / 'indexed_series'. 
+
+<!-- * Added method `funique.grouped_df`. ???? -->
+
+* Function `ss()` has a new argument `check = TRUE`. Setting `check = FALSE` allows subsetting data frames / lists with positive integers without checking whether integers are positive or in-range. For programmers. 
+
 # collapse 1.8.8
 
 * `flm` and `fFtest` are now internal generic with an added formula method e.g. `flm(mpg ~ hp + carb, mtcars, weights = wt)` or `fFtest(mpg ~ hp + carb | vs + am, mtcars, weights = wt)` in addition to the programming interface. Thanks to Grant McDermott for suggesting. 
