@@ -30,7 +30,7 @@ sbt(.x, \dots)     # Shorthand for fsubset
 
 
 # Fast subsetting (replaces `[` with drop = FALSE, programmers choice)
-ss(x, i, j)
+ss(x, i, j, check = TRUE)
 }
 
 \arguments{
@@ -42,6 +42,7 @@ ss(x, i, j)
   \item{drop}{passed on to \code{[} indexing operator. Only available for the matrix method.}
   \item{i}{positive or negative row-indices or a logical vector to subset the rows of \code{x}.}
   \item{j}{a vector of column names, positive or negative indices or a suitable logical vector to subset the columns of \code{x}. \emph{Note:} Negative indices are converted to positive ones using \code{j <- seq_along(x)[j]}.}
+  \item{check}{logical. \code{FALSE} skips checks on \code{i} and \code{j}, e.g. whether indices are negative. This offers a speedup to programmers, but can terminate R if zero or negative indices are passed. }
  \item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
 }
 \details{
