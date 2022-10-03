@@ -24,7 +24,7 @@ fsorttable <- function(x, srt) {
 
 
 descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
-                  Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99), cols = NULL,
+                  Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), cols = NULL,
                   label.attr = 'label', ...) {
   nam <- l1orlst(as.character(substitute(X)))
 
@@ -55,10 +55,15 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
   if(is.list(X)) {
     is_sf <- inherits(X, "sf")
     # if(inherits(X, "POSIXlt")) X <- list(X = as.POSIXct(X))
-    if(inherits(X, "indexed_frame")) X <- unindex(X)
+    if(inherits(X, "pdata.frame")) X <- unindex(X)
     class(X) <- NULL
     if(is_sf) X[[attr(X, "sf_column")]] <- NULL
-  } else X <- unclass(qDF(X))
+  } else {
+    if(inherits(X, "pseries")) X <- unindex(X)
+    is_1D <- is.null(dim(X))
+    X <- unclass(qDF(X))
+    if(is_1D) names(X) <- nam
+  }
   if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
   res <- vector('list', length(X))
   num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
