@@ -359,9 +359,9 @@ fgroup_by <- function(.X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, 
   oldClass(.X) <- NULL
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
   dots <- substitute(list(...))
-  vars <- all.vars(dots, unique = FALSE)
-  # In case sequences of columns are passed... Think: can enable fgroup_by(mtcars, 1:cyl) ??
-  if(length(vars)+1L != length(dots) && any(all.names(dots) == ":")) {
+  # vars <- all.vars(dots, unique = FALSE)
+  # In case sequences of columns are passed... Think: can enable fgroup_by(mtcars, 1:cyl)
+  if(any(all_funs(dots) == ":")) { # length(vars)+1L != length(dots) && any(all.names(dots) == ":")
   # Note that fgroup_by(mtcars, bla = round(mpg / cyl), vs:am) only groups by vs, and am. fselect(mtcars, bla = round(mpg / cyl), vs:am) also does the wrong thing.
     nl <- `names<-`(as.vector(seq_along(.X), "list"), names(.X))
     vars <- eval(substitute(c(...)), nl, parent.frame())
@@ -375,8 +375,11 @@ fgroup_by <- function(.X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, 
   } else {
     e <- eval(dots, .X, parent.frame())
     name <- names(e)
-    # If something else than NSE cols is supplied
-    if(length(e) == 1L && (length(vars) != 1L || !anyv(names(.X), vars)) && is.null(name)) { # !is.symbol(dots[[2L]]) || length(e[[1L]]) != length(.X[[1L]]) || is.function(e[[1L]] # Fixes #320
+    vars <- all.vars(dots, unique = FALSE)
+    # If something else than NSE cols is supplied, see https://github.com/SebKrantz/collapse/issues/320
+    # Note: doesn't support fgroup_by(mtcars, cyl / vs), but ok, this should be named...
+    # fgroup_by(mtcars, c("cyl", "vs")) gives vars == character(0)
+    if(length(e) == 1L && is.null(name) && (length(vars) != 1L || !anyv(names(.X), vars))) { # !is.symbol(dots[[2L]]) || length(e[[1L]]) != length(.X[[1L]]) || is.function(e[[1L]] # Fixes #320
       e <- .X[cols2int(e[[1L]], .X, names(.X), FALSE)]
     } else {
       if(length(name)) {  # fgroup_by(mtcars, bla = round(mpg / cyl), vs, am)
