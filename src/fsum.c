@@ -334,6 +334,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
           // else fsum_int_g_omp_impl(INTEGER(out), INTEGER(x), ng, INTEGER(g), narm, l, nth);
         } else {
           double sum = nth <= 1 ? fsum_int_impl(INTEGER(x), narm, l) : fsum_int_omp_impl(INTEGER(x), narm, l, nth);
+          UNPROTECT(nprotect); // Thomas Kalibera Patch: to appease rchk.
           if(sum > INT_MAX || sum <= INT_MIN) return ScalarReal(sum); // INT_MIN is NA_INTEGER
           return ScalarInteger(ISNAN(sum) ? NA_INTEGER : (int)sum);
         }

@@ -864,7 +864,8 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     } else pw = REAL(w);
   }
   if(nullg) {
-    if(TYPEOF(w) != REALSXP) UNPROTECT(nprotect);
+    // if(TYPEOF(w) != REALSXP)
+    UNPROTECT(nprotect);
     return w_mode_impl(x, pw, asLogical(Rnarm), asInteger(Rret));
   }
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
@@ -886,9 +887,15 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     po = INTEGER(o);
     pst = INTEGER(getAttrib(o, install("starts")));
   }
-  if(nullw) return mode_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
-  if(TYPEOF(w) != REALSXP) UNPROTECT(nprotect);
-  return w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
+  // if(nullw) return mode_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
+  // if(TYPEOF(w) != REALSXP) UNPROTECT(nprotect);
+  // return w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
+  // Thomas Kalibera Patch:
+  SEXP res;
+  if(nullw) res = mode_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
+  else res = w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
+  UNPROTECT(nprotect);
+  return res;
 }
 
 // TODO: allow column-level parallelism??
