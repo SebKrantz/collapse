@@ -475,7 +475,9 @@ print.index_df <- function(x, topn = 5, ...) {
   # res <- NextMethod() # don't use pdata.frame methods
   res <- .subset2(x, name, exact = FALSE) # as.character(substitute(name)) -> not necessary!
   if(is.null(res)) return(NULL)
+  clr <- class(res)
   attr(res, "index_df") <- attr(x, "index_df")
+  if(!any(clr == "indexed_series")) oldClass(res) <- c("indexed_series", "pseries", clr)
   res
 }
 
@@ -505,7 +507,9 @@ print.index_df <- function(x, topn = 5, ...) {
   # res <- UseMethod("[[", x)
   res <- .subset2(x, i, ...)
   if(is.null(res)) return(NULL)
+  clr <- class(res)
   attr(res, "index_df") <- attr(x, "index_df")
+  if(!any(clr == "indexed_series")) oldClass(res) <- c("indexed_series", "pseries", clr)
   res
 }
 
