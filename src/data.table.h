@@ -80,7 +80,7 @@ extern size_t typeorder[100];
 
 // assign.c
 void writeNA(SEXP v, const int from, const int n);
-void savetl_init(), savetl(SEXP s), savetl_end();
+void savetl_init(void), savetl(SEXP s), savetl_end(void);
 SEXP setcolorder(SEXP x, SEXP o);
 
 // subset.c
