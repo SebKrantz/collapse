@@ -389,7 +389,7 @@ SEXP fwtabulate(SEXP x, SEXP w, SEXP ngp, SEXP ckna) {
 // https://www.datamentor.io/r-programming/examples/gcd-hcf/
 // https://stackoverflow.com/questions/7500128/how-to-use-operator-for-float-values-in-c
 // https://www.tutorialspoint.com/find-out-the-gcd-of-two-numbers-using-while-loop-in-c-language
-double dgcd(double a, double b) {
+static inline double dgcd(double a, double b) {
   double rem;
   while(b > 0.000001) // check for b>0 condition because in a % b, b should not equal to zero
   {
@@ -400,7 +400,7 @@ double dgcd(double a, double b) {
   return a;
 }
 
-int igcd(int a, int b) {
+static inline int igcd(int a, int b) {
   int rem;
   while(b != 0) // check for b!=0 condition because in a % b, b should not equal to zero
   {
@@ -410,6 +410,18 @@ int igcd(int a, int b) {
   }
   return a;
 }
+
+// See as_double_integer64 at https://github.com/truecluster/bit64/blob/master/src/integer64.c
+// static inline long long i64gcd(long long a, long long b) {
+//   long long rem;
+//   while(b != 0) // check for b!=0 condition because in a % b, b should not equal to zero
+//   {
+//     rem = a % b;
+//     a = b;
+//     b = rem;
+//   }
+//   return a;
+// }
 
 // Greatest common divisor of a vector of numeric values
 // Note that the function expects positive values only (use abs() in R beforehand)
@@ -446,6 +458,17 @@ SEXP vecgcd(SEXP x) {
     }
     case REALSXP:
     {
+      if(inherits(x, "integer64")) error("vgcd does not support integer64. Please convert your vector to double using as.double(x).");
+      // if(inherits(x, "integer64")) {
+      //   long long *px = (long long *)REAL(x), gcd = px[0];
+      //   for(int i = 1; i < n; ++i) {
+      //     if(gcd <= 1) break;
+      //     gcd = i64gcd(px[i], gcd);
+      //   }
+      //   SEXP res = gcd == 0 ? ScalarReal(1) : ScalarReal((double)gcd);
+      //   copyMostAttrib(x, res);
+      //   return res;
+      // }
       // TODO: Check if double is integer?
       double *px = REAL(x), gcd = px[0];
       for(int i = 1; i < n; ++i) {
@@ -519,3 +542,5 @@ SEXP all_funs(SEXP x) {
 
   return data.ans;
 }
+
+
