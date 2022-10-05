@@ -298,6 +298,11 @@ unattrib <- function(object) `attributes<-`(object, NULL)
 # setAttrR <- function(object, a, v) `attr<-`(object, a, v)
 
 setAttrib <- function(object, a) .Call(C_setAttrib, object, a)
+setattrib <- function(object, a) {
+  .Call(C_setattributes, object, a)
+  return(invisible(object))
+}
+
 # setAttribR <- function(object, a) `attributes<-`(object, x)
 
 copyAttrib <- function(to, from) .Call(C_copyAttrib, to, from)

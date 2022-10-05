@@ -20,6 +20,7 @@
 \alias{setColnames}
 \alias{setDimnames}
 \alias{unattrib}
+\alias{setattrib}
 \alias{setAttrib}
 \alias{copyAttrib}
 \alias{copyMostAttrib}
@@ -66,6 +67,7 @@ setDimnames(object, dn,
             which = NULL)     # Set dimension names of object and return object
 unattrib(object)              # Remove all attributes from object
 setAttrib(object, a)          # Replace all attributes with list of attributes 'a'
+setattrib(object, a)          # Same thing by reference, returning object invisibly
 copyAttrib(to, from)          # Copy all attributes from object 'from' to object 'to'
 copyMostAttrib(to, from)      # Copy most attributes from object 'from' to object 'to'
 is_categorical(x)             # The opposite of is.numeric
@@ -100,7 +102,7 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
 \details{
 \code{all_funs} is the opposite of \code{\link{all.vars}}, to return the functions called rather than the variables in an expression. See Examples.
 
-  \code{copyAttrib} and \code{copyMostAttrib} take a shallow copy of the attribute list, i.e. they don't duplicate in memory the attributes themselves. They also, along with \code{setAttrib}, take a shallow copy of lists passed to the \code{to} argument, so that lists are not modified by reference. Atomic \code{to} arguments are however modified by reference.
+  \code{copyAttrib} and \code{copyMostAttrib} take a shallow copy of the attribute list, i.e. they don't duplicate in memory the attributes themselves. They also, along with \code{setAttrib}, take a shallow copy of lists passed to the \code{to} argument, so that lists are not modified by reference. Atomic \code{to} arguments are however modified by reference. The function \code{setattrib}, added in v1.8.9, modifies the \code{object} by reference i.e. no shallow copies are taken.
 
 \code{copyMostAttrib} copies all attributes except for \code{"names"}, \code{"dim"} and \code{"dimnames"} (like the corresponding C-API function), and further only copies the \code{"row.names"} attribute of data frames if known to be valid. Thus it is a suitable choice if objects should be of the same type but are not of equal dimensions.
 }

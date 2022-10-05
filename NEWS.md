@@ -12,6 +12,8 @@
 
 * Function `ss()` has a new argument `check = TRUE`. Setting `check = FALSE` allows subsetting data frames / lists with positive integers without checking whether integers are positive or in-range. For programmers. 
 
+* Added helper function `setattrib()`, to set a new attribute list for an object by reference + invisible return. This is different from the existing function `setAttrib()` (note the capital A), which takes a shallow copy of list-like objects and returns the result.   
+
 # collapse 1.8.8
 
 * `flm` and `fFtest` are now internal generic with an added formula method e.g. `flm(mpg ~ hp + carb, mtcars, weights = wt)` or `fFtest(mpg ~ hp + carb | vs + am, mtcars, weights = wt)` in addition to the programming interface. Thanks to Grant McDermott for suggesting. 
