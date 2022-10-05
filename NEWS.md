@@ -1,4 +1,6 @@
-# collapse 1.8.9.9000
+# collapse 1.8.9
+
+* Fixed some warnings on rchk and newer C compilers (LLVM clang 10+). 
 
 * `.pseries` / `.indexed_series` methods also change the implicit class of the vector (attached after `"pseries"`), if the data type changed. e.g. calling a function like `fgrowth` on an integer pseries changed the data type to double, but the "integer" class was still attached after "pseries".
 
@@ -13,6 +15,7 @@
 * Function `ss()` has a new argument `check = TRUE`. Setting `check = FALSE` allows subsetting data frames / lists with positive integers without checking whether integers are positive or in-range. For programmers. 
 
 * Added helper function `setattrib()`, to set a new attribute list for an object by reference + invisible return. This is different from the existing function `setAttrib()` (note the capital A), which takes a shallow copy of list-like objects and returns the result.   
+
 
 # collapse 1.8.8
 
