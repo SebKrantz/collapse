@@ -23,8 +23,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
-          extra-packages: [covr, sf, weights]
-
+          extra-packages: |
+            covr
+            sf
+            weights
       - name: Test coverage
         run: |
           library(covr)
