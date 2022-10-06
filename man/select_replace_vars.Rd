@@ -43,7 +43,7 @@ slt(x, \dots) <- value            # Shorthand for fselect<-
 ## Select and replace columns by names, indices, logical vectors,
 ## regular expressions or using functions to identify columns
 
-get_vars(x, vars, return = "data", regex = FALSE, \dots)
+get_vars(x, vars, return = "data", regex = FALSE, rename = FALSE, \dots)
       gv(x, vars, return = "data", \dots)   # Shorthand for get_vars
      gvr(x, vars, return = "data", \dots)   # Shorthand for get_vars(..., regex = TRUE)
 
@@ -92,6 +92,7 @@ date_vars(x) <- value
   \emph{Note}: replacement functions only replace data, however column names are replaced together with the data (if available).
   }
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}. Matching is done using \code{\link{grep}}.}
+\item{rename}{logical. If \code{vars} is a named vector of column names or indices, \code{rename = TRUE} will use the (non missing) names to rename columns.}
 \item{pos}{the position where columns are added in the data frame. \code{"end"} (default) will append the data frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
 \item{\dots}{for \code{fselect}: column names and expressions e.g. \code{fselect(mtcars, newname = mpg, hp, carb:vs)}. for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}, a single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(\dots)}).}
 }

@@ -126,22 +126,23 @@ cat_vars <- function(x, return = "data") get_vars_ind(x, .Call(C_vtypes, x, 1L) 
 "cat_vars<-" <- function(x, value) `get_vars_ind<-`(x, .Call(C_vtypes, x, 1L) %!=% TRUE, value)
 
 
-get_vars <- function(x, vars, return = "data", regex = FALSE, ...) {
+get_vars <- function(x, vars, return = "data", regex = FALSE, rename = FALSE, ...) {
  if(regex) {
    if(!is.character(vars)) stop("If regex = TRUE, vars must be character")
    ind <- rgrep(vars, attr(x, "names"), ...)
  } else {
    if(!missing(...)) unused_arg_action(match.call(), ...)
    ind <- cols2int(vars, x, attr(x, "names"))
+   if(rename && length(nam_vars <- names(vars)) == length(ind)) { # Allow renaming during selection
+     nonmiss <- nzchar(nam_vars)
+     attr(x, "names")[ind[nonmiss]] <- nam_vars[nonmiss]
+   }
  }
  get_vars_ind(x, ind, return)
 }
 
 gv <- function(x, vars, return = "data", ...) {
-  if(!missing(...)) {
-    warning("Please use the new shortcut 'gvr' for regex column selection.")
-    return(get_vars(x, vars, return, ...))
-  }
+  if(!missing(...)) return(get_vars(x, vars, return, ...))
   ind <- cols2int(vars, x, attr(x, "names"))
   get_vars_ind(x, ind, return)
 }

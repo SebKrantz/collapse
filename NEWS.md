@@ -14,6 +14,8 @@
 
 * Function `ss()` has a new argument `check = TRUE`. Setting `check = FALSE` allows subsetting data frames / lists with positive integers without checking whether integers are positive or in-range. For programmers. 
 
+* Function `get_vars()` has a new argument `rename` allowing select-renaming of columns in standard evaluation programming, e.g. `get_vars(mtcars, c(newname = "cyl", "vs", "am"), rename = TRUE)`. The default is `rename = FALSE`, to warrant full backwards compatibility. See #327. 
+
 * Added helper function `setattrib()`, to set a new attribute list for an object by reference + invisible return. This is different from the existing function `setAttrib()` (note the capital A), which takes a shallow copy of list-like objects and returns the result.   
 
 
