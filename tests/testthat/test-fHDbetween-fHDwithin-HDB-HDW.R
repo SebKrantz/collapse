@@ -757,4 +757,60 @@ test_that("HDW data.frame method (formula input) throw errors", {
   expect_error(HDW(mtcars, ~ cyl + vs, cols = "mpg2"))
 })
 
+
+if(identical(Sys.getenv("NCRAN"), "TRUE"))
+test_that("Indexed data methods", {
+
+  wldi = findex_by(wlddev, iso3c, year)
+
+  expect_true(inherits(HDW(wldi$PCGDP), "indexed_series"))
+  expect_true(inherits(HDW(wldi$PCGDP, fill = FALSE), "indexed_series"))
+  expect_true(inherits(HDB(wldi$PCGDP), "indexed_series"))
+  expect_true(inherits(HDB(wldi$PCGDP, fill = FALSE), "indexed_series"))
+  expect_true(inherits(HDW(wldi$date), "indexed_series"))
+  expect_true(inherits(HDW(wldi$date, fill = FALSE), "indexed_series"))
+  expect_true(inherits(HDB(wldi$date), "indexed_series"))
+  expect_true(inherits(HDB(wldi$date, fill = FALSE), "indexed_series"))
+
+  fl <- unclass(findex(wldi))
+
+  expect_equal(unattrib(HDW(wldi$PCGDP)), unattrib(HDW(wlddev$PCGDP, fl, fill = TRUE)))
+  expect_equal(unattrib(HDW(wldi$PCGDP, fill = FALSE)), unattrib(HDW(wlddev$PCGDP, fl)))
+  expect_equal(unattrib(HDB(wldi$PCGDP)), unattrib(HDB(wlddev$PCGDP, fl, fill = TRUE)))
+  expect_equal(unattrib(HDB(wldi$PCGDP, fill = FALSE)), unattrib(HDB(wlddev$PCGDP, fl)))
+
+  for(f in c("HDW", "HDB")) {
+    # print(f)
+    FUN <- match.fun(f)
+    cdat = FUN(wldi, stub = FALSE)
+    expect_equal(lapply(cdat, unattrib), lapply(FUN(wlddev, ~ iso3c + qF(year), variable.wise = TRUE, stub = FALSE), unattrib))
+    expect_equal(lapply(slt(cdat, PCGDP:POP), unattrib), lapply(FUN(slt(wlddev, PCGDP:POP), fl, variable.wise = TRUE, stub = FALSE), unattrib))
+    expect_true(inherits(cdat, "indexed_frame"))
+    expect_true(inherits(cdat$PCGDP, "indexed_series"))
+    expect_true(fnrow(cdat) == fnrow(wldi))
+    expect_identical(findex(cdat), findex(wldi))
+    expect_true(fnrow(findex(cdat)) == fnrow(findex(cdat$PCGDP)))
+
+    cdat = FUN(wldi, variable.wise = FALSE, stub = FALSE)
+    expect_equal(lapply(cdat, unattrib), lapply(FUN(wlddev, ~ iso3c + qF(year), fill = TRUE, stub = FALSE), unattrib))
+    expect_equal(lapply(slt(cdat, PCGDP:POP), unattrib), lapply(FUN(slt(wlddev, PCGDP:POP), fl, fill = TRUE, stub = FALSE), unattrib))
+    expect_true(inherits(cdat, "indexed_frame"))
+    expect_true(inherits(cdat$PCGDP, "indexed_series"))
+    expect_true(fnrow(cdat) == fnrow(wldi))
+    expect_identical(findex(cdat), findex(wldi))
+    expect_true(fnrow(findex(cdat)) == fnrow(findex(cdat$PCGDP)))
+
+    cdat = FUN(wldi, fill = FALSE, stub = FALSE)
+    expect_equal(lapply(cdat, unattrib), lapply(FUN(wlddev, ~ iso3c + qF(year), stub = FALSE), unattrib))
+    expect_equal(lapply(slt(cdat, PCGDP:POP), unattrib), lapply(FUN(slt(wlddev, PCGDP:POP), fl, stub = FALSE), unattrib))
+    expect_true(inherits(cdat, "indexed_frame"))
+    expect_true(inherits(cdat$PCGDP, "indexed_series"))
+    expect_false(fnrow(cdat) == fnrow(wldi))
+    expect_true(fnrow(findex(cdat)) == fnrow(cdat))
+    expect_true(fnrow(findex(cdat)) == fnrow(findex(cdat$PCGDP)))
+
+  }
+
+})
+
 options(warn = 1)
