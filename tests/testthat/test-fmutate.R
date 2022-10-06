@@ -296,7 +296,7 @@ test_that("fsummarise miscellaneous things", {
     rsplit(mtcars, disp + hp ~ cyl) %>% lapply(pwcorDF) %>% unlist2d("cyl", "var") %>% tfm(cyl = as.numeric(cyl))
   )
 
-  if(identical(Sys.getenv("NCRAN"), "TRUE")) # No tests depending on suggested package (except for major ones).
+  if(identical(Sys.getenv("LOCAL"), "TRUE")) # No tests depending on suggested package (except for major ones).
   expect_equal(
     mtcars %>% gby(cyl) %>% smr(acr(disp:hp, pwcorDF, w = wt, .apply = FALSE)),
     rsplit(mtcars, disp + hp + wt ~ cyl) %>% lapply(function(x) pwcorDF(gv(x, 1:2), w = x$wt)) %>%

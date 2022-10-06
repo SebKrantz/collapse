@@ -37,6 +37,7 @@ test_that("descr, pwcor, pwcov, pwnobs", {
 
 if(identical(Sys.getenv("NCRAN"), "TRUE")) {
 
+if(identical(Sys.getenv("LOCAL"), "TRUE"))
 test_that("weighted correlations are correct", {
 
   # This is to fool very silly checks on CRAN scanning the code of the tests
