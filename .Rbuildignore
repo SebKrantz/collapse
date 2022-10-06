@@ -24,3 +24,6 @@ man/figures
 ^\.fastverse$
 \.log$
 _cache$
+_snaps
+
+

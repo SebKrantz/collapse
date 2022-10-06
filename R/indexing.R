@@ -224,7 +224,7 @@ findex_by <- function(.X, ..., single = "auto", interact.ids = TRUE) { # pid = N
   vars <- all.vars(dots, unique = FALSE)
 
   # If something else than NSE cols is supplied
-  if(length(ids) == 1L && (length(vars) != 1L || !anyv(names(.X), vars)) && is.null(nam)) { # !is.symbol(dots[[2L]]) || length(ids[[1L]]) != length(.X[[1L]]) || is.function(ids[[1L]]) # Fixes #320
+  if(length(ids) == 1L && is.null(nam) && (length(vars) != 1L || !anyv(names(.X), vars))) { # !is.symbol(dots[[2L]]) || length(ids[[1L]]) != length(.X[[1L]]) || is.function(ids[[1L]]) # Fixes #320
     ids <- .X[cols2int(ids[[1L]], .X, names(.X), FALSE)]
   } else {
     if(length(nam)) {
@@ -475,7 +475,9 @@ print.index_df <- function(x, topn = 5, ...) {
   # res <- NextMethod() # don't use pdata.frame methods
   res <- .subset2(x, name, exact = FALSE) # as.character(substitute(name)) -> not necessary!
   if(is.null(res)) return(NULL)
+  clr <- class(res)
   attr(res, "index_df") <- attr(x, "index_df")
+  if(!any(clr == "indexed_series")) oldClass(res) <- c("indexed_series", "pseries", clr)
   res
 }
 
@@ -505,7 +507,9 @@ print.index_df <- function(x, topn = 5, ...) {
   # res <- UseMethod("[[", x)
   res <- .subset2(x, i, ...)
   if(is.null(res)) return(NULL)
+  clr <- class(res)
   attr(res, "index_df") <- attr(x, "index_df")
+  if(!any(clr == "indexed_series")) oldClass(res) <- c("indexed_series", "pseries", clr)
   res
 }
 

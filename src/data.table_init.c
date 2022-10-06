@@ -40,7 +40,7 @@ size_t sizes[100];  // max appears to be FUNSXP = 99, see Rinternals.h
 size_t typeorder[100];
 
 // -> Needed for SIZEOF macro used in rbindlist Howver TYPEORDER macro and typeof is not used...
-static void setSizes() {
+static void setSizes(void) {
   for (int i=0; i<100; ++i) { sizes[i]=0; typeorder[i]=0; }
   // only these types are currently allowed as column types :
   sizes[LGLSXP] =  sizeof(int);       typeorder[LGLSXP] =  0;

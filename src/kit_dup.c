@@ -707,7 +707,10 @@ SEXP funiqueC(SEXP x) {
       }
     }
     Free(h);
-    if(g == n) return x;
+    if(g == n) {
+      UNPROTECT(nprotect);
+      return x;
+    }
     PROTECT(res = allocVector(INTSXP, g)); ++nprotect;
     int *restrict pres = INTEGER(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
@@ -727,7 +730,10 @@ SEXP funiqueC(SEXP x) {
       rbl:;
     }
     Free(h);
-    if(g == n) return x;
+    if(g == n) {
+      UNPROTECT(nprotect);
+      return x;
+    }
     PROTECT(res = allocVector(REALSXP, g)); ++nprotect;
     double *restrict pres = REAL(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
@@ -758,7 +764,10 @@ SEXP funiqueC(SEXP x) {
       cbl:;
     }
     Free(h);
-    if(g == n) return x;
+    if(g == n) {
+      UNPROTECT(nprotect);
+      return x;
+    }
     PROTECT(res = allocVector(CPLXSXP, g)); ++nprotect;
     Rcomplex *restrict pres = COMPLEX(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
@@ -776,14 +785,17 @@ SEXP funiqueC(SEXP x) {
       sbl:;
     }
     Free(h);
-    if(g == n) return x;
+    if(g == n) {
+      UNPROTECT(nprotect);
+      return x;
+    }
     PROTECT(res = allocVector(STRSXP, g)); ++nprotect;
     SEXP *restrict pres = STRING_PTR(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   }
   copyMostAttrib(x, res);
-  if(g != n) UNPROTECT(nprotect); // The condition and nprotect variable is not necessary here, just an attempt to appease rchk
+  UNPROTECT(nprotect);
   return res;
 }
 

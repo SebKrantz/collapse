@@ -162,21 +162,17 @@ fdroplevelsCpp <- function(x, check_NA = TRUE) {
 }
 
 
-setAttributes <- function(x, a) {
-    .Call(C_setAttributes, x, a)
-}
+setAttributes <- function(x, a) .Call(C_setAttributes, x, a)
 
-copyMostAttributes <- function(to, from) {
-  .Call(C_copyMostAttributes, to, from)
-}
 
-setattributes <- function(x, a) {
-    invisible(.Call(C_setattributes, x, a))
-}
+copyMostAttributes <- function(to, from) .Call(C_copyMostAttributes, to, from)
 
-duplAttributes <- function(x, y) {
-    .Call(C_duplAttributes, x, y)
-}
+
+setattributes <- function(x, a) .Call(C_setattributes, x, a) # invisible()
+
+
+duplAttributes <- function(x, y) .Call(C_duplAttributes, x, y)
+
 
 # No longer needed...
 # setattr <- function(x, a, v) {
