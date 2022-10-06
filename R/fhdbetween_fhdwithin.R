@@ -327,6 +327,7 @@ fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
 fhdwithin.pseries <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, ...) {
+  if(is.matrix(x)) stop("higher-dimensional centering of matrix pseries is currently not supported. You can use fhdwithin.matrix(x, ix(x), fill = TRUE)")
   ix <- findex(x)
   namix <- attr(ix, "names")
   if(is.character(effect) && length(effect) == 1L && effect == "all") {
@@ -827,7 +828,7 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
     }), ax)) # Rfast fastlm??
   } else { # at this point missing values are already removed from x and fl !!
     if(nallfc || !fcl) {
-      Y <- if(nallfc) x - flmres(demean(x, fl, w, ...), xmat, w, lm.method, ...) else flmres(x, xmat, w, lm.method, FALSE, ...)
+      Y <- if(nallfc) x %c-% flmres(demean(x, fl, w, ...), xmat, w, lm.method, ...) else flmres(x, xmat, w, lm.method, FALSE, ...)
     } else Y <- demean(x, fl, w, ..., means = TRUE)
     if(na.rm && fill)  # x[cc, ] <- Y; x[-cc, ] <- NA
       return(setAttributes(.Call(C_lassign, Y, nrx, cc, NA_real_), ax))
@@ -889,7 +890,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     # Only this part of the code is different from fhdwithin !!
     if(variable.wise) {
       if(na.rm) { # this means there were mising values in fl, which were already removed!
-        return(setAttributes(lapply(unattrib(x), function(y) {
+        return(setAttributes(lapply(.subset(x, Xvars), function(y) {
           y[-cc] <- NA # which is not faster !!
           ycc <- whichv(y, NA, TRUE)
           y_cc <- Csv(y, cc)
@@ -901,7 +902,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
           return(y)
         }), ax))
       }
-      return(setAttributes(lapply(unattrib(x), function(y) {
+      return(setAttributes(lapply(.subset(x, Xvars), function(y) {
         ycc <- whichv(y, NA, TRUE)
         y_cc <- Csv(y, ycc)
         wc <- w[ycc]
@@ -912,7 +913,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     } else { # at this point missing values are already removed from  fl !!
       x <- if(na.rm) .Call(C_subsetDT, x, cc, Xvars, FALSE) else .subset(x, Xvars)
       if(nallfc || !fcl) {
-        Y <- if(nallfc) x - flmres(demean(x, fl, w, ...), xmat, w, lm.method, ...) else flmres(x, xmat, w, lm.method, FALSE, ...)
+        Y <- if(nallfc) x %c-% flmres(demean(x, fl, w, ...), xmat, w, lm.method, ...) else flmres(x, xmat, w, lm.method, FALSE, ...)
       } else Y <- demean(x, fl, w, ..., means = TRUE)
       if(na.rm && fill)  # x[cc, ] <- Y; x[-cc, ] <- NA
         return(setAttributes(.Call(C_lassign, Y, nrx, cc, NA_real_), ax))
