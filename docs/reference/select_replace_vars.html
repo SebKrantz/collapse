@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 
@@ -74,7 +74,7 @@
 <span class="co">## Select and replace columns by names, indices, logical vectors,</span>
 <span class="co">## regular expressions or using functions to identify columns</span>
 
-<span class="fu">get_vars</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, regex <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
+<span class="fu">get_vars</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, regex <span class="op">=</span> <span class="cn">FALSE</span>, rename <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
       <span class="fu">gv</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, <span class="va">...</span><span class="op">)</span>   <span class="co"># Shorthand for get_vars</span>
      <span class="fu">gvr</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, <span class="va">...</span><span class="op">)</span>   <span class="co"># Shorthand for get_vars(..., regex = TRUE)</span>
 
@@ -123,6 +123,9 @@
 
 <dt>regex</dt>
 <dd><p>logical. <code>TRUE</code> will do regular expression search on the column names of <code>x</code> using a (vector of) regular expression(s) passed to <code>vars</code>. Matching is done using <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></code>.</p></dd>
+
+<dt>rename</dt>
+<dd><p>logical. If <code>vars</code> is a named vector of column names or indices, <code>rename = TRUE</code> will use the (non missing) names to rename columns.</p></dd>
 
 <dt>pos</dt>
 <dd><p>the position where columns are added in the data frame. <code>"end"</code> (default) will append the data frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching <code>length(value)</code> if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order.</p></dd>

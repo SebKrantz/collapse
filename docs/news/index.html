@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 
@@ -59,6 +59,17 @@
       <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.8.9" id="collapse-189">collapse 1.8.9<a class="anchor" aria-label="anchor" href="#collapse-189"></a></h2>
+<ul><li><p>Fixed some warnings on rchk and newer C compilers (LLVM clang 10+).</p></li>
+<li><p><code>.pseries</code> / <code>.indexed_series</code> methods also change the implicit class of the vector (attached after <code>"pseries"</code>), if the data type changed. e.g. calling a function like <code>fgrowth</code> on an integer pseries changed the data type to double, but the “integer” class was still attached after “pseries”.</p></li>
+<li><p>Fixed bad testing for SE inputs in <code><a href="../reference/GRP.html">fgroup_by()</a></code> and <code><a href="../reference/indexing.html">findex_by()</a></code>. See <a href="https://github.com/SebKrantz/collapse/issues/320" class="external-link">#320</a>.</p></li>
+<li><p>Added <code>rsplit.matrix</code> method.</p></li>
+<li><p><code><a href="../reference/descr.html">descr()</a></code> now by default also reports 10% and 90% quantiles for numeric variables (in line with STATA’s detailed summary statistics), and can also be applied to ‘pseries’ / ‘indexed_series’. Furthermore, <code><a href="../reference/descr.html">descr()</a></code> itself now has an argument <code>stepwise</code> such that <code>descr(big_data, stepwise = TRUE)</code> yields computation of summary statistics on a variable-by-variable basis (and the finished ‘descr’ object is returned invisibly). The printed result is thus identical to <code>print(descr(big_data), stepwise = TRUE)</code>, with the difference that the latter first does the entire computation whereas the former computes statistics on demand.</p></li>
+</ul><!-- * Added method `funique.grouped_df`. ???? --><ul><li><p>Function <code><a href="../reference/fsubset.html">ss()</a></code> has a new argument <code>check = TRUE</code>. Setting <code>check = FALSE</code> allows subsetting data frames / lists with positive integers without checking whether integers are positive or in-range. For programmers.</p></li>
+<li><p>Function <code><a href="../reference/select_replace_vars.html">get_vars()</a></code> has a new argument <code>rename</code> allowing select-renaming of columns in standard evaluation programming, e.g. <code>get_vars(mtcars, c(newname = "cyl", "vs", "am"), rename = TRUE)</code>. The default is <code>rename = FALSE</code>, to warrant full backwards compatibility. See <a href="https://github.com/SebKrantz/collapse/issues/327" class="external-link">#327</a>.</p></li>
+<li><p>Added helper function <code><a href="../reference/small-helpers.html">setattrib()</a></code>, to set a new attribute list for an object by reference + invisible return. This is different from the existing function <code><a href="../reference/small-helpers.html">setAttrib()</a></code> (note the capital A), which takes a shallow copy of list-like objects and returns the result.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.8.8" id="collapse-188">collapse 1.8.8<small>2022-08-15</small><a class="anchor" aria-label="anchor" href="#collapse-188"></a></h2>
 <ul><li><p><code>flm</code> and <code>fFtest</code> are now internal generic with an added formula method e.g. <code>flm(mpg ~ hp + carb, mtcars, weights = wt)</code> or <code>fFtest(mpg ~ hp + carb | vs + am, mtcars, weights = wt)</code> in addition to the programming interface. Thanks to Grant McDermott for suggesting.</p></li>

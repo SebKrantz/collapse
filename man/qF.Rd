@@ -15,7 +15,7 @@ Fast Factor Generation, Interactions and Vector Grouping
 
 \code{finteraction} generates a factor or 'qG' object by interacting multiple vectors or factors. In that process missing values are always replaced with a level and unused levels/combinations are always dropped.
 
-\emph{collapse} internally makes optimal use of factors and 'qG' objects when passed as grouping vectors to statistical functions (\code{g/by}, or \code{t} arguments) i.e. typically no further grouping or ordering is performed and objects are used directly by statistcial C/C++ code.
+\emph{collapse} internally makes optimal use of factors and 'qG' objects when passed as grouping vectors to statistical functions (\code{g/by}, or \code{t} arguments) i.e. typically no further grouping or ordering is performed and objects are used directly by statistical C/C++ code.
 }
 \usage{
 qF(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
@@ -44,7 +44,7 @@ itn(\dots) # Shorthand for finteraction
                  1 \tab\tab "auto"   \tab\tab automatic selection: \code{if(is.double(x) && sort) "radix" else if(sort && length(x) < 1e5) "rcpp_hash" else "hash"}. \cr
                  2 \tab\tab "radix" \tab\tab use radix ordering to generate factors. Supports \code{sort = FALSE} only for character vectors. See Details. \cr
                  3 \tab\tab "hash"   \tab\tab use hashing to generate factors. Since v1.8.3 this is a fast hybrid implementation using \code{\link{group}} and radix ordering applied to the unique elements. See Details. \cr
-                 4 \tab\tab "rcpp_hash" \tab\tab the previos "hash" algorithm prior to v1.8.3: uses \code{Rcpp::sugar::sort_unique} and \code{Rcpp::sugar::match}. Only supports \code{sort = TRUE}. \cr
+                 4 \tab\tab "rcpp_hash" \tab\tab the previous "hash" algorithm prior to v1.8.3: uses \code{Rcpp::sugar::sort_unique} and \code{Rcpp::sugar::match}. Only supports \code{sort = TRUE}. \cr
   }
   Note that for \code{finteraction}, \code{method = "hash"} is always unsorted and \code{method = "rcpp_hash"} is not available.
 }
@@ -61,7 +61,7 @@ There are 3 internal methods of computation: radix ordering, hashing, and Rcpp s
 
 Regarding speed: In general \code{qF} is around 5x faster than \code{as.factor} on character data and about 30x faster on numeric data. Automatic method dispatch typically does a good job delivering optimal performance.
 
-\code{qG} is in the first place a programmers function. It generates a factor-'light' class 'qG' consisting of only an integer grouping vector and an attribute providing the number of groups. It is slightly faster and more memory efficient than \code{\link{GRP}} for grouping atomic vectors, and also convenient as it can be stored in a data frame column, which are the main reasons for its existance. %The fact that it (optionally) returns the unique groups / levels without converting them to character is an added bonus (this also provides a small performance gain compared to \code{qF}). Since v1.7, you can also call a C-level function \code{\link{group}} directly, which works for multivariate data as well, but does not sort the data and does not preserve missing values.
+\code{qG} is in the first place a programmers function. It generates a factor-'light' class 'qG' consisting of only an integer grouping vector and an attribute providing the number of groups. It is slightly faster and more memory efficient than \code{\link{GRP}} for grouping atomic vectors, and also convenient as it can be stored in a data frame column, which are the main reasons for its existence. %The fact that it (optionally) returns the unique groups / levels without converting them to character is an added bonus (this also provides a small performance gain compared to \code{qF}). Since v1.7, you can also call a C-level function \code{\link{group}} directly, which works for multivariate data as well, but does not sort the data and does not preserve missing values.
 
 \code{finteraction} is simply a wrapper around \code{as_factor_GRP(GRP.default(X))}, where X is replaced by the arguments in '\dots' combined in a list (so its not really an interaction function but just a multivariate grouping converted to factor, see \code{\link{GRP}} for computational details). In general: All vectors, factors, or lists of vectors / factors passed can be interacted. Interactions always create a level for missing values and always drop unused levels.
 }

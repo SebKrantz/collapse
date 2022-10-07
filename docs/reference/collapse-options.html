@@ -3,7 +3,7 @@
 
 option(&quot;collapse_unused_arg_action&quot;) regulates how generic functions (such as the Fast Statistical Functions) in the package react when an unknown argument is passed to a method. The default action is &quot;warning&quot; which issues a warning. Other options are &quot;error&quot;, &quot;message&quot; or &quot;none&quot;, whereby the latter enables silent swallowing of such arguments.
 option(&quot;collapse_mask&quot;) can be used to create additional functions in the collapse namespace when loading the package, which will mask some existing base R and dplyr functions. In particular, collapse provides a large number of functions that start with 'f' e.g. fsubset, ftransform, fdroplevels etc.. Specifying options(collapse_mask = c(&quot;fsubset&quot;, &quot;ftransform&quot;, &quot;fdroplevels&quot;)) before loading the package will make additional functions subset, transform, and droplevels available to the user, and mask the corresponding base R functions when the package is attached. In general, all functions starting with 'f' can be passed to the option. There are also a couple of keywords that you can specify to add groups of functions, and 2 special functions:
-&quot;manip&quot; adds data manipulation functions: fsubset, ftransform, ftransform&amp;lt;-, ftransformv, fcompute, fcomputev, fselect, fselect&amp;lt;-, fgroup_by, fgroup_vars, fungroup, fsummarise, fmutate, frename, findex_by, findex
+&quot;manip&quot; adds data manipulation functions: fsubset, ftransform, ftransform&lt;-, ftransformv, fcompute, fcomputev, fselect, fselect&lt;-, fgroup_by, fgroup_vars, fungroup, fsummarise, fmutate, frename, findex_by, findex
 &quot;helper&quot; adds the functions: fdroplevels, finteraction, funique, fnunique, frange, fnlevels, fnrow and fncol. 
 &quot;fast-fun&quot; adds the functions contained in the macro: .FAST_FUN.
 &quot;fast-stat-fun&quot; adds the functions contained in the macro: .FAST_STAT_FUN.
@@ -17,7 +17,7 @@ In General, this option is for your convenience, if you want to write visually m
 
 
 
-option(&quot;collapse_F_to_FALSE&quot;), if set to TRUE, replaces the lead operator F in the package with a value FALSE when loading the package, which solves issues arising from the use of F as a shortcut for FALSE in R codes when collapse is attached. Note that F is just a value in the base package namespace, and it should NOT be used in production codes, precisely because users can overwrite it by assignment. An alternative solution to invoking this option would also just be assigning a value F &amp;lt;- FALSE in your global environment.
+option(&quot;collapse_F_to_FALSE&quot;), if set to TRUE, replaces the lead operator F in the package with a value FALSE when loading the package, which solves issues arising from the use of F as a shortcut for FALSE in R codes when collapse is attached. Note that F is just a value in the base package namespace, and it should NOT be used in production codes, precisely because users can overwrite it by assignment. An alternative solution to invoking this option would also just be assigning a value F &lt;- FALSE in your global environment.
 
 
 "><meta property="og:image" content="/logo.png"><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -38,7 +38,7 @@ option(&quot;collapse_F_to_FALSE&quot;), if set to TRUE, replaces the lead opera
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 

@@ -361,7 +361,8 @@ pre code {
 </div>
 
 
-<pre class="r"><code>library(fastverse)
+<pre class="r"><code># System: M1 MAC (2020), 16GB, CRAN Binaries
+library(fastverse)
 #&gt; -- Attaching packages --------------------------------------- fastverse 0.2.4 --
 #&gt; collapse       1.8.7      testthat       3.1.4
 #&gt; magrittr       2.0.3      microbenchmark 1.4.9
@@ -387,6 +388,7 @@ fastverse_extend(dplyr, arrow, microbenchmark)
 #&gt; arrow::timestamp() masks utils::timestamp()
 #&gt; dplyr::union()     masks base::union()
 
+# Data From: https://www.kaggle.com/datasets/neilclack/nyc-taxi-trip-data-google-public-data?resource=download
 system.time(taxi &lt;- fread(&quot;misc/NYC_TAXI_2019/taxi_trip_data.csv&quot;, tz = &quot;UTC&quot;))
 #&gt;    user  system elapsed
 #&gt;   3.578   0.498   7.767

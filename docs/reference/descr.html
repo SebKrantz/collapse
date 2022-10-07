@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 
@@ -66,8 +66,8 @@
 
     <div id="ref-usage">
     <div class="sourceCode"><pre><code>descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
-      Qprobs = c(0.01, 0.05, 0.25, 0.5, 0.75, 0.95, 0.99),
-      cols = NULL, label.attr = "label", ...)
+      Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99),
+      cols = NULL, label.attr = "label", stepwise = FALSE, ...)
 
 # S3 method for descr
 [(x, ...)
@@ -134,12 +134,12 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <dd><p>logical. <code>TRUE</code> prints contents in reverse order, starting with the last column, so that the dataset can be analyzed by scrolling up the console after calling <code>descr</code>.</p></dd>
 
 <dt>stepwise</dt>
-<dd><p>logical. <code>TRUE</code> prints one variable at a time. The user needs to press [enter] to see the printout for the next variable.</p></dd>
+<dd><p>logical. <code>TRUE</code> prints one variable at a time. The user needs to press [enter] to see the printout for the next variable. If called from <code>descr</code>, the computation is also done one variable at a time, and the finished 'descr' object is returned invisibly. This is recommended for larger datasets, where precomputing the statistics for all variables can be time consuming.</p></dd>
 
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p><code>descr</code> was heavily inspired by <code><a href="https://rdrr.io/pkg/Hmisc/man/describe.html" class="external-link">Hmisc::describe</a></code>, but computes about 10x faster. The performance is comparable to <code><a href="https://rdrr.io/pkg/vars/man/summary.html" class="external-link">summary</a></code>. <code>descr</code> was built as a wrapper around <code><a href="qsu.html">qsu</a></code>, to enrich the set of statistics computed by <code><a href="qsu.html">qsu</a></code> for both numeric and categorical variables.</p>
+    <p><code>descr</code> was heavily inspired by <code><a href="https://rdrr.io/pkg/Hmisc/man/describe.html" class="external-link">Hmisc::describe</a></code>, but computes about 10x faster. The performance is comparable to <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></code>. <code>descr</code> was built as a wrapper around <code><a href="qsu.html">qsu</a></code>, to enrich the set of statistics computed by <code><a href="qsu.html">qsu</a></code> for both numeric and categorical variables.</p>
 <p><code><a href="qsu.html">qsu</a></code> itself is yet about 10x faster than <code>descr</code>, and is optimized for grouped, panel data and weighted statistics. It is possible to also compute grouped, panel data and/or weighted statistics with <code>descr</code> by passing group-ids to <code>g</code>, panel-ids to <code>pid</code> or a weight vector to <code>w</code>. These arguments are handed down to <code><a href="qsu.html">qsu.default</a></code> and only affect the statistics natively computed by <code>qsu</code>, i.e. passing a weight vector produces a weighted mean, sd, skewness and kurtosis but not weighted quantiles.</p>
 <p>The list-object returned from <code>descr</code> can be converted to a tidy data frame using <code>as.data.frame</code>. This representation will not include frequency tables computed for categorical variables, and the method cannot handle arrays of statistics (applicable when <code>g</code> or <code>pid</code> arguments are passed to <code>descr</code>, in that case <code>as.data.frame.descr</code> will throw an appropriate error).</p>
     </div>
@@ -165,32 +165,32 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span>     N  Ndist  Mean    SD  Min  Max  Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   150     35  5.84  0.83  4.3  7.9  0.31  2.43</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  25%  50%  75%   95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4.4  4.6  5.1  5.8  6.4  7.25  7.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  10%  25%  50%  75%  90%   95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4.4  4.6  4.8  5.1  5.8  6.4  6.9  7.25  7.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     N  Ndist  Mean    SD  Min  Max  Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   150     23  3.06  0.44    2  4.4  0.32  3.18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%    5%  25%  50%  75%  95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2.2  2.34  2.8    3  3.3  3.8  4.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%    5%  10%  25%  50%  75%   90%  95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2.2  2.34  2.5  2.8    3  3.3  3.61  3.8  4.15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     N  Ndist  Mean    SD  Min  Max   Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   150     43  3.76  1.77    1  6.9  -0.27   1.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%  25%   50%  75%  95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.15  1.3  1.6  4.35  5.1  6.1  6.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%  10%  25%   50%  75%  90%  95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.15  1.3  1.4  1.6  4.35  5.1  5.8  6.1  6.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     N  Ndist  Mean    SD  Min  Max  Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   150     22   1.2  0.76  0.1  2.5  -0.1  1.66</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  25%  50%  75%  95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.1  0.2  0.3  1.3  1.8  2.3  2.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  10%  25%  50%  75%  90%  95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.1  0.2  0.2  0.3  1.3  1.8  2.2  2.3  2.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Species (factor): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -267,16 +267,16 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span>       N  Ndist  Mean     SD   Min   Max  Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   13176     61  1990  17.61  1960  2020    -0   1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%   75%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1960  1963  1975  1990  2005  2017  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1960  1963  1966  1975  1990  2005  2014  2017  2020</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> decade (integer): Decade</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       N  Ndist     Mean     SD   Min   Max  Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   13176      7  1985.57  17.51  1960  2020  0.03  1.79</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%   75%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1960  1960  1970  1990  2000  2010  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1960  1960  1960  1970  1990  2000  2010  2010  2020</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region (factor): Region</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -317,24 +317,26 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist      Mean        SD     Min        Max  Skew   Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   9470   9470  12048.78  19077.64  132.08  196061.42  3.13  17.12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       1%      5%      25%      50%       75%       95%       99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   227.71  399.62  1303.19  3767.16  14787.03  48507.84  92340.28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       1%      5%     10%      25%      50%       75%       90%       95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   227.71  399.62  555.55  1303.19  3767.16  14787.03  35646.02  48507.84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   92340.28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX (numeric): Life expectancy at birth, total (years)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (11.43% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       N  Ndist  Mean     SD    Min    Max   Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   11670  10548  64.3  11.48  18.91  85.42  -0.67  2.67</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      1%     5%    25%    50%    75%    95%    99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   35.83  42.77  56.36  67.44  72.95  79.34  82.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      1%     5%    10%    25%    50%    75%    90%    95%    99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   35.83  42.77  46.83  56.36  67.44  72.95  77.08  79.34  82.36</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GINI (numeric): Gini index (World Bank estimate)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (86.76% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist   Mean   SD   Min   Max  Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1744    368  38.53  9.2  20.7  65.8   0.6  2.53</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%  75%    95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   24.6  26.3  31.5  36.4   45  55.98  60.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%  75%   90%    95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   24.6  26.3  27.6  31.5  36.4   45  52.6  55.98  60.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ODA (numeric): Net official development assistance and official aid received (constant 2018 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (34.67% NAs)</span>
@@ -343,18 +345,20 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span>     Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   114.89</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             1%           5%          25%         50%         75%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -12'593999.7  1'363500.01  44'887499.8  165'970001  495'042503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              95%             99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.93281696e+09  3.73380782e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1%           5%          10%          25%         50%         75%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -12'593999.7  1'363500.01  8'347000.31  44'887499.8  165'970001  495'042503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              90%             95%             99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.18400697e+09  1.93281696e+09  3.73380782e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> POP (numeric): Population, total</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (1.95% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       N  Ndist         Mean          SD   Min             Max  Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   12919  12877  24'245971.6  102'120674  2833  1.39771500e+09  9.75  108.91</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        1%       5%     25%       50%        75%          95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   8698.84  31083.3  443791  4'072517  12'816178  81'177252.5  308'862641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        1%       5%      10%     25%       50%        75%          90%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   8698.84  31083.3  62268.4  443791  4'072517  12'816178  46'637331.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           95%         99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   81'177252.5  308'862641</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: GGDC10S, 16 Variables, N = 5027</span>
@@ -425,96 +429,112 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist     Mean     SD   Min   Max   Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   5027     67  1981.58  17.57  1947  2013  -0.05  1.86</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%   75%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1950  1953  1967  1982  1997  2009  2011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1950  1953  1957  1967  1982  1997  2006  2009  2011</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AGR (numeric): Agriculture </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.19% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist        Mean           SD  Min             Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4364   4353  2'526696.5  37'129098.1    0  1.19187778e+09  23.95  642.16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.09  23.18  930.7  4394.52  29781.04  2'393977.49  24'932575.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%    25%      50%       75%     90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.09  23.18  144.56  930.7  4394.52  29781.04  315403  2'393977.49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   24'932575.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> MIN (numeric): Mining</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min             Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4224  1'867908.95  32'334251.7    0  1.10344053e+09  25.27  712.33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%    25%     50%      75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  1.2  38.95  173.22  4841.26  713420.36  14'309891.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%   10%    25%     50%      75%       90%        95%          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  1.2  3.78  38.95  173.22  4841.26  64810.08  713420.36  14'309891.9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> MAN (numeric): Manufacturing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min             Max   Skew   Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4353  5'538491.36  63'090998.4    0  1.86843541e+09  20.71  498.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%     50%       75%          95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  27.31  620.44  3718.1  52805.35  2'978846.99  108'499037</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%     25%     50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  27.31  103.84  620.44  3718.1  52805.35  516077.08  2'978846.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   108'499037</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PU (numeric): Utilities</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.39% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist       Mean           SD  Min          Max  Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4354   4237  335679.47  2'576027.41    0  65'324543.8  13.5  244.29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%    25%     50%      75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0  2.16  25.74  167.95  4892.25  291356.48  11'866259.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%  10%    25%     50%      75%       90%        95%          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0  2.16  6.3  25.74  167.95  4892.25  63004.56  291356.48  11'866259.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CON (numeric): Construction</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean         SD  Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4339  1'801597.63  24'382598    0  860'638677  26.15  774.73</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.03  215.57  1473.45  13514.84  829361.57  37'430603.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%        95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.03  43.37  215.57  1473.45  13514.84  132609.51  829361.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   37'430603.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> WRT (numeric): Trade, restaurants and hotels</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min             Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4344  3'392909.52  36'950812.9    0  1.15497404e+09  21.19  530.06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.03  25.07  650.38  3773.64  41648.17  2'646521.57  79'618054.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.03  25.07  96.85  650.38  3773.64  41648.17  475116.68  2'646521.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   79'618054.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TRA (numeric): Transport, storage and communication</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4334  1'473269.72  16'815143.2    0  547'047040  22.77  604.58</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%     50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  12.28  205.79  1174.8  18927.21  1'059843.16  31'750009.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%     50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  12.28  37.35  205.79  1174.8  18927.21  195055.31  1'059843.16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   31'750009.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FIRE (numeric): Finance, insurance, real estate and business services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD       Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4349  1'657114.84  13'709981.9  -2848.81  387'997506  16.48  356.43</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%     25%     50%      75%          95%        99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0  3.87  128.18  960.13  13460.4  1'599086.92  55'536957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%   10%     25%     50%      75%        90%          95%        99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0  3.87  14.3  128.18  960.13  13460.4  252299.08  1'599086.92  55'536957</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GOV (numeric): Government services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (30.73% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3482   3470  1'712300.28  16'967383.7    0  485'535400  18.67  430.18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  48.14  723.98  3928.51  37689.12  1'400263.37  56'340246.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%     25%      50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  48.14  121.87  723.98  3928.51  37689.12  331990.24  1'400263.37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   56'340246.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OTH (numeric): Community, social and personal services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (15.5% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4248   4238  1'684527.32  15'613923.6    0  402'671182  14.93  273.79</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.92  310.09  1433.17  13321.29  605013.39  42'264477.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%        95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.92  49.56  310.09  1433.17  13321.29  107230.29  605013.39</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   42'264477.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SUM (numeric): Summation of sector GDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.19% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean          SD  Min             Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4364   4364  21'566436.8  251'812500    0  8.06794210e+09  22.53  589.58</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%      5%      25%       50%        75%          95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.38  269.63  4803.94  23186.19  284646.08  15'030223.5  435'513356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%      5%      10%      25%       50%        75%          90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.38  269.63  1242.98  4803.94  23186.19  284646.08  2'644610.11  15'030223.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   435'513356</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Some useful print options (also try stepwise argument)</span></span>
@@ -524,96 +544,112 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean          SD  Min             Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4364   4364  21'566436.8  251'812500    0  8.06794210e+09  22.53  589.58</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%      5%      25%       50%        75%          95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.38  269.63  4803.94  23186.19  284646.08  15'030223.5  435'513356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%      5%      10%      25%       50%        75%          90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.38  269.63  1242.98  4803.94  23186.19  284646.08  2'644610.11  15'030223.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   435'513356</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OTH (numeric): Community, social and personal services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (15.5% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4248   4238  1'684527.32  15'613923.6    0  402'671182  14.93  273.79</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.92  310.09  1433.17  13321.29  605013.39  42'264477.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%        95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.92  49.56  310.09  1433.17  13321.29  107230.29  605013.39</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   42'264477.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GOV (numeric): Government services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (30.73% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3482   3470  1'712300.28  16'967383.7    0  485'535400  18.67  430.18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  48.14  723.98  3928.51  37689.12  1'400263.37  56'340246.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%     25%      50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  48.14  121.87  723.98  3928.51  37689.12  331990.24  1'400263.37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   56'340246.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FIRE (numeric): Finance, insurance, real estate and business services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD       Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4349  1'657114.84  13'709981.9  -2848.81  387'997506  16.48  356.43</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%     25%     50%      75%          95%        99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0  3.87  128.18  960.13  13460.4  1'599086.92  55'536957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%   10%     25%     50%      75%        90%          95%        99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0  3.87  14.3  128.18  960.13  13460.4  252299.08  1'599086.92  55'536957</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TRA (numeric): Transport, storage and communication</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4334  1'473269.72  16'815143.2    0  547'047040  22.77  604.58</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%     50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  12.28  205.79  1174.8  18927.21  1'059843.16  31'750009.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%     50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  12.28  37.35  205.79  1174.8  18927.21  195055.31  1'059843.16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   31'750009.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> WRT (numeric): Trade, restaurants and hotels</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min             Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4344  3'392909.52  36'950812.9    0  1.15497404e+09  21.19  530.06</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.03  25.07  650.38  3773.64  41648.17  2'646521.57  79'618054.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.03  25.07  96.85  650.38  3773.64  41648.17  475116.68  2'646521.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   79'618054.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CON (numeric): Construction</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean         SD  Min         Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4339  1'801597.63  24'382598    0  860'638677  26.15  774.73</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.03  215.57  1473.45  13514.84  829361.57  37'430603.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%        95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.03  43.37  215.57  1473.45  13514.84  132609.51  829361.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   37'430603.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PU (numeric): Utilities</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.39% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist       Mean           SD  Min          Max  Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4354   4237  335679.47  2'576027.41    0  65'324543.8  13.5  244.29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%    25%     50%      75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0  2.16  25.74  167.95  4892.25  291356.48  11'866259.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%  10%    25%     50%      75%       90%        95%          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0  2.16  6.3  25.74  167.95  4892.25  63004.56  291356.48  11'866259.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> MAN (numeric): Manufacturing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min             Max   Skew   Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4353  5'538491.36  63'090998.4    0  1.86843541e+09  20.71  498.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%     50%       75%          95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  27.31  620.44  3718.1  52805.35  2'978846.99  108'499037</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%     25%     50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  27.31  103.84  620.44  3718.1  52805.35  516077.08  2'978846.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   108'499037</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> MIN (numeric): Mining</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.37% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean           SD  Min             Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4355   4224  1'867908.95  32'334251.7    0  1.10344053e+09  25.27  712.33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%    25%     50%      75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  1.2  38.95  173.22  4841.26  713420.36  14'309891.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%   10%    25%     50%      75%       90%        95%          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  1.2  3.78  38.95  173.22  4841.26  64810.08  713420.36  14'309891.9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AGR (numeric): Agriculture </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.19% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist        Mean           SD  Min             Max   Skew    Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   4364   4353  2'526696.5  37'129098.1    0  1.19187778e+09  23.95  642.16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.09  23.18  930.7  4394.52  29781.04  2'393977.49  24'932575.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%    25%      50%       75%     90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.09  23.18  144.56  930.7  4394.52  29781.04  315403  2'393977.49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   24'932575.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Year (numeric): Year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist     Mean     SD   Min   Max   Skew  Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   5027     67  1981.58  17.57  1947  2013  -0.05  1.86</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%   75%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1950  1953  1967  1982  1997  2009  2011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1950  1953  1957  1967  1982  1997  2006  2009  2011</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variable (character): Variable</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -662,6 +698,7 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span>       4     105     124     117     126     129 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: GGDC10S, 16 Variables, N = 5027</span>
+<span class="r-in"><span class="co"># For bigger data consider: descr(big_data, stepwise = TRUE)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Generating a data frame</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, table <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
@@ -669,10 +706,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  country character               Country Name 13176   216    NA    NA   NA NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    iso3c    factor               Country Code 13176   216    NA    NA   NA NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3     date      Date Date Recorded (Fictitious) 13176    61 -3287 18628   NA NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Skew Kurt 1% 5% 25% 50% 75% 95% 99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   NA   NA NA NA  NA  NA  NA  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   NA   NA NA NA  NA  NA  NA  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   NA   NA NA NA  NA  NA  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Skew Kurt 1% 5% 10% 25% 50% 75% 90% 95% 99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   NA   NA NA NA  NA  NA  NA  NA  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   NA   NA NA NA  NA  NA  NA  NA  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   NA   NA NA NA  NA  NA  NA  NA  NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 10 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Passing Arguments down to qsu.default: For Panel Data Statistics</span></span>
@@ -687,8 +724,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within    50  5.84  0.51  4.16  7.16   0.12  3.26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  25%  50%  75%   95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4.4  4.6  5.1  5.8  6.4  7.25  7.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  10%  25%  50%  75%  90%   95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4.4  4.6  4.8  5.1  5.8  6.4  6.9  7.25  7.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -698,8 +735,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within    50  3.06  0.34  1.93  4.03  0.03  3.51</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%    5%  25%  50%  75%  95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2.2  2.34  2.8    3  3.3  3.8  4.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%    5%  10%  25%  50%  75%   90%  95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2.2  2.34  2.5  2.8    3  3.3  3.61  3.8  4.15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -709,8 +746,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within    50  3.76  0.43   2.5  5.11   0.12  3.89</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%  25%   50%  75%  95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.15  1.3  1.6  4.35  5.1  6.1  6.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%  10%  25%   50%  75%  90%  95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.15  1.3  1.4  1.6  4.35  5.1  5.8  6.1  6.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -720,8 +757,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within    50   1.2   0.2  0.57  1.67  -0.05  3.36</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  25%  50%  75%  95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.1  0.2  0.3  1.3  1.8  2.3  2.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  10%  25%  50%  75%  90%  95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.1  0.2  0.2  0.3  1.3  1.8  2.2  2.3  2.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Species (factor): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -804,8 +841,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within      61  1990  17.61  1960  2020    -0   1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%   75%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1960  1963  1975  1990  2005  2017  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1960  1963  1966  1975  1990  2005  2014  2017  2020</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> decade (integer): Decade</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -815,8 +852,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within      61  1985.57  17.51     1960     2020  0.03  1.79</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%   75%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1960  1960  1970  1990  2000  2010  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1960  1960  1960  1970  1990  2000  2010  2010  2020</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region (factor): Region</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -863,8 +900,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within   45.97  12048.78   6723.68  -33504.87   76767.53  0.66   17.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       1%      5%      25%      50%       75%       95%       99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   227.71  399.62  1303.19  3767.16  14787.03  48507.84  92340.28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       1%      5%     10%      25%      50%       75%       90%       95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   227.71  399.62  555.55  1303.19  3767.16  14787.03  35646.02  48507.84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   92340.28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX (numeric): Life expectancy at birth, total (years)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (11.43% NAs)</span>
@@ -874,8 +913,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within   56.38   64.3   6.08  32.91  84.42  -0.26   3.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      1%     5%    25%    50%    75%    95%    99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   35.83  42.77  56.36  67.44  72.95  79.34  82.36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      1%     5%    10%    25%    50%    75%    90%    95%    99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   35.83  42.77  46.83  56.36  67.44  72.95  77.08  79.34  82.36</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GINI (numeric): Gini index (World Bank estimate)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (86.76% NAs)</span>
@@ -885,8 +924,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within   10.44  38.53  2.93  25.39  55.36  0.33  5.34</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%  75%    95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   24.6  26.3  31.5  36.4   45  55.98  60.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%  75%   90%    95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   24.6  26.3  27.6  31.5  36.4   45  52.6  55.98  60.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ODA (numeric): Net official development assistance and official aid received (constant 2018 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (34.67% NAs)</span>
@@ -900,10 +939,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within   263.37</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             1%           5%          25%         50%         75%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   -12'593999.7  1'363500.01  44'887499.8  165'970001  495'042503</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              95%             99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.93281696e+09  3.73380782e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             1%           5%          10%          25%         50%         75%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   -12'593999.7  1'363500.01  8'347000.31  44'887499.8  165'970001  495'042503</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              90%             95%             99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.18400697e+09  1.93281696e+09  3.73380782e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> POP (numeric): Population, total</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (1.95% NAs)</span>
@@ -917,8 +956,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within   149.24</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        1%       5%     25%       50%        75%          95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   8698.84  31083.3  443791  4'072517  12'816178  81'177252.5  308'862641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        1%       5%      10%     25%       50%        75%          90%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   8698.84  31083.3  62268.4  443791  4'072517  12'816178  46'637331.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           95%         99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   81'177252.5  308'862641</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Grouped Statistics</span></span>
@@ -933,8 +974,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica   50  6.59  0.64  4.9  7.9  0.11  2.91</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  25%  50%  75%   95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4.4  4.6  5.1  5.8  6.4  7.25  7.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  10%  25%  50%  75%  90%   95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   4.4  4.6  4.8  5.1  5.8  6.4  6.9  7.25  7.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Width (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (66.67% NAs)</span>
@@ -944,8 +985,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica   50  2.97  0.32  2.2  3.8   0.35  3.52</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%    5%  25%  50%  75%  95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2.2  2.34  2.8    3  3.3  3.8  4.15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%    5%  10%  25%  50%  75%   90%  95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2.2  2.34  2.5  2.8    3  3.3  3.61  3.8  4.15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Length (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (66.67% NAs)</span>
@@ -955,8 +996,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica   50  5.55  0.55  4.5  6.9   0.53  2.74</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%  25%   50%  75%  95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.15  1.3  1.6  4.35  5.1  6.1  6.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%  10%  25%   50%  75%  90%  95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.15  1.3  1.4  1.6  4.35  5.1  5.8  6.1  6.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Petal.Width (numeric): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (66.67% NAs)</span>
@@ -966,8 +1007,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica   50  2.03  0.27  1.4  2.5  -0.13  2.34</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  25%  50%  75%  95%  99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.1  0.2  0.3  1.3  1.8  2.3  2.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1%   5%  10%  25%  50%  75%  90%  95%  99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.1  0.2  0.2  0.3  1.3  1.8  2.2  2.3  2.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Species (factor): </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics</span>
@@ -1059,8 +1100,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa            1148  1985.59  15.07  1960  2013     0   1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   25%   50%   75%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1950  1953  1967  1982  1997  2009  2011</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1950  1953  1957  1967  1982  1997  2006  2009  2011</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AGR (numeric): Agriculture </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.06% NAs)</span>
@@ -1080,8 +1121,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa               17'625142.9   7.33   64.98</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.09  23.18  930.7  4394.52  29781.04  2'393977.49  24'932575.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%    25%      50%       75%     90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.09  23.18  144.56  930.7  4394.52  29781.04  315403  2'393977.49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   24'932575.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> MIN (numeric): Mining</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.06% NAs)</span>
@@ -1101,8 +1144,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa               15'568361.4   8.87   88.61</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%    25%     50%      75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  1.2  38.95  173.22  4841.26  713420.36  14'309891.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%   5%   10%    25%     50%      75%       90%        95%          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  1.2  3.78  38.95  173.22  4841.26  64810.08  713420.36  14'309891.9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> MAN (numeric): Manufacturing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.06% NAs)</span>
@@ -1122,8 +1165,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa                  7'676500   8.67   88.74</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%     50%       75%          95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  27.31  620.44  3718.1  52805.35  2'978846.99  108'499037</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%     25%     50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  27.31  103.84  620.44  3718.1  52805.35  516077.08  2'978846.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   108'499037</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PU (numeric): Utilities</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.08% NAs)</span>
@@ -1143,8 +1188,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa               1'825400  9.03   99.43</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%    25%     50%      75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0  2.16  25.74  167.95  4892.25  291356.48  11'866259.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%  10%    25%     50%      75%       90%        95%          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0  2.16  6.3  25.74  167.95  4892.25  63004.56  291356.48  11'866259.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CON (numeric): Construction</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.06% NAs)</span>
@@ -1164,8 +1209,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa             10'588300  12.92  201.92</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.03  215.57  1473.45  13514.84  829361.57  37'430603.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%        95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.03  43.37  215.57  1473.45  13514.84  132609.51  829361.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   37'430603.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> WRT (numeric): Trade, restaurants and hotels</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.06% NAs)</span>
@@ -1185,8 +1232,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa                 19'486200  9.12   98.41</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.03  25.07  650.38  3773.64  41648.17  2'646521.57  79'618054.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.03  25.07  96.85  650.38  3773.64  41648.17  475116.68  2'646521.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   79'618054.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> TRA (numeric): Transport, storage and communication</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.06% NAs)</span>
@@ -1206,8 +1255,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa            9'773441.71  10.72  131.86</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%     50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  12.28  205.79  1174.8  18927.21  1'059843.16  31'750009.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%     50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.05  12.28  37.35  205.79  1174.8  18927.21  195055.31  1'059843.16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   31'750009.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> FIRE (numeric): Finance, insurance, real estate and business services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.06% NAs)</span>
@@ -1227,8 +1278,8 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa            11'650290.1  11.09  139.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%     25%     50%      75%          95%        99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0  3.87  128.18  960.13  13460.4  1'599086.92  55'536957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1%    5%   10%     25%     50%      75%        90%          95%        99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0  3.87  14.3  128.18  960.13  13460.4  252299.08  1'599086.92  55'536957</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GOV (numeric): Government services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (82.73% NAs)</span>
@@ -1248,8 +1299,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa            12'973353.5  11.06  154.29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%          95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  48.14  723.98  3928.51  37689.12  1'400263.37  56'340246.3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     10%     25%      50%       75%        90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  48.14  121.87  723.98  3928.51  37689.12  331990.24  1'400263.37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   56'340246.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OTH (numeric): Community, social and personal services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.08% NAs)</span>
@@ -1269,8 +1322,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa            1'411950.45  10.75  139.55</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%     25%      50%       75%        95%          99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.92  310.09  1433.17  13321.29  605013.39  42'264477.4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%     5%    10%     25%      50%       75%        90%        95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.02  15.92  49.56  310.09  1433.17  13321.29  107230.29  605013.39</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   42'264477.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SUM (numeric): Summation of sector GDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (78.06% NAs)</span>
@@ -1290,8 +1345,10 @@ print(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-saharan Africa               91'111865.3   8.63    87.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     1%      5%      25%       50%        75%          95%         99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   0.38  269.63  4803.94  23186.19  284646.08  15'030223.5  435'513356</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     1%      5%      10%      25%       50%        75%          90%          95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   0.38  269.63  1242.98  4803.94  23186.19  284646.08  2'644610.11  15'030223.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   435'513356</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-in"></span>
 </code></pre></div>
