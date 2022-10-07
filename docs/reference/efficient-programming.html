@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 
@@ -342,58 +342,58 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   28   28   28   28   28   28   28   28   28   28   28 </span>
 <span class="r-in"><span class="fu">missing_cases</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                <span class="co"># Fast equivalent to !complete.cases(mtc_na)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  TRUE  TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE</span>
 <span class="r-in"><span class="fu">missing_cases</span><span class="op">(</span><span class="va">mtc_na</span>, cols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>    <span class="co"># Missing cases on certain columns?</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE  TRUE FALSE FALSE  TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] FALSE FALSE  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  TRUE FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE</span>
 <span class="r-in"><span class="co"># to see all missing cases use kit::pallNA(mtc_na)</span></span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span>                      <span class="co"># 12x faster than na.omit(mtc_na)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C         17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE        16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla    33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger  15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic       30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona     21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># Adds attribute with removed cases, like na.omit</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C         17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE        16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla    33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger  15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic       30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona     21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vs"</span>,<span class="st">"am"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Removes only cases missing vs or am</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0  NA  160 110 3.90 2.620 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    21.4  NA  258 110 3.08    NA 19.44  1  0   NA    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8  360 175 3.15 3.440    NA  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3  NA  360  NA 3.21 3.570    NA  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 19 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4        NA   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag  21.0   6 160.0 110 3.90 2.875 17.02  0  1   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant        18.1  NA 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360     14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D      24.4   4 146.7  62 3.69 3.190 20.00  1  0   NA    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 18 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span><span class="op">)</span>                  <span class="co"># Also works for matrices</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C         17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE        16.4   8 275.8 180 3.07 4.070 17.40  0  0    3    3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial 14.7   8 440.0 230 3.23 5.345 17.42  0  0    3    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla    33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger  15.5   8 318.0 150 2.76 3.520 16.87  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic       30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona     21.5   4 120.1  97 3.70 2.465 20.01  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"><span class="fu">na_omit</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">$</span><span class="va">vs</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># Also works with vectors</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 0 0 1 1 1 0 0 0 0 0 0 1 1 1 0 0 0 0 1 0 0 0 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 1 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 0 0 0 0 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"na.action")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  6  9 19 28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  5 13 14 28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "omit"</span>
 <span class="r-in"><span class="fu">na_rm</span><span class="op">(</span><span class="va">mtc_na</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>                     <span class="co"># For vectors na_rm is faster ...</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 0 0 1 1 1 0 0 0 0 0 0 1 1 1 0 0 0 0 1 0 0 0 0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 1 1 1 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 0 0 0 0 1</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">mtc_na</span><span class="op">)</span></span>
 <span class="r-in"></span>
 </code></pre></div>

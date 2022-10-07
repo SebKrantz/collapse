@@ -18,7 +18,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 
@@ -89,7 +89,7 @@
 
 
 <span class="co"># Fast subsetting (replaces `[` with drop = FALSE, programmers choice)</span>
-<span class="fu">ss</span><span class="op">(</span><span class="va">x</span>, <span class="va">i</span>, <span class="va">j</span><span class="op">)</span></code></pre></div>
+<span class="fu">ss</span><span class="op">(</span><span class="va">x</span>, <span class="va">i</span>, <span class="va">j</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -115,6 +115,9 @@
 
   <dt>j</dt>
 <dd><p>a vector of column names, positive or negative indices or a suitable logical vector to subset the columns of <code>x</code>. <em>Note:</em> Negative indices are converted to positive ones using <code>j &lt;- seq_along(x)[j]</code>.</p></dd>
+
+  <dt>check</dt>
+<dd><p>logical. <code>FALSE</code> skips checks on <code>i</code> and <code>j</code>, e.g. whether indices are negative. This offers a speedup to programmers, but can terminate R if zero or negative indices are passed.</p></dd>
 
  <dt>drop.index.levels</dt>
 <dd><p>character. Either <code>"id"</code>, <code>"time"</code>, <code>"all"</code> or <code>"none"</code>. See <a href="indexing.html">indexing</a>.</p></dd>

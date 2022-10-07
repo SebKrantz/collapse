@@ -18,7 +18,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 
@@ -252,13 +252,13 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6       0.17930818       0.3391766</span>
 <span class="r-in"> </span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Partialling out 2 fixed effects</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP HDW.LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43 1578.6211 -1.3980224</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44 1412.8849 -1.1838196</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45  917.2033 -1.0547978</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46  627.8605 -0.8296048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47  168.0458 -0.6683027</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48 -234.9535 -0.4708428</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   HDW.PCGDP HDW.LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1578.6211 -1.3980224</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1412.8849 -1.1838196</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  917.2033 -1.0547978</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  627.8605 -0.8296048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  168.0458 -0.6683027</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 -234.9535 -0.4708428</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="co"># Variable-wise</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   HDW.PCGDP HDW.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA  -6.706423</span>
@@ -268,38 +268,38 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5        NA  -6.445378</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6        NA  -6.367659</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="co"># Adding ODA as a continuous regressor</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP HDW.LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43 -324.3991 -1.1765307</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44 -439.5404 -0.9751559</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45 -598.9266 -0.7835446</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46  100.2175 -0.6186010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47  -70.7664 -0.4966332</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48  330.3561 -0.2257800</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   HDW.PCGDP HDW.LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -324.3991 -1.1765307</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -439.5404 -0.9751559</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -598.9266 -0.7835446</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  100.2175 -0.6186010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  -70.7664 -0.4966332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  330.3561 -0.2257800</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">:</span><span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">decade</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="co"># Country-decade and year FE's</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     HDW.PCGDP  HDW.LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43  411.79228 -0.55122290</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44  231.95880 -0.36367639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45  -73.18195 -0.20459213</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46   43.93176 -0.05394933</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47 -136.49858  0.06637048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48 -151.30884  0.24440305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP  HDW.LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  411.79228 -0.55122290</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  231.95880 -0.36367639</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  -73.18195 -0.20459213</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   43.93176 -0.05394933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -136.49858  0.06637048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 -151.30884  0.24440305</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">*</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>          <span class="co"># Country specific time trends</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     HDW.PCGDP    HDW.LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43  -3.035801 -0.1540994153</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44  -7.963841 -0.1544275887</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45 -35.533424 -0.1407557620</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46 -29.220766 -0.1100839354</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47 -38.876368 -0.0614121088</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48 -16.317261  0.0002597179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP    HDW.LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  -3.035801 -0.1540994153</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  -7.963841 -0.1544275887</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -35.533424 -0.1407557620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 -29.220766 -0.1100839354</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -38.876368 -0.0614121088</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 -16.317261  0.0002597179</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">year</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Country specific cubic trends</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     HDW.PCGDP  HDW.LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 43 -258.40688  0.23602846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 44 -119.55996  0.11364318</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 45  -10.27730 -0.01083611</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 46   60.86412 -0.07646294</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 47  -21.08698 -0.02429083</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 48   58.90309 -0.07073351</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP  HDW.LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -258.40688  0.23602846</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -119.55996  0.11364318</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  -10.27730 -0.01083611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   60.86412 -0.07646294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  -21.08698 -0.02429083</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   58.90309 -0.07073351</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># More complex examples</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">:</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span></span>

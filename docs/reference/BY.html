@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 
@@ -130,7 +130,7 @@
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p><code>BY</code> is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is faster than <code><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></code>, <code><a href="https://rdrr.io/r/base/by.html" class="external-link">by</a></code>, <code><a href="https://r-spatial.github.io/sf/reference/aggregate.sf.html" class="external-link">aggregate</a></code> and <em>(d)plyr</em>, and preserves data attributes just like <code><a href="dapply.html">dapply</a></code>.  <!-- % and more versatile though not faster than \emph{dplyr} --></p>
+    <p><code>BY</code> is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is faster than <code><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></code>, <code><a href="https://rdrr.io/r/base/by.html" class="external-link">by</a></code>, <code><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></code> and <em>(d)plyr</em>, and preserves data attributes just like <code><a href="dapply.html">dapply</a></code>.  <!-- % and more versatile though not faster than \emph{dplyr} --></p>
 <p><!-- %I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution. --></p>
 <p>It is principally a wrapper around <code>lapply(gsplit(x, g), FUN, ...)</code>, that uses <code><a href="GRP.html">gsplit</a></code> for optimized splitting and also strongly optimizes on the internal code compared to <em>base</em> R functions. For more details look at the documentation for <code><a href="dapply.html">dapply</a></code> which works very similar (apart from the splitting performed in <code>BY</code>). The function is intended for simple cases involving flexible computation of statistics across groups using a single function e.g. <code>iris |&gt; gby(Species) |&gt; BY(IQR)</code> is simpler than <code>iris |&gt; gby(Species) |&gt; smr(acr(.fns = IQR))</code> etc..</p>
 <p><!-- % For larger tasks, the \link[=fast-statistical-functions]{Fast Statistical Functions} or the \emph{data.table} package are more appropriate tools. --></p>
@@ -356,6 +356,11 @@
 <span class="r-in"> </span>
 <span class="r-in"><span class="co">## grouped data frame method</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘magrittr’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:testthat’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     equals, is_less_than, not</span>
 <span class="r-in"><span class="va">giris</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">Species</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span><span class="op">)</span>                      <span class="co"># Compute sum</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species Sepal.Length Sepal.Width Petal.Length Petal.Width</span>

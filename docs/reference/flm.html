@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
       </span>
     </div>
 
@@ -144,7 +144,7 @@ flm(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...)</code></pre></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> carb         0.33207257</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Check this is correct</span></span>
-<span class="r-in"><span class="va">lmcoef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/vars/man/coefficients.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, weights <span class="op">=</span> <span class="va">wt</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">lmcoef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, weights <span class="op">=</span> <span class="va">wt</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/drop.html" class="external-link">drop</a></span><span class="op">(</span><span class="va">coef</span><span class="op">)</span>, <span class="va">lmcoef</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"></span>
@@ -226,6 +226,12 @@ flm(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...)</code></pre></di
 <span class="r-in"><span class="co"># Test that all methods give the same result</span></span>
 <span class="r-in"><span class="fu"><a href="small-helpers.html">all_obj_equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
 <span class="r-in">  <span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, w <span class="op">=</span> <span class="va">wt</span>, method <span class="op">=</span> <span class="va">i</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 methods overwritten by 'RcppEigen':</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   method               from         </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   predict.fastLm       RcppArmadillo</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   print.fastLm         RcppArmadillo</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   summary.fastLm       RcppArmadillo</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>   print.summary.fastLm RcppArmadillo</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"></span>
 </code></pre></div>
