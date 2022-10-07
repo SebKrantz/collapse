@@ -14,7 +14,7 @@ Detailed Statistical Description of Data Frame
 \usage{
 descr(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
       Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99),
-      cols = NULL, label.attr = "label", \dots)
+      cols = NULL, label.attr = "label", stepwise = FALSE, \dots)
 
 \method{[}{descr}(x, ...)
 
@@ -64,7 +64,7 @@ character. The name of a label attribute to display for each variable (if variab
 \item{t.table}{logical. \code{TRUE} (default) prints a transposed table.}
 \item{summary}{logical. \code{TRUE} (default) computes and displays a summary of the frequencies, if the size of the table for a categorical variable exceeds \code{n}.}
 \item{reverse}{logical. \code{TRUE} prints contents in reverse order, starting with the last column, so that the dataset can be analyzed by scrolling up the console after calling \code{descr}.}
-\item{stepwise}{logical. \code{TRUE} prints one variable at a time. The user needs to press [enter] to see the printout for the next variable.}
+\item{stepwise}{logical. \code{TRUE} prints one variable at a time. The user needs to press [enter] to see the printout for the next variable. If called from \code{descr}, the computation is also done one variable at a time, and the finished 'descr' object is returned invisibly. This is recommended for larger datasets, where precomputing the statistics for all variables can be time consuming. }
 }
 \details{
 \code{descr} was heavily inspired by \code{Hmisc::describe}, but computes about 10x faster. The performance is comparable to \code{\link{summary}}. \code{descr} was built as a wrapper around \code{\link{qsu}}, to enrich the set of statistics computed by \code{\link{qsu}} for both numeric and categorical variables.
@@ -88,6 +88,7 @@ descr(GGDC10S)
 
 # Some useful print options (also try stepwise argument)
 print(descr(GGDC10S), reverse = TRUE, t.table = FALSE)
+# For bigger data consider: descr(big_data, stepwise = TRUE)
 
 # Generating a data frame
 as.data.frame(descr(wlddev, table = FALSE))

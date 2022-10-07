@@ -8,7 +8,7 @@
 
 * Added `rsplit.matrix` method. 
 
-* `descr()` now by default also reports 10% and 90% quantiles for numeric variables (in line with STATA's detailed summary statistics), and can also be applied to 'pseries' / 'indexed_series'. 
+* `descr()` now by default also reports 10% and 90% quantiles for numeric variables (in line with STATA's detailed summary statistics), and can also be applied to 'pseries' / 'indexed_series'. Furthermore, `descr()` itself now has an argument `stepwise` such that `descr(big_data, stepwise = TRUE)` yields computation of summary statistics on a variable-by-variable basis (and the finished 'descr' object is returned invisibly). The printed result is thus identical to `print(descr(big_data), stepwise = TRUE)`, with the difference that the latter first does the entire computation whereas the former computes statistics on demand.   
 
 <!-- * Added method `funique.grouped_df`. ???? -->
 

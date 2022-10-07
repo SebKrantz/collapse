@@ -31,7 +31,7 @@ jobs:
         run: |
           library(covr)
           options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS=""))
-          # Sys.setenv(NCRAN = TRUE, NMAC = TRUE)
-          # suppressWarnings(codecov(type = "all"))
-          codecov()
+          Sys.setenv(NCRAN = TRUE, NMAC = TRUE)
+          suppressWarnings(codecov(type = "all"))
+          # codecov()
         shell: Rscript {0}

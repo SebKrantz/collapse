@@ -25,7 +25,7 @@ fsorttable <- function(x, srt) {
 
 descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
                   Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), cols = NULL,
-                  label.attr = 'label', ...) {
+                  label.attr = 'label', stepwise = FALSE, ...) {
   nam <- l1orlst(as.character(substitute(X)))
 
   armat <- function(x, y) c(x[1L], Ndist = y, x[-1L])
@@ -66,24 +66,39 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
   }
   if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
   res <- vector('list', length(X))
-  num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
-  res[num] <- lapply(X[num], descrnum, ...)
-  if(!all(num)) {
-    date <- vapply(unattrib(X), is_date, TRUE)
-    if(any(date)) {
-      res[date] <- lapply(X[date], descrdate)
-      cat <- !(num | date)
-    } else cat <- !num
-    res[cat] <- lapply(X[cat], descrcat)
+  if(stepwise) { # This means we compute one by one, mainly for printing...
+    N <- length(X[[1L]])
+    attributes(res) <- list(names = names(X), name = nam, N = N,
+                            arstat = !dotsok, table = table, class = "descr")
+    cat('Dataset: ', nam,', ', length(res), ' Variables, N = ', N, "\n", sep = "")
+    cat(paste(rep("-", .Options$width), collapse = ""), "\n", sep = "")
+    for(i in seq_along(X)) {
+      invisible(readline(prompt = sprintf("Press [enter] for variable %s/%s or [esc] to exit", i, length(res))))
+      xi <- X[[i]]
+      res[[i]] <- if(is.numeric(xi)) descrnum(xi, ...) else if(is_date(xi)) descrdate(xi) else descrcat(xi)
+      print(res[i], noheader = TRUE)
+    }
+  } else {
+    num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
+    res[num] <- lapply(X[num], descrnum, ...)
+    if(!all(num)) {
+      date <- vapply(unattrib(X), is_date, TRUE)
+      if(any(date)) {
+        res[date] <- lapply(X[date], descrdate)
+        cat <- !(num | date)
+      } else cat <- !num
+      res[cat] <- lapply(X[cat], descrcat)
+    }
+    attributes(res) <- list(names = names(X), name = nam, N = length(X[[1L]]),
+                            arstat = !dotsok, table = table, class = "descr")
   }
-  attributes(res) <- list(names = names(X), name = nam, N = length(X[[1L]]),
-                          arstat = !dotsok, table = table, class = "descr")
-  res
+  return(if(stepwise) invisible(res) else res)
 }
 
 `[.descr` <- function(x, ...) copyMostAttributes(.subset(x, ...), x)
 
 print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, reverse = FALSE, stepwise = FALSE, ...) {
+  noheader <- !missing(...) && isTRUE(list(...)$noheader)
   oldClass(x) <- NULL
   w <- paste(rep("-", .Options$width), collapse = "")
   arstat <- attr(x, "arstat")
@@ -91,7 +106,7 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
   DSN <- attr(x, "N")
   cb <- function(...) if(t.table) cbind(...) else formatC(rbind(...), drop0trailing = TRUE)
   ct <- function(z) if(t.table) cbind(Freq = z) else z
-  if(reverse) x <- rev.default(x) else {
+  if(reverse) x <- rev.default(x) else if(!noheader) {
     cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
     cat(w, "\n", sep = "")
   }
@@ -140,7 +155,7 @@ print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summ
     cat(w, "\n", sep = "") # More compressed -> better !
     # cat("\n", w, "\n", sep = "")
   }
-  if(reverse) cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
+  if(reverse && !noheader) cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
   invisible(x)
 }
 
