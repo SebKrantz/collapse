@@ -91,7 +91,9 @@ In addition, *collapse* provides 5 vignettes (available online):
 
 * [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames.
 
-### Cheatsheet
+*Note* that these vignettes currently (October 2022) do not cover major features introduced in versions 1.7 and 1.8. They have been updated if you see a 2022/23 in the date of the vignette.
+
+### Cheatsheet (v1.8.8)
 
 <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page1.png" width="330"/></a>  <!-- height="227" 294 -->
 <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page2.png" width="330"/></a> 
