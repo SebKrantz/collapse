@@ -10,7 +10,7 @@ name: test-coverage
 
 jobs:
   test-coverage:
-    runs-on: ubuntu-devel
+    runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -25,7 +25,6 @@ jobs:
         with:
           extra-packages: |
             covr
-            class
             sf
             weights
       - name: Test coverage
