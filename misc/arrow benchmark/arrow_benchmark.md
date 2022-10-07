@@ -27,6 +27,7 @@ fastverse_extend(dplyr, arrow, microbenchmark)
 #> arrow::timestamp() masks utils::timestamp()
 #> dplyr::union()     masks base::union()
 
+# Data From: https://www.kaggle.com/datasets/neilclack/nyc-taxi-trip-data-google-public-data?resource=download
 system.time(taxi <- fread("misc/NYC_TAXI_2019/taxi_trip_data.csv", tz = "UTC"))
 #>    user  system elapsed
 #>   3.578   0.498   7.767

@@ -10,15 +10,15 @@ topics <- sort(setdiff(unlist(lapply(tools::Rd_db("collapse"),
                       c("collapse-documentation","A0-collapse-documentation","collapse-depreciated","collapse-renamed"))) # "collapse-package"
 options(max.print = 70L)
 build_reference(examples = TRUE, topics = topics) # "collapse-package"
-Sys.setenv(NCRAN = "TRUE")
-Sys.setenv(RUNBENCH = "TRUE")
+Sys.setenv(NCRAN = TRUE, NMAC = TRUE, RUNBENCH = TRUE, LOCAL = TRUE)
 # build_articles(lazy = TRUE) # lazy = FALSE # Still do with NCRAN = TRUE
 build_articles_index()
+build_article("collapse_documentation")
 build_article("collapse_intro")
 build_article("collapse_and_plm")
 build_article("collapse_and_data.table")
 build_article("collapse_and_sf")
-# Replace all A0-collapse-documentation.html with index.html !!
+# Replace all collapse-documentation.html with index.html !!
 # Replce all <h1>Reference</h1> with <h1>Documentation & Overview</h1>
 # Replce all <h1>Articles</h1> with <h1>Vignettes / Articles</h1>
 # Replace &amp;lt;- with &lt;- and %&amp;gt;% with %&gt;% and
