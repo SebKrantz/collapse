@@ -49,12 +49,11 @@ atomic_elem <- function(l, return = "sublist", keep.class = FALSE) {
   setAttributes(l, al)
 }
 
-is_regular <- function(x) is.list(x) || is.atomic(x) # fastest way?
-
 is_unlistable <- function(l, DF.as.list = FALSE) {
   if(!is.list(l)) return(TRUE)
   if(DF.as.list) return(all(unlist(rapply(l, is.atomic, how = "list"), use.names = FALSE)))
-  all(unlist(rapply2d(l, is_regular), use.names = FALSE)) # fastest way?
+  checkisul <- function(x) if(is.atomic(x) || inherits(x, "data.frame")) TRUE else if(is.list(x)) lapply(x, checkisul) else FALSE
+  all(unlist(checkisul(l), use.names = FALSE)) # fastest way?
 }
 
 is.unlistable <- function(l, DF.as.list = FALSE) {
@@ -243,19 +242,43 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE,
 
 # there is base::getElement
 
+# 'regular' (is.atomic(x) || is.list(x)) elements, the check now implements in C_vtypes with option 5L.
+is_regular_vec <- function(x) .Call(C_vtypes, x, 5L)
+is_irregular_vec <- function(x) !.Call(C_vtypes, x, 5L)
+
+# A variant of list_extract_FUN for FUN that can take a list as input and check the elements
+list_extract_FUN_vec <- function(l, FUN, ret, keep.tree = FALSE, nkeep_class = TRUE) {
+  regsearch <- function(x) {
+    if(nkeep_class && is.object(x)) oldClass(x) <- NULL
+    if(any(subl <- .Call(C_vtypes, x, ret))) {
+      wsubl <- which(subl)
+      wnsubl <- whichv(subl, FALSE)
+      matches <- FUN(x[wnsubl])
+      a <- lapply(x[wsubl], regsearch)
+      wa <- vlengths(a, FALSE) > 0L
+      x <- c(x[wnsubl][matches], a[wa])
+      if(keep.tree || length(x) != 1L)
+        return(x[forder.int(c(wnsubl[matches], wsubl[wa]))]) else return(x[[1L]])
+    } else if(length(x)) {
+      matches <- which(FUN(x))
+      if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]])
+    }
+  }
+  regsearch(l)
+}
+
 reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE) {
   if(!is.list(l)) stop("l needs to be a list")
   if(keep.class) al <- attributes(l)
   # if(inherits(l, "data.frame")) if(keep.class) return(l) else return(unattrib(l))
   if(recursive) {
-    # is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
-    l <- list_extract_FUN(l, is_regular, 4L, keep.tree, !keep.class)
+    l <- list_extract_FUN_vec(l, is_regular_vec, 4L, keep.tree, !keep.class)
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
       return(setAttributes(l, al))
     } else return(l)
   } else {
-    matches <- which(vapply(l, is_regular, TRUE, USE.NAMES = FALSE)) # l <- base::Filter(is_regular,l)
+    matches <- which(is_regular_vec(l))
     if(keep.tree || length(matches) != 1L) {
       if(keep.class) return(fcolsubset(l, matches)) else return(.subset(l, matches))
     } else return(.subset2(l, matches))
@@ -264,18 +287,15 @@ reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
 
 irreg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE) {
   if(!is.list(l)) stop("l needs to be a list")
-  is.irregular <- function(x) !(is.list(x) || is.atomic(x)) # is.irregular fastest way?
   if(keep.class) al <- attributes(l)
-  # if(inherits(l, "data.frame")) stop("A data.frame is a regular object!")
   if(recursive) {
-    # is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
-    l <- list_extract_FUN(l, is.irregular, 4L, keep.tree, !keep.class)
+    l <- list_extract_FUN_vec(l, is_irregular_vec, 4L, keep.tree, !keep.class)
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
       return(setAttributes(l, al))
     } else return(l)
   } else {
-    matches <- which(vapply(l, is.irregular, TRUE, USE.NAMES = FALSE)) # l <- base::Filter(is_regular,l)
+    matches <- which(is_irregular_vec(l))
     if(keep.tree || length(matches) != 1L) {
       if(keep.class) return(fcolsubset(l, matches)) else return(.subset(l, matches))
     } else return(.subset2(l, matches))
