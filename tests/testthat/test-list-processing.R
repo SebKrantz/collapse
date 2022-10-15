@@ -64,6 +64,16 @@ test_that("get_elem works well", { # Could still add more tests..
   expect_true(length(get_elem(get_elem(l, "piv", regex = TRUE, invert = TRUE), "piv", regex = TRUE)) == 0L)
   expect_false(length(get_elem(get_elem(l, "piv", regex = TRUE, invert = TRUE), "tol")) == 0L)
 
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), "b"), "a")
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), "b", invert = TRUE), 1)
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), "b", keep.tree = TRUE), list(list(b = "a")))
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), "b", invert = TRUE, keep.tree = TRUE), list(list(a = 1)))
+
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), is.character), "a")
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), is.character, invert = TRUE), 1)
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), is.character, keep.tree = TRUE), list(list(b = "a")))
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), is.character, invert = TRUE, keep.tree = TRUE), list(list(a = 1)))
+
 })
 
 if(NCRAN)
