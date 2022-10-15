@@ -244,7 +244,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
       // Just some heuristic checking as this is a programmers function
       const int v1 = INTEGER_ELT(val, 0), vn = INTEGER_ELT(val, lv-1);
       if(v1 < 1 || v1 > n || vn < 1 || vn > n) error("Detected index (v) outside of range [1, length(x)]");
-    } else error("If length(v) > 1, v must be an integer or logical vector");
+    } else error("If length(v) > 1, v must be an integer or logical vector"); // TODO: Allow reals of length 1 ??
   } else if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
 
   if(lr > 1 && tr != tx) { // lr == n &&
@@ -611,33 +611,52 @@ SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
 SEXP vtypes(SEXP x, SEXP isnum) {
   int tx = TYPEOF(x);
   if(tx != VECSXP) return ScalarInteger(tx);
+  SEXP *px = SEXPPTR(x); // This is ok, even if x contains ALTREP objects..
   int n = length(x);
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *pans = INTEGER(ans);
   switch(asInteger(isnum)) {
   case 0:
-    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(VECTOR_ELT(x, i)) + 1;
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) + 1;
     break;
   case 1: // Numeric variables: do_is with op = 100: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
+          // See also DispatchOrEval in https://github.com/wch/r-source/blob/trunk/src/main/eval.c
     {
-    if(inherits(x, "indexed_frame")) {
-      for(int i = 0; i != n; ++i) {
-        SEXP ci = VECTOR_ELT(x, i);
-        int tci = TYPEOF(ci);
-        pans[i] = (tci == INTSXP && inherits(ci, "integer")) || (tci == REALSXP && inherits(ci, "numeric")); // length(getAttrib(ci, R_ClassSymbol)) <= 2;
+    if(inherits(x, "pdata.frame")) {
+      for(int i = 0, tci, tnum, is_num; i != n; ++i) {
+        is_num = 0;
+        tci = TYPEOF(px[i]);
+        tnum = tci == INTSXP || tci == REALSXP;
+        if(tnum) is_num = inherits(px[i], "integer") || inherits(px[i], "numeric") || inherits(px[i], "ts") || inherits(px[i], "units");
+        pans[i] = tnum && is_num;
       }
+      // for(int i = 0; i != n; ++i) {
+      //   int tci = TYPEOF(px[i]);
+      //   pans[i] = (tci == INTSXP && inherits(px[i], "integer")) || (tci == REALSXP && inherits(px[i], "numeric")); // length(getAttrib(ci, R_ClassSymbol)) <= 2;
+      // }
     } else {
-      for(int i = 0; i != n; ++i) {
-        SEXP ci = VECTOR_ELT(x, i);
-        int tci = TYPEOF(ci);
-        pans[i] = (tci == INTSXP || tci == REALSXP) && OBJECT(ci) == 0;
+      for(int i = 0, tci, tnum, is_num; i != n; ++i) {
+        // pans[i] = isNumeric(px[i]) && !isLogical(px[i]); // Date is numeric, from: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
+        tci = TYPEOF(px[i]);
+        tnum = tci == INTSXP || tci == REALSXP;
+        is_num = tnum && OBJECT(px[i]) == 0;
+        if(tnum && !is_num) is_num = inherits(px[i], "ts") || inherits(px[i], "units");
+        pans[i] = is_num;
       }
     }
     SET_TYPEOF(ans, LGLSXP);
     break;
     }
-  case 2:
-    for(int i = 0; i != n; ++i) pans[i] = (int)isFactor(VECTOR_ELT(x, i));
+  case 2: // is.factor
+    for(int i = 0; i != n; ++i) pans[i] = (int)isFactor(px[i]);
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  case 3: // is.list, needed for list processing functions
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP;
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  case 4: // is.sublist, needed for list processing functions
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !isFrame(px[i]);
     SET_TYPEOF(ans, LGLSXP);
     break;
   default: error("Unsupported vtypes option");
