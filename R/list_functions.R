@@ -3,23 +3,23 @@ rapply2d <- function(l, FUN, ..., classes = "data.frame") {
   aply2d(l) # lapply(x,aply2d) # if this is enabled, rapply2d takes apart data.frame if passed
 }
 
-get_elem_FUN <- function(x, FUN, return = "sublist", keep_class = FALSE)
-  switch(return, sublist = if(keep_class) fcolsubset(x, vapply(`attributes<-`(x, NULL), FUN, TRUE)) else .subset(x, vapply(`attributes<-`(x, NULL), FUN, TRUE)),
-         names = attr(x, "names")[vapply(`attributes<-`(x, NULL), FUN, TRUE)],
-         indices = which(vapply(`attributes<-`(x, NULL), FUN, TRUE)),
-         named_indices = which(`names<-`(vapply(`attributes<-`(x, NULL), FUN, TRUE), attr(x, "names"))),
-         logical = vapply(`attributes<-`(x, NULL), FUN, TRUE),
-         named_logical = `names<-`(vapply(`attributes<-`(x, NULL), FUN, TRUE), attr(x, "names")),
+get_elem_indl <- function(x, indl, return = "sublist", keep_class = FALSE)
+  switch(return, sublist = if(keep_class) fcolsubset(x, indl) else .subset(x, indl),
+         names = attr(x, "names")[indl],
+         indices = which(indl),
+         named_indices = which(`names<-`(indl, attr(x, "names"))),
+         logical = indl,
+         named_logical = `names<-`(indl, attr(x, "names")),
          stop("Unknown return option!"))
 
 list_elem <- function(l, return = "sublist", keep.class = FALSE) {
   if(!is.list(l)) stop("l needs to be a list")
-  get_elem_FUN(l, is.list, return, keep.class)
+  get_elem_indl(l, .Call(C_vtypes, l, 3L), return, keep.class)
 }
 
 atomic_elem <- function(l, return = "sublist", keep.class = FALSE) {
   if(!is.list(l)) stop("l needs to be a list")
-  get_elem_FUN(l, is.atomic, return, keep.class)
+  get_elem_indl(l, .Call(C_vtypes, l, 7L), return, keep.class)
 }
 
 
@@ -42,7 +42,7 @@ atomic_elem <- function(l, return = "sublist", keep.class = FALSE) {
   ilv <- is.list(value)
   len <- if(ilv) length(value) else 1L
   attributes(l) <- NULL
-  ind <- whichv(.Call(C_vtypes, l, 3L), FALSE)
+  ind <- which(.Call(C_vtypes, l, 7L))
   if(len != length(ind)) stop("length(value) must match length(list_elem(l))")
   if(ilv) l[ind] <- value else l[[ind]] <- value
   if(ilv && length(nam <- names(value))) al[["names"]][ind] <- nam
@@ -191,7 +191,6 @@ list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE, nkeep_class = T
 # Note: all functions currently remove empty list elements !
 # keep.tree argument still issues wih xlevels
 
-# TODO: add option invert = TRUE, also: grep has the option, grepl not..
 get_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE,
                      keep.tree = FALSE, keep.class = FALSE,
                      regex = FALSE, invert = FALSE, ...) {

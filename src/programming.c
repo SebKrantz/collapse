@@ -659,6 +659,26 @@ SEXP vtypes(SEXP x, SEXP isnum) {
     for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !isFrame(px[i]);
     SET_TYPEOF(ans, LGLSXP);
     break;
+  case 7: // is.atomic(x), needed in atomic_elem()
+    // is.atomic: do_is with op = 200:  https://github.com/wch/r-source/blob/9f9033e193071f256e21a181cb053cba983ed4a9/src/main/coerce.c
+    for(int i = 0; i != n; ++i) {
+      switch(TYPEOF(px[i])) {
+      case NILSXP: /* NULL is atomic (S compatibly), but not in isVectorAtomic(.) */
+      case CHARSXP:
+      case LGLSXP:
+      case INTSXP:
+      case REALSXP:
+      case CPLXSXP:
+      case STRSXP:
+      case RAWSXP:
+        pans[i] = 1;
+        break;
+      default:
+        pans[i] = 0;
+      }
+    }
+    SET_TYPEOF(ans, LGLSXP);
+    break;
   case 5: // is.atomic(x) || is.list(x), needed in reg_elem() and irreg_elem()
     for(int i = 0; i != n; ++i) {
       switch(TYPEOF(px[i])) {
@@ -687,7 +707,6 @@ SEXP vtypes(SEXP x, SEXP isnum) {
     for(int i = 0; i != n; ++i) {
       if(length(px[i]) == 0)
         pans[i] = 1;
-      // is.atomic: do_is with op = 200:  https://github.com/wch/r-source/blob/9f9033e193071f256e21a181cb053cba983ed4a9/src/main/coerce.c
       else switch(TYPEOF(px[i])) {
            case VECSXP:
              pans[i] = isFrame(px[i]) ? 2 : 0;
