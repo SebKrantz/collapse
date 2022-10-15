@@ -1,3 +1,11 @@
+# collapse 1.9.0.9000
+
+* `num_vars()` has become a bit smarter: columns of class 'ts' and 'units' are now also recognized as numeric. In general, users should be aware that `num_vars()` does not regard any R methods defined for `is.numeric()`, it simply checks whether objects are of type integer or double, and do not have a class. The addition of these two exceptions now guards against two common cases where `num_vars()` may give undesirable outcomes. Note that `num_vars()`  is also called in `collap()` to distinguish between numeric (`FUN`) and non-numeric (`catFUN`) columns. 
+
+* List extraction function `get_elem()` now has an option `invert = TRUE` (default `FALSE`) to remove matching elements from a (nested) list. Also the functionality of argument `keep.class = TRUE` is implemented in a better way, such that the default `keep.class = FALSE` toggles classes from (non-matched) list-like objects inside the list to be removed. 
+
+* Most list processing functions are noticeably faster, as checking the data types of elements in a list is now also done in C. 
+
 # collapse 1.8.9
 
 * Fixed some warnings on rchk and newer C compilers (LLVM clang 10+). 
