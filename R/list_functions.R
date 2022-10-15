@@ -109,9 +109,9 @@ has_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALS
 #
 # }
 
-# General note: What about lists containing data.tables ? '[' subsetting will be wrong !
-list_extract_FUN <- function(l, FUN, ret, keep.tree = FALSE) { # is.subl
+list_extract_FUN <- function(l, FUN, ret, keep.tree = FALSE, nkeep_class = TRUE) { # is.subl
  regsearch <- function(x) {
+  if(nkeep_class && is.object(x)) oldClass(x) <- NULL
   if(any(subl <- .Call(C_vtypes, x, ret))) { # vapply(x, is.subl, TRUE, USE.NAMES = FALSE) # is.list(x) && a
     wsubl <- which(subl)
     wnsubl <- whichv(subl, FALSE)
@@ -129,8 +129,9 @@ list_extract_FUN <- function(l, FUN, ret, keep.tree = FALSE) { # is.subl
  regsearch(l)
 }
 
-list_extract_regex <- function(l, exp, ret, keep.tree = FALSE, ...) {
+list_extract_regex <- function(l, exp, ret, keep.tree = FALSE, nkeep_class = TRUE, ...) {
   regsearch <- function(x) {
+  if(nkeep_class && is.object(x)) oldClass(x) <- NULL
   if(any(subl <- .Call(C_vtypes, x, ret))) {
       # matches <- rgrepl(exp, names(x), ...)
       # wres <- which(matches)
@@ -152,9 +153,10 @@ list_extract_regex <- function(l, exp, ret, keep.tree = FALSE, ...) {
  regsearch(l)
 }
 
-list_extract_names <- function(l, nam, ret, keep.tree = FALSE, invert = FALSE) {
+list_extract_names <- function(l, nam, ret, keep.tree = FALSE, nkeep_class = TRUE, invert = FALSE) {
  "%cop%" <- if(invert) `%!in%` else `%in%`
  regsearch <- function(x) {
+  if(nkeep_class && is.object(x)) oldClass(x) <- NULL
   if(any(subl <- .Call(C_vtypes, x, ret))) {
       matches <- names(x) %cop% nam
       wres <- which(matches) # match(nam, names(x), 0L) # better bcause gives integer(0) -> necessary as cannot do l[[0L]]
@@ -176,12 +178,13 @@ list_extract_names <- function(l, nam, ret, keep.tree = FALSE, invert = FALSE) {
 
 # Idea: Also use indices and logical vectors ? i.e. get first two columns of alist of data.frames ?
 # This behaves a bit differently (not find elements everywhere, but also subset inside the list)
-list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE) {
+list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE, nkeep_class = TRUE) {
   if(is.logical(ind)) ind <- which(ind)
   if(length(ind) > 1L || keep.tree) {
-    regsearch <- function(x) if(is.subl(x)) lapply(x, regsearch) else x[ind]
+    regsearch <- function(x) if(is.subl(x)) lapply(x, regsearch) else if(nkeep_class) .subset(x, ind) else x[ind]
   } else {
-    regsearch <- function(x) if(is.subl(x)) lapply(x, regsearch) else x[[ind]]
+    # if(ind[1L] < 1L) stop("Cannot subset with single negative indices") # .subset2 throws error...
+    regsearch <- function(x) if(is.subl(x)) lapply(x, regsearch) else .subset2(x, ind)
   }
   regsearch(l)
 }
@@ -199,20 +202,20 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE,
     if(keep.class) al <- attributes(l)
     if(is.function(elem)) {
       if(!missing(...)) unused_arg_action(match.call(), ...)
-      l <- list_extract_FUN(l, if(invert) function(x) !elem(x) else elem, ret, keep.tree)
+      l <- list_extract_FUN(l, if(invert) function(x) !elem(x) else elem, ret, keep.tree, !keep.class)
     } else if(is.character(elem)) {
       if(regex) {
-        l <- if(invert) list_extract_regex(l, elem, ret, keep.tree, invert = TRUE, ...) else
-                        list_extract_regex(l, elem, ret, keep.tree, ...)
+        l <- if(invert) list_extract_regex(l, elem, ret, keep.tree, !keep.class, invert = TRUE, ...) else
+                        list_extract_regex(l, elem, ret, keep.tree, !keep.class, ...)
       } else {
         if(!missing(...)) unused_arg_action(match.call(), ...)
-        l <- list_extract_names(l, elem, ret, keep.tree, invert)
+        l <- list_extract_names(l, elem, ret, keep.tree, !keep.class, invert)
       }
     } else {
       if(!missing(...)) unused_arg_action(match.call(), ...)
       if(invert) stop("Cannot use option invert = TRUE if elem is indices or a logical vector")
       is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame")
-      l <- list_extract_ind(l, elem, is.subl, keep.tree)
+      l <- list_extract_ind(l, elem, is.subl, keep.tree, !keep.class)
     }
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
@@ -246,7 +249,7 @@ reg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
   # if(inherits(l, "data.frame")) if(keep.class) return(l) else return(unattrib(l))
   if(recursive) {
     # is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
-    l <- list_extract_FUN(l, is_regular, 4L, keep.tree)
+    l <- list_extract_FUN(l, is_regular, 4L, keep.tree, !keep.class)
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
       return(setAttributes(l, al))
@@ -266,7 +269,7 @@ irreg_elem <- function(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALS
   # if(inherits(l, "data.frame")) stop("A data.frame is a regular object!")
   if(recursive) {
     # is.subl <- function(x) is.list(x) && !inherits(x, "data.frame")
-    l <- list_extract_FUN(l, is.irregular, 4L, keep.tree)
+    l <- list_extract_FUN(l, is.irregular, 4L, keep.tree, !keep.class)
     if(keep.class && is.list(l)) {
       al[["names"]] <- names(l)
       return(setAttributes(l, al))
