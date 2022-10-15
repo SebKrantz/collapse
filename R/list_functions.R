@@ -92,7 +92,7 @@ has_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALS
       oldClass(l) <- NULL # in case [ behaves weird
       ret <- 4L - as.logical(DF.as.list) # is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame") # could do without, but it seems to remove data.frame attributes, and more speed!
       namply <- function(y) if(any(subl <- .Call(C_vtypes, y, ret))) # vapply(y, is.subl, TRUE)
-        c(names(subl), unlist(lapply(.subset(y, subl), namply), use.names = FALSE)) else names(y) # also overall subl names are important, and .subset for DT subsetting ! # names(which(!subl)) # names(y)[!subl] # which is faster?
+        c(names(y), unlist(lapply(.subset(y, subl), namply), use.names = FALSE)) else names(y) # also overall subl names are important, and .subset for DT subsetting ! # names(which(!subl)) # names(y)[!subl] # which is faster?
       if(regex) return(length(rgrep(elem, namply(l), ...)) > 0L) else return(any(namply(l) %in% elem))
     } else if(regex) return(length(rgrep(elem, names(l), ...)) > 0L) else return(any(names(l) %in% elem))
   } else stop("elem must be a function or character vector of element names or regular expressions")
@@ -108,69 +108,136 @@ has_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALS
 #
 # }
 
-list_extract_FUN <- function(l, FUN, ret, keep.tree = FALSE, nkeep_class = TRUE) { # is.subl
- regsearch <- function(x) {
-  if(nkeep_class && is.object(x)) oldClass(x) <- NULL
-  if(any(subl <- .Call(C_vtypes, x, ret))) { # vapply(x, is.subl, TRUE, USE.NAMES = FALSE) # is.list(x) && a
-    wsubl <- which(subl)
-    wnsubl <- whichv(subl, FALSE)
-    matches <- vapply(x[wnsubl], FUN, TRUE, USE.NAMES = FALSE)
-    a <- lapply(x[wsubl], regsearch)
-    wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements! could make it length or is.null! # vapply(a, length, 1L, USE.NAMES = FALSE)
-    x <- c(x[wnsubl][matches], a[wa]) # The problem here: If all elements in a sublist are atomic, it still retains the sublist itself with NULL inside!
-    if(keep.tree || length(x) != 1L)
-      return(x[forder.int(c(wnsubl[matches], wsubl[wa]))]) else return(x[[1L]]) # fastest way?
-  } else if(length(x)) { # This ensures correct behavior in the final nodes: if (length(x)) because problem encountered in get.elem(V, is.matrix) -> empty xlevels list, the lapply below does not execute
-    matches <- which(vapply(x, FUN, TRUE, USE.NAMES = FALSE))
-    if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=
-  }
+list_extract_FUN <- function(l, FUN, ret, keep.tree = FALSE, nkeep_class = TRUE, invert = FALSE) {
+ if(invert) {
+   # This is rather simple, just negate the vapply calls. could also simple invert the function.. but this is faster...
+   regsearch <- function(x) {
+     if(nkeep_class && is.object(x)) oldClass(x) <- NULL
+     if(any(subl <- .Call(C_vtypes, x, ret))) {
+       wsubl <- which(subl)
+       wnsubl <- whichv(subl, FALSE)
+       matches <- !vapply(x[wnsubl], FUN, TRUE, USE.NAMES = FALSE)
+       a <- lapply(x[wsubl], regsearch)
+       wa <- vlengths(a, FALSE) > 0L
+       x <- c(x[wnsubl][matches], a[wa])
+       if(keep.tree || length(x) != 1L)
+         return(x[forder.int(c(wnsubl[matches], wsubl[wa]))]) else return(x[[1L]])
+     } else if(length(x)) {
+       matches <- whichv(vapply(x, FUN, TRUE, USE.NAMES = FALSE), FALSE)
+       if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]])
+     }
+   }
+ } else {
+   regsearch <- function(x) {
+     if(nkeep_class && is.object(x)) oldClass(x) <- NULL
+     if(any(subl <- .Call(C_vtypes, x, ret))) { # vapply(x, is.subl, TRUE, USE.NAMES = FALSE) # is.list(x) && a
+       wsubl <- which(subl)
+       wnsubl <- whichv(subl, FALSE)
+       matches <- vapply(x[wnsubl], FUN, TRUE, USE.NAMES = FALSE)
+       a <- lapply(x[wsubl], regsearch)
+       wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements! could make it length or is.null! # vapply(a, length, 1L, USE.NAMES = FALSE)
+       x <- c(x[wnsubl][matches], a[wa]) # The problem here: If all elements in a sublist are atomic, it still retains the sublist itself with NULL inside! -> but c() removes it!!
+       if(keep.tree || length(x) != 1L)
+         return(x[forder.int(c(wnsubl[matches], wsubl[wa]))]) else return(x[[1L]]) # fastest way?
+     } else if(length(x)) { # This ensures correct behavior in the final nodes: if (length(x)) because problem encountered in get.elem(V, is.matrix) -> empty xlevels list, the lapply below does not execute
+       matches <- which(vapply(x, FUN, TRUE, USE.NAMES = FALSE))
+       if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=
+     }
+   }
  }
  regsearch(l)
 }
 
-list_extract_regex <- function(l, exp, ret, keep.tree = FALSE, nkeep_class = TRUE, ...) {
-  regsearch <- function(x) {
-  if(nkeep_class && is.object(x)) oldClass(x) <- NULL
-  if(any(subl <- .Call(C_vtypes, x, ret))) {
-      # matches <- rgrepl(exp, names(x), ...)
-      # wres <- which(matches)
-      wres <- rgrep(exp, names(x), ...)
-      # wnressubl <- if(length(wres)) which(subl & !matches) else which(subl)
-      wnressubl <- if(length(wres)) fsetdiff(which(subl), wres) else which(subl)
-    if(length(wnressubl)) { # faster way?
-      a <- lapply(x[wnressubl], regsearch) # is this part still necessary?, or only for keep.tree
-      wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements!! could make it length or is.null!, length is better for length 0 lists !! #  vapply(a, length, 1L)
-      x <- c(x[wres], a[wa])
-      if(keep.tree || length(x) != 1L)
-        return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
-    } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
-  } else { # This ensures correct behavior in the final nodes:
-    matches <- rgrep(exp, names(x), ...)
-    if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=
+list_extract_regex <- function(l, exp, ret, keep.tree = FALSE, nkeep_class = TRUE, invert = FALSE, ...) {
+  if(invert) {
+    regsearch <- function(x) {
+      if(nkeep_class && is.object(x)) oldClass(x) <- NULL
+      if(any(subl <- .Call(C_vtypes, x, ret))) {
+        wsubl <- which(subl)
+        matches <- !rgrepl(exp, names(x), ...) # rgrep with invert??
+        if(length(wsubl)) {
+          wres <- which(matches & !subl)
+          a <- lapply(x[wsubl], regsearch)
+          wa <- vlengths(a, FALSE) > 0L
+          x <- c(x[wres], a[wa])
+          if(keep.tree || length(x) != 1L)
+            return(x[forder.int(c(wres, wsubl[wa]))]) else return(x[[1L]])
+        } else {
+          wres <- which(matches)
+          if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
+        }
+      } else {
+        matches <- !rgrepl(exp, names(x), ...)
+        if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]])
+      }
+    }
+  } else {
+    regsearch <- function(x) {
+      if(nkeep_class && is.object(x)) oldClass(x) <- NULL
+      if(any(subl <- .Call(C_vtypes, x, ret))) {
+        matches <- rgrepl(exp, names(x), ...)
+        wres <- which(matches)
+        # wres <- rgrep(exp, names(x), ...)
+        wnressubl <- which(if(length(wres)) subl & !matches else subl)
+        # wnressubl <- if(length(wres)) fsetdiff(which(subl), wres) else which(subl)
+        if(length(wnressubl)) { # faster way?
+          a <- lapply(x[wnressubl], regsearch) # is this part still necessary?, or only for keep.tree
+          wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements!! could make it length or is.null!, length is better for length 0 lists !! #  vapply(a, length, 1L)
+          x <- c(x[wres], a[wa])
+          if(keep.tree || length(x) != 1L)
+            return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
+        } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
+      } else { # This ensures correct behavior in the final nodes:
+        matches <- rgrep(exp, names(x), ...)
+        if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=
+      }
+    }
   }
- }
  regsearch(l)
 }
 
 list_extract_names <- function(l, nam, ret, keep.tree = FALSE, nkeep_class = TRUE, invert = FALSE) {
- "%cop%" <- if(invert) `%!in%` else `%in%`
- regsearch <- function(x) {
-  if(nkeep_class && is.object(x)) oldClass(x) <- NULL
-  if(any(subl <- .Call(C_vtypes, x, ret))) {
-      matches <- names(x) %cop% nam
-      wres <- which(matches) # match(nam, names(x), 0L) # better bcause gives integer(0) -> necessary as cannot do l[[0L]]
-      wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)  # old solution: faster but does not work well if parent list is unnamed ! (i.e. l = list(lm1, lm1))
-    if(length(wnressubl)) {
-      a <- lapply(x[wnressubl], regsearch)
-      wa <- vlengths(a, FALSE) > 0L # vapply(a, length, 1L)
-      x <- c(x[wres], a[wa])
-      if(keep.tree || length(x) != 1L)
-        return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
-    } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
-  } else {
-    matches <- which(names(x) %cop% nam)
-    if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=, because interger(0) goes in first..
-  }
+ if(invert) {
+   regsearch <- function(x) {
+     if(nkeep_class && is.object(x)) oldClass(x) <- NULL
+     if(any(subl <- .Call(C_vtypes, x, ret))) {
+       wsubl <- which(subl)
+       matches <- names(x) %!in% nam
+       if(length(wsubl)) {
+         wres <- which(matches & !subl)
+         a <- lapply(x[wsubl], regsearch)
+         wa <- vlengths(a, FALSE) > 0L
+         x <- c(x[wres], a[wa])
+         if(keep.tree || length(x) != 1L)
+           return(x[forder.int(c(wres, wsubl[wa]))]) else return(x[[1L]])
+       } else {
+         wres <- which(matches)
+         if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
+       }
+     } else {
+       matches <- which(names(x) %!in% nam)
+       if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]])
+     }
+   }
+ } else {
+   regsearch <- function(x) {
+     if(nkeep_class && is.object(x)) oldClass(x) <- NULL
+     if(any(subl <- .Call(C_vtypes, x, ret))) {
+       matches <- names(x) %in% nam
+       wres <- which(matches) # match(nam, names(x), 0L) # better bcause gives integer(0) -> necessary as cannot do l[[0L]]
+       wnressubl <- which(if(length(wres)) subl & !matches else subl) # fsetdiff(which(subl), wres)  # old solution: faster but does not work well if parent list is unnamed ! (i.e. l = list(lm1, lm1))
+       if(length(wnressubl)) {
+         a <- lapply(x[wnressubl], regsearch)
+         wa <- vlengths(a, FALSE) > 0L # vapply(a, length, 1L)
+         x <- c(x[wres], a[wa])
+         if(keep.tree || length(x) != 1L)
+           return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
+       } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
+     } else {
+       matches <- which(names(x) %in% nam)
+       if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=, because interger(0) goes in first..
+     }
+   }
  }
  regsearch(l)
 }
@@ -200,18 +267,20 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE,
     if(keep.class) al <- attributes(l)
     if(is.function(elem)) {
       if(!missing(...)) unused_arg_action(match.call(), ...)
-      l <- list_extract_FUN(l, if(invert) function(x) !elem(x) else elem, ret, keep.tree, !keep.class)
+      l <- list_extract_FUN(l, elem, ret, keep.tree, !keep.class, invert)
     } else if(is.character(elem)) {
       if(regex) {
-        l <- if(invert) list_extract_regex(l, elem, ret, keep.tree, !keep.class, invert = TRUE, ...) else
-                        list_extract_regex(l, elem, ret, keep.tree, !keep.class, ...)
+        l <- list_extract_regex(l, elem, ret, keep.tree, !keep.class, invert, ...)
       } else {
         if(!missing(...)) unused_arg_action(match.call(), ...)
         l <- list_extract_names(l, elem, ret, keep.tree, !keep.class, invert)
       }
     } else {
       if(!missing(...)) unused_arg_action(match.call(), ...)
-      if(invert) stop("Cannot use option invert = TRUE if elem is indices or a logical vector")
+      if(invert) {
+        if(is.numeric(elem)) stop("Cannot use option invert = TRUE if elem is indices")
+        elem <- !elem
+      }
       is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame")
       l <- list_extract_ind(l, elem, is.subl, keep.tree, !keep.class)
     }
