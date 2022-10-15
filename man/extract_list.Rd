@@ -32,7 +32,7 @@ irreg_elem(l, recursive = TRUE, keep.tree = FALSE, keep.class = FALSE)
 
 ## Extract elements / subset list tree
 get_elem(l, elem, recursive = TRUE, DF.as.list = FALSE, keep.tree = FALSE,
-         keep.class = FALSE, regex = FALSE, \dots)
+         keep.class = FALSE, regex = FALSE, invert = FALSE, \dots)
 
 ## Check for the existence of elements
 has_elem(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALSE, \dots)
@@ -61,6 +61,7 @@ has_elem(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALSE, \dots)
   \item{keep.tree}{logical. \code{TRUE} always returns the entire list tree leading up to all matched results, while \code{FALSE} drops the top-level part of the tree if possible.}
   \item{keep.class}{logical. For objects: should the class be retained?}
   \item{regex}{logical. Should regular expression search be used on the list names, or only exact matches?}
+  \item{invert}{logical. Invert search i.e. exclude matched elements from the list?}
   \item{\dots}{further arguments to \code{grep} (if \code{regex = TRUE}).}
 }
 \details{

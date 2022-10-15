@@ -132,9 +132,11 @@ list_extract_FUN <- function(l, FUN, ret, keep.tree = FALSE) { # is.subl
 list_extract_regex <- function(l, exp, ret, keep.tree = FALSE, ...) {
   regsearch <- function(x) {
   if(any(subl <- .Call(C_vtypes, x, ret))) {
-      matches <- rgrepl(exp, names(x), ...)
-      wres <- which(matches)  #   wres <- rgrep(exp, names(x), ...)
-      wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)
+      # matches <- rgrepl(exp, names(x), ...)
+      # wres <- which(matches)
+      wres <- rgrep(exp, names(x), ...)
+      # wnressubl <- if(length(wres)) which(subl & !matches) else which(subl)
+      wnressubl <- if(length(wres)) fsetdiff(which(subl), wres) else which(subl)
     if(length(wnressubl)) { # faster way?
       a <- lapply(x[wnressubl], regsearch) # is this part still necessary?, or only for keep.tree
       wa <- vlengths(a, FALSE) > 0L # note that this also gets rid of null elements!! could make it length or is.null!, length is better for length 0 lists !! #  vapply(a, length, 1L)
@@ -150,10 +152,11 @@ list_extract_regex <- function(l, exp, ret, keep.tree = FALSE, ...) {
  regsearch(l)
 }
 
-list_extract_names <- function(l, nam, ret, keep.tree = FALSE) {
+list_extract_names <- function(l, nam, ret, keep.tree = FALSE, invert = FALSE) {
+ "%cop%" <- if(invert) `%!in%` else `%in%`
  regsearch <- function(x) {
   if(any(subl <- .Call(C_vtypes, x, ret))) {
-      matches <- names(x) %in% nam
+      matches <- names(x) %cop% nam
       wres <- which(matches) # match(nam, names(x), 0L) # better bcause gives integer(0) -> necessary as cannot do l[[0L]]
       wnressubl <- if(length(wres)) which(subl & !matches) else which(subl) # fsetdiff(which(subl), wres)  # old solution: faster but does not work well if parent list is unnamed ! (i.e. l = list(lm1, lm1))
     if(length(wnressubl)) {
@@ -164,7 +167,7 @@ list_extract_names <- function(l, nam, ret, keep.tree = FALSE) {
         return(x[forder.int(c(wres, wnressubl[wa]))]) else return(x[[1L]])
     } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
   } else {
-    matches <- which(names(x) %in% nam)
+    matches <- which(names(x) %cop% nam)
     if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=, because interger(0) goes in first..
   }
  }
@@ -188,21 +191,26 @@ list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE) {
 
 # TODO: add option invert = TRUE, also: grep has the option, grepl not..
 get_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE,
-                     keep.tree = FALSE, keep.class = FALSE, regex = FALSE, ...) {
+                     keep.tree = FALSE, keep.class = FALSE,
+                     regex = FALSE, invert = FALSE, ...) {
   if(!is.list(l)) stop("l needs to be a list")
   if(recursive) {
     ret <- 4L - as.logical(DF.as.list)
     if(keep.class) al <- attributes(l)
     if(is.function(elem)) {
       if(!missing(...)) unused_arg_action(match.call(), ...)
-      l <- list_extract_FUN(l, elem, ret, keep.tree)
+      l <- list_extract_FUN(l, if(invert) function(x) !elem(x) else elem, ret, keep.tree)
     } else if(is.character(elem)) {
-      if(regex) l <- list_extract_regex(l, elem, ret, keep.tree, ...) else {
-         if(!missing(...)) unused_arg_action(match.call(), ...)
-         l <- list_extract_names(l, elem, ret, keep.tree)
+      if(regex) {
+        l <- if(invert) list_extract_regex(l, elem, ret, keep.tree, invert = TRUE, ...) else
+                        list_extract_regex(l, elem, ret, keep.tree, ...)
+      } else {
+        if(!missing(...)) unused_arg_action(match.call(), ...)
+        l <- list_extract_names(l, elem, ret, keep.tree, invert)
       }
     } else {
       if(!missing(...)) unused_arg_action(match.call(), ...)
+      if(invert) stop("Cannot use option invert = TRUE if elem is indices or a logical vector")
       is.subl <- if(DF.as.list) is.list else function(x) is.list(x) && !inherits(x, "data.frame")
       l <- list_extract_ind(l, elem, is.subl, keep.tree)
     }
@@ -213,18 +221,18 @@ get_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE,
   } else {
     if(is.function(elem)) {
       if(!missing(...)) unused_arg_action(match.call(), ...)
-      elem <- which(vapply(l, elem, TRUE, USE.NAMES = FALSE))
+      elem <- whichv(vapply(l, elem, TRUE, USE.NAMES = FALSE), TRUE, invert)
     } else if(is.character(elem)) {
-      if(regex) elem <- rgrep(elem, names(l), ...) else {
+      if(regex) elem <- rgrep(elem, names(l), invert = invert, ...) else {
         if(!missing(...)) unused_arg_action(match.call(), ...)
-        elem <- which(names(l) %in% elem)
+        elem <- which(if(invert) names(l) %!in% elem else names(l) %in% elem)
       }
     } else if(is.logical(elem)) {
       if(!missing(...)) unused_arg_action(match.call(), ...)
-      elem <- which(elem) # else stop("elem must be a function, character vector or vector of regular expressions!")
+      elem <- whichv(elem, TRUE, invert) # else stop("elem must be a function, character vector or vector of regular expressions!")
     }
     if(keep.tree || length(elem) != 1L) {
-      if(keep.class) return(fcolsubset(l, elem)) else return(.subset(l, elem)) # <- # base::Filter(elem, l)
+      if(keep.class) return(fcolsubset(l, elem)) else return(.subset(l, elem))
     } else return(.subset2(l, elem))
   }
 }
