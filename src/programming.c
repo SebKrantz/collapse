@@ -635,7 +635,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
   case 1: // Numeric variables: do_is with op = 100: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
           // See also DispatchOrEval in https://github.com/wch/r-source/blob/trunk/src/main/eval.c
     {
-    if(inherits(x, "pdata.frame")) {
+    if(inherits(x, "indexed_frame")) { // NOT pdata.frame!! because columns in pdata.frame only become pseries when extracted from the frame
       for(int i = 0, tci, tnum, is_num; i != n; ++i) {
         is_num = 0;
         tci = TYPEOF(px[i]);
