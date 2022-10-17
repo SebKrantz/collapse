@@ -18,7 +18,7 @@ across(.cols = NULL, .fns, ..., .names = NULL,
   \item{.cols}{select columns using column names and expressions (e.g. \code{a:b} or \code{c(a, b, c:f)}), column indices, logical vectors, or functions yielding a logical value e.g. \code{is.numeric}. \code{NULL} applies functions to all columns except for grouping columns.}
   \item{.fns}{A function, character vector of functions or list of functions. Vectors / lists can be named to yield alternative names in the result (see \code{.names}). This argument is evaluated inside \code{substitute()}, and the content (not the names of vectors/lists) is checked against \code{.FAST_FUN} and \code{.OPERATOR_FUN}. Matching functions receive vectorized execution, other functions are applied to the data in a standard way.}
   \item{\dots}{further arguments to \code{.fns}. Arguments are evaluated in the data environment and split by groups as well (for non-vectorized functions, if of the same length as the data).}
-  \item{.names}{controls the naming of computed columns. \code{NULL} generates names of the form \code{coli_funj} if multiple functions are used. \code{.names = TRUE} enables this for a single function, \code{.names = FALSE} disables it for multiple functions (sensible for functions such as \code{.OPERATOR_FUN} that rename columns (if \code{.apply = FALSE})). It is also possible to supply a function with two arguments for column and function names e.g. \code{function(c, f) paste0(f, "_", c)}. Finally, you can supply a custom vector of names which must match \code{length(.cols) * length(.fns)}.}
+  \item{.names}{controls the naming of computed columns. \code{NULL} generates names of the form \code{coli_funj} if multiple functions are used. \code{.names = TRUE} enables this for a single function, \code{.names = FALSE} disables it for multiple functions (sensible for functions such as \code{.OPERATOR_FUN} that rename columns (if \code{.apply = FALSE})). Setting \code{.names = "flip"} generates names of the form \code{funj_coli}. It is also possible to supply a function with two arguments for column and function names e.g. \code{function(c, f) paste0(f, "_", c)}. Finally, you can supply a custom vector of names which must match \code{length(.cols) * length(.fns)}.}
   \item{.apply}{controls whether functions are applied column-by-column (\code{TRUE}) or to multiple columns at once (\code{FALSE}). The default, \code{"auto"}, does the latter for vectorized functions, which have an efficient data frame method. It can also be sensible to use \code{.apply = FALSE} for non-vectorized functions, especially multivariate functions like \code{\link{lm}} or \code{\link{pwcor}}, or functions renaming the data. See Examples.  }
   \item{.transpose}{with multiple \code{.fns}, \code{.transpose} controls whether the result is ordered first by column, then by function (\code{TRUE}), or vice-versa (\code{FALSE}). \code{"auto"} does the former if all functions yield results of the same dimensions (dimensions may differ if \code{.apply = FALSE}). See Examples.}
 }
@@ -56,6 +56,11 @@ wlddev \%>\% fgroup_by(region, income) \%>\%
 # Note that the above still detects fmean as a fast function, the names of the list
 # are irrelevant, but the function name must be typed or passed as a character vector,
 # Otherwise functions will be executed by groups e.g. function(x) fmean(x) won't vectorize
+
+# Same, naming in a different way
+wlddev \%>\% fgroup_by(region, income) \%>\%
+    fsummarise(across(PCGDP:GINI, list(mu = fmean, sd = fsd), w = POP, .names = "flip"),
+               sum_POP = fsum(POP), OECD = fmean(OECD))
 
 # Or we want to do more advanced things..
 # Such as nesting data frames..

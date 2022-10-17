@@ -229,28 +229,41 @@ default: error("Unsupported type '%s' passed to allv() / anyv()", type2char(TYPE
 
 SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
 
-  const int n = length(x), lv = length(val), lr = length(rep), tv = TYPEOF(val),
-    tx = TYPEOF(x), tr = TYPEOF(rep), ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
-  int nprotect = 0;
+  const int n = length(x), lv = length(val), lr = length(rep),
+    tx = TYPEOF(x), ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
+  int nprotect = 0, tv = TYPEOF(val), tr = TYPEOF(rep);
 
   if(lv > 1 || ind1) {
     if(tv == LGLSXP) {
       if(lv != n) error("If v is a logical vector, length(v) needs to be equal to length(x)");
       if(lr != 1 && lr != n) error("If v is a logical vector, length(r) needs to be 1 or length(x)");
-    } else if(tv == INTSXP) {
+    } else if(tv == INTSXP || tv == REALSXP) {
       if(invert) error("invert = TRUE is only possible if v is a logical vector");
+      if(lv == 0) return x; // integer(0) cannot cause error
       if(lv > n) error("length(v) must be <= length(x)");
       if(!(lr == 1 || lr == n || lr == lv)) error("length(r) must be either 1, length(v) or length(x)");
+      if(tv == REALSXP) {
+        if(lv == 1 && REAL_ELT(val, 0) == (int)REAL_ELT(val, 0)) {
+          tv = INTSXP;
+          val = PROTECT(coerceVector(val, INTSXP));
+          ++nprotect;
+        } else error("If length(v) > 1 or vind1 = TRUE, v must be an integer or logical vector");
+      }
       // Just some heuristic checking as this is a programmers function
       const int v1 = INTEGER_ELT(val, 0), vn = INTEGER_ELT(val, lv-1);
       if(v1 < 1 || v1 > n || vn < 1 || vn > n) error("Detected index (v) outside of range [1, length(x)]");
-    } else error("If length(v) > 1, v must be an integer or logical vector");
-  } else if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
+    } else error("If length(v) > 1 or vind1 = TRUE, v must be an integer or logical vector");
+  } else {
+    if(lv == 0) return x; // empty replacement, good to return?
+    if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
+  }
 
   if(lr > 1 && tr != tx) { // lr == n &&
     if(!((tx == INTSXP && tr == LGLSXP) || (tx == LGLSXP && tr == INTSXP))) {
-      PROTECT_INDEX ipx;
-      PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
+      // PROTECT_INDEX ipx;
+      // PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
+      tr = tx;
+      rep = PROTECT(coerceVector(rep, tx));
       ++nprotect;
     } // error("typeof(x) needs to match typeof(r)");
   }
@@ -428,7 +441,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   default: error("Unsupported type '%s' passed to setv() / copyv()", type2char(tx));
   }
 
-  if(nprotect) UNPROTECT(nprotect);
+  UNPROTECT(nprotect);
   if(set == 0) return(ans);
   return(x);
 }
@@ -611,36 +624,123 @@ SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
 SEXP vtypes(SEXP x, SEXP isnum) {
   int tx = TYPEOF(x);
   if(tx != VECSXP) return ScalarInteger(tx);
+  SEXP *px = SEXPPTR(x); // This is ok, even if x contains ALTREP objects..
   int n = length(x);
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *pans = INTEGER(ans);
   switch(asInteger(isnum)) {
   case 0:
-    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(VECTOR_ELT(x, i)) + 1;
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) + 1;
     break;
   case 1: // Numeric variables: do_is with op = 100: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
+          // See also DispatchOrEval in https://github.com/wch/r-source/blob/trunk/src/main/eval.c
     {
-    if(inherits(x, "indexed_frame")) {
-      for(int i = 0; i != n; ++i) {
-        SEXP ci = VECTOR_ELT(x, i);
-        int tci = TYPEOF(ci);
-        pans[i] = (tci == INTSXP && inherits(ci, "integer")) || (tci == REALSXP && inherits(ci, "numeric")); // length(getAttrib(ci, R_ClassSymbol)) <= 2;
+    if(inherits(x, "indexed_frame")) { // NOT pdata.frame!! because columns in pdata.frame only become pseries when extracted from the frame
+      for(int i = 0, tci, tnum, is_num; i != n; ++i) {
+        is_num = 0;
+        tci = TYPEOF(px[i]);
+        tnum = tci == INTSXP || tci == REALSXP;
+        if(tnum) is_num = inherits(px[i], "integer") || inherits(px[i], "numeric") || inherits(px[i], "ts") || inherits(px[i], "units");
+        pans[i] = tnum && is_num;
       }
+      // for(int i = 0; i != n; ++i) {
+      //   int tci = TYPEOF(px[i]);
+      //   pans[i] = (tci == INTSXP && inherits(px[i], "integer")) || (tci == REALSXP && inherits(px[i], "numeric")); // length(getAttrib(ci, R_ClassSymbol)) <= 2;
+      // }
     } else {
-      for(int i = 0; i != n; ++i) {
-        SEXP ci = VECTOR_ELT(x, i);
-        int tci = TYPEOF(ci);
-        pans[i] = (tci == INTSXP || tci == REALSXP) && OBJECT(ci) == 0;
+      for(int i = 0, tci, tnum, is_num; i != n; ++i) {
+        // pans[i] = isNumeric(px[i]) && !isLogical(px[i]); // Date is numeric, from: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
+        tci = TYPEOF(px[i]);
+        tnum = tci == INTSXP || tci == REALSXP;
+        is_num = tnum && OBJECT(px[i]) == 0;
+        if(tnum && !is_num) is_num = inherits(px[i], "ts") || inherits(px[i], "units");
+        pans[i] = is_num;
       }
     }
     SET_TYPEOF(ans, LGLSXP);
     break;
     }
-  case 2:
-    for(int i = 0; i != n; ++i) pans[i] = (int)isFactor(VECTOR_ELT(x, i));
+  case 2: // is.factor
+    for(int i = 0; i != n; ++i) pans[i] = (int)isFactor(px[i]);
     SET_TYPEOF(ans, LGLSXP);
     break;
-  default: error("Unsupported vtypes option");
+  case 3: // is.list, needed for list processing functions
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP;
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  case 4: // is.sublist, needed for list processing functions
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !isFrame(px[i]);
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  case 7: // is.atomic(x), needed in atomic_elem()
+    // is.atomic: do_is with op = 200:  https://github.com/wch/r-source/blob/9f9033e193071f256e21a181cb053cba983ed4a9/src/main/coerce.c
+    for(int i = 0; i != n; ++i) {
+      switch(TYPEOF(px[i])) {
+      case NILSXP: /* NULL is atomic (S compatibly), but not in isVectorAtomic(.) */
+      case CHARSXP:
+      case LGLSXP:
+      case INTSXP:
+      case REALSXP:
+      case CPLXSXP:
+      case STRSXP:
+      case RAWSXP:
+        pans[i] = 1;
+        break;
+      default:
+        pans[i] = 0;
+      }
+    }
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  case 5: // is.atomic(x) || is.list(x), needed in reg_elem() and irreg_elem()
+    for(int i = 0; i != n; ++i) {
+      switch(TYPEOF(px[i])) {
+      case VECSXP:
+        pans[i] = 1;
+        break;
+      case NILSXP: /* NULL is atomic (S compatibly), but not in isVectorAtomic(.) */
+      case CHARSXP:
+      case LGLSXP:
+      case INTSXP:
+      case REALSXP:
+      case CPLXSXP:
+      case STRSXP:
+      case RAWSXP:
+        pans[i] = 1;
+        break;
+      default:
+        pans[i] = 0;
+      }
+    }
+    SET_TYPEOF(ans, LGLSXP);
+    break;
+  case 6:
+    // Faster object type identification, needed in unlist2d:
+    // idf <- function(x) if(inherits(x, "data.frame")) 2L else if (!length(x)) 1L else 3L*is.atomic(x)
+    for(int i = 0; i != n; ++i) {
+      if(length(px[i]) == 0)
+        pans[i] = 1;
+      else switch(TYPEOF(px[i])) {
+           case VECSXP:
+             pans[i] = isFrame(px[i]) ? 2 : 0;
+             break;
+           case NILSXP: /* NULL is atomic (S compatibly), but not in isVectorAtomic(.) */
+           case CHARSXP:
+           case LGLSXP:
+           case INTSXP:
+           case REALSXP:
+           case CPLXSXP:
+           case STRSXP:
+           case RAWSXP:
+            pans[i] = 3;
+            break;
+           default:
+             pans[i] = 0;
+           }
+    }
+    break;
+  default:
+    error("Unsupported vtypes option");
   }
   UNPROTECT(1);
   return ans;

@@ -42,6 +42,7 @@ test_that("rapply2d works well", {
 
 test_that("get_elem works well", { # Could still add more tests..
 
+  if(NCRAN) expect_true(is.matrix(get_elem(l, is.matrix)))
   if(NCRAN) expect_true(is.matrix(get_elem(list(list(list(l))), is.matrix)))
   if(NCRAN) expect_false(is.matrix(get_elem(list(list(list(l))), is.matrix, keep.tree = TRUE)))
 
@@ -54,6 +55,24 @@ test_that("get_elem works well", { # Could still add more tests..
   expect_equal(get_elem(l, "tol"), 1e-7)
   expect_identical(get_elem(mtcars, 1), mtcars[[1]])
   expect_identical(get_elem(mtcars, 1, DF.as.list = TRUE), as.list(ss(mtcars, 1)))
+
+  expect_true(length(get_elem(get_elem(l, is.matrix, invert = TRUE), is.matrix)) == 0L)
+  expect_true(length(get_elem(get_elem(l, is.data.frame, invert = TRUE), is.data.frame)) == 0L)
+  expect_true(length(get_elem(l, "pivot")) > 1L)
+  expect_true(length(get_elem(get_elem(l, "pivot", invert = TRUE), "pivot")) == 0L)
+  expect_true(length(get_elem(get_elem(l, "piv", regex = TRUE, invert = TRUE), "pivot")) == 0L)
+  expect_true(length(get_elem(get_elem(l, "piv", regex = TRUE, invert = TRUE), "piv", regex = TRUE)) == 0L)
+  expect_false(length(get_elem(get_elem(l, "piv", regex = TRUE, invert = TRUE), "tol")) == 0L)
+
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), "b"), "a")
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), "b", invert = TRUE), 1)
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), "b", keep.tree = TRUE), list(list(b = "a")))
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), "b", invert = TRUE, keep.tree = TRUE), list(list(a = 1)))
+
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), is.character), "a")
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), is.character, invert = TRUE), 1)
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), is.character, keep.tree = TRUE), list(list(b = "a")))
+  expect_equal(get_elem(list(list(a = 1), list(b = "a")), is.character, invert = TRUE, keep.tree = TRUE), list(list(a = 1)))
 
 })
 

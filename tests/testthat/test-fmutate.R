@@ -477,6 +477,58 @@ test_that("fmutate miscellaneous", {
 
 }
 
+test_that(".names works properly", {
+  expect_equal(
+    smr(gmtc, acr(c(hp, wt), list(sum, max, min))),
+    smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = TRUE))
+  )
+  expect_equal(
+   smr(gmtc, acr(c(hp, wt), list(sum, max, min))),
+   smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = function(c, f) paste0(c, "_", f)))
+  )
+  expect_equal(
+    smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = "flip")),
+    smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = function(c, f) paste0(f, "_", c)))
+  )
+  expect_equal(
+    smr(gmtc, acr(c(hp, wt), list(sum, max, min), .transpose = FALSE)),
+    smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = function(c, f) paste0(c, "_", f), .transpose = FALSE))
+  )
+  expect_equal(
+    smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = "flip", .transpose = FALSE)),
+    smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = function(c, f) paste0(f, "_", c), .transpose = FALSE))
+  )
+  expect_equal(
+    names(smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = FALSE))),
+    .c(cyl, vs, am, hp, hp, hp, wt, wt, wt)
+  )
+  expect_equal(
+    names(smr(gmtc, acr(c(hp, wt), list(sum, max, min), .names = FALSE, .transpose = FALSE))),
+    .c(cyl, vs, am, hp, wt, hp, wt, hp, wt)
+  )
+  expect_equal(
+    names(smr(gmtc, acr(c(hp, wt), sum, .names = FALSE))),
+    .c(cyl, vs, am, hp, wt)
+  )
+  expect_equal(
+    names(smr(gmtc, acr(c(hp, wt), sum, .names = FALSE, .transpose = FALSE))),
+    .c(cyl, vs, am, hp, wt)
+  )
+  expect_equal(
+    names(smr(gmtc, acr(c(hp, wt), sum, .names = TRUE))),
+    .c(cyl, vs, am, hp_sum, wt_sum)
+  )
+  expect_equal(
+    names(smr(gmtc, acr(c(hp, wt), sum, .names = "flip"))),
+    .c(cyl, vs, am, sum_hp, sum_wt)
+  )
+  expect_equal(
+    names(smr(gmtc, acr(c(hp, wt), sum, .names = "flip", .transpose = FALSE))),
+    .c(cyl, vs, am, sum_hp, sum_wt)
+  )
+
+})
+
 if(FALSE) {
 
 

@@ -15,7 +15,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
     attr(l, "row.names") <- .set_row_names(length(.subset2(l, 1L)))
     `oldClass<-`(l, DATAclass)
   }
-  idf <- function(x) if(inherits(x, "data.frame")) 2L else if (!length(x)) 1L else 3L*is.atomic(x) # was if(is.null(x)) 1L -> disregards empty list, bug reported # faster way ? : This is not faster:   2L*inherits(x, "data.frame") + is.null(x) + 3L*is.atomic(x)
+  # idf <- function(x) if(inherits(x, "data.frame")) 2L else if (!length(x)) 1L else 3L*is.atomic(x) # was if(is.null(x)) 1L -> disregards empty list, bug reported # faster way ? : This is not faster:   2L*inherits(x, "data.frame") + is.null(x) + 3L*is.atomic(x)
   addrn <- function(x) if(any(attr(x, "names") == row.names)) x else c(`names<-`(list(attr(x, "row.names")), row.names), x) # faster way ?
   attol <- function(x) {
     # class(x) <- NULL # tables are also arrays, although only 1D, not because of the class but because they have a dimension attribute.
@@ -38,8 +38,8 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   }
   ul2d <- function(y) {
     if(inherits(y, "data.frame") || is.atomic(y)) return(y)
-    oldClass(y) <- NULL # perhaps unclassing y would put more safety ? -> yes !
-    ident <- vapply(`attributes<-`(y, NULL), idf, 1L) # removes names ?
+    if(is.object(y)) oldClass(y) <- NULL # perhaps unclassing y would put more safety ? -> yes !
+    ident <- .Call(C_vtypes, y, 6L)  # vapply(`attributes<-`(y, NULL), idf, 1L) # removes names ?
     if(is.list(y) && all(ident > 0L)) {
       if(any(at <- ident == 3L)) y[at] <- lapply(y[at], attol)
       if(keeprn && any(df <- ident == 2L)) y[df] <- lapply(y[df], addrn) # better cbind for data.table ? or x[["row.names"]] =.. and the sort later ?
