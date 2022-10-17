@@ -423,10 +423,19 @@ setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN
   fun <- funs$funs
 
   if(length(.names) && !is.logical(.names)) {
-    if(is.function(.names)) names <- .names(nam[cols], namfun)
-    else {
-      if(length(.names) != length(namfun) * length(cols)) stop("length(.names) must match length(.fns) * length(.cols)")
-      names <- .names
+    if(is.function(.names)) {
+      names <- if(isFALSE(.transpose)) # .names(nam[cols], namfun)
+        as.vector(outer(nam[cols], namfun, .names)) else
+        as.vector(t(outer(nam[cols], namfun, .names)))
+    } else {
+      if(length(.names) == 1L && .names == "flip") {
+        names <- if(isFALSE(.transpose))
+          as.vector(outer(nam[cols], namfun, function(z, f) paste(f, z, sep = "_"))) else
+          as.vector(t(outer(nam[cols], namfun, function(z, f) paste(f, z, sep = "_"))))
+      } else {
+        if(length(.names) != length(namfun) * length(cols)) stop("length(.names) must match length(.fns) * length(.cols)")
+        names <- .names
+      }
     }
   } else {
     # Third version: .names = FALSE does nothing. Allows fmutate(mtcars, across(cyl:vs, list(L, D, G), n = 1:3))
