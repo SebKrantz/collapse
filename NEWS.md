@@ -6,6 +6,8 @@
 
 * Most list processing functions are noticeably faster, as checking the data types of elements in a list is now also done in C. 
 
+* Improvements to `setv()` and `copyv()`, making them more robust to borderline cases: `integer(0)` passed to `v` does nothing (instead of error), and it is also possible to pass a single real index if `vind1 = TRUE` i.e. passing `1` instead of `1L` does not produce an error. 
+
 # collapse 1.8.9
 
 * Fixed some warnings on rchk and newer C compilers (LLVM clang 10+). 

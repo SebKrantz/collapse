@@ -229,28 +229,41 @@ default: error("Unsupported type '%s' passed to allv() / anyv()", type2char(TYPE
 
 SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
 
-  const int n = length(x), lv = length(val), lr = length(rep), tv = TYPEOF(val),
-    tx = TYPEOF(x), tr = TYPEOF(rep), ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
-  int nprotect = 0;
+  const int n = length(x), lv = length(val), lr = length(rep),
+    tx = TYPEOF(x), ind1 = asLogical(Rind1), invert = asLogical(Rinvert), set = asLogical(Rset);
+  int nprotect = 0, tv = TYPEOF(val), tr = TYPEOF(rep);
 
   if(lv > 1 || ind1) {
     if(tv == LGLSXP) {
       if(lv != n) error("If v is a logical vector, length(v) needs to be equal to length(x)");
       if(lr != 1 && lr != n) error("If v is a logical vector, length(r) needs to be 1 or length(x)");
-    } else if(tv == INTSXP) {
+    } else if(tv == INTSXP || tv == REALSXP) {
       if(invert) error("invert = TRUE is only possible if v is a logical vector");
+      if(lv == 0) return x; // integer(0) cannot cause error
       if(lv > n) error("length(v) must be <= length(x)");
       if(!(lr == 1 || lr == n || lr == lv)) error("length(r) must be either 1, length(v) or length(x)");
+      if(tv == REALSXP) {
+        if(lv == 1 && REAL_ELT(val, 0) == (int)REAL_ELT(val, 0)) {
+          tv = INTSXP;
+          val = PROTECT(coerceVector(val, INTSXP));
+          ++nprotect;
+        } else error("If length(v) > 1 or vind1 = TRUE, v must be an integer or logical vector");
+      }
       // Just some heuristic checking as this is a programmers function
       const int v1 = INTEGER_ELT(val, 0), vn = INTEGER_ELT(val, lv-1);
       if(v1 < 1 || v1 > n || vn < 1 || vn > n) error("Detected index (v) outside of range [1, length(x)]");
-    } else error("If length(v) > 1, v must be an integer or logical vector"); // TODO: Allow reals of length 1 ??
-  } else if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
+    } else error("If length(v) > 1 or vind1 = TRUE, v must be an integer or logical vector");
+  } else {
+    if(lv == 0) return x; // empty replacement, good to return?
+    if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
+  }
 
   if(lr > 1 && tr != tx) { // lr == n &&
     if(!((tx == INTSXP && tr == LGLSXP) || (tx == LGLSXP && tr == INTSXP))) {
-      PROTECT_INDEX ipx;
-      PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
+      // PROTECT_INDEX ipx;
+      // PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
+      tr = tx;
+      rep = PROTECT(coerceVector(rep, tx));
       ++nprotect;
     } // error("typeof(x) needs to match typeof(r)");
   }
@@ -428,7 +441,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   default: error("Unsupported type '%s' passed to setv() / copyv()", type2char(tx));
   }
 
-  if(nprotect) UNPROTECT(nprotect);
+  UNPROTECT(nprotect);
   if(set == 0) return(ans);
   return(x);
 }
