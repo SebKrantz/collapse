@@ -705,9 +705,10 @@ addNA2 <- function(x) {
   oldClass(x) <- NULL
   if(!anyNA(lev <- attr(x, "levels"))) {
     attr(x, "levels") <- c(lev, NA_character_)
-    x[is.na(x)] <- length(lev) + 1L
-  } else x[is.na(x)] <- length(lev)
-  `oldClass<-`(x, clx)
+    .Call(C_setcopyv, x, NA_integer_, length(lev) + 1L, FALSE, TRUE, FALSE) # x[is.na(x)] <- length(lev) + 1L
+  } else .Call(C_setcopyv, x, NA_integer_, length(lev), FALSE, TRUE, FALSE) # x[is.na(x)] <- length(lev)
+  oldClass(x) <- clx
+  x
 }
 
 # addNA2 <- function(x) {
