@@ -60,7 +60,19 @@ test_that("frename works as intended", {
   expect_equal(frename(iris, tolower, cols = is.numeric), setNames(iris, c(tolower(names(iris)[1:4]), names(iris)[-(1:4)])))
   expect_equal(frename(iris, paste, "new", sep = "_", cols = 1:2), setNames(iris, c(paste(names(iris)[1:2], "new", sep = "_"), names(iris)[-(1:2)])))
 
+  ## Using vectors of names and programming
+  expect_equal(frename(iris, tolower), frename(iris, tolower(names(iris)), .nse = FALSE))
+  newname = "sepal_length"
+  expect_equal(frename(iris, Sepal.Length = newname, .nse = FALSE), setNames(iris, c(newname, names(iris)[-1L])))
+  newnames = c("sepal_length", "sepal_width")
+  expect_true(all_obj_equal(frename(iris, newnames, cols = 1:2),
+                            frename(iris, newnames, cols = 1:2, .nse = FALSE),
+                            setNames(iris, c(newnames, names(iris)[-(1:2)]))))
+  newnames = c(Sepal.Length = "sepal_length", Sepal.Width = "sepal_width")
+  expect_equal(frename(iris, newnames, .nse = FALSE), setNames(iris, c(newnames, names(iris)[-(1:2)])))
+
   if(requireNamespace("data.table", quietly = TRUE)) {
+
   ## Renaming by reference
   iris2 <- data.table::copy(iris)
   setrename(iris2, tolower)
@@ -75,6 +87,40 @@ test_that("frename works as intended", {
   setrename(iris2, paste, "new", sep = "_", cols = 1:2)
   expect_equal(iris2, setNames(iris, c(paste(names(iris)[1:2], "new", sep = "_"), names(iris)[-(1:2)])))
   rm(iris2)
+
+  nam <- toupper(names(iris))
+
+  # Relabelling with functions
+  iris2 <- data.table::copy(setLabels(iris, nam))
+  setrelabel(iris2, tolower)
+  expect_equal(iris2, setLabels(iris, tolower(nam)))
+  iris2 <- data.table::copy(setLabels(iris, nam))
+  setrelabel(iris2, tolower, cols = 1:2)
+  expect_equal(iris2, setLabels(iris, c(tolower(nam[1:2]), nam[-(1:2)])))
+  iris2 <- data.table::copy(setLabels(iris, nam))
+  setrelabel(iris2, tolower, cols = is.numeric)
+  expect_equal(iris2, setLabels(iris, c(tolower(nam[1:4]), nam[5])))
+  iris2 <- data.table::copy(setLabels(iris, nam))
+  setrelabel(iris2, paste, "new", sep = "_", cols = 1:2)
+  expect_equal(iris2, setLabels(iris, c(paste(nam[1:2], "new", sep = "_"), nam[-(1:2)])))
+
+  # Relabelling other
+  iris2 <- data.table::copy(setLabels(iris, nam))
+  setrelabel(iris2, Sepal.Length = "sepal.length", Sepal.Width = "sepal.width")
+  expect_equal(iris2, setLabels(iris, c(tolower(nam[1:2]), nam[-(1:2)])))
+  iris2 <- data.table::copy(setLabels(iris, nam))
+  setrelabel(iris2, tolower(nam))
+  expect_equal(iris2, setLabels(iris, tolower(nam)))
+  iris2 <- data.table::copy(setLabels(iris, nam))
+  setrelabel(iris2, tolower(nam[1:2]), cols = 1:2)
+  expect_equal(iris2, setLabels(iris, c(tolower(nam[1:2]), nam[-(1:2)])))
+  iris2 <- data.table::copy(setLabels(iris, nam))
+  setrelabel(iris2, setNames(tolower(nam[1:2]), c("Sepal.Length", "Sepal.Width")))
+  expect_equal(iris2, setLabels(iris, c(tolower(nam[1:2]), nam[-(1:2)])))
+
+  vlabels(iris) <- NULL
+  rm(iris2)
+
   }
 
 })
