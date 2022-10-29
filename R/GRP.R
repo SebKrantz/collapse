@@ -286,7 +286,7 @@ GRP.qG <- function(X, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE
   grl <- return.groups && length(groups <- attr(X, "groups"))
   if(!inherits(X, "na.included")) if(anyNA(unclass(X))) {
     ng <- ng + 1L
-    X[is.na(X)] <- ng
+    X <- .Call(C_setcopyv, X, NA, ng, FALSE, FALSE, FALSE) # X[is.na(X)] <- ng
     if(grl) groups <- c(groups, NA)
   }
   st <- attr(X, "starts")
@@ -671,7 +671,7 @@ as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
     clx <- c(if(ordered) "ordered", "factor", if(nainc) "na.included") # can set unordered ??
   } else {
     if(anyNA(unclass(x))) {
-      x[is.na(x)] <- attr(x, "N.groups") + 1L
+      x <- .Call(C_setcopyv, x, NA, attr(x, "N.groups") + 1L, FALSE, FALSE, FALSE) # x[is.na(x)] <- attr(x, "N.groups") + 1L
       groups <- c(groups, NA_character_) # faster doing groups[length(groups)+1] <- NA? -> Nope, what you have is fastest !
     }
     clx <- c(if(ordered) "ordered", "factor", "na.included")
@@ -740,8 +740,8 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
     }
     ax <- if(return.groups) list(N.groups = ng, groups = lev, class = newclx) else
       list(N.groups = ng, class = newclx)
-    x[is.na(x)] <- ng
-    return(`attributes<-`(x, ax))
+     # x[is.na(x)] <- ng
+    return(`attributes<-`(.Call(C_setcopyv, x, NA, ng, FALSE, FALSE, FALSE), ax))
   }
   switch(method, # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
          auto  = if(is.double(x) && sort) # is.character(x) || is.logical(x) || !sort || length(x) < 500L
