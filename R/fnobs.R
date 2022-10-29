@@ -116,14 +116,14 @@ fNobs <- function(x, ...) {
   UseMethod("fnobs")
 }
 fNobs.default <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fnobs.default(x, ...)
 }
 fNobs.matrix <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fnobs.matrix(x, ...)
 }
 fNobs.data.frame <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fnobs.data.frame(x, ...)
 }

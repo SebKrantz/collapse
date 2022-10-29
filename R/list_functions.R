@@ -57,7 +57,7 @@ is_unlistable <- function(l, DF.as.list = FALSE) {
 }
 
 is.unlistable <- function(l, DF.as.list = FALSE) {
-  message("Note that 'is.unlistable' was renamed to 'is_unlistable'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'is.unlistable' was renamed to 'is_unlistable'. It will be removed end of 2023, see help('collapse-renamed').")
   is_unlistable(l, DF.as.list)
 }
 

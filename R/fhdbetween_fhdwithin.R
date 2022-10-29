@@ -935,15 +935,15 @@ fHDbetween <- function(x, ...) {
   UseMethod("fhdbetween")
 }
 fHDbetween.default <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fhdbetween.default(x, ...)
 }
 fHDbetween.matrix <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fhdbetween.matrix(x, ...)
 }
 fHDbetween.data.frame <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fhdbetween.data.frame(x, ...)
 }
 
@@ -953,15 +953,15 @@ fHDwithin <- function(x, ...) {
   UseMethod("fhdwithin")
 }
 fHDwithin.default <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fhdwithin.default(x, ...)
 }
 fHDwithin.matrix <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fhdwithin.matrix(x, ...)
 }
 fHDwithin.data.frame <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fhdwithin.data.frame(x, ...)
 }
 

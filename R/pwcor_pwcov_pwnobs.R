@@ -18,7 +18,7 @@ pwnobs <- function(X) {
 }
 
 pwNobs <- function(X) {
-  message("Note that 'pwNobs' was renamed to 'pwnobs'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'pwNobs' was renamed to 'pwnobs'. It will be removed end of 2023, see help('collapse-renamed').")
   pwnobs(X)
 }
 # corr.p <- function(r, n) {

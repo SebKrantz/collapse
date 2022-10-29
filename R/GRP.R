@@ -156,7 +156,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
 
 is_GRP <- function(x) inherits(x, "GRP")
 is.GRP <- function(x) {
-  message("Note that 'is.GRP' was renamed to 'is_GRP'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'is.GRP' was renamed to 'is_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
   inherits(x, "GRP")
 }
 
@@ -261,7 +261,7 @@ as_factor_GRP <- function(x, ordered = FALSE) { # , ...
 }
 
 as.factor_GRP <- function(x, ordered = FALSE) {
-  message("Note that 'as.factor_GRP' was renamed to 'as_factor_GRP'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'as.factor_GRP' was renamed to 'as_factor_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
   as_factor_GRP(x, ordered)
 }
 
@@ -286,7 +286,7 @@ GRP.qG <- function(X, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE
   grl <- return.groups && length(groups <- attr(X, "groups"))
   if(!inherits(X, "na.included")) if(anyNA(unclass(X))) {
     ng <- ng + 1L
-    X[is.na(X)] <- ng
+    X <- .Call(C_setcopyv, X, NA, ng, FALSE, FALSE, FALSE) # X[is.na(X)] <- ng
     if(grl) groups <- c(groups, NA)
   }
   st <- attr(X, "starts")
@@ -523,16 +523,18 @@ fungroup <- function(X, ...) {
 
 condCopyAttrib <- function(x, d) {
   if(is.object(x)) return(x)
-  rn <- c(NA_integer_, -length(x[[1L]]))
   cld <- oldClass(d)
-  oldClass(d) <- NULL
-  attr(d, "groups") <- NULL
-  attr(d, "row.names") <- NULL
-  x <- copyMostAttributes(x, d)
-  attr(x, "row.names") <- rn
-  oldClass(x) <- fsetdiff(cld, c("GRP_df", "grouped_df", "sf"))
-  if(any(cld == "data.table")) return(alc(x))
-  x
+  condalcSA(x, list(names = attr(x, "names"),
+                    row.names = .set_row_names(length(x[[1L]])),
+                    class = cld[cld %!in% c("GRP_df", "grouped_df", "sf", "pdata.frame", "indexed_frame")]),
+            any(cld == "data.table"))
+  # attr(d, "groups") <- NULL
+  # attr(d, "row.names") <- NULL
+  # x <- copyMostAttributes(x, d)
+  # attr(x, "row.names") <- rn
+  # oldClass(x) <- fsetdiff(cld, c("GRP_df", "grouped_df", "sf"))
+  # if(any(cld == "data.table")) return(alc(x))
+  # x
 }
 
 fgroup_vars <- function(X, return = "data") {
@@ -578,7 +580,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 
 is_qG <- function(x) is.integer(x) && inherits(x, "qG")
 is.qG <- function(x) {
-  message("Note that 'is.qG' was renamed to 'is_qG'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'is.qG' was renamed to 'is_qG'. It will be removed end of 2023, see help('collapse-renamed').")
   inherits(x, "qG")
 }
 
@@ -671,7 +673,7 @@ as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
     clx <- c(if(ordered) "ordered", "factor", if(nainc) "na.included") # can set unordered ??
   } else {
     if(anyNA(unclass(x))) {
-      x[is.na(x)] <- attr(x, "N.groups") + 1L
+      x <- .Call(C_setcopyv, x, NA, attr(x, "N.groups") + 1L, FALSE, FALSE, FALSE) # x[is.na(x)] <- attr(x, "N.groups") + 1L
       groups <- c(groups, NA_character_) # faster doing groups[length(groups)+1] <- NA? -> Nope, what you have is fastest !
     }
     clx <- c(if(ordered) "ordered", "factor", "na.included")
@@ -680,7 +682,7 @@ as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
 }
 
 as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
-  message("Note that 'as.factor_qG' was renamed to 'as_factor_qG'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'as.factor_qG' was renamed to 'as_factor_qG'. It will be removed end of 2023, see help('collapse-renamed').")
   as_factor_qG(x, ordered, na.exclude)
 }
 
@@ -740,8 +742,8 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
     }
     ax <- if(return.groups) list(N.groups = ng, groups = lev, class = newclx) else
       list(N.groups = ng, class = newclx)
-    x[is.na(x)] <- ng
-    return(`attributes<-`(x, ax))
+     # x[is.na(x)] <- ng
+    return(`attributes<-`(.Call(C_setcopyv, x, NA, ng, FALSE, FALSE, FALSE), ax))
   }
   switch(method, # if((is.character(x) && !na.exclude) || (length(x) < 500 && !(is.character(x) && na.exclude)))
          auto  = if(is.double(x) && sort) # is.character(x) || is.logical(x) || !sort || length(x) < 500L

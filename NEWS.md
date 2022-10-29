@@ -1,5 +1,17 @@
 # collapse 1.9.0.9000
 
+*collapse* 1.9.0 release is expected in December 2022 or January 2023. 
+
+### Changes to functionality
+
+* All functions renamed in *collapse* 1.6.0 are now depreciated, to be removed end of 2023. These functions had already been giving messages since v1.6.0. See `help("collapse-renamed")`.
+
+### Additions
+
+* Added functions `fcount()` and `fcountv()`: a versatile and much faster replacements for `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
+
+### Improvements
+
 * `num_vars()` has become a bit smarter: columns of class 'ts' and 'units' are now also recognized as numeric. In general, users should be aware that `num_vars()` does not regard any R methods defined for `is.numeric()`, it simply checks whether objects are of type integer or double, and do not have a class. The addition of these two exceptions now guards against two common cases where `num_vars()` may give undesirable outcomes. Note that `num_vars()`  is also called in `collap()` to distinguish between numeric (`FUN`) and non-numeric (`catFUN`) columns. 
 
 * List extraction function `get_elem()` now has an option `invert = TRUE` (default `FALSE`) to remove matching elements from a (nested) list. Also the functionality of argument `keep.class = TRUE` is implemented in a better way, such that the default `keep.class = FALSE` toggles classes from (non-matched) list-like objects inside the list to be removed. 
@@ -9,6 +21,8 @@
 * Improvements to `setv()` and `copyv()`, making them more robust to borderline cases: `integer(0)` passed to `v` does nothing (instead of error), and it is also possible to pass a single real index if `vind1 = TRUE` i.e. passing `1` instead of `1L` does not produce an error. 
 
 * Fixed a bug in the `.names` argument to `across()`. Passing a naming function such as `.names = function(c, f) paste0(c, "-", f)` now works as intended i.e. the function is applied to all combinations of columns (c) and functions (f) using `outer()`. Previously this was just internally evaluated as `.names(cols, funs)`, which did not work if there were either multiple cols or multiple funs. There is also now a possibility to set `.names = "flip"`, which names columns `f_c` instead of `c_f`. 
+
+* Functions `frename()` and `setrename()` have an additional argument `.nse = TRUE`, conforming to the default non-standard evaluation of tagged vector expressions e.g. `frename(mtcars, mpg = newname)` is the same as `frename(mtcars, mpg = "newname")`. Setting `.nse = FALSE` allows `newname` to be a variable holding a name e.g. `newname = "othername"; frename(mtcars, mpg = newname, .nse = FALSE)`. Another use of the argument is that a (named) character vector can now be passed to the function to rename a (subset of) columns e.g. `cvec = letters[1:3]; frename(mtcars, cvec, cols = 4:6, .nse = FALSE)` (this works even with `.nse = TRUE`), and `names(cvec) = c("cyl", "vs", "am"); frename(mtcars, cvec, .nse = FALSE)`. Furthermore, `setrename()` now also returns the renamed data invisibly, and `relabel()` and `setrelabel()` have also gained similar flexibility to allow (named) lists or vectors of variable labels to be passed. *Note* that these function have no NSE capabilities, so they work essentially like `frename(..., .nse = FALSE)`.
 
 # collapse 1.8.9
 

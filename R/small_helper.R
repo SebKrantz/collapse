@@ -317,13 +317,13 @@ addAttributes <- function(x, a) .Call(C_setAttributes, x, c(attributes(x), a))
 
 is_categorical <- function(x) !is.numeric(x)
 is.categorical <- function(x) {
-  message("Note that 'is.categorical' was renamed to 'is_categorical'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'is.categorical' was renamed to 'is_categorical'. It will be removed end of 2023, see help('collapse-renamed').")
   !is.numeric(x)
 }
 
 is_date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
 is.Date <- function(x) {
-  message("Note that 'is.Date' was renamed to 'is_date'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'is.Date' was renamed to 'is_date'. It will be removed end of 2023, see help('collapse-renamed').")
   inherits(x, c("Date","POSIXlt","POSIXct"))
 }
 
@@ -500,12 +500,12 @@ as_character_factor <- function(X, keep.attr = TRUE) {
 }
 
 as.numeric_factor <- function(X, keep.attr = TRUE) {
-  message("Note that 'as.numeric_factor' was renamed to 'as_numeric_factor'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'as.numeric_factor' was renamed to 'as_numeric_factor'. It will be removed end of 2023, see help('collapse-renamed').")
   as_numeric_factor(X, keep.attr)
 }
 
 as.character_factor <- function(X, keep.attr = TRUE) {
-  message("Note that 'as.character_factor' was renamed to 'as_character_factor'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'as.character_factor' was renamed to 'as_character_factor'. It will be removed end of 2023, see help('collapse-renamed').")
   as_character_factor(X, keep.attr)
 }
 
@@ -705,9 +705,10 @@ addNA2 <- function(x) {
   oldClass(x) <- NULL
   if(!anyNA(lev <- attr(x, "levels"))) {
     attr(x, "levels") <- c(lev, NA_character_)
-    x[is.na(x)] <- length(lev) + 1L
-  } else x[is.na(x)] <- length(lev)
-  `oldClass<-`(x, clx)
+    .Call(C_setcopyv, x, NA_integer_, length(lev) + 1L, FALSE, TRUE, FALSE) # x[is.na(x)] <- length(lev) + 1L
+  } else .Call(C_setcopyv, x, NA_integer_, length(lev), FALSE, TRUE, FALSE) # x[is.na(x)] <- length(lev)
+  oldClass(x) <- clx
+  x
 }
 
 # addNA2 <- function(x) {
