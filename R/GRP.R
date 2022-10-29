@@ -523,16 +523,18 @@ fungroup <- function(X, ...) {
 
 condCopyAttrib <- function(x, d) {
   if(is.object(x)) return(x)
-  rn <- c(NA_integer_, -length(x[[1L]]))
   cld <- oldClass(d)
-  oldClass(d) <- NULL
-  attr(d, "groups") <- NULL
-  attr(d, "row.names") <- NULL
-  x <- copyMostAttributes(x, d)
-  attr(x, "row.names") <- rn
-  oldClass(x) <- fsetdiff(cld, c("GRP_df", "grouped_df", "sf"))
-  if(any(cld == "data.table")) return(alc(x))
-  x
+  condalcSA(x, list(names = attr(x, "names"),
+                    row.names = .set_row_names(length(x[[1L]])),
+                    class = cld[cld %!in% c("GRP_df", "grouped_df", "sf", "pdata.frame", "indexed_frame")]),
+            any(cld == "data.table"))
+  # attr(d, "groups") <- NULL
+  # attr(d, "row.names") <- NULL
+  # x <- copyMostAttributes(x, d)
+  # attr(x, "row.names") <- rn
+  # oldClass(x) <- fsetdiff(cld, c("GRP_df", "grouped_df", "sf"))
+  # if(any(cld == "data.table")) return(alc(x))
+  # x
 }
 
 fgroup_vars <- function(X, return = "data") {
