@@ -17,6 +17,8 @@
 
 \item \code{\link{funique}} is a faster version of \code{\link{unique}}. The data frame method also allows selecting unique rows according to a subset of the columns. \code{\link{fnunique}} efficiently calculates the number of unique values/rows.
 
+\item \code{\link{fcount}} computes group counts based on a subset of columns in the data, and is a fast replacement for \code{dplyr::count}. \code{\link{fcountv}} is a programmers version of the function.
+
 \item \code{\link{qF}}, shorthand for 'quick-factor' implements very fast factor generation from atomic vectors using either radix ordering \code{method = "radix"} or hashing \code{method = "hash"}. Factors can also be used for efficient grouped programming with \emph{collapse} functions, especially if they are generated using \code{qF(x, na.exclude = FALSE)} which assigns a level to missing values and attaches a class 'na.included' ensuring that no additional missing value checks are executed by \emph{collapse} functions.
 
 \item \code{\link{qG}}, shorthand for 'quick-group', generates a kind of factor-light without the levels attribute but instead an attribute providing the number of levels. Optionally the levels / groups can be attached, but without converting them to character. Objects have a class 'qG', which is also recognized in the \emph{collapse} ecosystem.
@@ -41,6 +43,7 @@
                  \code{\link{GRP}} \tab\tab \code{default, GRP, factor, qG, grouped_df, pseries, pdata.frame}  \tab\tab Fast grouping and a flexible grouping object \cr
                  \code{\link{fgroup_by}} \tab\tab No methods, for data frames  \tab\tab Fast grouped data frame \cr
                  \code{\link{funique}}, \code{\link{fnunique}} \tab\tab \code{default, data.frame, sf, pseries, pdata.frame, list}  \tab\tab Fast (number of) unique values/rows \cr
+                \code{\link[=fcount]{fcount(v)}} \tab\tab Internal generic, supports vectors, matrices, data.frames, lists, grouped_df and pdata.frame \tab\tab Fast group counts \cr
                  \code{\link{qF}} \tab\tab No methods, for vectors \tab\tab Quick factor generation \cr
                  \code{\link{qG}} \tab\tab No methods, for vectors \tab\tab Quick grouping of vectors and a 'factor-light' class \cr
                  \code{\link{fdroplevels}} \tab\tab \code{factor, data.frame, list} \tab\tab Fast removal of unused factor levels \cr
