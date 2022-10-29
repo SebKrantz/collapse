@@ -96,7 +96,7 @@ frename_core <- function(.x, cols, .nse, ...) {
   args <- if(.nse) substitute(c(...))[-1L] else c(...)
   nam <- attr(.x, "names")
   namarg <- names(args)
-  if(is.null(namarg)) { #  || !all(nzchar(namarg)): why?
+  if(is.null(namarg) || !all(nzchar(namarg))) { # The second condition is needed for a function with additional arguments to be passed.
     arg1 <- ..1
     if(length(cols)) ind <- cols2int(cols, .x, nam)
     if(is.function(arg1)) {
@@ -140,14 +140,19 @@ relabel <- function(.x, ..., cols = NULL, attrn = "label") { # , sc = TRUE
   args <- list(...)
   nam <- attr(.x, "names")
   namarg <- names(args)
-  if(is.null(namarg) || !all(nzchar(namarg))) {
-    if(!is.function(..1)) stop("... needs to be expressions colname = newname, or a function to apply to the names of columns in cols.")
-    lab <- vlabels(.x, attrn, FALSE)
-    FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
-      function(x) do.call(..1, c(list(x), list(...)[-1L]))
-    if(is.null(cols)) return(.Call(C_setvlabels, .x, attrn, FUN(lab), NULL))
-    ind <- cols2int(cols, .x, nam, FALSE)
-    args <- FUN(lab[ind])
+  if(is.null(namarg) || !all(nzchar(namarg))) { # The second condition is needed for a function with additional arguments to be passed.
+    arg1 <- args[[1L]]
+    if(length(cols)) ind <- cols2int(cols, .x, nam)
+    if(is.function(arg1)) {
+      lab <- vlabels(.x, attrn, FALSE)
+      FUN <- if(length(args) == 1L) arg1 else
+        function(x) do.call(arg1, c(list(x), args[-1L]))
+      if(is.null(cols)) return(.Call(C_setvlabels, .x, attrn, FUN(lab), NULL))
+      args <- FUN(lab[ind])
+    } else if(is.character(arg1)) {
+      if(is.null(cols)) ind <- if(length(names(arg1))) ckmatch(names(arg1), nam) else NULL
+      args <- arg1
+    } else stop("... needs to be expressions colname = 'New Label', a function to apply to the names of columns in cols, or a suitable character vector of labels.")
   } else ind <- ckmatch(namarg, nam)
   .Call(C_setvlabels, .x, attrn, args, ind)
 }
