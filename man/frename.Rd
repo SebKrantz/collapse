@@ -12,10 +12,10 @@ Fast Renaming and Relabelling Objects
 A fast substitute for \code{dplyr::rename}. \code{setrename} renames objects by reference. These functions also work with objects other than data frames that have a 'names' attribute. \code{relabel} and \code{setrelabel} do that same for labels attached to list elements / data frame columns.
 }
 \usage{
-frename(.x, \dots, cols = NULL)
-rnm(.x, \dots, cols = NULL)     # Shorthand for frename()
+frename(.x, \dots, cols = NULL, .nse = TRUE)
+rnm(.x, \dots, cols = NULL, .nse = TRUE)     # Shorthand for frename()
 
-setrename(.x, \dots, cols = NULL)
+setrename(.x, \dots, cols = NULL, .nse = TRUE)
 
 relabel(.x, \dots, cols = NULL, attrn = "label")
 
@@ -26,9 +26,11 @@ setrelabel(.x, \dots, cols = NULL, attrn = "label")
 \arguments{
   \item{.x}{for \code{(f/set)rename}: an R object with a \code{"names"} attribute. For \code{(set)relabel}: a named list.
 }
-  \item{\dots}{either tagged vector expressions of the form \code{name = newname} / \code{name = newlabel}, or a single function (+ optional arguments to the function) applied to all names/labels (of columns/elements selected in \code{cols}).
+  \item{\dots}{either tagged vector expressions of the form \code{name = newname} / \code{name = newlabel}, a (named) vector of names/labels, or a single function (+ optional arguments to the function) applied to all names/labels (of columns/elements selected in \code{cols}).
 }
   \item{cols}{If \code{\dots} is a function, select a subset of columns/elements to rename/relabel using names, indices, a logical vector or a function applied to the columns if \code{.x} is a list (e.g. \code{is.numeric}).}
+
+  \item{.nse}{logical. \code{TRUE} allows non-standard evaluation of tagged vector expressions, allowing you to supply new names without quotes. Set to \code{FALSE} for programming or passing vectors of names.}
 
   \item{attrn}{character. Name of attribute to store labels or retrieve labels from.}
 }
@@ -54,10 +56,19 @@ head(frename(iris, tolower, cols = 1:2))
 head(frename(iris, tolower, cols = is.numeric))
 head(frename(iris, paste, "new", sep = "_", cols = 1:2))
 
+## Using vectors of names and programming
+newname = "sepal_length"
+head(frename(iris, Sepal.Length = newname, .nse = FALSE))
+newnames = c("sepal_length", "sepal_width")
+head(frename(iris, newnames, cols = 1:2))
+newnames = c(Sepal.Length = "sepal_length", Sepal.Width = "sepal_width")
+head(frename(iris, newnames, .nse = FALSE))
+
 ## Renaming by reference
 # setrename(iris, tolower)
 # head(iris)
 # rm(iris)
+# etc...
 
 ## Relabelling (by reference)
 # namlab(relabel(wlddev, PCGDP = "GDP per Capita", LIFEEX = "Life Expectancy"))

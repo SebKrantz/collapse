@@ -10,6 +10,8 @@
 
 * Fixed a bug in the `.names` argument to `across()`. Passing a naming function such as `.names = function(c, f) paste0(c, "-", f)` now works as intended i.e. the function is applied to all combinations of columns (c) and functions (f) using `outer()`. Previously this was just internally evaluated as `.names(cols, funs)`, which did not work if there were either multiple cols or multiple funs. There is also now a possibility to set `.names = "flip"`, which names columns `f_c` instead of `c_f`. 
 
+* Functions `frename()` and `setrename()` have an additional argument `.nse = TRUE`, conforming to the default non-standard evaluation of tagged vector expressions e.g. `frename(mtcars, mpg = newname)` is the same as `frename(mtcars, mpg = "newname")`. Setting `.nse = FALSE` allows `newname` to be a variable holding a name e.g. `newname = "othername"; frename(mtcars, mpg = newname, .nse = FALSE)`. Another use of the argument is that a (named) character vector can now be passed to the function to rename a (subset of) columns e.g. `cvec = letters[1:3]; frename(mtcars, cvec, cols = 4:6)`, or also `names(cvec) = c("cyl", "vs", "am"); frename(mtcars, cvec, .nse = FALSE)`. Furthermore, `setrename()` now also returns the renamed data invisibly. 
+
 # collapse 1.8.9
 
 * Fixed some warnings on rchk and newer C compilers (LLVM clang 10+). 

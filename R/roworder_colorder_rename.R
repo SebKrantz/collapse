@@ -91,40 +91,46 @@ colorderv <- function(X, neworder = radixorder(names(X)), pos = "front", regex =
                    any(ax[["class"]] == "data.table")))
 }
 
-frename <- function(.x, ..., cols = NULL) {
-  args <- substitute(c(...))[-1L]
+
+frename_core <- function(.x, cols, .nse, ...) {
+  args <- if(.nse) substitute(c(...))[-1L] else c(...)
   nam <- attr(.x, "names")
   namarg <- names(args)
-  if(is.null(namarg) || !all(nzchar(namarg))) {
-    if(!is.function(..1)) stop("... needs to be expressions colname = newname, or a function to apply to the names of columns in cols.")
-    FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
-      function(x) do.call(..1, c(list(x), list(...)[-1L]))
-    if(is.null(cols)) return(condalc(`attr<-`(.x, "names", FUN(nam)),
-                                     inherits(.x, "data.table")))
-    ind <- cols2int(cols, .x, nam, FALSE)
-    nam[ind] <- FUN(nam[ind])
+  if(is.null(namarg)) { #  || !all(nzchar(namarg)): why?
+    arg1 <- ..1
+    if(length(cols)) ind <- cols2int(cols, .x, nam)
+    if(is.function(arg1)) {
+      FUN <- if(...length() == 1L) arg1 else # could do special case if ...length() == 2L
+        function(x) do.call(arg1, c(list(x), list(...)[-1L]))
+      if(is.null(cols)) return(FUN(nam))
+      nam[ind] <- FUN(nam[ind])
+    } else if(is.character(arg1)) {
+      if(is.null(cols)) {
+        if(length(arg1) != length(nam)) stop(sprintf("If cols = NULL, the vector or names length = %i must match the object names length = %i.", length(arg1), length(nam)))
+        return(arg1)
+      }
+      if(length(arg1) != length(ind)) stop(sprintf("The vector of names length = %s does not match the number of columns selected = %s.", length(arg1), length(ind)))
+      nam[ind] <- arg1
+    } else stop("... needs to be expressions colname = newname, a function to apply to the names of columns in cols, or a suitable character vector of names.")
   } else nam[ckmatch(namarg, nam)] <- as.character(args)
-  return(condalc(`attr<-`(.x, "names", nam), inherits(.x, "data.table")))
+  return(nam)
+}
+
+frename <- function(.x, ..., cols = NULL, .nse = TRUE) {
+  attr(.x, "names") <- frename_core(.x, cols, .nse, ...)
+  condalc(.x, inherits(.x, "data.table"))
 }
 
 rnm <- frename # rnm clashes with 2 packages.., rme would work but is inconsistent
 
-# A tiny bit faster than setrename <- function(.x, ..., cols = NULL) eval.parent(substitute(.x <- frename(.x, ..., cols = cols))), but not much...
-setrename <- function(.x, ..., cols = NULL) {
-  args <- substitute(c(...))[-1L]
-  nam <- attr(.x, "names")
-  namarg <- names(args)
-  if(is.null(namarg) || !all(nzchar(namarg))) {
-    if(!is.function(..1)) stop("... needs to be expressions colname = newname, or a function to apply to the names of columns in cols.")
-    FUN <- if(...length() == 1L) ..1 else # could do special case if ...length() == 2L
-      function(x) do.call(..1, c(list(x), list(...)[-1L]))
-    if(is.null(cols)) nam <- FUN(nam) else {
-      ind <- cols2int(cols, .x, nam, FALSE)
-      nam[ind] <- FUN(nam[ind])
-    }
-  } else nam[ckmatch(namarg, nam)] <- as.character(args)
-  # Need to allocate here, because the named are captured in ".internal.selfref", so modification be reference still produces an error.
-  if(inherits(.x, "data.table")) assign(as.character(substitute(.x)), alc(`attr<-`(.x, "names", nam)), envir = parent.frame())
+setrename <- function(.x, ..., cols = NULL, .nse = TRUE) {
+  nam <- frename_core(.x, cols, .nse, ...)
+  if(inherits(.x, "data.table")) {
+    # Need to allocate here, because the named are captured in ".internal.selfref", so modification be reference still produces an error.
+    res <- alc(`attr<-`(.x, "names", nam))
+    assign(as.character(substitute(.x)), res, envir = parent.frame())
+    return(invisible(res))
+  }
   invisible(.Call(C_setnames, .x, nam))
 }
 
