@@ -114,11 +114,11 @@ logi_vars <- function(x, return = "data") get_vars_ind(x, .Call(C_vtypes, x, 0L)
 date_vars <- function(x, return = "data") get_vars_indl(x, vapply(`attributes<-`(x, NULL), is_date, TRUE), return)
 "date_vars<-" <- function(x, value) `get_vars_ind<-`(x, vapply(`attributes<-`(x, NULL), is_date, TRUE), value)
 Date_vars <- function(x, return = "data") {
-  message("Note that 'Date_vars' was renamed to 'date_vars'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'Date_vars' was renamed to 'date_vars'. It will be removed end of 2023, see help('collapse-renamed').")
   date_vars(x, return)
 }
 "Date_vars<-" <- function(x, value) {
-   message("Note that 'Date_vars' was renamed to 'date_vars'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'Date_vars' was renamed to 'date_vars'. It will be removed end of 2023, see help('collapse-renamed').")
   `date_vars<-`(x, value)
 }
 

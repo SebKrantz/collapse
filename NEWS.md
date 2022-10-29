@@ -2,9 +2,13 @@
 
 *collapse* 1.9.0 release is expected in December 2022 or January 2023. 
 
+### Changes to functionality
+
+* All functions renamed in *collapse* 1.6.0 are now depreciated, to be removed end of 2023. These functions had already been giving messages since v1.6.0. See `help("collapse-renamed")`.
+
 ### Additions
 
-* Added functions `fcount()` and `fcountv()`: a versatile and much faster replacements for `dplyr::count`. It and also work with vectors / matrices, as well as grouped and indexed data. 
+* Added functions `fcount()` and `fcountv()`: a versatile and much faster replacements for `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
 
 ### Improvements
 

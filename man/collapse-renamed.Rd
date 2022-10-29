@@ -41,7 +41,7 @@
 Renamed Functions
 }
 \description{
-These functions were renamed moving from collapse 1.5.3 to 1.6.0 to make the namespace more consistent. With collapse 1.7.0 I have depreciated all methods to \code{fNobs}, \code{fNdistinct}, \code{fHDbetween} and \code{fHDwithin}. The S3 generics and the other functions will be depreciated in 2023 for the earliest. These all now give a message reminding you not to use them in fresh code.
+These functions were renamed moving from collapse 1.5.3 to 1.6.0 to make the namespace more consistent. With collapse 1.9.0, all of these functions are depreciated, and the core methods to \code{fNobs}, \code{fNdistinct}, \code{fHDbetween} and \code{fHDwithin} are no longer exported. I intend to remove all of these functions except for the S3 generics \code{fNobs}, \code{fNdistinct}, \code{fHDbetween} and \code{fHDwithin} from the package by end of 2023. %The S3 generics and the other functions will be depreciated in 2023 for the earliest. These all now give a message reminding you not to use them in fresh code.
 }
 \section{Renaming}{\preformatted{
 fNobs -> fnobs

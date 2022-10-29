@@ -156,7 +156,7 @@ GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last =
 
 is_GRP <- function(x) inherits(x, "GRP")
 is.GRP <- function(x) {
-  message("Note that 'is.GRP' was renamed to 'is_GRP'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'is.GRP' was renamed to 'is_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
   inherits(x, "GRP")
 }
 
@@ -261,7 +261,7 @@ as_factor_GRP <- function(x, ordered = FALSE) { # , ...
 }
 
 as.factor_GRP <- function(x, ordered = FALSE) {
-  message("Note that 'as.factor_GRP' was renamed to 'as_factor_GRP'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'as.factor_GRP' was renamed to 'as_factor_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
   as_factor_GRP(x, ordered)
 }
 
@@ -580,7 +580,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 
 is_qG <- function(x) is.integer(x) && inherits(x, "qG")
 is.qG <- function(x) {
-  message("Note that 'is.qG' was renamed to 'is_qG'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'is.qG' was renamed to 'is_qG'. It will be removed end of 2023, see help('collapse-renamed').")
   inherits(x, "qG")
 }
 
@@ -682,7 +682,7 @@ as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
 }
 
 as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
-  message("Note that 'as.factor_qG' was renamed to 'as_factor_qG'. It will not be removed anytime soon, but please use updated function names in new code, see help('collapse-renamed')")
+  .Deprecated(msg = "'as.factor_qG' was renamed to 'as_factor_qG'. It will be removed end of 2023, see help('collapse-renamed').")
   as_factor_qG(x, ordered, na.exclude)
 }
 

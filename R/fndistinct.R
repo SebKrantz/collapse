@@ -82,14 +82,14 @@ fNdistinct <- function(x, ...) {
   UseMethod("fndistinct")
 }
 fNdistinct.default <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fndistinct.default(x, ...)
 }
 fNdistinct.matrix <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fndistinct.matrix(x, ...)
 }
 fNdistinct.data.frame <- function(x, ...) {
-  .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
+  # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fndistinct.data.frame(x, ...)
 }
