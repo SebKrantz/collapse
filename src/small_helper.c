@@ -301,11 +301,6 @@ SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind) { // , SEXP sc
 }
 
 
-SEXP setnames(SEXP x, SEXP nam) {
-  setAttrib(x, R_NamesSymbol, nam);
-  return x;
-}
-
 SEXP Cissorted(SEXP x, SEXP strictly) {
    return ScalarLogical(FALSE == isUnsorted(x, (Rboolean)asLogical(strictly)));
 }

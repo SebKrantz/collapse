@@ -6,6 +6,13 @@
 #include "data.table.h"
 #include <Rdefines.h>
 
+
+SEXP setnames(SEXP x, SEXP nam) {
+  setAttrib(x, R_NamesSymbol, nam);
+  if(INHERITS(x, char_datatable)) setselfref(x);
+  return x;
+}
+
 bool allNA(SEXP x, bool errorForBadType) {
   // less space and time than all(is.na(x)) at R level because that creates full size is.na(x) first before all()
   // whereas this allNA can often return early on testing the first value without reading the rest

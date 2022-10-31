@@ -1,7 +1,7 @@
 
 
 # TODO: keep argument? -> not needed, can use fselect beforehand...
-fcount_core <- function(x, g, w = NULL, name = "n", add = FALSE) {
+fcount_core <- function(x, g, w = NULL, name = "N", add = FALSE) {
   # TODO: don't need integer group sizes if this is the case....
   if(length(w)) g$group.sizes <- .Call(C_fwtabulate, g$group.id, w, g$N.groups, FALSE) # na.rm in g is not needed (FALSE)
   # if(is.atomic(x)) { # what about factors and sort argument?? and dropping levels??
@@ -34,7 +34,7 @@ fcount_core <- function(x, g, w = NULL, name = "n", add = FALSE) {
   condalc(copyMostAttributes(c(res, `names<-`(list(g$group.sizes), name[1L])), res), inherits(x, "data.table"))
 }
 
-fcount <- function(x, ..., w = NULL, name = "n", add = FALSE, sort = FALSE, decreasing = FALSE) {
+fcount <- function(x, ..., w = NULL, name = "N", add = FALSE, sort = FALSE, decreasing = FALSE) {
   if(is.list(x)) w <- eval(substitute(w), x, parent.frame())
   else x <- qDF(x)
   if(is.character(add)) add <- switch(add, gv =, group_vars = 2L, stop("add must be TRUE, FALSE or group_vars (gv)")) # add = "g", "groups" or "group_vars"
@@ -45,7 +45,7 @@ fcount <- function(x, ..., w = NULL, name = "n", add = FALSE, sort = FALSE, decr
   fcount_core(x, g, w, name, add)
 }
 
-fcountv <- function(x, cols = NULL, w = NULL, name = "n", add = FALSE, sort = FALSE, ...) {
+fcountv <- function(x, cols = NULL, w = NULL, name = "N", add = FALSE, sort = FALSE, ...) {
   # Safe enough ? or only allow character ? what about collapv() ?, extra option ?
   # if(length(w) == 1L && is.list(x) && length(unclass(x)) > 1L && (is.character(w) || is.integer(w) || (is.numeric(w) && w %% 1 < 1e-6)))
   if(is.atomic(x)) x <- qDF(x)

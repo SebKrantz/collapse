@@ -84,6 +84,7 @@ void savetl_init(void), savetl(SEXP s), savetl_end(void);
 SEXP setcolorder(SEXP x, SEXP o);
 
 // subset.c
+void setselfref(SEXP x);
 SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows);
 SEXP subsetVector(SEXP x, SEXP idx, SEXP checkidx);
 SEXP anyNA(SEXP x, SEXP cols);
