@@ -9,10 +9,10 @@ Efficiently Count Observations by Group
 A much faster replacement for \code{dplyr::count}.
 }
 \usage{
-fcount(x, ..., w = NULL, name = "n", add = FALSE,
+fcount(x, ..., w = NULL, name = "N", add = FALSE,
       sort = FALSE, decreasing = FALSE)
 
-fcountv(x, cols = NULL, w = NULL, name = "n", add = FALSE,
+fcountv(x, cols = NULL, w = NULL, name = "N", add = FALSE,
         sort = FALSE, ...)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -20,8 +20,8 @@ fcountv(x, cols = NULL, w = NULL, name = "n", add = FALSE,
   \item{x}{a data frame or list-like object, including 'grouped_df' or 'indexed_frame'. Atomic vectors or matrices can also be passed, but will be sent through \code{\link{qDF}}. }
   \item{\dots}{for \code{fcount}: names or sequences of columns to count cases by - passed to \code{\link{fselect}}. For \code{fcountv}: further arguments passed to \code{\link{GRP}} (such as \code{decreasing}, \code{na.last}, \code{method}, \code{effect} etc.). Leaving this empty will count on all columns. }
   \item{cols}{select columns to count cases by, using column names, indices, a logical vector or a selector function (e.g. \code{is_categorical}).}
-  \item{w}{a numeric vector of weights, may contain missing values. \emph{Note} that the corresponding argument in \code{dplyr::count} is called \code{wt}, but collapse has a global default for weights arguments to be called \code{w}.}
-  \item{name}{character. The name of the column containing the count or sum of weights. }
+  \item{w}{a numeric vector of weights, may contain missing values. In \code{fcount} this can also be the (unquoted) name of a column in the data frame. \code{fcountv} also supports a single character name. \emph{Note} that the corresponding argument in \code{dplyr::count} is called \code{wt}, but \emph{collapse} has a global default for weights arguments to be called \code{w}.}
+  \item{name}{character. The name of the column containing the count or sum of weights. \code{dplyr::count} it is called \code{"n"}, but \code{"N"} is more consistent with the rest of \emph{collapse} and \emph{data.table}.}
   \item{add}{\code{TRUE} adds the count column to \code{x}. Alternatively \code{add = "group_vars"} (or \code{add = "gv"} for parsimony) can be used to retain only the variables selected for counting in \code{x} and the count.}
   \item{sort, decreasing}{arguments passed to \code{\link{GRP}} affecting the order of rows in the output (if \code{add = FALSE}), and the algorithm used for counting. In general, \code{sort = FALSE} is faster unless data is already sorted by the columns used for counting.
 }
