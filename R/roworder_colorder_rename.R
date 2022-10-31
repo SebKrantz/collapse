@@ -125,12 +125,13 @@ rnm <- frename # rnm clashes with 2 packages.., rme would work but is inconsiste
 
 setrename <- function(.x, ..., cols = NULL, .nse = TRUE) {
   nam <- frename_core(.x, cols, .nse, ...)
-  if(inherits(.x, "data.table")) {
-    # Need to allocate here, because the named are captured in ".internal.selfref", so modification be reference still produces an error.
-    res <- alc(`attr<-`(.x, "names", nam))
-    assign(as.character(substitute(.x)), res, envir = parent.frame())
-    return(invisible(res))
-  }
+  # No longer needed, as also calling setselfref() in C now.
+  # if(inherits(.x, "data.table")) {
+  #   # Need to allocate here, because the named are captured in ".internal.selfref", so modification be reference still produces an error.
+  #   res <- alc(`attr<-`(.x, "names", nam))
+  #   assign(as.character(substitute(.x)), res, envir = parent.frame())
+  #   return(invisible(res))
+  # }
   invisible(.Call(C_setnames, .x, nam))
 }
 
