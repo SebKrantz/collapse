@@ -8,8 +8,19 @@
 
 
 SEXP setnames(SEXP x, SEXP nam) {
-  setAttrib(x, R_NamesSymbol, nam);
-  if(INHERITS(x, char_datatable)) setselfref(x);
+  if(TYPEOF(nam) != STRSXP) error("names need to be character typed");
+  if(INHERITS(x, char_datatable)) {
+    int n = TRUELENGTH(x), l = LENGTH(nam);
+    if(n < l) error("Invalid data.table (underallocated), use qDT(data) to make valid.");
+    SEXP newnam = PROTECT(allocVector(STRSXP, n)),
+      *pnn = STRING_PTR(newnam), *pn = STRING_PTR(nam);
+    for(int i = 0; i < l; ++i) pnn[i] = pn[i];
+    SETLENGTH(newnam, l);
+    SET_TRUELENGTH(newnam, n);
+    setAttrib(x, R_NamesSymbol, newnam);
+    setselfref(x);
+    UNPROTECT(1);
+  } else setAttrib(x, R_NamesSymbol, nam);
   return x;
 }
 
