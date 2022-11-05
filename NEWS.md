@@ -8,6 +8,8 @@
 
 ### Bug Fixes
 
+* `fmode()` gave wrong results for singleton groups (groups of size 1) on *unsorted* data. I had optimized `fmode()` for singleton groups to directly return the corresponding element, but it did not access the element through the (internal) ordering vector, so the first element/row of the entire vector/data was taken. The same mistake occurred for `fndistinct` if singleton groups were `NA`, which were counted as `1` instead of `0` under the `na.rm = TRUE` default (provided the first element of the vector/data was not `NA`). The mistake did not occur with data sorted by the groups, because here the data pointer already pointed to the first element of the group. (My apologies for this bug, it took me more than half a year to discover it, using *collapse* on a daily basis, and it escaped 700 unit tests as well).
+
 * Function `groupid(x, na.skip = TRUE)` returned uninitialized first elements if the first values in `x` where `NA`. Thanks for reporting @Henrik-P (#335). 
 
 ### Additions
