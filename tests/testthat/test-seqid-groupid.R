@@ -98,6 +98,11 @@ xNA2[c(1,20)] <- NA_integer_
 # This was an issue !!
 expect_identical(groupid(c(NA,NA,1.343,NA,NA)), groupid(c(NA,NA,1L,NA,NA)))
 
+expect_true(allNA(replicate(500, groupid(NA, na.skip = TRUE)))) #335
+expect_equal(unattrib(groupid(c(NA, NA), na.skip = TRUE)), c(NA_integer_, NA_integer_))
+expect_equal(unattrib(groupid(c(NA, "a"), na.skip = TRUE)), c(NA, 1L))
+expect_equal(unattrib(groupid(c(NA, NA, "a"), na.skip = TRUE)), c(NA, NA, 1L))
+
 # Start at 0
 # groupid(x, start = 0)
 # groupid(x, na.skip = TRUE, start = 0)

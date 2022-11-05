@@ -6,6 +6,10 @@
 
 * All functions renamed in *collapse* 1.6.0 are now depreciated, to be removed end of 2023. These functions had already been giving messages since v1.6.0. See `help("collapse-renamed")`.
 
+### Bug Fixes
+
+* Function `groupid(x, na.skip = TRUE)` returned uninitialized first elements if the first values in `x` where `NA`. Thanks for reporting @Henrik-P (#335). 
+
 ### Additions
 
 * Added functions `fcount()` and `fcountv()`: a versatile and much faster replacements for `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
