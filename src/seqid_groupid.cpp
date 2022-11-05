@@ -18,7 +18,7 @@ IntegerVector seqid(const IntegerVector& x, const SEXP& o = R_NilValue, int del 
   IntegerVector out = no_init_vector(l);
   if(Rf_isNull(o)) {
     if(na_skip) {
-      int j = 0, end = l-1;
+      int j = 0, end = l;
       while(x[j] == NA_INTEGER && j != end) out[j++] = NA_INTEGER;
       if(j != end) {
         prev = x[j];
@@ -156,7 +156,7 @@ IntegerVector groupidImpl(Vector<RTYPE> x, SEXP o, int start, bool na_skip, bool
     IntegerVector out = no_init_vector(l);
     if(Rf_isNull(o)) {
       if(na_skip) {
-        int j = 0, end = l-1;
+        int j = 0, end = l;
         while(isnanT(x[j]) && j != end) out[j++] = NA_INTEGER;
         if(j != end) {
           prev = x[j];

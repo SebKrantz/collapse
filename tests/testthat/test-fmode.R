@@ -484,3 +484,17 @@ test_that("fmode produces errors for wrong input", {
 })
 
 }
+
+
+test_that("Singleton group optimization works properly", {
+  g <- GRP(as.character(seq_row(mtcars)))
+  w <- mtcars$wt
+  expect_equal(unattrib(fmode(mtcars$mpg, g)), mtcars$mpg[g$order])
+  expect_equal(unattrib(fmode(mtcars$mpg, g, w)), mtcars$mpg[g$order])
+  g <- GRP(seq_row(mtcars))
+  expect_equal(unattrib(fmode(mtcars$mpg, g)), mtcars$mpg[g$order])
+  expect_equal(unattrib(fmode(mtcars$mpg, g, w)), mtcars$mpg[g$order])
+  g <- GRP(sample.int(100, 32))
+  expect_equal(unattrib(fmode(mtcars$mpg, g)), mtcars$mpg[g$order])
+  expect_equal(unattrib(fmode(mtcars$mpg, g, w)), mtcars$mpg[g$order])
+})

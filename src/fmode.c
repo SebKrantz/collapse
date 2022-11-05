@@ -9,7 +9,7 @@
 // Problem: does not work in parallel, each thread needs own intermediate vectors
 
 int mode_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
-  if(l == 1) return px[0];
+  if(l == 1) return sorted ? px[0] : px[po[0]-1];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, val, mode, max = 1, i = 0, end = l-1,
@@ -85,7 +85,10 @@ int mode_int(const int *restrict px, const int *restrict po, const int l, const 
 }
 
 int w_mode_int(const int *restrict px, const double *restrict pw, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
-  if(l == 1) return ISNAN(pw[0]) ? NA_INTEGER : px[0];
+  if(l == 1) {
+    if(sorted) return ISNAN(pw[0]) ? NA_INTEGER : px[0];
+    return ISNAN(pw[po[0]-1]) ? NA_INTEGER : px[po[0]-1];
+  }
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, val, mode, i = 0, end = l-1,
@@ -166,7 +169,7 @@ int w_mode_int(const int *restrict px, const double *restrict pw, const int *res
 
 
 int mode_fct_logi(const int *restrict px, const int *restrict po, const int l, const int nlev, const int sorted, const int narm, const int ret) {
-  if(l == 1) return px[0];
+  if(l == 1) return sorted ? px[0] : px[po[0]-1];
   int val, mode, max = 1, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   int *restrict n = (int*)Calloc(nlevp+1, int); // Table to count frequency of values
@@ -222,7 +225,10 @@ int mode_fct_logi(const int *restrict px, const int *restrict po, const int l, c
 }
 
 int w_mode_fct_logi(const int *restrict px, const double *restrict pw, const int *restrict po, const int l, const int nlev, const int sorted, const int narm, const int ret) {
-  if(l == 1) return ISNAN(pw[0]) ? NA_INTEGER : px[0];
+  if(l == 1) {
+    if(sorted) return ISNAN(pw[0]) ? NA_INTEGER : px[0];
+    return ISNAN(pw[po[0]-1]) ? NA_INTEGER : px[po[0]-1];
+  }
   int val, mode, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   double *restrict sumw = (double*)Calloc(nlevp+1, double); // Table to save each values sum of weights
@@ -285,7 +291,7 @@ int w_mode_fct_logi(const int *restrict px, const double *restrict pw, const int
 
 
 double mode_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
-  if(l == 1) return px[0];
+  if(l == 1) return sorted ? px[0] : px[po[0]-1];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, max = 1, i = 0, end = l-1,
@@ -365,7 +371,10 @@ double mode_double(const double *restrict px, const int *restrict po, const int 
 }
 
 double w_mode_double(const double *restrict px, const double *restrict pw, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
-  if(l == 1) return ISNAN(pw[0]) ? NA_REAL : px[0];
+  if(l == 1) {
+    if(sorted) return ISNAN(pw[0]) ? NA_REAL : px[0];
+    return ISNAN(pw[po[0]-1]) ? NA_REAL : px[po[0]-1];
+  }
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, i = 0, end = l-1, minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
@@ -448,7 +457,7 @@ double w_mode_double(const double *restrict px, const double *restrict pw, const
 
 
 SEXP mode_string(const SEXP *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
-  if(l == 1) return px[0];
+  if(l == 1) return sorted ? px[0] : px[po[0]-1];
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, max = 1, i = 0, end = l-1,
@@ -525,7 +534,10 @@ SEXP mode_string(const SEXP *restrict px, const int *restrict po, const int l, c
 }
 
 SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int *restrict po, const int l, const int sorted, const int narm, const int ret) {
-  if(l == 1) return ISNAN(pw[0]) ? NA_STRING : px[0];
+  if(l == 1) {
+    if(sorted) return ISNAN(pw[0]) ? NA_STRING : px[0];
+    return ISNAN(pw[po[0]-1]) ? NA_STRING : px[po[0]-1];
+  }
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, index = 0, i = 0, end = l-1, minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;

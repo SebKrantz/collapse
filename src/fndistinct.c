@@ -9,7 +9,7 @@
 // Problem: does not work in parallel, each thread needs own hash table...
 
 int ndistinct_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm) {
-  if(l == 1) return !(narm && px[0] == NA_INTEGER);
+  if(l == 1) return !(narm && px[sorted ? 0 : po[0]-1] == NA_INTEGER);
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;
@@ -58,7 +58,7 @@ int ndistinct_int(const int *restrict px, const int *restrict po, const int l, c
 }
 
 int ndistinct_fct(const int *restrict px, const int *restrict po, const int l, const int nlev, const int sorted, const int narm) {
-  if(l == 1) return !(narm && px[0] == NA_INTEGER);
+  if(l == 1) return !(narm && px[sorted ? 0 : po[0]-1] == NA_INTEGER);
   int *restrict h = (int*)Calloc(nlev+1, int);
   int ndist = 0, anyNA = narm; // Ensures breaking works if narm = TRUE or FALSE
   if(sorted) {
@@ -92,7 +92,7 @@ int ndistinct_fct(const int *restrict px, const int *restrict po, const int l, c
 }
 
 int ndistinct_logi(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm) {
-  if(l == 1) return !(narm && px[0] == NA_LOGICAL);
+  if(l == 1) return !(narm && px[sorted ? 0 : po[0]-1] == NA_LOGICAL);
   int seenT = 0, seenF = 0, anyNA = narm; // Ensures breaking works if narm = TRUE or FALSE
   if(sorted) {
     for (int i = 0, xi; i != l; ++i) {
@@ -131,7 +131,7 @@ int ndistinct_logi(const int *restrict px, const int *restrict po, const int l, 
 }
 
 int ndistinct_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm) {
-  if(l == 1) return !(narm && ISNAN(px[0]));
+  if(l == 1) return !(narm && ISNAN(px[sorted ? 0 : po[0]-1]));
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;
@@ -185,7 +185,7 @@ int ndistinct_double(const double *restrict px, const int *restrict po, const in
 }
 
 int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int l, const int sorted, const int narm) {
-  if(l == 1) return !(narm && px[0] == NA_STRING);
+  if(l == 1) return !(narm && px[sorted ? 0 : po[0]-1] == NA_STRING);
   const size_t l2 = 2U * (size_t) l;
   size_t M = 256, id = 0;
   int K = 8, ndist = 0, anyNA = 0;

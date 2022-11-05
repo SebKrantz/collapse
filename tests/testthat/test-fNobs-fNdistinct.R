@@ -215,3 +215,16 @@ test_that("fndistinct produces errors for wrong input", {
 })
 
 }
+
+test_that("Singleton group optimization works properly", {
+  g <- GRP(as.character(seq_row(mtcars)))
+  xNA <- na_insert(mtcars$mpg)
+  expect_equal(unattrib(fndistinct(xNA, g)), as.integer(!is.na(xNA[g$order])))
+  g <- GRP(seq_row(mtcars))
+  xNA <- na_insert(mtcars$mpg)
+  expect_equal(unattrib(fndistinct(xNA, g)), as.integer(!is.na(xNA[g$order])))
+  g <- GRP(sample.int(100, 32))
+  xNA <- na_insert(mtcars$mpg)
+  expect_equal(unattrib(fndistinct(xNA, g)), as.integer(!is.na(xNA[g$order])))
+})
+
