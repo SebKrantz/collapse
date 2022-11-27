@@ -51,6 +51,9 @@ static int nalast = -1;
 // =1, -1 for ascending and descending order respectively
 static int order = 1;
 
+static double POS_INF = 1.0/0.0;
+static double NEG_INF = -1.0/0.0;
+
 //replaced n < 200 with n < N_SMALL.Easier to change later
 #define N_SMALL 200
 // range limit for counting sort. Should be less than INT_MAX
@@ -611,14 +614,14 @@ static void iradix_r(int *xsub, int *osub, int n, int radix)
 // + changed to MSD and hooked into do_radixsort framework here.
 // + replaced tolerance with rounding s.f.
 
-static unsigned long long dmask1;
-static unsigned long long dmask2;
+// static unsigned long long dmask1;
+// static unsigned long long dmask2;
 
-static void setNumericRounding(int dround)
-{
-  dmask1 = dround ? 1 << (8 * dround - 1) : 0;
-  dmask2 = 0xffffffffffffffff << dround * 8;
-}
+// static void setNumericRounding(int dround)
+// {
+  // dmask1 = dround ? 1 << (8 * dround - 1) : 0;
+  // dmask2 = 0xffffffffffffffff << dround * 8;
+// }
 
 static union {
   double d;
@@ -629,8 +632,9 @@ static
   unsigned long long dtwiddle(void *p, int i, int order)
   {
     u.d = order * ((double *)p)[i]; // take care of 'order' at the beginning
-    if (R_FINITE(u.d)) {
-      u.ull = (u.d != 0.0) ? u.ull + ((u.ull & dmask1) << 1) : 0;
+    if (u.d == u.d & u.d != POS_INF & u.d != NEG_INF) { // R_FINITE(u.d)
+      u.ull = (u.d != 0.0) ? u.ull : 0;
+      // u.ull = (u.d != 0.0) ? u.ull + ((u.ull & dmask1) << 1) : 0;
     } else if (ISNAN(u.d)) {
       u.ull = 0;
       return (nalast == 1 ? ~u.ull : u.ull);
@@ -639,7 +643,8 @@ static
     // always flip sign bit and if negative (sign bit was set)
     // flip other bits too
     0xffffffffffffffff : 0x8000000000000000;
-    return ((u.ull ^ mask) & dmask2);
+    // return ((u.ull ^ mask) & dmask2);
+    return (u.ull ^ mask);
   }
 
 static Rboolean dnan(void *p, int i)
@@ -1597,7 +1602,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
 
   /* When grouping, we round off doubles to account for imprecision */
-  setNumericRounding(0); // before: retGrp ? 2 : 0
+  // setNumericRounding(0); // before: retGrp ? 2 : 0
 
   if (args == R_NilValue)
     return R_NilValue;
@@ -2009,7 +2014,7 @@ void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
 
   nalast = (NA_last) ? 1 : -1; // 1=TRUE, -1=FALSE
   /* When grouping, we round off doubles to account for imprecision */
-  setNumericRounding(0);
+  // setNumericRounding(0);
   if(!isVector(x)) error("x is not a vector");
   nl = XLENGTH(x);
   order = (decreasing) ? -1 : 1;
