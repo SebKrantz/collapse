@@ -51,8 +51,8 @@ static int nalast = -1;
 // =1, -1 for ascending and descending order respectively
 static int order = 1;
 
-static double POS_INF = 1.0/0.0;
-static double NEG_INF = -1.0/0.0;
+// static double POS_INF = 1.0/0.0;
+// static double NEG_INF = -1.0/0.0;
 
 //replaced n < 200 with n < N_SMALL.Easier to change later
 #define N_SMALL 200
@@ -632,10 +632,11 @@ static
   unsigned long long dtwiddle(void *p, int i, int order)
   {
     u.d = order * ((double *)p)[i]; // take care of 'order' at the beginning
-    if (u.d == u.d & u.d != POS_INF & u.d != NEG_INF) { // R_FINITE(u.d)
-      u.ull = (u.d != 0.0) ? u.ull : 0;
+    // if (u.d == u.d & u.d != POS_INF & u.d != NEG_INF) { // R_FINITE(u.d)
+    //  u.ull = (u.d != 0.0) ? u.ull : 0;
       // u.ull = (u.d != 0.0) ? u.ull + ((u.ull & dmask1) << 1) : 0;
-    } else if (ISNAN(u.d)) {
+    // } else
+    if (ISNAN(u.d)) {
       u.ull = 0;
       return (nalast == 1 ? ~u.ull : u.ull);
     }
