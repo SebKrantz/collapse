@@ -69,7 +69,7 @@ extern Rcomplex NA_CPLX;  // initialized in init.c; see there for comments
 
 // radixsort Must do Cradixsort, otherwise issue on mac
 // SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args);
-// void Cdoubleradixsort(int *o, bool NA_last, bool decreasing, SEXP x);
+// void num1radixsort(int *o, bool NA_last, bool decreasing, SEXP x);
 // static void dsort(double *x, int *o, int n);
 
 // dogroups.c

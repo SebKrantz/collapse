@@ -2026,7 +2026,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
 
 // Get the order of a single numeric column. Used internally for weighted quantile computations.
-void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
+void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   int n = -1, tmp;
   R_xlen_t nl = n;
   void *xd;

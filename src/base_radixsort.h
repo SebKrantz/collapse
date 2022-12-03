@@ -61,4 +61,4 @@ typedef struct VECTOR_SEXPREC {
 
 
 SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args);
-void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x);
+void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x);
