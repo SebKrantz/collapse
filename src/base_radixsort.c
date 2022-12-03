@@ -1721,8 +1721,8 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
     }
   }
 
-  int maxgrpn = gsmax[flip];   // biggest group in the first arg
-  void *xsub = NULL;           // local
+  int maxgrpn = gsmax[flip];          // biggest group in the first arg
+  void *xsub = NULL, *xsubaddr = NULL;   // local
   // int (*f) ();
   // void (*g) ();
   int fgtype;
@@ -1730,6 +1730,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   if (narg > 1 && gsngrp[flip] < n) {
     // double is the largest type, 8
     xsub = (void *) malloc(maxgrpn * sizeof(double));
+    xsubaddr = xsub; // Needed to get back location...
     if (xsub == NULL)
       Error("Couldn't allocate xsub in do_radixsort, requested %d * %d bytes.",
             maxgrpn, sizeof(double));
@@ -1829,15 +1830,22 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       //        though, will have to copy x at that point
       //        When doing this, xsub could be allocated at
       //        that point for the first time.
-      if (TYPEOF(x) == STRSXP)
-        for (int j = 0; j != thisgrpn; ++j)
-          ((SEXP *) xsub)[j] = ((SEXP *) xd)[o[i++] - 1];
-      else if (TYPEOF(x) == REALSXP)
-        for (int j = 0; j != thisgrpn; ++j)
-          ((double *) xsub)[j] = ((double *) xd)[o[i++] - 1];
-      else
-        for (int j = 0; j != thisgrpn; ++j)
-          ((int *) xsub)[j] = ((int *) xd)[o[i++] - 1];
+      // -> Implementing this:
+      if(isSorted) xsub = xd+i;
+      else switch(TYPEOF(x)) {
+        case STRSXP: {
+          SEXP *pxsub = (SEXP *)xsub, *pxd = (SEXP *)xd-1;
+          for(int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[o[i++]];
+        } break;
+        case REALSXP: {
+          double *pxsub = (double *)xsub, *pxd = (double *)xd-1;
+          for (int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[o[i++]];
+        } break;
+        default: {
+          int *pxsub = (int *)xsub, *pxd = (int *)xd-1;
+          for (int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[o[i++]];
+        }
+      }
 
       // continue; // BASELINE short circuit timing
       // point. Up to here is the cost of creating xsub.
@@ -1854,19 +1862,22 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       case 4:
         tmp = csorted(xsub, thisgrpn);
       }
+
       if (tmp) {
+        if(isSorted) xsub = xsubaddr; // need to reset here as well...
         // *sorted will have already push()'d the groups
         if (tmp == -1) {
           isSorted = FALSE;
-          for (int k = 0; k < thisgrpn / 2; k++) {
+          for (int k = 0, q; k < thisgrpn / 2; k++) {
             // reverse the order in-place using no
             // function call or working memory
             // isorted only returns -1 for
             // _strictly_ decreasing order,
             // otherwise ties wouldn't be stable
+            q = thisgrpn - 1 - k;
             tmp = osub[k];
-            osub[k] = osub[thisgrpn - 1 - k];
-            osub[thisgrpn - 1 - k] = tmp;
+            osub[k] = osub[q];
+            osub[q] = tmp;
           }
         } else if (nalast == 0 && tmp == -2) {
           // all NAs, replace osub[.] with 0s.
@@ -1874,8 +1885,8 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
           for (int k = 0; k != thisgrpn; ++k) osub[k] = 0;
         }
         continue;
-      }
-      isSorted = FALSE;
+      } // I think no need to allocate xsub, just need to reset pointer after sorting...
+
       // nalast=NA will result in newo[0] = 0. So had to change to -1.
       newo[0] = -1;
       // may update osub directly, or if not will put the
@@ -1888,16 +1899,21 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       case 4: cgroup(xsub, osub, thisgrpn); break;
       }
 
+      if(isSorted) xsub = xsubaddr; // This is it, just need to restore the memory address...
+
+      isSorted = FALSE;
+
       if (newo[0] != -1) {
-        if (nalast != 0)
+        int *pxsub = (int *)xsub;
+        if (nalast != 0) {
           for (int j = 0; j != thisgrpn; ++j)
             // reuse xsub to reorder osub
-            ((int *) xsub)[j] = osub[newo[j] - 1];
-        else
+            pxsub[j] = osub[newo[j] - 1];
+        } else {
           for (int j = 0; j != thisgrpn; ++j)
             // final nalast case to handle!
-            ((int *) xsub)[j] = (newo[j] == 0) ? 0 :
-            osub[newo[j] - 1];
+            pxsub[j] = (newo[j] == 0) ? 0 : osub[newo[j] - 1];
+        }
         memcpy(osub, xsub, thisgrpn * sizeof(int));
       }
     }
