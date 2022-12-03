@@ -51,6 +51,9 @@ static int nalast = -1;
 // =1, -1 for ascending and descending order respectively
 static int order = 1;
 
+// static double POS_INF = 1.0/0.0;
+// static double NEG_INF = -1.0/0.0;
+
 //replaced n < 200 with n < N_SMALL.Easier to change later
 #define N_SMALL 200
 // range limit for counting sort. Should be less than INT_MAX
@@ -611,14 +614,14 @@ static void iradix_r(int *xsub, int *osub, int n, int radix)
 // + changed to MSD and hooked into do_radixsort framework here.
 // + replaced tolerance with rounding s.f.
 
-static unsigned long long dmask1;
-static unsigned long long dmask2;
+// static unsigned long long dmask1;
+// static unsigned long long dmask2;
 
-static void setNumericRounding(int dround)
-{
-  dmask1 = dround ? 1 << (8 * dround - 1) : 0;
-  dmask2 = 0xffffffffffffffff << dround * 8;
-}
+// static void setNumericRounding(int dround)
+// {
+  // dmask1 = dround ? 1 << (8 * dround - 1) : 0;
+  // dmask2 = 0xffffffffffffffff << dround * 8;
+// }
 
 static union {
   double d;
@@ -629,9 +632,11 @@ static
   unsigned long long dtwiddle(void *p, int i, int order)
   {
     u.d = order * ((double *)p)[i]; // take care of 'order' at the beginning
-    if (R_FINITE(u.d)) {
-      u.ull = (u.d != 0.0) ? u.ull + ((u.ull & dmask1) << 1) : 0;
-    } else if (ISNAN(u.d)) {
+    // if (u.d == u.d & u.d != POS_INF & u.d != NEG_INF) { // R_FINITE(u.d)
+    //  u.ull = (u.d != 0.0) ? u.ull : 0;
+      // u.ull = (u.d != 0.0) ? u.ull + ((u.ull & dmask1) << 1) : 0;
+    // } else
+    if (ISNAN(u.d)) {
       u.ull = 0;
       return (nalast == 1 ? ~u.ull : u.ull);
     }
@@ -639,7 +644,8 @@ static
     // always flip sign bit and if negative (sign bit was set)
     // flip other bits too
     0xffffffffffffffff : 0x8000000000000000;
-    return ((u.ull ^ mask) & dmask2);
+    // return ((u.ull ^ mask) & dmask2);
+    return (u.ull ^ mask);
   }
 
 static Rboolean dnan(void *p, int i)
@@ -1093,9 +1099,10 @@ static void cgroup(SEXP * x, int *o, int n)
   // where equal (sort needed therefore, unfortunately?, only if
   // there are any marked encodings present)
   int cumsum = 0;
-  for (int i = 0; i != ustr_n; ++i) {      // 0.000
-    push(-TRLEN(ustr[i]));
-    SET_TRLEN(ustr[i], cumsum += -TRLEN(ustr[i]));
+  for (int i = 0, mtli; i != ustr_n; ++i) {      // 0.000
+    mtli = -TRLEN(ustr[i]);
+    push(mtli);
+    SET_TRLEN(ustr[i], cumsum += mtli);
   }
   int *target = (o[0] != -1) ? newo : o;
   for (int i = n - 1; i >= 0; i--) {
@@ -1597,7 +1604,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
 
   /* When grouping, we round off doubles to account for imprecision */
-  setNumericRounding(0); // before: retGrp ? 2 : 0
+  // setNumericRounding(0); // before: retGrp ? 2 : 0
 
   if (args == R_NilValue)
     return R_NilValue;
@@ -1715,8 +1722,8 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
     }
   }
 
-  int maxgrpn = gsmax[flip];   // biggest group in the first arg
-  void *xsub = NULL;           // local
+  int maxgrpn = gsmax[flip];          // biggest group in the first arg
+  void *xsub = NULL; // , *xsubaddr = NULL;   // local
   // int (*f) ();
   // void (*g) ();
   int fgtype;
@@ -1724,6 +1731,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   if (narg > 1 && gsngrp[flip] < n) {
     // double is the largest type, 8
     xsub = (void *) malloc(maxgrpn * sizeof(double));
+    // xsubaddr = xsub; // Needed to get back location...
     if (xsub == NULL)
       Error("Couldn't allocate xsub in do_radixsort, requested %d * %d bytes.",
             maxgrpn, sizeof(double));
@@ -1823,15 +1831,29 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       //        though, will have to copy x at that point
       //        When doing this, xsub could be allocated at
       //        that point for the first time.
-      if (TYPEOF(x) == STRSXP)
-        for (int j = 0; j != thisgrpn; ++j)
-          ((SEXP *) xsub)[j] = ((SEXP *) xd)[o[i++] - 1];
-      else if (TYPEOF(x) == REALSXP)
-        for (int j = 0; j != thisgrpn; ++j)
-          ((double *) xsub)[j] = ((double *) xd)[o[i++] - 1];
-      else
-        for (int j = 0; j != thisgrpn; ++j)
-          ((int *) xsub)[j] = ((int *) xd)[o[i++] - 1];
+      // -> Implementing this:
+      if(isSorted) {
+        // xsub = xd+i;
+        switch(TYPEOF(x)) {
+        case STRSXP: memcpy((SEXP *)xsub, (SEXP *)xd+i, thisgrpn * sizeof(SEXP)); break;
+        case REALSXP: memcpy((double *)xsub, (double *)xd+i, thisgrpn * sizeof(double)); break;
+        default: memcpy((int *)xsub, (int *)xd+i, thisgrpn * sizeof(int)); break;
+        }
+        i += thisgrpn;
+      } else switch(TYPEOF(x)) {
+        case STRSXP: {
+          SEXP *pxsub = (SEXP *)xsub, *pxd = (SEXP *)xd-1;
+          for(int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[o[i++]];
+        } break;
+        case REALSXP: {
+          double *pxsub = (double *)xsub, *pxd = (double *)xd-1;
+          for (int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[o[i++]];
+        } break;
+        default: {
+          int *pxsub = (int *)xsub, *pxd = (int *)xd-1;
+          for (int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[o[i++]];
+        }
+      }
 
       // continue; // BASELINE short circuit timing
       // point. Up to here is the cost of creating xsub.
@@ -1848,19 +1870,22 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       case 4:
         tmp = csorted(xsub, thisgrpn);
       }
+
       if (tmp) {
+        // if(isSorted) xsub = xsubaddr; // need to reset here as well...
         // *sorted will have already push()'d the groups
         if (tmp == -1) {
           isSorted = FALSE;
-          for (int k = 0; k < thisgrpn / 2; k++) {
+          for (int k = 0, q; k < thisgrpn / 2; k++) {
             // reverse the order in-place using no
             // function call or working memory
             // isorted only returns -1 for
             // _strictly_ decreasing order,
             // otherwise ties wouldn't be stable
+            q = thisgrpn - 1 - k;
             tmp = osub[k];
-            osub[k] = osub[thisgrpn - 1 - k];
-            osub[thisgrpn - 1 - k] = tmp;
+            osub[k] = osub[q];
+            osub[q] = tmp;
           }
         } else if (nalast == 0 && tmp == -2) {
           // all NAs, replace osub[.] with 0s.
@@ -1868,7 +1893,14 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
           for (int k = 0; k != thisgrpn; ++k) osub[k] = 0;
         }
         continue;
-      }
+      } // else if(isSorted) { // Need to copy now, because isort, dsort etc modify the data...
+      //   switch(TYPEOF(x)) {
+      //   case STRSXP: memcpy((SEXP *)xsubaddr, (SEXP *)xsub, thisgrpn * sizeof(SEXP)); break;
+      //   case REALSXP: memcpy((double *)xsubaddr, (double *)xsub, thisgrpn * sizeof(double)); break;
+      //   default: memcpy((int *)xsubaddr, (int *)xsub, thisgrpn * sizeof(int)); break;
+      //   }
+      //   xsub = xsubaddr;
+      // }
       isSorted = FALSE;
       // nalast=NA will result in newo[0] = 0. So had to change to -1.
       newo[0] = -1;
@@ -1883,15 +1915,16 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       }
 
       if (newo[0] != -1) {
-        if (nalast != 0)
+        int *pxsub = (int *)xsub;
+        if (nalast != 0) {
           for (int j = 0; j != thisgrpn; ++j)
             // reuse xsub to reorder osub
-            ((int *) xsub)[j] = osub[newo[j] - 1];
-        else
+            pxsub[j] = osub[newo[j] - 1];
+        } else {
           for (int j = 0; j != thisgrpn; ++j)
             // final nalast case to handle!
-            ((int *) xsub)[j] = (newo[j] == 0) ? 0 :
-            osub[newo[j] - 1];
+            pxsub[j] = (newo[j] == 0) ? 0 : osub[newo[j] - 1];
+        }
         memcpy(osub, xsub, thisgrpn * sizeof(int));
       }
     }
@@ -2002,64 +2035,72 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 }
 
 
-void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
+
+// Get the order of a single numeric column. Used internally for weighted quantile computations.
+void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   int n = -1, tmp;
   R_xlen_t nl = n;
   void *xd;
 
   nalast = (NA_last) ? 1 : -1; // 1=TRUE, -1=FALSE
-  /* When grouping, we round off doubles to account for imprecision */
-  setNumericRounding(0);
   if(!isVector(x)) error("x is not a vector");
   nl = XLENGTH(x);
   order = (decreasing) ? -1 : 1;
 
-  // (ML) FIXME: need to support long vectors
   if (nl > INT_MAX) error("long vectors not supported");
 
   n = (int) nl;
-  // if (n != LENGTH(o)) error("lengths of all arguments must match"); Cannot get length from pointer to first element!!
 
   // upper limit for stack size (all size 1 groups). We'll detect
   // and avoid that limit, but if just one non-1 group (say 2), that
   // can't be avoided.
   gsmaxalloc = n;
 
-  // once for the result, needs to be length n.
-
-  // TO DO: save allocation if NULL is returned (isSorted = =TRUE) so
-  // [i|c|d]sort know they can populate o directly with no working
-  // memory needed to reorder existing order had to repace this from
-  // '0' to '-1' because 'nalast = 0' replace 'o[.]' with 0 values.
-
   if (n > 0) o[0] = -1;
   xd = DATAPTR(x);
 
+  switch(TYPEOF(x)) {
+  case INTSXP:
+  case LGLSXP:
+    tmp = isorted(xd, n);
+    break;
+  case REALSXP :
+    twiddle = &dtwiddle;
+    is_nan  = &dnan;
+    tmp = dsorted(xd, n);
+    break;
+  default :
+    error("First arg is type '%s', not yet supported",
+          type2char(TYPEOF(x)));
+  }
+
+  // only needed for multiple columns or grouping
   stackgrps = FALSE;
-  // savetl_init();   // from now on use Error not error.
-  twiddle = &dtwiddle;
-  is_nan  = &dnan;
-  tmp = dsorted(xd, n);
+
   if (tmp) { // -1 or 1.
     if (tmp == 1) { // same as expected in 'order' (1 = increasing, -1 = decreasing)
       for (int i = 0; i != n; ++i) o[i] = i + 1;
-    } else if (tmp == -1) { // -1 (or -n for result of strcmp), strictly opposite to -expected 'order'
+    } else if (tmp == -1) { // -1 strictly opposite to -expected 'order'
       for (int i = 0; i != n; ++i) o[i] = n - i;
     }
   } else {
+    switch (TYPEOF(x)) {
+    case INTSXP:
+    case LGLSXP:
+      isort(xd, o, n);
+      break;
+    case REALSXP :
       dsort(xd, o, n);
+      break;
+    default:
+      error("Internal error: previous default should have caught unsupported type");
+    }
   }
-  // dsort(xd, o, n);
 
-
-  maxlen = 1;  // reset global. Minimum needed to count "" and NA
-  //savetl_end();
-
-  // gsfree(); // ok??
-  free(radix_xsub);          radix_xsub=NULL;    radix_xsuballoc=0; // needed in dradix !!
-  free(newo);    newo=NULL; // also needed !!
-  free(xtmp);                xtmp=NULL;          xtmp_alloc=0; // needed !!
-  free(otmp);                otmp=NULL;          otmp_alloc=0; // needed !!
-  // TO DO: use xtmp already got
-
+  // maxlen = 1; // Only needed for strings...
+  gsfree(); // Needed !!
+  free(radix_xsub);          radix_xsub=NULL;    radix_xsuballoc=0;
+  // free(newo);                newo=NULL; // not needed if only one column
+  free(xtmp);                xtmp=NULL;          xtmp_alloc=0;
+  free(otmp);                otmp=NULL;          otmp_alloc=0;
 }

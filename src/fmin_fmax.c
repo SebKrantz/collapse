@@ -29,7 +29,7 @@ void fmin_double_impl(double *pout, double *px, int ng, int *pg, int narm, int l
       --pout;
       for(int i = l; i--; ) if(pout[pg[i]] > px[i] || ISNAN(pout[pg[i]])) pout[pg[i]] = px[i];  // fastest
     } else {
-      for(int i = ng; i--; ) pout[i] = DBL_MAX;
+      for(int i = ng; i--; ) pout[i] = POS_INF;
       --pout;
       for(int i = l; i--; ) if(pout[pg[i]] > px[i] || ISNAN(px[i])) pout[pg[i]] = px[i];  // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     }
@@ -99,7 +99,7 @@ void fmax_double_impl(double *pout, double *px, int ng, int *pg, int narm, int l
       --pout;
       for(int i = l; i--; ) if(pout[pg[i]] < px[i] || ISNAN(pout[pg[i]])) pout[pg[i]] = px[i];  // fastest
     } else {
-      for(int i = ng; i--; ) pout[i] = DBL_MIN;
+      for(int i = ng; i--; ) pout[i] = NEG_INF;
       --pout;
       for(int i = l; i--; ) if(pout[pg[i]] < px[i] || ISNAN(px[i])) pout[pg[i]] = px[i];  // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     }

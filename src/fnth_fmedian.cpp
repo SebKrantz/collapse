@@ -139,7 +139,7 @@ NumericVector fnthCpp(const NumericVector& x, double Q = 0.5, int ng = 0, const 
     if(l != wg.size()) stop("length(w) must match length(x)");
     IntegerVector o = no_init_vector(l);
     int *ord = INTEGER(o);
-    Cdoubleradixsort(ord, TRUE, FALSE, wrap(x)); // starts from 1
+    num1radixsort(ord, TRUE, FALSE, wrap(x)); // starts from 1
 
     if(ng == 0) {
       double wsumQ = 0, wsum = wg[o[0]-1], res = DBL_MIN;
@@ -412,7 +412,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
       }
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
-        Cdoubleradixsort(ord, TRUE, FALSE, wrap(column)); // starts from 1....
+        num1radixsort(ord, TRUE, FALSE, wrap(column)); // starts from 1....
         if(narm) {
           wsumQ = 0;
           for(int i = 0; i != l; ++i) if(nisnan(column[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
@@ -468,7 +468,7 @@ SEXP fnthmCpp(const NumericMatrix& x, double Q = 0.5, int ng = 0, const IntegerV
       for(int j = col; j--; ) {
         NumericMatrix::ConstColumn column = x( _ , j);
         NumericMatrix::Column nthj = out( _ , j);
-        Cdoubleradixsort(ord, TRUE, FALSE, wrap(column));
+        num1radixsort(ord, TRUE, FALSE, wrap(column));
         NumericVector wsum(ng);
         if(narm) {
           std::fill(wsumQ.begin(), wsumQ.end(), 0.0);
@@ -720,7 +720,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
       for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(lx1 != column.size()) stop("length(w) must match nrow(x)");
-        Cdoubleradixsort(ord, TRUE, FALSE, wrap(column)); // starts from 1
+        num1radixsort(ord, TRUE, FALSE, wrap(column)); // starts from 1
         if(narm) {
           wsumQ = 0;
           for(int i = 0; i != lx1; ++i) if(nisnan(column[i])) wsumQ += wg[i]; //  && nisnan(wg[i])
@@ -781,7 +781,7 @@ SEXP fnthlCpp(const List& x, double Q = 0.5, int ng = 0, const IntegerVector& g 
       for(int j = l; j--; ) {
         NumericVector column = x[j];
         if(lx1 != column.size()) stop("length(w) must match nrow(x)");
-        Cdoubleradixsort(ord, TRUE, FALSE, wrap(column));
+        num1radixsort(ord, TRUE, FALSE, wrap(column));
         NumericVector wsum(ng), nthj(ng, NA_REAL);
         if(narm) {
           std::fill(wsumQ.begin(), wsumQ.end(), 0.0);

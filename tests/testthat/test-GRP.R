@@ -7,17 +7,20 @@ if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
 
 NCRAN <- Sys.getenv("NCRAN") == "TRUE"
 set.seed(101)
-mtcNA <- na_insert(mtcars)
+mtcNA <- na_insert(na_insert(na_insert(mtcars), 0.05, value = Inf), 0.05, value = -Inf)
 wlddev2 <- slt(wlddev, -date)
 num_vars(wlddev2) <- round(num_vars(wlddev2), 8)
+num_vars(wlddev2) <- na_insert(na_insert(num_vars(wlddev2), 0.01, value = Inf), 0.01, value = -Inf)
 wldNA <- na_insert(wlddev2)
-
 GGDCNA <- na_insert(GGDC10S)
 
 
 unlab <- function(x) `attr<-`(x, "label", NULL)
 
 test_that("radixorder works like order(.., method = 'radix')", {
+
+wldNA$ones = 1
+wldNA$sequ = 1:fnrow(wldNA)
 
 # Ordering single variable
 expect_identical(lapply(wldNA, function(x) unattrib(radixorder(x))), lapply(wldNA, order, method = "radix"))
@@ -403,6 +406,23 @@ test_that("GRP2() works as intended", {
   expect_identical(lapply(g, function(i) GRP2(.subset(wlduo, i))), lapply(g, function(i) base_group(.subset(wlduo, i), sort = TRUE, group.sizes = TRUE)))
 })
 
+# This is a bit odd test, but there have been some issues here in the past...
+test_that("Single groups works correctly", {
+
+  g <- replicate(30, qG(rep(1, 10)), simplify = FALSE)
+  expect_true(all_identical(g))
+  expect_true(all(sapply(g, attr, "N.groups") == 1L))
+  g <- replicate(30, qG(rep(1, 10), na.exclude = FALSE), simplify = FALSE)
+  expect_true(all_identical(g))
+  expect_true(all(sapply(g, attr, "N.groups") == 1L))
+  g <- replicate(30, qG(replace(rep(1, 10), 3:4, NA_real_)), simplify = FALSE)
+  expect_true(all_identical(g))
+  expect_true(all(sapply(g, attr, "N.groups") == 1L))
+  g <- replicate(30, qG(replace(rep(1, 10), 3:4, NA_real_), na.exclude = FALSE), simplify = FALSE)
+  expect_true(all_identical(g))
+  expect_true(all(sapply(g, attr, "N.groups") == 2L))
+
+})
 
 if(identical(Sys.getenv("NCRAN"), "TRUE")) {
 
