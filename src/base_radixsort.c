@@ -2024,64 +2024,71 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 }
 
 
+
+// Get the order of a single numeric column. Used internally for weighted quantile computations.
 void Cdoubleradixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   int n = -1, tmp;
   R_xlen_t nl = n;
   void *xd;
 
   nalast = (NA_last) ? 1 : -1; // 1=TRUE, -1=FALSE
-  /* When grouping, we round off doubles to account for imprecision */
-  // setNumericRounding(0);
   if(!isVector(x)) error("x is not a vector");
   nl = XLENGTH(x);
   order = (decreasing) ? -1 : 1;
 
-  // (ML) FIXME: need to support long vectors
   if (nl > INT_MAX) error("long vectors not supported");
 
   n = (int) nl;
-  // if (n != LENGTH(o)) error("lengths of all arguments must match"); Cannot get length from pointer to first element!!
 
   // upper limit for stack size (all size 1 groups). We'll detect
   // and avoid that limit, but if just one non-1 group (say 2), that
   // can't be avoided.
   gsmaxalloc = n;
 
-  // once for the result, needs to be length n.
-
-  // TO DO: save allocation if NULL is returned (isSorted = =TRUE) so
-  // [i|c|d]sort know they can populate o directly with no working
-  // memory needed to reorder existing order had to repace this from
-  // '0' to '-1' because 'nalast = 0' replace 'o[.]' with 0 values.
-
   if (n > 0) o[0] = -1;
   xd = DATAPTR(x);
 
+  switch(TYPEOF(x)) {
+  case INTSXP:
+  case LGLSXP:
+    tmp = isorted(xd, n);
+    break;
+  case REALSXP :
+    twiddle = &dtwiddle;
+    is_nan  = &dnan;
+    tmp = dsorted(xd, n);
+    break;
+  default :
+    error("First arg is type '%s', not yet supported",
+          type2char(TYPEOF(x)));
+  }
+
+  // only needed for multiple columns or grouping
   stackgrps = FALSE;
-  // savetl_init();   // from now on use Error not error.
-  twiddle = &dtwiddle;
-  is_nan  = &dnan;
-  tmp = dsorted(xd, n);
+
   if (tmp) { // -1 or 1.
     if (tmp == 1) { // same as expected in 'order' (1 = increasing, -1 = decreasing)
       for (int i = 0; i != n; ++i) o[i] = i + 1;
-    } else if (tmp == -1) { // -1 (or -n for result of strcmp), strictly opposite to -expected 'order'
+    } else if (tmp == -1) { // -1 strictly opposite to -expected 'order'
       for (int i = 0; i != n; ++i) o[i] = n - i;
     }
   } else {
+    switch (TYPEOF(x)) {
+    case INTSXP:
+    case LGLSXP:
+      isort(xd, o, n);
+      break;
+    case REALSXP :
       dsort(xd, o, n);
+      break;
+    default:
+      error("Internal error: previous default should have caught unsupported type");
+    }
   }
-  // dsort(xd, o, n);
-
 
   maxlen = 1;  // reset global. Minimum needed to count "" and NA
-  //savetl_end();
-
-  // gsfree(); // ok??
-  free(radix_xsub);          radix_xsub=NULL;    radix_xsuballoc=0; // needed in dradix !!
-  free(newo);    newo=NULL; // also needed !!
-  free(xtmp);                xtmp=NULL;          xtmp_alloc=0; // needed !!
-  free(otmp);                otmp=NULL;          otmp_alloc=0; // needed !!
-  // TO DO: use xtmp already got
-
+  free(radix_xsub);          radix_xsub=NULL;    radix_xsuballoc=0;
+  free(newo);                newo=NULL;
+  free(xtmp);                xtmp=NULL;          xtmp_alloc=0;
+  free(otmp);                otmp=NULL;          otmp_alloc=0;
 }
