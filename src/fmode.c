@@ -99,7 +99,7 @@ int w_mode_int(const int *restrict px, const double *restrict pw, const int *res
   }
   int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
   double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
-  double max = DBL_MIN;
+  double max = NEG_INF;
 
   if(sorted) {
     mode = px[0];
@@ -232,7 +232,7 @@ int w_mode_fct_logi(const int *restrict px, const double *restrict pw, const int
   int val, mode, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
   double *restrict sumw = (double*)Calloc(nlevp+1, double); // Table to save each values sum of weights
-  double max = DBL_MIN;
+  double max = NEG_INF;
 
   if(sorted) {
     mode = px[0];
@@ -384,7 +384,7 @@ double w_mode_double(const double *restrict px, const double *restrict pw, const
   }
   int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
   double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
-  double val, mode, max = DBL_MIN;
+  double val, mode, max = NEG_INF;
   union uno tpv;
 
   if(sorted) {
@@ -547,7 +547,7 @@ SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int
   }
   int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
   double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
-  double max = DBL_MIN;
+  double max = NEG_INF;
   SEXP val, mode;
 
   if(sorted) {

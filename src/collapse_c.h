@@ -7,6 +7,9 @@
 #undef ISNAN
 #define ISNAN(x) ((x) != (x))
 
+static double POS_INF = 1.0/0.0;
+static double NEG_INF = -1.0/0.0;
+
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng);
 void DFcopyAttr(SEXP out, SEXP x, int ng);
 
