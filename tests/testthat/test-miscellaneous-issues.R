@@ -327,4 +327,65 @@ test_that("functions using welfords method properly deal with zero weights", {
 })
 
 
+test_that("singleton groups are handled properly by all statistical functions", {
+  w <- rep(1, fnrow(wlddev))
+  # Ordered
+  g <- GRP(seq_row(wlddev), return.groups = FALSE)
+  expect_equal(fmode(wlddev, g), wlddev)
+  expect_equal(fmode(wlddev, g, w), wlddev)
+  expect_equal(ffirst(wlddev, g), wlddev)
+  expect_equal(flast(wlddev, g), wlddev)
+  expect_equal(dapply(fndistinct(wlddev, g), unattrib), dapply(wlddev, function(x) as.integer(!is.na(x))))
+  expect_equal(fmode(wlddev, g, na.rm = FALSE), wlddev)
+  expect_equal(fmode(wlddev, g, w, na.rm = FALSE), wlddev)
+  expect_equal(ffirst(wlddev, g, na.rm = FALSE), wlddev)
+  expect_equal(flast(wlddev, g, na.rm = FALSE), wlddev)
+  expect_equal(dapply(fndistinct(wlddev, g, na.rm = FALSE), unattrib), dapply(wlddev, function(x) rep(1L, length(x))))
+  for(FUN in list(fmean, fmedian, fnth, fsum, fprod, fmin, fmax, fbetween)) {
+    # print(FUN)
+    expect_equal(FUN(nv(wlddev), g = g), nv(wlddev))
+    expect_equal(FUN(nv(wlddev), g = g, na.rm = FALSE), nv(wlddev))
+    expect_equal(FUN(nv(wlddev), g = g, w = w), nv(wlddev))
+    expect_equal(FUN(nv(wlddev), g = g, w = w, na.rm = FALSE), nv(wlddev))
+  }
+  for(FUN in list(fvar, fsd, fscale, flag, fdiff, fgrowth)) {
+    expect_true(all(dapply(FUN(nv(wlddev), g = g), allNA)))
+    expect_true(all(dapply(FUN(nv(wlddev), g = g, na.rm = FALSE), allNA)))
+    expect_true(all(dapply(FUN(nv(wlddev), g = g, w = w, n = -1), allNA)))
+    expect_true(all(dapply(FUN(nv(wlddev), g = g, w = w, n = -1, na.rm = FALSE), allNA)))
+  }
+  # Unordered
+  o <- radixorder(rnorm(fnrow(wlddev)))
+  g <- GRP(o, return.groups = FALSE)
+  wlduo <- setRownames(ss(wlddev, radixorder(o)))
+  expect_equal(fmode(wlddev, g), wlduo)
+  expect_equal(fmode(wlddev, g, w), wlduo)
+  expect_equal(ffirst(wlddev, g), wlduo)
+  expect_equal(flast(wlddev, g), wlduo)
+  expect_equal(dapply(fndistinct(wlddev, g), unattrib), dapply(wlduo, function(x) as.integer(!is.na(x))))
+  expect_equal(fmode(wlddev, g, na.rm = FALSE), wlduo)
+  expect_equal(fmode(wlddev, g, w, na.rm = FALSE), wlduo)
+  expect_equal(ffirst(wlddev, g, na.rm = FALSE), wlduo)
+  expect_equal(flast(wlddev, g, na.rm = FALSE), wlduo)
+  expect_equal(dapply(fndistinct(wlddev, g, na.rm = FALSE), unattrib), dapply(wlduo, function(x) rep(1L, length(x))))
+  for(FUN in list(fmean, fmedian, fnth, fsum, fprod, fmin, fmax)) {
+    # print(FUN)
+    expect_equal(FUN(nv(wlddev), g = g), nv(wlduo))
+    expect_equal(FUN(nv(wlddev), g = g, na.rm = FALSE), nv(wlduo))
+    expect_equal(FUN(nv(wlddev), g = g, w = w), nv(wlduo))
+    expect_equal(FUN(nv(wlddev), g = g, w = w, na.rm = FALSE), nv(wlduo))
+  }
+  expect_equal(fbetween(nv(wlddev), g), nv(wlddev))
+  expect_equal(fbetween(nv(wlddev), g, na.rm = FALSE), nv(wlddev))
+  expect_equal(fbetween(nv(wlddev), g, w), nv(wlddev))
+  expect_equal(fbetween(nv(wlddev), g, w, na.rm = FALSE), nv(wlddev))
+  for(FUN in list(fvar, fsd, fscale, flag, fdiff, fgrowth)) {
+    expect_true(all(dapply(FUN(nv(wlddev), g = g), allNA)))
+    expect_true(all(dapply(FUN(nv(wlddev), g = g, na.rm = FALSE), allNA)))
+    expect_true(all(dapply(FUN(nv(wlddev), g = g, w = w, n = -1), allNA)))
+    expect_true(all(dapply(FUN(nv(wlddev), g = g, w = w, n = -1, na.rm = FALSE), allNA)))
+  }
+})
+
+
 options(warn = 1)
