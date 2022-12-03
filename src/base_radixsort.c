@@ -1099,9 +1099,10 @@ static void cgroup(SEXP * x, int *o, int n)
   // where equal (sort needed therefore, unfortunately?, only if
   // there are any marked encodings present)
   int cumsum = 0;
-  for (int i = 0; i != ustr_n; ++i) {      // 0.000
-    push(-TRLEN(ustr[i]));
-    SET_TRLEN(ustr[i], cumsum += -TRLEN(ustr[i]));
+  for (int i = 0, mtli; i != ustr_n; ++i) {      // 0.000
+    mtli = -TRLEN(ustr[i]);
+    push(mtli);
+    SET_TRLEN(ustr[i], cumsum += mtli);
   }
   int *target = (o[0] != -1) ? newo : o;
   for (int i = n - 1; i >= 0; i--) {
@@ -1722,7 +1723,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   }
 
   int maxgrpn = gsmax[flip];          // biggest group in the first arg
-  void *xsub = NULL, *xsubaddr = NULL;   // local
+  void *xsub = NULL; // , *xsubaddr = NULL;   // local
   // int (*f) ();
   // void (*g) ();
   int fgtype;
@@ -1730,7 +1731,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   if (narg > 1 && gsngrp[flip] < n) {
     // double is the largest type, 8
     xsub = (void *) malloc(maxgrpn * sizeof(double));
-    xsubaddr = xsub; // Needed to get back location...
+    // xsubaddr = xsub; // Needed to get back location...
     if (xsub == NULL)
       Error("Couldn't allocate xsub in do_radixsort, requested %d * %d bytes.",
             maxgrpn, sizeof(double));
@@ -1831,8 +1832,15 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       //        When doing this, xsub could be allocated at
       //        that point for the first time.
       // -> Implementing this:
-      if(isSorted) xsub = xd+i;
-      else switch(TYPEOF(x)) {
+      if(isSorted) {
+        // xsub = xd+i;
+        switch(TYPEOF(x)) {
+        case STRSXP: memcpy((SEXP *)xsub, (SEXP *)xd+i, thisgrpn * sizeof(SEXP)); break;
+        case REALSXP: memcpy((double *)xsub, (double *)xd+i, thisgrpn * sizeof(double)); break;
+        default: memcpy((int *)xsub, (int *)xd+i, thisgrpn * sizeof(int)); break;
+        }
+        i += thisgrpn;
+      } else switch(TYPEOF(x)) {
         case STRSXP: {
           SEXP *pxsub = (SEXP *)xsub, *pxd = (SEXP *)xd-1;
           for(int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[o[i++]];
@@ -1864,7 +1872,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       }
 
       if (tmp) {
-        if(isSorted) xsub = xsubaddr; // need to reset here as well...
+        // if(isSorted) xsub = xsubaddr; // need to reset here as well...
         // *sorted will have already push()'d the groups
         if (tmp == -1) {
           isSorted = FALSE;
@@ -1885,8 +1893,15 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
           for (int k = 0; k != thisgrpn; ++k) osub[k] = 0;
         }
         continue;
-      } // I think no need to allocate xsub, just need to reset pointer after sorting...
-
+      } // else if(isSorted) { // Need to copy now, because isort, dsort etc modify the data...
+      //   switch(TYPEOF(x)) {
+      //   case STRSXP: memcpy((SEXP *)xsubaddr, (SEXP *)xsub, thisgrpn * sizeof(SEXP)); break;
+      //   case REALSXP: memcpy((double *)xsubaddr, (double *)xsub, thisgrpn * sizeof(double)); break;
+      //   default: memcpy((int *)xsubaddr, (int *)xsub, thisgrpn * sizeof(int)); break;
+      //   }
+      //   xsub = xsubaddr;
+      // }
+      isSorted = FALSE;
       // nalast=NA will result in newo[0] = 0. So had to change to -1.
       newo[0] = -1;
       // may update osub directly, or if not will put the
@@ -1898,10 +1913,6 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       case 3: csort(xsub, osub, thisgrpn); break;
       case 4: cgroup(xsub, osub, thisgrpn); break;
       }
-
-      if(isSorted) xsub = xsubaddr; // This is it, just need to restore the memory address...
-
-      isSorted = FALSE;
 
       if (newo[0] != -1) {
         int *pxsub = (int *)xsub;
@@ -2086,9 +2097,10 @@ void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
     }
   }
 
-  maxlen = 1;  // reset global. Minimum needed to count "" and NA
+  // maxlen = 1; // Only needed for strings...
+  gsfree(); // Needed !!
   free(radix_xsub);          radix_xsub=NULL;    radix_xsuballoc=0;
-  free(newo);                newo=NULL;
+  // free(newo);                newo=NULL; // not needed if only one column
   free(xtmp);                xtmp=NULL;          xtmp_alloc=0;
   free(otmp);                otmp=NULL;          otmp_alloc=0;
 }
