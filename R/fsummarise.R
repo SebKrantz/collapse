@@ -149,6 +149,8 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
   return(condalcSA(res, ax, any(cld == "data.table")))
 }
 
+fsummarize <- fsummarise
+
 smr <- fsummarise
 
 # sumr # -> yes, but above is more consistent with other shortcuts
