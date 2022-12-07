@@ -4,19 +4,19 @@
 #include "collapse_c.h"
 
 // Inspired by Numerical Recipes in C and data.table's quickselect.c
-// Additional inspiration taken from Rfast2, and a loot of my own cooking...
+// Additional inspiration taken from Rfast2, and these references for sample Quantiles:
+// https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
+// https://doi.org/10.2307/2684934
+// https://aakinshin.net/posts/weighted-quantiles/
 
+// Adopted from data.table's quickselect.c
 static inline void iswap(int *a, int *b)           {int     tmp=*a; *a=*b; *b=tmp;}
 static inline void dswap(double *a, double *b)     {double  tmp=*a; *a=*b; *b=tmp;}
 
-// Quickselect return options:
-// ret == 0: Quantile
-// ret == 1: Average (median if Q = 0.5)
-// ret == 2: Lower element
-// ret == 3: Upper element
-
+// Barebones quickselect algorithm from Numerical Recipes in C
 #undef QUICKSELECT
 #define QUICKSELECT(SWAP)                     \
+  unsigned int ir = n-1, l = 0, lp;           \
   for(;;) {                                   \
     lp = l+1;                                 \
     if (ir <= lp) {                           \
@@ -52,56 +52,86 @@ static inline void dswap(double *a, double *b)     {double  tmp=*a; *a=*b; *b=tm
   }                                           \
   a = x[elem];
 
-#define QUICKSELECT_FINISH                    \
-  if (ret > 1 || (ret > 0 && n%2 == 1))       \
-    return (double)a;                         \
-  b = x[elem+1];                              \
-  for(int i = elem+2; i < n; ++i)             \
-      if(x[i] < b) b = x[i];                  \
-  if(ret == 1 || Q == 0.5)                    \
-     return ((double)a+(double)b)/2.0;        \
-  double h = (n-1)*Q - (double)elem;          \
-  return (double)a + h*(double)(b-a);
+// Quantile method switcher
+// https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
+// Need to subtract 1 from h because of 0-indexing in C
+#undef RETQSWITCH
+#define RETQSWITCH(n)                                          \
+  switch(ret) {                                                \
+  case 7:                                                      \
+  case 1:                                                      \
+  case 2: /* quantile type 7, average, or Lower element*/      \
+    h = (n - 1)*Q;                                             \
+    break;                                                     \
+  case 3: /* upper element*/                                   \
+    h = n*Q;                                                   \
+    break;                                                     \
+  case 5: /* quantile type 5*/                                 \
+    h = n*Q - 0.5;                                             \
+    break;                                                     \
+  case 6: /* quantile type 6*/                                 \
+    h = (n + 1)*Q - 1.0;                                       \
+    break;                                                     \
+  case 8: /* quantile type 8 (best according to H&F 1986)*/    \
+    h = ((double)n + 1.0/3.0)*Q - 2.0/3.0;                     \
+    break;                                                     \
+  case 9: /* quantile type 9*/                                 \
+    h = ((double)n + 1.0/4.0)*Q - 5.0/8.0;                     \
+    break;                                                     \
+  }
 
-// same as (1-h)*(double)a + h*(double)b
-// double h = (n-1)*Q - (double)elem;
-// double h = (len-1)*Q; h -= (int)h;
+
 
 double dquickselect(double *x, const int n, const int ret, const double Q) {
   if(n == 0) return NA_REAL;
-  unsigned int ir = n-1, l = 0, lp, elem = ret != 3 ? (n-1)*Q : n*Q;
-  double a, b;
+  unsigned int elem;
+  double a, b, h;
+  RETQSWITCH(n);
+  elem = h;
+  h -= elem; // Key: need to subtract elem
   QUICKSELECT(dswap);
-  QUICKSELECT_FINISH;
+  if((ret == 1 && n%2 == 1) || ret == 2 || ret == 3 || h == 0) return a;
+  b = x[elem+1];
+  for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
+  if(ret == 1 || Q == 0.5) return (a+b)/2.0;
+  return a + h*(b-a); // same as (1-h)*a + h*b
 }
 
 double iquickselect(int *x, const int n, const int ret, const double Q) {
   if(n == 0) return NA_REAL;
-  unsigned int ir = n-1, l = 0, lp, elem = ret != 3 ? (n-1)*Q : n*Q;
+  unsigned int elem;
   int a, b;
+  double h;
+  RETQSWITCH(n);
+  elem = h;
+  h -= elem; // Key: need to subtract elem
   QUICKSELECT(iswap);
-  QUICKSELECT_FINISH;
+  if((ret == 1 && n%2 == 1) || ret == 2 || ret == 3 || h == 0) return (double)a;
+  b = x[elem+1];
+  for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
+  if(ret == 1 || Q == 0.5) return ((double)a+(double)b)/2.0;
+  return (double)a + h*(double)(b-a); // same as (1-h)*(double)a + h*(double)b
 }
 
 
 // --------------------------------------------------------------------------
-// First a faster quantile function... type = 7 as default in stats::quantile
+// First a faster quantile function
 // --------------------------------------------------------------------------
+
+// Need versions that to supply the element and h
 
 double dquickselect_elem(double *x, const int n, const unsigned int elem, double h) {
   if(n == 0) return NA_REAL;
-  unsigned int ir = n-1, l = 0, lp;
   double a, b;
   QUICKSELECT(dswap);
-  if(h == 0) return (double)a;
+  if(h == 0) return a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
-  return (double)a + h*(double)(b-a);
+  return a + h*(b-a);
 }
 
 double iquickselect_elem(int *x, const int n, const unsigned int elem, double h) {
   if(n == 0) return NA_REAL;
-  unsigned int ir = n-1, l = 0, lp;
   int a, b;
   QUICKSELECT(iswap);
   if(h == 0) return (double)a;
@@ -134,23 +164,32 @@ double iquickselect_elem(int *x, const int n, const unsigned int elem, double h)
       pres[np-1] = x_max;                                                     \
     }                                                                         \
   }                                                                           \
-                                                                              \
-  for(int i = 0, offset = 0; i < np; ++i) {                                   \
-    if(probs[i] > 0 && probs[i] < 1) {                                        \
-      double h = (l-1)*probs[i];                                              \
-      pres[i] = QFUN(x_cc + offset, l - offset, (int)h - offset, h - (int)h); \
-      offset = (int)h;                                                        \
+  double h, Q;                                                                \
+  for(int i = 0, offset = 0, ih; i < np; ++i) {                               \
+    Q = probs[i];                                                             \
+    if(Q > 0 && Q < 1) {                                                      \
+      RETQSWITCH(l);                                                          \
+      ih = h;                                                                 \
+      pres[i] = QFUN(x_cc + offset, l - offset, ih - offset, h - ih);         \
+      offset = ih;                                                            \
     }                                                                         \
   }
 
-// TODO: what about missing values??
-#define FQUANTILE_ORDVEC                                                      \
-for(int i = 0; i < np; ++i) {                                                 \
-    double elem = (l-1)*probs[i], h = elem - (int)elem,                       \
-          a = px[po[(int)elem]], b = px[po[(int)elem+1]];                     \
-    pres[i] = a + h * (b - a);                                                \
+
+#define FQUANTILE_ORDVEC                                    \
+double a, b, h, Q;                                          \
+for(int i = 0, ih; i < np; ++i) {                           \
+  Q = probs[i];                                             \
+  if(Q > 0 && Q < 1) {                                      \
+    RETQSWITCH(l);                                          \
+    ih = h; a = px[po[ih]]; b = px[po[ih+1]];               \
+    pres[i] = a + (h - ih) * (b - a);                       \
+  } else pres[i] = px[po[(l-1)*(int)Q]];                    \
 }
 
+// TODO: Proper quantile weighting...
+// See: https://aakinshin.net/posts/weighted-quantiles/
+// And: https://en.wikipedia.org/wiki/Percentile#Weighted_percentile
 #define WQUANTILE_CORE                             \
 for(unsigned int i = 0, k = 0; i < np; ++i) {      \
   if(probs[i] > 0 && probs[i] < 1) {               \
@@ -174,10 +213,10 @@ for(unsigned int i = 0, k = 0; i < np; ++i) {      \
 // TODO: args o and check.o, to compute quantiles from existing ordering vector...
 // TODO: check o ??
 // potentially also internal optimization ???
-SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP checko) {
+SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEXP checko) {
 
   if(TYPEOF(Rprobs) != REALSXP) error("probs needs to be a numeric vector");
-  int tx = TYPEOF(x), n = length(x), np = length(Rprobs), narm = asLogical(Rnarm), nprotect = 1;
+  int tx = TYPEOF(x), n = length(x), np = length(Rprobs), narm = asLogical(Rnarm), ret = asInteger(Rtype), nprotect = 1;
   if(tx != REALSXP && tx != INTSXP && tx != LGLSXP) error("x needs to be numeric");
 
   SEXP res = PROTECT(allocVector(REALSXP, np));
@@ -230,7 +269,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP checko) {
       FQUANTILE_CORE(iquickselect_elem);
     }
 
-  } else { // Weighted or Ordered: we need
+  } else { // Weighted or Ordered
 
     int *po = &n;
     double *pw = probs, nanw0 = 0;
@@ -263,7 +302,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP checko) {
       if(tx == REALSXP) { // Numeric data
         double *px = REAL(x)-1;
         if(ISNAN(px[po[0]])) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fquantile().");
-        --po; while(ISNAN(px[po[l]])) --l; ++po;
+        --po; while(ISNAN(px[po[l]]) && l != 0) --l; ++po;
         if(l <= 1) {
           double ret = (l == 0 || ISNAN(nanw0)) ? NA_REAL : px[po[0]];
           for(int i = 0; i < np; ++i) pres[i] = ret;
@@ -273,7 +312,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP checko) {
       } else {
         int *px = INTEGER(x)-1;
         if(px[po[0]] == NA_INTEGER) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fquantile().");
-        --po; while(px[po[l]] == NA_INTEGER) --l; ++po;
+        --po; while(px[po[l]] == NA_INTEGER && l != 0) --l; ++po;
         if(l <= 1) {
           for(int i = 0, ret = (l == 0 || ISNAN(nanw0)) ? NA_INTEGER : px[po[0]]; i < np; ++i) pres[i] = ret;
           UNPROTECT(nprotect);
