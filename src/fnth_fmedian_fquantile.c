@@ -66,6 +66,9 @@ static inline void dswap(double *a, double *b)     {double  tmp=*a; *a=*b; *b=tm
   case 3: /* upper element*/                                   \
     h = n*Q;                                                   \
     break;                                                     \
+  case 4: /* quantile type 4*/                                 \
+    h = n*Q - 1.0;                                             \
+    break;                                                     \
   case 5: /* quantile type 5*/                                 \
     h = n*Q - 0.5;                                             \
     break;                                                     \
