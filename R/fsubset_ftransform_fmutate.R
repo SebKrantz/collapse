@@ -577,6 +577,23 @@ dots_apply_grouped_bulk <- function(d, g, f, dots) {
   do.call(lapply, c(list(dsp, f), dots))
 }
 
+mutate_grouped_expand <- function(value, g) {
+  lv <- vlengths(value, FALSE)
+  nr <- length(g[[2L]])
+  if(allv(lv, nr)) {
+    if(!isTRUE(g$ordered[2L])) {
+      if(length(value) < 4L) { # optimal?
+        value <- lapply(value, function(x, g) .Call(C_greorder, x, g), g)
+      } else {
+        ind <- .Call(C_greorder, seq_len(nr), g)
+        value <- .Call(C_subsetDT, value, ind, seq_along(value), FALSE)
+      }
+    }
+    return(value)
+  }
+  if(!allv(lv, g[[1L]])) stop("With groups, NROW(value) must either be ng or nrow(.data)")
+  return(.Call(C_subsetDT, value, g[[2L]], seq_along(value), FALSE))
+}
 
 mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
   g <- data[[".g_"]]
@@ -606,23 +623,8 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
     value <- .Call(C_rbindlist, unclass(value), FALSE, FALSE, NULL)
     oldClass(value) <- NULL
   }
-  lv <- vlengths(value, FALSE)
-  nr <- length(g[[2L]])
-  if(allv(lv, nr)) {
-    if(!isTRUE(g$ordered[2L])) {
-      if(length(value) < 4L) { # optimal?
-        value <- lapply(value, function(x, g) .Call(C_greorder, x, g), g)
-      } else {
-        ind <- .Call(C_greorder, seq_len(nr), g)
-        value <- .Call(C_subsetDT, value, ind, seq_along(value), FALSE)
-      }
-    }
-    if(apli) names(value) <- names(.data_)
-    return(value)
-  }
-  if(!allv(lv, g[[1L]])) stop("With groups, NROW(value) must either be ng or nrow(.data)")
   if(apli) names(value) <- names(.data_)
-  return(.Call(C_subsetDT, value, g[[2L]], seq_along(value), FALSE))
+  return(mutate_grouped_expand(value, g))
 }
 
 
@@ -642,7 +644,7 @@ do_grouped_expr <- function(ei, nfun, .data, g, pe) {
 }
 
 # Same as above, without unlisting...
-do_grouped_expr_list <- function(ei, .data, g, pe, .cols, ax) {
+do_grouped_expr_list <- function(ei, .data, g, pe, .cols, ax, mutate = FALSE) {
   v <- all.vars(ei)
   if(any(v == ".data")) {
     .data[names(.data) %in% c(".g_", ".gsplit_")] <- NULL
@@ -665,7 +667,9 @@ do_grouped_expr_list <- function(ei, .data, g, pe, .cols, ax) {
     res <- if(length(all_funs(ei)) == 1L) eval(othFUN_compute(ei), .data, pe) else
       gsplit_single_apply(.data[[v]], g, ei, v, pe, FALSE)
   }
-  .Call(C_rbindlist, res, FALSE, FALSE, NULL)
+  res <- .Call(C_rbindlist, res, FALSE, FALSE, NULL)
+  if(mutate) return(mutate_grouped_expand(res, g))
+  res
 }
 
 
@@ -698,7 +702,7 @@ fmutate <- function(.data, ..., .keep = "all", .cols = NULL) {
           # return(eval(ei, enclos = pe))
           .data <- eval(ei, list(do_across = do_across, mutate_funi_grouped = mutate_funi_grouped), pe) # ftransform_core(.data, eval(ei, pe))
         } else {
-          r <- do_grouped_expr_list(ei, .data, g, pe, .cols, cld)
+          r <- do_grouped_expr_list(ei, .data, g, pe, .cols, cld, TRUE)
           .data[names(r)] <- r
         }
       } else { # Tagged vector expressions
@@ -709,11 +713,16 @@ fmutate <- function(.data, ..., .keep = "all", .cols = NULL) {
         eif <- all_funs(ei)
         if(any(eif %in% .FAST_FUN_MOPS)) {
           .data[[nam[i]]] <- eval(fFUN_mutate_add_groups(ei), .data, pe)
-        } else {
+        } else if(length(eif)) {
           r <- do_grouped_expr(ei, length(eif), .data, g, pe)
           .data[[nam[i]]] <- if(length(r) == g[[1L]])
                .Call(C_subsetVector, r, g[[2L]], FALSE) else # .Call(C_TRA, .data[[v]], r, g[[2L]], 1L) # Faster than simple subset r[g[[2L]] ??]
                .Call(C_greorder, r, g) # r[forder.int(forder.int(g[[2L]]))] # Seems twice is necessary...
+        } else { # something like bla = 1 or mpg = vs
+          r <- eval(ei, .data, pe)
+          if(length(r) == 1L) r <- alloc(r, nr)
+          else if(length(r) != nr) stop("length mismatch")
+          .data[[nam[i]]] <- r
         }
       }
     }
