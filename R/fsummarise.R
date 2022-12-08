@@ -81,7 +81,7 @@ smr_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
 
 
 
-fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
+fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- substitute(list(...))
   nam <- names(e)
@@ -101,11 +101,12 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
     for(i in 2:length(e)) { # This is good and very fast
       ei <- e[[i]]
       if(nullnam || nam[i] == "") { # Across
-        if(ei[[1L]] != quote(across) && ei[[1L]] != quote(acr)) stop("expressions need to be named or start with across(), or its shorthand acr().")
-        ei[[1L]] <- quote(do_across)
-        ei$.eval_funi <- quote(smr_funi_grouped)
-        # return(eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe))
-        res[[i]] <- eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe)
+        if(ei[[1L]] == quote(across) || ei[[1L]] == quote(acr)) {
+          ei[[1L]] <- quote(do_across)
+          ei$.eval_funi <- quote(smr_funi_grouped)
+          # return(eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe))
+          res[[i]] <- eval(ei, list(do_across = do_across, smr_funi_grouped = smr_funi_grouped), pe)
+        } else res[[i]] <- do_grouped_expr_list(ei, .data, g, pe, .cols, ax)
       } else { # Tagged vector expressions
         eif <- all_funs(ei)
         res[[i]] <- list(if(any(eif %in% .FAST_STAT_FUN_POLD))  # startsWith(eif, .FAST_STAT_FUN_POLD) Note: startsWith does not reliably capture expressions e.g. e <- quote(list(b = fmean(log(mpg)) + max(qsec))) does not work !!
@@ -132,9 +133,10 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE) {
       for(i in 2:length(e)) {
         ei <- e[[i]]
         if(nullnam || nam[i] == "") {
-          if(ei[[1L]] != quote(across) && ei[[1L]] != quote(acr)) stop("expressions need to be named or start with across(), or its shorthand acr().")
-          ei[[1L]] <- quote(.do_across)
-          ei$.eval_funi <- quote(.smr_funi_simple)
+          if(ei[[1L]] == quote(across) || ei[[1L]] == quote(acr)) { # stop("expressions need to be named or start with across(), or its shorthand acr().")
+            ei[[1L]] <- quote(.do_across)
+            ei$.eval_funi <- quote(.smr_funi_simple)
+          }
           e[[i]] <- ei
         } else e[[i]] <- as.call(list(quote(list), ei))
       }

@@ -332,32 +332,35 @@ fFUN_mutate_add_groups <- function(z) {
 }
 
 
-gsplit_single_apply <- function(x, g, ex, v, encl) {
+gsplit_single_apply <- function(x, g, ex, v, encl, unl = TRUE) {
   funexpr <- quote(function(.x_yz_) .x_yz_)
   funexpr[[3]] <- eval(call("substitute", ex, `names<-`(list(quote(.x_yz_)), v)), NULL, NULL)
   funexpr[[4]] <- NULL
   fun <- eval(funexpr, encl, baseenv())
-  copyMostAttributes(unlist(lapply(gsplit(x, g), fun), FALSE, FALSE), x)
+  res <- lapply(gsplit(x, g), fun)
+  if(unl) copyMostAttributes(unlist(res, FALSE, FALSE), x) else res
 }
 
 # Old version: more expensive...
 # gsplit_single_apply <- function(x, g, ex, v, encl)
 #   copyMostAttributes(unlist(lapply(gsplit(x, g), function(i) eval(ex, `names<-`(list(i), v), encl)), FALSE, FALSE), x)
 
-gsplit_multi_apply <- function(x, g, ex, encl) {
+gsplit_multi_apply <- function(x, g, ex, encl, SD = FALSE) {
   sx <- seq_along(x)
-  unlist(lapply(gsplit(NULL, g),
-         function(i) eval(ex, .Call(C_subsetDT, x, i, sx, FALSE), encl)), FALSE, FALSE)
+  gs <- gsplit(NULL, g)
+  if(!SD) return(lapply(gs, function(i) eval(ex, .Call(C_subsetDT, x, i, sx, FALSE), encl)))
+  funexpr <- substitute(function(.data) expr, list(expr = ex))
+  funexpr[[4]] <- NULL
+  fun <- eval(funexpr, encl, baseenv())
+  lapply(gs, function(i) fun(.Call(C_subsetDT, x, i, sx, FALSE)))
 }
 
 othFUN_compute <- function(x) {
   if(length(x) == 2L) # No additional function arguments
-    return(substitute(unlist(lapply(.gsplit_(a, .g_), b), FALSE, FALSE),
+    return(substitute(lapply(.gsplit_(a, .g_), b),
                       list(a = x[[2L]], b = x[[1L]])))
   # With more arguments, things become more complex..
-  lapply_call <- as.call(c(list(quote(lapply), substitute(.gsplit_(a, .g_), list(a = x[[2L]]))), as.list(x[-2L])))
-  substitute(unlist(a, FALSE, FALSE),
-             list(a = lapply_call, b = x[[2L]]))
+  as.call(c(list(quote(lapply), substitute(.gsplit_(a, .g_), list(a = x[[2L]]))), as.list(x[-2L])))
 }
 
 keep_v <- function(d, v) copyMostAttributes(null_rm(.subset(d, unique.default(v))), d)
@@ -628,16 +631,46 @@ do_grouped_expr <- function(ei, nfun, .data, g, pe) {
   if(length(v) > 1L) {
     # Could include global environemntal variables e.g. fmutate(data, new = mean(var) + q)
     namd <- names(.data)
-    if(length(wv <- na_rm(match(v, namd))) > 1L) return(gsplit_multi_apply(.data[wv], g, ei, pe))
+    if(length(wv <- na_rm(match(v, namd))) > 1L) return(unlist(gsplit_multi_apply(.data[wv], g, ei, pe), FALSE, FALSE))
     return(gsplit_single_apply(.data[[wv]], g, ei, namd[wv], pe))
   }
-  if(nfun == 1L) return(copyMostAttributes(eval(othFUN_compute(ei), .data, pe), .data[[v]]))
+  if(nfun == 1L) {
+    res <- eval(othFUN_compute(ei), .data, pe)
+    return(copyMostAttributes(unlist(res, FALSE, FALSE), .data[[v]]))
+  }
   gsplit_single_apply(.data[[v]], g, ei, v, pe)
+}
+
+# Same as above, without unlisting...
+do_grouped_expr_list <- function(ei, .data, g, pe, .cols, ax) {
+  v <- all.vars(ei)
+  if(any(v == ".data")) {
+    .data[names(.data) %in% c(".g_", ".gsplit_")] <- NULL
+    if(is.character(ax)) { # for fmutate
+      cld <- ax
+      ax <- attributes(.data)
+      ax[["groups"]] <- NULL
+      ax[["names"]] <- fsetdiff(ax[["names"]], c(".g_", ".gsplit_"))
+      ax[["class"]] <- fsetdiff(cld, c("GRP_df", "grouped_df"))
+    }
+    setattributes(.data, ax)
+    if(length(.cols)) .data <- colsubset(.data, .cols)
+    res <- gsplit_multi_apply(.data, g, ei, pe, TRUE)
+  } else if(length(v) > 1L) {
+    namd <- names(.data)
+    res <- if(length(wv <- na_rm(match(v, namd))) > 1L)
+      gsplit_multi_apply(.data[wv], g, ei, pe) else
+      gsplit_single_apply(.data[[wv]], g, ei, namd[wv], pe, FALSE)
+  } else {
+    res <- if(length(all_funs(ei)) == 1L) eval(othFUN_compute(ei), .data, pe) else
+      gsplit_single_apply(.data[[v]], g, ei, v, pe, FALSE)
+  }
+  .Call(C_rbindlist, res, FALSE, FALSE, NULL)
 }
 
 
 # TODO: Preserves attributes ?? what about ftransform??
-fmutate <- function(.data, ..., .keep = "all") {
+fmutate <- function(.data, ..., .keep = "all", .cols = NULL) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- substitute(list(...))
   nam <- names(e)
@@ -658,12 +691,16 @@ fmutate <- function(.data, ..., .keep = "all") {
     for(i in 2:length(e)) {
       ei <- e[[i]]
       if(nullnam || nam[i] == "") { # Across
-        if(ei[[1L]] != quote(across) && ei[[1L]] != quote(acr)) stop("expressions need to be named or start with across(), or its shorthand acr().")
-        ei[[1L]] <- quote(do_across)
-        ei$.eval_funi <- quote(mutate_funi_grouped)
-        ei$.summ <- FALSE
-        # return(eval(ei, enclos = pe))
-        .data <- eval(ei, list(do_across = do_across, mutate_funi_grouped = mutate_funi_grouped), pe) # ftransform_core(.data, eval(ei, pe))
+        if(ei[[1L]] == quote(across) || ei[[1L]] == quote(acr)) {
+          ei[[1L]] <- quote(do_across)
+          ei$.eval_funi <- quote(mutate_funi_grouped)
+          ei$.summ <- FALSE
+          # return(eval(ei, enclos = pe))
+          .data <- eval(ei, list(do_across = do_across, mutate_funi_grouped = mutate_funi_grouped), pe) # ftransform_core(.data, eval(ei, pe))
+        } else {
+          r <- do_grouped_expr_list(ei, .data, g, pe, .cols, cld)
+          .data[names(r)] <- r
+        }
       } else { # Tagged vector expressions
         if(is.null(ei)) {
           .data[[nam[i]]] <- NULL
@@ -685,12 +722,16 @@ fmutate <- function(.data, ..., .keep = "all") {
     for(i in 2:length(e)) { # This is good and very fast
       ei <- e[[i]]
       if(nullnam || nam[i] == "") { # Across
-        if(ei[[1L]] != quote(across) && ei[[1L]] != quote(acr)) stop("expressions need to be named or start with across(), or its shorthand acr().")
-        ei[[1L]] <- quote(do_across)
-        ei$.eval_funi <- quote(mutate_funi_simple)
-        ei$.summ <- FALSE
-        # return(eval(ei, enclos = pe))
-        .data <- eval(ei, list(do_across = do_across, mutate_funi_simple = mutate_funi_simple), pe) # ftransform_core(.data, eval(ei, enclos = pe))
+        if(ei[[1L]] == quote(across) || ei[[1L]] == quote(acr)) { # stop("expressions need to be named or start with across(), or its shorthand acr().")
+          ei[[1L]] <- quote(do_across)
+          ei$.eval_funi <- quote(mutate_funi_simple)
+          ei$.summ <- FALSE
+          # return(eval(ei, enclos = pe))
+          .data <- eval(ei, list(do_across = do_across, mutate_funi_simple = mutate_funi_simple), pe) # ftransform_core(.data, eval(ei, enclos = pe))
+        } else {
+          r <- eval(ei, .data, pe)
+          .data[names(r)] <- r
+        }
       } else { # Tagged vector expressions
         r <- eval(ei, .data, pe)
         if(!is.null(r)) { # don't use length(), because only NULL removes list elements...

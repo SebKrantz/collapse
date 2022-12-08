@@ -18,6 +18,12 @@
 
 ### Improvements
 
+* `fsummarise` and `fmutate` gained an ability to evaluate arbitrary expressions that result in lists / data frames without the need to use `across()`. For example: `mtcars |> fgroup_by(cyl, vs, am) |> fsummarise(mctl(cor(cbind(mpg, wt, carb)), names = TRUE))` or `mtcars |> fgroup_by(cyl) |> fsummarise(mctl(lmtest::coeftest(lm(mpg ~ wt + carb)), names = TRUE))`. There is also the possibility to compute expressions using `.data` e.g. `mtcars |> fgroup_by(cyl) |> fsummarise(mctl(lmtest::coeftest(lm(mpg ~ wt + carb, .data)), names = TRUE))` yields the same thing, but is less efficient because the whole dataset (including 'cyl') is split by groups. For greater efficiency and convenience, you can preselect columns using a global `.cols` argument, e.g. `mtcars |> fgroup_by(cyl, vs, am) |> fsummarise(mctl(cor(.data), names = TRUE), .cols = .c(mpg, wt, carb))` gives the same as above. Thee *Notes* about this:
+
+  + No grouped optimizations / vectorizations for fast statistical functions used in the expressions apply. The expressions are evaluated for each group as provided.  
+  + All elements in the result list need to have the same length, and, for `fmutate`, need to be equal to the length of the data (in each group). 
+  + If `.data` is used, the the expression (`expr`) will be turned into a function of `.data` (`function(.data) expr`), which means objects not found in the caller environment will not be available. 
+
 * `radixorder` is about 25% faster on characters and doubles. This also benefits grouping performance. Note that `group()` may still be substantially faster on unsorted data, so if performance is critical try the `sort = FALSE` argument to functions like `fgroup_by` and compare. 
 
 * `num_vars()` has become a bit smarter: columns of class 'ts' and 'units' are now also recognized as numeric. In general, users should be aware that `num_vars()` does not regard any R methods defined for `is.numeric()`, it simply checks whether objects are of type integer or double, and do not have a class. The addition of these two exceptions now guards against two common cases where `num_vars()` may give undesirable outcomes. Note that `num_vars()`  is also called in `collap()` to distinguish between numeric (`FUN`) and non-numeric (`catFUN`) columns. 
