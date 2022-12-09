@@ -1835,7 +1835,11 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       if(isSorted) {
         // xsub = xd+i;
         switch(TYPEOF(x)) {
-        case STRSXP: memcpy((SEXP *)xsub, (SEXP *)xd+i, thisgrpn * sizeof(SEXP)); break;
+        case STRSXP: {
+          // memcpy((SEXP *)xsub, (SEXP *)xd+i, thisgrpn * sizeof(SEXP)); break; // memcpy does not work for SEXP !!
+          SEXP *pxsub = (SEXP *)xsub, *pxd = (SEXP *)xd+i;
+          for(int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[j];
+        } break;
         case REALSXP: memcpy((double *)xsub, (double *)xd+i, thisgrpn * sizeof(double)); break;
         default: memcpy((int *)xsub, (int *)xd+i, thisgrpn * sizeof(int)); break;
         }
@@ -1895,7 +1899,6 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
         continue;
       } // else if(isSorted) { // Need to copy now, because isort, dsort etc modify the data...
       //   switch(TYPEOF(x)) {
-      //   case STRSXP: memcpy((SEXP *)xsubaddr, (SEXP *)xsub, thisgrpn * sizeof(SEXP)); break;
       //   case REALSXP: memcpy((double *)xsubaddr, (double *)xsub, thisgrpn * sizeof(double)); break;
       //   default: memcpy((int *)xsubaddr, (int *)xsub, thisgrpn * sizeof(int)); break;
       //   }
