@@ -61,52 +61,37 @@ extern SEXP SelfRefSymbol;
 extern SEXP sym_datatable_locked;
 // extern SEXP sym_collapse_DT_alloccol;
 
+// data.table_init.c
+SEXP collapse_init(SEXP mess);
 long long DtoLL(double x);
 double LLtoD(long long x);
 extern double NA_INT64_D;
 extern long long NA_INT64_LL;
 extern Rcomplex NA_CPLX;  // initialized in init.c; see there for comments
-
-// radixsort Must do Cradixsort, otherwise issue on mac
-// SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args);
-// void num1radixsort(int *o, bool NA_last, bool decreasing, SEXP x);
-// static void dsort(double *x, int *o, int n);
-
-// dogroups.c
-SEXP keepattr(SEXP to, SEXP from);
-SEXP growVector(SEXP x, R_len_t newlen);
 extern size_t sizes[100];  // max appears to be FUNSXP = 99, see Rinternals.h
 extern size_t typeorder[100];
 
-// assign.c
-void writeNA(SEXP v, const int from, const int n);
-void savetl_init(void), savetl(SEXP s), savetl_end(void);
-SEXP setcolorder(SEXP x, SEXP o);
-
-// subset.c
-void setselfref(SEXP x);
-SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows);
-SEXP subsetVector(SEXP x, SEXP idx, SEXP checkidx);
-SEXP anyNA(SEXP x, SEXP cols);
-// SEXP uniqlengths(SEXP x, SEXP n);
-SEXP Calloccol(SEXP dt); // , SEXP Rn
-
-// frank.c
-SEXP dt_na(SEXP x, SEXP cols);
-SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns);
-
-// assign.c
-const char *memrecycle(SEXP target, SEXP where, int r, int len, SEXP source, int coln, const char *colname);
-
-// utils.c
+// data.table_utils.c
+SEXP setnames(SEXP x, SEXP nam);
 bool allNA(SEXP x, bool errorForBadType);
 SEXP allNAv(SEXP x, SEXP errorForBadType);
 bool INHERITS(SEXP x, SEXP char_);
-SEXP copyAsPlain(SEXP x);
+SEXP dt_na(SEXP x, SEXP cols);
+SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns);
+SEXP setcolorder(SEXP x, SEXP o);
 
+// data.table_subset.c
+void setselfref(SEXP x);
+SEXP Calloccol(SEXP dt);
+SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax);
+SEXP extendIntVec(SEXP x, int len, int val);
+SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf);
+SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows);
+SEXP subsetVector(SEXP x, SEXP idx, SEXP checkidx);
 
-// quickselect
-// double dquickselect(double *x, int n);
-// double iquickselect(int *x, int n);
-// double i64quickselect(int64_t *x, int n);
+// rbindlist.c
+void writeNA(SEXP v, const int from, const int n);
+void writeValue(SEXP target, SEXP source, const int from, const int n);
+void savetl_init(void), savetl(SEXP s), savetl_end(void);
+SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg);
 
