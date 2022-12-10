@@ -9,6 +9,7 @@ library(magrittr)
 bmean <- base::mean
 bsum <- base::sum
 bsd <- stats::sd
+bmin <- base::min
 bmax <- base::max
 
 NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")

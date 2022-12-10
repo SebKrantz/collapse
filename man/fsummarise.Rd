@@ -14,7 +14,7 @@ Fast Summarise
 \usage{
 fsummarise(.data, ..., keep.group_vars = TRUE, .cols = NULL)
 fsummarize(.data, ..., keep.group_vars = TRUE, .cols = NULL)
-smr(.data, ..., keep.group_vars = TRUE)        # Shorthand
+smr(.data, ..., keep.group_vars = TRUE, .cols = NULL)        # Shorthand
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
