@@ -1,12 +1,15 @@
 \name{fsummarise}
 \alias{fsummarise}
+\alias{fsummarize}
 \alias{smr}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Summarise
 }
 \description{
-\code{fsummarize} is a much faster version of \code{dplyr::summarise}, when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions}.
+\code{fsummarise} is a much faster version of \code{dplyr::summarise}, when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions}.
+
+\code{fsummarize} and \code{fsummarise} are synonyms.
 }
 \usage{
 fsummarise(.data, ..., keep.group_vars = TRUE)
