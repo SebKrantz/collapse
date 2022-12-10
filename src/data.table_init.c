@@ -4,8 +4,6 @@
  and licensed under a Mozilla Public License 2.0 (MPL-2.0) license.
 */
 
-
-
 #include <Rdefines.h>
 // #include <R_ext/Rdynload.h>
 // #include <R_ext/Visibility.h>
@@ -20,8 +18,8 @@ SEXP char_ordered;
 SEXP char_dataframe;
 SEXP char_datatable;
 SEXP char_sf;
-// not currently needed (base_radixsort uses install), but perhaps later..
 SEXP sym_sorted;
+// not currently needed (base_radixsort uses install), but perhaps later..
 // SEXP sym_maxgrpn;
 // SEXP sym_starts;
 // SEXP char_starts;

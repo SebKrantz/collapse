@@ -16,15 +16,23 @@
 
 * Added functions `fcount()` and `fcountv()`: a versatile and blazing fast alternative to `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
 
+* `fsummarize()` was added as a synonym to `fsummarise`. Thanks @arthurgailes for the PR. 
+
 ### Improvements
+
+* `fsummarise` and `fmutate` gained an ability to evaluate arbitrary expressions that result in lists / data frames without the need to use `across()`. For example: `mtcars |> fgroup_by(cyl, vs, am) |> fsummarise(mctl(cor(cbind(mpg, wt, carb)), names = TRUE))` or `mtcars |> fgroup_by(cyl) |> fsummarise(mctl(lmtest::coeftest(lm(mpg ~ wt + carb)), names = TRUE))`. There is also the possibility to compute expressions using `.data` e.g. `mtcars |> fgroup_by(cyl) |> fsummarise(mctl(lmtest::coeftest(lm(mpg ~ wt + carb, .data)), names = TRUE))` yields the same thing, but is less efficient because the whole dataset (including 'cyl') is split by groups. For greater efficiency and convenience, you can pre-select columns using a global `.cols` argument, e.g. `mtcars |> fgroup_by(cyl, vs, am) |> fsummarise(mctl(cor(.data), names = TRUE), .cols = .c(mpg, wt, carb))` gives the same as above. Three *Notes* about this:
+
+  + No grouped vectorizations for fast statistical functions i.e. the entire expression is evaluated for each group. (Let me know if there are applications where vectorization would be possible and beneficial. I can't think of any.)  
+  + All elements in the result list need to have the same length, or, for `fmutate`, have the same length as the data (in each group). 
+  + If `.data` is used, the entire expression (`expr`) will be turned into a function of `.data` (`function(.data) expr`), which means columns are only available when accessed through `.data` e.g. `.data$col1`. 
 
 * `radixorder` is about 25% faster on characters and doubles. This also benefits grouping performance. Note that `group()` may still be substantially faster on unsorted data, so if performance is critical try the `sort = FALSE` argument to functions like `fgroup_by` and compare. 
 
-* `num_vars()` has become a bit smarter: columns of class 'ts' and 'units' are now also recognized as numeric. In general, users should be aware that `num_vars()` does not regard any R methods defined for `is.numeric()`, it simply checks whether objects are of type integer or double, and do not have a class. The addition of these two exceptions now guards against two common cases where `num_vars()` may give undesirable outcomes. Note that `num_vars()`  is also called in `collap()` to distinguish between numeric (`FUN`) and non-numeric (`catFUN`) columns. 
+* Most list processing functions are noticeably faster, as checking the data types of elements in a list is now also done in C, and I have made some improvements to *collapse*'s version of `rbindlist()` (used in `unlist2d()`, and various other places). 
 
 * List extraction function `get_elem()` now has an option `invert = TRUE` (default `FALSE`) to remove matching elements from a (nested) list. Also the functionality of argument `keep.class = TRUE` is implemented in a better way, such that the default `keep.class = FALSE` toggles classes from (non-matched) list-like objects inside the list to be removed. 
 
-* Most list processing functions are noticeably faster, as checking the data types of elements in a list is now also done in C. 
+* `num_vars()` has become a bit smarter: columns of class 'ts' and 'units' are now also recognized as numeric. In general, users should be aware that `num_vars()` does not regard any R methods defined for `is.numeric()`, it simply checks whether objects are of type integer or double, and do not have a class. The addition of these two exceptions now guards against two common cases where `num_vars()` may give undesirable outcomes. Note that `num_vars()`  is also called in `collap()` to distinguish between numeric (`FUN`) and non-numeric (`catFUN`) columns. 
 
 * Improvements to `setv()` and `copyv()`, making them more robust to borderline cases: `integer(0)` passed to `v` does nothing (instead of error), and it is also possible to pass a single real index if `vind1 = TRUE` i.e. passing `1` instead of `1L` does not produce an error. 
 

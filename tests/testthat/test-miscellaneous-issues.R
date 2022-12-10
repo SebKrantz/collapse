@@ -341,7 +341,7 @@ test_that("singleton groups are handled properly by all statistical functions", 
   expect_equal(ffirst(wlddev, g, na.rm = FALSE), wlddev)
   expect_equal(flast(wlddev, g, na.rm = FALSE), wlddev)
   expect_equal(dapply(fndistinct(wlddev, g, na.rm = FALSE), unattrib), dapply(wlddev, function(x) rep(1L, length(x))))
-  for(FUN in list(fmean, fmedian, fnth, fsum, fprod, fmin, fmax, fbetween)) {
+  for(FUN in list(fmean, fmedian, fnth, fsum, fprod, fmin, fmax, fbetween, fcumsum)) {
     # print(FUN)
     expect_equal(FUN(nv(wlddev), g = g), nv(wlddev))
     expect_equal(FUN(nv(wlddev), g = g, na.rm = FALSE), nv(wlddev))
@@ -375,10 +375,12 @@ test_that("singleton groups are handled properly by all statistical functions", 
     expect_equal(FUN(nv(wlddev), g = g, w = w), nv(wlduo))
     expect_equal(FUN(nv(wlddev), g = g, w = w, na.rm = FALSE), nv(wlduo))
   }
-  expect_equal(fbetween(nv(wlddev), g), nv(wlddev))
-  expect_equal(fbetween(nv(wlddev), g, na.rm = FALSE), nv(wlddev))
-  expect_equal(fbetween(nv(wlddev), g, w), nv(wlddev))
-  expect_equal(fbetween(nv(wlddev), g, w, na.rm = FALSE), nv(wlddev))
+  for(FUN in list(fbetween, fcumsum)) {
+    expect_equal(FUN(nv(wlddev), g), nv(wlddev))
+    expect_equal(FUN(nv(wlddev), g, na.rm = FALSE), nv(wlddev))
+    expect_equal(FUN(nv(wlddev), g, w), nv(wlddev))
+    expect_equal(FUN(nv(wlddev), g, w, na.rm = FALSE), nv(wlddev))
+  }
   for(FUN in list(fvar, fsd, fscale, flag, fdiff, fgrowth)) {
     expect_true(all(dapply(FUN(nv(wlddev), g = g), allNA)))
     expect_true(all(dapply(FUN(nv(wlddev), g = g, na.rm = FALSE), allNA)))

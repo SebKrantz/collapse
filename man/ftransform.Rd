@@ -42,8 +42,8 @@ fcompute(.data, \dots, keep = NULL)
 fcomputev(.data, vars, FUN, \dots, apply = TRUE, keep = NULL)
 
 # New: dplyr-style mutate (sequential evaluation + across() feature)
-fmutate(.data, ..., .keep = "all")
-mtt(.data, ..., .keep = "all") # Shorthand for fmutate
+fmutate(.data, ..., .keep = "all", .cols = NULL)
+mtt(.data, ..., .keep = "all", .cols = NULL) # Shorthand for fmutate
 }
 \arguments{
     \item{.data}{a data frame or named list of columns.}
@@ -53,7 +53,9 @@ mtt(.data, ..., .keep = "all") # Shorthand for fmutate
     \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(.data, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
     \item{value}{a named list of replacements, it will be treated like an evaluated list of \code{column = value} arguments.}
     \item{keep}{select columns to preserve using column names, indices or a function (e.g. \code{is.numeric}). By default computed columns are added after the preserved ones, unless they are assigned the same name in which case the preserved columns will be replaced in order.}
-   \item{.keep}{Either one of \code{"all", "used", "unused"} or \code{"none"} (see \code{\link[dplyr]{mutate}}), or columns names/indices/function as \code{keep}.}
+   \item{.keep}{either one of \code{"all", "used", "unused"} or \code{"none"} (see \code{\link[dplyr]{mutate}}), or columns names/indices/function as \code{keep}.}
+
+   \item{.cols}{for expressions involving \code{.data}, \code{.cols} can be used to subset columns, e.g. \code{mtcars |> gby(cyl) |> mtt(broom::augment(lm(mpg ~., .data)), .cols = 1:7)}. Can pass column names, indices, a logical vector or a selector function (e.g. \code{is.numericr}).}
 }
 \details{
   The \code{\dots} arguments to \code{ftransform} are tagged

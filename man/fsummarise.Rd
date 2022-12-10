@@ -1,16 +1,20 @@
 \name{fsummarise}
 \alias{fsummarise}
+\alias{fsummarize}
 \alias{smr}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Summarise
 }
 \description{
-\code{fsummarize} is a much faster version of \code{dplyr::summarise}, when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions}.
+\code{fsummarise} is a much faster version of \code{dplyr::summarise}, when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions}.
+
+\code{fsummarize} and \code{fsummarise} are synonyms.
 }
 \usage{
-fsummarise(.data, ..., keep.group_vars = TRUE)
-smr(.data, ..., keep.group_vars = TRUE)        # Shorthand
+fsummarise(.data, ..., keep.group_vars = TRUE, .cols = NULL)
+fsummarize(.data, ..., keep.group_vars = TRUE, .cols = NULL)
+smr(.data, ..., keep.group_vars = TRUE, .cols = NULL)        # Shorthand
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,6 +26,9 @@ smr(.data, ..., keep.group_vars = TRUE)        # Shorthand
 }
   \item{keep.group_vars}{
 logical. \code{FALSE} removes grouping variables after computation.
+}
+  \item{.cols}{
+for expressions involving \code{.data}, \code{.cols} can be used to subset columns, e.g. \code{mtcars |> gby(cyl) |> smr(mctl(cor(.data), TRUE), .cols = 5:7)}. Can pass column names, indices, a logical vector or a selector function (e.g. \code{is.numericr}).
 }
 }
 \value{

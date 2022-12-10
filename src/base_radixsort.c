@@ -26,6 +26,48 @@
 
 #include "base_radixsort.h"
 
+#define IS_ASCII(x) (LEVELS(x) & 64) // from data.table.h
+
+// NOTE: All of this is copied from Defn.h: https://github.com/wch/r-source/blob/28de75af0541f93832c5899139b969d290bf422e/src/include/Defn.h
+// to avoid checking for ALTREP in TRUELENGTH, which slows down the code unnecessarily...
+
+#define NAMED_BITS 16
+
+struct sxpinfo_struct {
+  SEXPTYPE type      :  TYPE_BITS;
+  /* ==> (FUNSXP == 99) %% 2^5 == 3 == CLOSXP
+   * -> warning: `type' is narrower than values
+   *              of its type
+   * when SEXPTYPE was an enum */
+  unsigned int scalar:  1;
+  unsigned int obj   :  1;
+  unsigned int alt   :  1;
+  unsigned int gp    : 16;
+  unsigned int mark  :  1;
+  unsigned int debug :  1;
+  unsigned int trace :  1;  /* functions and memory tracing */
+  unsigned int spare :  1;  /* used on closures and when REFCNT is defined */
+  unsigned int gcgen :  1;  /* old generation number */
+  unsigned int gccls :  3;  /* node class */
+  unsigned int named : NAMED_BITS;
+  unsigned int extra : 32 - NAMED_BITS; /* used for immediate bindings */
+}; /*		    Tot: 64 */
+
+#define SEXPREC_HEADER           \
+  struct sxpinfo_struct sxpinfo; \
+  struct SEXPREC *attrib;        \
+  struct SEXPREC *gengc_next_node, *gengc_prev_node
+
+struct vecsxp_struct {
+  R_xlen_t	length;
+  R_xlen_t	truelength;
+};
+
+typedef struct VECTOR_SEXPREC {
+  SEXPREC_HEADER;
+  struct vecsxp_struct vecsxp;
+} VECTOR_SEXPREC, *VECSEXP;
+
 
 // gs = groupsizes e.g.23, 12, 87, 2, 1, 34,...
 static int *gs[2] = { NULL };
@@ -1835,7 +1877,11 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
       if(isSorted) {
         // xsub = xd+i;
         switch(TYPEOF(x)) {
-        case STRSXP: memcpy((SEXP *)xsub, (SEXP *)xd+i, thisgrpn * sizeof(SEXP)); break;
+        case STRSXP: {
+          // memcpy((SEXP *)xsub, (SEXP *)xd+i, thisgrpn * sizeof(SEXP)); break; // memcpy does not work for SEXP !!
+          SEXP *pxsub = (SEXP *)xsub, *pxd = (SEXP *)xd+i;
+          for(int j = 0; j != thisgrpn; ++j) pxsub[j] = pxd[j];
+        } break;
         case REALSXP: memcpy((double *)xsub, (double *)xd+i, thisgrpn * sizeof(double)); break;
         default: memcpy((int *)xsub, (int *)xd+i, thisgrpn * sizeof(int)); break;
         }
@@ -1895,7 +1941,6 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
         continue;
       } // else if(isSorted) { // Need to copy now, because isort, dsort etc modify the data...
       //   switch(TYPEOF(x)) {
-      //   case STRSXP: memcpy((SEXP *)xsubaddr, (SEXP *)xsub, thisgrpn * sizeof(SEXP)); break;
       //   case REALSXP: memcpy((double *)xsubaddr, (double *)xsub, thisgrpn * sizeof(double)); break;
       //   default: memcpy((int *)xsubaddr, (int *)xsub, thisgrpn * sizeof(int)); break;
       //   }
