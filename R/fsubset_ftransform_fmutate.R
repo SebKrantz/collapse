@@ -690,8 +690,7 @@ fmutate <- function(.data, ..., .keep = "all", .cols = NULL) {
   gdfl <- any(cld == "grouped_df")
   if(gdfl) {
     g <- GRP.grouped_df(.data, return.groups = FALSE, call = FALSE)
-    .data[[".g_"]] <- g
-    .data[[".gsplit_"]] <- gsplit
+    .data[c(".g_", ".gsplit_")] <- list(g, gsplit)
     for(i in 2:length(e)) {
       ei <- e[[i]]
       if(nullnam || nam[i] == "") { # Across

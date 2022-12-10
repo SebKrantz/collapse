@@ -95,8 +95,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
     attr(.data, "groups") <- NULL
     ax <- attributes(.data)
     ax[["class"]] <- fsetdiff(cld, c("GRP_df", "grouped_df"))
-    .data[[".g_"]] <- g
-    .data[[".gsplit_"]] <- gsplit
+    .data[c(".g_", ".gsplit_")] <- list(g, gsplit)
     res <- vector("list", length(e))
     for(i in 2:length(e)) { # This is good and very fast
       ei <- e[[i]]
@@ -146,8 +145,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
     # return(res)
     if(!all_eq(vlengths(res, FALSE))) stop("all computations need to result in vectors of equal length")
   }
-  ax[["names"]] <- names(res)
-  ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
+  ax[c("names", "row.names")] <- list(names(res), .set_row_names(length(res[[1L]])))
   return(condalcSA(res, ax, any(cld == "data.table")))
 }
 
