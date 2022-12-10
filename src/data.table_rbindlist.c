@@ -74,7 +74,7 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
     } break;
     case REALSXP: {
       if (INHERITS(target, char_integer64)) {
-      int64_t *vd = (int64_t *)REAL(target), value = (int64_t)REAL(source);
+      int64_t *vd = (int64_t *)REAL(target), value = (int64_t)REAL(source)[0];
       for (int i=from; i<=to; ++i) vd[i] = value;
     } else {
       double *vd = REAL(target), value = REAL(source)[0];
@@ -85,17 +85,14 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       Rcomplex *vd = COMPLEX(target), value = COMPLEX(source)[0];
       for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
-    case STRSXP: {
-      SEXP *vd = STRING_PTR(target), value = STRING_ELT(source, 0);
-      for (int i=from; i<=to; ++i) vd[i] = value;
-    } break;
+    case STRSXP:
     case VECSXP:
     case EXPRSXP: {
-      SEXP value = VECTOR_ELT(source, 0);
-      for (int i=from; i<=to; ++i) SET_VECTOR_ELT(target, i, value);
+      SEXP *vd = SEXPPTR(target), value = SEXPPTR(source)[0];
+      for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
-    default :
-      error("Internal error: writeValue passed a vector of type '%s'", type2char(TYPEOF(target)));
+    default:
+      error("Internal error: Unsupported column type '%s'", type2char(TYPEOF(target)));
     }
   } else {
     switch(tt) {
@@ -126,7 +123,7 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       memcpy(COMPLEX(target) + from, COMPLEX(source), n * sizeof(Rcomplex));
       break;
     default:
-      error("Unsupported column type '%s'", type2char(TYPEOF(target)));
+      error("Internal error: Unsupported column type '%s'", type2char(TYPEOF(target)));
     }
   }
   if(coerce == 0) return;
