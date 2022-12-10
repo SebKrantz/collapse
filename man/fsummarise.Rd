@@ -12,7 +12,8 @@ Fast Summarise
 \code{fsummarize} and \code{fsummarise} are synonyms.
 }
 \usage{
-fsummarise(.data, ..., keep.group_vars = TRUE)
+fsummarise(.data, ..., keep.group_vars = TRUE, .cols = NULL)
+fsummarize(.data, ..., keep.group_vars = TRUE, .cols = NULL)
 smr(.data, ..., keep.group_vars = TRUE)        # Shorthand
 }
 %- maybe also 'usage' for other objects documented here.
@@ -25,6 +26,9 @@ smr(.data, ..., keep.group_vars = TRUE)        # Shorthand
 }
   \item{keep.group_vars}{
 logical. \code{FALSE} removes grouping variables after computation.
+}
+  \item{.cols}{
+for expressions involving \code{.data}, \code{.cols} can be used to subset columns, e.g. \code{mtcars |> gby(cyl) |> smr(mctl(cor(.data), TRUE), .cols = 5:7)}. Can pass column names, indices, a logical vector or a selector function (e.g. \code{is.numericr}).
 }
 }
 \value{
