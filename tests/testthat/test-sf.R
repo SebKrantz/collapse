@@ -38,4 +38,12 @@ test_that("sf methods work properly", {
                                     geometry = st_union(geometry)), "sf"))
 })
 
+test_that("rbinding and mutating sf works well", {
+  expect_identical(nc, nc %>% fgroup_by(AREA) %>% fmutate((.data)) %>% fungroup())
+  expect_identical(funique(nc, "AREA"), nc %>% fgroup_by(AREA, sort = FALSE) %>% ffirst(na.rm = FALSE))
+  expect_identical(roworder(nc, AREA), nc %>% rsplit(~ AREA, keep.by = TRUE) %>% unlist2d(FALSE) %>% copyMostAttrib(nc))
+  expect_identical(roworder(nc, AREA), nc %>% rsplit(~ AREA) %>% unlist2d("AREA") %>%
+                     fmutate(AREA = as.double(AREA)) %>% copyMostAttrib(nc))
+})
+
 }
