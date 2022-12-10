@@ -204,13 +204,13 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
   }
   const bool idcol = !isNull(idcolArg);
   if (idcol && (!isString(idcolArg) || LENGTH(idcolArg)!=1)) error("Internal error: rbindlist.c idcol is not a single string");  // # nocov
-  int ncol=0, first=0;
+  int ncol=0, first=0, ll = LENGTH(l);
   int64_t nrow=0, upperBoundUniqueNames=1;
   bool anyNames=false;
   int numZero=0, firstZeroCol=0, firstZeroItem=0;
-  int *eachMax = (int *)R_alloc(LENGTH(l), sizeof(int));
+  int *eachMax = (int *)R_alloc(ll, sizeof(int));
   // pre-check for any errors here to save having to get cleanup right below when usenames
-  for (int i=0; i<LENGTH(l); i++) {  // length(l)>0 checked above
+  for (int i=0; i<ll; i++) {  // length(l)>0 checked above
     eachMax[i] = 0;
     SEXP li = VECTOR_ELT(l, i);
     if (isNull(li)) continue;
@@ -257,7 +257,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     if (!uniq) error("Failed to allocate upper bound of %dll unique column names [sum(lapply(l,ncol))]", (int64_t)upperBoundUniqueNames);
     savetl_init();
     int nuniq=0;
-    for (int i=0; i<LENGTH(l); i++) {
+    for (int i=0; i<ll; i++) {
       SEXP li = VECTOR_ELT(l, i);
       int thisncol=LENGTH(li);
       if (isNull(li) || !LENGTH(li)) continue;
@@ -288,7 +288,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       error("Failed to allocate nuniq=%d items working memory in rbindlist.c", nuniq);
       // # nocov end
     }
-    for (int i=0; i<LENGTH(l); i++) {
+    for (int i=0; i<ll; i++) {
       SEXP li = VECTOR_ELT(l, i);
       int thisncol=length(li);
       if (thisncol==0) continue;
@@ -311,7 +311,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     // ncol is now the final number of columns accounting for unique and dups across all colnames
     // allocate a matrix:  nrows==length(list)  each entry contains which column to fetch for that final column
 
-    int *colMapRaw = (int *)malloc(LENGTH(l)*ncol * sizeof(int));  // the result of this scope used later
+    int *colMapRaw = (int *)malloc(ll*ncol * sizeof(int));  // the result of this scope used later
     int *uniqMap = (int *)malloc(ncol * sizeof(int)); // maps the ith unique string to the first time it occurs in the final result
     int *dupLink = (int *)malloc(ncol * sizeof(int)); // if a colname has occurred before (a dup) links from the 1st to the 2nd time in the final result, 2nd to 3rd, etc
     if (!colMapRaw || !uniqMap || !dupLink) {
@@ -322,11 +322,11 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       error("Failed to allocate ncol=%d items working memory in rbindlist.c", ncol);
       // # nocov end
     }
-    for (int i=0; i<LENGTH(l)*ncol; ++i) colMapRaw[i]=-1;   // 0-based so use -1
+    for (int i=0, end = ll*ncol; i<end; ++i) colMapRaw[i]=-1;   // 0-based so use -1
     for (int i=0; i<ncol; ++i) {uniqMap[i] = dupLink[i] = -1;}
     int nextCol=0, lastDup=ncol-1;
 
-    for (int i=0; i<LENGTH(l); ++i) {
+    for (int i=0; i<ll; ++i) {
       SEXP li = VECTOR_ELT(l, i);
       int thisncol=length(li);
       if (thisncol==0) continue;
@@ -361,17 +361,17 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
 
     // colMapRaw is still allocated. It was allocated with malloc because we needed to catch if the alloc failed.
     // move it to R's heap so it gets automatically free'd on exit, and on any error between now and the end of rbindlist.
-    colMap = (int *)R_alloc(LENGTH(l)*ncol, sizeof(int));
+    colMap = (int *)R_alloc(ll*ncol, sizeof(int));
     // This R_alloc could fail with out-of-memory but given it is very small it's very unlikely. If it does fail, colMapRaw will leak.
     //   But colMapRaw leaking now in this very rare situation is better than colMapRaw leaking in the more likely but still rare conditions later.
     //   And it's better than having to trap all exit point from here to the end of rbindlist, which may not be possible; e.g. writeNA() could error inside it with unsupported type.
     //   This very unlikely leak could be fixed by using an on.exit() at R level rbindlist(); R-exts$6.1.2 refers to pwilcox for example. However, that would not
     //   solve the (mere) leak if we ever call rbindlist internally from other C functions.
-    memcpy(colMap, colMapRaw, LENGTH(l)*ncol*sizeof(int));
+    memcpy(colMap, colMapRaw, ll*ncol*sizeof(int));
     free(colMapRaw);  // local scope in this branch to ensure can't be used below
 
     // to view map when debugging ...
-    // for (int i=0; i<LENGTH(l); ++i) { for (int j=0; j<ncol; ++j) Rprintf("%2d ",colMap[i*ncol + j]);  Rprintf("\n"); }
+    // for (int i=0; i<ll; ++i) { for (int j=0; j<ncol; ++j) Rprintf("%2d ",colMap[i*ncol + j]);  Rprintf("\n"); }
   }
 
   if (fill && usenames==NA_LOGICAL) error("Internal error: usenames==NA but fill=TRUE. usenames should have been set to TRUE earlier with warning.");
@@ -381,22 +381,22 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     char buff[1001] = "";
     const char *extra = usenames==TRUE?"":" use.names='check' (default from v1.12.2) emits this message and proceeds as if use.names=FALSE for "\
                                           " backwards compatibility. See news item 5 in v1.12.2 for options to control this message.";
-    for (int i=0; i<LENGTH(l); ++i) {
+    for (int i=0; i<ll; ++i) {
       SEXP li = VECTOR_ELT(l, i);
       if (!length(li) || !length(getAttrib(li, R_NamesSymbol))) continue;
       for (int j=0; j<ncol; ++j) {
         const int w = colMap[i*ncol + j];
         if (w==-1) {
           int missi = i;
-          while (colMap[i*ncol + j]==-1 && i<LENGTH(l)) i++;
-          if (i==LENGTH(l)) error("Internal error: could not find the first column name not present in earlier item");
+          while (colMap[i*ncol + j]==-1 && i<ll) i++;
+          if (i==ll) error("Internal error: could not find the first column name not present in earlier item");
           SEXP s = getAttrib(VECTOR_ELT(l, i), R_NamesSymbol);
           int w2 = colMap[i*ncol + j];
           const char *str = isString(s) ? CHAR(STRING_ELT(s,w2)) : "";
             sprintf(buff, "Column %d ['%s'] of item %d is missing in item %d. Use fill=TRUE to fill with NA (NULL for list columns), or use.names=FALSE to ignore column names.%s",
                         w2+1, str, i+1, missi+1, extra );
           if (usenames==TRUE) error(buff);
-          i = LENGTH(l); // break from outer i loop
+          i = ll; // break from outer i loop
           break;         // break from inner j loop
         }
         if (w!=j && usenames==NA_LOGICAL) {
@@ -404,7 +404,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           if (!isString(s) || i==0) error("Internal error: usenames==NA but an out-of-order name has been found in an item with no names or the first item. [%d]", i);
            sprintf(buff, "Column %d ['%s'] of item %d appears in position %d in item %d. Set use.names=TRUE to match by column name, or use.names=FALSE to ignore column names.%s",
                                w+1, CHAR(STRING_ELT(s,w)), i+1, j+1, i, extra);
-          i = LENGTH(l);
+          i = ll;
           break;
         }
       }
@@ -436,7 +436,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     SEXP idval, listNames=getAttrib(l, R_NamesSymbol);
     if (length(listNames)) {
       SET_VECTOR_ELT(ans, 0, idval=allocVector(STRSXP, nrow));
-      for (int i=0,ansloc=0; i<LENGTH(l); ++i) {
+      for (int i=0,ansloc=0; i<ll; ++i) {
         SEXP li = VECTOR_ELT(l, i);
         if (!length(li)) continue;
         const int thisnrow = eachMax[i];
@@ -446,7 +446,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     } else {
       SET_VECTOR_ELT(ans, 0, idval=allocVector(INTSXP, nrow));
       int *idvald = INTEGER(idval);
-      for (int i=0,ansloc=0; i<LENGTH(l); ++i) {
+      for (int i=0,ansloc=0; i<ll; ++i) {
         SEXP li = VECTOR_ELT(l, i);
         if (!length(li)) continue;
         const int thisnrow = eachMax[i];
@@ -466,7 +466,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     bool anyNotStringOrFactor=false;
     SEXP firstCol=R_NilValue;
     int firsti=-1, firstw=-1;
-    for (int i=0; i<LENGTH(l); ++i) {
+    for (int i=0; i<ll; ++i) {
       SEXP li = VECTOR_ELT(l, i);
       if (!length(li)) continue;
       int w = usenames ? colMap[i*ncol + j] : j;  // colMap tells us which item to fetch for each of the final result columns, so we can stack column-by-column
@@ -518,8 +518,8 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       // in future warn, or use list column instead ... warning("Column %d contains a factor but not all items for the column are character or factor", idcol+j+1);
       // some coercing from (likely) integer/numeric to character will be needed. But this coerce can feasibly fail with out-of-memory, so we have to do it up-front
       // before the savetl_init() because we have no hook to clean up tl if coerceVector fails.
-      if (coercedForFactor==NULL) { coercedForFactor=PROTECT(allocVector(VECSXP, LENGTH(l))); nprotect++; }
-      for (int i=0; i<LENGTH(l); ++i) {
+      if (coercedForFactor==NULL) { coercedForFactor=PROTECT(allocVector(VECSXP, ll)); nprotect++; }
+      for (int i=0; i<ll; ++i) {
         int w = usenames ? colMap[i*ncol + j] : j;
         if (w==-1) continue;
         SEXP thisCol = VECTOR_ELT(VECTOR_ELT(l, i), w);
@@ -552,7 +552,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           levelsRaw[k] = s;
           SET_TRUELENGTH(s,-k-1);
         }
-        for (int i=0; i<LENGTH(l); ++i) {
+        for (int i=0; i<ll; ++i) {
           int w = usenames ? colMap[i*ncol + j] : j;
           if (w==-1) continue;
           SEXP thisCol = VECTOR_ELT(VECTOR_ELT(l, i), w);
@@ -577,7 +577,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
                   // k>=1 (so k-1 is ok) because when k==0 last==0 and this branch wouldn't happen
                 }
                 orderedFactor=false;
-                i=LENGTH(l);  // break outer i loop
+                i=ll;  // break outer i loop
                 break;        // break inner k loop
                 // we leave the tl set for the longest levels; the regular factor will be created with the longest ordered levels first in case that useful for user
               }
@@ -586,7 +586,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           }
         }
       }
-      for (int i=0; i<LENGTH(l); ++i) {
+      for (int i=0; i<ll; ++i) {
         const int thisnrow = eachMax[i];
         SEXP li = VECTOR_ELT(l, i);
         if (!length(li)) continue;  // NULL items in the list() of DT/DF; not if thisnrow==0 because we need to retain (unused) factor levels (#3508)
@@ -691,7 +691,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         setAttrib(target, R_ClassSymbol, ScalarString(char_factor));
       }
     } else {  // factor==false
-      for (int i=0, ll = LENGTH(l); i < ll; ++i) {
+      for (int i=0; i < ll; ++i) {
         const int thisnrow = eachMax[i];
         if (thisnrow==0) continue;
         SEXP li = VECTOR_ELT(l, i);
