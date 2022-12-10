@@ -74,7 +74,7 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
     } break;
     case REALSXP: {
       if (INHERITS(target, char_integer64)) {
-      int64_t *vd = (int64_t *)REAL(target), value = (int64_t)REAL(source);
+      int64_t *vd = (int64_t *)REAL(target), value = (int64_t)REAL(source)[0];
       for (int i=from; i<=to; ++i) vd[i] = value;
     } else {
       double *vd = REAL(target), value = REAL(source)[0];
@@ -85,17 +85,14 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       Rcomplex *vd = COMPLEX(target), value = COMPLEX(source)[0];
       for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
-    case STRSXP: {
-      SEXP *vd = STRING_PTR(target), value = STRING_ELT(source, 0);
-      for (int i=from; i<=to; ++i) vd[i] = value;
-    } break;
+    case STRSXP:
     case VECSXP:
     case EXPRSXP: {
-      SEXP value = VECTOR_ELT(source, 0);
-      for (int i=from; i<=to; ++i) SET_VECTOR_ELT(target, i, value);
+      SEXP *vd = SEXPPTR(target), value = SEXPPTR(source)[0];
+      for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
-    default :
-      error("Internal error: writeValue passed a vector of type '%s'", type2char(TYPEOF(target)));
+    default:
+      error("Internal error: Unsupported column type '%s'", type2char(TYPEOF(target)));
     }
   } else {
     switch(tt) {
@@ -126,7 +123,7 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       memcpy(COMPLEX(target) + from, COMPLEX(source), n * sizeof(Rcomplex));
       break;
     default:
-      error("Unsupported column type '%s'", type2char(TYPEOF(target)));
+      error("Internal error: Unsupported column type '%s'", type2char(TYPEOF(target)));
     }
   }
   if(coerce == 0) return;
@@ -512,7 +509,6 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       error("Internal error: column %d of result is determined to be integer64 but maxType=='%s' != REALSXP", j+1, type2char(maxType)); // # nocov
     SEXP target;
     SET_VECTOR_ELT(ans, idcol+j, target=allocVector(maxType, nrow));  // does not initialize logical & numerics, but does initialize character and list
-    if (!factor) copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
 
     if (factor && anyNotStringOrFactor) {
       // in future warn, or use list column instead ... warning("Column %d contains a factor but not all items for the column are character or factor", idcol+j+1);
@@ -678,6 +674,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       for (int k=0; k<nLevel; ++k) SET_TRUELENGTH(levelsRaw[k], 0);
       savetl_end();
       if (warnStr[0]) warning(warnStr);  // now savetl_end() has happened it's safe to call warning (could error if options(warn=2))
+      copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
       SEXP levelsSxp;
       setAttrib(target, R_LevelsSymbol, levelsSxp=allocVector(STRSXP, nLevel));
       for (int k=0; k<nLevel; ++k) SET_STRING_ELT(levelsSxp, k, levelsRaw[k]);
@@ -713,6 +710,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         }
         ansloc += thisnrow;
       }
+      copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
     }
   }
   UNPROTECT(nprotect);  // ans, coercedForFactor, thisCol

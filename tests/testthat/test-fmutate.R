@@ -398,14 +398,13 @@ test_that("fmutate with across reorders correctly", {
 
   for(i in seq_col(wlddev)) {
     gdf <- fgroup_by(wlddev, i)
-    labs <- vlabels(wlddev)
-    expect_true(all_obj_equal(
+    expect_true(all_identical(
       wlddev,
       fungroup(fmutate(gdf, across(c(PCGDP, LIFEEX), identity))),
       fungroup(fmutate(gdf, across(.fns = identity))),
-      fungroup(fmutate(gdf, list(PCGDP = PCGDP, LIFEEX = LIFEEX))) %>% setLabels(labs),
-      fungroup(fmutate(gdf, (.data), .cols = .c(PCGDP, LIFEEX))) %>% setLabels(labs),
-      fungroup(fmutate(gdf, (.data))) %>% setLabels(labs)
+      fungroup(fmutate(gdf, list(PCGDP = PCGDP, LIFEEX = LIFEEX))),
+      fungroup(fmutate(gdf, (.data), .cols = .c(PCGDP, LIFEEX))),
+      fungroup(fmutate(gdf, (.data)))
     ))
   }
 

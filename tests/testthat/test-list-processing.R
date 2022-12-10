@@ -109,3 +109,9 @@ test_that("has_elem works well", {
 })
 
 
+test_that("coercions in rbindlist", {
+ expect_true(allv(vtypes(unlist2d(list(dapply(mtcars, as.integer), mtcars), idcols = FALSE)), "double"))
+ expect_true(allv(vtypes(unlist2d(list(mtcars, dapply(mtcars, as.integer)), idcols = FALSE)), "double"))
+ expect_true(allv(vtypes(unlist2d(list(dapply(mtcars, as.integer), dapply(mtcars, as.integer)), idcols = FALSE)), "integer"))
+})
+
