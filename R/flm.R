@@ -93,24 +93,8 @@ flm.formula <- function(formula, data = NULL, weights = NULL, add.icpt = TRUE, .
   flm.default(y, do.call(cbind, X), w, FALSE, ...)
 }
 
-
-
 # Slower than using chol2inv (discarded)
 # lmchol2 <- function(X, y) {
 #   ch <- chol(crossprod(X))
 #   backsolve(ch, forwardsolve(ch, crossprod(X, y), upper = TRUE, trans = TRUE))
 # }
-
-
-# getDLLRegisteredRoutines("RcppArmadillo")
-#
-# identical(getNativeSymbolInfo("_RcppArmadillo_fastLm_impl", PACKAGE = "RcppArmadillo"),
-# get0("_RcppArmadillo_fastLm_impl", envir = getNamespace("RcppArmadillo")))
-#
-#
-# microbenchmark::microbenchmark(A = getNativeSymbolInfo("_RcppArmadillo_fastLm_impl", PACKAGE = "RcppArmadillo"),
-#           B = get0("_RcppArmadillo_fastLm_impl", envir = getNamespace("RcppArmadillo")))
-#
-# .Call(get0("_RcppArmadillo_fastLm_impl", envir = getNamespace("RcppArmadillo")), X, y)
-#
-# .Call("_RcppArmadillo_fastLm_impl", X, y, PACKAGE = "RcppArmadillo")

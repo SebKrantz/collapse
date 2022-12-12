@@ -4,8 +4,7 @@ bprod <- base::prod
 bmin <- base::min
 bmax <- base::max
 
-# Row-operations (documented under data transformations...) ... see if any other package has it (i.e. matrixStats etc..)
-# or wirhout r ??? look for %+% function on Rducumentation.. rdio.
+# Row-operations (documented under data transformations...) ...
 
 "%rr%" <- function(X, v) if(is.atomic(X) || is.atomic(v) || inherits(X, "data.frame")) TRA(X, v, "replace_fill") else # outer(rep.int(1L, dim(X)[2L]), v)
   duplAttributes(.mapply(function(x, y) TRA(x, y, "replace_fill"), list(unattrib(X), unattrib(v)), NULL), X)
@@ -19,8 +18,6 @@ bmax <- base::max
   duplAttributes(.mapply(function(x, y) TRA(x, y, "/"), list(unattrib(X), unattrib(v)), NULL), X)
 
 
-
-# othidentity <- function(x, y) y
 "%cr%" <- function(X, V) if(is.atomic(X)) return(duplAttributes(rep(V, NCOL(X)), X)) else # outer(rep.int(1L, dim(X)[2L]), V)
   if(is.atomic(V)) return(duplAttributes(lapply(vector("list", length(unclass(X))), function(z) V), X)) else
     copyAttrib(V, X) # copyAttrib first makes a shallow copy of V
@@ -673,11 +670,6 @@ charorNULL <- function(x) if(is.character(x)) x else NULL
 
 tochar <- function(x) if(is.character(x)) x else as.character(x)  # if(is.object(x)) as.character(x) else .Call(C_aschar, x)
 
-# more security here?
-# unique_factor <- function(x) {  # Still needed with new collap solution ? -> Nope !
-#   res <- seq_along(attr(x, "levels"))
-#   .Call(C_duplAttributes, res, x)
-# }
 # dotstostr <- function(...) {
 #   args <- deparse(substitute(c(...)))
 #   nc <- nchar(args)
@@ -719,7 +711,6 @@ addNA2 <- function(x) {
 #   return(`oldClass<-`(factor(x, levels = ll, exclude = NULL), clx))
 # }
 
-
 l1orn <- function(x, nam) if(length(x) == 1L) x else nam
 l1orlst <- function(x) if(length(x) == 1L) x else x[length(x)]
 
@@ -730,25 +721,8 @@ fsimplify2array <- function(l) {
   res
 }
 
-
 # fss <- function(x, i, j) {
 #   rn <- attr(x, "row.names")
 #   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1") return(.Call(C_subsetDT, x, i, j))
 #   return(`attr<-`(.Call(C_subsetDT, x, i, j), "row.names", rn[r]))
 # }
-
-# fsplit_DF <- function(x, j, f, rnl, ...) {
-#   j <- seq_along(unclass(x))
-#   rn <- attr(x, "row.names")
-#   if(is.numeric(rn) || is.null(rn) || rn[1L] == "1")
-#     return(lapply(split.default(seq_along(.subset2(x, 1L)), f, ...),
-#                   function(i) .Call(C_subsetDT, x, i, j)))
-#   lapply(split.default(seq_along(.subset2(x, 1L)), f, ...),
-#          function(i) `attr<-`(.Call(C_subsetDT, x, i, j), "row.names", rn[i]))
-# }
-
-
-
-
-
-

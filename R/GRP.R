@@ -452,7 +452,7 @@ print.invisible <- function(x, ...) cat("")
   res
 }
 
-# missing doesn't work, its invidible return...
+# missing doesn't work, its invisible return...
 # `[.GRP_df` <- function(x, ...) {
 #   tstop <- function(x) if(missing(x)) NULL else x
 #   res <- tstop(NextMethod()) # better than above (problems with data.table method, but do further checks...)
@@ -489,9 +489,6 @@ print.invisible <- function(x, ...) cat("")
 # }
 
 
-# "[117 ordered groups | mean(N): 64 | sd(N): 29.7]"
-# "[117 ordered groups | Avg. N: 64 (SD: 29.7)]"
-
 fungroup <- function(X, ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   clx <- oldClass(X)
@@ -501,25 +498,6 @@ fungroup <- function(X, ...) {
   X
 }
 
-# collapse 1.3.2 versions:
-# fgroup_by <- function(X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = FALSE) {      #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !!
-#   clx <- oldClass(X)
-#   attr(X, "groups") <- GRP.default(fselect(X, ...), NULL, sort, decreasing, na.last, TRUE, return.order, FALSE) # `names<-`(eval(e, X, parent.frame()), all.vars(e))
-#   attr(X, "was.tibble") <- any(clx == "tbl_df")
-#   add_cl <- if(any(clx == "data.table")) c("data.table", "tbl_df", "tbl", "grouped_df") else c("tbl_df", "tbl", "grouped_df")
-#   oldClass(X) <- c(add_cl, fsetdiff(clx, add_cl)) # necesssary to avoid printing errors... (i.e. wrong group object etc...)
-#   X
-# }
-#
-# fungroup <- function(X, untibble = isFALSE(attr(X, "was.tibble"))) {
-#   clx <- oldClass(X)
-#   attr(X, "groups") <- NULL
-#   if(untibble) {
-#     oldClass(X) <- fsetdiff(clx, c("tbl_df", "tbl", "grouped_df"))
-#     attr(X, "was.tibble") <- NULL
-#   } else oldClass(X) <- clx[clx != "grouped_df"]
-#   X
-# }
 
 condCopyAttrib <- function(x, d) {
   if(is.object(x)) return(x)
