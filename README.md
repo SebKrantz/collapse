@@ -5,7 +5,7 @@
 [![R build status](https://github.com/SebKrantz/collapse/workflows/R-CMD-check/badge.svg)](https://github.com/SebKrantz/collapse/actions)
 [![collapse status badge](https://fastverse.r-universe.dev/badges/collapse)](https://fastverse.r-universe.dev)
 [![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse) 
-[![cran checks](https://cranchecks.info/badges/worst/collapse)](https://cran.r-project.org/web/checks/check_results_collapse.html)
+[![cran checks](https://badges.cranchecks.info/worst/collapse.svg)](https://cran.r-project.org/web/checks/check_results_collapse.html)
 ![downloads per month](http://cranlogs.r-pkg.org/badges/collapse?color=blue)
 ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=blue)
  [![Conda Version](https://img.shields.io/conda/vn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
