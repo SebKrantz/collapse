@@ -118,11 +118,15 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
     res <- unlist(res, FALSE, use.names = TRUE)
     # replicating groups if more rows per computation...
     if(!all_eq(lr <- vlengths(res, FALSE))) {
-      if(!keep.group_vars) stop("all computations need to result in vectors of equal length")
-      gi <- seq_along(g$group.vars)
-      ef <- lr[length(gi)+1L] / g[[1L]]
-      if(!all_eq(lr[-gi]) || ef %% 1 > 0) stop("all computations need to result in vectors of equal length")
-      res[gi] <- .Call(C_subsetDT, res[gi], rep(seq_len(g[[1L]]), each = ef), gi, FALSE) # Using C_subsetvector is not really faster... (1-2 microseconds gain)
+      # if(!keep.group_vars) stop("all computations need to result in vectors of equal length")
+      # gi <- seq_along(g$group.vars)
+      # ef <- lr[length(gi)+1L] / g[[1L]]
+      maxlr <- bmax(lr)
+      ef <- maxlr / g[[1L]]
+      # if(!all_eq(lr[-gi]) || ef %% 1 > 0) stop("all computations need to result in vectors of equal length")
+      gi <- whichv(lr, maxlr, invert = TRUE)
+      if(ef != as.integer(ef) || !all_eq(lr[gi])) stop("all computations need to result in vectors of length 1 or the maximum length of any expression")
+      res[gi] <- .Call(C_subsetDT, res, rep(seq_len(g[[1L]]), each = ef), gi, FALSE) # Using C_subsetvector is not really faster... (1-2 microseconds gain)
     }
   } else {
     # Without groups...
@@ -143,7 +147,12 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
       res <- unlist(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe), FALSE, use.names = TRUE)
     } else res <- eval(e, .data, pe)
     # return(res)
-    if(!all_eq(vlengths(res, FALSE))) stop("all computations need to result in vectors of equal length")
+    if(!all_eq(lr <- vlengths(res, FALSE))) {
+      maxlr <- bmax(lr)
+      gi <- whichv(lr, maxlr, invert = TRUE)
+      if(!allv(lr[gi], 1L)) stop("all computations need to result in vectors of length 1 or the maximum length of any expression")
+      res[gi] <- .Call(C_subsetDT, res, rep.int(1L, maxlr), gi, FALSE)
+    }
   }
   ax[c("names", "row.names")] <- list(names(res), .set_row_names(length(res[[1L]])))
   return(condalcSA(res, ax, any(cld == "data.table")))

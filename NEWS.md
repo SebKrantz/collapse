@@ -25,6 +25,9 @@
   + No grouped vectorizations for fast statistical functions i.e. the entire expression is evaluated for each group. (Let me know if there are applications where vectorization would be possible and beneficial. I can't think of any.)  
   + All elements in the result list need to have the same length, or, for `fmutate`, have the same length as the data (in each group). 
   + If `.data` is used, the entire expression (`expr`) will be turned into a function of `.data` (`function(.data) expr`), which means columns are only available when accessed through `.data` e.g. `.data$col1`. 
+  
+  
+* `fsummarise` supports computations with mixed result lengths e.g. `mtcars |> fgroup_by(cyl) |> fsummarise(N = GRPN(), mean_mpg = fmean(mpg), quantile_mpg = fquantile(mpg))`, as long as all computations result in either length 1 or length k vectors, where k is the maximum result length (for `fquantile` with default settings k = 5).   
 
 * `radixorder` is about 25% faster on characters and doubles. This also benefits grouping performance. Note that `group()` may still be substantially faster on unsorted data, so if performance is critical try the `sort = FALSE` argument to functions like `fgroup_by` and compare. 
 
