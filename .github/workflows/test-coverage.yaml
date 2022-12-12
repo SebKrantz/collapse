@@ -33,7 +33,7 @@ jobs:
           Sys.setenv(NCRAN = TRUE, NMAC = TRUE)
           suppressWarnings(
           codecov(
-            type = "all".
+            type = "all",
             quiet = FALSE,
             clean = FALSE,
             install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package")
