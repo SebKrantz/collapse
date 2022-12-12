@@ -108,13 +108,3 @@ rsplit.data.frame <- function(x, by, drop = TRUE, flatten = FALSE, # check = TRU
   rspl_DF(x, by)
 }
 
-
-# Misc trial:
-#
-#     fli <- lapply(fl[-1L], split, fl[[1L]], ...)
-#     for(i in seq_len(length(fl)-1L)) {
-#       r <- rapply(r, split, fl[[1L]], how = "list")
-#       fli <- rapply(fli[-1L], split, fli[[2L]], ..., how = "list")
-#     }
-#   }
-#   r

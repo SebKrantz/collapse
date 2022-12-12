@@ -177,11 +177,11 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
   if (anyNA) {                                                    \
     for (int i = 0; i != n; ++i) {                                \
       int elem = idxp[i];                                         \
-      ap[i] = elem==NA_INTEGER ? _NAVAL_ : sp[elem-1];            \
+      ap[i] = elem==NA_INTEGER ? _NAVAL_ : sp[elem];              \
     }                                                             \
   } else {                                                        \
     for (int i = 0; i != n; ++i) {                                \
-      ap[i] = sp[idxp[i]-1];                                      \
+      ap[i] = sp[idxp[i]];                                        \
     }                                                             \
   }
   // For small n such as 2,3,4 etc we hope OpenMP will be sensible inside it and not create a team with each thread doing just one item. Otherwise,
@@ -192,17 +192,16 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
   switch(TYPEOF(source)) {
     case INTSXP:
     case LGLSXP: {
-      int *sp = INTEGER(source), *ap = INTEGER(ans);
-      PARLOOP(NA_INTEGER)
+      int *restrict sp = INTEGER(source)-1, *restrict ap = INTEGER(ans);
+      PARLOOP(NA_INTEGER);
     } break;
     case REALSXP : {
       if (INHERITS(source, char_integer64)) {
-        int64_t *sp = (int64_t *)REAL(source);
-        int64_t *ap = (int64_t *)REAL(ans);
-        PARLOOP(INT64_MIN)
+        int64_t *restrict sp = (int64_t *)REAL(source)-1, *restrict ap = (int64_t *)REAL(ans);
+        PARLOOP(INT64_MIN);
       } else {
-        double *sp = REAL(source), *ap = REAL(ans);
-        PARLOOP(NA_REAL)
+        double *restrict sp = REAL(source)-1, *restrict ap = REAL(ans);
+        PARLOOP(NA_REAL);
       }
     } break;
     case STRSXP : {
@@ -213,8 +212,8 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // TODO - discuss with Luke Tierney. Produce benchmarks on integer/double to see if it's worth making a safe
     //        API interface for package use for STRSXP.
     // Aside: setkey() is a separate special case (a permutation) and does do this in parallel without using SET_*.
-    SEXP *sp = STRING_PTR(source), *ap = STRING_PTR(ans);
-    PARLOOP(NA_STRING)
+    SEXP *restrict sp = STRING_PTR(source)-1, *restrict ap = STRING_PTR(ans);
+    PARLOOP(NA_STRING);
   } break;
   case VECSXP : {
     // VECTOR_PTR does exist but returns 'not safe to return vector pointer' when USE_RINTERNALS is not defined.
@@ -223,16 +222,16 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // we take the R API (INTEGER()[i], REAL()[i], etc) outside loops for the simple types even when not parallel. For this
       // type list case (VECSXP) it might be that some items are ALTREP for example, so we really should use the heavier
       // _ELT accessor (VECTOR_ELT) inside the loop in this case.
-      SEXP *sp = SEXPPTR(source), *ap = SEXPPTR(ans);
-      PARLOOP(R_NilValue)
+      SEXP *restrict sp = SEXPPTR(source)-1, *restrict ap = SEXPPTR(ans);
+      PARLOOP(R_NilValue);
     } break;
     case CPLXSXP : {
-      Rcomplex *sp = COMPLEX(source), *ap = COMPLEX(ans);
-      PARLOOP(NA_CPLX)
+      Rcomplex *restrict sp = COMPLEX(source)-1, *restrict ap = COMPLEX(ans);
+      PARLOOP(NA_CPLX);
     } break;
     case RAWSXP : {
-      Rbyte *sp = RAW(source), *ap = RAW(ans);
-      PARLOOP(0)
+      Rbyte *restrict sp = RAW(source)-1, *restrict ap = RAW(ans);
+      PARLOOP(0);
     } break;
     default :
       error("Internal error: column type '%s' not supported by data.table subset. All known types are supported so please report as bug.", type2char(TYPEOF(source)));  // # nocov
@@ -473,7 +472,13 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
     if (!isNewList(x)) error("Internal error. Argument 'x' to CsubsetDT is type '%s' not 'list'", type2char(TYPEOF(rows))); // # nocov
       if (!length(x)) return x;  // return empty list
 
-    const int nrow = length(VECTOR_ELT(x, 0));
+    if (!isInteger(cols)) error("Internal error. Argument 'cols' to Csubset is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
+    int ncol = LENGTH(cols), l = LENGTH(x), *pcols = INTEGER(cols);
+    for (int i = 0; i != ncol; ++i) {
+      if (pcols[i] < 1 || pcols[i] > l) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, pcols[i], l);
+    }
+
+    const int nrow = length(VECTOR_ELT(x, pcols[0]-1)); // Allows checking just subsetted columns for right length
     // if fast return, return data.table if all rows selected through positive indices...
     // if(asLogical(fastret) && nrow == LENGTH(rows) && INTEGER(rows)[0] > 0) {
     //  if(LENGTH(cols) == length(x)) return x;
@@ -487,12 +492,6 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
       const char *err = check_idx(rows, nrow, &anyNA); // , &orderedSubset
       if (err!=NULL) error(err);
     }
-
-    if (!isInteger(cols)) error("Internal error. Argument 'cols' to Csubset is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
-    int ncol = LENGTH(cols), l = LENGTH(x), *pcols = INTEGER(cols);
-      for (int i = 0; i != ncol; ++i) {
-        if (pcols[i] < 1 || pcols[i] > l) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, pcols[i], l);
-      }
 
       // Adding sf geometry column if not already selected...
       if(oxl && INHERITS(x, char_sf)) {

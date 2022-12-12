@@ -50,9 +50,7 @@ to_plm <- function(x, row.names = FALSE) {
 # time_unik_new = (time_unik - min(time_unik)) / my_step
 # time = time_unik_new[time_full$x]
 
-# TODO: Could envision faster factor generation following this principle, e.g.
-# first get unique values using group(), do forder.int, then expand again...
-# also think of fixest's quf, checking if double is integer, break out of loop if fail...
+# TODO: also think of fixest's quf, checking if double is integer, break out of loop if fail...
 
 timeid <- function(x, factor = FALSE, ordered = factor, extra = FALSE) {
   id <- .Call(C_group, x, TRUE, FALSE) # starts = TRUE, group.sizes = FALSE
