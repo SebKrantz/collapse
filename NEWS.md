@@ -29,6 +29,8 @@
   
 * `fsummarise` supports computations with mixed result lengths e.g. `mtcars |> fgroup_by(cyl) |> fsummarise(N = GRPN(), mean_mpg = fmean(mpg), quantile_mpg = fquantile(mpg))`, as long as all computations result in either length 1 or length k vectors, where k is the maximum result length (for `fquantile` with default settings k = 5).   
 
+* `BY` now supports data-length arguments to be passed e.g. `BY(mtcars, mtcars$cyl, fquantile, w = mtcars$wt)`, making it effectively a generic grouped `mapply` function as well.  
+
 * `radixorder` is about 25% faster on characters and doubles. This also benefits grouping performance. Note that `group()` may still be substantially faster on unsorted data, so if performance is critical try the `sort = FALSE` argument to functions like `fgroup_by` and compare. 
 
 * Most list processing functions are noticeably faster, as checking the data types of elements in a list is now also done in C, and I have made some improvements to *collapse*'s version of `rbindlist()` (used in `unlist2d()`, and various other places). 
