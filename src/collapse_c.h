@@ -7,6 +7,7 @@
 #undef ISNAN
 #define ISNAN(x) ((x) != (x))
 
+int max_threads;
 static double POS_INF = 1.0/0.0;
 static double NEG_INF = -1.0/0.0;
 

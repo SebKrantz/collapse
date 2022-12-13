@@ -292,6 +292,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
     narm = asLogical(Rnarm), nth = asInteger(Rnth), nprotect = 0, nwl = isNull(w);
   if(narm) narm += asLogical(fill);
+  if(nth > max_threads) nth = max_threads;
   // ALTREP methods for compact sequences: not safe yet and not part of the API.
   // if(ALTREP(x) && ng == 0 && nwl) {
   // switch(tx) {
@@ -378,6 +379,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
       narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
       nth = asInteger(Rnth); // , cmth = nth > 1 && col >= nth;
   if(narm) narm += asLogical(fill);
+  if(nth > max_threads) nth = max_threads;
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(l*col < 100000) nth = 1; // No gains from multithreading on small data
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
@@ -495,6 +497,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 
 SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop, SEXP Rnth) {
   int l = length(x), ng = asInteger(Rng), nth = asInteger(Rnth), nprotect = 1;
+  if(nth > max_threads) nth = max_threads;
   // TODO: Disable multithreading if overall data size is small?
   if(l < 1) return x; // needed ??
   if(ng == 0 && asLogical(Rdrop)) {

@@ -1,13 +1,27 @@
-#include "data.table.h"
 /*
  This code is adapted from the data.table package: http://r-datatable.com
  and licensed under a Mozilla Public License 2.0 (MPL-2.0) license.
 */
 
+#ifdef _OPENMP
+  #include <omp.h>
+  #define OMP_NUM_PROCS omp_get_num_procs()
+  #define OMP_THREAD_LIMIT omp_get_thread_limit()
+  #define OMP_MAX_THREADS omp_get_max_threads()
+#else
+  #define OMP_NUM_PROCS 1
+  #define OMP_THREAD_LIMIT 1
+  #define OMP_MAX_THREADS 1
+#endif
+
+
+#include "data.table.h"
+#include "collapse_c.h"
 #include <Rdefines.h>
 // #include <R_ext/Rdynload.h>
 // #include <R_ext/Visibility.h>
 
+static inline int imin(int a, int b) { return a < b ? a : b; }
 
 // global constants extern in data.table.h for gcc10 -fno-common; #4091
 // these are written to once here on initialization, but because of that write they can't be declared const
@@ -145,6 +159,10 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   SelfRefSymbol = install(".internal.selfref");
   sym_datatable_locked = install(".data.table.locked");
   // sym_collapse_DT_alloccol = install("collapse_DT_alloccol");
+
+  max_threads = OMP_NUM_PROCS;
+  max_threads = imin(max_threads, OMP_THREAD_LIMIT);
+  max_threads = imin(max_threads, OMP_MAX_THREADS);
 
   return mess;
 }

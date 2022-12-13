@@ -359,7 +359,8 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
   SEXP res;
-  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, l = length(x);
+  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst,
+    l = length(x), nthreads = asInteger(Rnthreads);
   if(l != length(pg[1])) error("length(g) must match length(x)");
   if(isNull(o)) {
     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
@@ -376,7 +377,8 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
     po = INTEGER(o);
     pst = INTEGER(getAttrib(o, install("starts")));
   }
-  PROTECT(res = ndistinct_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rnthreads)));
+  if(nthreads > max_threads) nthreads = max_threads;
+  PROTECT(res = ndistinct_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), nthreads));
   if(OBJECT(x) == 0) copyMostAttrib(x, res);
   else {
     SEXP sym_label = install("label");
@@ -389,6 +391,7 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
 SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
   int l = length(x), narm = asLogical(Rnarm), nthreads = asInteger(Rnthreads);
   if(l < 1) return ScalarInteger(0);
+  if(nthreads > max_threads) nthreads = max_threads;
   if(isNull(g) && asLogical(Rdrop)) {
     SEXP out = PROTECT(allocVector(INTSXP, l)), *restrict px = SEXPPTR(x);
     int *restrict pout = INTEGER(out);
@@ -450,7 +453,7 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1],
       narm = asLogical(Rnarm), nthreads = asInteger(Rnthreads);
   if(l < 1) return ScalarInteger(0); // Prevents seqfault for numeric(0) #101
-
+  if(nthreads > max_threads) nthreads = max_threads;
   if(isNull(g)) {
     SEXP res = PROTECT(allocVector(INTSXP, col));
     int *restrict pres = INTEGER(res);
