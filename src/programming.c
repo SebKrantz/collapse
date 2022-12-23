@@ -850,7 +850,7 @@ SEXP frange(SEXP x, SEXP Rnarm) {
 SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
 
   SEXP dim = getAttrib(x, R_DimSymbol);
-  int nrow, ncol, ret, lv = length(vec), nthreads = asInteger(Rnthreads), nprotect = 1;
+  int nrow, ncol, ret, nullv = isNull(vec), nthreads = asInteger(Rnthreads), nprotect = 1;
   if(nthreads > max_threads) nthreads = max_threads;
   if(TYPEOF(dim) != INTSXP) {
     nrow = 1;
@@ -873,18 +873,16 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
   }
 
   size_t l = nrow;
-  if(lv == 0) { // Full distance matrix
-  if(nrow <= 1) error("If v is left empty, x needs to be a matrix with at least 2 rows");
-   l = ((double)nrow / 2) * (nrow - 1);
-   // if(ltmp > UINT_MAX) error("Distance matrix too large, the maximum unsigned integer is %d, your distance matrix would require %d elements", UINT_MAX, ltmp);
-   // l = ltmp;
-  } else if(lv != ncol) error("length(v) must match ncol(x)");
+  if(nullv) { // Full distance matrix
+    if(nrow <= 1) error("If v is left empty, x needs to be a matrix with at least 2 rows");
+    l = ((double)nrow / 2) * (nrow - 1);
+  } else if(length(vec) != ncol) error("length(v) must match ncol(x)");
 
   SEXP res = PROTECT(allocVector(REALSXP, l));
   double *px = REAL(x), *pres = REAL(res);
   memset(pres, 0, sizeof(double) * l);
 
-  if(lv == 0) { // Full distance matrix
+  if(nullv) { // Full distance matrix
     if(nthreads > 1) {
       if(nthreads > nrow-1) nthreads = nrow-1;
       #pragma omp parallel for num_threads(nthreads)
@@ -971,7 +969,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
     }
   }
 
-  if(lv == 0) { // Full distance matrix object
+  if(nullv) { // Full distance matrix object
     // First creating symbols to avoid protect errors: https://blog.r-project.org/2019/04/18/common-protect-errors/
     SEXP sym_Size = install("Size"), sym_Labels = install("Labels"),
       sym_Diag = install("Diag"), sym_Upper = install("Upper"), sym_method = install("method");
