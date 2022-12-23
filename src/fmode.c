@@ -4,6 +4,8 @@
 #include "kit.h"
 #include "collapse_c.h"
 
+static double NEG_INF = -1.0/0.0;
+
 // C-implementations for different data types ----------------------------------
 // TODO: outsource and memset hash table and count vector?
 // Problem: does not work in parallel, each thread needs own intermediate vectors
