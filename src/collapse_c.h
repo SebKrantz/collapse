@@ -7,7 +7,7 @@
 #undef ISNAN
 #define ISNAN(x) ((x) != (x))
 
-int max_threads;
+extern int max_threads;
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng);
 void DFcopyAttr(SEXP out, SEXP x, int ng);

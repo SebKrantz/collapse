@@ -45,6 +45,8 @@ SEXP SelfRefSymbol;
 SEXP sym_datatable_locked;
 // SEXP sym_collapse_DT_alloccol;
 
+int max_threads;
+
 double NA_INT64_D;
 long long NA_INT64_LL;
 Rcomplex NA_CPLX;
