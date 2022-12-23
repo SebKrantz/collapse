@@ -1,3 +1,6 @@
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 #include "collapse_c.h"
 
 SEXP Cna_rm(SEXP x) {
@@ -839,4 +842,124 @@ SEXP frange(SEXP x, SEXP Rnarm) {
   copyMostAttrib(x, out);
   UNPROTECT(1);
   return out;
+}
+
+
+// faster distance matrices
+// base R's version: https://github.com/wch/r-source/blob/79298c499218846d14500255efd622b5021c10ec/src/library/stats/src/distance.c
+SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
+
+  SEXP dim = getAttrib(x, R_DimSymbol);
+  if(TYPEOF(dim) != INTSXP || TYPEOF(x) != REALSXP)
+    error("x needs to be a numeric matrix");
+
+  int nrow = INTEGER(dim)[0], ncol = INTEGER(dim)[1], lv = length(vec),
+    nthreads = asInteger(Rnthreads), ret = 0, nprotect = 1;
+
+  if(nthreads > max_threads) nthreads = max_threads;
+
+  if(TYPEOF(Rret) == STRSXP) {
+    const char *r = CHAR(STRING_ELT(Rret, 0));
+    if(strcmp(r, "euclidian") == 0) ret = 1;
+    else if(strcmp(r, "euclidian_squared") == 0) ret = 2;
+    else error("Unsupported method: %s", r);
+  } else {
+    ret = asInteger(Rret);
+    if(ret < 1 || ret > 2) error("method must be 1 (euclidian) or 2 (euclidian_squared)");
+  }
+
+  size_t l = nrow;
+  if(lv == 0) { // Full distance matrix
+   l = ((double)nrow / 2) * (nrow - 1);
+   // if(ltmp > UINT_MAX) error("Distance matrix too large, the maximum unsigned integer is %d, your distance matrix would require %d elements", UINT_MAX, ltmp);
+   // l = ltmp;
+  } else if(lv != ncol) error("length(vec) must match ncol(x)");
+
+  SEXP res = PROTECT(allocVector(REALSXP, l));
+  double *px = REAL(x), *pres = REAL(res);
+  memset(pres, 0, sizeof(double) * l);
+
+  if(lv == 0) { // Full distance matrix
+    if(nthreads > 1) {
+      if(nthreads > nrow-1) nthreads = nrow-1;
+      #pragma omp parallel for num_threads(nthreads)
+      for (int k = 1; k < nrow; ++k) { // Row vectors to compute distances with
+        int nmk = nrow - k;
+        double *presk = pres + l - nmk*(nmk+1)/2, // https://en.wikipedia.org/wiki/1_%2B_2_%2B_3_%2B_4_%2B_%E2%8B%AF
+               *pxj = px + k, v = pxj[-1], tmp;
+        for (int j = 0; j < ncol; ++j) { // Elements of the row vector at hand
+          for(int i = 0; i < nmk; ++i) { // All remaining rows to compute the distance to
+            tmp = pxj[i] - v;
+            presk[i] += tmp * tmp;
+          }
+          pxj += nrow; v = pxj[-1];
+        }
+      }
+    } else {
+      double *presk = pres, *pxj, v, tmp;
+      for (int k = 1, nmk = nrow; k != nrow; ++k) { // Row vectors to compute distances with
+        --nmk; pxj = px + k; v = pxj[-1];
+        for (int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
+          for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
+            tmp = pxj[i] - v;
+            presk[i] += tmp * tmp;
+          }
+          pxj += nrow; v = pxj[-1];
+        }
+        presk += nmk;
+      }
+    }
+  } else { // Only a single vector
+    if(TYPEOF(vec) != REALSXP) {
+      vec = PROTECT(coerceVector(vec, REALSXP)); ++nprotect;
+    }
+    double *pv = REAL(vec);
+    if(nthreads > 1) {
+      if(nthreads > nrow) nthreads = nrow;
+      for (int j = 0; j < ncol; ++j) {
+        double *pxj = px + j * nrow, v = pv[j];
+        #pragma omp parallel for num_threads(nthreads)
+        for (int i = 0; i < nrow; ++i) {
+          double tmp = pxj[i] - v;
+          pres[i] += tmp * tmp;
+        }
+      }
+    } else {
+      for (int j = 0; j != ncol; ++j) {
+        double *pxj = px + j * nrow, v = pv[j], tmp;
+        for (int i = 0; i != nrow; ++i) {
+          tmp = pxj[i] - v;
+          pres[i] += tmp * tmp;
+        }
+      }
+    }
+  }
+
+  // Square Root
+  if(ret == 1) {
+    if(nthreads > 1) {
+      #pragma omp parallel for num_threads(nthreads)
+      for (size_t i = 0; i < l; ++i) pres[i] = sqrt(pres[i]);
+    } else {
+      for (size_t i = 0; i != l; ++i) pres[i] = sqrt(pres[i]);
+    }
+  }
+
+  if(lv == 0) { // Full distance matrix object
+    // First creating symbols to avoid protect errors: https://blog.r-project.org/2019/04/18/common-protect-errors/
+    SEXP sym_Size = install("Size"), sym_Labels = install("Labels"),
+      sym_Diag = install("Diag"), sym_Upper = install("Upper"), sym_method = install("method");
+    setAttrib(res, sym_Size, ScalarInteger(nrow));
+    SEXP dn = getAttrib(x, R_DimNamesSymbol);
+    if(TYPEOF(dn) == VECSXP && length(dn))
+       setAttrib(res, sym_Labels, VECTOR_ELT(dn, 0));
+    setAttrib(res, sym_Diag, ScalarLogical(0));
+    setAttrib(res, sym_Upper, ScalarLogical(0));
+    setAttrib(res, sym_method, mkString(ret == 1 ? "euclidian" : "euclidian_squared"));
+    // Note: Missing "call" attribute
+    classgets(res, mkString("dist"));
+  }
+
+  UNPROTECT(nprotect);
+  return res;
 }
