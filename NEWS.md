@@ -18,9 +18,11 @@
 
 * Added functions `fcount()` and `fcountv()`: a versatile and blazing fast alternative to `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
 
+* Added function `fdist`: A fast replacement for `stats::dist`, that computes a euclidian distance matrix around 4x faster than `stats::dist` in serial mode, with additional gains possible through multithreading. It also supports computing the distance of a matrix with a single row-vector, i.e. `fdist(mat, mat[1, ])` is the same as `sqrt(colSums((t(mat) - mat[1, ])^2)))`, but about 20x faster in serial mode, with additional gains possible through (sub-column level) multithreading. 
+
 * `fsummarize()` was added as a synonym to `fsummarise`. Thanks @arthurgailes for the PR. 
 
-* **C API**: *collapse* exports 20 C functions that provide functionality that is either convenient or rather complicated to implement from scratch. The exported functions can be found at the bottom of `src/ExportSymbols.c`. The API excludes most of the statistical functions, which I thought are too closely related to how *collapse* works to be of much use to a C programmer. But you are free to request the export of additional functions, including C++ functions. 
+* **C API**: *collapse* exports around 20 C functions that provide functionality that is either convenient or rather complicated to implement from scratch. The exported functions can be found at the bottom of `src/ExportSymbols.c`. The API excludes most of the statistical functions, which I thought are too closely related to how *collapse* works to be of much use to a C programmer. But you are free to request the export of additional functions, including C++ functions. 
 
 ### Improvements
 
