@@ -850,14 +850,18 @@ SEXP frange(SEXP x, SEXP Rnarm) {
 SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
 
   SEXP dim = getAttrib(x, R_DimSymbol);
-  if(TYPEOF(dim) != INTSXP || TYPEOF(x) != REALSXP)
-    error("x needs to be a numeric matrix");
-
-  int nrow = INTEGER(dim)[0], ncol = INTEGER(dim)[1], lv = length(vec),
-    nthreads = asInteger(Rnthreads), ret = 0, nprotect = 1;
-
+  int nrow, ncol, ret, lv = length(vec), nthreads = asInteger(Rnthreads), nprotect = 1;
   if(nthreads > max_threads) nthreads = max_threads;
-
+  if(TYPEOF(dim) != INTSXP) {
+    nrow = 1;
+    ncol= length(x);
+  } else {
+    nrow = INTEGER(dim)[0];
+    ncol= INTEGER(dim)[1];
+  }
+  if(TYPEOF(x) != REALSXP) {
+    x = PROTECT(coerceVector(x, REALSXP)); ++nprotect;
+  }
   if(TYPEOF(Rret) == STRSXP) {
     const char *r = CHAR(STRING_ELT(Rret, 0));
     if(strcmp(r, "euclidian") == 0) ret = 1;
@@ -870,6 +874,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
 
   size_t l = nrow;
   if(lv == 0) { // Full distance matrix
+  if(nrow <= 1) error("If v is left empty, x needs to be a matrix with at least 2 rows");
    l = ((double)nrow / 2) * (nrow - 1);
    // if(ltmp > UINT_MAX) error("Distance matrix too large, the maximum unsigned integer is %d, your distance matrix would require %d elements", UINT_MAX, ltmp);
    // l = ltmp;
@@ -914,24 +919,45 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
       vec = PROTECT(coerceVector(vec, REALSXP)); ++nprotect;
     }
     double *pv = REAL(vec);
-    if(nthreads > 1) {
-      if(nthreads > nrow) nthreads = nrow;
-      for (int j = 0; j < ncol; ++j) {
-        double *pxj = px + j * nrow, v = pv[j];
-        #pragma omp parallel for num_threads(nthreads)
-        for (int i = 0; i < nrow; ++i) {
-          double tmp = pxj[i] - v;
-          pres[i] += tmp * tmp;
+
+    if(nrow > 1) { // x is a matrix
+      if(nthreads > 1) {
+        if(nthreads > nrow) nthreads = nrow;
+        for (int j = 0; j < ncol; ++j) {
+          double *pxj = px + j * nrow, v = pv[j];
+          #pragma omp parallel for num_threads(nthreads)
+          for (int i = 0; i < nrow; ++i) {
+            double tmp = pxj[i] - v;
+            pres[i] += tmp * tmp;
+          }
+        }
+      } else {
+        for (int j = 0; j != ncol; ++j) {
+          double *pxj = px + j * nrow, v = pv[j], tmp;
+          for (int i = 0; i != nrow; ++i) {
+            tmp = pxj[i] - v;
+            pres[i] += tmp * tmp;
+          }
         }
       }
-    } else {
-      for (int j = 0; j != ncol; ++j) {
-        double *pxj = px + j * nrow, v = pv[j], tmp;
-        for (int i = 0; i != nrow; ++i) {
-          tmp = pxj[i] - v;
-          pres[i] += tmp * tmp;
+    } else { // x is a vector
+      double dres = 0.0;
+      if(nthreads > 1) {
+        if(nthreads > ncol) nthreads = ncol;
+        #pragma omp parallel for num_threads(nthreads) reduction(+:dres)
+        for (int i = 0; i < ncol; ++i) {
+          double tmp = px[i] - pv[i];
+          dres += tmp * tmp;
+        }
+      } else {
+        double tmp;
+        for (int i = 0; i != ncol; ++i) {
+          tmp = px[i] - pv[i];
+          dres += tmp * tmp;
         }
       }
+      pres[0] = ret == 1 ? sqrt(dres) : dres;
+      ret = 2; // ensures we avoid the squaring root loop below
     }
   }
 
