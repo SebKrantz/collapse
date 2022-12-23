@@ -73,7 +73,7 @@ vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispa
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
 frange(x, na.rm = TRUE)     # Much faster base::range, for integer and double objects
-fdist(x, v = NULL,          # Much faster stats::dist. Also supports distances of row-
+fdist(x, v = NULL, ...,    # Much faster stats::dist. Also supports distances of row-
       method = "euclidian", # vector v and matrix x, or two vectors x and v. Note that
       nthreads = 1L)        # x is coerced to numeric matrix if integer or data frame.
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
@@ -115,7 +115,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
     \emph{Notes:} More options may be added here in the future. The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}.
   }
   \item{nthreads}{integer. The number of threads to use. Multithreading also works for distances with a single vector \code{v}.}
-  \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv} and \code{setop}, the argument is unused, and serves as a placeholder for possible future arguments.}
+  \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv}, \code{setop} and \code{fdist}, the argument is unused, and serves as a placeholder for possible future arguments.}
 }
 \details{
 \code{alloc} is a fusion of \code{\link{rep_len}} and \code{\link{replicate}} that is faster in both cases. If \code{value} is a length one atomic vector (logical, integer, double, string, complex or raw), the functionality is as \code{rep_len(value, n)} i.e. the output is a length \code{n} atomic vector with the same attributes as \code{value} (apart from \code{"names"}, \code{"dim"} and \code{"dimnames"}). For all other cases the functionality is as \code{replicate(n, value, simplify = FALSE)} i.e. the output is a length-10 list of the objects. If \code{value} is a list itself, the list is not deep-copied on each replication.
