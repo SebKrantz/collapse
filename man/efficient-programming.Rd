@@ -48,7 +48,7 @@ whichv(x, value,            # Faster than which(x == value)
 whichNA(x, invert = FALSE)  # Faster than which((!)is.na(x))
 x \%==\% value                # Infix for whichv(v, value, FALSE), use e.g. in fsubset()
 x \%!=\% value                # Infix for whichv(v, value, TRUE). See also Note (3)
-alloc(value, n)             # Faster than rep_len(value, n)
+alloc(value, n)             # Fast rep_len(value, n) or replicate(n, value). See Details
 copyv(X, v, R, \dots, invert  # Fast replace(X, v, R), replace(X, X (!/=)= v, R) or
     = FALSE, vind1 = FALSE, # replace(X, (!)v, R[(!)v]). See Details and Note (4).
     xlist = FALSE)          # For multi-replacement see also kit::vswitch()
@@ -118,6 +118,8 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv} and \code{setop}, the argument is unused, and serves as a placeholder for possible future arguments.}
 }
 \details{
+\code{alloc} is a fusion of \code{\link{rep_len}} and \code{\link{replicate}} that is faster in both cases. If \code{value} is a length one atomic vector (logical, integer, double, string, complex or raw), the functionality is as \code{rep_len(value, n)} i.e. the output is a length \code{n} atomic vector with the same attributes as \code{value} (apart from \code{"names"}, \code{"dim"} and \code{"dimnames"}). For all other cases the functionality is as \code{replicate(n, value, simplify = FALSE)} i.e. the output is a length-10 list of the objects. If \code{value} is a list itself, the list is not deep-copied on each replication.
+
 \code{copyv} and \code{setv} are designed to optimize operations that require replacing data in objects in the broadest sense. The only difference between them is that \code{copyv} first deep-copies \code{X} before doing replacements whereas \code{setv} modifies \code{X} in place and returns the result invisibly. There are 3 ways these functions can be used:
 
 \enumerate{
@@ -139,7 +141,7 @@ If \code{X} should not be interpreted like a data frame, setting \code{xlist = T
 \note{
 
 \enumerate{
-\item None of these functions currently support complex vectors.
+\item None of these functions (apart from \code{alloc}) currently support complex vectors.
 
 \item \code{setop} and the operators \code{\%+=\%}, \code{\%-=\%}, \code{\%*=\%} and \code{\%/=\%} also work with integer data, but do not perform any integer related checks. R's integers are bounded between +-2,147,483,647 and \code{NA_integer_} is stored as the value -2,147,483,648. Thus computations resulting in values exceeding +-2,147,483,647 will result in integer overflows, and \code{NA_integer_} should not occur on either side of a \code{setop} call. These are programmers functions and meant to provide the most efficient math possible to responsible users.
 
