@@ -64,11 +64,12 @@ X \%/=\% V                    # Infix for setop(X, "/", V). See also Note (2)
 na_rm(x)                    # Fast: if(anyNA(x)) x[!is.na(x)] else x,
                             # also removes NULL / empty elements from list
 na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
-      na.attr = FALSE, ...) # can use selected columns and attach indices
+        na.attr = FALSE,    # can use selected columns and attach indices
+        all = FALSE, ...)   # and can also only remove all-missing cases
 na_insert(X, prop = 0.1,    # Insert missing values at random
           value = NA)
 missing_cases(X,            # The oposite of complete.cases(), faster for
-              cols = NULL)  # data frames. See also kit::panyNA() and kit::pallNA()
+  cols = NULL, all = FALSE) # data frames. See also kit::panyNA() and kit::pallNA()
 vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
@@ -104,6 +105,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
    \item{cols}{select columns to check for missing values using column names, indices, a logical vector or a function (e.g. \code{is.numeric}). The default is to check all columns, which could be inefficient.}
   \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}
+  \item{all}{logical. \code{TRUE} will only detect/remove cases that are all missing i.e. that only have missing values.}
   \item{prop}{double. Specify the proportion of observations randomly replaced with \code{NA}.}
   \item{use.names}{logical. Preserve names if \code{X} is a list. }
   \item{na.rm}{logical. \code{TRUE} omits missing values by skipping them in the computation. \code{FALSE} terminates the computation once a missing value is encountered and returns 2 missing values.}
@@ -112,7 +114,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
                  1 \tab\tab \code{"euclidian"}   \tab\tab euclidian distance \cr
                  2 \tab\tab \code{"euclidian_squared"} \tab\tab squared euclidian distance (more efficient) \cr
     }
-    \emph{Notes:} More options may be added here in the future. The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}.
+    \emph{Notes:} More options may be added here in the future. The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}. See Examples.
   }
   \item{nthreads}{integer. The number of threads to use. Multithreading also works for distances with a single vector \code{v}.}
   \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv}, \code{setop} and \code{fdist}, the argument is unused, and serves as a placeholder for possible future arguments.}

@@ -14,7 +14,7 @@ void DFcopyAttr(SEXP out, SEXP x, int ng);
 
 void multi_yw(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 SEXP collapse_init(SEXP);
-SEXP dt_na(SEXP, SEXP);
+SEXP dt_na(SEXP, SEXP, SEXP);
 SEXP allNAv(SEXP, SEXP);
 SEXP Cradixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x);

@@ -109,66 +109,115 @@ inline bool INHERITS(SEXP x, SEXP char_) {
   return false;
 }
 
-SEXP dt_na(SEXP x, SEXP cols) {
-  int n=0, elem;
+// Enhanced version of the original
+SEXP dt_na(SEXP x, SEXP cols, SEXP all) {
+  int n = 0, elem, ncol = LENGTH(cols);
 
-  if (!isNewList(x)) error("Internal error. Argument 'x' to Cdt_na is type '%s' not 'list'", type2char(TYPEOF(x))); // # nocov
-  if (!isInteger(cols)) error("Internal error. Argument 'cols' to Cdt_na is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
-  for (int i=0; i<LENGTH(cols); ++i) {
+  if(!isNewList(x)) error("Internal error. Argument 'x' to missing_cases is type '%s' not 'list'", type2char(TYPEOF(x))); // # nocov
+  if(!isInteger(cols)) error("Internal error. Argument 'cols' to missing_cases is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
+  for (int i = 0; i < ncol; ++i) {
     elem = INTEGER(cols)[i];
-    if (elem<1 || elem>LENGTH(x))
+    if(elem < 1 || elem > LENGTH(x))
       error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, elem, LENGTH(x));
-    if (!n) n = length(VECTOR_ELT(x, elem-1));
+    if(!n) n = length(VECTOR_ELT(x, elem-1));
   }
+
   SEXP ans = PROTECT(allocVector(LGLSXP, n));
   int *ians = LOGICAL(ans);
-  for (int i=0; i != n; ++i) ians[i]=0;
-  for (int i=0; i<LENGTH(cols); ++i) {
-    SEXP v = VECTOR_ELT(x, INTEGER(cols)[i]-1);
-    if (!length(v) || isNewList(v) || isList(v)) continue; // like stats:::na.omit.data.frame, skip list/pairlist columns
-    if (n != length(v))
-      error("Column %d of input list x is length %d, inconsistent with first column of that item which is length %d.", i+1,length(v),n);
-    switch (TYPEOF(v)) {
-    case LGLSXP: {
-      const int *iv = LOGICAL(v);
-      for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_LOGICAL);
-    }
-      break;
-    case INTSXP: {
-      const int *iv = INTEGER(v);
-      for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_INTEGER);
-    }
-      break;
-    case STRSXP: {
-      const SEXP *sv = STRING_PTR(v);
-      for (int j=0; j != n; ++j) ians[j] |= (sv[j] == NA_STRING);
-    }
-      break;
-    case REALSXP: {
-      const double *dv = REAL(v);
-      if (INHERITS(v, char_integer64)) {
-        for (int j=0; j != n; ++j) {
-          ians[j] |= (DtoLL(dv[j]) == NA_INT64_LL);   // TODO: can be == NA_INT64_D directly
-        }
-      } else {
-        for (int j=0; j != n; ++j) ians[j] |= ISNAN(dv[j]);
+  memset(ians, 0, sizeof(int) * n);  // for (int i=0; i != n; ++i) ians[i]=0;
+
+  if(asLogical(all)) { // All missing rows
+    // Preliminary check for early return
+    for (int i = 0, tv; i < ncol; ++i) {
+      tv = TYPEOF(VECTOR_ELT(x, INTEGER(cols)[i]-1));
+      if(tv != LGLSXP && tv != INTSXP && tv != REALSXP && tv != STRSXP && tv != CPLXSXP && tv != NILSXP) {
+        UNPROTECT(1);
+        return(ans);
       }
     }
-      break;
-    case RAWSXP: {
-      // no such thing as a raw NA
-      // vector already initialised to all 0's
+    // Summing the missing values
+    int len = ncol;
+    for (int i = 0; i < ncol; ++i) {
+      SEXP v = VECTOR_ELT(x, INTEGER(cols)[i]-1);
+      if (!length(v)) {
+        --len; continue;
+      }
+      if (n != length(v))
+        error("Column %d of input list x is length %d, inconsistent with first column of that item which is length %d.", i+1,length(v),n);
+      switch (TYPEOF(v)) {
+      case LGLSXP: {
+        const int *iv = LOGICAL(v);
+        for (int j=0; j != n; ++j) ians[j] += (iv[j] == NA_LOGICAL);
+      } break;
+      case INTSXP: {
+        const int *iv = INTEGER(v);
+        for (int j=0; j != n; ++j) ians[j] += (iv[j] == NA_INTEGER);
+      } break;
+      case STRSXP: {
+        const SEXP *sv = STRING_PTR(v);
+        for (int j=0; j != n; ++j) ians[j] += (sv[j] == NA_STRING);
+      } break;
+      case REALSXP: {
+        const double *dv = REAL(v);
+        if (INHERITS(v, char_integer64)) {
+          for (int j=0; j != n; ++j) ians[j] += (dv[j] == NA_INT64_D);
+        } else {
+          for (int j=0; j != n; ++j) ians[j] += ISNAN(dv[j]);
+        }
+      } break;
+      case CPLXSXP: {
+        const Rcomplex *dv = COMPLEX(v);
+        for (int j=0; j != n; ++j) ians[j] += (ISNAN(dv[j].r) || ISNAN(dv[j].i));
+      } break;
+      default:
+        error("Unsupported column type '%s'", type2char(TYPEOF(v)));
+      }
     }
-      break;
-    case CPLXSXP: {
-      // taken from https://github.com/wch/r-source/blob/d75f39d532819ccc8251f93b8ab10d5b83aac89a/src/main/coerce.c
-      for (int j=0; j != n; ++j) ians[j] |= (ISNAN(COMPLEX(v)[j].r) || ISNAN(COMPLEX(v)[j].i));
-    }
-      break;
-    default:
-      error("Unsupported column type '%s'", type2char(TYPEOF(v)));
+    // This computes the result
+    for (int j=0; j != n; ++j) ians[j] = ians[j] == len;
+
+  } else { // Any missing (default)
+    for (int i = 0; i < ncol; ++i) {
+      SEXP v = VECTOR_ELT(x, INTEGER(cols)[i]-1);
+      if (!length(v) || isNewList(v) || isList(v)) continue; // like stats:::na.omit.data.frame, skip list/pairlist columns
+      if (n != length(v))
+        error("Column %d of input list x is length %d, inconsistent with first column of that item which is length %d.", i+1,length(v),n);
+      switch (TYPEOF(v)) {
+      case LGLSXP: {
+        const int *iv = LOGICAL(v);
+        for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_LOGICAL);
+      } break;
+      case INTSXP: {
+        const int *iv = INTEGER(v);
+        for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_INTEGER);
+      } break;
+      case STRSXP: {
+        const SEXP *sv = STRING_PTR(v);
+        for (int j=0; j != n; ++j) ians[j] |= (sv[j] == NA_STRING);
+      } break;
+      case REALSXP: {
+        const double *dv = REAL(v);
+        if (INHERITS(v, char_integer64)) {
+          for (int j=0; j != n; ++j) ians[j] |= (dv[j] == NA_INT64_D);
+        } else {
+          for (int j=0; j != n; ++j) ians[j] |= ISNAN(dv[j]);
+        }
+      } break;
+      case RAWSXP: {
+        // no such thing as a raw NA
+        // vector already initialised to all 0's
+      } break;
+      case CPLXSXP: {
+        // taken from https://github.com/wch/r-source/blob/d75f39d532819ccc8251f93b8ab10d5b83aac89a/src/main/coerce.c
+        const Rcomplex *dv = COMPLEX(v);
+        for (int j=0; j != n; ++j) ians[j] |= (ISNAN(dv[j].r) || ISNAN(dv[j].i));
+      } break;
+      default:
+        error("Unsupported column type '%s'", type2char(TYPEOF(v)));
+      }
     }
   }
+
   UNPROTECT(1);
   return(ans);
 }

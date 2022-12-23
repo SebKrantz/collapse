@@ -94,7 +94,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_seqid", (DL_FUNC) &_collapse_seqid, 7},
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 1},
-  {"C_dt_na", (DL_FUNC) &dt_na, 2},
+  {"C_dt_na", (DL_FUNC) &dt_na, 3},
   {"C_allNA", (DL_FUNC) &allNAv, 2},
   {"C_na_rm", (DL_FUNC) &Cna_rm, 1},
   {"C_whichv", (DL_FUNC) &whichv, 3},
