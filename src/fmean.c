@@ -223,6 +223,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth) {
   // }
   if(l < 1) return tx == REALSXP ? x : ScalarReal(asReal(x)); // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
+  if(nth > max_threads) nth = max_threads;
   if(l < 100000) nth = 1; // No improvements from multithreading on small data.
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(REALSXP, ng == 0 ? 1 : ng));
@@ -285,6 +286,7 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
   int tx = TYPEOF(x), nth = asInteger(Rnth), nprotect = 1, *restrict pgs = &nprotect;
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
+  if(nth > max_threads) nth = max_threads;
   if(l*col < 100000) nth = 1; // No gains from multithreading on small data
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(REALSXP, ng == 0 ? col : col * ng));
@@ -391,6 +393,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
   const int l = length(x), ng = asInteger(Rng);
   int nth = asInteger(Rnth), nprotect = 1;
   if(l < 1) return x; // needed ??
+  if(nth > max_threads) nth = max_threads;
   if(ng == 0 && asLogical(Rdrop)) {
     SEXP out = PROTECT(allocVector(REALSXP, l)), *restrict px = SEXPPTR(x);
     double *restrict pout = REAL(out);

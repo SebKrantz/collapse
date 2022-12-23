@@ -556,6 +556,7 @@ dots_apply_grouped <- function(d, g, f, dots) {
     asl <- lapply(dots[ln], gsplit, g)
     if(length(dots) > length(ln)) {
       mord <- dots[-ln]
+      if(is.null(names(mord)) && is.null(names(asl))) warning("If some arguments have the same length as the data (vectors) while others have length 1 (scalars), please ensure that at least one of the two have keywords e.g. argname = value. This is because the latter are passed to the 'MoreArgs' argument of .mapply, and thus the order in which arguments are passed to the function might be different from your top-level call. In particular, .mapply will first pass the vector valued arguments followed by the scalar valued ones.")
       FUN <- function(x) .mapply(f, c(list(gsplit(x, g)), asl), mord) # do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE, MoreArgs = mord), asl))
     } else FUN <- function(x) .mapply(f, c(list(gsplit(x, g)), asl), NULL) # do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE), asl))
     return(lapply(d, function(y) copyMostAttributes(unlist(FUN(y), FALSE, FALSE), y)))
@@ -571,7 +572,11 @@ dots_apply_grouped_bulk <- function(d, g, f, dots) {
   # Arguments withs ame length as data
   if(length(ln <- whichv(vlengths(dots, FALSE), n))) {
     asl <- lapply(dots[ln], gsplit, g)
-    return(.mapply(f, c(list(dsp), asl), if(length(dots) > length(ln)) dots[-ln] else NULL))
+    if(length(dots) > length(ln)) {
+      mord <- dots[-ln]
+      if(is.null(names(mord)) && is.null(names(asl))) warning("If some arguments have the same length as the data (vectors) while others have length 1 (scalars), please ensure that at least one of the two have keywords e.g. argname = value. This is because the latter are passed to the 'MoreArgs' argument of .mapply, and thus the order in which arguments are passed to the function might be different from your top-level call. In particular, .mapply will first pass the vector valued arguments followed by the scalar valued ones.")
+    } else mord <- NULL
+    return(.mapply(f, c(list(dsp), asl), mord))
   }
   # No arguments to be split
   do.call(lapply, c(list(dsp, f), dots))

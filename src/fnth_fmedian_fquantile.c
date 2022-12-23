@@ -93,7 +93,7 @@ double dquickselect(double *x, const int n, const int ret, const double Q) {
   elem = h;
   h -= elem; // Key: need to subtract elem
   QUICKSELECT(dswap);
-  if((ret == 1 && n%2 == 1) || ret == 2 || ret == 3 || h == 0) return a;
+  if((ret == 1 && n%2 == 1) || ret == 2 || ret == 3 || h == 0.0) return a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
   if(ret == 1 || Q == 0.5) return (a+b)/2.0;
@@ -109,7 +109,7 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
   elem = h;
   h -= elem; // Key: need to subtract elem
   QUICKSELECT(iswap);
-  if((ret == 1 && n%2 == 1) || ret == 2 || ret == 3 || h == 0) return (double)a;
+  if((ret == 1 && n%2 == 1) || ret == 2 || ret == 3 || h == 0.0) return (double)a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
   if(ret == 1 || Q == 0.5) return ((double)a+(double)b)/2.0;
@@ -127,7 +127,7 @@ double dquickselect_elem(double *x, const int n, const unsigned int elem, double
   if(n == 0) return NA_REAL;
   double a, b;
   QUICKSELECT(dswap);
-  if(h == 0) return a;
+  if(h == 0.0) return a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
   return a + h*(b-a);
@@ -137,7 +137,7 @@ double iquickselect_elem(int *x, const int n, const unsigned int elem, double h)
   if(n == 0) return NA_REAL;
   int a, b;
   QUICKSELECT(iswap);
-  if(h == 0) return (double)a;
+  if(h == 0.0) return (double)a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
   return (double)a + h*(double)(b-a);

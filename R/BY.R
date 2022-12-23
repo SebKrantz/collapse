@@ -15,7 +15,14 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder 
   g <- GRP(g, return.groups = use.g.names, sort = sort, call = FALSE)
 
   # Computing result: unsimplified
-  res <- aplyfun(gsplit(x, g), FUN, ...)
+  if(!missing(...) && length(x) > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), length(x)))) {
+    asl <- lapply(dots[ln], gsplit, g)
+    if(length(dots) > length(ln)) {
+      mord <- dots[-ln]
+      if(is.null(names(mord)) && is.null(names(asl))) warning("If some arguments have the same length as the data (vectors) while others have length 1 (scalars), please ensure that at least one of the two have keywords e.g. argname = value. This is because the latter are passed to the 'MoreArgs' argument of .mapply, and thus the order in which arguments are passed to the function might be different from your top-level call. In particular, .mapply will first pass the vector valued arguments followed by the scalar valued ones.")
+    } else mord <- NULL
+    res <- .mapply(FUN, c(list(gsplit(x, g)), asl), mord)
+  } else res <- aplyfun(gsplit(x, g), FUN, ...)
 
   # Returning raw or wide result
   if(simplify == 3L || expand.wide) {
@@ -63,8 +70,9 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder 
 # }
 
 copysplaplfun <- function(x, g, FUN, ...) copyMostAttributes(unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE), x)
+copysplmaplfun <- function(x, g, FUN, asl, mord) copyMostAttributes(unlist(.mapply(FUN, c(list(gsplit(x, g)), asl), mord), FALSE, FALSE), x)
 splaplfun <- function(x, g, FUN, ...) unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE)
-
+splmaplfun <- function(x, g, FUN, asl, mord) unlist(.mapply(FUN, c(list(gsplit(x, g)), asl), mord), FALSE, FALSE)
 
 BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder = TRUE,
                           expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
@@ -77,9 +85,23 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
   return <- switch(return[1L], same = 1L, matrix = 3L, data.frame = 2L, list = 0L,
                    stop("Unknown return option!"))
   g <- GRP(g, return.groups = use.g.names, sort = sort, call = FALSE)
+  n <- length(g[[2L]])
+
+  if(!missing(...) && n > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), n))) {
+    asl <- lapply(dots[ln], gsplit, g)
+    if(length(dots) > length(ln)) {
+      mord <- dots[-ln]
+      if(is.null(names(mord)) && is.null(names(asl))) warning("If some arguments have the same length as the data (vectors) while others have length 1 (scalars), please ensure that at least one of the two have keywords e.g. argname = value. This is because the latter are passed to the 'MoreArgs' argument of .mapply, and thus the order in which arguments are passed to the function might be different from your top-level call. In particular, .mapply will first pass the vector valued arguments followed by the scalar valued ones.")
+    } else mord <- NULL
+    multi <- TRUE
+  } else multi <- FALSE
 
   # Just plain list output
   if(return == 0L) {
+    if(multi) {
+      if(expand.wide) return(aplyfun(x, function(y) do.call(rbind, .mapply(FUN, c(list(gsplit(y, g, use.g.names)), asl), mord))))
+      return(aplyfun(x, function(y) .mapply(FUN, c(list(gsplit(y, g, use.g.names)), asl), mord)))
+    }
     if(expand.wide) return(aplyfun(x, function(y) do.call(rbind, lapply(gsplit(y, g, use.g.names), FUN, ...))))
     return(aplyfun(x, function(y) lapply(gsplit(y, g, use.g.names), FUN, ...)))
   }
@@ -89,7 +111,8 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
   # Wider output (for multiple summary statistics like quantile())
   if(expand.wide) {
     if(return < 3L) { # Return a data.frame
-      splitfun <- function(y) .Call(Cpp_mctl, do.call(rbind, lapply(gsplit(y, g), FUN, ...)), TRUE, 0L)
+      splitfun <- if(multi) function(y) .Call(Cpp_mctl, do.call(rbind, .mapply(FUN, c(list(gsplit(y, g)), asl), mord)), TRUE, 0L) else
+        function(y) .Call(Cpp_mctl, do.call(rbind, lapply(gsplit(y, g), FUN, ...)), TRUE, 0L)
       res <- unlist(aplyfun(x, splitfun), recursive = FALSE, use.names = TRUE)
       if(return == 1L) {
         isDTl <- inherits(x, "data.table")
@@ -105,7 +128,8 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
       return(condalcSA(res, ax, isDTl))
     } else { # Return a matrix
       attributes(x) <- NULL
-      splitfun <- function(y) do.call(rbind, lapply(gsplit(y, g), FUN, ...))
+      splitfun <- if(multi) function(y) do.call(rbind, .mapply(FUN, c(list(gsplit(y, g)), asl), mord)) else
+        function(y) do.call(rbind, lapply(gsplit(y, g), FUN, ...))
       res <- do.call(cbind, aplyfun(x, splitfun))
       cn <- dimnames(res)[[2L]]
       namr <- rep(ax[["names"]], each = ncol(res)/length(x))
@@ -118,7 +142,6 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
   # No expand wide (classical result)
   matl <- return == 3L
   isDTl <- !matl && return != 2L && inherits(x, "data.table") # is data table and return data.table
-  n <- length(g[[2L]])
   rownam <- ax[["row.names"]]
   attributes(x) <- NULL
 
@@ -128,7 +151,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
   # Using group names...
   if(use.g.names && !isDTl && !is.null(g$groups)) {
     res <- vector("list", length(x))
-    res1 <- lapply(gsplit(x[[1L]], g), FUN, ...)
+    res1 <- if(multi) .mapply(FUN, c(list(gsplit(x[[1L]], g)), asl), mord) else lapply(gsplit(x[[1L]], g), FUN, ...)
 
     if(length(names(res1[[1L]]))) { # We apply a function that assigns names (e.g. quantile())
       names(res1) <- GRPnames(g)
@@ -151,20 +174,20 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
     # Finish computing results...
     if(matl) {
       res[[1L]] <- res1
-      if(length(res) > 1L) res[-1L] <- aplyfun(x[-1L], splaplfun, g, FUN, ...)
+      if(length(res) > 1L) res[-1L] <- if(multi) aplyfun(x[-1L], splmaplfun, g, FUN, asl, mord) else aplyfun(x[-1L], splaplfun, g, FUN, ...)
       res <- do.call(cbind, res)
     } else {
       res[[1L]] <- copyMostAttributes(res1, x[[1L]])
-      if(length(res) > 1L) res[-1L] <- aplyfun(x[-1L], copysplaplfun, g, FUN, ...)
+      if(length(res) > 1L) res[-1L] <- if(multi) aplyfun(x[-1L], copysplmaplfun, g, FUN, asl, mord) else aplyfun(x[-1L], copysplaplfun, g, FUN, ...)
     }
 
   # Not using group names...
   } else {
     if(matl) {
-      res <- do.call(cbind, aplyfun(x, splaplfun, g, FUN, ...))
+      res <- if(multi) do.call(cbind, aplyfun(x, splmaplfun, g, FUN, asl, mord)) else do.call(cbind, aplyfun(x, splaplfun, g, FUN, ...))
       rn <- if(nrow(res) == n && is.character(rownam) && rownam[1L] != "1" && (reorder || isTRUE(g$ordered[2L]))) rownam else NULL
     } else {
-      res <- aplyfun(x, copysplaplfun, g, FUN, ...) # isDTL ? -> Not needed as data.tables cannot have character row-names anyway.
+      res <- if(multi) aplyfun(x, copysplmaplfun, g, FUN, asl, mord) else aplyfun(x, copysplaplfun, g, FUN, ...) # isDTL ? -> Not needed as data.tables cannot have character row-names anyway.
       rn <- if(length(res[[1L]]) != n || !(reorder || isTRUE(g$ordered[2L]))) .set_row_names(length(res[[1L]])) else NULL
     }
   }
@@ -197,10 +220,24 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
   return <- switch(return[1L], same = 3L, matrix = 2L, data.frame = 1L, list = 0L,
                    stop("Unknown return option!"))
   g <- GRP(g, return.groups = use.g.names, sort = sort, call = FALSE)
+  n <- nrow(x)
+
+  if(!missing(...) && n > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), n))) {
+    asl <- lapply(dots[ln], gsplit, g)
+    if(length(dots) > length(ln)) {
+      mord <- dots[-ln]
+      if(is.null(names(mord)) && is.null(names(asl))) warning("If some arguments have the same length as the data (vectors) while others have length 1 (scalars), please ensure that at least one of the two have keywords e.g. argname = value. This is because the latter are passed to the 'MoreArgs' argument of .mapply, and thus the order in which arguments are passed to the function might be different from your top-level call. In particular, .mapply will first pass the vector valued arguments followed by the scalar valued ones.")
+    } else mord <- NULL
+    multi <- TRUE
+  } else multi <- FALSE
 
   # Just plain list output
   if(return == 0L) {
     xln <- .Call(Cpp_mctl, x, TRUE, 0L) # Named list from matrix
+    if(multi) {
+      if(expand.wide) return(aplyfun(xln, function(y) do.call(rbind, .mapply(FUN, c(list(gsplit(y, g, use.g.names)), asl), mord))))
+      return(aplyfun(xln, function(y) .mapply(FUN, c(list(gsplit(y, g, use.g.names)), asl), mord)))
+    }
     if(expand.wide) return(aplyfun(xln, function(y) do.call(rbind, lapply(gsplit(y, g, use.g.names), FUN, ...))))
     return(aplyfun(xln, function(y) lapply(gsplit(y, g, use.g.names), FUN, ...)))
   }
@@ -208,13 +245,15 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
   # Wider output (for multiple summary statistics like quantile())
   if(expand.wide) {
     if(return == 1L) { # Return data frame
-      splitfun <- function(y) .Call(Cpp_mctl, do.call(rbind, lapply(gsplit(y, g), FUN, ...)), TRUE, 0L)
+      splitfun <- if(multi) function(y) .Call(Cpp_mctl, do.call(rbind, .mapply(FUN, c(list(gsplit(y, g)), asl), mord)), TRUE, 0L) else
+        function(y) .Call(Cpp_mctl, do.call(rbind, lapply(gsplit(y, g), FUN, ...)), TRUE, 0L)
       res <- unlist(aplyfun(.Call(Cpp_mctl, x, TRUE, 0L), splitfun), recursive = FALSE, use.names = TRUE)
       ax <- list(names = names(res),
                  row.names = if(use.g.names && length(gn <- GRPnames(g))) gn else .set_row_names(length(res[[1L]])),
                  class = "data.frame")
     } else { # Return a matrix
-      splitfun2 <- function(y) do.call(rbind, lapply(gsplit(y, g), FUN, ...))
+      splitfun2 <- if(multi) function(y) do.call(rbind, .mapply(FUN, c(list(gsplit(y, g)), asl), mord)) else
+        function(y) do.call(rbind, lapply(gsplit(y, g), FUN, ...))
       res <- do.call(cbind, aplyfun(.Call(Cpp_mctl, x, FALSE, 0L), splitfun2))
       cn <- dimnames(res)[[2L]]
       namr <- rep(dimnames(x)[[2L]], each = ncol(res)/ncol(x))
@@ -228,7 +267,6 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
     return(setAttributes(res, ax))
   }
 
-  n <- nrow(x)
   dn <- dimnames(x)
   matl <- return > 1L
   xl <- .Call(Cpp_mctl, x, FALSE, 0L) # Plain list from matrix columns
@@ -236,7 +274,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
   # No expand wide (classical result)
   if(use.g.names && !is.null(g$groups)) {
     res <- vector("list", length(xl))
-    res1 <- lapply(gsplit(xl[[1L]], g), FUN, ...)
+    res1 <- if(multi) .mapply(FUN, c(list(gsplit(xl[[1L]], g)), asl), mord) else lapply(gsplit(xl[[1L]], g), FUN, ...)
 
     if(length(names(res1[[1L]]))) { # We apply a function that assigns names (e.g. quantile())
       names(res1) <- GRPnames(g)
@@ -255,7 +293,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
 
     # Finish computing results...
     res[[1L]] <- res1
-    if(length(res) > 1L) res[-1L] <- aplyfun(xl[-1L], splaplfun, g, FUN, ...)
+    if(length(res) > 1L) res[-1L] <- if(multi) aplyfun(xl[-1L], splmaplfun, g, FUN, asl, mord) else aplyfun(xl[-1L], splaplfun, g, FUN, ...)
 
     if(matl) { # Return a matrix
       res <- do.call(cbind, res)
@@ -264,7 +302,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
 
   } else { # Not using group names
 
-    res <- aplyfun(xl, splaplfun, g, FUN, ...)
+    res <- if(multi) aplyfun(xl, splmaplfun, g, FUN, asl, mord) else aplyfun(xl, splaplfun, g, FUN, ...)
 
     if(matl) { # Return matrix
 

@@ -564,6 +564,15 @@ test_that(".names works properly", {
 
 })
 
+
+test_that("Warnings for unnamed scalar and vector-valued arguments passed", {
+  tf <- function(x, ...) x
+  expect_warning(mtt(gmtc, acr(hp:carb, tf, TRUE, wt)))
+  expect_warning(mtt(gmtc, acr(hp:carb, tf, wt, TRUE)))
+  expect_warning(mtt(gmtc, acr(hp:carb, tf, TRUE, wt, .apply = FALSE)))
+  expect_warning(mtt(gmtc, acr(hp:carb, tf, wt, TRUE, .apply = FALSE)))
+})
+
 if(FALSE) {
 
 

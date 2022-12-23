@@ -12,13 +12,25 @@
 
 * Function `groupid(x, na.skip = TRUE)` returned uninitialized first elements if the first values in `x` where `NA`. Thanks for reporting @Henrik-P (#335). 
 
+* Fixed a bug in the `.names` argument to `across()`. Passing a naming function such as `.names = function(c, f) paste0(c, "-", f)` now works as intended i.e. the function is applied to all combinations of columns (c) and functions (f) using `outer()`. Previously this was just internally evaluated as `.names(cols, funs)`, which did not work if there were multiple cols and multiple funs. There is also now a possibility to set `.names = "flip"`, which names columns `f_c` instead of `c_f`. 
+
 ### Additions
 
 * Added functions `fcount()` and `fcountv()`: a versatile and blazing fast alternative to `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
 
+* Added function `fdist`: A fast and versatile replacement for `stats::dist`. It computes a full euclidian distance matrix around 4x faster than `stats::dist` in serial mode, with additional gains possible through multithreading along the distance matrix columns (decreasing thread loads as the matrix is lower triangular). It also supports computing the distance of a matrix with a single row-vector, or simply between two vectors. E.g. `fdist(mat, mat[1, ])` is the same as `sqrt(colSums((t(mat) - mat[1, ])^2)))`, but about 20x faster in serial mode, and `fdist(x, y)` is the same as `sqrt(sum((x-y)^2))`, about 3x faster in serial mode. In both cases (sub-column level) multithreading is available.
+
 * `fsummarize()` was added as a synonym to `fsummarise`. Thanks @arthurgailes for the PR. 
 
+* **C API**: *collapse* exports around 20 C functions that provide functionality that is either convenient or rather complicated to implement from scratch. The exported functions can be found at the bottom of `src/ExportSymbols.c`. The API excludes the *Fast Statistical Functions*, which I thought are too closely related to how *collapse* works internally to be of much use to a C programmer (e.g. they expect grouping objects or certain kinds of integer vectors). But you are free to request the export of additional functions, including C++ functions. 
+
 ### Improvements
+
+* `BY` now supports data-length arguments to be passed e.g. `BY(mtcars, mtcars$cyl, fquantile, w = mtcars$wt)`, making it effectively a generic grouped `mapply` function as well.  
+
+* `radixorder` is about 25% faster on characters and doubles. This also benefits grouping performance. Note that `group()` may still be substantially faster on unsorted data, so if performance is critical try the `sort = FALSE` argument to functions like `fgroup_by` and compare. 
+
+* Most list processing functions are noticeably faster, as checking the data types of elements in a list is now also done in C, and I have made some improvements to *collapse*'s version of `rbindlist()` (used in `unlist2d()`, and various other places). 
 
 * `fsummarise` and `fmutate` gained an ability to evaluate arbitrary expressions that result in lists / data frames without the need to use `across()`. For example: `mtcars |> fgroup_by(cyl, vs, am) |> fsummarise(mctl(cor(cbind(mpg, wt, carb)), names = TRUE))` or `mtcars |> fgroup_by(cyl) |> fsummarise(mctl(lmtest::coeftest(lm(mpg ~ wt + carb)), names = TRUE))`. There is also the possibility to compute expressions using `.data` e.g. `mtcars |> fgroup_by(cyl) |> fsummarise(mctl(lmtest::coeftest(lm(mpg ~ wt + carb, .data)), names = TRUE))` yields the same thing, but is less efficient because the whole dataset (including 'cyl') is split by groups. For greater efficiency and convenience, you can pre-select columns using a global `.cols` argument, e.g. `mtcars |> fgroup_by(cyl, vs, am) |> fsummarise(mctl(cor(.data), names = TRUE), .cols = .c(mpg, wt, carb))` gives the same as above. Three *Notes* about this:
 
@@ -26,22 +38,17 @@
   + All elements in the result list need to have the same length, or, for `fmutate`, have the same length as the data (in each group). 
   + If `.data` is used, the entire expression (`expr`) will be turned into a function of `.data` (`function(.data) expr`), which means columns are only available when accessed through `.data` e.g. `.data$col1`. 
   
-  
-* `fsummarise` supports computations with mixed result lengths e.g. `mtcars |> fgroup_by(cyl) |> fsummarise(N = GRPN(), mean_mpg = fmean(mpg), quantile_mpg = fquantile(mpg))`, as long as all computations result in either length 1 or length k vectors, where k is the maximum result length (for `fquantile` with default settings k = 5).   
-
-* `radixorder` is about 25% faster on characters and doubles. This also benefits grouping performance. Note that `group()` may still be substantially faster on unsorted data, so if performance is critical try the `sort = FALSE` argument to functions like `fgroup_by` and compare. 
-
-* Most list processing functions are noticeably faster, as checking the data types of elements in a list is now also done in C, and I have made some improvements to *collapse*'s version of `rbindlist()` (used in `unlist2d()`, and various other places). 
+* `fsummarise` supports computations with mixed result lengths e.g. `mtcars |> fgroup_by(cyl) |> fsummarise(N = GRPN(), mean_mpg = fmean(mpg), quantile_mpg = fquantile(mpg))`, as long as all computations result in either length 1 or length k vectors, where k is the maximum result length (e.g. for `fquantile` with default settings k = 5).   
 
 * List extraction function `get_elem()` now has an option `invert = TRUE` (default `FALSE`) to remove matching elements from a (nested) list. Also the functionality of argument `keep.class = TRUE` is implemented in a better way, such that the default `keep.class = FALSE` toggles classes from (non-matched) list-like objects inside the list to be removed. 
 
-* `num_vars()` has become a bit smarter: columns of class 'ts' and 'units' are now also recognized as numeric. In general, users should be aware that `num_vars()` does not regard any R methods defined for `is.numeric()`, it simply checks whether objects are of type integer or double, and do not have a class. The addition of these two exceptions now guards against two common cases where `num_vars()` may give undesirable outcomes. Note that `num_vars()`  is also called in `collap()` to distinguish between numeric (`FUN`) and non-numeric (`catFUN`) columns. 
+* `num_vars()` has become a bit smarter: columns of class 'ts' and 'units' are now also recognized as numeric. In general, users should be aware that `num_vars()` does not regard any R methods defined for `is.numeric()`, it is implemented in C and simply checks whether objects are of type integer or double, and do not have a class. The addition of these two exceptions now guards against two common cases where `num_vars()` may give undesirable outcomes. Note that `num_vars()`  is also called in `collap()` to distinguish between numeric (`FUN`) and non-numeric (`catFUN`) columns. 
 
 * Improvements to `setv()` and `copyv()`, making them more robust to borderline cases: `integer(0)` passed to `v` does nothing (instead of error), and it is also possible to pass a single real index if `vind1 = TRUE` i.e. passing `1` instead of `1L` does not produce an error. 
 
-* Fixed a bug in the `.names` argument to `across()`. Passing a naming function such as `.names = function(c, f) paste0(c, "-", f)` now works as intended i.e. the function is applied to all combinations of columns (c) and functions (f) using `outer()`. Previously this was just internally evaluated as `.names(cols, funs)`, which did not work if there were multiple cols and multiple funs. There is also now a possibility to set `.names = "flip"`, which names columns `f_c` instead of `c_f`. 
-
 * Functions `frename()` and `setrename()` have an additional argument `.nse = TRUE`, conforming to the default non-standard evaluation of tagged vector expressions e.g. `frename(mtcars, mpg = newname)` is the same as `frename(mtcars, mpg = "newname")`. Setting `.nse = FALSE` allows `newname` to be a variable holding a name e.g. `newname = "othername"; frename(mtcars, mpg = newname, .nse = FALSE)`. Another use of the argument is that a (named) character vector can now be passed to the function to rename a (subset of) columns e.g. `cvec = letters[1:3]; frename(mtcars, cvec, cols = 4:6, .nse = FALSE)` (this works even with `.nse = TRUE`), and `names(cvec) = c("cyl", "vs", "am"); frename(mtcars, cvec, .nse = FALSE)`. Furthermore, `setrename()` now also returns the renamed data invisibly, and `relabel()` and `setrelabel()` have also gained similar flexibility to allow (named) lists or vectors of variable labels to be passed. *Note* that these function have no NSE capabilities, so they work essentially like `frename(..., .nse = FALSE)`.
+
+* Greater thread safety: the number of threads supplied by the user to functions like `fmean()` is ensured to not exceed either of `omp_get_num_procs()`, `omp_get_thread_limit()`, and `omp_get_max_threads()`. 
 
 # collapse 1.8.9
 

@@ -53,6 +53,10 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_fmode", (DL_FUNC) &fmodeC, 6},
   {"C_fmodem", (DL_FUNC) &fmodemC, 7},
   {"C_fmodel", (DL_FUNC) &fmodelC, 6},
+  {"C_fnth", (DL_FUNC) &fnthC, 7},
+  {"C_fnthm", (DL_FUNC) &fnthmC, 8},
+  {"C_fnthl", (DL_FUNC) &fnthlC, 8},
+  {"C_fquantile", (DL_FUNC) &fquantileC, 7},
   {"C_fprod", (DL_FUNC) &fprodC, 5},
   {"C_fprodm", (DL_FUNC) &fprodmC, 6},
   {"C_fprodl", (DL_FUNC) &fprodlC, 6},
@@ -114,6 +118,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_subsetCols", (DL_FUNC) &subsetCols, 3},
   {"C_alloc", (DL_FUNC) &falloc, 2},
   {"C_frange", (DL_FUNC) &frange, 2},
+  {"C_fdist", (DL_FUNC) &fdist, 4},
   {"C_createeptr", (DL_FUNC) &createeptr, 1},
   {"C_geteptr", (DL_FUNC) &geteptr, 1},
   {"C_fcrosscolon", (DL_FUNC) &fcrosscolon, 4},
@@ -135,4 +140,31 @@ void R_init_collapse(DllInfo *dll) {
   R_registerRoutines(dll, CEntries, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
   R_forceSymbols(dll, TRUE);
+  // C API ------------------------------------------------------------------
+  // Functions start with cp_. Apart from a brief description on the right, the API is not documented.
+  // You need to look up the function in the C code under src/, and perhaps also how
+  // it is used under R/. Feel free to request export of additional C/C++ functions.
+  // I do not guarantee C API stability, but you are of course free to secure yourself
+  // by putting a package on CRAN that uses the API, together with appropriate tests...
+  R_RegisterCCallable("collapse", "cp_TRA", (DL_FUNC) &TRAC);
+  R_RegisterCCallable("collapse", "cp_range", (DL_FUNC) &frange);
+  R_RegisterCCallable("collapse", "cp_dist", (DL_FUNC) &fdist);
+  R_RegisterCCallable("collapse", "cp_quantile", (DL_FUNC) &fquantileC);
+  R_RegisterCCallable("collapse", "cp_cumsum", (DL_FUNC) &fcumsumC);
+  R_RegisterCCallable("collapse", "cp_group", (DL_FUNC) &groupVec);          // Main hash-based grouping function: for atomic vectors and data frames
+  R_RegisterCCallable("collapse", "cp_group_at", (DL_FUNC) &groupAtVec);     // Same but only works with atomic vectors and has option to keep missing values
+  R_RegisterCCallable("collapse", "cp_unique", (DL_FUNC) &funiqueC);         // Unique values for atomic vector
+  R_RegisterCCallable("collapse", "cp_radixorder", (DL_FUNC) &Cradixsort);
+  R_RegisterCCallable("collapse", "cp_rbindlist", (DL_FUNC) &rbindlist);
+  R_RegisterCCallable("collapse", "cp_na_rm", (DL_FUNC) &Cna_rm);
+  R_RegisterCCallable("collapse", "cp_missing_cases", (DL_FUNC) &dt_na);
+  R_RegisterCCallable("collapse", "cp_whichv", (DL_FUNC) &whichv);
+  R_RegisterCCallable("collapse", "cp_anyallv", (DL_FUNC) &anyallv);
+  R_RegisterCCallable("collapse", "cp_setcopyv", (DL_FUNC) &setcopyv);
+  R_RegisterCCallable("collapse", "cp_multiassign", (DL_FUNC) &multiassign);
+  R_RegisterCCallable("collapse", "cp_vecgcd", (DL_FUNC) &vecgcd);
+  R_RegisterCCallable("collapse", "cp_all_funs", (DL_FUNC) &all_funs);
+  R_RegisterCCallable("collapse", "cp_subsetCols", (DL_FUNC) &subsetCols);
+  R_RegisterCCallable("collapse", "cp_subsetDataFrame", (DL_FUNC) &subsetDT);
+  R_RegisterCCallable("collapse", "cp_subsetVector", (DL_FUNC) &subsetVector);
 }

@@ -7,8 +7,7 @@
 #undef ISNAN
 #define ISNAN(x) ((x) != (x))
 
-static double POS_INF = 1.0/0.0;
-static double NEG_INF = -1.0/0.0;
+int max_threads;
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng);
 void DFcopyAttr(SEXP out, SEXP x, int ng);
@@ -29,6 +28,7 @@ SEXP subsetVector(SEXP, SEXP, SEXP);
 SEXP Calloccol(SEXP dt); // , SEXP Rn
 SEXP falloc(SEXP, SEXP);
 SEXP frange(SEXP x, SEXP Rnarm);
+SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads);
 // SEXP CasChar(SEXP x);
 SEXP setAttributes(SEXP x, SEXP a);
 SEXP setattributes(SEXP x, SEXP a);

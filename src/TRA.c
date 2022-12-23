@@ -53,7 +53,7 @@ int TtI(SEXP x) {
   if(strcmp(r, "REPLACE_NA") == 0) return 0;
   if(strcmp(r, "REPLACE_FILL") == 0) return 1;
   if(strcmp(r, "REPLACE") == 0) return 2;
-  error("Unknown transformation!");
+  error("Unknown transformation: %s", r);
 }
 
 

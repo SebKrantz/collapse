@@ -7,6 +7,7 @@
 \alias{whichv}
 \alias{whichNA}
 \alias{frange}
+\alias{fdist}
 \alias{alloc}
 \alias{copyv}
 \alias{setv}
@@ -72,6 +73,9 @@ vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispa
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
 frange(x, na.rm = TRUE)     # Much faster base::range, for integer and double objects
+fdist(x, v = NULL,          # Much faster stats::dist. Also supports distances of row-
+      method = "euclidian", # vector v and matrix x, or two vectors x and v. Note that
+      nthreads = 1L)        # x is coerced to numeric matrix if integer or data frame.
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
 fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
 fncol(X)                    # Faster ncol for data frames (not faster for matrices)
@@ -103,6 +107,14 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{prop}{double. Specify the proportion of observations randomly replaced with \code{NA}.}
   \item{use.names}{logical. Preserve names if \code{X} is a list. }
   \item{na.rm}{logical. \code{TRUE} omits missing values by skipping them in the computation. \code{FALSE} terminates the computation once a missing value is encountered and returns 2 missing values.}
+  \item{method}{an integer or character string indicating the method of computing distances.
+  \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
+                 1 \tab\tab \code{"euclidian"}   \tab\tab euclidian distance \cr
+                 2 \tab\tab \code{"euclidian_squared"} \tab\tab squared euclidian distance (more efficient) \cr
+    }
+    \emph{Notes:} More options may be added here in the future. The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}.
+  }
+  \item{nthreads}{integer. The number of threads to use. Multithreading also works for distances with a single vector \code{v}.}
   \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv} and \code{setop}, the argument is unused, and serves as a placeholder for possible future arguments.}
 }
 \details{
@@ -208,6 +220,27 @@ na_omit(mtc_na$vs, na.attr = TRUE)   # Also works with vectors
 na_rm(mtc_na$vs)                     # For vectors na_rm is faster ...
 rm(mtc_na)
 
+## Distance matrix
+m = as.matrix(mtcars)
+str(fdist(m)) # Same as dist(m)
+
+# Distance with vector
+fdist(m, fmean(m))
+
+# Mahalanobis distance
+m_mahal = t(forwardsolve(t(chol(cov(m))), t(m)))
+fdist(m_mahal, fmean(m_mahal))
+sqrt(unattrib(mahalanobis(m, fmean(m), cov(m))))
+\donttest{
+# Distance of two vectors
+x <- rnorm(1e6)
+y <- rnorm(1e6)
+microbenchmark::microbenchmark(
+  fdist(x, y),
+  fdist(x, y, nthreads = 2),
+  sqrt(sum((x-y)^2))
+)
+}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

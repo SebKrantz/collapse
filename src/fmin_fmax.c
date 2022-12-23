@@ -1,6 +1,9 @@
 #include "collapse_c.h"
 // #include <R_ext/Altrep.h>
 
+static double POS_INF = 1.0/0.0;
+static double NEG_INF = -1.0/0.0;
+
 void fmin_double_impl(double *pout, double *px, int ng, int *pg, int narm, int l) {
   if(ng == 0) {
     double min;

@@ -4,6 +4,8 @@
 #include "kit.h"
 #include "collapse_c.h"
 
+static double NEG_INF = -1.0/0.0;
+
 // C-implementations for different data types ----------------------------------
 // TODO: outsource and memset hash table and count vector?
 // Problem: does not work in parallel, each thread needs own intermediate vectors
@@ -882,7 +884,7 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   }
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
-  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst;
+  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, nthreads = asInteger(Rnthreads);
   if(l != length(pg[1])) error("length(g) must match length(x)");
   if(isNull(o)) {
     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
@@ -903,9 +905,10 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   // if(TYPEOF(w) != REALSXP) UNPROTECT(nprotect);
   // return w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
   // Thomas Kalibera Patch:
+  if(nthreads > max_threads) nthreads = max_threads;
   SEXP res;
-  if(nullw) res = mode_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
-  else res = w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
+  if(nullw) res = mode_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), nthreads);
+  else res = w_mode_g_impl(x, pw, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), nthreads);
   UNPROTECT(nprotect);
   return res;
 }
@@ -915,6 +918,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0, nprotect = 1,
     narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads);
   if(l < 1) return x;
+  if(nthreads > max_threads) nthreads = max_threads;
   SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
   if(nullg && nthreads > l) nthreads = l;
   if(nullg && nullw) {
@@ -974,6 +978,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
       narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads),
       nullg = isNull(g), nullw = isNull(w), nprotect = 1;
   if(l <= 1) return x; // Prevents seqfault for numeric(0) #101
+  if(nthreads > max_threads) nthreads = max_threads;
   if(nthreads > col) nthreads = col;
 
   double tmp = 0.0, *restrict pw = &tmp;
