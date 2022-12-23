@@ -869,7 +869,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
     else error("Unsupported method: %s", r);
   } else {
     ret = asInteger(Rret);
-    if(ret < 1 || ret > 2) error("method must be 1 (euclidian) or 2 (euclidian_squared)");
+    if(ret < 1 || ret > 2) error("method must be 1 ('euclidian') or 2 ('euclidian_squared')");
   }
 
   size_t l = nrow;
@@ -878,7 +878,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
    l = ((double)nrow / 2) * (nrow - 1);
    // if(ltmp > UINT_MAX) error("Distance matrix too large, the maximum unsigned integer is %d, your distance matrix would require %d elements", UINT_MAX, ltmp);
    // l = ltmp;
-  } else if(lv != ncol) error("length(vec) must match ncol(x)");
+  } else if(lv != ncol) error("length(v) must match ncol(x)");
 
   SEXP res = PROTECT(allocVector(REALSXP, l));
   double *px = REAL(x), *pres = REAL(res);
@@ -957,7 +957,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         }
       }
       pres[0] = ret == 1 ? sqrt(dres) : dres;
-      ret = 2; // ensures we avoid the squaring root loop below
+      ret = 2; // ensures we avoid the square root loop below
     }
   }
 
