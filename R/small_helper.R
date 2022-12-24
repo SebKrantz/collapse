@@ -390,7 +390,7 @@ missing_cases <- function(X, cols = NULL, prop = 0) {
   if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names")), prop))
   if(is.matrix(X)) {
     if(length(cols)) X <- X[, cols]
-    return(if(prop > 0 && is.matrix(X)) rowSums(is.na(X)) >= bmax(as.integer(prop * NCOL(X)), 1L) else !complete.cases(X))
+    if(is.matrix(X)) return(if(prop > 0) rowSums(is.na(X)) >= bmax(as.integer(prop * NCOL(X)), 1L) else !complete.cases(X))
   }
   is.na(X)
 }
