@@ -404,8 +404,7 @@ all_eq <- function(x) .Call(C_anyallv, x, x[1L], TRUE)
 na_omit <- function(X, cols = NULL, na.attr = FALSE, prop = 0, ...) {
   if(is.list(X)) {
     iX <- seq_along(unclass(X))
-    rl <- if(is.null(cols)) .Call(C_dt_na, X, iX, prop) else
-          .Call(C_dt_na, X, cols2int(cols, X, attr(X, "names")), prop) # gives error if X not list
+    rl <- .Call(C_dt_na, X, if(is.null(cols)) iX else cols2int(cols, X, attr(X, "names")), prop)
     rkeep <- whichv(rl, FALSE)
     if(length(rkeep) == fnrow(X)) return(condalc(X, inherits(X, "data.table")))
     res <- .Call(C_subsetDT, X, rkeep, iX, FALSE) # This allocates data.tables...
