@@ -230,7 +230,7 @@ rm_stub <- function(X, stub, pre = TRUE, regex = FALSE, cols = NULL, ...) {
 
 setRownames <- function(object, nm = if(is.atomic(object)) seq_row(object) else NULL) {
   if(is.list(object)) {
-    l <- length(.subset2(object, 1L))
+    l <- .Call(C_fnrow, object)
     if(is.null(nm)) nm <- .set_row_names(l) else if(length(nm) != l) stop("supplied row-names must match list extent")
     attr(object, "row.names") <- nm
     if(inherits(object, "data.table")) return(alc(object))
@@ -451,7 +451,7 @@ fnlevels <- function(x) length(attr(x, "levels"))
 
 # flevels <- function(x) attr(x, "levels")
 
-fnrow <- function(X) if(is.list(X)) length(.subset2(X, 1L)) else dim(X)[1L]
+fnrow <- function(X) .Call(C_fnrow, X)  # if(is.list(X)) length(.subset2(X, 1L)) else dim(X)[1L]
 
 fnrow2 <- function(X) length(.subset2(X, 1L))
 
@@ -461,11 +461,10 @@ fNCOL <- function(X) if(is.list(X)) length(unclass(X)) else NCOL(X)
 
 fdim <- function(X) {
    if(is.atomic(X)) return(dim(X)) # or if !is.list ?
-   oldClass(X) <- NULL
-   c(length(X[[1L]]), length(X)) # Faster than c(length(.subset2(X, 1L)), length(unclass(X)))
+   c(.Call(C_fnrow, X), length(unclass(X)))
 }
 
-seq_row <- function(X) if(is.list(X)) seq_along(.subset2(X, 1L)) else seq_len(dim(X)[1L])
+seq_row <- function(X) seq_len(.Call(C_fnrow, X))
 
 seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(dim(X)[2L])
 

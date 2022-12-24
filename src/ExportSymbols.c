@@ -119,6 +119,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_alloc", (DL_FUNC) &falloc, 2},
   {"C_frange", (DL_FUNC) &frange, 2},
   {"C_fdist", (DL_FUNC) &fdist, 4},
+  {"C_fnrow", (DL_FUNC) &fnrowC, 1},
   {"C_createeptr", (DL_FUNC) &createeptr, 1},
   {"C_geteptr", (DL_FUNC) &geteptr, 1},
   {"C_fcrosscolon", (DL_FUNC) &fcrosscolon, 4},

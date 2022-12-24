@@ -346,7 +346,7 @@ pad_atomic <- function(x, i, n, value) {
 pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i is same length as X, fill missing, 2 - i is positive: insert missing values in positions
   ilog <- is.logical(i)
   ineg <- i[1L] < 0L
-  n <- if(is.list(X)) length(.subset2(X, 1L)) else if(is.matrix(X)) dim(X)[1L] else length(X)
+  n <- if(is.list(X) || is.matrix(X)) fnrow(X) else length(X)
   xpos <- switch(method[1L], auto = if(ilog) bsum(i) == n else if(ineg) FALSE else length(i) == n,
                  xpos = TRUE, vpos = FALSE, stop("Unknown method: ", method[1L]))
   n <- if(ilog) length(i) else if(xpos && !ineg) bmax(i) else n + length(i)

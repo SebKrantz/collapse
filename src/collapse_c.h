@@ -29,6 +29,7 @@ SEXP Calloccol(SEXP dt); // , SEXP Rn
 SEXP falloc(SEXP, SEXP);
 SEXP frange(SEXP x, SEXP Rnarm);
 SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads);
+SEXP fnrowC(SEXP x);
 // SEXP CasChar(SEXP x);
 SEXP setAttributes(SEXP x, SEXP a);
 SEXP setattributes(SEXP x, SEXP a);

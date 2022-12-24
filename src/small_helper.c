@@ -550,4 +550,10 @@ SEXP all_funs(SEXP x) {
   return data.ans;
 }
 
+SEXP fnrowC(SEXP x) {
+  if(TYPEOF(x) == VECSXP) return ScalarInteger(length(x) ? length(VECTOR_ELT(x, 0)) : 0);
+  SEXP dim = getAttrib(x, R_DimSymbol);
+  if(TYPEOF(dim) != INTSXP) return R_NilValue;
+  return ScalarInteger(INTEGER(dim)[0]);
+}
 

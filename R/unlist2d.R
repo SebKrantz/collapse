@@ -12,7 +12,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   DATAclass <- if(DT) c("data.table", "data.frame") else "data.frame"
 
   DFDTl <- function(l) {
-    attr(l, "row.names") <- .set_row_names(length(.subset2(l, 1L)))
+    attr(l, "row.names") <- .set_row_names(.Call(C_fnrow, l))
     `oldClass<-`(l, DATAclass)
   }
   # idf <- function(x) if(inherits(x, "data.frame")) 2L else if (!length(x)) 1L else 3L*is.atomic(x) # was if(is.null(x)) 1L -> disregards empty list, bug reported # faster way ? : This is not faster:   2L*inherits(x, "data.frame") + is.null(x) + 3L*is.atomic(x)

@@ -16,6 +16,8 @@
 
 * Fixed a bug in the `.names` argument to `across()`. Passing a naming function such as `.names = function(c, f) paste0(c, "-", f)` now works as intended i.e. the function is applied to all combinations of columns (c) and functions (f) using `outer()`. Previously this was just internally evaluated as `.names(cols, funs)`, which did not work if there were multiple cols and multiple funs. There is also now a possibility to set `.names = "flip"`, which names columns `f_c` instead of `c_f`. 
 
+* `fnrow()` was rewritten in C and also supports data frames with 0 rows. Similarly for `seq_row()`. Thanks @NicChr (#344). 
+
 ### Additions
 
 * Added functions `fcount()` and `fcountv()`: a versatile and blazing fast alternative to `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
