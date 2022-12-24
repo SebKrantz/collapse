@@ -6,6 +6,8 @@
 
 * All functions renamed in *collapse* 1.6.0 are now depreciated, to be removed end of 2023. These functions had already been giving messages since v1.6.0. See `help("collapse-renamed")`.
 
+* The lead operator `F()` is not exported anymore from the package namespace, to avoid clashes with `base::F` flagged by multiple people. The operator is still part of the package and can be accessed using `collapse:::F`. I have also added an option `"collapse_export_F"`, such that setting `options(collapse_export_F = TRUE)` before loading the package exports the operator as before. Thanks @matthewross07 (#100), @edrubin (#194), and @arthurgailes (#347). 
+
 ### Bug Fixes
 
 * `fmode()` gave wrong results for singleton groups (groups of size 1) on *unsorted* data. I had optimized `fmode()` for singleton groups to directly return the corresponding element, but it did not access the element through the (internal) ordering vector, so the first element/row of the entire vector/data was taken. The same mistake occurred for `fndistinct` if singleton groups were `NA`, which were counted as `1` instead of `0` under the `na.rm = TRUE` default (provided the first element of the vector/data was not `NA`). The mistake did not occur with data sorted by the groups, because here the data pointer already pointed to the first element of the group. (My apologies for this bug, it took me more than half a year to discover it, using *collapse* on a daily basis, and it escaped 700 unit tests as well).

@@ -19,6 +19,8 @@ f2 <- sample.int(5, nrow(EuStockMarkets), replace = TRUE)
 # numFUN <- setdiff(.FAST_STAT_FUN, c("fnth", "fmode", "ffirst", "flast", "fmin", "fmax"))
 countFUN <- c("fnobs", "fndistinct")
 
+F <- getNamespace("collapse")$F
+
 test_that("statistical functions handle attributes properly", {
 
   for(i in setdiff(.FAST_STAT_FUN, "fnth")) {

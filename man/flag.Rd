@@ -28,44 +28,37 @@ Fast Lags and Leads for Time Series and Panel Data
 \description{
 \code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} and \code{F} provide more flexibility than \code{flag} when applied to data frames (i.e.  column subsetting, formula input and id-variable-preservation capabilities\dots), but are otherwise identical.
 
+\emph{Note:} Since v1.9.0, \code{F} is no longer exported, but can be accesssed using \code{collapse:::F}, or through setting \code{options(collapse_export_F = TRUE)} before loading the package. The syntax is the same as \code{L}.
+
 % (\code{flag} is more of a programmers function in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{L} and \code{F} are more practical to use in regression formulas or for computations on data frames.)
 }
 \usage{
 flag(x, n = 1, \dots)
    L(x, n = 1, \dots)
-   F(x, n = 1, \dots)
 
 \method{flag}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
 \method{L}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
-\method{F}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
 
 \method{flag}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, \dots)
 \method{L}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
-\method{F}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
 
 \method{flag}{data.frame}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, \dots)
 \method{L}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-  fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
-\method{F}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
   fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
 \method{flag}{pseries}(x, n = 1, fill = NA, stubs = length(n) > 1L, shift = "time", \dots)
 \method{L}{pseries}(x, n = 1, fill = NA, stubs = TRUE, shift = "time", \dots)
-\method{F}{pseries}(x, n = 1, fill = NA, stubs = TRUE, shift = "time", \dots)
 
 \method{flag}{pdata.frame}(x, n = 1, fill = NA, stubs = length(n) > 1L, shift = "time", \dots)
 \method{L}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
-  shift = "time", keep.ids = TRUE, \dots)
-\method{F}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
   shift = "time", keep.ids = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
 \method{flag}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1L, keep.ids = TRUE, \dots)
 \method{L}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
-\method{F}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -129,11 +122,8 @@ The 'indexed_series' ('pseries') and 'indexed_frame' ('pdata.frame')  methods au
 \examples{
 ## Simple Time Series: AirPassengers
 L(AirPassengers)                      # 1 lag
-F(AirPassengers)                      # 1 lead
-
-all_identical(L(AirPassengers),       # 3 identical ways of computing 1 lag
-              flag(AirPassengers),
-              F(AirPassengers, -1))
+flag(AirPassengers)                   # Same
+L(AirPassengers, -1)                  # 1 lead
 
 head(L(AirPassengers, -1:3))          # 1 lead and 3 lags - output as matrix
 

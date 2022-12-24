@@ -70,7 +70,7 @@ Data and Global Macros \tab\tab Groningen Growth and Development Centre 10-Secto
 
 \item \code{options("collapse_mask")} can be used to export copies of functions starting with \code{"f"} when loading the package, removing the leading \code{"f"} (e.g. also exporting \code{subset} as a clone to \code{fsubset}). This will mask like-named base R or \emph{dplyr} functions.
 
-\item \code{options("collapse_F_to_FALSE")} can also be called before loading the package to set the lead operator \code{F} in the package to \code{FALSE}, to avoid problems with \code{base::F}.
+\item \code{options("collapse_export_F")} can also be called before loading the package to export the lead operator \code{F} (exported by default previous to v1.9.0), but now not exported to avoid problems with \code{base::F}. Alternatively, the operator can be accessed using \code{collapse:::F}.
 
 % \item When manipulating \emph{data.table}'s, you can set how many columns \emph{collapse} functions overallocate with \code{option("collapse_DT_alloccol")}. The default is \code{100L}.
 }

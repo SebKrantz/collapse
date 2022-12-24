@@ -79,7 +79,7 @@
     namespaceExport(clpns, c(unmask, unmask_special))
   }
 
-  if(isTRUE(getOption("collapse_F_to_FALSE"))) assign("F", FALSE, envir = clpns)
+  if(isTRUE(getOption("collapse_export_F"))) namespaceExport(clpns, "F")
 
   # Experimental collapse_remove option: doesn't work because namespace exports not defined yet.
   # if(length(crem <- getOption("collapse_remove")) && is.character(crem)) {

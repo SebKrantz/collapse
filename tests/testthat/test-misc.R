@@ -5,6 +5,7 @@ if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
 # rm(list = ls())
 set.seed(101)
 m <- na_insert(qM(mtcars))
+F <- getNamespace("collapse")$F
 
 test_that("descr, pwcor, pwcov, pwnobs", {
 

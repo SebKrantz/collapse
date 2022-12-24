@@ -6,6 +6,8 @@ if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
 
 options(warn = -1)
 
+F <- getNamespace("collapse")$F
+
 if(identical(Sys.getenv("NCRAN"), "TRUE")) {
 
 test_that("Using a factor with unused levels does not pose a problem to flag, fdiff or fgrowth (#25)", {
