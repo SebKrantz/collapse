@@ -235,7 +235,7 @@ gvr <- function(x, vars, return = "data", ...) {
 add_vars <- function(x, ..., pos = "end") {
   if(...length() == 1L) return(`add_vars<-`(x, pos, ...))
   l <- c(...)
-  if(!all(fnrow2(x) == vlengths(l, FALSE))) stop("if multiple arguments are passed to '...', each needs to be a data.frame/list with column-lengths matching nrow(x)")
+  if(!all(fnrow(x) == vlengths(l, FALSE))) stop("if multiple arguments are passed to '...', each needs to be a data.frame/list with column-lengths matching nrow(x)")
   return(`add_vars<-`(x, pos, l)) # very minimal ! Doesn't work for vectors etc !
 }
 av <- add_vars

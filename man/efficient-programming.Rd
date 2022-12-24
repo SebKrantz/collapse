@@ -48,7 +48,7 @@ whichv(x, value,            # Faster than which(x == value)
 whichNA(x, invert = FALSE)  # Faster than which((!)is.na(x))
 x \%==\% value                # Infix for whichv(v, value, FALSE), use e.g. in fsubset()
 x \%!=\% value                # Infix for whichv(v, value, TRUE). See also Note (3)
-alloc(value, n)             # Faster than rep_len(value, n)
+alloc(value, n)             # Fast rep_len(value, n) or replicate(n, value). See Details
 copyv(X, v, R, \dots, invert  # Fast replace(X, v, R), replace(X, X (!/=)= v, R) or
     = FALSE, vind1 = FALSE, # replace(X, (!)v, R[(!)v]). See Details and Note (4).
     xlist = FALSE)          # For multi-replacement see also kit::vswitch()
@@ -64,16 +64,17 @@ X \%/=\% V                    # Infix for setop(X, "/", V). See also Note (2)
 na_rm(x)                    # Fast: if(anyNA(x)) x[!is.na(x)] else x,
                             # also removes NULL / empty elements from list
 na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
-      na.attr = FALSE, ...) # can use selected columns and attach indices
+        na.attr = FALSE,    # can use selected columns and attach indices
+        all = FALSE, ...)   # and can also only remove all-missing cases
 na_insert(X, prop = 0.1,    # Insert missing values at random
           value = NA)
 missing_cases(X,            # The oposite of complete.cases(), faster for
-              cols = NULL)  # data frames. See also kit::panyNA() and kit::pallNA()
+  cols = NULL, all = FALSE) # data frames. See also kit::panyNA() and kit::pallNA()
 vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
 frange(x, na.rm = TRUE)     # Much faster base::range, for integer and double objects
-fdist(x, v = NULL,          # Much faster stats::dist. Also supports distances of row-
+fdist(x, v = NULL, ...,    # Much faster stats::dist. Also supports distances of row-
       method = "euclidian", # vector v and matrix x, or two vectors x and v. Note that
       nthreads = 1L)        # x is coerced to numeric matrix if integer or data frame.
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
@@ -104,6 +105,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
    \item{cols}{select columns to check for missing values using column names, indices, a logical vector or a function (e.g. \code{is.numeric}). The default is to check all columns, which could be inefficient.}
   \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}
+  \item{all}{logical. \code{TRUE} will only detect/remove cases that are all missing i.e. that only have missing values.}
   \item{prop}{double. Specify the proportion of observations randomly replaced with \code{NA}.}
   \item{use.names}{logical. Preserve names if \code{X} is a list. }
   \item{na.rm}{logical. \code{TRUE} omits missing values by skipping them in the computation. \code{FALSE} terminates the computation once a missing value is encountered and returns 2 missing values.}
@@ -112,12 +114,14 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
                  1 \tab\tab \code{"euclidian"}   \tab\tab euclidian distance \cr
                  2 \tab\tab \code{"euclidian_squared"} \tab\tab squared euclidian distance (more efficient) \cr
     }
-    \emph{Notes:} More options may be added here in the future. The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}.
+    \emph{Notes:} More options may be added here in the future. The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}. See Examples.
   }
   \item{nthreads}{integer. The number of threads to use. Multithreading also works for distances with a single vector \code{v}.}
-  \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv} and \code{setop}, the argument is unused, and serves as a placeholder for possible future arguments.}
+  \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv}, \code{setop} and \code{fdist}, the argument is unused, and serves as a placeholder for possible future arguments.}
 }
 \details{
+\code{alloc} is a fusion of \code{\link{rep_len}} and \code{\link{replicate}} that is faster in both cases. If \code{value} is a length one atomic vector (logical, integer, double, string, complex or raw), the functionality is as \code{rep_len(value, n)} i.e. the output is a length \code{n} atomic vector with the same attributes as \code{value} (apart from \code{"names"}, \code{"dim"} and \code{"dimnames"}). For all other cases the functionality is as \code{replicate(n, value, simplify = FALSE)} i.e. the output is a length-10 list of the objects. If \code{value} is a list itself, the list is not deep-copied on each replication.
+
 \code{copyv} and \code{setv} are designed to optimize operations that require replacing data in objects in the broadest sense. The only difference between them is that \code{copyv} first deep-copies \code{X} before doing replacements whereas \code{setv} modifies \code{X} in place and returns the result invisibly. There are 3 ways these functions can be used:
 
 \enumerate{
@@ -139,7 +143,7 @@ If \code{X} should not be interpreted like a data frame, setting \code{xlist = T
 \note{
 
 \enumerate{
-\item None of these functions currently support complex vectors.
+\item None of these functions (apart from \code{alloc}) currently support complex vectors.
 
 \item \code{setop} and the operators \code{\%+=\%}, \code{\%-=\%}, \code{\%*=\%} and \code{\%/=\%} also work with integer data, but do not perform any integer related checks. R's integers are bounded between +-2,147,483,647 and \code{NA_integer_} is stored as the value -2,147,483,648. Thus computations resulting in values exceeding +-2,147,483,647 will result in integer overflows, and \code{NA_integer_} should not occur on either side of a \code{setop} call. These are programmers functions and meant to provide the most efficient math possible to responsible users.
 

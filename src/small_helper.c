@@ -44,9 +44,12 @@ void DFcopyAttr(SEXP out, SEXP x, int ng) {
 
 // Faster than rep_len(value, n) and slightly faster than matrix(value, n) (which in turn is faster than rep_len)...
 SEXP falloc(SEXP value, SEXP n) {
-  int l = asInteger(n), tval = TYPEOF(value);
-  if(length(value) > 1) error("Must supply a single value to alloc()");
-  SEXP out = PROTECT(allocVector(tval, l));
+  int l = asInteger(n), tval = TYPEOF(value), isat = isVectorAtomic(value);
+  if(length(value) > 1 && isat) {
+    isat = 0;
+    tval = VECSXP;
+  }
+  SEXP out = PROTECT(allocVector(isat ? tval : VECSXP, l));
   switch(tval) {
     case INTSXP:
     case LGLSXP: {
@@ -57,7 +60,7 @@ SEXP falloc(SEXP value, SEXP n) {
     }
     case REALSXP: {
       double val = asReal(value), *pout = REAL(out);
-      if(val == 0.0) memset(pout, 0.0, l*sizeof(double));
+      if(val == 0.0) memset(pout, 0, l*sizeof(double));
       else for(int i = 0; i != l; ++i) pout[i] = val;
       break;
     }
@@ -66,14 +69,23 @@ SEXP falloc(SEXP value, SEXP n) {
       for(int i = 0; i != l; ++i) pout[i] = val;
       break;
     }
-    case VECSXP: {
+    case CPLXSXP: {
+      Rcomplex val = asComplex(value), *pout = COMPLEX(out);
+      for(int i = 0; i != l; ++i) pout[i] = val;
+      break;
+    }
+    case RAWSXP: {
+      Rbyte val = RAW(value)[0], *pout = RAW(out);
+      for(int i = 0; i != l; ++i) pout[i] = val;
+      break;
+    }
+    default: {
       SEXP *pout = SEXPPTR(out);
       for(int i = 0; i != l; ++i) pout[i] = value;
       break;
     }
-    default: error("Not supportd SEXP Type in alloc()");
   }
-  copyMostAttrib(value, out);
+  if(isat) copyMostAttrib(value, out);
   UNPROTECT(1);
   return out;
 }
@@ -538,4 +550,10 @@ SEXP all_funs(SEXP x) {
   return data.ans;
 }
 
+SEXP fnrowC(SEXP x) {
+  if(TYPEOF(x) == VECSXP) return ScalarInteger(length(x) ? length(VECTOR_ELT(x, 0)) : 0);
+  SEXP dim = getAttrib(x, R_DimSymbol);
+  if(TYPEOF(dim) != INTSXP) return R_NilValue;
+  return ScalarInteger(INTEGER(dim)[0]);
+}
 

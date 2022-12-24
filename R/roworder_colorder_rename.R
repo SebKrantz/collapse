@@ -46,7 +46,7 @@ roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.la
   } else {
     if(!is.integer(neworder)) neworder <- if(is.numeric(neworder)) as.integer(neworder) else if(is.logical(neworder))
                                           which(neworder) else stop("neworder should be integer or logical.")
-    if(length(neworder) != fnrow2(X)) neworder <- posord(seq_along(.subset2(X, 1L)), neworder, pos)
+    if(length(neworder) != fnrow(X)) neworder <- posord(seq_row(X), neworder, pos)
   }
   rn <- attr(X, "row.names")
   res <- .Call(C_subsetDT, X, neworder, seq_along(unclass(X)), FALSE)

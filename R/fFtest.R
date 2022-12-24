@@ -52,7 +52,7 @@ fFtest.default <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
       r2f <- 1 - fvar.default(fhdwithin.default(y, data[, -1L], w, na.rm = FALSE, ...), w = w)/vy
       r2r <- 1 - fvar.default(fhdwithin.default(y, data[, 2:(Xn+1L)], w, na.rm = FALSE, ...), w = w)/vy
     } else {
-      n <- fnrow2(data)
+      n <- fnrow(data)
       r2f <- 1 - fvar.default(fhdwithin.default(y, fcolsubset(data, -1L), w, na.rm = FALSE, ...), w = w)/vy
       r2r <- 1 - fvar.default(fhdwithin.default(y, fcolsubset(data, 2:(Xn+1L)), w, na.rm = FALSE, ...), w = w)/vy
     }

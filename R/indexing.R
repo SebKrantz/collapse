@@ -178,7 +178,7 @@ index_series <- function(data, index, cl) {
 }
 
 reindex <- function(x, index = findex(x), single = "auto") {
-  n <- if(is.list(x)) fnrow2(x) else NROW(x)
+  n <- if(is.list(x)) fnrow(x) else NROW(x)
   if(is.atomic(index)) {
     if(length(index) != n) stop("index does not match data length")
     nam <- l1orlst(as.character(substitute(index)))
@@ -189,7 +189,7 @@ reindex <- function(x, index = findex(x), single = "auto") {
     attr(index, "single.id") <- idl
     oldClass(index) <- c("index_df", "pindex", "data.frame")
   } else {
-    if(fnrow2(index) != n) stop("index does not match data length")
+    if(fnrow(index) != n) stop("index does not match data length")
     if(!inherits(index, "pindex")) {
       if(!all(.Call(C_vtypes, index, 2L))) stop("All variables in a valid index must be factors. Please prepare you data accordingly.")
       index <- qDF(index)
@@ -392,7 +392,7 @@ droplevels_index <- function(index, drop.index.levels = "id") {
 
 print.index_df <- function(x, topn = 5, ...) {
    oldClass(x) <- "data.frame"
-   if(fnrow2(x) > 2*topn) {
+   if(fnrow(x) > 2*topn) {
      print(head(x, topn), ...)
      cat("---")
      print(`names<-`(tail(x, topn), NULL), ...)
@@ -424,7 +424,7 @@ print.index_df <- function(x, topn = 5, ...) {
       }
     } else cal <- as.call(list(quote(`[`), quote(res), substitute(i)))
     res <- eval(cal, list(res = res), parent.frame())
-    if(missing(i) && fnrow2(res) != fnrow2(x)) {
+    if(missing(i) && fnrow(res) != fnrow(x)) {
       if(ivsbl) oldClass(res) <- fsetdiff(oldClass(res), "invisible")
       return(unindex(res)) # data.table aggregation
     } else if(!missing(i)) i <- eval(substitute(i), x, parent.frame())
@@ -432,10 +432,10 @@ print.index_df <- function(x, topn = 5, ...) {
 
   index <- attr(x, "index_df")
 
-  if(!missing(i) && (is.atomic(res) || fnrow2(res) != fnrow2(x) || length(i) == fnrow2(x))) { # Problem: mtcars[1:10] selects columns, not rows!!
+  if(!missing(i) && (is.atomic(res) || fnrow(res) != fnrow(x) || length(i) == fnrow(x))) { # Problem: mtcars[1:10] selects columns, not rows!!
     index <- droplevels_index(ss(index, i), drop.index.levels)
     if(is.list(res)) {
-      if(fnrow2(res) != fnrow2(index)) return(unindex(res)) # could be with data.table using i and also aggregating in j
+      if(fnrow(res) != fnrow(index)) return(unindex(res)) # could be with data.table using i and also aggregating in j
       res <- index_series(res, index, clx)
     }
   } else if(!idDTl && is.list(res)) res <- index_series(res, index, clx)

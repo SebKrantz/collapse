@@ -230,7 +230,7 @@ rm_stub <- function(X, stub, pre = TRUE, regex = FALSE, cols = NULL, ...) {
 
 setRownames <- function(object, nm = if(is.atomic(object)) seq_row(object) else NULL) {
   if(is.list(object)) {
-    l <- length(.subset2(object, 1L))
+    l <- .Call(C_fnrow, object)
     if(is.null(nm)) nm <- .set_row_names(l) else if(length(nm) != l) stop("supplied row-names must match list extent")
     attr(object, "row.names") <- nm
     if(inherits(object, "data.table")) return(alc(object))
@@ -345,7 +345,7 @@ whichNA <- function(x, invert = FALSE) .Call(C_whichv, x, NA, invert)
 frange <- function(x, na.rm = TRUE) .Call(C_frange, x, na.rm)
 alloc <- function(value, n) .Call(C_alloc, value, n)
 vgcd <- function(x) .Call(C_vecgcd, x)
-fdist <- function(x, v = NULL, method = "euclidian", nthreads = 1L) .Call(C_fdist, if(is.atomic(x)) x else qM(x), v, method, nthreads)
+fdist <- function(x, v = NULL, ..., method = "euclidian", nthreads = 1L) .Call(C_fdist, if(is.atomic(x)) x else qM(x), v, method, nthreads)
 
 allNA <- function(x) .Call(C_allNA, x, TRUE) # True means give error for unsupported vector types, not FALSE.
 anyv <- function(x, value) .Call(C_anyallv, x, value, FALSE)
@@ -386,9 +386,12 @@ setop <- function(X, op, V, ..., rowwise = FALSE) # Making sure some error is pr
 "%/=%" <- function(X, V) invisible(.Call(C_setop, X, V, 4L, FALSE))
 
 
-missing_cases <- function(X, cols = NULL) {
-  if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names"))))
-  if(is.matrix(X)) return(if(is.null(cols)) !complete.cases(X) else !complete.cases(X[, cols]))
+missing_cases <- function(X, cols = NULL, all = FALSE) {
+  if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names")), all))
+  if(is.matrix(X)) {
+    if(length(cols)) X <- X[, cols]
+    return(if(all) rowSums(is.na(X)) == NCOL(X) else !complete.cases(X))
+  }
   is.na(X)
 }
 
@@ -398,13 +401,13 @@ null_rm <- function(l) if(!all(ind <- vlengths(l, FALSE) > 0L)) .subset(l, ind) 
 
 all_eq <- function(x) .Call(C_anyallv, x, x[1L], TRUE)
 
-na_omit <- function(X, cols = NULL, na.attr = FALSE, ...) {
+na_omit <- function(X, cols = NULL, na.attr = FALSE, all = FALSE, ...) {
   if(is.list(X)) {
     iX <- seq_along(unclass(X))
-    rl <- if(is.null(cols)) .Call(C_dt_na, X, iX) else
-          .Call(C_dt_na, X, cols2int(cols, X, attr(X, "names"))) # gives error if X not list
+    rl <- if(is.null(cols)) .Call(C_dt_na, X, iX, all) else
+          .Call(C_dt_na, X, cols2int(cols, X, attr(X, "names")), all) # gives error if X not list
     rkeep <- whichv(rl, FALSE)
-    if(length(rkeep) == fnrow2(X)) return(condalc(X, inherits(X, "data.table")))
+    if(length(rkeep) == fnrow(X)) return(condalc(X, inherits(X, "data.table")))
     res <- .Call(C_subsetDT, X, rkeep, iX, FALSE) # This allocates data.tables...
     rn <- attr(X, "row.names")
     if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- Csv(rn, rkeep)
@@ -419,7 +422,8 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE, ...) {
       attr(res, "index") <- index_omit
     }
   } else {
-    rl <- if(is.null(cols)) complete.cases(X) else complete.cases(X[, cols])
+    rl <- if(all && is.matrix(X)) rowSums(is.na(if(is.null(cols)) X else X[, cols])) != ncol(X) else
+          if(is.null(cols)) complete.cases(X) else complete.cases(X[, cols])
     rkeep <- which(rl)
     if(length(rkeep) == NROW(X)) return(X)
     res <- if(is.matrix(X)) X[rkeep, , drop = FALSE, ...] else X[rkeep, ...]
@@ -430,7 +434,7 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE, ...) {
 
 na_insert <- function(X, prop = 0.1, value = NA) {
   if(is.list(X)) {
-    n <- fnrow2(X)
+    n <- fnrow(X)
     nmiss <- floor(n * prop)
     res <- duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, sample.int(n, nmiss), value = value)), X)
     return(if(inherits(X, "data.table")) alc(res) else res)
@@ -447,9 +451,7 @@ fnlevels <- function(x) length(attr(x, "levels"))
 
 # flevels <- function(x) attr(x, "levels")
 
-fnrow <- function(X) if(is.list(X)) length(.subset2(X, 1L)) else dim(X)[1L]
-
-fnrow2 <- function(X) length(.subset2(X, 1L))
+fnrow <- function(X) .Call(C_fnrow, X)  # if(is.list(X)) length(.subset2(X, 1L)) else dim(X)[1L]
 
 fncol <- function(X) if(is.list(X)) length(unclass(X)) else dim(X)[2L]
 
@@ -457,11 +459,10 @@ fNCOL <- function(X) if(is.list(X)) length(unclass(X)) else NCOL(X)
 
 fdim <- function(X) {
    if(is.atomic(X)) return(dim(X)) # or if !is.list ?
-   oldClass(X) <- NULL
-   c(length(X[[1L]]), length(X)) # Faster than c(length(.subset2(X, 1L)), length(unclass(X)))
+   c(.Call(C_fnrow, X), length(unclass(X)))
 }
 
-seq_row <- function(X) if(is.list(X)) seq_along(.subset2(X, 1L)) else seq_len(dim(X)[1L])
+seq_row <- function(X) seq_len(.Call(C_fnrow, X))
 
 seq_col <- function(X) if(is.list(X)) seq_along(unclass(X)) else seq_len(dim(X)[2L])
 

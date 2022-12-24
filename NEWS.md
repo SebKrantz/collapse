@@ -6,6 +6,8 @@
 
 * All functions renamed in *collapse* 1.6.0 are now depreciated, to be removed end of 2023. These functions had already been giving messages since v1.6.0. See `help("collapse-renamed")`.
 
+* The lead operator `F()` is not exported anymore from the package namespace, to avoid clashes with `base::F` flagged by multiple people. The operator is still part of the package and can be accessed using `collapse:::F`. I have also added an option `"collapse_export_F"`, such that setting `options(collapse_export_F = TRUE)` before loading the package exports the operator as before. Thanks @matthewross07 (#100), @edrubin (#194), and @arthurgailes (#347). 
+
 ### Bug Fixes
 
 * `fmode()` gave wrong results for singleton groups (groups of size 1) on *unsorted* data. I had optimized `fmode()` for singleton groups to directly return the corresponding element, but it did not access the element through the (internal) ordering vector, so the first element/row of the entire vector/data was taken. The same mistake occurred for `fndistinct` if singleton groups were `NA`, which were counted as `1` instead of `0` under the `na.rm = TRUE` default (provided the first element of the vector/data was not `NA`). The mistake did not occur with data sorted by the groups, because here the data pointer already pointed to the first element of the group. (My apologies for this bug, it took me more than half a year to discover it, using *collapse* on a daily basis, and it escaped 700 unit tests as well).
@@ -14,11 +16,13 @@
 
 * Fixed a bug in the `.names` argument to `across()`. Passing a naming function such as `.names = function(c, f) paste0(c, "-", f)` now works as intended i.e. the function is applied to all combinations of columns (c) and functions (f) using `outer()`. Previously this was just internally evaluated as `.names(cols, funs)`, which did not work if there were multiple cols and multiple funs. There is also now a possibility to set `.names = "flip"`, which names columns `f_c` instead of `c_f`. 
 
+* `fnrow()` was rewritten in C and also supports data frames with 0 rows. Similarly for `seq_row()`. Thanks @NicChr (#344). 
+
 ### Additions
 
 * Added functions `fcount()` and `fcountv()`: a versatile and blazing fast alternative to `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
 
-* Added function `fdist`: A fast and versatile replacement for `stats::dist`. It computes a full euclidian distance matrix around 4x faster than `stats::dist` in serial mode, with additional gains possible through multithreading along the distance matrix columns (decreasing thread loads as the matrix is lower triangular). It also supports computing the distance of a matrix with a single row-vector, or simply between two vectors. E.g. `fdist(mat, mat[1, ])` is the same as `sqrt(colSums((t(mat) - mat[1, ])^2)))`, but about 20x faster in serial mode, and `fdist(x, y)` is the same as `sqrt(sum((x-y)^2))`, about 3x faster in serial mode. In both cases (sub-column level) multithreading is available.
+* Added function `fdist`: A fast and versatile replacement for `stats::dist`. It computes a full euclidian distance matrix around 4x faster than `stats::dist` in serial mode, with additional gains possible through multithreading along the distance matrix columns (decreasing thread loads as the matrix is lower triangular). It also supports computing the distance of a matrix with a single row-vector, or simply between two vectors. E.g. `fdist(mat, mat[1, ])` is the same as `sqrt(colSums((t(mat) - mat[1, ])^2)))`, but about 20x faster in serial mode, and `fdist(x, y)` is the same as `sqrt(sum((x-y)^2))`, about 3x faster in serial mode. In both cases (sub-column level) multithreading is available. *Note* that `fdist` does not skip missing values i.e. `NA`'s will result in `NA` distances. There is also no internal implementation for integers or data frames. Such inputs will be coerced to numeric matrices. 
 
 * `fsummarize()` was added as a synonym to `fsummarise`. Thanks @arthurgailes for the PR. 
 
@@ -45,6 +49,10 @@
 * `num_vars()` has become a bit smarter: columns of class 'ts' and 'units' are now also recognized as numeric. In general, users should be aware that `num_vars()` does not regard any R methods defined for `is.numeric()`, it is implemented in C and simply checks whether objects are of type integer or double, and do not have a class. The addition of these two exceptions now guards against two common cases where `num_vars()` may give undesirable outcomes. Note that `num_vars()`  is also called in `collap()` to distinguish between numeric (`FUN`) and non-numeric (`catFUN`) columns. 
 
 * Improvements to `setv()` and `copyv()`, making them more robust to borderline cases: `integer(0)` passed to `v` does nothing (instead of error), and it is also possible to pass a single real index if `vind1 = TRUE` i.e. passing `1` instead of `1L` does not produce an error. 
+
+* `alloc()` now works with all types of objects i.e. it can replicate any object. If the input is non-atomic, atomic with length > 1 or `NULL`, the output is a list of these objects, e.g. `alloc(NULL, 10)` gives a length 10 list of `NULL` objects, or `alloc(mtcars, 10)` gives a list of `mtcars` datasets. Note that in the latter case the datasets are not deep-copied, so no additional memory is consumed. 
+
+* `missing_cases()` and `na_omit()` have gained an argument `all = FALSE`. Setting `all = TRUE` toggles detection/removal of cases that are all-missing. For data frames this is done efficicently in C. For matrices this is currently still implemented using `rowSums(is.na(X)) == ncol(X)`, so the performance is less than optimal. 
 
 * Functions `frename()` and `setrename()` have an additional argument `.nse = TRUE`, conforming to the default non-standard evaluation of tagged vector expressions e.g. `frename(mtcars, mpg = newname)` is the same as `frename(mtcars, mpg = "newname")`. Setting `.nse = FALSE` allows `newname` to be a variable holding a name e.g. `newname = "othername"; frename(mtcars, mpg = newname, .nse = FALSE)`. Another use of the argument is that a (named) character vector can now be passed to the function to rename a (subset of) columns e.g. `cvec = letters[1:3]; frename(mtcars, cvec, cols = 4:6, .nse = FALSE)` (this works even with `.nse = TRUE`), and `names(cvec) = c("cyl", "vs", "am"); frename(mtcars, cvec, .nse = FALSE)`. Furthermore, `setrename()` now also returns the renamed data invisibly, and `relabel()` and `setrelabel()` have also gained similar flexibility to allow (named) lists or vectors of variable labels to be passed. *Note* that these function have no NSE capabilities, so they work essentially like `frename(..., .nse = FALSE)`.
 

@@ -44,7 +44,7 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
     # if(all(class(X) == class)) return(X) # better adjust rows ? -> yes, row.names.col should always work !
     if(is.null(attr(X, "names"))) attr(X, "names") <- paste0("V", seq_along(unclass(X)))
     if(is.null(attr(X, "row.names"))) {
-      attr(X, "row.names") <- .set_row_names(length(.subset2(X, 1L)))
+      attr(X, "row.names") <- .set_row_names(fnrow(X))
     } else if(!isFALSE(row.names.col)) {
       ax <- attributes(X)
       X <- c(list(ax[["row.names"]]), X)
@@ -118,7 +118,7 @@ qDT_raw <- function(X, row.names.col, keep.attr, DT_class, X_nam) {
       setattributes(X, ax)
     }
     if(!length(DT_class) && inherits(X, c("data.table", "data.frame"))) return(X)
-    attr(X, "row.names") <- .set_row_names(length(.subset2(X, 1L)))
+    attr(X, "row.names") <- .set_row_names(fnrow(X))
   } else {
     nam <- attr(X, "names")
     rncol <- !isFALSE(row.names.col) && length(rn <- attr(X, "row.names"))

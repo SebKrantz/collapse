@@ -44,15 +44,15 @@ TRA.data.frame <- function(x, STATS, FUN = "-", g = NULL, set = FALSE, ...) {
   if(is.null(g)) return(.Call(C_TRAl,x,STATS,0L,FUN,set))
   if(is.atomic(g)) {
     if(is.nmfactor(g)) {
-      if(fnlevels(g) != fnrow2(STATS)) stop("number of groups must match nrow(STATS)")
+      if(fnlevels(g) != fnrow(STATS)) stop("number of groups must match nrow(STATS)")
     } else {
       g <- qG(g, na.exclude = FALSE) # needs to be ordered to be compatible with fast functions !!
-      if(attr(g, "N.groups") != fnrow2(STATS)) stop("number of groups must match nrow(STATS)")
+      if(attr(g, "N.groups") != fnrow(STATS)) stop("number of groups must match nrow(STATS)")
     }
     return(.Call(C_TRAl,x,STATS,g,FUN,set))
   }
   if(!is_GRP(g)) g <- GRP.default(g, return.groups = FALSE, call = FALSE)
-  if(g[[1L]] != fnrow2(STATS)) stop("number of groups must match nrow(STATS)")
+  if(g[[1L]] != fnrow(STATS)) stop("number of groups must match nrow(STATS)")
   .Call(C_TRAl,x,STATS,g[[2L]],FUN,set)
 }
 

@@ -292,6 +292,8 @@ test_that("flag produces errors for wrong input", {
 
 # L and F
 
+F <- getNamespace("collapse")$F
+
 test_that("F performs like baselead", {
   expect_equal(F(1:10, -1), baselead(1:10))
   expect_equal(F(1:10, -2), baselead(1:10, 2))

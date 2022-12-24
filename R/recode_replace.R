@@ -25,7 +25,7 @@ recode_num <- function(X, ..., default = NULL, missing = NULL, set = FALSE) {
         repfun <- function(y) if(is.numeric(y)) scv(y, nam, args, set) else y # `[<-`(y, y == nam, value = args)
       }
     } else {
-      nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+      nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
           z <- scv(y, NA, default, set, TRUE) # duplAttributes(alloc(default, nr), y)
@@ -54,7 +54,7 @@ recode_num <- function(X, ..., default = NULL, missing = NULL, set = FALSE) {
         } else y
       }
     } else {
-      nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+      nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
           z <- scv(y, NA, default, set, TRUE) # duplAttributes(alloc(default, nr), y)
@@ -102,7 +102,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
           repfun <- function(y) if(is.character(y)) `[<-`(y, grepl(nam, y, ignore.case, FALSE, fixed), value = args) else y
         }
       } else {
-        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
@@ -131,7 +131,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
           } else y
         }
       } else {
-        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
@@ -161,7 +161,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
           repfun <- function(y) if(is.character(y)) scv(y, nam, args, set) else y # `[<-`(y, y == nam, value = args)
         }
       } else {
-        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
@@ -190,7 +190,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
           } else y
         }
       } else {
-        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
@@ -346,7 +346,7 @@ pad_atomic <- function(x, i, n, value) {
 pad <- function(X, i, value = NA, method = c("auto", "xpos", "vpos")) { # 1 - i is same length as X, fill missing, 2 - i is positive: insert missing values in positions
   ilog <- is.logical(i)
   ineg <- i[1L] < 0L
-  n <- if(is.list(X)) length(.subset2(X, 1L)) else if(is.matrix(X)) dim(X)[1L] else length(X)
+  n <- if(is.list(X) || is.matrix(X)) fnrow(X) else length(X)
   xpos <- switch(method[1L], auto = if(ilog) bsum(i) == n else if(ineg) FALSE else length(i) == n,
                  xpos = TRUE, vpos = FALSE, stop("Unknown method: ", method[1L]))
   n <- if(ilog) length(i) else if(xpos && !ineg) bmax(i) else n + length(i)
