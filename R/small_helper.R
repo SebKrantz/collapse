@@ -386,11 +386,11 @@ setop <- function(X, op, V, ..., rowwise = FALSE) # Making sure some error is pr
 "%/=%" <- function(X, V) invisible(.Call(C_setop, X, V, 4L, FALSE))
 
 
-missing_cases <- function(X, cols = NULL, all = FALSE) {
-  if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names")), all))
+missing_cases <- function(X, cols = NULL, prop = 0) {
+  if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names")), prop))
   if(is.matrix(X)) {
     if(length(cols)) X <- X[, cols]
-    return(if(all) rowSums(is.na(X)) == NCOL(X) else !complete.cases(X))
+    return(if(prop > 0 && is.matrix(X)) rowSums(is.na(X)) >= bmax(as.integer(prop * NCOL(X)), 1L) else !complete.cases(X))
   }
   is.na(X)
 }
@@ -401,11 +401,11 @@ null_rm <- function(l) if(!all(ind <- vlengths(l, FALSE) > 0L)) .subset(l, ind) 
 
 all_eq <- function(x) .Call(C_anyallv, x, x[1L], TRUE)
 
-na_omit <- function(X, cols = NULL, na.attr = FALSE, all = FALSE, ...) {
+na_omit <- function(X, cols = NULL, na.attr = FALSE, prop = 0, ...) {
   if(is.list(X)) {
     iX <- seq_along(unclass(X))
-    rl <- if(is.null(cols)) .Call(C_dt_na, X, iX, all) else
-          .Call(C_dt_na, X, cols2int(cols, X, attr(X, "names")), all) # gives error if X not list
+    rl <- if(is.null(cols)) .Call(C_dt_na, X, iX, prop) else
+          .Call(C_dt_na, X, cols2int(cols, X, attr(X, "names")), prop) # gives error if X not list
     rkeep <- whichv(rl, FALSE)
     if(length(rkeep) == fnrow(X)) return(condalc(X, inherits(X, "data.table")))
     res <- .Call(C_subsetDT, X, rkeep, iX, FALSE) # This allocates data.tables...
@@ -422,8 +422,8 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE, all = FALSE, ...) {
       attr(res, "index") <- index_omit
     }
   } else {
-    rl <- if(all && is.matrix(X)) rowSums(is.na(if(is.null(cols)) X else X[, cols])) != ncol(X) else
-          if(is.null(cols)) complete.cases(X) else complete.cases(X[, cols])
+    Xcols <- if(is.null(cols)) X else X[, cols]
+    rl <- if(prop > 0 && is.matrix(Xcols)) rowSums(is.na(Xcols)) < bmax(as.integer(prop * ncol(Xcols)), 1L) else complete.cases(Xcols)
     rkeep <- which(rl)
     if(length(rkeep) == NROW(X)) return(X)
     res <- if(is.matrix(X)) X[rkeep, , drop = FALSE, ...] else X[rkeep, ...]

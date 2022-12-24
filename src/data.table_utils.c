@@ -110,8 +110,10 @@ inline bool INHERITS(SEXP x, SEXP char_) {
 }
 
 // Enhanced version of the original
-SEXP dt_na(SEXP x, SEXP cols, SEXP all) {
+SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop) {
   int n = 0, elem, ncol = LENGTH(cols);
+  double prop = asReal(Rprop);
+  if(ISNAN(prop) || prop < 0.0 || prop > 1.0) error("prop needs to be a proportion [0, 1]");
 
   if(!isNewList(x)) error("Internal error. Argument 'x' to missing_cases is type '%s' not 'list'", type2char(TYPEOF(x))); // # nocov
   if(!isInteger(cols)) error("Internal error. Argument 'cols' to missing_cases is type '%s' not 'integer'", type2char(TYPEOF(cols))); // # nocov
@@ -126,20 +128,23 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP all) {
   int *ians = LOGICAL(ans);
   memset(ians, 0, sizeof(int) * n);  // for (int i=0; i != n; ++i) ians[i]=0;
 
-  if(asLogical(all)) { // All missing rows
-    // Preliminary check for early return
-    for (int i = 0, tv; i < ncol; ++i) {
-      tv = TYPEOF(VECTOR_ELT(x, INTEGER(cols)[i]-1));
-      if(tv != LGLSXP && tv != INTSXP && tv != REALSXP && tv != STRSXP && tv != CPLXSXP && tv != NILSXP) {
-        UNPROTECT(1);
-        return(ans);
-      }
-    }
-    // Summing the missing values
+  if(prop > 0.0) { // More than 1 missing row
+    // if(prop == 1) { // Not sensible: better skip lists...
+    //   // Preliminary check for early return
+    //   for (int i = 0, tv; i < ncol; ++i) {
+    //     tv = TYPEOF(VECTOR_ELT(x, INTEGER(cols)[i]-1));
+    //     if(tv != LGLSXP && tv != INTSXP && tv != REALSXP && tv != STRSXP && tv != CPLXSXP && tv != NILSXP) {
+    //       UNPROTECT(1);
+    //       return(ans);
+    //     }
+    //   }
+    // }
+
+    // Counting the missing values
     int len = ncol;
     for (int i = 0; i < ncol; ++i) {
       SEXP v = VECTOR_ELT(x, INTEGER(cols)[i]-1);
-      if (!length(v)) {
+      if (!length(v) || isNewList(v) || isList(v) || TYPEOF(v) == RAWSXP) {
         --len; continue;
       }
       if (n != length(v))
@@ -174,7 +179,11 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP all) {
       }
     }
     // This computes the result
-    for (int j=0; j != n; ++j) ians[j] = ians[j] == len;
+    if(prop < 1.0) {
+      len = (int)((double)len * prop);
+      if(len < 1) len = 1;
+    }
+    for (int j = 0; j != n; ++j) ians[j] = ians[j] >= len;
 
   } else { // Any missing (default)
     for (int i = 0; i < ncol; ++i) {
