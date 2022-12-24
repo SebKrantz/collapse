@@ -41,6 +41,7 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
                       fig.width = 8, fig.height = 5, 
                       out.width = '100%')
 lag <- stats::lag
+F <- getNamespace("collapse")$F
 
 set.seed(101)
 ```

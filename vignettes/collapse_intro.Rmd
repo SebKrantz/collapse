@@ -48,6 +48,8 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 X = mtcars[1:2]
 by = mtcars$cyl
 
+F <- getNamespace("collapse")$F
+
 set.seed(101)
 ```
 
