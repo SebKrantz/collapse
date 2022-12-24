@@ -76,7 +76,7 @@ SEXP setnames(SEXP x, SEXP nam);
 bool allNA(SEXP x, bool errorForBadType);
 SEXP allNAv(SEXP x, SEXP errorForBadType);
 bool INHERITS(SEXP x, SEXP char_);
-SEXP dt_na(SEXP x, SEXP cols, SEXP all);
+SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop);
 SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns);
 SEXP setcolorder(SEXP x, SEXP o);
 

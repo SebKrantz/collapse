@@ -433,7 +433,7 @@ fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = TRUE, fil
       return(y)
     })
     return(setAttributes(varwisecomp(x, g, w, ...), ax))
-  } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x)), FALSE))) {
+  } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x)), 0))) {
     cc <- whichv(miss, FALSE)
     gcc <- .Call(C_subsetDT, g, cc, seq_along(g), FALSE)
     Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x)), FALSE), gcc, w[cc], ...)
@@ -563,7 +563,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
     if(na.rm) {
-      miss <- if(variable.wise) .Call(C_dt_na, x, fvars, FALSE) else .Call(C_dt_na, x, c(Xvars, fvars), FALSE)
+      miss <- if(variable.wise) .Call(C_dt_na, x, fvars, 0) else .Call(C_dt_na, x, c(Xvars, fvars), 0)
       if(missw <- length(w) && anyNA(w)) miss <- miss | is.na(w)
       if(missw || any(miss)) {
         ax[["na.rm"]] <- which(miss)
@@ -869,7 +869,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
     if(na.rm) {
-      miss <- if(variable.wise) .Call(C_dt_na, x, fvars, FALSE) else .Call(C_dt_na, x, c(Xvars, fvars), FALSE)
+      miss <- if(variable.wise) .Call(C_dt_na, x, fvars, 0) else .Call(C_dt_na, x, c(Xvars, fvars), 0)
       if(missw <- length(w) && anyNA(w)) miss <- miss | is.na(w)
       if(missw || any(miss)) {
         ax[["na.rm"]] <- which(miss)
