@@ -185,7 +185,7 @@ GRPN <- function(x, expand = TRUE, ...) {
 n <- function(x, g, TRA, ...) {
   if(missing(g)) {
     if(missing(x)) stop("if data is not grouped need to call n() on a column")
-    return(if(is.list(x)) fnrow2(x) else length(x))
+    return(if(is.list(x)) fnrow(x) else length(x))
   }
   if(!inherits(g, "GRP")) stop("g must be a 'GRP' object")
   if(missing(TRA)) return(g$group.sizes)
@@ -439,13 +439,13 @@ print.invisible <- function(x, ...) cat("")
       eval.parent(substitute(x <- res))
       oldClass(res) <- c("invisible", clx) # return(invisible(res)) -> doesn't work here for some reason
     } else {
-      if(!(is.list(res) && fnrow2(res) == fnrow2(x))) return(fungroup(res))
+      if(!(is.list(res) && fnrow(res) == fnrow(x))) return(fungroup(res))
       if(is.null(attr(res, "groups"))) attr(res, "groups") <- attr(x, "groups")
       oldClass(res) <- clx
     }
   } else {
     res <- `[`(fungroup(x), ...) # does not respect data.table properties, but better for sf data frame and others which check validity of "groups" attribute
-    if(!(is.list(res) && fnrow2(res) == fnrow2(x))) return(res)
+    if(!(is.list(res) && fnrow(res) == fnrow(x))) return(res)
     attr(res, "groups") <- attr(x, "groups")
     oldClass(res) <- clx
   }
@@ -457,7 +457,7 @@ print.invisible <- function(x, ...) cat("")
 #   tstop <- function(x) if(missing(x)) NULL else x
 #   res <- tstop(NextMethod()) # better than above (problems with data.table method, but do further checks...)
 #   if(is.null(res)) return(NULL)
-#   if(!(is.list(res) && fnrow2(res) == fnrow2(x))) return(fungroup(res))
+#   if(!(is.list(res) && fnrow(res) == fnrow(x))) return(fungroup(res))
 #   if(is.null(g <- attr(res, "groups"))) attr(res, "groups") <- g
 #   oldClass(res) <- oldClass(x)
 #   return(res)
@@ -544,7 +544,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   gr <- g[[lg]]
   ng <- length(gr)
   gs <- vlengths(gr, FALSE)
-  id <- .Call(C_groups2GRP, gr, fnrow2(X), gs)
+  id <- .Call(C_groups2GRP, gr, fnrow(X), gs)
   return(`oldClass<-`(list(N.groups = ng, # The C code here speeds up things a lot !!
                         group.id = id,  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
                         group.sizes = gs,

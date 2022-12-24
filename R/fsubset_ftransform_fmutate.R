@@ -39,7 +39,7 @@ ss <- function(x, i, j, check = TRUE) {
   }
   if(!is.integer(i)) {
     if(is.numeric(i)) i <- as.integer(i) else if(is.logical(i)) {
-      nr <- fnrow2(x)
+      nr <- fnrow(x)
       if(check && length(i) != nr) stop("i needs to be integer or logical(nrow(x))") # which(r & !is.na(r)) not needed !
       i <- which(i)
       if(length(i) == nr) return(if(mj) x else .Call(C_subsetCols, x, j, TRUE))
@@ -74,7 +74,7 @@ fsubset.data.frame <- function(.x, subset, ...) {
   }
   checkrows <- TRUE
   if(is.logical(r)) {
-    nr <- fnrow2(.x)
+    nr <- fnrow(.x)
     if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(.x)) or integer") # which(r & !is.na(r)) not needed !
     r <- which(r)
     if(length(r) == nr) if(missing(...)) return(.x) else return(.Call(C_subsetCols, .x, vars, TRUE))
@@ -130,7 +130,7 @@ fsubset.pdata.frame <- function(.x, subset, ..., drop.index.levels = "id") {
   }
   checkrows <- TRUE
   if(is.logical(r)) {
-    nr <- fnrow2(.x)
+    nr <- fnrow(.x)
     if(length(r) != nr) stop("subset needs to be an expression evaluating to logical(nrow(.x)) or integer") # which(r & !is.na(r)) not needed !
     r <- which(r)
     if(length(r) == nr) if(missing(...)) return(.x) else return(.Call(C_subsetCols, .x, vars, TRUE))
@@ -278,7 +278,7 @@ fcompute_core <- function(.data, e, keep = NULL) {
         e <- c(e, .subset(.data, attr(.data, "sf_column")))
   ax[["names"]] <- names(e)
   le <- vlengths(e, FALSE)
-  nr <- fnrow2(.data)
+  nr <- fnrow(.data)
   rl <- le == nr
   if(all(rl)) return(condalcSA(e, ax, inherits(.data, "data.table"))) # All computed vectors have the right length
   if(any(1L < le & !rl)) stop("Lengths of replacements must be equal to nrow(.data) or 1")
@@ -566,7 +566,7 @@ dots_apply_grouped <- function(d, g, f, dots) {
 }
 
 dots_apply_grouped_bulk <- function(d, g, f, dots) {
-  n <- fnrow2(d)
+  n <- fnrow(d)
   dsp <- rsplit.data.frame(d, g, simplify = FALSE, flatten = TRUE, use.names = FALSE)
   if(is.null(dots)) return(lapply(dsp, f))
   # Arguments withs ame length as data

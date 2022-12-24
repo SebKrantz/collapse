@@ -344,8 +344,8 @@ BY.grouped_df <- function(x, FUN, ..., reorder = TRUE, keep.group_vars = TRUE, u
   # Other return options
   if(!is.data.frame(res)) return(res)
 
-  n <- fnrow2(res)
-  same_size <- n == fnrow2(x)
+  n <- fnrow(res)
+  same_size <- n == fnrow(x)
   if(!same_size && is.null(g[[4L]])) keep.group_vars <- FALSE
 
   # Not preserving grouping variable or same size and no grouping variables: return appropriate object

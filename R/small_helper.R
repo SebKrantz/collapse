@@ -407,7 +407,7 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE, all = FALSE, ...) {
     rl <- if(is.null(cols)) .Call(C_dt_na, X, iX, all) else
           .Call(C_dt_na, X, cols2int(cols, X, attr(X, "names")), all) # gives error if X not list
     rkeep <- whichv(rl, FALSE)
-    if(length(rkeep) == fnrow2(X)) return(condalc(X, inherits(X, "data.table")))
+    if(length(rkeep) == fnrow(X)) return(condalc(X, inherits(X, "data.table")))
     res <- .Call(C_subsetDT, X, rkeep, iX, FALSE) # This allocates data.tables...
     rn <- attr(X, "row.names")
     if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- Csv(rn, rkeep)
@@ -434,7 +434,7 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE, all = FALSE, ...) {
 
 na_insert <- function(X, prop = 0.1, value = NA) {
   if(is.list(X)) {
-    n <- fnrow2(X)
+    n <- fnrow(X)
     nmiss <- floor(n * prop)
     res <- duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, sample.int(n, nmiss), value = value)), X)
     return(if(inherits(X, "data.table")) alc(res) else res)
@@ -452,8 +452,6 @@ fnlevels <- function(x) length(attr(x, "levels"))
 # flevels <- function(x) attr(x, "levels")
 
 fnrow <- function(X) .Call(C_fnrow, X)  # if(is.list(X)) length(.subset2(X, 1L)) else dim(X)[1L]
-
-fnrow2 <- function(X) length(.subset2(X, 1L))
 
 fncol <- function(X) if(is.list(X)) length(unclass(X)) else dim(X)[2L]
 

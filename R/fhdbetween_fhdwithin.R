@@ -22,7 +22,7 @@ myModFrame <- function(f, data) {
   v <- attr(t, "variables")
   res <- eval(v, data, parent.frame()) # faster than res <- eval(substitute(with(data, e), list(e = v)))
   attributes(res) <- list(names = as.character(v[-1L]),
-                          row.names = .set_row_names(fnrow2(data)),
+                          row.names = .set_row_names(fnrow(data)),
                           class = "data.frame",
                           terms = t)
   res
@@ -440,7 +440,7 @@ fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = TRUE, fil
     if(fill) {
       ax <- attributes(x)
       ax[["na.rm"]] <- which(miss)
-      return(setAttributes(.Call(C_lassign, Y, fnrow2(x), cc, NA_real_), ax))
+      return(setAttributes(.Call(C_lassign, Y, fnrow(x), cc, NA_real_), ax))
     }
     attr(Y, "row.names") <- attr(x, "row.names")[cc] # row.names of pdata.frame are special.
     nix <- length(unclass(ix))
@@ -466,7 +466,7 @@ fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, va
       cc <- which(cc)
       w <- w[cc]
       if(!variable.wise) {
-        if(fill) nrx <- fnrow2(x) else if(is.character(ax[["row.names"]]))
+        if(fill) nrx <- fnrow(x) else if(is.character(ax[["row.names"]]))
           ax[["row.names"]] <- ax[["row.names"]][cc] else ax[["row.names"]] <- .set_row_names(length(cc)) # best ??
         x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)), FALSE)
       }
@@ -569,7 +569,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         ax[["na.rm"]] <- which(miss)
         cc <- whichv(miss, FALSE)
         w <- w[cc]
-        if(!variable.wise) if(fill) nrx <- fnrow2(x) else if(is.character(ax[["row.names"]]))
+        if(!variable.wise) if(fill) nrx <- fnrow(x) else if(is.character(ax[["row.names"]]))
           ax[["row.names"]] <- ax[["row.names"]][cc] else ax[["row.names"]] <- .set_row_names(length(cc)) # best ??
       } else na.rm <- FALSE
     }
@@ -771,7 +771,7 @@ fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, v
       cc <- which(cc)
       w <- w[cc]
       if(!variable.wise) {
-        if(fill) nrx <- fnrow2(x) else if(is.character(ax[["row.names"]]))
+        if(fill) nrx <- fnrow(x) else if(is.character(ax[["row.names"]]))
           ax[["row.names"]] <- ax[["row.names"]][cc] else ax[["row.names"]] <- .set_row_names(length(cc)) # best ??
         x <- .Call(C_subsetDT, x, cc, seq_along(unclass(x)), FALSE)
       }
@@ -875,7 +875,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
         ax[["na.rm"]] <- which(miss)
         cc <- whichv(miss, FALSE)
         w <- w[cc]
-        if(!variable.wise) if(fill) nrx <- fnrow2(x) else if(is.character(ax[["row.names"]]))
+        if(!variable.wise) if(fill) nrx <- fnrow(x) else if(is.character(ax[["row.names"]]))
           ax[["row.names"]] <- ax[["row.names"]][cc] else ax[["row.names"]] <- .set_row_names(length(cc)) # best ??
       } else na.rm <- FALSE
     }

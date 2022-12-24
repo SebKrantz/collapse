@@ -25,7 +25,7 @@ recode_num <- function(X, ..., default = NULL, missing = NULL, set = FALSE) {
         repfun <- function(y) if(is.numeric(y)) scv(y, nam, args, set) else y # `[<-`(y, y == nam, value = args)
       }
     } else {
-      nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+      nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
           z <- scv(y, NA, default, set, TRUE) # duplAttributes(alloc(default, nr), y)
@@ -54,7 +54,7 @@ recode_num <- function(X, ..., default = NULL, missing = NULL, set = FALSE) {
         } else y
       }
     } else {
-      nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+      nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
       if(missingl) {
         repfun <- function(y) if(is.numeric(y)) {
           z <- scv(y, NA, default, set, TRUE) # duplAttributes(alloc(default, nr), y)
@@ -102,7 +102,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
           repfun <- function(y) if(is.character(y)) `[<-`(y, grepl(nam, y, ignore.case, FALSE, fixed), value = args) else y
         }
       } else {
-        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
@@ -131,7 +131,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
           } else y
         }
       } else {
-        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
@@ -161,7 +161,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
           repfun <- function(y) if(is.character(y)) scv(y, nam, args, set) else y # `[<-`(y, y == nam, value = args)
         }
       } else {
-        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
@@ -190,7 +190,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
           } else y
         }
       } else {
-        nr <- if(is.atomic(X)) NROW(X) else fnrow2(X)
+        nr <- if(is.atomic(X)) NROW(X) else fnrow(X)
         if(missingl) {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, NA, default, set, TRUE)  # duplAttributes(alloc(default, nr), y)
