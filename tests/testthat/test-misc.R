@@ -327,3 +327,15 @@ test_that("all_funs works properly", {
   expect_identical(all_funs(quote(sum(z)/2+4+e+g+h+(p/sum(u))+(q-y))), c("+", "+", "+", "+", "+", "+", "/", "sum", "(", "/", "sum", "(", "-"))
   expect_identical(all_funs(quote(mean(fmax(min(fmode(mpg))))/fmean(mpg) + e + f + 1 + fsd(hp) + sum(bla) / 20)), c("+", "+", "+", "+", "+", "/", "mean", "fmax", "min", "fmode", "fmean", "fsd", "/", "sum"))
 })
+
+test_that("fdist works properly", {
+  expect_equal(fdist(m), fdist(mtcars))
+  expect_equal(fdist(m), fdist(m, method = 1L))
+  expect_equal(fdist(m, method = "euclidean_squared"), fdist(m, method = 2L))
+  expect_equal(fdist(m), `attr<-`(dist(m), "call", NULL))
+  expect_equal(unattrib(fdist(m, method = "euclidean_squared")), unattrib(dist(m))^2)
+  expect_equal(fdist(m, fmean(m)), unattrib(sqrt(colSums((t(m) - fmean(m))^2))))
+  expect_equal(fdist(m, fmean(m), method = "euclidean_squared"), unattrib(colSums((t(m) - fmean(m))^2)))
+  expect_equal(fdist(m[, 1], m[, 3]), sqrt(sum((m[, 1] - m[, 3])^2)))
+  expect_equal(fdist(m[, 1], m[, 3], method = "euclidean_squared"), sum((m[, 1] - m[, 3])^2))
+})
