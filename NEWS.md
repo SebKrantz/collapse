@@ -16,7 +16,7 @@
 
 * Fixed a bug in the `.names` argument to `across()`. Passing a naming function such as `.names = function(c, f) paste0(c, "-", f)` now works as intended i.e. the function is applied to all combinations of columns (c) and functions (f) using `outer()`. Previously this was just internally evaluated as `.names(cols, funs)`, which did not work if there were multiple cols and multiple funs. There is also now a possibility to set `.names = "flip"`, which names columns `f_c` instead of `c_f`. 
 
-* `fnrow()` was rewritten in C and also supports data frames with 0 rows. Similarly for `seq_row()`. Thanks @NicChr (#344). 
+* `fnrow()` was rewritten in C and also supports data frames with 0 columns. Similarly for `seq_row()`. Thanks @NicChr (#344). 
 
 ### Additions
 
@@ -26,7 +26,7 @@
 
 * `fsummarize()` was added as a synonym to `fsummarise`. Thanks @arthurgailes for the PR. 
 
-* **C API**: *collapse* exports around 20 C functions that provide functionality that is either convenient or rather complicated to implement from scratch. The exported functions can be found at the bottom of `src/ExportSymbols.c`. The API excludes the *Fast Statistical Functions*, which I thought are too closely related to how *collapse* works internally to be of much use to a C programmer (e.g. they expect grouping objects or certain kinds of integer vectors). But you are free to request the export of additional functions, including C++ functions. 
+* **C API**: *collapse* exports around 20 C functions that provide functionality that is either convenient or rather complicated to implement from scratch. The exported functions can be found at the bottom of `src/ExportSymbols.c`. The API does not include the *Fast Statistical Functions*, which I thought are too closely related to how *collapse* works internally to be of much use to a C programmer (e.g. they expect grouping objects or certain kinds of integer vectors). But you are free to request the export of additional functions, including C++ functions. 
 
 ### Improvements
 
@@ -53,6 +53,8 @@
 * `alloc()` now works with all types of objects i.e. it can replicate any object. If the input is non-atomic, atomic with length > 1 or `NULL`, the output is a list of these objects, e.g. `alloc(NULL, 10)` gives a length 10 list of `NULL` objects, or `alloc(mtcars, 10)` gives a list of `mtcars` datasets. Note that in the latter case the datasets are not deep-copied, so no additional memory is consumed. 
 
 * `missing_cases()` and `na_omit()` have gained an argument `prop = 0`, indicating the proportion of values missing for the case to be considered missing/to be omitted. The default value of `0` indicates that at least 1 value must be missing. Of course setting `prop = 1` indicates that all values must be missing. For data frames/lists the checking is done efficiently in C. For matrices this is currently still implemented using `rowSums(is.na(X)) >= max(as.integer(prop * ncol(X)), 1L)`, so the performance is less than optimal. 
+
+* `missing_cases()` has an extra argument `count = FALSE`. Setting `count = TRUE` returns the case-wise missing value count (by `cols`).  
 
 * Functions `frename()` and `setrename()` have an additional argument `.nse = TRUE`, conforming to the default non-standard evaluation of tagged vector expressions e.g. `frename(mtcars, mpg = newname)` is the same as `frename(mtcars, mpg = "newname")`. Setting `.nse = FALSE` allows `newname` to be a variable holding a name e.g. `newname = "othername"; frename(mtcars, mpg = newname, .nse = FALSE)`. Another use of the argument is that a (named) character vector can now be passed to the function to rename a (subset of) columns e.g. `cvec = letters[1:3]; frename(mtcars, cvec, cols = 4:6, .nse = FALSE)` (this works even with `.nse = TRUE`), and `names(cvec) = c("cyl", "vs", "am"); frename(mtcars, cvec, .nse = FALSE)`. Furthermore, `setrename()` now also returns the renamed data invisibly, and `relabel()` and `setrelabel()` have also gained similar flexibility to allow (named) lists or vectors of variable labels to be passed. *Note* that these function have no NSE capabilities, so they work essentially like `frename(..., .nse = FALSE)`.
 

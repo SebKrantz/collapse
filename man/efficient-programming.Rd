@@ -68,13 +68,13 @@ na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
         prop = 0, ...)      # and remove cases with a proportion of values missing
 na_insert(X, prop = 0.1,    # Insert missing values at random
           value = NA)
-missing_cases(X,            # The oposite of complete.cases(), faster for
-  cols = NULL, prop = 0)    # data frames. See also kit::panyNA() and kit::pallNA()
+missing_cases(X, cols=NULL, # The oposite of complete.cases(), faster for DF's.
+  prop = 0, count = FALSE)  # See also kit::panyNA(), kit::pallNA(), kit::pcountNA()
 vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
 frange(x, na.rm = TRUE)     # Much faster base::range, for integer and double objects
-fdist(x, v = NULL, ...,    # Much faster stats::dist. Also supports distances of row-
+fdist(x, v = NULL, ...,     # Much faster stats::dist. Also supports distances of row-
       method = "euclidian", # vector v and matrix x, or two vectors x and v. Note that
       nthreads = 1L)        # x is coerced to numeric matrix if integer or data frame.
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
@@ -106,6 +106,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{n}{integer. The length of the vector to allocate with \code{value}.}
   \item{na.attr}{logical. \code{TRUE} adds an attribute containing the removed cases. For compatibility reasons this is exactly the same format as \code{na.omit} i.e. the attribute is called "na.action" and of class "omit".}
   \item{prop}{double. For \code{na_insert}: the proportion of observations to be randomly replaced with \code{NA}. For \code{missing_cases} and \code{na_omit}: the proportion of values missing for the case to be considered missing (within \code{cols} if speficied). For matrices this is implemented in R as \code{rowSums(is.na(X)) >= max(as.integer(prop * ncol(X)), 1L)}. The C code for data frames works equivalently, and skips list- and raw-columns (\code{ncol(X)} is adjusted downwards).}
+  \item{count}{logical. \code{TRUE} returns the row-wise missing value count (within \code{cols}). This ignores \code{prop}.}
   \item{use.names}{logical. Preserve names if \code{X} is a list. }
   \item{na.rm}{logical. \code{TRUE} omits missing values by skipping them in the computation. \code{FALSE} terminates the computation once a missing value is encountered and returns 2 missing values.}
   \item{method}{an integer or character string indicating the method of computing distances.
@@ -214,12 +215,15 @@ mtc_na <- na_insert(mtcars, 0.15)    # Set 15\% of values missing at random
 fnobs(mtc_na)                        # See observation count
 missing_cases(mtc_na)                # Fast equivalent to !complete.cases(mtc_na)
 missing_cases(mtc_na, cols = 3:4)    # Missing cases on certain columns?
+missing_cases(mtc_na, count = TRUE)  # Missing case count
 missing_cases(mtc_na, prop = 0.8)    # Cases with 80\% or more missing
-missing_cases(mtc_na, cols = 3:4, prop = 1) # Cases mssing columns 3 and 4
+missing_cases(mtc_na, cols = 3:4, prop = 1)     # Cases mssing columns 3 and 4
+missing_cases(mtc_na, cols = 3:4, count = TRUE) # Missing case count on columns 3 and 4
+
 na_omit(mtc_na)                      # 12x faster than na.omit(mtc_na)
 na_omit(mtc_na, prop = 0.8)          # Only remove cases missing 80\% or more
 na_omit(mtc_na, na.attr = TRUE)      # Adds attribute with removed cases, like na.omit
-na_omit(mtc_na, cols = c("vs","am")) # Removes only cases missing vs or am
+na_omit(mtc_na, cols = .c(vs, am))   # Removes only cases missing vs or am
 na_omit(qM(mtc_na))                  # Also works for matrices
 na_omit(mtc_na$vs, na.attr = TRUE)   # Also works with vectors
 na_rm(mtc_na$vs)                     # For vectors na_rm is faster ...

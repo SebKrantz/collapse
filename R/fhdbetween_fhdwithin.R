@@ -60,17 +60,17 @@ getfl <- function(mf) {
     oldClass(mf) <- NULL # good ??
     tl <- terms[["term.labels"]]
     factors <- terms[[2L]]
-    fctterms <- colSums(factors[facts, , drop = FALSE]) > 0
-    fctinteract <- fctterms & colSums(factors) > 1 # best ??
+    fctterms <- fcolSums(factors[facts, , drop = FALSE]) > 0
+    fctinteract <- fctterms & fcolSums(factors) > 1 # best ??
 
     # Any interactions involving factors
     if(any(fctinteract)) {
       single <- rowSums(factors[facts, , drop = FALSE] > 0L) == 1 # These are either single factors or factors only appearing inside an interaction...
       factors <- factors[, fctinteract, drop = FALSE]
-      nointeract <- rowSums(factors[facts, , drop = FALSE]) == 0  # These are factors not appearing in interactions
+      nointeract <- frowSums(factors[facts, , drop = FALSE]) == 0  # These are factors not appearing in interactions
       singlefct <- names(which(single & nointeract)) # better way ??  # tl[fctterms & !fctinteract]
       intterms <-  mctl(factors > 0L, TRUE) # Need names here
-      fctfct <- colSums(factors[!facts, , drop = FALSE]) == 0 # These are factor-factor interactions...
+      fctfct <- colSums(factors[!facts, , drop = FALSE]) == 0 # These are factor-factor interactions... need names
 
       fctdat <- NULL # best way to do this ?? or as before with pre-allocation ??
       lsf <- length(singlefct)
@@ -93,7 +93,7 @@ getfl <- function(mf) {
 
           # Check for duplicate factors in interactions (largely independent of the other stuff)
           dupchk <- factors[, -im, drop = FALSE] > 0L # same as intslopes...
-          if(any(dupfct <- rowSums(dupchk) > 1)) { # Check for factors with multiple slopes...
+          if(any(dupfct <- frowSums(dupchk) > 1)) { # Check for factors with multiple slopes...
             if(bsum(dupfct) > 1L) stop("Cannot currently support multiple factors with multiple slopes...")
             dupfct <- which(dupchk[dupfct, ]) # This accounts for im
             fctdat <- c(fctdat, lapply(c(intslope[-im][dupfct[1L]], intslope[-im][-dupfct]), finteract, facts, mf))
@@ -109,7 +109,7 @@ getfl <- function(mf) {
           if(length(lsl) != length(lim)) { # The other cases... if exist
             othmc <- lsl[-lim]
             if(any(alone <- single & !nointeract)) {
-              alone <- colSums(factors[alone, -im, drop = FALSE]) > 0 # This finds the terms corresponding to a factor appearing in an interaction but nowhere else..
+              alone <- fcolSums(factors[alone, -im, drop = FALSE]) > 0 # This finds the terms corresponding to a factor appearing in an interaction but nowhere else..
               othmc[alone] <- -othmc[alone]
             }
             if(any(dupfct)) { # reordering if dupfct... putting it in front..
@@ -123,7 +123,7 @@ getfl <- function(mf) {
 
         } else { # No double factor interactions with slopes.. Only simple slopes interactions.. (what about dupfact of two different double interactions with slope, but no factfact?)
           dupchk <- factors > 0L # same as intslopes...
-          if(any(dupfct <- rowSums(dupchk) > 1)) { # Check for factors with multiple slopes...
+          if(any(dupfct <- frowSums(dupchk) > 1)) { # Check for factors with multiple slopes...
             if(bsum(dupfct) > 1L) stop("Cannot currently support multiple factors with multiple slopes...")
             dupfct <- which(dupchk[dupfct, ])
             fctdat <- c(fctdat, lapply(c(intslope[dupfct[1L]], intslope[-dupfct]), finteract, facts, mf))
@@ -131,7 +131,7 @@ getfl <- function(mf) {
           slopes <- lapply(intslope, slinteract, facts, mf) # getting slopes, independent of dupfct...
           lsl <- lengths(slopes, FALSE)
           if(any(alone <- single & !nointeract)) { # Any factor occurring only inside an interaction... This is independent of dupfact and thre associated reordering...
-            alone <- colSums(factors[alone, , drop = FALSE]) > 0
+            alone <- fcolSums(factors[alone, , drop = FALSE]) > 0
             lsl[alone] <- -lsl[alone]
           }
           if(any(dupfct)) { # reordering if dupfct... putting it in front..
@@ -433,7 +433,7 @@ fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = TRUE, fil
       return(y)
     })
     return(setAttributes(varwisecomp(x, g, w, ...), ax))
-  } else if(na.rm && any(miss <- .Call(C_dt_na, x, seq_along(unclass(x)), 0))) {
+  } else if(na.rm && any(miss <- missDF(x))) {
     cc <- whichv(miss, FALSE)
     gcc <- .Call(C_subsetDT, g, cc, seq_along(g), FALSE)
     Y <- demean(.Call(C_subsetDT, x, cc, seq_along(unclass(x)), FALSE), gcc, w[cc], ...)
@@ -563,7 +563,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
     if(na.rm) {
-      miss <- if(variable.wise) .Call(C_dt_na, x, fvars, 0) else .Call(C_dt_na, x, c(Xvars, fvars), 0)
+      miss <- missDF(x, if(variable.wise) fvars else c(Xvars, fvars))
       if(missw <- length(w) && anyNA(w)) miss <- miss | is.na(w)
       if(missw || any(miss)) {
         ax[["na.rm"]] <- which(miss)
@@ -869,7 +869,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
     ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
 
     if(na.rm) {
-      miss <- if(variable.wise) .Call(C_dt_na, x, fvars, 0) else .Call(C_dt_na, x, c(Xvars, fvars), 0)
+      miss <- missDF(x, if(variable.wise) fvars else c(Xvars, fvars))
       if(missw <- length(w) && anyNA(w)) miss <- miss | is.na(w)
       if(missw || any(miss)) {
         ax[["na.rm"]] <- which(miss)

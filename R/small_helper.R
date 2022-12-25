@@ -385,14 +385,25 @@ setop <- function(X, op, V, ..., rowwise = FALSE) # Making sure some error is pr
 "%*=%" <- function(X, V) invisible(.Call(C_setop, X, V, 3L, FALSE))
 "%/=%" <- function(X, V) invisible(.Call(C_setop, X, V, 4L, FALSE))
 
+# Internal functions
+missDF <- function(x, cols = seq_along(unclass(x))) .Call(C_dt_na, x, cols, 0, FALSE)
+frowSums <- function(x) {
+  nr <- dim(x)[1L]
+  .rowSums(x, nr, length(x)/nr)
+}
+fcolSums <- function(x) {
+  nr <- dim(x)[1L]
+  .colSums(x, nr, length(x)/nr)
+}
 
-missing_cases <- function(X, cols = NULL, prop = 0) {
-  if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names")), prop))
+missing_cases <- function(X, cols = NULL, prop = 0, count = FALSE) {
+  if(is.list(X)) return(.Call(C_dt_na, X, if(is.null(cols)) seq_along(unclass(X)) else cols2int(cols, X, attr(X, "names")), prop, count))
   if(is.matrix(X)) {
     if(length(cols)) X <- X[, cols]
-    if(is.matrix(X)) return(if(prop > 0) rowSums(is.na(X)) >= bmax(as.integer(prop * NCOL(X)), 1L) else !complete.cases(X))
+    if(is.matrix(X)) return(if(count) as.integer(frowSums(is.na(X))) else if(prop > 0) # as.integer() needed to establish consistency (integer output)
+      frowSums(is.na(X)) >= bmax(as.integer(prop * NCOL(X)), 1L) else !complete.cases(X))
   }
-  is.na(X)
+  if(count) as.integer(is.na(X)) else is.na(X) # Note: as.integer() here is inefficient, but storage.mode() <- "integer" is also. Would have to export a R wrapper to C function SET_TYPEOF()... but this is probably never invoked anyway.
 }
 
 na_rm <- function(x) .Call(C_na_rm, x)  # x[!is.na(x)]
@@ -404,7 +415,7 @@ all_eq <- function(x) .Call(C_anyallv, x, x[1L], TRUE)
 na_omit <- function(X, cols = NULL, na.attr = FALSE, prop = 0, ...) {
   if(is.list(X)) {
     iX <- seq_along(unclass(X))
-    rl <- .Call(C_dt_na, X, if(is.null(cols)) iX else cols2int(cols, X, attr(X, "names")), prop)
+    rl <- .Call(C_dt_na, X, if(is.null(cols)) iX else cols2int(cols, X, attr(X, "names")), prop, FALSE)
     rkeep <- whichv(rl, FALSE)
     if(length(rkeep) == fnrow(X)) return(condalc(X, inherits(X, "data.table")))
     res <- .Call(C_subsetDT, X, rkeep, iX, FALSE) # This allocates data.tables...
@@ -422,7 +433,7 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE, prop = 0, ...) {
     }
   } else {
     Xcols <- if(is.null(cols)) X else X[, cols]
-    rl <- if(prop > 0 && is.matrix(Xcols)) rowSums(is.na(Xcols)) < bmax(as.integer(prop * ncol(Xcols)), 1L) else complete.cases(Xcols)
+    rl <- if(prop > 0 && is.matrix(Xcols)) frowSums(is.na(Xcols)) < bmax(as.integer(prop * ncol(Xcols)), 1L) else complete.cases(Xcols)
     rkeep <- which(rl)
     if(length(rkeep) == NROW(X)) return(X)
     res <- if(is.matrix(X)) X[rkeep, , drop = FALSE, ...] else X[rkeep, ...]
