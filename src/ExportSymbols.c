@@ -94,7 +94,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_seqid", (DL_FUNC) &_collapse_seqid, 7},
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 1},
-  {"C_dt_na", (DL_FUNC) &dt_na, 3},
+  {"C_dt_na", (DL_FUNC) &dt_na, 4},
   {"C_allNA", (DL_FUNC) &allNAv, 2},
   {"C_na_rm", (DL_FUNC) &Cna_rm, 1},
   {"C_whichv", (DL_FUNC) &whichv, 3},
@@ -151,12 +151,12 @@ void R_init_collapse(DllInfo *dll) {
   R_RegisterCCallable("collapse", "cp_range", (DL_FUNC) &frange);
   R_RegisterCCallable("collapse", "cp_dist", (DL_FUNC) &fdist);
   R_RegisterCCallable("collapse", "cp_quantile", (DL_FUNC) &fquantileC);
-  R_RegisterCCallable("collapse", "cp_cumsum", (DL_FUNC) &fcumsumC);
   R_RegisterCCallable("collapse", "cp_group", (DL_FUNC) &groupVec);          // Main hash-based grouping function: for atomic vectors and data frames
   R_RegisterCCallable("collapse", "cp_group_at", (DL_FUNC) &groupAtVec);     // Same but only works with atomic vectors and has option to keep missing values
   R_RegisterCCallable("collapse", "cp_unique", (DL_FUNC) &funiqueC);         // Unique values for atomic vector
   R_RegisterCCallable("collapse", "cp_radixorder", (DL_FUNC) &Cradixsort);
   R_RegisterCCallable("collapse", "cp_rbindlist", (DL_FUNC) &rbindlist);
+  R_RegisterCCallable("collapse", "cp_alloc", (DL_FUNC) &falloc);
   R_RegisterCCallable("collapse", "cp_na_rm", (DL_FUNC) &Cna_rm);
   R_RegisterCCallable("collapse", "cp_missing_cases", (DL_FUNC) &dt_na);
   R_RegisterCCallable("collapse", "cp_whichv", (DL_FUNC) &whichv);
@@ -165,7 +165,7 @@ void R_init_collapse(DllInfo *dll) {
   R_RegisterCCallable("collapse", "cp_multiassign", (DL_FUNC) &multiassign);
   R_RegisterCCallable("collapse", "cp_vecgcd", (DL_FUNC) &vecgcd);
   R_RegisterCCallable("collapse", "cp_all_funs", (DL_FUNC) &all_funs);
+  R_RegisterCCallable("collapse", "cp_subsetVector", (DL_FUNC) &subsetVector);
   R_RegisterCCallable("collapse", "cp_subsetCols", (DL_FUNC) &subsetCols);
   R_RegisterCCallable("collapse", "cp_subsetDataFrame", (DL_FUNC) &subsetDT);
-  R_RegisterCCallable("collapse", "cp_subsetVector", (DL_FUNC) &subsetVector);
 }

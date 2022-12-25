@@ -110,8 +110,8 @@ inline bool INHERITS(SEXP x, SEXP char_) {
 }
 
 // Enhanced version of the original
-SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop) {
-  int n = 0, elem, ncol = LENGTH(cols);
+SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
+  int n = 0, elem, ncol = LENGTH(cols), count = asLogical(Rcount);
   double prop = asReal(Rprop);
   if(ISNAN(prop) || prop < 0.0 || prop > 1.0) error("prop needs to be a proportion [0, 1]");
 
@@ -128,7 +128,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop) {
   int *ians = LOGICAL(ans);
   memset(ians, 0, sizeof(int) * n);  // for (int i=0; i != n; ++i) ians[i]=0;
 
-  if(prop > 0.0) { // More than 1 missing row
+  if(count || prop > 0.0) { // More than 1 missing row, or counting mising values
     // if(prop == 1) { // Not sensible: better skip lists...
     //   // Preliminary check for early return
     //   for (int i = 0, tv; i < ncol; ++i) {
@@ -178,13 +178,16 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop) {
         error("Unsupported column type '%s'", type2char(TYPEOF(v)));
       }
     }
-    // This computes the result
-    if(prop < 1.0) {
-      len = (int)((double)len * prop);
-      if(len < 1) len = 1;
+    if(count) {
+      SET_TYPEOF(ans, INTSXP);
+    } else {
+      // This computes the result
+      if(prop < 1.0) {
+        len = (int)((double)len * prop);
+        if(len < 1) len = 1;
+      }
+      for (int j = 0; j != n; ++j) ians[j] = ians[j] >= len;
     }
-    for (int j = 0; j != n; ++j) ians[j] = ians[j] >= len;
-
   } else { // Any missing (default)
     for (int i = 0; i < ncol; ++i) {
       SEXP v = VECTOR_ELT(x, INTEGER(cols)[i]-1);

@@ -180,25 +180,29 @@ gvr <- function(x, vars, return = "data", ...) {
   `get_vars_ind<-`(x, ind, value)
 }
 
-# Make faster ?
 "add_vars<-" <- function(x, pos = "end", value) {
   ax <- attributes(x)
   attributes(x) <- NULL
   lx <- length(x)
   if(is.list(value)) {
     oldClass(value) <- NULL # fastest ?
+    # This works with zero row data frames, but not with zero column ones
     if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
     # res <- c(x, value)  # FASTER than commented out below
-    if(is.character(pos)) {
-      if(pos == "end") {
-        ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam) else
-          c(ax[["names"]], paste0("V", seq(lx+1L, lx+length(value))))
-        return(condalcSA(c(x, value), ax, any(ax[["class"]] == "data.table")))
-      } else if(pos != "front") stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
-        ax[["names"]] <- if(length(nam <- names(value)))  c(nam, ax[["names"]]) else
-          c(paste0("V", seq_along(value)), ax[["names"]])
-        return(condalcSA(c(value, x), ax, any(ax[["class"]] == "data.table")))
-    }
+    if(is.character(pos)) switch(pos,
+          end = {
+            ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam) else
+              c(ax[["names"]], paste0("V", seq(lx+1L, lx+length(value))))
+            return(condalcSA(c(x, value), ax, any(ax[["class"]] == "data.table")))
+          },
+          front = {
+            ax[["names"]] <- if(length(nam <- names(value)))  c(nam, ax[["names"]]) else
+              c(paste0("V", seq_along(value)), ax[["names"]])
+            return(condalcSA(c(value, x), ax, any(ax[["class"]] == "data.table")))
+          },
+          stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
+      )
+
     lv <- length(value)
     tl <- lv+lx
     if(!is.numeric(pos) || length(pos) != lv || bmax(pos) > tl) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
@@ -215,17 +219,21 @@ gvr <- function(x, vars, return = "data", ...) {
     # res <- c(x, list(value)) # FASTER than below ? -> Nope
     # ax[["names"]] <- c(ax[["names"]], paste0("V", lx+1L))
     nam <- l1orlst(as.character(substitute(value)))
-    if(is.character(pos)) {
-      if(pos == "end") {
-        x[[lx+1L]] <- value
-        ax[["names"]] <- c(ax[["names"]], nam) # paste0("V", lx+1L)
-        return(condalcSA(x, ax, any(ax[["class"]] == "data.table")))
-      } else if(pos != "front") stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
-      ax[["names"]] <- c(nam, ax[["names"]])
-      return(condalcSA(c(list(value), x), ax, any(ax[["class"]] == "data.table")))
-    }
+    if(is.character(pos)) switch(pos,
+         end = {
+           x[[lx+1L]] <- value
+           ax[["names"]] <- c(ax[["names"]], nam) # paste0("V", lx+1L)
+           return(condalcSA(x, ax, any(ax[["class"]] == "data.table")))
+         },
+         front = {
+           ax[["names"]] <- c(nam, ax[["names"]])
+           return(condalcSA(c(list(value), x), ax, any(ax[["class"]] == "data.table")))
+         },
+         stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
+      )
+
     if(!is.numeric(pos) || length(pos) > 1L || pos > lx+1L) stop("pos needs to be 'end', 'front' or a suitable numeric / integer vector of positions!")
-    o <- forder.int(c(1:lx, pos-1L))
+    o <- forder.int(c(seq_len(lx), pos-1L))
     ax[["names"]] <- c(ax[["names"]], nam)[o]
     return(condalcSA(c(x, list(value))[o], ax, any(ax[["class"]] == "data.table")))
   }
@@ -233,10 +241,15 @@ gvr <- function(x, vars, return = "data", ...) {
 "av<-" <- `add_vars<-`
 
 add_vars <- function(x, ..., pos = "end") {
-  if(...length() == 1L) return(`add_vars<-`(x, pos, ...))
-  l <- c(...)
-  if(!all(fnrow(x) == vlengths(l, FALSE))) stop("if multiple arguments are passed to '...', each needs to be a data.frame/list with column-lengths matching nrow(x)")
-  return(`add_vars<-`(x, pos, l)) # very minimal ! Doesn't work for vectors etc !
+  if(...length() == 1L) {
+    if(is.list(..1) || is.null(names(l <- list(...)))) return(`add_vars<-`(x, pos, ...))
+    return(`add_vars<-`(x, pos, l))
+  }
+  l <- list(...) # Old: c(...), did not allow atomic inputs...
+  l <- if(all(.Call(C_vtypes, l, 3L))) c(...) else # Checks if all is list...
+    unlist(lapply(l, function(z) if(is.list(z)) z else list(z)), recursive = FALSE)
+  if(!allv(vlengths(l, FALSE), fnrow(x))) stop("if multiple arguments are passed to '...', for all arguments NROW(arg) must match nrow(x)")
+  return(`add_vars<-`(x, pos, l))
 }
 av <- add_vars
 
