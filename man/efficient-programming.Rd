@@ -75,7 +75,7 @@ vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, .
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
 frange(x, na.rm = TRUE)     # Much faster base::range, for integer and double objects
 fdist(x, v = NULL, ...,     # Much faster stats::dist. Also supports distances of row-
-      method = "euclidian", # vector v and matrix x, or two vectors x and v. Note that
+      method = "euclidean", # vector v and matrix x, or two vectors x and v. Note that
       nthreads = 1L)        # x is coerced to numeric matrix if integer or data frame.
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
 fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
@@ -111,8 +111,8 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{na.rm}{logical. \code{TRUE} omits missing values by skipping them in the computation. \code{FALSE} terminates the computation once a missing value is encountered and returns 2 missing values.}
   \item{method}{an integer or character string indicating the method of computing distances.
   \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
-                 1 \tab\tab \code{"euclidian"}   \tab\tab euclidian distance \cr
-                 2 \tab\tab \code{"euclidian_squared"} \tab\tab squared euclidian distance (more efficient) \cr
+                 1 \tab\tab \code{"euclidean"}   \tab\tab euclidean distance \cr
+                 2 \tab\tab \code{"euclidean_squared"} \tab\tab squared euclidean distance (more efficient) \cr
     }
     \emph{Notes:} More options may be added here in the future. The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}. See Examples.
   }

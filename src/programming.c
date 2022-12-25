@@ -864,12 +864,12 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
   }
   if(TYPEOF(Rret) == STRSXP) {
     const char *r = CHAR(STRING_ELT(Rret, 0));
-    if(strcmp(r, "euclidian") == 0) ret = 1;
-    else if(strcmp(r, "euclidian_squared") == 0) ret = 2;
+    if(strcmp(r, "euclidean") == 0) ret = 1;
+    else if(strcmp(r, "euclidean_squared") == 0) ret = 2;
     else error("Unsupported method: %s", r);
   } else {
     ret = asInteger(Rret);
-    if(ret < 1 || ret > 2) error("method must be 1 ('euclidian') or 2 ('euclidian_squared')");
+    if(ret < 1 || ret > 2) error("method must be 1 ('euclidean') or 2 ('euclidean_squared')");
   }
 
   size_t l = nrow;
@@ -979,7 +979,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
        setAttrib(res, sym_Labels, VECTOR_ELT(dn, 0));
     setAttrib(res, sym_Diag, ScalarLogical(0));
     setAttrib(res, sym_Upper, ScalarLogical(0));
-    setAttrib(res, sym_method, mkString(ret == 1 ? "euclidian" : "euclidian_squared"));
+    setAttrib(res, sym_method, mkString(ret == 1 ? "euclidean" : "euclidean_squared"));
     // Note: Missing "call" attribute
     classgets(res, mkString("dist"));
   }
