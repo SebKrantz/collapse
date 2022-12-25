@@ -94,7 +94,7 @@ date_vars(x) <- value
 \item{regex}{logical. \code{TRUE} will do regular expression search on the column names of \code{x} using a (vector of) regular expression(s) passed to \code{vars}. Matching is done using \code{\link{grep}}.}
 \item{rename}{logical. If \code{vars} is a named vector of column names or indices, \code{rename = TRUE} will use the (non missing) names to rename columns.}
 \item{pos}{the position where columns are added in the data frame. \code{"end"} (default) will append the data frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching \code{length(value)} if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order. }
-\item{\dots}{for \code{fselect}: column names and expressions e.g. \code{fselect(mtcars, newname = mpg, hp, carb:vs)}. for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: Same as \code{value}, a single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using \code{c(\dots)}).}
+\item{\dots}{for \code{fselect}: column names and expressions e.g. \code{fselect(mtcars, newname = mpg, hp, carb:vs)}. for \code{get_vars}: further arguments passed to \code{\link{grep}}, if \code{regex = TRUE}. For \code{add_vars}: multiple lists/data frames or vectors (which should be given names e.g. \code{name = vector}). A single argument passed may also be an (unnamed) vector or matrix.}
 }
 
 \details{
@@ -104,7 +104,7 @@ Similarly type-wise operations like \code{data[sapply(data, is.numeric)]} or \co
 
 \code{fselect} provides an efficient alternative to \code{dplyr::select}, allowing the selection of variables based on expressions evaluated within the data frame, see Examples. It is about 100x faster than \code{dplyr::select} but also more simple as it does not provide special methods (except for 'sf' and 'data.table' which are handled internally) .
 
-Finally, \code{add_vars(data1, data2, data3, \dots)} is a lot faster than \code{cbind(data1, data2, data3, \dots)}, and preserves the attributes of \code{data1} (i.e. it is like adding columns to \code{data1}). The replacement function \code{add_vars(data) <- someFUN(get_vars(data, cols))} efficiently appends \code{data} with computed columns. The \code{pos} argument allows adding columns at positions other than the end (right) of the data frame, see Examples.
+Finally, \code{add_vars(data1, data2, data3, \dots)} is a lot faster than \code{cbind(data1, data2, data3, \dots)}, and preserves the attributes of \code{data1} (i.e. it is like adding columns to \code{data1}). The replacement function \code{add_vars(data) <- someFUN(get_vars(data, cols))} efficiently appends \code{data} with computed columns. The \code{pos} argument allows adding columns at positions other than the end (right) of the data frame, see Examples. \emph{Note} that \code{add_vars} does not check duplicated column names or \code{NULL} columns, and does not evaluate expressions in a data environment, or replicate length 1 inputs like \code{\link{cbind}}. All of this is provided by \code{\link{ftransform}}.
 
 All functions introduced here perform their operations class-independent. They all basically work like this: (1) save the attributes of \code{x}, (2) unclass \code{x}, (3) subset, replace or append \code{x} as a list, (4) modify the "names" component of the attributes of \code{x} accordingly and (5) efficiently attach the attributes again to the result from step (3).
 Thus they can freely be applied to data.table's, grouped tibbles, panel data frames and other classes and will return an object of exactly the same class and the same attributes.
@@ -112,7 +112,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 % secure w.r.t. redefinitions of \code{`[.data.frame`} or \code{`[<-.data.frame`} for other classes (i.e. data.table's, tibbles etc.) and preserve all attributes of the data
 }
 \note{
-The functions here only check the length of the first column, which is one of the reasons why they are so fast. When lists of unequal-length columns are offered as replacements this yields a malformed data frame (which will also print a warning in the console i.e. you will notice that).
+In many cases functions here only check the length of the first column, which is one of the reasons why they are so fast. When lists of unequal-length columns are offered as replacements this yields a malformed data frame (which will also print a warning in the console i.e. you will notice that).
 }
 \seealso{
 \code{\link{fsubset}}, \code{\link{ftransform}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
@@ -153,5 +153,9 @@ av(wlddev,c(10,12,14,16)) <- W(wlddev,~iso3c, cols = 9:12, # Adding next to orig
 head(wlddev)
 get_vars(wlddev, c(10,12,14,16)) <- NULL                   # Deleting
 
+head(add_vars(wlddev, new = STD(wlddev$PCGDP)))                  # Can also add columns like this
+head(add_vars(wlddev, STD(nv(wlddev)), new = W(wlddev$PCGDP)))   # etc...
+
+head(add_vars(mtcars, mtcars, mpg = mtcars$mpg, mtcars), 2)      # add_vars does not check names!
 }
 \keyword{manip}
