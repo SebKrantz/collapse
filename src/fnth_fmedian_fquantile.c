@@ -83,17 +83,47 @@ static inline void dswap(double *a, double *b)     {double  tmp=*a; *a=*b; *b=tm
     break;                                                     \
   }
 
-
+// Idea: take mean weight...
+#undef RETWQSWITCH
+#define RETWQSWITCH(sumw, mu)                                  \
+switch(ret) {                                                  \
+case 7:                                                        \
+case 1:                                                        \
+case 2: /* quantile type 7, average, or Lower element*/        \
+  h = (sumw - mu) * Q;                                         \
+  break;                                                       \
+case 3: /* upper element*/                                     \
+  h = sumw * Q;                                                \
+  break;                                                       \
+case 4: /* quantile type 4: does not give exact results*/      \
+  h = sumw * Q - mu;                                           \
+  break;                                                       \
+case 5: /* quantile type 5*/                                   \
+  h = sumw * Q - 0.5*mu;                                       \
+  break;                                                       \
+case 6: /* quantile type 6*/                                   \
+  h = (sumw + mu)*Q - mu;                                      \
+  break;                                                       \
+case 8: /* quantile type 8 (best according to H&F 1986)*/      \
+  h = (sumw + 1.0/3.0 * mu)*Q - 2.0/3.0 * mu;                  \
+  break;                                                       \
+case 9: /* quantile type 9*/                                   \
+  h = (sumw + 1.0/4.0 * mu)*Q - 5.0/8.0 * mu;                  \
+  break;                                                       \
+}
+/* Redundant? -> yes!
+if(h < 0) h = 0;
+else if(h > sumw) h = sumw;
+*/
 
 double dquickselect(double *x, const int n, const int ret, const double Q) {
   if(n == 0) return NA_REAL;
   unsigned int elem;
   double a, b, h;
   RETQSWITCH(n);
-  elem = h;
-  h -= elem; // Key: need to subtract elem
+  elem = h; h -= elem; // need to subtract elem
   QUICKSELECT(dswap);
-  if((ret == 1 && n%2 == 1) || ret == 2 || ret == 3 || h == 0.0) return a;
+  if((ret < 4 && (ret != 1 || n%2 == 1)) || elem == n-1 || h <= 0.0) return a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
   if(ret == 1 || Q == 0.5) return (a+b)/2.0;
@@ -106,10 +136,9 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
   int a, b;
   double h;
   RETQSWITCH(n);
-  elem = h;
-  h -= elem; // Key: need to subtract elem
+  elem = h; h -= elem; // need to subtract elem
   QUICKSELECT(iswap);
-  if((ret == 1 && n%2 == 1) || ret == 2 || ret == 3 || h == 0.0) return (double)a;
+  if((ret < 4 && (ret != 1 || n%2 == 1)) || elem == n-1 || h <= 0.0) return (double)a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
   if(ret == 1 || Q == 0.5) return ((double)a+(double)b)/2.0;
@@ -127,7 +156,7 @@ double dquickselect_elem(double *x, const int n, const unsigned int elem, double
   if(n == 0) return NA_REAL;
   double a, b;
   QUICKSELECT(dswap);
-  if(h == 0.0) return a;
+  if(elem == n-1 || h <= 0.0) return a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
   return a + h*(b-a);
@@ -137,7 +166,7 @@ double iquickselect_elem(int *x, const int n, const unsigned int elem, double h)
   if(n == 0) return NA_REAL;
   int a, b;
   QUICKSELECT(iswap);
-  if(h == 0.0) return (double)a;
+  if(elem == n-1 || h <= 0.0) return (double)a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
   return (double)a + h*(double)(b-a);
@@ -185,37 +214,49 @@ for(int i = 0, ih; i < np; ++i) {                           \
   Q = probs[i];                                             \
   if(Q > 0 && Q < 1) {                                      \
     RETQSWITCH(l);                                          \
-    ih = h; a = px[po[ih]]; b = px[po[ih+1]];               \
-    pres[i] = a + (h - ih) * (b - a);                       \
-  } else pres[i] = px[po[(l-1)*(int)Q]];                    \
+    ih = h; a = px[po[ih]];                                 \
+    if(ih == n-1 || h < 0.0) pres[i] = a;                   \
+    else {                                                  \
+      b = px[po[ih+1]];                                     \
+      pres[i] = a + (h - ih) * (b - a);                     \
+    }                                                       \
+  } else pres[i] = px[po[(int)((l-1)*Q)]];                  \
 }
 
-// TODO: Proper quantile weighting...
+// Proper quantile weighting ??
 // See: https://aakinshin.net/posts/weighted-quantiles/
 // And: https://en.wikipedia.org/wiki/Percentile#Weighted_percentile
 #define WQUANTILE_CORE                             \
 for(unsigned int i = 0, k = 0; i < np; ++i) {      \
   if(probs[i] > 0 && probs[i] < 1) {               \
-    double wsumQ = sumw * probs[i];                \
-    while(wsum < wsumQ) wsum += pw[po[k++]];       \
-    if(wsum == wsumQ) {                            \
-      double out = px[po[k-1]], n = 2;             \
-      while(pw[po[k]] == 0) {                      \
-        out += px[po[k++]];                        \
-        ++n;                                       \
+    double Q = probs[i], h, a, b;                  \
+    RETWQSWITCH(sumw, mu);                         \
+    while(wsum < h) wsum += pw[po[k++]];           \
+    a = px[po[k > 0 ? k-1 : 0]];                   \
+    if(k > 0 && k < l && wsum > h) {               \
+      b = px[po[k]];                               \
+      h = 1.0 - (wsum - h) / pw[po[k]];            \
+      /* If zero weights, need to set back a*/     \
+      if(pw[po[k-1]] == 0.0) {                     \
+        int j = k-2;                               \
+        while(j > 0 && pw[po[j]] == 0.0) --j;      \
+        a = px[po[j]];                             \
       }                                            \
-      pres[i] = (out + px[po[k]]) / n;             \
-    } else {                                       \
-      double h = (wsum - wsumQ) / pw[po[k-1]],     \
-             a = px[po[k-2]], b = px[po[k-1]];     \
       pres[i] = a + h * (b - a);                   \
-    }                                              \
-  } else pres[i] = px[po[(l-1)*(int)probs[i]]];    \
+    } else pres[i] = a; /* nothing todo for 0's?*/ \
+  } else pres[i] = px[po[(int)((l-1)*probs[i])]];  \
 }
+// What about 0 weights? Idea: move forward until first non-0 weight element and take that as b...
+// if(wsum == h) {
+//   double out = px[po[k-1]], n = 2;
+//   while(pw[po[k]] == 0) {
+//     out += px[po[k++]];
+//     ++n;
+//   }
+//   pres[i] = (out + px[po[k]]) / n;
+// }
 
-// TODO: args o and check.o, to compute quantiles from existing ordering vector...
-// TODO: check o ??
-// potentially also internal optimization ???
+
 SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEXP checko) {
 
   if(TYPEOF(Rprobs) != REALSXP) error("probs needs to be a numeric vector");
@@ -339,6 +380,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
 
       for(unsigned int i = 0; i != l; ++i) sumw += pw[po[i]];
       if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
+      double mu = sumw / (double)l;
 
       if(tx == REALSXP) { // Numeric data
         double *px = REAL(x)-1;
