@@ -775,6 +775,8 @@ SEXP frange(SEXP x, SEXP Rnarm) {
 
   SEXP out = PROTECT(allocVector(tx, 2));
 
+  if(l < 1) error("cannot compute range on zero-length vector");
+
   switch(tx) {
     case INTSXP:
     case LGLSXP:
