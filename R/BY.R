@@ -360,7 +360,12 @@ BY.grouped_df <- function(x, FUN, ..., reorder = TRUE, keep.group_vars = TRUE, u
   }
 
   # If other size or no groups
-  if(n != g[[1L]] && is.null(g[[4L]])) return(fungroup(res))
+  if(n != g[[1L]]) {
+    if(is.null(g[[4L]])) return(fungroup(res))
+    len <- n / g[[1L]]
+    if(len != as.integer(len)) stop("length of output (", n, ") is not a multiple of the number of groups: ", g[[1L]])
+    g[[4L]] <- .Call(C_subsetDT, g[[4L]], rep(seq_len(g[[1L]]), each = len), seq_along(g[[5L]]), FALSE)
+  }
 
   # Aggregation
   ar <- attributes(fungroup2(res, oldClass(res)))
