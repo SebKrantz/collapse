@@ -66,9 +66,6 @@ static inline void dswap(double *a, double *b)     {double  tmp=*a; *a=*b; *b=tm
   case 3: /* upper element*/                                   \
     h = n*Q;                                                   \
     break;                                                     \
-  case 4: /* quantile type 4*/                                 \
-    h = n*Q - 1.0;                                             \
-    break;                                                     \
   case 5: /* quantile type 5*/                                 \
     h = n*Q - 0.5;                                             \
     break;                                                     \
@@ -82,6 +79,11 @@ static inline void dswap(double *a, double *b)     {double  tmp=*a; *a=*b; *b=tm
     h = ((double)n + 1.0/4.0)*Q - 5.0/8.0;                     \
     break;                                                     \
   }
+/*
+case 4: // quantile type 4: not exact for weighted case, and also bad properties.
+  h = n*Q - 1.0;
+  break;
+*/
 
 // Idea: take mean weight...
 #undef RETWQSWITCH
@@ -94,9 +96,6 @@ case 2: /* quantile type 7, average, or Lower element*/        \
   break;                                                       \
 case 3: /* upper element*/                                     \
   h = sumw * Q;                                                \
-  break;                                                       \
-case 4: /* quantile type 4: does not give exact results*/      \
-  h = sumw * Q - mu;                                           \
   break;                                                       \
 case 5: /* quantile type 5*/                                   \
   h = sumw * Q - 0.5*mu;                                       \
@@ -111,6 +110,11 @@ case 9: /* quantile type 9*/                                   \
   h = (sumw + 1.0/4.0 * mu)*Q - 5.0/8.0 * mu;                  \
   break;                                                       \
 }
+/*
+case 4: // quantile type 4: does not give exact results
+  h = sumw * Q - mu;
+  break;
+*/
 /* Redundant? -> yes!
 if(h < 0) h = 0;
 else if(h > sumw) h = sumw;
@@ -150,7 +154,7 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 // First a faster quantile function
 // --------------------------------------------------------------------------
 
-// Need versions that to supply the element and h
+// Need versions that supply the element and h
 
 double dquickselect_elem(double *x, const int n, const unsigned int elem, double h) {
   if(n == 0) return NA_REAL;
@@ -262,6 +266,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   if(TYPEOF(Rprobs) != REALSXP) error("probs needs to be a numeric vector");
   int tx = TYPEOF(x), n = length(x), np = length(Rprobs), narm = asLogical(Rnarm), ret = asInteger(Rtype), nprotect = 1;
   if(tx != REALSXP && tx != INTSXP && tx != LGLSXP) error("x needs to be numeric");
+  if(ret < 5 || ret > 9) error("fquantile only supports continuous quantile types 5-9. You requested type: %d", ret);
 
   SEXP res = PROTECT(allocVector(REALSXP, np));
   if(np == 0) { // quantile(x, numeric(0))
