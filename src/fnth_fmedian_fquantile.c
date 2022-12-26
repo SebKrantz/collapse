@@ -257,7 +257,7 @@ for(unsigned int i = 0, k = 0; i < np; ++i) {      \
 // }
 
 
-SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEXP checko) {
+SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEXP Rnames, SEXP checko) {
 
   if(TYPEOF(Rprobs) != REALSXP) error("probs needs to be a numeric vector");
   int tx = TYPEOF(x), n = length(x), np = length(Rprobs), narm = asLogical(Rnarm), ret = asInteger(Rtype), nprotect = 1;
@@ -278,6 +278,16 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   for(int i = 0; i < np; ++i) {
     if(probs[i] < 0 || probs[i] > 1) error("probabilities need to be in in range [0, 1]");
     if(i > 0 && probs[i] < probs[i-1]) error("probabilities need to be passed in ascending order");
+  }
+
+  if(asLogical(Rnames)) {
+    SEXP names = PROTECT(allocVector(STRSXP, np)); ++nprotect;
+    char namei[5];
+    for(int i = 0; i < np; ++i) {
+      snprintf(namei, 5, "%d%%", (int)(probs[i]*100));
+      SET_STRING_ELT(names, i, mkChar(namei));
+    }
+    namesgets(res, names);
   }
 
   // TODO: What about l == 0 or 1 and narm = TRUE, also with weighted...
