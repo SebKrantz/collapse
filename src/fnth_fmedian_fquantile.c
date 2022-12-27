@@ -208,7 +208,7 @@ if(probs[0] == 0 || probs[np-1] == 1) {                                       \
       pres[i] = QFUN(x_cc + offset, l - offset, ih - offset, h - ih);         \
       offset = ih;                                                            \
     }                                                                         \
-  } /* This is much more effective: fetching min and max ex-post */           \
+  } /* This is much more efficient: fetching min and max ex-post */           \
   if(probs[0] == 0) {                                                         \
     x_min = x_cc[0];                                                          \
     for(unsigned int i = 0, end = l*probs[1]; i < end; ++i)                   \
@@ -238,7 +238,7 @@ for(int i = 0, ih; i < np; ++i) {                           \
   } else pres[i] = px[po[(int)((l-1)*Q)]];                  \
 }
 
-// Proper quantile weighting ?
+// Proper quantile weighting? At least it gives the same results for equal weights of any magnitude.
 // See: https://aakinshin.net/posts/weighted-quantiles/
 // And: https://en.wikipedia.org/wiki/Percentile#Weighted_percentile
 #define WQUANTILE_CORE                             \
@@ -246,7 +246,7 @@ for(unsigned int i = 0, k = 0; i < np; ++i) {      \
   if(probs[i] > 0 && probs[i] < 1) {               \
     double Q = probs[i], h, a, b;                  \
     RETWQSWITCH(sumw, mu);                         \
-    while(wsum < h) wsum += pw[po[k++]];           \
+    while(wsum <= h) wsum += pw[po[k++]];          \
     a = px[po[k > 0 ? k-1 : 0]];                   \
     if(k > 0 && k < l && wsum > h) {               \
       b = px[po[k]];                               \
@@ -261,7 +261,7 @@ for(unsigned int i = 0, k = 0; i < np; ++i) {      \
     } else pres[i] = a; /* nothing todo for 0's?*/ \
   } else pres[i] = px[po[(int)((l-1)*probs[i])]];  \
 }
-// What about 0 weights? Idea: move forward until first non-0 weight element and take that as b...
+// Previous zero-weight code in fnth: forward iteration with simple averaging of adjacent order statistics.
 // if(wsum == h) {
 //   double out = px[po[k-1]], n = 2;
 //   while(pw[po[k]] == 0) {
