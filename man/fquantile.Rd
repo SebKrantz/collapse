@@ -4,7 +4,7 @@
 \alias{frange}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Fast (Weighted) Sample Quantiles and Range of Vector}
+Fast (Weighted) Sample Quantiles and Range}
 \description{
 A faster alternative to \code{\link{quantile}} (written fully in C), that supports sampling weights, and can also quickly compute quantiles from an ordering vector (e.g. \code{order(x)}). \code{frange} provides a fast alternative to \code{\link{range}}.
 }
