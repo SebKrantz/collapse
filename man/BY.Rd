@@ -101,9 +101,9 @@ giris \%>\% BY(sum, use.g.names = TRUE,  # Use row.names and
 giris \%>\% BY(sum, return = "matrix")   # Return matrix
 giris \%>\% BY(sum, return = "matrix",   # Matrix with row.names
              use.g.names = TRUE)
-giris \%>\% BY(quantile)                 # Compute quantiles (output is stacked)
-giris \%>\% BY(quantile,                 # Much better, also keeps 'Species'
-             expand.wide = TRUE)
+giris \%>\% BY(.quantile)                # Compute quantiles (output is stacked)
+giris \%>\% BY(.quantile, names = TRUE,  # Wide output
+               expand.wide = TRUE)
 }
 }
 \keyword{manip}

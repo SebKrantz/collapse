@@ -6,8 +6,6 @@
 \alias{allNA}
 \alias{whichv}
 \alias{whichNA}
-\alias{frange}
-\alias{fdist}
 \alias{alloc}
 \alias{copyv}
 \alias{setv}
@@ -73,10 +71,6 @@ missing_cases(X, cols=NULL, # The oposite of complete.cases(), faster for DF's.
 vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
-frange(x, na.rm = TRUE)     # Much faster base::range, for integer and double objects
-fdist(x, v = NULL, ...,     # Much faster stats::dist. Also supports distances of row-
-      method = "euclidean", # vector v and matrix x, or two vectors x and v. Note that
-      nthreads = 1L)        # x is coerced to numeric matrix if integer or data frame.
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
 fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
 fncol(X)                    # Faster ncol for data frames (not faster for matrices)
@@ -108,16 +102,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{prop}{double. For \code{na_insert}: the proportion of observations to be randomly replaced with \code{NA}. For \code{missing_cases} and \code{na_omit}: the proportion of values missing for the case to be considered missing (within \code{cols} if speficied). For matrices this is implemented in R as \code{rowSums(is.na(X)) >= max(as.integer(prop * ncol(X)), 1L)}. The C code for data frames works equivalently, and skips list- and raw-columns (\code{ncol(X)} is adjusted downwards).}
   \item{count}{logical. \code{TRUE} returns the row-wise missing value count (within \code{cols}). This ignores \code{prop}.}
   \item{use.names}{logical. Preserve names if \code{X} is a list. }
-  \item{na.rm}{logical. \code{TRUE} omits missing values by skipping them in the computation. \code{FALSE} terminates the computation once a missing value is encountered and returns 2 missing values.}
-  \item{method}{an integer or character string indicating the method of computing distances.
-  \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
-                 1 \tab\tab \code{"euclidean"}   \tab\tab euclidean distance \cr
-                 2 \tab\tab \code{"euclidean_squared"} \tab\tab squared euclidean distance (more efficient) \cr
-    }
-    \emph{Notes:} More options may be added here in the future. The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}. See Examples.
-  }
-  \item{nthreads}{integer. The number of threads to use. Multithreading also works for distances with a single vector \code{v}.}
-  \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv}, \code{setop} and \code{fdist}, the argument is unused, and serves as a placeholder for possible future arguments.}
+  \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv} and \code{setop}, the argument is unused, and serves as a placeholder for possible future arguments.}
 }
 \details{
 \code{alloc} is a fusion of \code{\link{rep_len}} and \code{\link{replicate}} that is faster in both cases. If \code{value} is a length one atomic vector (logical, integer, double, string, complex or raw), the functionality is as \code{rep_len(value, n)} i.e. the output is a length \code{n} atomic vector with the same attributes as \code{value} (apart from \code{"names"}, \code{"dim"} and \code{"dimnames"}). For all other cases the functionality is as \code{replicate(n, value, simplify = FALSE)} i.e. the output is a length-10 list of the objects. If \code{value} is a list itself, the list is not deep-copied on each replication.
@@ -228,28 +213,6 @@ na_omit(qM(mtc_na))                  # Also works for matrices
 na_omit(mtc_na$vs, na.attr = TRUE)   # Also works with vectors
 na_rm(mtc_na$vs)                     # For vectors na_rm is faster ...
 rm(mtc_na)
-
-## Distance matrix
-m = as.matrix(mtcars)
-str(fdist(m)) # Same as dist(m)
-
-# Distance with vector
-fdist(m, fmean(m))
-
-# Mahalanobis distance
-m_mahal = t(forwardsolve(t(chol(cov(m))), t(m)))
-fdist(m_mahal, fmean(m_mahal))
-sqrt(unattrib(mahalanobis(m, fmean(m), cov(m))))
-\donttest{
-# Distance of two vectors
-x <- rnorm(1e6)
-y <- rnorm(1e6)
-microbenchmark::microbenchmark(
-  fdist(x, y),
-  fdist(x, y, nthreads = 2),
-  sqrt(sum((x-y)^2))
-)
-}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

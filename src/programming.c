@@ -779,6 +779,10 @@ SEXP frange(SEXP x, SEXP Rnarm) {
     case INTSXP:
     case LGLSXP:
     {
+      if(l < 1) {
+        INTEGER(out)[0] = INTEGER(out)[1] = NA_INTEGER;
+        break;
+      }
       int min, max, tmp, *px = INTEGER(x);
       if(narm) {
         int j = l-1;
@@ -809,6 +813,10 @@ SEXP frange(SEXP x, SEXP Rnarm) {
     }
     case REALSXP:
     {
+      if(l < 1) {
+        REAL(out)[0] = REAL(out)[1] = NA_REAL;
+        break;
+      }
       double min, max, tmp, *px = REAL(x);
       if(narm) {
         int j = l-1;
@@ -836,7 +844,7 @@ SEXP frange(SEXP x, SEXP Rnarm) {
       REAL(out)[1] = max;
       break;
     }
-    default: error("Unsupported SEXP type!");
+    default: error("Unsupported SEXP type: %s", type2char(tx));
   }
 
   copyMostAttrib(x, out);

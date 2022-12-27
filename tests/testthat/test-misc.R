@@ -249,6 +249,9 @@ test_that("frange works well", {
   expect_equal(frange(xiNA, na.rm = FALSE), range(xiNA))
   expect_equal(frange(xiNA), range(xiNA, na.rm = TRUE))
 
+  expect_identical(frange(numeric(0)), rep(NA_real_, 2L))
+  expect_identical(frange(integer(0)), rep(NA_integer_, 2L))
+
 })
 
 # TODO: Test other cols options and formula options !!!
