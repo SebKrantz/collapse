@@ -85,7 +85,7 @@ case 4: // quantile type 4: not exact for weighted case, and also bad properties
   break;
 */
 
-// Idea: take mean weight...
+// Weighted quantiles. Idea: make h dependent on sum of weights and average weight.
 #undef RETWQSWITCH
 #define RETWQSWITCH(sumw, mu)                                  \
 switch(ret) {                                                  \
@@ -115,7 +115,7 @@ case 4: // quantile type 4: does not give exact results
   h = sumw * Q - mu;
   break;
 */
-/* Redundant? -> yes!
+/* Redundant? -> yes! this is dealt with below
 if(h < 0) h = 0;
 else if(h > sumw) h = sumw;
 */
@@ -157,7 +157,7 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 // Need versions that supply the element and h
 
 double dquickselect_elem(double *x, const int n, const unsigned int elem, double h) {
-  if(n == 0) return NA_REAL;
+  // if(n == 0) return NA_REAL; // done in fquantile...
   double a, b;
   QUICKSELECT(dswap);
   if(elem == n-1 || h <= 0.0) return a;
@@ -167,7 +167,7 @@ double dquickselect_elem(double *x, const int n, const unsigned int elem, double
 }
 
 double iquickselect_elem(int *x, const int n, const unsigned int elem, double h) {
-  if(n == 0) return NA_REAL;
+  // if(n == 0) return NA_REAL; // done in fquantile...
   int a, b;
   QUICKSELECT(iswap);
   if(elem == n-1 || h <= 0.0) return (double)a;
@@ -176,32 +176,31 @@ double iquickselect_elem(int *x, const int n, const unsigned int elem, double h)
   return (double)a + h*(double)(b-a);
 }
 
-// If minimum and / or maximum requested
-// TODO: could do this afterwards?? in selected area??
-// exact comparison??
-// TODO: Bad probabilities check.
-// Also: For large N radix ordering seems to be faster than repeated quickselect
-#define FQUANTILE_CORE(QFUN)                                                  \
-  if(probs[0] == 0 || probs[np-1] == 1) {                                     \
-    x_min = x_max = x_cc[0];                                                  \
-    if(probs[0] == 0 && probs[np-1] == 1) {                                   \
-      for(unsigned int i = 1; i != l; ++i) {                                  \
-        if(x_cc[i] < x_min) x_min = x_cc[i];                                  \
-        if(x_cc[i] > x_max) x_max = x_cc[i];                                  \
-      }                                                                       \
-      pres[0] = x_min; pres[np-1] = x_max;                                    \
-    } else if(probs[0] == 0) {                                                \
-      for(unsigned int i = 1; i != l; ++i)                                    \
-        if(x_cc[i] < x_min) x_min = x_cc[i];                                  \
-      pres[0] = x_min;                                                        \
-    } else {                                                                  \
-      for(unsigned int i = 1; i != l; ++i)                                    \
-        if(x_cc[i] > x_min) x_min = x_cc[i];                                  \
-      pres[np-1] = x_max;                                                     \
+/*
+ Old Solution: full initial pass to get min and max.
+if(probs[0] == 0 || probs[np-1] == 1) {                                       \
+  x_min = x_max = x_cc[0];                                                    \
+  if(probs[0] == 0 && probs[np-1] == 1) {                                     \
+    for(unsigned int i = 1; i != l; ++i) {                                    \
+      if(x_cc[i] < x_min) x_min = x_cc[i];                                    \
+      if(x_cc[i] > x_max) x_max = x_cc[i];                                    \
     }                                                                         \
+    pres[0] = x_min; pres[np-1] = x_max;                                      \
+  } else if(probs[0] == 0) {                                                  \
+    for(unsigned int i = 1; i != l; ++i)                                      \
+      if(x_cc[i] < x_min) x_min = x_cc[i];                                    \
+      pres[0] = x_min;                                                        \
+  } else {                                                                    \
+    for(unsigned int i = 1; i != l; ++i)                                      \
+      if(x_cc[i] > x_min) x_min = x_cc[i];                                    \
+      pres[np-1] = x_max;                                                     \
   }                                                                           \
+}                                                                             \
+*/
+#define FQUANTILE_CORE(QFUN)                                                  \
   double h, Q;                                                                \
-  for(int i = 0, offset = 0, ih; i < np; ++i) {                               \
+  int ih;                                                                     \
+  for(int i = 0, offset = 0; i < np; ++i) {                                   \
     Q = probs[i];                                                             \
     if(Q > 0 && Q < 1) {                                                      \
       RETQSWITCH(l);                                                          \
@@ -209,9 +208,21 @@ double iquickselect_elem(int *x, const int n, const unsigned int elem, double h)
       pres[i] = QFUN(x_cc + offset, l - offset, ih - offset, h - ih);         \
       offset = ih;                                                            \
     }                                                                         \
+  } /* This is much more effective: fetching min and max ex-post */           \
+  if(probs[0] == 0) {                                                         \
+    x_min = x_cc[0];                                                          \
+    for(unsigned int i = 0, end = l*probs[1]; i < end; ++i)                   \
+        if(x_cc[i] < x_min) x_min = x_cc[i];                                  \
+    pres[0] = (double)x_min;                                                  \
+  }                                                                           \
+  if(probs[np-1] == 1) {                                                      \
+    x_max = x_cc[ih];                                                         \
+    for(unsigned int i = ih+1; i < l; ++i)                                    \
+        if(x_cc[i] > x_max) x_max = x_cc[i];                                  \
+    pres[np-1] = (double)x_max;                                               \
   }
 
-
+// If we have an ordering vector supplied as input to the function
 #define FQUANTILE_ORDVEC                                    \
 double a, b, h, Q;                                          \
 for(int i = 0, ih; i < np; ++i) {                           \
@@ -219,7 +230,7 @@ for(int i = 0, ih; i < np; ++i) {                           \
   if(Q > 0 && Q < 1) {                                      \
     RETQSWITCH(l);                                          \
     ih = h; a = px[po[ih]];                                 \
-    if(ih == n-1 || h < 0.0) pres[i] = a;                   \
+    if(ih == n-1 || h <= 0.0) pres[i] = a;                  \
     else {                                                  \
       b = px[po[ih+1]];                                     \
       pres[i] = a + (h - ih) * (b - a);                     \
@@ -227,7 +238,7 @@ for(int i = 0, ih; i < np; ++i) {                           \
   } else pres[i] = px[po[(int)((l-1)*Q)]];                  \
 }
 
-// Proper quantile weighting ??
+// Proper quantile weighting ?
 // See: https://aakinshin.net/posts/weighted-quantiles/
 // And: https://en.wikipedia.org/wiki/Percentile#Weighted_percentile
 #define WQUANTILE_CORE                             \
@@ -277,9 +288,6 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   double *probs = REAL(Rprobs), *pres = REAL(res);
   unsigned int l = 0;
 
-  /* TODO: switch to radixorder based on rule e.g. length(probs) > log(n) as in Rfast??
-     Appears better than building checks into the arguments in R, though also decreases flexibility...
-     Need to think: anything against that? and case where this is undesirable? */
   for(int i = 0; i < np; ++i) {
     if(probs[i] < 0 || probs[i] > 1) error("probabilities need to be in in range [0, 1]");
     if(i > 0 && probs[i] < probs[i-1]) error("probabilities need to be passed in ascending order");
@@ -295,14 +303,30 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
     namesgets(res, names);
   }
 
-  // TODO: What about l == 0 or 1 and narm = TRUE, also with weighted...
-  if(isNull(w) && isNull(o)) { // Standard: quickselect
+  // First the trivial case
+  if(n <= 1) {
+
+    double val = n == 0 ? NA_REAL : tx == REALSXP ? REAL(x)[0] : INTEGER(x)[0] == NA_INTEGER ? NA_REAL : (double)INTEGER(x)[0];
+    for(int i = 0; i < np; ++i) pres[i] = val;
+
+  // This case: no quantile estimation, simple range
+  } else if(np <= 2 && isNull(o) && (probs[0] == 0 || probs[0] == 1) && (np <= 1 || probs[1] == 1)) {
+
+    SEXP rng = PROTECT(frange(x, Rnarm)); ++nprotect;
+    if(TYPEOF(rng) != REALSXP) {
+      rng = PROTECT(coerceVector(rng, REALSXP)); ++nprotect;
+    }
+    if(probs[0] == 0) pres[0] = REAL(rng)[0];
+    else if(probs[0] == 1) pres[0] = REAL(rng)[1];
+    if(np == 2) pres[1] = REAL(rng)[1];
+
+  } else if(isNull(w) && isNull(o)) { // Standard: quickselect
 
     if(tx == REALSXP) { // Numeric data
       double *x_cc = (double *) R_alloc(n, sizeof(double)), *px = REAL(x), x_min, x_max;
       if(narm) {
         for(unsigned int i = 0; i != n; ++i) if(NISNAN(px[i])) x_cc[l++] = px[i];
-        if(l <= 1) {
+        if(l <= 1) { // TODO: More elegant way to solve? Also with integers and weighted estimation ...
           for(int i = 0; i < np; ++i) pres[i] = l == 0 ? NA_REAL : x_cc[0];
           UNPROTECT(nprotect);
           return res;
@@ -317,7 +341,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
       if(narm) {
         for(unsigned int i = 0; i != n; ++i) if(px[i] != NA_INTEGER) x_cc[l++] = px[i];
         if(l <= 1) {
-          for(int i = 0, ret = l == 0 ? NA_INTEGER : x_cc[0]; i < np; ++i) pres[i] = ret;
+          for(int i = 0; i < np; ++i) pres[i] = l == 0 ? NA_REAL : (double)x_cc[0];
           UNPROTECT(nprotect);
           return res;
         }
@@ -336,12 +360,12 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
     if(!isNull(o)) {
       if(length(o) != n || TYPEOF(o) != INTSXP) error("o must be a valid ordering vector, of the same length as x and type integer");
       po = INTEGER(o);
-      if(asLogical(checko)) { // TODO: Better way??
+      if(asLogical(checko)) { // TODO: Better way?
         for(unsigned int i = 0; i != n; ++i)
           if(po[i] < 1 || po[i] > n) error("Some elements in o are outside of range [1, length(x)]");
       }
     } else  {
-      po = (int *) R_alloc(n, sizeof(int)); // Calloc ??
+      po = (int *) R_alloc(n, sizeof(int)); // Calloc ?
       num1radixsort(po, TRUE, FALSE, x);
     }
 
@@ -363,8 +387,8 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
         if(ISNAN(px[po[0]])) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fquantile().");
         --po; while(ISNAN(px[po[l]]) && l != 0) --l; ++po;
         if(l <= 1) {
-          double ret = (l == 0 || ISNAN(nanw0)) ? NA_REAL : px[po[0]];
-          for(int i = 0; i < np; ++i) pres[i] = ret;
+          double val = (l == 0 || ISNAN(nanw0)) ? NA_REAL : px[po[0]];
+          for(int i = 0; i < np; ++i) pres[i] = val;
           UNPROTECT(nprotect);
           return res;
         }
@@ -373,7 +397,8 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
         if(px[po[0]] == NA_INTEGER) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fquantile().");
         --po; while(px[po[l]] == NA_INTEGER && l != 0) --l; ++po;
         if(l <= 1) {
-          for(int i = 0, ret = (l == 0 || ISNAN(nanw0)) ? NA_INTEGER : px[po[0]]; i < np; ++i) pres[i] = ret;
+          double val = (l == 0 || ISNAN(nanw0)) ? NA_REAL : (double)px[po[0]];
+          for(int i = 0; i < np; ++i) pres[i] = val;
           UNPROTECT(nprotect);
           return res;
         }
@@ -395,7 +420,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
 
       for(unsigned int i = 0; i != l; ++i) sumw += pw[po[i]];
       if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
-      double mu = sumw / (double)l;
+      double mu = sumw / l;
 
       if(tx == REALSXP) { // Numeric data
         double *px = REAL(x)-1;
@@ -412,6 +437,8 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   UNPROTECT(nprotect);
   return res;
 }
+
+
 
 // TODO: quicksort for weighted statistics??
 
