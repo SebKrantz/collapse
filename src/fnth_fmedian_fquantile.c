@@ -250,14 +250,14 @@ for(unsigned int i = 0, k = 0; i < np; ++i) {      \
     a = px[po[k > 0 ? k-1 : 0]];                   \
     if(k > 0 && k < l && wsum > h) {               \
       b = px[po[k]];                               \
-      h = 1.0 - (wsum - h) / pw[po[k]];            \
+      h = (wsum - h) / pw[po[k]];                  \
       /* If zero weights, need to set back a*/     \
       if(pw[po[k-1]] == 0.0) {                     \
         int j = k-2;                               \
         while(j > 0 && pw[po[j]] == 0.0) --j;      \
         a = px[po[j]];                             \
       }                                            \
-      pres[i] = a + h * (b - a);                   \
+      pres[i] = b + h * (a - b);                   \
     } else pres[i] = a; /* nothing todo for 0's?*/ \
   } else pres[i] = px[po[(int)((l-1)*probs[i])]];  \
 }
