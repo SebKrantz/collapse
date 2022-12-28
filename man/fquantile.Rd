@@ -61,20 +61,32 @@ for (i in 5:9) print(all_obj_equal(fquantile(mtcars$mpg, type = i),
                                     quantile(mtcars$mpg, type = i)))
 
 ## Demonstaration: weighted quantiles type 7
-x = mtcars$mpg
-w = mtcars$wt     # Zero weights: set x = x[w > 0]; w = w[w > 0]
-o = radixorder(x)
-p = 0.25
+wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE) {
+  if(na.rm && anyNA(x)) {          # Removing missing values
+    cc = whichNA(x, invert = TRUE)
+    x = x[cc]; w = w[cc]
+  }
+  nzero = whichv(w, 0, invert = TRUE)
+  x = x[nzero]; w = w[nzero]       # Removing zero weights
+  o = radixorder(x)                # Ordering
+  temp = sum(w)                    # Computing sum(w) - mean(w)
+  temp = temp - temp / length(w)
+  w_cs = cumsum(w[o])              # Cumulative sum
+  res = numeric(length(probs))     # Result vector
 
-sumwp = (sum(w) - mean(w)) * p   # Target sum of weights for quantile type 7
-w_cs = cumsum(w[o])              # Cumulative sum
-j = which.max(w_cs > sumwp)      # Lower order statistic
-hl = (w_cs[j] - sumwp) / w[o[j+1]]         # Index weight of x[j]  (h = 1 - hl)
-WQ_p = hl * x[o[j]] + (1 - hl) * x[o[j+1]] # Weighted quantile
-print(WQ_p)
-all.equal(WQ_p, .quantile(x, 0.25, w))
+  for (i in seq_along(probs)) {
+    sumwp = temp * probs[i]      # Target sum of weights for quantile type 7
+    j = which.max(w_cs > sumwp)  # Lower order statistic
+    hl = (w_cs[j] - sumwp) / w[o[j+1L]]           # Index weight of x[j]  (h = 1 - hl)
+    res[i] = hl * x[o[j]] + (1 - hl) * x[o[j+1L]] # Weighted quantile
+  }
+  return(res)
+} # Note: doesn't work well for min and max. The C code is significantly more rigorous.
 
-rm(x, w, o, p, sumwp, w_cs, j, hl, WQ_p)
+wquantile7R(mtcars$mpg, mtcars$wt)
+
+all.equal(wquantile7R(mtcars$mpg, mtcars$wt),
+          .quantile(mtcars$mpg, c(0.25, 0.5, 0.75), w = mtcars$wt))
 
 ## Efficient grouped quantile estimation: use .quantile for less call overhead
 BY(mtcars$mpg, mtcars$cyl, .quantile, names = TRUE, expand.wide = TRUE)
