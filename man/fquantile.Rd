@@ -66,9 +66,9 @@ wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = 
     cc = whichNA(x, invert = TRUE)    # The C code first calls radixorder(x), which places
     x = x[cc]; w = w[cc]              # missing values last, so removing = early termination
   }
-  wzero = whichv(w, 0)                # Removing zero weights
-  if(length(wzero)) {                 # In C, skipping zero weight order statistics is built
-    x = x[-wzero]; w = w[-wzero]      # into the quantile algorithm, as outlined above
+  if(anyv(w, 0)) {                    # Removing zero weights
+    nzw = whichv(w, 0, invert = TRUE) # In C, skipping zero weight order statistics is built
+    x = x[nzw]; w = w[nzw]            # into the quantile algorithm, as outlined above
   }
   o = radixorder(x)                   # Ordering
   temp = sum(w)                       # Computing sum(w) - mean(w)
