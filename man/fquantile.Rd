@@ -69,11 +69,12 @@ p = 0.25
 sumwp = (sum(w) - mean(w)) * p   # Target sum of weights for quantile type 7
 w_cs = cumsum(w[o])              # Cumulative sum
 j = which.max(w_cs > sumwp)      # Lower order statistic
-h = (w_cs[j] - sumwp) / w[o[j+1]]        # Weight of lower order statistic
-WQ_p = h * x[o[j]] + (1 - h) * x[o[j+1]] # Weighted quantile
+hl = (w_cs[j] - sumwp) / w[o[j+1]]         # Index weight of x[j]  (h = 1 - hl)
+WQ_p = hl * x[o[j]] + (1 - hl) * x[o[j+1]] # Weighted quantile
 print(WQ_p)
+all.equal(WQ_p, .quantile(x, 0.25, w))
 
-rm(x, w, o, p, sumwp, w_cs, j, h, WQ_p)
+rm(x, w, o, p, sumwp, w_cs, j, hl, WQ_p)
 
 ## Efficient grouped quantile estimation: use .quantile for less call overhead
 BY(mtcars$mpg, mtcars$cyl, .quantile, names = TRUE, expand.wide = TRUE)
