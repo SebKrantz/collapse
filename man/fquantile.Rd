@@ -62,27 +62,24 @@ for (i in 5:9) print(all_obj_equal(fquantile(mtcars$mpg, type = i),
 
 ## Demonstaration: weighted quantiles type 7 in R
 wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = TRUE) {
-  if(na.rm && anyNA(x)) {          # Removing missing values
-    cc = whichNA(x, invert = TRUE)
-    x = x[cc]; w = w[cc]
+  if(na.rm && anyNA(x)) {             # Removing missing values (only in x)
+    cc = whichNA(x, invert = TRUE)    # The C code first calls radixorder(x), which places
+    x = x[cc]; w = w[cc]              # missing values last
   }
   nzero = whichv(w, 0, invert = TRUE)
-  x = x[nzero]; w = w[nzero]       # Removing zero weights
-  o = radixorder(x)                # Ordering
-  temp = sum(w)                    # Computing sum(w) - mean(w)
+  x = x[nzero]; w = w[nzero]          # Removing zero weights
+  o = radixorder(x)                   # Ordering
+  temp = sum(w)                       # Computing sum(w) - mean(w)
   temp = temp - temp / length(w)
-  w_cs = cumsum(w[o])              # Cumulative sum
-  res = numeric(length(probs))     # Result vector
-
-  for (i in seq_along(probs)) {
-    sumwp = temp * probs[i]      # Target sum of weights for quantile type 7
-    j = which.max(w_cs > sumwp)  # Lower order statistic
-    hl = (w_cs[j] - sumwp) / w[o[j+1L]]           # Index weight of x[j]  (h = 1 - hl)
-    res[i] = hl * x[o[j]] + (1 - hl) * x[o[j+1L]] # Weighted quantile
-  }
-
+  w_cs = cumsum(w[o])                 # Cumulative sum
+  res = sapply(probs, function(p) {
+    sumwp = temp * p                  # Target sum of weights for quantile type 7
+    j = which.max(w_cs > sumwp)       # Lower order statistic
+    hl = (w_cs[j] - sumwp) / w[o[j+1L]]   # Index weight of x[j]  (h = 1 - hl)
+    hl * x[o[j]] + (1 - hl) * x[o[j+1L]]  # Weighted quantile
+  })
   if(names) names(res) = paste0(as.integer(probs * 100), "\%")
-  return(res)
+  res
 } # Note: doesn't work well for min and max. The C code is significantly more rigorous.
 
 wquantile7R(mtcars$mpg, mtcars$wt)
