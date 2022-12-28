@@ -64,10 +64,12 @@ for (i in 5:9) print(all_obj_equal(fquantile(mtcars$mpg, type = i),
 wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = TRUE) {
   if(na.rm && anyNA(x)) {             # Removing missing values (only in x)
     cc = whichNA(x, invert = TRUE)    # The C code first calls radixorder(x), which places
-    x = x[cc]; w = w[cc]              # missing values last
+    x = x[cc]; w = w[cc]              # missing values last, so removing = early termination
   }
-  nzero = whichv(w, 0, invert = TRUE)
-  x = x[nzero]; w = w[nzero]          # Removing zero weights
+  wzero = whichv(w, 0)                # Removing zero weights
+  if(length(wzero)) {                 # In C, skipping zero weight order statistics is built
+    x = x[-wzero]; w = w[-wzero]      # into the quantile algorithm, as outlined above
+  }
   o = radixorder(x)                   # Ordering
   temp = sum(w)                       # Computing sum(w) - mean(w)
   temp = temp - temp / length(w)
@@ -80,7 +82,7 @@ wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = 
   })
   if(names) names(res) = paste0(as.integer(probs * 100), "\%")
   res
-} # Note: doesn't work well for min and max. The C code is significantly more rigorous.
+} # Note: doesn't work for min and max. Overall the C code is significantly more rigorous.
 
 wquantile7R(mtcars$mpg, mtcars$wt)
 
