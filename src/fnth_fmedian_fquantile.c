@@ -8,6 +8,7 @@
 // https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
 // https://doi.org/10.2307/2684934
 // https://aakinshin.net/posts/weighted-quantiles/
+// At large, the weighted quantile algorithm is my own idea [(C) 2022 Sebastian Krantz]
 
 // Adopted from data.table's quickselect.c
 static inline void iswap(int *a, int *b)           {int     tmp=*a; *a=*b; *b=tmp;}
@@ -99,15 +100,19 @@ case 3: /* upper element*/                                     \
   break;                                                       \
 case 5: /* quantile type 5*/                                   \
   h = sumw * Q - 0.5*mu;                                       \
+  if(h < 0.0) h = 0.0;                                         \
   break;                                                       \
 case 6: /* quantile type 6*/                                   \
   h = (sumw + mu)*Q - mu;                                      \
+  if(h < 0.0) h = 0.0;                                         \
   break;                                                       \
 case 8: /* quantile type 8 (best according to H&F 1986)*/      \
   h = (sumw + 1.0/3.0 * mu)*Q - 2.0/3.0 * mu;                  \
+  if(h < 0.0) h = 0.0;                                         \
   break;                                                       \
 case 9: /* quantile type 9*/                                   \
   h = (sumw + 1.0/4.0 * mu)*Q - 5.0/8.0 * mu;                  \
+  if(h < 0.0) h = 0.0;                                         \
   break;                                                       \
 }
 /*
@@ -115,9 +120,8 @@ case 4: // quantile type 4: does not give exact results
   h = sumw * Q - mu;
   break;
 */
-/* Redundant? -> yes! this is dealt with below
-if(h < 0) h = 0;
-else if(h > sumw) h = sumw;
+/* Redundant? -> yes!
+ if(h > sumw) h = sumw;
 */
 
 double dquickselect(double *x, const int n, const int ret, const double Q) {
@@ -178,15 +182,15 @@ double iquickselect_elem(int *x, const int n, const unsigned int elem, double h)
 
 /*
  Old Solution: full initial pass to get min and max.
-if(probs[0] == 0 || probs[np-1] == 1) {                                       \
+if(probs[0] == 0.0 || probs[np-1] == 1.0) {                                   \
   x_min = x_max = x_cc[0];                                                    \
-  if(probs[0] == 0 && probs[np-1] == 1) {                                     \
+  if(probs[0] == 0.0 && probs[np-1] == 1.0) {                                 \
     for(unsigned int i = 1; i != l; ++i) {                                    \
       if(x_cc[i] < x_min) x_min = x_cc[i];                                    \
       if(x_cc[i] > x_max) x_max = x_cc[i];                                    \
     }                                                                         \
     pres[0] = x_min; pres[np-1] = x_max;                                      \
-  } else if(probs[0] == 0) {                                                  \
+  } else if(probs[0] == 0.0) {                                                \
     for(unsigned int i = 1; i != l; ++i)                                      \
       if(x_cc[i] < x_min) x_min = x_cc[i];                                    \
       pres[0] = x_min;                                                        \
@@ -202,20 +206,20 @@ if(probs[0] == 0 || probs[np-1] == 1) {                                       \
   int ih;                                                                     \
   for(int i = 0, offset = 0; i < np; ++i) {                                   \
     Q = probs[i];                                                             \
-    if(Q > 0 && Q < 1) {                                                      \
+    if(Q > 0.0 && Q < 1.0) {                                                  \
       RETQSWITCH(l);                                                          \
       ih = h;                                                                 \
       pres[i] = QFUN(x_cc + offset, l - offset, ih - offset, h - ih);         \
       offset = ih;                                                            \
     }                                                                         \
   } /* This is much more efficient: fetching min and max ex-post */           \
-  if(probs[0] == 0) {                                                         \
+  if(probs[0] == 0.0) {                                                       \
     x_min = x_cc[0];                                                          \
     for(unsigned int i = 0, end = l*probs[1]; i < end; ++i)                   \
         if(x_cc[i] < x_min) x_min = x_cc[i];                                  \
     pres[0] = (double)x_min;                                                  \
   }                                                                           \
-  if(probs[np-1] == 1) {                                                      \
+  if(probs[np-1] == 1.0) {                                                    \
     x_max = x_cc[ih];                                                         \
     for(unsigned int i = ih+1; i < l; ++i)                                    \
         if(x_cc[i] > x_max) x_max = x_cc[i];                                  \
@@ -227,7 +231,7 @@ if(probs[0] == 0 || probs[np-1] == 1) {                                       \
 double a, b, h, Q;                                          \
 for(int i = 0, ih; i < np; ++i) {                           \
   Q = probs[i];                                             \
-  if(Q > 0 && Q < 1) {                                      \
+  if(Q > 0.0 && Q < 1.0) {                                  \
     RETQSWITCH(l);                                          \
     ih = h; a = px[po[ih]];                                 \
     if(ih == n-1 || h <= 0.0) pres[i] = a;                  \
@@ -241,25 +245,39 @@ for(int i = 0, ih; i < np; ++i) {                           \
 // Proper quantile weighting? At least it gives the same results for equal weights of any magnitude.
 // See: https://aakinshin.net/posts/weighted-quantiles/
 // And: https://en.wikipedia.org/wiki/Percentile#Weighted_percentile
-#define WQUANTILE_CORE                             \
-for(unsigned int i = 0, k = 0; i < np; ++i) {      \
-  if(probs[i] > 0 && probs[i] < 1) {               \
-    double Q = probs[i], h, a, b;                  \
-    RETWQSWITCH(sumw, mu);                         \
-    while(wsum <= h) wsum += pw[po[k++]];          \
-    a = px[po[k > 0 ? k-1 : 0]];                   \
-    if(k > 0 && k < l && wsum > h) {               \
-      b = px[po[k]];                               \
-      h = (wsum - h) / pw[po[k]];                  \
-      /* If zero weights, need to set back a*/     \
-      if(pw[po[k-1]] == 0.0) {                     \
-        int j = k-2;                               \
-        while(j > 0 && pw[po[j]] == 0.0) --j;      \
-        a = px[po[j]];                             \
-      }                                            \
-      pres[i] = b + h * (a - b);                   \
-    } else pres[i] = a; /* nothing todo for 0's?*/ \
-  } else pres[i] = px[po[(int)((l-1)*probs[i])]];  \
+#define WQUANTILE_CORE                                \
+double Q, h, a, wb, b;                                \
+for(int i = 0, k = 0; i < np; ++i) {                  \
+  Q = probs[i];                                       \
+  if(Q > 0.0 && Q < 1.0) {                            \
+    RETWQSWITCH(sumw, mu);                            \
+    while(wsum <= h) wsum += pw[po[k++]];             \
+    a = px[po[k == 0 ? 0 : k-1]];                     \
+    if(k == 0 || k == l || h == 0.0) {                \
+      pres[i] = a; continue;                          \
+    }                                                 \
+    wb = pw[po[k]];                                   \
+    /* If zero weights, need to move forward*/        \
+    if(wb == 0.0) {                                   \
+    /* separate indices as possible: h < wsum(i-1) */ \
+      int kp = k, lm = l-1;                           \
+      while(kp < lm && wb == 0.0) wb = pw[po[++kp]];  \
+      if(wb == 0.0) {                                 \
+        k = kp; pres[i] = a; continue;                \
+      }                                               \
+      b = px[po[kp]];                                 \
+    } else b = px[po[k]];                             \
+    h = (wsum - h) / wb;                              \
+    pres[i] = b + h * (a - b);                        \
+  } else {  /* Since probs must be passed in order*/  \
+    if(Q == 0.0) {                                    \
+      while(pw[po[k]] == 0.0) ++k;                    \
+    } else {                                          \
+      k = l-1;                                        \
+      while(pw[po[k]] == 0.0) --k;                    \
+    }                                                 \
+    pres[i] = px[po[k]];                              \
+  }                                                   \
 }
 // Previous zero-weight code in fnth: forward iteration with simple averaging of adjacent order statistics.
 // if(wsum == h) {
@@ -289,7 +307,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   unsigned int l = 0;
 
   for(int i = 0; i < np; ++i) {
-    if(probs[i] < 0 || probs[i] > 1) error("probabilities need to be in in range [0, 1]");
+    if(probs[i] < 0.0 || probs[i] > 1.0) error("probabilities need to be in in range [0, 1]");
     if(i > 0 && probs[i] < probs[i-1]) error("probabilities need to be passed in ascending order");
   }
 
@@ -306,18 +324,29 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   // First the trivial case
   if(n <= 1) {
 
+    if(!isNull(w)) {
+      if(length(w) != n) error("length(w) must match length(x)");
+      if(length(w) > 0) {
+        double wtmp = asReal(w);
+        if(wtmp == 0.0) n = 0;
+        else if(ISNAN(wtmp) && NISNAN(asReal(x))) error("Missing weights in order statistics are currently only supported if x is also missing");
+      }
+    }
+
+    wall0:; // If all weights are zero
     double val = n == 0 ? NA_REAL : tx == REALSXP ? REAL(x)[0] : INTEGER(x)[0] == NA_INTEGER ? NA_REAL : (double)INTEGER(x)[0];
     for(int i = 0; i < np; ++i) pres[i] = val;
 
   // This case: no quantile estimation, simple range
-  } else if(np <= 2 && isNull(o) && (probs[0] == 0 || probs[0] == 1) && (np <= 1 || probs[1] == 1)) {
+  } else if(np <= 2 && isNull(o) && (probs[0] == 0.0 || probs[0] == 1.0) && (np <= 1 || probs[1] == 1.0)) {
 
+    // TODO: could also check weights here, but this case is presumably very rare anyway..
     SEXP rng = PROTECT(frange(x, Rnarm)); ++nprotect;
     if(TYPEOF(rng) != REALSXP) {
       rng = PROTECT(coerceVector(rng, REALSXP)); ++nprotect;
     }
-    if(probs[0] == 0) pres[0] = REAL(rng)[0];
-    else if(probs[0] == 1) pres[0] = REAL(rng)[1];
+    if(probs[0] == 0.0) pres[0] = REAL(rng)[0];
+    else if(probs[0] == 1.0) pres[0] = REAL(rng)[1];
     if(np == 2) pres[1] = REAL(rng)[1];
 
   } else if(isNull(w) && isNull(o)) { // Standard: quickselect
@@ -355,7 +384,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   } else { // Weighted or Ordered
 
     int *po = &n;
-    double *pw = probs, nanw0 = 0;
+    double *pw = probs, nanw0 = 0.0;
 
     if(!isNull(o)) {
       if(length(o) != n || TYPEOF(o) != INTSXP) error("o must be a valid ordering vector, of the same length as x and type integer");
@@ -416,11 +445,22 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
       }
 
     } else {
-      double wsum = 0, sumw = 0; // wsum is running sum, sumw is the total sum
+      double wsum = 0.0, sumw = 0.0; // wsum is running sum, sumw is the total sum
 
-      for(unsigned int i = 0; i != l; ++i) sumw += pw[po[i]];
+      unsigned int nw0 = 0;
+      for(unsigned int i = 0; i != l; ++i) {
+        wsum = pw[po[i]];
+        if(wsum == 0.0) ++nw0;
+        sumw += wsum;
+      }
+      wsum = 0.0;
       if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
-      double mu = sumw / l;
+      if(sumw < 0.0) error("Weights must be positive or zero");
+      if(l == nw0 || sumw == 0.0) { // error("For weighted quantile estimation, must supply at least one non-zero weight for non-NA x");
+        n = 0;
+        goto wall0;
+      }
+      double mu = sumw / (l - nw0);
 
       if(tx == REALSXP) { // Numeric data
         double *px = REAL(x)-1;
