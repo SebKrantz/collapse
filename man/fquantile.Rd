@@ -71,13 +71,14 @@ wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = 
     x = x[nzw]; w = w[nzw]            # into the quantile algorithm, as outlined above
   }
   o = radixorder(x)                   # Ordering
-  temp = sum(w)                       # Computing sum(w) - mean(w)
-  temp = temp - temp / length(w)
-  w_cs = cumsum(w[o])                 # Cumulative sum
-  res = sapply(probs, function(p) {
-    sumwp = temp * p                  # Target sum of weights for quantile type 7
-    j = which.max(w_cs > sumwp)       # Lower order statistic
-    hl = (w_cs[j] - sumwp) / w[o[j+1L]]   # Index weight of x[j]  (h = 1 - hl)
+  wo = w[o]
+  w_cs = cumsum(wo)                   # Cumulative sum
+  sumwp = sum(w)                      # Computing sum(w) - mean(w)
+  sumwp = sumwp - sumwp / length(w)
+  sumwp = sumwp * probs               # Target sums of weights for quantile type 7
+  res = sapply(sumwp, function(tsump) {
+    j = which.max(w_cs > tsump)           # Lower order statistic
+    hl = (w_cs[j] - tsump) / wo[j+1L]     # Index weight of x[j]  (h = 1 - hl)
     hl * x[o[j]] + (1 - hl) * x[o[j+1L]]  # Weighted quantile
   })
   if(names) names(res) = paste0(as.integer(probs * 100), "\%")
