@@ -29,7 +29,7 @@ frange(x, na.rm = TRUE)
   \item{o}{integer. An vector giving the ordering of the elements in \code{x}, such that \code{identical(x[o], sort(x))}. If available this considerably speeds up the estimation.}
   \item{na.rm}{logical. Remove missing values, default \code{TRUE}. }
   \item{type}{integer. Quantile types 5-9. See \code{\link{quantile}}. Further details are provided in Hyndman and Fan (1996) who recommended type 8. The default method is type 7.}
-  \item{names}{logical. Generates names of the form \code{paste0(as.integer(probs * 100), "\%")} (in C). Set to \code{FALSE} for speedup, especially during repeated executions. }
+  \item{names}{logical. Generates names of the form \code{paste0(as.integer(probs * 100), "\%")} (in C). Set to \code{FALSE} for speedup. }
   \item{check.o}{logical. If \code{o} is supplied, \code{TRUE} runs through \code{o} once and checks that it is valid, i.e. that each element is in \code{[1, length(x)]}. Set to \code{FALSE} for significant speedup if \code{o} is known to be valid. }
 }
 \details{
@@ -60,8 +60,8 @@ for (i in 5:9) print(all_obj_equal(fquantile(mtcars$mpg, type = i),
                                    fquantile(mtcars$mpg, type = i, w = w, o = o),
                                     quantile(mtcars$mpg, type = i)))
 
-## Demonstaration: weighted quantiles type 7
-wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE) {
+## Demonstaration: weighted quantiles type 7 in R
+wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = TRUE) {
   if(na.rm && anyNA(x)) {          # Removing missing values
     cc = whichNA(x, invert = TRUE)
     x = x[cc]; w = w[cc]
@@ -80,13 +80,15 @@ wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE) {
     hl = (w_cs[j] - sumwp) / w[o[j+1L]]           # Index weight of x[j]  (h = 1 - hl)
     res[i] = hl * x[o[j]] + (1 - hl) * x[o[j+1L]] # Weighted quantile
   }
+
+  if(names) names(res) = paste0(as.integer(probs * 100), "\%")
   return(res)
 } # Note: doesn't work well for min and max. The C code is significantly more rigorous.
 
 wquantile7R(mtcars$mpg, mtcars$wt)
 
 all.equal(wquantile7R(mtcars$mpg, mtcars$wt),
-          .quantile(mtcars$mpg, c(0.25, 0.5, 0.75), w = mtcars$wt))
+          fquantile(mtcars$mpg, c(0.25, 0.5, 0.75), mtcars$wt))
 
 ## Efficient grouped quantile estimation: use .quantile for less call overhead
 BY(mtcars$mpg, mtcars$cyl, .quantile, names = TRUE, expand.wide = TRUE)
