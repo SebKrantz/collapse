@@ -3,8 +3,8 @@
 #endif
 #include "collapse_c.h"
 
-// Inspired by Numerical Recipes in C and data.table's quickselect.c
-// Additional inspiration taken from Rfast2, and these references for sample Quantiles:
+// Inspired by Numerical Recipes in C and data.table's quickselect.c,
+// R's quantile() function, Rfast2::Quantile, and these references for sample quantiles:
 // https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
 // https://doi.org/10.2307/2684934
 // https://aakinshin.net/posts/weighted-quantiles/
@@ -479,9 +479,9 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 // With weights, currently radix sort of the entire vector, and then passing through by groups
 // TODO: quicksort for weighted statistics at the group-level? could be a partial sort so potentially faster and parallelizable...
 
-// TODO:Check consistency of pointer increments!!
+// TODO: Check consistency of pointer increments!!
 
-double w_compute_h_sorted(const double *pw, const int l, const int ret, const double Q) {
+double w_compute_h(const double *pw, const int l, const int ret, const double Q) {
   double sumw = 0.0;
   int nw0 = 0;
   for(int i = 0; i != l; ++i) {
@@ -497,7 +497,7 @@ double w_compute_h_sorted(const double *pw, const int l, const int ret, const do
 }
 
 // If no groups or sorted groups pxo is the ordering of x
-#define WNTH_GSORTED                                                       \
+#define WNTH_CORE                                                          \
 double wsum = 0.0, wb, a; /* TODO: reuse wsum, eliminate a */              \
 int k = 0;                                                                 \
 while(wsum <= h) wsum += pw[pxo[k++]];                                     \
@@ -513,12 +513,12 @@ wb = px[pxo[k]];                                                           \
 return wb + h * (a - wb);
 
 
-double w_compute_h(const double *pw, const int *po, const int l, const int ret, const double Q) {
+double w_compute_h_grouped(const double *pw, const int *po, const int l, const int ret, const double Q) {
   double sumw = 0.0, mu, h;
   int nw0 = 0;
   for(int i = 0; i != l; ++i) {
     mu = pw[po[i]];
-    if(mu == 0.0) ++nw0;
+    if(mu == 0.0) ++nw0; // TODO: nw0 += mu == 0.0 ??
     sumw += mu;
   }
   if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
@@ -530,7 +530,7 @@ double w_compute_h(const double *pw, const int *po, const int l, const int ret, 
 }
 
 // Otherwise: double indexation, po is the ordering of the groups
-#define WNTH_GUNSORTED                                                     \
+#define WNTH_CORE_GROUPED                                                  \
 double wsum = 0.0, wb, a; /* TODO: reuse wsum, eliminate a */              \
 int k = 0;                                                                 \
 while(wsum <= h) wsum += pw[pxo[po[k++]]];                                 \
@@ -548,7 +548,7 @@ return wb + h * (a - wb);
 
 // Finally, in the default vector method: also provide the option to pass an ordering vector of x, even without weights
 
-#define FNTH_ORDVEC                                                         \
+#define NTH_ORDVEC                                                          \
 RETQSWITCH(l);                                                              \
 double a, b;                                                                \
 int ih = h; a = px[pxo[ih]];                                                \
@@ -556,6 +556,13 @@ if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a;  \
 b = px[pxo[ih+1]];                                                          \
 return (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);
 
+#define NTH_ORDVEC_GROUPED                                                  \
+RETQSWITCH(l);                                                              \
+double a, b;                                                                \
+int ih = h; a = px[pxo[po[ih]]];                                            \
+if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a;  \
+b = px[pxo[po[ih+1]]];                                                      \
+return (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);
 
 
 
@@ -589,52 +596,8 @@ double nth_int(const int *px, const int *restrict po, const int l, const int sor
   return res;
 }
 
-double w_nth_int(const int *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, const int l, const int sorted, const int narm, const int ret, const double Q) {
-  if(l == 0) return NA_REAL;
-  if(l == 1) { // TODO: what about NA_INTEGER and NA/0 weights??
-    if(sorted) return ISNAN(pw[0]) ? NA_REAL : (double)px[0];
-    return ISNAN(pw[po[0]-1]) ? NA_REAL : (double)px[po[0]];
-  }
-  if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
-    if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-      while(px[pxo[l]] == NA_INTEGER && l != 0) --l;
-      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[, Q)) ? NA_REAL : (double)px[pxo[0]];
-    }
-    if(h == DBL_MIN) h = w_compute_h_sorted(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
-    if(ISNAN(h)) return NA_REAL;
-    WNTH_GSORTED;
-  }
-  if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-    while(px[pxo[po[l]]] == NA_INTEGER && l != 0) --l;
-    if(l <= 1) return (l == 0 || ISNAN(pw[pxo[po[0]]])) ? NA_REAL : (double)px[pxo[po[0]]];
-  }
-  if(h = DBL_MIN) h = w_compute_h(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
-  if(ISNAN(h)) return NA_REAL;
-  WNTH_GUNSORTED;
-}
-
-double ord_nth_int(const int *restrict px, const int *restrict pxo, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
-  if(l == 0) return NA_REAL;
-  if(l == 1) {  // TODO: what about NA_INTEGER and NA/0 weights??
-    if(sorted) return ISNAN(pw[0]) ? NA_REAL : (double)px[0];
-    return ISNAN(pw[po[0]-1]) ? NA_REAL : (double)px[po[0]];
-  }
-  if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
-    if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-      while(px[pxo[l]] == NA_INTEGER && l != 0) --l;
-      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[0]])) ? NA_REAL : (double)px[pxo[0]];
-    }
-    FNTH_ORDVEC;
-  }
-  if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-    while(px[pxo[po[l]]] == NA_INTEGER && l != 0) --l;
-    if(l <= 1) return (l == 0 || ISNAN(pw[pxo[po[0]]])) ? NA_REAL : (double)px[pxo[po[0]]];
-  }
-  FNTH_ORDVEC;
-}
-
-
 double nth_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
+  if(l == 0) return NA_REAL;
   if(l == 1) return sorted ? px[0] : px[po[0]-1];
 
   double *x_cc = (double *) Calloc(l, double);
@@ -662,6 +625,30 @@ double nth_double(const double *restrict px, const int *restrict po, const int l
   return res;
 }
 
+double w_nth_int(const int *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, const int l, const int sorted, const int narm, const int ret, const double Q) {
+  if(l == 0) return NA_REAL;
+  if(l == 1) { // TODO: what about NA_INTEGER and NA/0 weights??
+    if(sorted) return ISNAN(pw[0]) ? NA_REAL : (double)px[0];
+    return ISNAN(pw[po[0]-1]) ? NA_REAL : (double)px[po[0]];
+  }
+  if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
+    if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
+      while(px[pxo[l]] == NA_INTEGER && l != 0) --l;
+      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[, Q)) ? NA_REAL : (double)px[pxo[0]];
+    }
+    if(h == DBL_MIN) h = w_compute_h(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+    if(ISNAN(h)) return NA_REAL;
+    WNTH_CORE;
+  }
+  if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
+    while(px[pxo[po[l]]] == NA_INTEGER && l != 0) --l;
+    if(l <= 1) return (l == 0 || ISNAN(pw[pxo[po[0]]])) ? NA_REAL : (double)px[pxo[po[0]]];
+  }
+  if(h = DBL_MIN) h = w_compute_h_grouped(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(ISNAN(h)) return NA_REAL;
+  WNTH_CORE_GROUPED;
+}
+
 double w_nth_double(const double *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) {
@@ -673,21 +660,55 @@ double w_nth_double(const double *restrict px, const int *restrict pxo, const do
       while(ISNAN(px[pxo[l]]) && l != 0) --l;
       if(l <= 1) return (l == 0 || ISNAN(pw[pxo[0]])) ? NA_REAL : px[pxo[0]];
     }
-    if(h = DBL_MIN) h = w_compute_h_sorted(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+    if(h = DBL_MIN) h = w_compute_h(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
     if(ISNAN(h)) return NA_REAL;
-    WNTH_GSORTED;
+    WNTH_CORE;
   }
   if(narm) {
     while(ISNAN(px[pxo[po[l]]]) && l != 0) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[pxo[po[0]]])) ? NA_REAL : px[pxo[po[0]]];
   }
-  if(h = DBL_MIN) h = w_compute_h(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h = DBL_MIN) h = w_compute_h_grouped(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
-  WNTH_GUNSORTED;
+  WNTH_CORE_GROUPED;
+}
+
+double ord_nth_int(const int *restrict px, const int *restrict pxo, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
+  if(l == 0) return NA_REAL;
+  if(l == 1) return px[sorted ? 0 : po[0]];
+  if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
+    if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
+      while(px[pxo[l]] == NA_INTEGER && l != 0) --l;
+      if(l <= 1) return l == 0 ? NA_REAL : (double)px[pxo[0]];
+    }
+    NTH_ORDVEC;
+  }
+  if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
+    while(px[pxo[po[l]]] == NA_INTEGER && l != 0) --l;
+    if(l <= 1) return l == 0 ? NA_REAL : (double)px[pxo[po[0]]];
+  }
+  NTH_ORDVEC_GROUPED;
+}
+
+double ord_nth_double(const double *restrict px, const int *restrict pxo, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
+  if(l == 0) return NA_REAL;
+  if(l == 1) return px[sorted ? 0 : po[0]];
+  if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
+    if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
+      while(ISNAN(px[pxo[l]]) && l != 0) --l;
+      if(l <= 1) return l == 0 ? NA_REAL : px[pxo[0]];
+    }
+    NTH_ORDVEC;
+  }
+  if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
+    while(ISNAN(px[pxo[po[l]]]) && l != 0) --l;
+    if(l <= 1) return l == 0 ? NA_REAL : px[pxo[po[0]]];
+  }
+  NTH_ORDVEC_GROUPED;
 }
 
 
-// Implementations for R vectors -----------------------------------------------
+// Implementations for R vectors ---------------------------------------------------------------
 
 SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
   int l = length(x);
@@ -710,112 +731,112 @@ SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
   return res;
 }
 
-// This only works for a single vector, po is the ordering of x
-SEXP w_ord_nth_impl(SEXP x, int *po, double *pw, double h, int narm, int ret, double Q) {
-  int n = length(x), l = n;
-
-  if(narm) {
-    if(tx == REALSXP) { // Numeric data
-      double *px = REAL(x)-1;
-      if(ISNAN(px[po[0]])) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fnth().");
-      --po; while(ISNAN(px[po[l]]) && l != 0) --l; ++po;
-      if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
-    } else {
-      int *px = INTEGER(x)-1;
-      if(px[po[0]] == NA_INTEGER) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fnth().");
-      --po; while(px[po[l]] == NA_INTEGER && l != 0) --l; ++po;
-      if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
-    }
-  }
-
-  double res, a, b; // result and required constants
-
-  if(ISNAN(h)) { // If just an ordering vector is supplied
-
-  #define FNTH_ORDVEC                                                         \
-    RETQSWITCH(l);                                                            \
-    int ih = h; a = px[po[ih]];                                               \
-    if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) res = a; \
-    else {                                                                    \
-      b = px[po[ih+1]];                                                       \
-      res == (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);     \
-    }
-
-    if(tx == REALSXP) { // Numeric data
-      double *px = REAL(x)-1;
-      FNTH_ORDVEC;
-    } else {
-      int *px = INTEGER(x)-1;
-      FNTH_ORDVEC;
-    }
-
-  } else { // Weighted quantile
-
-    double wsum = 0.0, wb; // wsum is running sum
-
-    if(narm || h = DBL_MIN) {
-
-      double sumw = 0.0;
-      int nw0 = 0;
-
-      for(unsigned int i = 0; i != l; ++i) {
-        wsum = pw[po[i]];
-        if(wsum == 0.0) ++nw0;
-        sumw += wsum;
-      }
-      wsum = 0.0;
-      if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
-      else if(sumw < 0.0) error("Weights must be positive or zero");
-      if(l == nw0 || sumw == 0.0) l = 0; /// TODO: what to do here ??
-      else mu = sumw / (l - nw0); // repetitive? provide as input??
-
-      RETWQSWITCH(sumw, mu);
-    }
-
-     #define WNTH_CORE                                      \
-        while(wsum <= h) wsum += pw[po[k++]];               \
-        a = px[po[k == 0 ? 0 : k-1]];                       \
-        if((ret < 4 && (ret != 1 || l%2 == 1)) || k == 0 || k == l || h == 0.0) {  \
-          res = a; /* TODO: ret == 1 averaging */           \
-        } else {                                            \
-          wb = pw[po[k]];                                   \
-          /* If zero weights, need to move forward*/        \
-          if(wb == 0.0)                                     \
-             while(k < l-1 && wb == 0.0) wb = pw[po[++k]];  \
-          if(wb == 0.0) pres = a;                           \
-          else {                                            \
-            b = px[po[k]];                                  \
-            h = (wsum - h) / wb;                            \
-            res = b + h * (a - b);                          \
-          }                                                 \
-        }
-      // Previous zero-weight code in fnth: forward iteration with simple averaging of adjacent order statistics.
-      // if(wsum == h) {
-      //   double out = px[po[k-1]], n = 2;
-      //   while(pw[po[k]] == 0) {
-      //     out += px[po[k++]];
-      //     ++n;
-      //   }
-      //   pres[i] = (out + px[po[k]]) / n;
-      // }
-
-    if(tx == REALSXP) { // Numeric data
-      double *px = REAL(x)-1;
-      WNTH_CORE;
-    } else {
-      int *px = INTEGER(x)-1;
-      WNTH_CORE;
-    }
-
-  }
-
-  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return ScalarReal(res);
-
-  SEXP out = ScalarReal(res); // Needs protection ??
-  copyMostAttrib(x, out);
-  return out;
-}
-
+// // This only works for a single vector, po is the ordering of x
+// SEXP w_ord_nth_impl(SEXP x, int *po, double *pw, double h, int narm, int ret, double Q) {
+//   int n = length(x), l = n;
+//
+//   if(narm) {
+//     if(tx == REALSXP) { // Numeric data
+//       double *px = REAL(x)-1;
+//       if(ISNAN(px[po[0]])) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fnth().");
+//       --po; while(ISNAN(px[po[l]]) && l != 0) --l; ++po;
+//       if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
+//     } else {
+//       int *px = INTEGER(x)-1;
+//       if(px[po[0]] == NA_INTEGER) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fnth().");
+//       --po; while(px[po[l]] == NA_INTEGER && l != 0) --l; ++po;
+//       if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
+//     }
+//   }
+//
+//   double res, a, b; // result and required constants
+//
+//   if(ISNAN(h)) { // If just an ordering vector is supplied
+//
+//   #define NTH_ORDVEC                                                         \
+//     RETQSWITCH(l);                                                            \
+//     int ih = h; a = px[po[ih]];                                               \
+//     if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) res = a; \
+//     else {                                                                    \
+//       b = px[po[ih+1]];                                                       \
+//       res == (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);     \
+//     }
+//
+//     if(tx == REALSXP) { // Numeric data
+//       double *px = REAL(x)-1;
+//       NTH_ORDVEC;
+//     } else {
+//       int *px = INTEGER(x)-1;
+//       NTH_ORDVEC;
+//     }
+//
+//   } else { // Weighted quantile
+//
+//     double wsum = 0.0, wb; // wsum is running sum
+//
+//     if(narm || h = DBL_MIN) {
+//
+//       double sumw = 0.0;
+//       int nw0 = 0;
+//
+//       for(unsigned int i = 0; i != l; ++i) {
+//         wsum = pw[po[i]];
+//         if(wsum == 0.0) ++nw0;
+//         sumw += wsum;
+//       }
+//       wsum = 0.0;
+//       if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
+//       else if(sumw < 0.0) error("Weights must be positive or zero");
+//       if(l == nw0 || sumw == 0.0) l = 0; /// TODO: what to do here ??
+//       else mu = sumw / (l - nw0); // repetitive? provide as input??
+//
+//       RETWQSWITCH(sumw, mu);
+//     }
+//
+//      #define WNTH_CORE                                      \
+//         while(wsum <= h) wsum += pw[po[k++]];               \
+//         a = px[po[k == 0 ? 0 : k-1]];                       \
+//         if((ret < 4 && (ret != 1 || l%2 == 1)) || k == 0 || k == l || h == 0.0) {  \
+//           res = a; /* TODO: ret == 1 averaging */           \
+//         } else {                                            \
+//           wb = pw[po[k]];                                   \
+//           /* If zero weights, need to move forward*/        \
+//           if(wb == 0.0)                                     \
+//              while(k < l-1 && wb == 0.0) wb = pw[po[++k]];  \
+//           if(wb == 0.0) pres = a;                           \
+//           else {                                            \
+//             b = px[po[k]];                                  \
+//             h = (wsum - h) / wb;                            \
+//             res = b + h * (a - b);                          \
+//           }                                                 \
+//         }
+//       // Previous zero-weight code in fnth: forward iteration with simple averaging of adjacent order statistics.
+//       // if(wsum == h) {
+//       //   double out = px[po[k-1]], n = 2;
+//       //   while(pw[po[k]] == 0) {
+//       //     out += px[po[k++]];
+//       //     ++n;
+//       //   }
+//       //   pres[i] = (out + px[po[k]]) / n;
+//       // }
+//
+//     if(tx == REALSXP) { // Numeric data
+//       double *px = REAL(x)-1;
+//       WNTH_CORE;
+//     } else {
+//       int *px = INTEGER(x)-1;
+//       WNTH_CORE;
+//     }
+//
+//   }
+//
+//   if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return ScalarReal(res);
+//
+//   SEXP out = ScalarReal(res); // Needs protection ??
+//   copyMostAttrib(x, out);
+//   return out;
+// }
+//
 
 SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
 
@@ -999,7 +1020,7 @@ SEXP w_ord_nth_g_impl(SEXP x, int *po, double *pw, int *pg, int ng, int *pgs, in
 
 
 
-#define FNTH_ORDVEC                                                         \
+#define NTH_ORDVEC                                                         \
   RETQSWITCH(l);                                                            \
   int ih = h; a = px[po[ih]];                                               \
   if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) res = a; \
@@ -1010,10 +1031,10 @@ SEXP w_ord_nth_g_impl(SEXP x, int *po, double *pw, int *pg, int ng, int *pgs, in
 
 if(tx == REALSXP) { // Numeric data
   double *px = REAL(x)-1;
-  FNTH_ORDVEC;
+  NTH_ORDVEC;
 } else {
   int *px = INTEGER(x)-1;
-  FNTH_ORDVEC;
+  NTH_ORDVEC;
 }
 
 
