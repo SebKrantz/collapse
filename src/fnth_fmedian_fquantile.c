@@ -549,16 +549,16 @@ return wb + h * (a - wb);
 // Finally, in the default vector method: also provide the option to pass an ordering vector of x, even without weights
 
 #define NTH_ORDVEC                                                          \
+double a, b, h;                                                             \
 RETQSWITCH(l);                                                              \
-double a, b;                                                                \
 int ih = h; a = px[pxo[ih]];                                                \
 if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a;  \
 b = px[pxo[ih+1]];                                                          \
 return (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);
 
 #define NTH_ORDVEC_GROUPED                                                  \
+double a, b, h;                                                             \
 RETQSWITCH(l);                                                              \
-double a, b;                                                                \
 int ih = h; a = px[pxo[po[ih]]];                                            \
 if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a;  \
 b = px[pxo[po[ih+1]]];                                                      \
@@ -625,7 +625,7 @@ double nth_double(const double *restrict px, const int *restrict po, const int l
   return res;
 }
 
-double w_nth_int(const int *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, const int l, const int sorted, const int narm, const int ret, const double Q) {
+double w_nth_int(const int *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) { // TODO: what about NA_INTEGER and NA/0 weights??
     if(sorted) return ISNAN(pw[0]) ? NA_REAL : (double)px[0];
@@ -634,7 +634,7 @@ double w_nth_int(const int *restrict px, const int *restrict pxo, const double *
   if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
     if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
       while(px[pxo[l]] == NA_INTEGER && l != 0) --l;
-      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[, Q)) ? NA_REAL : (double)px[pxo[0]];
+      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[0]])) ? NA_REAL : (double)px[pxo[0]];
     }
     if(h == DBL_MIN) h = w_compute_h(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
     if(ISNAN(h)) return NA_REAL;
@@ -644,12 +644,12 @@ double w_nth_int(const int *restrict px, const int *restrict pxo, const double *
     while(px[pxo[po[l]]] == NA_INTEGER && l != 0) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[pxo[po[0]]])) ? NA_REAL : (double)px[pxo[po[0]]];
   }
-  if(h = DBL_MIN) h = w_compute_h_grouped(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h_grouped(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE_GROUPED;
 }
 
-double w_nth_double(const double *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, const int l, const int sorted, const int narm, const int ret, const double Q) {
+double w_nth_double(const double *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) {
     if(sorted) return ISNAN(pw[0]) ? NA_REAL : px[0];
@@ -660,7 +660,7 @@ double w_nth_double(const double *restrict px, const int *restrict pxo, const do
       while(ISNAN(px[pxo[l]]) && l != 0) --l;
       if(l <= 1) return (l == 0 || ISNAN(pw[pxo[0]])) ? NA_REAL : px[pxo[0]];
     }
-    if(h = DBL_MIN) h = w_compute_h(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+    if(h == DBL_MIN) h = w_compute_h(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
     if(ISNAN(h)) return NA_REAL;
     WNTH_CORE;
   }
@@ -668,12 +668,12 @@ double w_nth_double(const double *restrict px, const int *restrict pxo, const do
     while(ISNAN(px[pxo[po[l]]]) && l != 0) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[pxo[po[0]]])) ? NA_REAL : px[pxo[po[0]]];
   }
-  if(h = DBL_MIN) h = w_compute_h_grouped(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h_grouped(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE_GROUPED;
 }
 
-double ord_nth_int(const int *restrict px, const int *restrict pxo, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
+double ord_nth_int(const int *restrict px, const int *restrict pxo, const int *restrict po, int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) return px[sorted ? 0 : po[0]];
   if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
@@ -690,7 +690,7 @@ double ord_nth_int(const int *restrict px, const int *restrict pxo, const int *r
   NTH_ORDVEC_GROUPED;
 }
 
-double ord_nth_double(const double *restrict px, const int *restrict pxo, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
+double ord_nth_double(const double *restrict px, const int *restrict pxo, const int *restrict po, int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) return px[sorted ? 0 : po[0]];
   if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
@@ -733,7 +733,7 @@ SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
   return res;
 }
 
-SEXP w_nth_impl(SEXP x, double *pxo, double *pw, int narm, int ret, double Q) { // , int nthreads
+SEXP w_nth_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) { // , int nthreads
   int l = length(x);
   if(l <= 1) return x;
 
@@ -759,7 +759,7 @@ SEXP w_nth_impl(SEXP x, double *pxo, double *pw, int narm, int ret, double Q) { 
   return res;
 }
 
-SEXP ord_nth_impl(SEXP x, double *pxo, int narm, int ret, double Q) {
+SEXP ord_nth_impl(SEXP x, int *pxo, int narm, int ret, double Q) {
   int l = length(x);
   if(l <= 1) return x;
 
@@ -830,12 +830,12 @@ SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int nar
     }
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")) copyMostAttrib(x, res);
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
 
-SEXP w_nth_g_impl(SEXP x, double *pxo, double *pw, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
+SEXP w_nth_g_impl(SEXP x, int *pxo, double *pw, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
 
   int l = length(x);
   if(nthreads > ng) nthreads = ng;
@@ -887,12 +887,12 @@ SEXP w_nth_g_impl(SEXP x, double *pxo, double *pw, int ng, int *pgs, int *po, in
     }
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")) copyMostAttrib(x, res);
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
 
-SEXP ord_nth_g_impl(SEXP x, double *pxo, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
+SEXP ord_nth_g_impl(SEXP x, int *pxo, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
 
   int l = length(x);
   if(nthreads > ng) nthreads = ng;
@@ -934,14 +934,14 @@ SEXP ord_nth_g_impl(SEXP x, double *pxo, int ng, int *pgs, int *po, int *pst, in
         int *px = INTEGER(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = ord_nth_int(px, pxo, pw, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
+          pres[gr] = ord_nth_int(px, pxo, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
     }
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")) copyMostAttrib(x, res);
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
@@ -1226,21 +1226,21 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   // Preprocessing g, computing ordering vector if not supplied
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP *restrict pg = SEXPPTR(g), ord = pg[6];
-  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict pord, *restrict pst;
+  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst;
   if(l != length(pg[1])) error("length(g) must match length(x)");
   if(isNull(ord)) {
     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
     for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i]; // TODO: get maxgrpn?
     pst = cgs + 1;
-    if(sorted) pord = &l;
+    if(sorted) po = &l;
     else {
       int *restrict count = (int *) Calloc(ng+1, int);
-      pord = (int *) R_alloc(l, sizeof(int)); --pord;
-      for(int i = 0; i != l; ++i) pord[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-      ++pord; Free(count);
+      po = (int *) R_alloc(l, sizeof(int)); --po;
+      for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
+      ++po; Free(count);
     }
   } else {
-    pord = INTEGER(ord);
+    po = INTEGER(ord);
     pst = INTEGER(getAttrib(ord, install("starts")));
   }
 
