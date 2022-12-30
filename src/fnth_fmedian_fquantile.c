@@ -3,12 +3,14 @@
 #endif
 #include "collapse_c.h"
 
-// Inspired by Numerical Recipes in C and data.table's quickselect.c,
-// R's quantile() function, Rfast2::Quantile, and these references for sample quantiles:
-// https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
-// https://doi.org/10.2307/2684934
-// https://aakinshin.net/posts/weighted-quantiles/
-// At large, the weighted quantile algorithm is my own cooking [(C) 2022 Sebastian Krantz]
+/*
+ Inspired by Numerical Recipes in C and data.table's quickselect.c,
+ R's quantile() function, Rfast2::Quantile, and these references for sample quantiles:
+   https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
+   https://doi.org/10.2307/2684934
+   https://aakinshin.net/posts/weighted-quantiles/
+ At large, the weighted quantile algorithm is my own cooking [(C) 2022 Sebastian Krantz]
+*/
 
 // Adopted from data.table's quickselect.c
 static inline void iswap(int *a, int *b)           {int     tmp=*a; *a=*b; *b=tmp;}
@@ -123,6 +125,8 @@ case 4: // quantile type 4: does not give exact results
 /* Redundant? -> yes!
  if(h > sumw) h = sumw;
 */
+
+
 
 // --------------------------------------------------------------------------
 // First a faster quantile function
@@ -375,7 +379,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
       if(tx == REALSXP) { // Numeric data
         double *px = REAL(x)-1;
         if(ISNAN(px[po[0]])) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fquantile().");
-        --po; while(ISNAN(px[po[l]]) && l != 0) --l; ++po;
+        --po; while(l != 0 && ISNAN(px[po[l]])) --l; ++po;
         if(l <= 1) {
           double val = (l == 0 || ISNAN(nanw0)) ? NA_REAL : px[po[0]];
           for(int i = 0; i < np; ++i) pres[i] = val;
@@ -385,7 +389,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
       } else {
         int *px = INTEGER(x)-1;
         if(px[po[0]] == NA_INTEGER) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fquantile().");
-        --po; while(px[po[l]] == NA_INTEGER && l != 0) --l; ++po;
+        --po; while(l != 0 && px[po[l]] == NA_INTEGER) --l; ++po;
         if(l <= 1) {
           double val = (l == 0 || ISNAN(nanw0)) ? NA_REAL : (double)px[po[0]];
           for(int i = 0; i < np; ++i) pres[i] = val;
@@ -479,8 +483,6 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 // With weights, currently radix sort of the entire vector, and then passing through by groups
 // TODO: quicksort for weighted statistics at the group-level? could be a partial sort so potentially faster and parallelizable...
 
-// TODO: Check consistency of pointer increments!!
-
 double w_compute_h(const double *pw, const int l, const int ret, const double Q) {
   double sumw = 0.0;
   int nw0 = 0;
@@ -497,6 +499,7 @@ double w_compute_h(const double *pw, const int l, const int ret, const double Q)
 }
 
 // If no groups or sorted groups pxo is the ordering of x
+// Expects pointers px and pw to be decremented by one
 #define WNTH_CORE                                                          \
 double wsum = 0.0, wb, a; /* TODO: reuse wsum, eliminate a */              \
 int k = 0;                                                                 \
@@ -530,6 +533,7 @@ double w_compute_h_grouped(const double *pw, const int *po, const int l, const i
 }
 
 // Otherwise: double indexation, po is the ordering of the groups
+// Expects pointers px, pxo and pw to be decremented by one
 #define WNTH_CORE_GROUPED                                                  \
 double wsum = 0.0, wb, a; /* TODO: reuse wsum, eliminate a */              \
 int k = 0;                                                                 \
@@ -548,14 +552,16 @@ return wb + h * (a - wb);
 
 // Finally, in the default vector method: also provide the option to pass an ordering vector of x, even without weights
 
+// Expects pointer pxo to be decremented by 1
 #define NTH_ORDVEC                                                          \
 double a, b, h;                                                             \
 RETQSWITCH(l);                                                              \
-int ih = h; a = px[pxo[ih]];                                                \
+int ih = h; a = px[pxo[ih+1]];                                              \
 if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a;  \
-b = px[pxo[ih+1]];                                                          \
+b = px[pxo[ih+2]];                                                          \
 return (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);
 
+// Expects pointers px and pxo to be decremented by 1
 #define NTH_ORDVEC_GROUPED                                                  \
 double a, b, h;                                                             \
 RETQSWITCH(l);                                                              \
@@ -569,6 +575,7 @@ return (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);
 
 // C-implementations for different data types, parallelizable ----------------------------------
 
+// TODO: single thread optimization: pass x_cc
 double nth_int(const int *px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) return sorted ? px[0] : px[po[0]-1];
@@ -595,7 +602,7 @@ double nth_int(const int *px, const int *restrict po, const int l, const int sor
   Free(x_cc);
   return res;
 }
-
+// TODO: single thread optimization: pass x_cc
 double nth_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) return sorted ? px[0] : px[po[0]-1];
@@ -625,23 +632,24 @@ double nth_double(const double *restrict px, const int *restrict po, const int l
   return res;
 }
 
+// Expects pointers px, pxo and pw to be decremented by 1
 double w_nth_int(const int *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) { // TODO: what about NA_INTEGER and NA/0 weights??
-    if(sorted) return ISNAN(pw[0]) ? NA_REAL : (double)px[0];
-    return ISNAN(pw[po[0]-1]) ? NA_REAL : (double)px[po[0]];
+    if(sorted) return ISNAN(pw[1]) ? NA_REAL : (double)px[1];
+    return ISNAN(pw[po[0]]) ? NA_REAL : (double)px[po[0]];
   }
   if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
     if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-      while(px[pxo[l]] == NA_INTEGER && l != 0) --l;
-      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[0]])) ? NA_REAL : (double)px[pxo[0]];
+      while(l != 0 && px[pxo[l]] == NA_INTEGER) --l;
+      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[1]])) ? NA_REAL : (double)px[pxo[1]];
     }
     if(h == DBL_MIN) h = w_compute_h(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
     if(ISNAN(h)) return NA_REAL;
     WNTH_CORE;
   }
   if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-    while(px[pxo[po[l]]] == NA_INTEGER && l != 0) --l;
+    while(l != 0 && px[pxo[po[l-1]]] == NA_INTEGER) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[pxo[po[0]]])) ? NA_REAL : (double)px[pxo[po[0]]];
   }
   if(h == DBL_MIN) h = w_compute_h_grouped(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
@@ -649,23 +657,24 @@ double w_nth_int(const int *restrict px, const int *restrict pxo, const double *
   WNTH_CORE_GROUPED;
 }
 
+// Expects pointers px, pxo and pw to be decremented by 1
 double w_nth_double(const double *restrict px, const int *restrict pxo, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) {
-    if(sorted) return ISNAN(pw[0]) ? NA_REAL : px[0];
+    if(sorted) return ISNAN(pw[1]) ? NA_REAL : px[1];
     return ISNAN(pw[po[0]]) ? NA_REAL : px[po[0]];
   }
   if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
     if(narm) {
-      while(ISNAN(px[pxo[l]]) && l != 0) --l;
-      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[0]])) ? NA_REAL : px[pxo[0]];
+      while(l != 0 && ISNAN(px[pxo[l]])) --l;
+      if(l <= 1) return (l == 0 || ISNAN(pw[pxo[1]])) ? NA_REAL : px[pxo[1]];
     }
     if(h == DBL_MIN) h = w_compute_h(pw+1, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
     if(ISNAN(h)) return NA_REAL;
     WNTH_CORE;
   }
   if(narm) {
-    while(ISNAN(px[pxo[po[l]]]) && l != 0) --l;
+    while(l != 0 && ISNAN(px[pxo[po[l-1]]])) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[pxo[po[0]]])) ? NA_REAL : px[pxo[po[0]]];
   }
   if(h == DBL_MIN) h = w_compute_h_grouped(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
@@ -673,35 +682,37 @@ double w_nth_double(const double *restrict px, const int *restrict pxo, const do
   WNTH_CORE_GROUPED;
 }
 
+// Expects pointers px and pxo to be decremented by 1
 double ord_nth_int(const int *restrict px, const int *restrict pxo, const int *restrict po, int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
-  if(l == 1) return px[sorted ? 0 : po[0]];
+  if(l == 1) return px[sorted ? 1 : po[0]];
   if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
     if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-      while(px[pxo[l]] == NA_INTEGER && l != 0) --l;
-      if(l <= 1) return l == 0 ? NA_REAL : (double)px[pxo[0]];
+      while(l != 0 && px[pxo[l]] == NA_INTEGER) --l;
+      if(l <= 1) return l == 0 ? NA_REAL : (double)px[pxo[1]];
     }
     NTH_ORDVEC;
   }
   if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-    while(px[pxo[po[l]]] == NA_INTEGER && l != 0) --l;
+    while(l != 0 && px[pxo[po[l-1]]] == NA_INTEGER) --l;
     if(l <= 1) return l == 0 ? NA_REAL : (double)px[pxo[po[0]]];
   }
   NTH_ORDVEC_GROUPED;
 }
 
+// Expects pointers px and pxo to be decremented by 1
 double ord_nth_double(const double *restrict px, const int *restrict pxo, const int *restrict po, int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
-  if(l == 1) return px[sorted ? 0 : po[0]];
+  if(l == 1) return px[sorted ? 1 : po[0]];
   if(sorted) { // This refers to the data being sorted by groups (po), not x being sorted (pxo)
     if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-      while(ISNAN(px[pxo[l]]) && l != 0) --l;
-      if(l <= 1) return l == 0 ? NA_REAL : px[pxo[0]];
+      while(l != 0 && ISNAN(px[pxo[l]])) --l;
+      if(l <= 1) return l == 0 ? NA_REAL : px[pxo[1]];
     }
     NTH_ORDVEC;
   }
   if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
-    while(ISNAN(px[pxo[po[l]]]) && l != 0) --l;
+    while(l != 0 && ISNAN(px[pxo[po[l-1]]])) --l;
     if(l <= 1) return l == 0 ? NA_REAL : px[pxo[po[0]]];
   }
   NTH_ORDVEC_GROUPED;
@@ -727,12 +738,13 @@ SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
   }
 
   if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return res;
-  // PROTECT(res); // Needed ??
+  PROTECT(res); // Needed ??
   copyMostAttrib(x, res);
-  // UNPROTECT(1);
+  UNPROTECT(1);
   return res;
 }
 
+// Expects pointers pxo and pw to be decremented by 1
 SEXP w_nth_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) { // , int nthreads
   int l = length(x);
   if(l <= 1) return x;
@@ -743,11 +755,11 @@ SEXP w_nth_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) { // 
   SEXP res;
   switch(TYPEOF(x)) {
   case REALSXP:
-    res = ScalarReal(w_nth_double(REAL(x), pxo, pw, &l, DBL_MIN, l, 1, narm, ret, Q));
+    res = ScalarReal(w_nth_double(REAL(x)-1, pxo, pw, &l, DBL_MIN, l, 1, narm, ret, Q));
     break;
   case INTSXP:
   case LGLSXP:
-    res = ScalarReal(w_nth_int(INTEGER(x), pxo, pw, &l, DBL_MIN, l, 1, narm, ret, Q));
+    res = ScalarReal(w_nth_int(INTEGER(x)-1, pxo, pw, &l, DBL_MIN, l, 1, narm, ret, Q));
     break;
   default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
@@ -755,10 +767,13 @@ SEXP w_nth_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) { // 
   // if(nthreads > 1) Free(pxo);
 
   if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return res;
+  PROTECT(res); // Needed ??
   copyMostAttrib(x, res);
+  UNPROTECT(1);
   return res;
 }
 
+// Expects pointer pxo to be decremented by 1
 SEXP ord_nth_impl(SEXP x, int *pxo, int narm, int ret, double Q) {
   int l = length(x);
   if(l <= 1) return x;
@@ -766,26 +781,29 @@ SEXP ord_nth_impl(SEXP x, int *pxo, int narm, int ret, double Q) {
   SEXP res;
   switch(TYPEOF(x)) {
   case REALSXP:
-    res = ScalarReal(ord_nth_double(REAL(x), pxo, &l, l, 1, narm, ret, Q));
+    res = ScalarReal(ord_nth_double(REAL(x)-1, pxo, &l, l, 1, narm, ret, Q));
     break;
   case INTSXP:
   case LGLSXP:
-    res = ScalarReal(ord_nth_int(INTEGER(x), pxo, &l, l, 1, narm, ret, Q));
+    res = ScalarReal(ord_nth_int(INTEGER(x)-1, pxo, &l, l, 1, narm, ret, Q));
     break;
   default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 
   if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return res;
+  PROTECT(res); // Needed ??
   copyMostAttrib(x, res);
+  UNPROTECT(1);
   return res;
 }
 
-
+// Expects pointer po to be decremented by 1
 SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
 
   int l = length(x);
   if(nthreads > ng) nthreads = ng;
 
+  // TODO: if nthreads = 1, pass x_cc array of size maxgrpn repeatedly to the functions!!
   SEXP res = PROTECT(allocVector(REALSXP, ng));
   double *pres = REAL(res);
 
@@ -793,18 +811,18 @@ SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int nar
     po = &l;
     switch(TYPEOF(x)) {
       case REALSXP: {
-        double *px = REAL(x);
+        double *px = REAL(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = nth_double(px + pst[gr]-1, po, pgs[gr], 1, narm, ret, Q);
+          pres[gr] = nth_double(px + pst[gr], po, pgs[gr], 1, narm, ret, Q);
         break;
       }
       case INTSXP:
       case LGLSXP: {
-        int *px = INTEGER(x);
+        int *px = INTEGER(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = nth_int(px + pst[gr]-1, po, pgs[gr], 1, narm, ret, Q);
+          pres[gr] = nth_int(px + pst[gr], po, pgs[gr], 1, narm, ret, Q);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
@@ -815,7 +833,7 @@ SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int nar
         double *px = REAL(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = nth_double(px, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
+          pres[gr] = nth_double(px, po + pst[gr], pgs[gr], 0, narm, ret, Q);
         break;
       }
       case INTSXP:
@@ -823,7 +841,7 @@ SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int nar
         int *px = INTEGER(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = nth_int(px, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
+          pres[gr] = nth_int(px, po + pst[gr], pgs[gr], 0, narm, ret, Q);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
@@ -835,6 +853,7 @@ SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int nar
   return res;
 }
 
+// Expects pointers pxo, pw and po to be decremented by 1
 SEXP w_nth_g_impl(SEXP x, int *pxo, double *pw, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
 
   int l = length(x);
@@ -850,18 +869,18 @@ SEXP w_nth_g_impl(SEXP x, int *pxo, double *pw, int ng, int *pgs, int *po, int *
     po = &l;
     switch(TYPEOF(x)) {
       case REALSXP: {
-        double *px = REAL(x);
+        double *px = REAL(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = w_nth_double(px + pst[gr]-1, pxo, pw, po, DBL_MIN, pgs[gr], 1, narm, ret, Q); // TODO: where to increment pointers ??
+          pres[gr] = w_nth_double(px + pst[gr], pxo, pw, po, DBL_MIN, pgs[gr], 1, narm, ret, Q);
         break;
       }
       case INTSXP:
       case LGLSXP: {
-        int *px = INTEGER(x);
+        int *px = INTEGER(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = w_nth_int(px + pst[gr]-1, pxo, pw, po, DBL_MIN, pgs[gr], 1, narm, ret, Q);
+          pres[gr] = w_nth_int(px + pst[gr], pxo, pw, po, DBL_MIN, pgs[gr], 1, narm, ret, Q);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
@@ -869,18 +888,18 @@ SEXP w_nth_g_impl(SEXP x, int *pxo, double *pw, int ng, int *pgs, int *po, int *
   } else { // Not sorted. Perhaps reordering x is faster?
     switch(TYPEOF(x)) {
       case REALSXP: {
-        double *px = REAL(x);
+        double *px = REAL(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = w_nth_double(px, pxo, pw, po + pst[gr]-1, DBL_MIN, pgs[gr], 0, narm, ret, Q); // TODO: where to increment pointers ??
+          pres[gr] = w_nth_double(px, pxo, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);
         break;
       }
       case INTSXP:
       case LGLSXP: {
-        int *px = INTEGER(x);
+        int *px = INTEGER(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = w_nth_int(px, pxo, pw, po + pst[gr]-1, DBL_MIN, pgs[gr], 0, narm, ret, Q);
+          pres[gr] = w_nth_int(px, pxo, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
@@ -892,6 +911,7 @@ SEXP w_nth_g_impl(SEXP x, int *pxo, double *pw, int ng, int *pgs, int *po, int *
   return res;
 }
 
+// Expects pointers pxo and po to be decremented by 1
 SEXP ord_nth_g_impl(SEXP x, int *pxo, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
 
   int l = length(x);
@@ -901,21 +921,21 @@ SEXP ord_nth_g_impl(SEXP x, int *pxo, int ng, int *pgs, int *po, int *pst, int s
   double *pres = REAL(res);
 
   if(sorted) { // Sorted: could compute cumulative group size (= starts) on the fly... but doesn't work multithreaded...
-    po = &l;
+    po = &l; --pxo;
     switch(TYPEOF(x)) {
       case REALSXP: {
-        double *px = REAL(x);
+        double *px = REAL(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = ord_nth_double(px + pst[gr]-1, pxo, po, pgs[gr], 1, narm, ret, Q);
+          pres[gr] = ord_nth_double(px, pxo + pst[gr], po, pgs[gr], 1, narm, ret, Q);
         break;
       }
       case INTSXP:
       case LGLSXP: {
-        int *px = INTEGER(x);
+        int *px = INTEGER(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = ord_nth_int(px + pst[gr]-1, pxo, po, pgs[gr], 1, narm, ret, Q);
+          pres[gr] = ord_nth_int(px, pxo + pst[gr], po, pgs[gr], 1, narm, ret, Q);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
@@ -923,18 +943,18 @@ SEXP ord_nth_g_impl(SEXP x, int *pxo, int ng, int *pgs, int *po, int *pst, int s
   } else { // Not sorted. Perhaps reordering x is faster?
     switch(TYPEOF(x)) {
       case REALSXP: {
-        double *px = REAL(x);
+        double *px = REAL(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = ord_nth_double(px, pxo, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q); // TODO: where to increment pointers ??
+          pres[gr] = ord_nth_double(px, pxo, po + pst[gr], pgs[gr], 0, narm, ret, Q); // TODO: where to increment pointers ??
         break;
       }
       case INTSXP:
       case LGLSXP: {
-        int *px = INTEGER(x);
+        int *px = INTEGER(x)-1;
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
-          pres[gr] = ord_nth_int(px, pxo, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
+          pres[gr] = ord_nth_int(px, pxo, po + pst[gr], pgs[gr], 0, narm, ret, Q);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
@@ -1157,7 +1177,7 @@ SEXP ord_nth_g_impl(SEXP x, int *pxo, int ng, int *pgs, int *po, int *pst, int s
 // Also for multiple columns with weights if na.rm = FALSE, can compute h's and supply repeatedly for each column
 
 // Function for atomic vectors: has extra arguments o and checko for passing external ordering vector
-// This is mean to speed up computation of several (grouped) quantiles on the same data
+// This is meant to speed up computation of several (grouped) quantiles on the same data
 SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads, SEXP o, SEXP checko) {
 
   int nullg = isNull(g), nullw = isNull(w), nullo = isNull(o), l = length(x), narm = asLogical(Rnarm),
@@ -1217,8 +1237,8 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
 
   // If no groups, return using suitable functions
   if(nullg) {
-    if(nullw) res = ord_nth_impl(x, pxo, narm, ret, Q);
-    else res = w_nth_impl(x, pxo, pw, narm, ret, Q);
+    if(nullw) res = ord_nth_impl(x, pxo-1, narm, ret, Q);
+    else res = w_nth_impl(x, pxo-1, pw-1, narm, ret, Q);
     UNPROTECT(nprotect);
     return res;
   }
@@ -1237,16 +1257,16 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
       int *restrict count = (int *) Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-      ++po; Free(count);
+      Free(count);
     }
   } else {
-    po = INTEGER(ord);
+    po = INTEGER(ord)-1;
     pst = INTEGER(getAttrib(ord, install("starts")));
   }
 
   if(nullw && nullo) res = nth_g_impl(x, ng, pgs, po, pst, sorted, narm, ret, Q, asInteger(Rnthreads));
-  else if(nullw) res = ord_nth_g_impl(x, pxo, ng, pgs, po, pst, sorted, narm, ret, Q, asInteger(Rnthreads));
-  else res = w_nth_g_impl(x, pxo, pw, ng, pgs, po, pst, sorted, narm, ret, Q, asInteger(Rnthreads));
+  else if(nullw) res = ord_nth_g_impl(x, pxo-1, ng, pgs, po, pst, sorted, narm, ret, Q, asInteger(Rnthreads));
+  else res = w_nth_g_impl(x, pxo-1, pw-1, ng, pgs, po, pst, sorted, narm, ret, Q, asInteger(Rnthreads));
   UNPROTECT(nprotect);
   return res;
 }
