@@ -53,7 +53,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_fmode", (DL_FUNC) &fmodeC, 6},
   {"C_fmodem", (DL_FUNC) &fmodemC, 7},
   {"C_fmodel", (DL_FUNC) &fmodelC, 6},
-  {"C_fnth", (DL_FUNC) &fnthC, 7},
+  {"C_fnth", (DL_FUNC) &fnthC, 9},
   {"C_fnthm", (DL_FUNC) &fnthmC, 8},
   {"C_fnthl", (DL_FUNC) &fnthlC, 8},
   {"C_fquantile", (DL_FUNC) &fquantileC, 8},

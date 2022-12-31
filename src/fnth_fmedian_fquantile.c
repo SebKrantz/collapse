@@ -1254,6 +1254,31 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
 // otherwise assign pointer...
 // Also for multiple columns with weights if na.rm = FALSE, can compute h's and supply repeatedly for each column
 
+#define CHECK_PROB(l)                                                                                                                                                            \
+  if(length(p) != 1) error("fnth supports only a single element / quantile. Use fquantile for multiple quantiles.");                                                             \
+  double Q = asReal(p);                                                                                                                                                          \
+  if(ISNAN(Q) || Q <= 0.0 || Q == 1.0) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");                             \
+  if(Q > 1.0) {                                                                                                                                                                  \
+    ret = 2; /* Correct ?? */                                                                                                                                                    \
+    if(nullg) {                                                                                                                                                                  \
+      if(Q >= l) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");                                                   \
+      Q = (Q-1.0)/(l-1);                                                                                                                                                         \
+    } else {                                                                                                                                                                     \
+      if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");                                                                  \
+      int ng = INTEGER(VECTOR_ELT(g, 0))[0];                                                                                                                                     \
+      if(Q >= (double)l/ng) error("n needs to be between 0 and 1, or between 1 and the length(x)/ng, with ng the number of groups. Use fmin and fmax for minima and maxima.");   \
+      Q = (Q-1.0)/((double)l/ng-1.0);                                                                                                                                            \
+    }                                                                                                                                                                            \
+  }
+
+#define CHECK_WEIGHTS(l)                                         \
+  if(length(w) != l) error("length(w) must match length(x)");    \
+  if(TYPEOF(w) != REALSXP) {                                     \
+    if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double). You supplied a vector of type: '%s'", type2char(TYPEOF(w))); \
+    w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;           \
+  }                                                              \
+  pw = REAL(w);
+
 /*
    Function for atomic vectors: has extra arguments o and checko for passing external ordering vector.
    This is meant to speed up computation of several (grouped) quantiles on the same data.
@@ -1265,22 +1290,8 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
       ret = asInteger(Rret), nprotect = 0;
 
   if(l <= 1) return x;
-  if(length(p) != 1) error("fnth supports only a single element / quantile. Use fquantile for multiple quantiles.");
 
-  double Q = asReal(p);
-  if(ISNAN(Q) || Q <= 0.0 || Q == 1.0) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
-  if(Q > 1.0) {
-    ret = 2; // Correct ??
-    if(nullg) {
-      if(Q >= l) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
-      Q = (Q-1.0)/(l-1);
-    } else {
-      if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-      int ng = INTEGER(VECTOR_ELT(g, 0))[0];
-      if(Q >= (double)l/ng) error("n needs to be between 0 and 1, or between 1 and the length(x)/ng, with ng the number of groups. Use fmin and fmax for minima and maxima.");
-      Q = (Q-1.0)/((double)l/ng-1.0);
-    }
-  }
+  CHECK_PROB(l);
 
   // First the simplest case
   if(nullg && nullw && nullo) return nth_impl(x, narm, ret, Q);
@@ -1301,12 +1312,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
 
   // Preprocessing w, computing ordering of x if not supplied
   if(!nullw) {
-    if(length(w) != l) error("length(w) must match length(x)");
-    if(TYPEOF(w) != REALSXP) {
-      if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double). You supplied a vector of type: '%s'", type2char(TYPEOF(w)));
-      w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
-    }
-    pw = REAL(w);
+    CHECK_WEIGHTS(l);
     if(nullo && nullg) { // for grouped execution use w_nth_g_qsort_impl() if o is not supplied.
       // nullo = 0;
       pxo = (int *) R_alloc(l, sizeof(int));
@@ -1377,284 +1383,327 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   }
    */
 
-  if(nullw && nullo) res = nth_g_impl(x, ng, pgs, po, pst, sorted, narm, ret, Q, asInteger(Rnthreads));
-  else if(nullw) res = nth_g_ord_impl(x, ng, pgs, pxo-1, pst, narm, ret, Q, asInteger(Rnthreads));
-  else if(nullo) res = w_nth_g_qsort_impl(x, pw, ng, pgs, po, pst, sorted, narm, ret, Q, asInteger(Rnthreads));
-  else res = w_nth_g_impl(x, pw-1, ng, pgs, pxo-1, pst, narm, ret, Q, asInteger(Rnthreads));
+  int nthreads = asInteger(Rnthreads);
+  if(nthreads > max_threads) nthreads = max_threads;
+
+  if(nullw && nullo) res = nth_g_impl(x, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+  else if(nullw) res = nth_g_ord_impl(x, ng, pgs, pxo-1, pst, narm, ret, Q, nthreads);
+  else if(nullo) res = w_nth_g_qsort_impl(x, pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+  else res = w_nth_g_impl(x, pw-1, ng, pgs, pxo-1, pst, narm, ret, Q, nthreads);
 
   UNPROTECT(nprotect);
   return res;
 }
 
-// // TODO: allow column-level parallelism??
-// SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {
-//   int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0, nprotect = 1,
-//     narm = asLogical(Rnarm), drop = asLogical(Rdrop), ret = asInteger(Rret), nthreads = asInteger(Rnthreads);
-//   if(l < 1) return x;
-//
-//   double Q = asReal(p);
-//   if(ISNAN(Q) || Q <= 0 || Q == 1) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
-//   if(Q > 1) {
-//     ret = 2; // Correct ??
-//     if(nullg) {
-//       if(Q >= l) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
-//       Q = (Q-1)/(l-1);
-//     } else {
-//       if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-//       int ng = length(VECTOR_ELT(g, 2));
-//       if(Q >= l/ng) error("n needs to be between 0 and 1, or between 1 and the length(x)/ng, with ng the number of groups. Use fmin and fmax for minima and maxima.");
-//       Q = (Q-1)/(l/ng-1);
-//     }
-//   }
-//
-//   SEXP out = PROTECT(allocVector(nullg && drop ? REALSXP : VECSXP, l)), *restrict px = SEXPPTR(x);
-//   int nrx = length(px[0]);
-//   double tmp = 0.0, *restrict pw = &tmp;
-//
-//   if(!nullw) {
-//     if(length(w) != nrx) error("length(w) must match nrow(x)");
-//     if(TYPEOF(w) != REALSXP) {
-//       if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double)");
-//       SEXP wd = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
-//       pw = REAL(wd);
-//     } else pw = REAL(w);
-//   }
-//
-//   if(nullg) {
-//     if(nthreads > l) nthreads = l;
-//     if(drop) {
-//       double *restrict pout = REAL(out);
-//       if(nullw) {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < l; ++j) pout[j] = REAL(nth_impl(px[j], narm, ret, Q))[0];
-//       } else {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < l; ++j) pout[j] = REAL(w_nth_impl(px[j], pw, narm, ret, Q))[0];
-//       }
-//       setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
-//       UNPROTECT(nprotect);
-//       return out;
-//     }
-//     SEXP *restrict pout = SEXPPTR(out);
-//     if(nullw) {
-//       #pragma omp parallel for num_threads(nthreads)
-//       for(int j = 0; j < l; ++j) pout[j] = nth_impl(px[j], narm, ret, Q);
-//     } else {
-//       #pragma omp parallel for num_threads(nthreads)
-//       for(int j = 0; j < l; ++j) pout[j] = w_nth_impl(px[j], pw, narm, ret, Q);
-//     }
-//   } else {
-//     if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-//     const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
-//     ng = INTEGER(pg[0])[0];
-//     int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst;
-//     if(nrx != length(pg[1])) error("length(g) must match nrow(x)");
-//     if(isNull(o)) {
-//       int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
-//       for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
-//       pst = cgs + 1;
-//       if(sorted) po = &l;
-//       else {
-//         int *restrict count = (int *) Calloc(ng+1, int);
-//         po = (int *) R_alloc(nrx, sizeof(int)); --po;
-//         for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-//         ++po; Free(count);
-//       }
-//     } else {
-//       po = INTEGER(o);
-//       pst = INTEGER(getAttrib(o, install("starts")));
-//     }
-//     SEXP *restrict pout = SEXPPTR(out);
-//     if(nullw) { // Parallelism at sub-column level
-//       for(int j = 0; j < l; ++j) pout[j] = nth_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
-//     } else { // Parallelism at sub-column level
-//       for(int j = 0; j < l; ++j) pout[j] = w_nth_g_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
-//     }
-//   }
-//
-//   DFcopyAttr(out, x, ng);
-//   UNPROTECT(nprotect);
-//   return out;
-// }
-//
-// SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {
-//   SEXP dim = getAttrib(x, R_DimSymbol);
-//   if(isNull(dim)) error("x is not a matrix");
-//   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1],
-//       narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads),
-//       nullg = isNull(g), nullw = isNull(w), nprotect = 1;
-//   if(l <= 1) return x; // Prevents seqfault for numeric(0) #101
-//   if(nthreads > col) nthreads = col;
-//   if(length(p) != 1) error("fnth supports only a single element / quantile. Use fquantile for multiple quantiles.");
-//   double Q = asReal(p);
-//   if(ISNAN(Q) || Q <= 0 || Q == 1) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
-//   if(Q > 1) {
-//     ret = 2; // Correct ??
-//     if(nullg) {
-//       if(Q >= l) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");
-//       Q = (Q-1)/(l-1);
-//     } else {
-//       if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-//       int ng = length(VECTOR_ELT(g, 2));
-//       if(Q >= l/ng) error("n needs to be between 0 and 1, or between 1 and the length(x)/ng, with ng the number of groups. Use fmin and fmax for minima and maxima.");
-//       Q = (Q-1)/(l/ng-1);
-//     }
-//   }
-//
-//   double tmp = 0.0, *restrict pw = &tmp;
-//   if(!nullw) {
-//     if(length(w) != l) error("length(w) must match nrow(x)");
-//     if(TYPEOF(w) != REALSXP) {
-//       if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double)");
-//       SEXP wd = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
-//       pw = REAL(wd);
-//     } else pw = REAL(w);
-//   }
-//
-//   if(nullg) {
-//     SEXP res = PROTECT(allocVector(tx, col));
-//
-//     switch(tx) {
-//     case REALSXP: {
-//       double *px = REAL(x), *restrict pres = REAL(res);
-//       if(nullw) {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) pres[j] = nth_double(px + j*l, &l, l, 1, narm, ret, Q);
-//       } else {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) pres[j] = w_nth_double(px + j*l, pw, &l, l, 1, narm, ret, Q);
-//       }
-//       break;
-//     }
-//     case INTSXP:
-//     case LGLSXP: {  // Factor matrix not well defined object...
-//       int *px = INTEGER(x), *restrict pres = INTEGER(res);
-//       if(nullw) {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) pres[j] = nth_int(px + j*l, &l, l, 1, narm, ret, Q);
-//       } else {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) pres[j] = w_nth_int(px + j*l, pw, &l, l, 1, narm, ret, Q);
-//       }
-//       break;
-//     }
-//     default: error("Not Supported SEXP Type!");
-//     }
-//
-//     matCopyAttr(res, x, Rdrop, /*ng=*/0);
-//     UNPROTECT(nprotect);
-//     return res;
-//   }
-//
-//   // With groups
-//   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-//   const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
-//   int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, gl = length(pg[1]);
-//   if(l != gl) error("length(g) must match nrow(x)");
-//   SEXP res = PROTECT(allocVector(tx, ng * col));
-//
-//   if(isNull(o)) {
-//     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
-//     for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
-//     pst = cgs + 1;
-//     if(sorted) po = &l;
-//     else {
-//       int *restrict count = (int *) Calloc(ng+1, int);
-//       po = (int *) R_alloc(l, sizeof(int)); --po;
-//       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-//       ++po; Free(count);
-//     }
-//   } else {
-//     po = INTEGER(o);
-//     pst = INTEGER(getAttrib(o, install("starts")));
-//   }
-//
-//   if(sorted) { // Sorted
-//     switch(tx) {
-//     case REALSXP: {
-//       double *px = REAL(x), *restrict pres = REAL(res);
-//       if(nullw) {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) {
-//           int jng = j * ng;
-//           double *pxj = px + j * l;
-//           for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_REAL : nth_double(pxj + pst[gr]-1, po, pgs[gr], 1, narm, ret, Q);
-//         }
-//       } else {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) {
-//           int jng = j * ng;
-//           double *pxj = px + j * l;
-//           for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_REAL : w_nth_double(pxj + pst[gr]-1, pw + pst[gr]-1, po, pgs[gr], 1, narm, ret, Q);
-//         }
-//       }
-//       break;
-//     }
-//     case INTSXP:
-//     case LGLSXP: { // Factor matrix not well defined object...
-//       int *px = INTEGER(x), *restrict pres = INTEGER(res);
-//       if(nullw) {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) {
-//           int *pxj = px + j * l, jng = j * ng;
-//           for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_INTEGER : nth_int(pxj + pst[gr]-1, po, pgs[gr], 1, narm, ret, Q);
-//         }
-//       } else {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) {
-//           int *pxj = px + j * l, jng = j * ng;
-//           for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_INTEGER : w_nth_int(pxj + pst[gr]-1, pw + pst[gr]-1, po, pgs[gr], 1, narm, ret, Q);
-//         }
-//       }
-//       break;
-//     }
-//     default: error("Not Supported SEXP Type!");
-//     }
-//   } else { // Not sorted
-//     switch(tx) {
-//     case REALSXP: {
-//       double *px = REAL(x), *restrict pres = REAL(res);
-//       if(nullw) {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) {
-//           int jng = j * ng;
-//           double *pxj = px + j * l;
-//           for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_REAL : nth_double(pxj, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
-//         }
-//       } else {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) {
-//           int jng = j * ng;
-//           double *pxj = px + j * l;
-//           for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_REAL : w_nth_double(pxj, pw, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
-//         }
-//       }
-//       break;
-//     }
-//     case INTSXP:
-//     case LGLSXP: {
-//       int *px = INTEGER(x), *restrict pres = INTEGER(res);
-//       if(nullw) {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) {
-//           int jng = j * ng, *pxj = px + j * l;
-//           for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_INTEGER : nth_int(pxj, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
-//         }
-//       } else {
-//         #pragma omp parallel for num_threads(nthreads)
-//         for(int j = 0; j < col; ++j) {
-//           int jng = j * ng, *pxj = px + j * l;
-//           for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_INTEGER : w_nth_int(pxj, pw, po + pst[gr]-1, pgs[gr], 0, narm, ret, Q);
-//         }
-//       }
-//       break;
-//     }
-//     default: error("Not Supported SEXP Type!");
-//     }
-//   }
-//
-//   matCopyAttr(res, x, Rdrop, ng);
-//   UNPROTECT(nprotect);
-//   return res;
-// }
-//
+
+#define CHECK_GROUPS(nrx)                                      \
+  if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP"); \
+  const SEXP *restrict pg = SEXPPTR(g), o = pg[6];             \
+  ng = INTEGER(pg[0])[0];                                      \
+  int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst; \
+  if(nrx != length(pg[1])) error("length(g) must match nrow(x)"); \
+  if(isNull(o)) {                                              \
+    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1; \
+    for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i]; \
+    pst = cgs + 1;                                             \
+    if(sorted) po = &l;                                        \
+    else {                                                     \
+      int *restrict count = (int *) Calloc(ng+1, int);         \
+      po = (int *) R_alloc(nrx, sizeof(int)); --po;            \
+      for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1; \
+      Free(count);                                             \
+    }                                                          \
+  } else {                                                     \
+    po = INTEGER(o)-1;                                         \
+    pst = INTEGER(getAttrib(o, install("starts")));            \
+  }
+
+
+// Function for lists / data frames
+SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {
+
+  int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0, nprotect = 1,
+    narm = asLogical(Rnarm), drop = asLogical(Rdrop), ret = asInteger(Rret), nthreads = asInteger(Rnthreads);
+
+  if(l < 1) return x;
+  if(nthreads > max_threads) nthreads = max_threads;
+
+  SEXP out = PROTECT(allocVector(nullg && drop ? REALSXP : VECSXP, l)), *restrict px = SEXPPTR(x);
+  int nrx = length(px[0]);
+
+  CHECK_PROB(nrx);
+
+  double *restrict pw = &Q;
+  if(!nullw) {
+    CHECK_WEIGHTS(nrx);
+  }
+
+  if(nullg) { // No groups, multithreading across columns
+    if(nthreads > l) nthreads = l;
+    if(drop) { // drop dimensions (return vector)
+      double *restrict pout = REAL(out);
+      if(nullw) {
+        if(nthreads == 1) {
+          for(int j = 0; j < l; ++j) pout[j] = REAL(nth_impl(px[j], narm, ret, Q))[0];
+        } else {
+          #pragma omp parallel for num_threads(nthreads)
+          for(int j = 0; j < l; ++j) pout[j] = REAL(nth_impl(px[j], narm, ret, Q))[0];
+        }
+      } else { // TODO: if narm = FALSE, can compute sumw beforehand
+        if(nthreads == 1) { // Can re-use ordering of x
+          int *pxo = (int *) R_alloc(nrx, sizeof(int));
+          for(int j = 0; j < l; ++j) {
+            num1radixsort(pxo, TRUE, FALSE, px[j]);
+            pout[j] = REAL(w_nth_impl(px[j], pxo-1, pw-1, narm, ret, Q))[0];
+          }
+        } else {
+          #pragma omp parallel for num_threads(nthreads)
+          for(int j = 0; j < l; ++j) {
+            int *pxo = (int *) Calloc(nrx, int);
+            num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
+            pout[j] = REAL(w_nth_impl(px[j], pxo-1, pw-1, narm, ret, Q))[0];
+            Free(pxo);
+          }
+        }
+      }
+      setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
+      UNPROTECT(nprotect);
+      return out;
+    }
+    // returns a list of atomic elements
+    SEXP *restrict pout = SEXPPTR(out);
+    if(nullw) {
+      if(nthreads == 1) {
+        for(int j = 0; j < l; ++j) pout[j] = nth_impl(px[j], narm, ret, Q);
+      } else {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < l; ++j) pout[j] = nth_impl(px[j], narm, ret, Q);
+      }
+    } else { // TODO: if narm = FALSE, can compute sumw beforehand
+      if(nthreads == 1) { // Can re-use ordering of x
+        int *pxo = (int *) R_alloc(nrx, sizeof(int));
+        for(int j = 0; j < l; ++j) {
+          num1radixsort(pxo, TRUE, FALSE, px[j]);
+          pout[j] = w_nth_impl(px[j], pxo-1, pw-1, narm, ret, Q);
+        }
+      } else {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < l; ++j) {
+          int *pxo = (int *) Calloc(nrx, int);
+          num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
+          pout[j] = w_nth_impl(px[j], pxo-1, pw-1, narm, ret, Q);
+          Free(pxo);
+        }
+      }
+    }
+
+  } else { // with groups: do the usual checking
+
+    CHECK_GROUPS(nrx);
+
+    SEXP *restrict pout = SEXPPTR(out);
+    if(nullw) { // Parallelism at sub-column level
+      for(int j = 0; j < l; ++j) pout[j] = nth_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+    } else { // Parallelism at sub-column level
+      for(int j = 0; j < l; ++j) pout[j] = w_nth_g_qsort_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+    }
+  }
+
+  DFcopyAttr(out, x, ng);
+  UNPROTECT(nprotect);
+  return out;
+}
+
+
+// Iterate over matrix columns: for integers and doubles
+#define COLWISE_NTH(FUN, WFUN, ORDFUN)                                               \
+  if(nullw) {                                                                        \
+    if(nthreads == 1) {                                                              \
+      for(int j = 0; j < col; ++j) pres[j] = FUN(px + j*l, &l, l, 1, narm, ret, Q);  \
+    } else {                                                                         \
+      _Pragma("omp parallel for num_threads(nthreads)")                              \
+      for(int j = 0; j < col; ++j) pres[j] = FUN(px + j*l, &l, l, 1, narm, ret, Q);  \
+    }                                                                                \
+  } else {                                                                           \
+    --px;                                                                            \
+    if(nthreads == 1) {                                                              \
+      int *pxo = (int *) R_alloc(l, sizeof(int));                                    \
+      for(int j = 0; j < col; ++j) {                                                 \
+        ORDFUN(pxo, TRUE, FALSE, l, px + j*l);                                       \
+        pres[j] = WFUN(px + j*l, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);              \
+      }                                                                              \
+    } else {                                                                         \
+      _Pragma("omp parallel for num_threads(nthreads)")                              \
+      for(int j = 0; j < col; ++j) {                                                 \
+        int *pxo = (int *) Calloc(l, int);                                           \
+        ORDFUN(pxo, TRUE, FALSE, l, px + j*l); /* Probably cannot be parallelized */ \
+        pres[j] = WFUN(px + j*l, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);              \
+        Free(pxo);                                                                   \
+      }                                                                              \
+    }                                                                                \
+  }
+
+// The same by groups if data already sorted by groups. px and pw should be decremented by 1
+#define COLWISE_NTH_GROUPED_SORTED(tdef, FUN, WFUN)                                  \
+if(nullw) {                                                                          \
+  if(nthreads == 1) {                                                                \
+    for(int j = 0; j != col; ++j) {                                                  \
+      int jng = j * ng;                                                              \
+      tdef *pxj = px + j * l;                                                        \
+      for(int gr = 0; gr != ng; ++gr)                                                \
+        pres[jng + gr] = FUN(pxj + pst[gr], po, pgs[gr], 1, narm, ret, Q);           \
+    }                                                                                \
+  } else {                                                                           \
+    _Pragma("omp parallel for num_threads(nthreads)")                                \
+    for(int j = 0; j < col; ++j) {                                                   \
+      int jng = j * ng;                                                              \
+      tdef *pxj = px + j * l;                                                        \
+      for(int gr = 0; gr < ng; ++gr)                                                 \
+        pres[jng + gr] = FUN(pxj + pst[gr], po, pgs[gr], 1, narm, ret, Q);           \
+    }                                                                                \
+  }                                                                                  \
+} else {                                                                             \
+  if(nthreads == 1) {                                                                \
+    for(int j = 0; j != col; ++j) {                                                  \
+      int jng = j * ng;                                                              \
+      tdef *pxj = px + j * l;                                                        \
+      for(int gr = 0; gr != ng; ++gr)                                                \
+        pres[jng + gr] = WFUN(pxj + pst[gr], pw + pst[gr], po, DBL_MIN, pgs[gr], 1, narm, ret, Q); \
+    }                                                                                \
+  } else {                                                                           \
+    _Pragma("omp parallel for num_threads(nthreads)")                                \
+    for(int j = 0; j < col; ++j) {                                                   \
+      int jng = j * ng;                                                              \
+      tdef *pxj = px + j * l;                                                        \
+      for(int gr = 0; gr < ng; ++gr)                                                 \
+        pres[jng + gr] = WFUN(pxj + pst[gr], pw + pst[gr], po, DBL_MIN, pgs[gr], 1, narm, ret, Q); \
+    }                                                                                \
+  }                                                                                  \
+}
+
+// The more general case. po should be decremented by 1. What about others ??
+#define COLWISE_NTH_GROUPED_UNSORTED(tdef, FUN, WFUN)                                              \
+if(nullw) {                                                                                        \
+  if(nthreads == 1) {                                                                              \
+    for(int j = 0; j != col; ++j) {                                                                \
+      int jng = j * ng;                                                                            \
+      tdef *pxj = px + j * l;                                                                      \
+      for(int gr = 0; gr != ng; ++gr)                                                              \
+        pres[jng + gr] = FUN(pxj, po + pst[gr], pgs[gr], 0, narm, ret, Q);                         \
+    }                                                                                              \
+  } else {                                                                                         \
+    _Pragma("omp parallel for num_threads(nthreads)")                                              \
+    for(int j = 0; j < col; ++j) {                                                                 \
+      int jng = j * ng;                                                                            \
+      tdef *pxj = px + j * l;                                                                      \
+      for(int gr = 0; gr < ng; ++gr)                                                               \
+        pres[jng + gr] = FUN(pxj, po + pst[gr], pgs[gr], 0, narm, ret, Q);                         \
+    }                                                                                              \
+  }                                                                                                \
+} else {                                                                                           \
+  if(nthreads == 1) {                                                                              \
+    for(int j = 0; j != col; ++j) {                                                                \
+      int jng = j * ng;                                                                            \
+      tdef *pxj = px + j * l;                                                                      \
+      for(int gr = 0; gr != ng; ++gr)                                                              \
+        pres[jng + gr] = WFUN(pxj, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);           \
+    }                                                                                              \
+  } else {                                                                                         \
+    _Pragma("omp parallel for num_threads(nthreads)")                                              \
+    for(int j = 0; j < col; ++j) {                                                                 \
+      int jng = j * ng;                                                                            \
+      tdef *pxj = px + j * l;                                                                      \
+      for(int gr = 0; gr < ng; ++gr)                                                               \
+        pres[jng + gr] = WFUN(pxj, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);           \
+    }                                                                                              \
+  }                                                                                                \
+}
+
+// Function for matrices: implemented at lower-level
+SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {
+
+  SEXP dim = getAttrib(x, R_DimSymbol);
+  if(isNull(dim)) error("x is not a matrix");
+
+  int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1],
+      narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads),
+      nullg = isNull(g), nullw = isNull(w), nprotect = 1;
+
+  if(l <= 1) return x; // Prevents segfault for numeric(0) #101
+  if(nthreads > col) nthreads = col;
+  if(nthreads > max_threads) nthreads = max_threads;
+
+  CHECK_PROB(l);
+
+  double *restrict pw = &Q;
+  if(!nullw) {
+    CHECK_WEIGHTS(l);
+    --pw; // All functions need decremented w pointer
+  }
+
+  if(nullg) {
+    SEXP res = PROTECT(allocVector(REALSXP, col));
+
+    switch(tx) {
+      case REALSXP: {
+        double *px = REAL(x), *restrict pres = REAL(res);
+        COLWISE_NTH(nth_double, w_nth_double, dradixsort);
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: {  // Factor matrix not well defined object...
+        int *px = INTEGER(x), *restrict pres = INTEGER(res);
+        COLWISE_NTH(nth_int, w_nth_int, iradixsort);
+        break;
+      }
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
+    }
+
+    matCopyAttr(res, x, Rdrop, /*ng=*/0);
+    UNPROTECT(nprotect);
+    return res;
+  }
+
+  // With groups
+  int ng;
+  CHECK_GROUPS(l);
+
+  SEXP res = PROTECT(allocVector(REALSXP, col * ng));
+
+  if(sorted) { // Sorted
+    switch(tx) {
+      case REALSXP: {
+        double *px = REAL(x)-1, *restrict pres = REAL(res);
+        COLWISE_NTH_GROUPED_SORTED(double, nth_double, w_nth_double_qsort);
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: { // Factor matrix not well defined object...
+        int *px = INTEGER(x)-1, *restrict pres = INTEGER(res);
+        COLWISE_NTH_GROUPED_SORTED(int, nth_int, w_nth_int_qsort);
+        break;
+      }
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
+    }
+  } else { // Not sorted
+    switch(tx) {
+      case REALSXP: {
+        double *px = REAL(x)-1, *restrict pres = REAL(res);
+        COLWISE_NTH_GROUPED_UNSORTED(double, nth_double, w_nth_double_qsort);
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: { // Factor matrix not well defined object...
+        int *px = INTEGER(x)-1, *restrict pres = INTEGER(res);
+        COLWISE_NTH_GROUPED_UNSORTED(int, nth_int, w_nth_int_qsort);
+        break;
+      }
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
+    }
+  }
+
+  matCopyAttr(res, x, Rdrop, ng);
+  UNPROTECT(nprotect);
+  return res;
+}
+
