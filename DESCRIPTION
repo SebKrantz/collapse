@@ -19,11 +19,13 @@ Description: A C/C++ based package for advanced data transformation and
     statistical computing in R that is extremely fast, class-agnostic,
     and programmer friendly through a flexible and parsimonious syntax.
     Core functionality includes S3 generic grouped and weighted statistical 
-    functions, fast grouping and ordering algorithms, data manipulation and 
-    transformation functions, flexible and rigorous handling of time 
-    series and panel data. It also includes fast functions for common 
-    statistical procesures, detailed summary statistics, powerful
-    tools to work with nested data, functions that allow memory efficient 
+    functions for vectors, matrices and data frames, providing extremely
+    efficient multi-dimensional vecorizations and OpenMP multithreading.
+    These are integreated with fast grouping and ordering functions/algorithms, 
+    data manipulation and transformation functions, including flexible and 
+    rigorous handling of time series and panel data. It also includes fast 
+    functions for common statistical procesures, detailed summary statistics, 
+    powerful tools to work with nested data, functions that allow memory efficient 
     R programming, and help dealing with variable labels and attributes.
     It is well integrated with base R, 'dplyr' / (grouped) 'tibble', 
     'data.table', 'sf', 'plm' (panel-series and data frames), and 
