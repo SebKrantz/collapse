@@ -1247,7 +1247,6 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
 // }
 
 
-// TODO: quicksort versions... can use R_qsort etc..
 
 // Functions for Export --------------------------------------------------------
 
@@ -1255,8 +1254,11 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
 // otherwise assign pointer...
 // Also for multiple columns with weights if na.rm = FALSE, can compute h's and supply repeatedly for each column
 
-// Function for atomic vectors: has extra arguments o and checko for passing external ordering vector
-// This is meant to speed up computation of several (grouped) quantiles on the same data
+/*
+   Function for atomic vectors: has extra arguments o and checko for passing external ordering vector.
+   This is meant to speed up computation of several (grouped) quantiles on the same data.
+   Note that for grouped execution the ordering vector needs to take into account the grouping e.g radixorder(GRPid(), myvar).
+ */
 SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads, SEXP o, SEXP checko) {
 
   int nullg = isNull(g), nullw = isNull(w), nullo = isNull(o), l = length(x), narm = asLogical(Rnarm),
@@ -1344,7 +1346,11 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
     if(nullo) po = INTEGER(ord)-1;
     pst = INTEGER(getAttrib(ord, install("starts")));
   }
-  /* Previous version: compute po if overall ordering of x is supplied to o
+  /*
+   * Previous version: computes po if overall ordering of x is supplied to o. This is made redundant by requiring
+   * the ordering o to now take into account the grouping (facilitated by R-level helper GRPid()), which provides
+   * much greater speedup for repeated executions, and by the addition of w_nth_g_qsort_impl().
+   *
   if((!nullw && nullo) || isNull(ord)) { // Extra case: if ordering vector supplied, need to use it to get the group elements in order
     int *restrict pgv = INTEGER(pg[1]);
     if(isNull(ord)) {
@@ -1368,7 +1374,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
       Free(count);
     }
     ++pst;
-  } else { // from here same as above
+  }
    */
 
   if(nullw && nullo) res = nth_g_impl(x, ng, pgs, po, pst, sorted, narm, ret, Q, asInteger(Rnthreads));
