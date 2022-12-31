@@ -545,15 +545,15 @@ res = wb + h * (a - wb);                                                   \
 }
 
 // Finally, in the default vector method: also provide the option to pass an ordering vector of x, even without weights
-// if teh groups are unsorted, po needs to be recomputed to provide the ordering within groups
+// if the groups are unsorted, po needs to be recomputed to provide the ordering within groups
 
 // Expects pointers px and po to be decremented by 1
-#define NTH_ORDVEC                                                          \
-double a, b, h;                                                             \
-RETQSWITCH(l);                                                              \
-int ih = h; a = px[po[ih]];                                                 \
-if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a;  \
-b = px[po[ih+1]];                                                           \
+#define NTH_ORDVEC                                                         \
+double a, b, h;                                                            \
+RETQSWITCH(l);                                                             \
+int ih = h; a = px[po[ih]];                                                \
+if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a; \
+b = px[po[ih+1]];                                                          \
 return (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);
 
 
