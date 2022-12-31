@@ -9,23 +9,31 @@
 
 extern int max_threads;
 
-void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng);
-void DFcopyAttr(SEXP out, SEXP x, int ng);
+// from base_radixsort.h (with significant modifications)
+SEXP Cradixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+void num1radixsort(int *, Rboolean, Rboolean, SEXP);
+void iradixsort(int *, Rboolean, Rboolean, int, int *);
+void dradixsort(int *, Rboolean, Rboolean, int, double *);
 
+// from stats_mAR.c
 void multi_yw(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+SEXP pacf1(SEXP, SEXP);
+
+// from data.table.h (with major modifications)
 SEXP collapse_init(SEXP);
 SEXP dt_na(SEXP, SEXP, SEXP, SEXP);
 SEXP allNAv(SEXP, SEXP);
-SEXP Cradixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x);
 SEXP frankds(SEXP, SEXP, SEXP, SEXP);
-SEXP pacf1(SEXP, SEXP);
 SEXP rbindlist(SEXP, SEXP, SEXP, SEXP);
 SEXP setcolorder(SEXP, SEXP);
 SEXP subsetDT(SEXP, SEXP, SEXP, SEXP);
 SEXP subsetCols(SEXP, SEXP, SEXP);
 SEXP subsetVector(SEXP, SEXP, SEXP);
-SEXP Calloccol(SEXP dt); // , SEXP Rn
+SEXP Calloccol(SEXP);
+
+// Native collapse functions
+void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng);
+void DFcopyAttr(SEXP out, SEXP x, int ng);
 SEXP falloc(SEXP, SEXP);
 SEXP frange(SEXP x, SEXP Rnarm);
 SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads);
@@ -114,9 +122,9 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads);
 SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads);
 SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads);
 // fnth, rewritten in C:
-SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads);
-SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads);
-SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads);
+SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads, SEXP o, SEXP checko);
+// SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads);
+// SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads);
 // New: fquantile:
 SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEXP Rnames, SEXP checko);
 
