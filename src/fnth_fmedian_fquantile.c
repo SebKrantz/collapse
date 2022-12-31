@@ -481,8 +481,8 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
   return (double)a + h*(double)(b-a); // same as (1-h)*(double)a + h*(double)b
 }
 
-// With weights, currently radix sort of the entire vector, and then passing through by groups
-// TODO: quicksort for weighted statistics at the group-level? could be a partial sort so potentially faster and parallelizable...
+// With weights, either radix sort of the entire vector, and then passing through by groups,
+// or quicksort at the group-level
 
 double w_compute_h(const double *pw, const int *po, const int l, const int sorted, const int ret, const double Q) {
   double sumw = 0.0, mu, h;
@@ -525,21 +525,21 @@ wb = px[po[k]];                                                            \
 return wb + h * (a - wb);
 
 // This is the same, just that the result is assigned. Needed for quicksort based implementations
-#define WNTH_CORE_RES                                                      \
+#define WNTH_CORE_QSORT                                                    \
 double res, wsum = 0.0, wb, a; /* TODO: reuse wsum, eliminate a */         \
 int k = 0;                                                                 \
-while(wsum <= h) wsum += pw[po[k++]];                                      \
-a = px[po[k == 0 ? 0 : k-1]];                                              \
+while(wsum <= h) wsum += pw[i_cc[k++]];                                    \
+a = x_cc[k == 0 ? 0 : k-1];                                                \
 if((ret < 4 && (ret != 1 || l%2 == 1)) || k == 0 || k == l || h == 0.0) {  \
   res = a; /* TODO: ret == 1 averaging */                                  \
 } else {                                                                   \
-wb = pw[po[k]];                                                            \
+wb = pw[i_cc[k]];                                                          \
 if(wb == 0.0)  /* If zero weights, need to move forward*/                  \
-  while(k < l-1 && wb == 0.0) wb = pw[po[++k]];                            \
+  while(k < l-1 && wb == 0.0) wb = pw[i_cc[++k]];                          \
 if(wb == 0.0) res = a;                                                     \
 else {                                                                     \
 h = (wsum - h) / wb;                                                       \
-wb = px[po[k]];                                                            \
+wb = x_cc[k];                                                              \
 res = wb + h * (a - wb);                                                   \
 }                                                                          \
 }
@@ -670,7 +670,68 @@ double ord_nth_double(const double *restrict px, const int *restrict po, int l, 
 }
 
 
-double w_nth_double_qsort(const double *restrict px, const double *restrict pw, int *restrict po, double h,
+// Group-level quicksort versions
+double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const int *restrict po, double h,
+                       const int l, const int sorted, const int narm, const int ret, const double Q) {
+  if(l == 0) return NA_REAL;
+  if(l == 1) {
+    if(sorted) return ISNAN(pw[1]) ? NA_REAL : px[1];
+    return ISNAN(pw[po[0]]) ? NA_REAL : px[po[0]];
+  }
+
+  int *x_cc = (int *) Calloc(l, int), *i_cc = (int *) Calloc(l, int), n = 0; // TODO: alloc i_cc afterwards if narm ??
+
+  if(sorted) { // both the pointers to x and w need to be suitably incremented for grouped execution.
+    if(narm) {
+      for(int i = 0; i != l; ++i) {
+        if(px[i] != NA_INTEGER) {
+          i_cc[n] = i;
+          x_cc[n++] = px[i];
+        }
+      }
+    } else {
+      n = l;
+      for(int i = 0; i != l; ++i) {
+        i_cc[i] = i;
+        x_cc[i] = px[i];
+      }
+    }
+  } else {
+    const int *pxm = px-1;
+    if(narm) {
+      for(int i = 0; i != l; ++i) {
+        if(pxm[po[i]] != NA_INTEGER) {
+          i_cc[n] = po[i];
+          x_cc[n++] = pxm[po[i]];
+        }
+      }
+    } else {
+      n = l;
+      for(int i = 0; i != l; ++i) {
+        i_cc[i] = po[i];
+        x_cc[i] = pxm[po[i]];
+      }
+    }
+  }
+
+  R_qsort_int_I(x_cc, i_cc, 1, n);
+
+  // TODO: Check if this makes sense...
+  if(h == DBL_MIN) h = w_compute_h(pw+1, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(ISNAN(h)) {
+    Free(x_cc);
+    Free(i_cc);
+    return NA_REAL;
+  }
+
+  WNTH_CORE_QSORT;
+
+  Free(x_cc);
+  Free(i_cc);
+  return res;
+}
+
+double w_nth_double_qsort(const double *restrict px, const double *restrict pw, const int *restrict po, double h,
                           const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l == 0) return NA_REAL;
   if(l == 1) {
@@ -718,10 +779,13 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
 
   // TODO: Check if this makes sense...
   if(h == DBL_MIN) h = w_compute_h(pw+1, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
-  if(ISNAN(h)) return NA_REAL;
-  po = i_cc;
+  if(ISNAN(h)) {
+    Free(x_cc);
+    Free(i_cc);
+    return NA_REAL;
+  }
 
-  WNTH_CORE_RES;
+  WNTH_CORE_QSORT;
 
   Free(x_cc);
   Free(i_cc);
@@ -927,31 +991,53 @@ SEXP ord_nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int narm, int r
   return res;
 }
 
-// New: try group-level quicksort algorithm.
-SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int narm, int ret, double Q, int nthreads) {
+// Expects pointer po to be decremented by 1
+SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, int nthreads) {
 
   if(nthreads > ng) nthreads = ng;
 
   SEXP res = PROTECT(allocVector(REALSXP, ng));
   double *pres = REAL(res);
 
-  switch(TYPEOF(x)) {
-  case REALSXP: {
-    double *px = REAL(x)-1;
-#pragma omp parallel for num_threads(nthreads)
-    for(int gr = 0; gr < ng; ++gr)
-      pres[gr] = w_nth_double(px, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);
-    break;
-  }
-  case INTSXP:
-  case LGLSXP: {
-    int *px = INTEGER(x)-1;
-#pragma omp parallel for num_threads(nthreads)
-    for(int gr = 0; gr < ng; ++gr)
-      pres[gr] = w_nth_int(px, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);
-    break;
-  }
-  default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+  if(sorted) { // sorted by groups: need to offset both px and pw
+    --pw;
+    switch(TYPEOF(x)) {
+      case REALSXP: {
+        double *px = REAL(x)-1;
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr)
+          pres[gr] = w_nth_double_qsort(px + pst[gr], pw + pst[gr], po, DBL_MIN, pgs[gr], 1, narm, ret, Q);
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: {
+        int *px = INTEGER(x)-1;
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr)
+          pres[gr] = w_nth_int_qsort(px + pst[gr], pw + pst[gr], po, DBL_MIN, pgs[gr], 1, narm, ret, Q);
+        break;
+      }
+      default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+    }
+  } else {
+    switch(TYPEOF(x)) {
+      case REALSXP: {
+        double *px = REAL(x);
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr)
+          pres[gr] = w_nth_double_qsort(px, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: {
+        int *px = INTEGER(x);
+        #pragma omp parallel for num_threads(nthreads)
+        for(int gr = 0; gr < ng; ++gr)
+          pres[gr] = w_nth_int_qsort(px, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);
+        break;
+      }
+      default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+    }
   }
 
   if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
