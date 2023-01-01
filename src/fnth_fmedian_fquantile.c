@@ -1086,6 +1086,26 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
 // otherwise assign pointer...
 // Also for multiple columns with weights if na.rm = FALSE, can compute h / sumw and supply repeatedly for each column
 
+int Rties2int(SEXP x) {
+  int tx = TYPEOF(x);
+  if(tx == INTSXP || tx == REALSXP || tx == LGLSXP) {
+    int ret = asInteger(x);
+    if(ret < 1 || ret > 9 || ret == 4) error("ties must be 1, 2, 3 or 5-9, you supplied: %d", ret);
+    return ret;
+  }
+  if(tx != STRSXP) error("ties must be integer or character");
+  const char * r = CHAR(STRING_ELT(x, 0)); // translateCharUTF8()
+  if(strcmp(r, "mean") == 0) return 1;
+  if(strcmp(r, "min") == 0) return 2;
+  if(strcmp(r, "max") == 0) return 3;
+  if(strcmp(r, "q5") == 0) return 5;
+  if(strcmp(r, "q6") == 0) return 6;
+  if(strcmp(r, "q7") == 0) return 7;
+  if(strcmp(r, "q8") == 0) return 8;
+  if(strcmp(r, "q9") == 0) return 9;
+  error("Unknown ties option: %s", r);
+}
+
 #undef CHECK_PROB
 #define CHECK_PROB(l)                                                                                                                                                            \
   if(length(p) != 1) error("fnth supports only a single element / quantile. Use fquantile for multiple quantiles.");                                                             \
@@ -1121,7 +1141,7 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
 SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads, SEXP o, SEXP checko) {
 
   int nullg = isNull(g), nullw = isNull(w), nullo = isNull(o), l = length(x), narm = asLogical(Rnarm),
-      ret = asInteger(Rret), nprotect = 0;
+      ret = Rties2int(Rret), nprotect = 0;
 
   if(l <= 1) return x;
 
@@ -1257,7 +1277,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
 SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {
 
   int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0, nprotect = 1,
-    narm = asLogical(Rnarm), drop = asLogical(Rdrop), ret = asInteger(Rret), nthreads = asInteger(Rnthreads);
+    narm = asLogical(Rnarm), drop = asLogical(Rdrop), ret = Rties2int(Rret), nthreads = asInteger(Rnthreads);
 
   if(l < 1) return x;
   if(nthreads > max_threads) nthreads = max_threads;
@@ -1470,7 +1490,7 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   if(isNull(dim)) error("x is not a matrix");
 
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1],
-      narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads),
+      narm = asLogical(Rnarm), ret = Rties2int(Rret), nthreads = asInteger(Rnthreads),
       nullg = isNull(g), nullw = isNull(w), nprotect = 1;
 
   if(l <= 1) return x; // Prevents segfault for numeric(0) #101
