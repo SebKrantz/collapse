@@ -1269,7 +1269,7 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
   double Q = asReal(p);                                                                                                                                                          \
   if(ISNAN(Q) || Q <= 0.0 || Q == 1.0) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");                             \
   if(Q > 1.0) {                                                                                                                                                                  \
-    ret = 2; /* Correct ?? */                                                                                                                                                    \
+    ret = 2; /* TODO: Correct ?? */                                                                                                                                                    \
     if(nullg) {                                                                                                                                                                  \
       if(Q >= l) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");                                                   \
       Q = (Q-1.0)/(l-1);                                                                                                                                                         \
@@ -1537,19 +1537,18 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       for(int j = 0; j < col; ++j) pres[j] = FUN(px + j*l, &l, l, 1, narm, ret, Q);  \
     }                                                                                \
   } else {                                                                           \
-    --px;                                                                            \
     if(nthreads == 1) {                                                              \
       int *pxo = (int *) R_alloc(l, sizeof(int));                                    \
       for(int j = 0; j < col; ++j) {                                                 \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l);                                       \
-        pres[j] = WFUN(px + j*l, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);              \
+        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);          \
       }                                                                              \
     } else {                                                                         \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) {                                                 \
         int *pxo = (int *) Calloc(l, int);                                           \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l); /* Probably cannot be parallelized */ \
-        pres[j] = WFUN(px + j*l, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);              \
+        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);          \
         Free(pxo);                                                                   \
       }                                                                              \
     }                                                                                \
