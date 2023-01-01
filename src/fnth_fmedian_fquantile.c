@@ -517,16 +517,24 @@ double w_compute_h(const double *pw, const int *po, const int l, const int sorte
 // Expects pointers px and pw to be decremented by one
 #undef WNTH_CORE
 #define WNTH_CORE                                                          \
-double wsum = 0.0, wb, a; /* TODO: reuse wsum, eliminate a */              \
+double wsum = 0.0, wb, a;                                                  \
 int k = 0;                                                                 \
 while(wsum <= h) wsum += pw[po[k++]];                                      \
 a = px[po[k == 0 ? 0 : k-1]];                                              \
-if((ret < 4 && (ret != 1 || l%2 == 1)) || k == 0 || k == l || h == 0.0)    \
-  return a; /* TODO: ret == 1 averaging */                                 \
+if((ret < 4 && (ret != 1 || wsum != h)) || k == 0 || k == l || h == 0.0)   \
+  return a;                                                                \
+if(ret == 1) { /* ret == 1: averaging, incl. zero weight elements */       \
+  wsum = 2.0; wb = px[po[k]];                                              \
+  while(k < l-1 && pw[po[k]] == 0.0) {                                     \
+    wb += px[po[++k]]; ++wsum;                                             \
+  }                                                                        \
+  return (a + wb) / wsum;                                                  \
+}                                                                          \
 wb = pw[po[k]];                                                            \
-if(wb == 0.0)  /* If zero weights, need to move forward*/                  \
+if(wb == 0.0) { /* If zero weights, need to move forward*/                 \
   while(k < l-1 && wb == 0.0) wb = pw[po[++k]];                            \
-if(wb == 0.0) return a;                                                    \
+  if(wb == 0.0) return a;                                                  \
+}                                                                          \
 h = (wsum - h) / wb;                                                       \
 wb = px[po[k]];                                                            \
 return wb + h * (a - wb);
@@ -535,22 +543,28 @@ return wb + h * (a - wb);
 // Does not require incremented pointers (depending on the content of i_cc)
 #undef WNTH_CORE_QSORT
 #define WNTH_CORE_QSORT                                                    \
-double res, wsum = 0.0, wb, a; /* TODO: reuse wsum, eliminate a */         \
+double res, wsum = 0.0, wb, a;                                             \
 int k = 0;                                                                 \
 while(wsum <= h) wsum += pw[i_cc[k++]];                                    \
 a = x_cc[k == 0 ? 0 : k-1];                                                \
-if((ret < 4 && (ret != 1 || l%2 == 1)) || k == 0 || k == l || h == 0.0) {  \
-  res = a; /* TODO: ret == 1 averaging */                                  \
+if((ret < 4 && (ret != 1 || wsum != h)) || k == 0 || k == l || h == 0.0) { \
+  res = a;                                                                 \
+} else if(ret == 1) { /* ret == 1: averaging, incl. zero weight elements */\
+  wsum = 2.0; wb = px[k];                                                  \
+  while(k < l-1 && pw[i_cc[k]] == 0.0) {                                   \
+    wb += px[++k]; ++wsum;                                                 \
+  }                                                                        \
+  res = (a + wb) / wsum;                                                   \
 } else {                                                                   \
-wb = pw[i_cc[k]];                                                          \
-if(wb == 0.0)  /* If zero weights, need to move forward*/                  \
-  while(k < l-1 && wb == 0.0) wb = pw[i_cc[++k]];                          \
-if(wb == 0.0) res = a;                                                     \
-else {                                                                     \
-h = (wsum - h) / wb;                                                       \
-wb = x_cc[k];                                                              \
-res = wb + h * (a - wb);                                                   \
-}                                                                          \
+  wb = pw[i_cc[k]];                                                        \
+  if(wb == 0.0)  /* If zero weights, need to move forward*/                \
+    while(k < l-1 && wb == 0.0) wb = pw[i_cc[++k]];                        \
+  if(wb == 0.0) res = a;                                                   \
+  else {                                                                   \
+    h = (wsum - h) / wb;                                                   \
+    wb = x_cc[k];                                                          \
+    res = wb + h * (a - wb);                                               \
+  }                                                                        \
 }
 
 // Finally, in the default vector method: also provide the option to pass an ordering vector of x, even without weights
