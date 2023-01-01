@@ -145,10 +145,10 @@ void R_init_collapse(DllInfo *dll) {
   /* C API
 
      Functions start with cp_, and can be used using e.g. cp_dist = R_GetCCallable("collapse", "cp_dist");
-     See section 5.4.3 of Writing R Extensions:
+     after declaring the function. See section 5.4.3 of Writing R Extensions:
      https://cran.r-project.org/doc/manuals/R-exts.html#Registering-native-routines
 
-     The API is not documented. You need to look up the function
+     The C API is not documented. You need to look up the function
      in the C code under src/, and perhaps also how it is used under R/. Feel free to request
      export of additional C/C++ functions. I do not a-priori guarantee C API stability, so I
      recommend you contact me if you want to use a C function in a package.
