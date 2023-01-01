@@ -5,7 +5,7 @@
 
 /*
  Inspired by Numerical Recipes in C and data.table's quickselect.c,
- R's quantile() function, Rfast2::Quantile, and these references for sample quantiles:
+ R's quantile() function, Rfast2::Quantile(), and these references for sample quantiles:
    https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
    https://doi.org/10.2307/2684934
    https://aakinshin.net/posts/weighted-quantiles/
@@ -1069,213 +1069,12 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
 }
 
 
-// // This only works for a single vector, po is the ordering of x
-// SEXP w_ord_nth_impl(SEXP x, int *po, double *pw, double h, int narm, int ret, double Q) {
-//   int n = length(x), l = n;
-//
-//   if(narm) {
-//     if(tx == REALSXP) { // Numeric data
-//       double *px = REAL(x)-1;
-//       if(ISNAN(px[po[0]])) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fnth().");
-//       --po; while(ISNAN(px[po[l]]) && l != 0) --l; ++po;
-//       if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
-//     } else {
-//       int *px = INTEGER(x)-1;
-//       if(px[po[0]] == NA_INTEGER) error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fnth().");
-//       --po; while(px[po[l]] == NA_INTEGER && l != 0) --l; ++po;
-//       if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
-//     }
-//   }
-//
-//   double res, a, b; // result and required constants
-//
-//   if(ISNAN(h)) { // If just an ordering vector is supplied
-//
-//   #define NTH_ORDVEC                                                          \
-//     RETQSWITCH(l);                                                            \
-//     int ih = h; a = px[po[ih]];                                               \
-//     if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) res = a; \
-//     else {                                                                    \
-//       b = px[po[ih+1]];                                                       \
-//       res == (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);     \
-//     }
-//
-//     if(tx == REALSXP) { // Numeric data
-//       double *px = REAL(x)-1;
-//       NTH_ORDVEC;
-//     } else {
-//       int *px = INTEGER(x)-1;
-//       NTH_ORDVEC;
-//     }
-//
-//   } else { // Weighted quantile
-//
-//     double wsum = 0.0, wb; // wsum is running sum
-//
-//     if(narm || h = DBL_MIN) {
-//
-//       double sumw = 0.0;
-//       int nw0 = 0;
-//
-//       for(unsigned int i = 0; i != l; ++i) {
-//         wsum = pw[po[i]];
-//         if(wsum == 0.0) ++nw0;
-//         sumw += wsum;
-//       }
-//       wsum = 0.0;
-//       if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
-//       else if(sumw < 0.0) error("Weights must be positive or zero");
-//       if(l == nw0 || sumw == 0.0) l = 0; /// TODO: what to do here ??
-//       else mu = sumw / (l - nw0); // repetitive? provide as input??
-//
-//       RETWQSWITCH(sumw, mu);
-//     }
-//
-//      #define WNTH_CORE                                                             \
-//         while(wsum <= h) wsum += pw[po[k++]];                                      \
-//         a = px[po[k == 0 ? 0 : k-1]];                                              \
-//         if((ret < 4 && (ret != 1 || l%2 == 1)) || k == 0 || k == l || h == 0.0) {  \
-//           res = a; /* TODO: ret == 1 averaging */                                  \
-//         } else {                                                                   \
-//           wb = pw[po[k]];                                                          \
-//           /* If zero weights, need to move forward*/                               \
-//           if(wb == 0.0)                                                            \
-//              while(k < l-1 && wb == 0.0) wb = pw[po[++k]];                         \
-//           if(wb == 0.0) pres = a;                                                  \
-//           else {                                                                   \
-//             b = px[po[k]];                                                         \
-//             h = (wsum - h) / wb;                                                   \
-//             res = b + h * (a - b);                                                 \
-//           }                                                                        \
-//         }
-//       // Previous zero-weight code in fnth: forward iteration with simple averaging of adjacent order statistics.
-//       // if(wsum == h) {
-//       //   double out = px[po[k-1]], n = 2;
-//       //   while(pw[po[k]] == 0) {
-//       //     out += px[po[k++]];
-//       //     ++n;
-//       //   }
-//       //   pres[i] = (out + px[po[k]]) / n;
-//       // }
-//
-//     if(tx == REALSXP) { // Numeric data
-//       double *px = REAL(x)-1;
-//       WNTH_CORE;
-//     } else {
-//       int *px = INTEGER(x)-1;
-//       WNTH_CORE;
-//     }
-//
-//   }
-//
-//   if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return ScalarReal(res);
-//
-//   SEXP out = ScalarReal(res); // Needs protection ??
-//   copyMostAttrib(x, out);
-//   return out;
-// }
-//
-// // NOTE: This is too complicated: need to create lots of intermediate vectors
-// SEXP w_ord_nth_g_impl(SEXP x, int *po, double *pw, int *pg, int ng, int *pgs, int sorted, double h, int narm, int ret, double Q) {
-//
-//   int l = length(x), tx = TYPEOF(x);
-//
-//   if(sorted) { // TODO: things are easy.. just pass through o
-//
-//   }
-//
-//   double *wsumQ = (double*)Calloc(ng, double)-1, *wsum = (double*)Calloc(ng, double);
-//   SEXP out = PROTECT(allocVector(REALSXP, ng));
-//
-//   if(narm) {
-//     switch(tx) {
-//     case REALSXP:
-//       for(int i = 0; i != l; ++i) if(NISNAN(x[i])) wsumQ[pg[i]] += pw[i];
-//       break;
-//     case INTSXP:
-//     case LGLSXP:
-//       for(int i = 0; i != l; ++i) if(x[i] != NA_INTEGER) wsumQ[pg[i]] += pw[i];
-//       break;
-//     default: error("Not Supported SEXP Type: '%s'", type2char(tx));
-//     }
-//   } else {
-//     for(int i = 0; i != l; ++i) wsumQ[pg[i]] += pw[i];
-//   }
-//
-//   for(int i = 0; i != ng; ++i) {
-//     if(ISNAN(wsumQ[i])) stop("Missing weights in order statistics are currently only supported if x is also missing");
-//     wsumQ[i] *= Q;
-//   }
-//
-//
-//   // wsumQ = wsumQ * Q;
-//   int gi, oi;
-//   if(tiesmean) {
-//     std::vector<bool> seen(ng);
-//     std::vector<int> n(ng, 1); // only needed for 0 weights. Could check above if there are any.
-//     for(int i = 0; i != l; ++i) {
-//       oi = o[i]-1;
-//       gi = g[oi]-1;
-//       if(seen[gi]) continue;
-//       if(wsum[gi] < wsumQ[gi]) out[gi] = x[oi];
-//       else {
-//         if(wsum[gi] > wsumQ[gi]) {
-//           seen[gi] = true;
-//           continue;
-//         }
-//         out[gi] += (x[oi]-out[gi])/++n[gi]; // https://stackoverflow.com/questions/28820904/how-to-efficiently-compute-average-on-the-fly-moving-average
-//       }
-//       wsum[gi] += wg[oi];
-//     }
-//   } else if(lower) {
-//     for(int i = 0; i != l; ++i) {
-//       oi = o[i]-1;
-//       gi = g[oi]-1;
-//       if(wsum[gi] < wsumQ[gi]) {
-//         wsum[gi] += wg[oi];
-//         out[gi] = x[oi];
-//       }
-//     }
-//   } else {
-//     for(int i = 0; i != l; ++i) {
-//       oi = o[i]-1;
-//       gi = g[oi]-1;
-//       if(wsum[gi] <= wsumQ[gi]) {
-//         wsum[gi] += wg[oi];
-//         out[gi] = x[oi];
-//       }
-//     }
-//   }
-//
-//
-//
-// #define NTH_ORDVEC                                                         \
-//   RETQSWITCH(l);                                                            \
-//   int ih = h; a = px[po[ih]];                                               \
-//   if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) res = a; \
-//   else {                                                                    \
-//     b = px[po[ih+1]];                                                       \
-//     res == (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);     \
-//   }
-//
-// if(tx == REALSXP) { // Numeric data
-//   double *px = REAL(x)-1;
-//   NTH_ORDVEC;
-// } else {
-//   int *px = INTEGER(x)-1;
-//   NTH_ORDVEC;
-// }
-//
-//
-// }
-
-
 
 // Functions for Export --------------------------------------------------------
 
 // TODO: Single thread optimization: re-use array for quickselect?? should be quite easy... just check if nthreads = 1,
 // otherwise assign pointer...
-// Also for multiple columns with weights if na.rm = FALSE, can compute h's and supply repeatedly for each column
+// Also for multiple columns with weights if na.rm = FALSE, can compute h / sumw and supply repeatedly for each column
 
 #undef CHECK_PROB
 #define CHECK_PROB(l)                                                                                                                                                            \
@@ -1283,7 +1082,7 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
   double Q = asReal(p);                                                                                                                                                          \
   if(ISNAN(Q) || Q <= 0.0 || Q == 1.0) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");                             \
   if(Q > 1.0) {                                                                                                                                                                  \
-    ret = 2; /* TODO: Correct ?? */                                                                                                                                                    \
+    ret = 2; /* ties = "min" */                                                                                                                                                    \
     if(nullg) {                                                                                                                                                                  \
       if(Q >= l) error("n needs to be between 0 and 1, or between 1 and length(x). Use fmin and fmax for minima and maxima.");                                                   \
       Q = (Q-1.0)/(l-1);                                                                                                                                                         \
@@ -1615,7 +1414,7 @@ if(nullw) {                                                                     
   }                                                                                  \
 }
 
-// The more general case. po should be decremented by 1. What about others ?
+// The more general case. po should be decremented by 1.
 #undef COLWISE_NTH_GROUPED_UNSORTED
 #define COLWISE_NTH_GROUPED_UNSORTED(tdef, FUN, WFUN)                                              \
 if(nullw) {                                                                                        \
