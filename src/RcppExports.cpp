@@ -248,65 +248,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// fnthCpp
-NumericVector fnthCpp(const NumericVector& x, double Q, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, int ret, int nthreads);
-RcppExport SEXP _collapse_fnthCpp(SEXP xSEXP, SEXP QSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP retSEXP, SEXP nthreadsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericVector& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(fnthCpp(x, Q, ng, g, gs, w, narm, ret, nthreads));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fnthmCpp
-SEXP fnthmCpp(const NumericMatrix& x, double Q, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret, int nthreads);
-RcppExport SEXP _collapse_fnthmCpp(SEXP xSEXP, SEXP QSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP dropSEXP, SEXP retSEXP, SEXP nthreadsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(fnthmCpp(x, Q, ng, g, gs, w, narm, drop, ret, nthreads));
-    return rcpp_result_gen;
-END_RCPP
-}
-// fnthlCpp
-SEXP fnthlCpp(const List& x, double Q, int ng, const IntegerVector& g, const SEXP& gs, const SEXP& w, bool narm, bool drop, int ret, int nthreads);
-RcppExport SEXP _collapse_fnthlCpp(SEXP xSEXP, SEXP QSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP gsSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP dropSEXP, SEXP retSEXP, SEXP nthreadsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const List& >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type Q(QSEXP);
-    Rcpp::traits::input_parameter< int >::type ng(ngSEXP);
-    Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type gs(gsSEXP);
-    Rcpp::traits::input_parameter< const SEXP& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< bool >::type narm(narmSEXP);
-    Rcpp::traits::input_parameter< bool >::type drop(dropSEXP);
-    Rcpp::traits::input_parameter< int >::type ret(retSEXP);
-    Rcpp::traits::input_parameter< int >::type nthreads(nthreadsSEXP);
-    rcpp_result_gen = Rcpp::wrap(fnthlCpp(x, Q, ng, g, gs, w, narm, drop, ret, nthreads));
-    return rcpp_result_gen;
-END_RCPP
-}
 // fscaleCpp
 NumericVector fscaleCpp(const NumericVector& x, int ng, const IntegerVector& g, const SEXP& w, bool narm, double set_mean, double set_sd);
 RcppExport SEXP _collapse_fscaleCpp(SEXP xSEXP, SEXP ngSEXP, SEXP gSEXP, SEXP wSEXP, SEXP narmSEXP, SEXP set_meanSEXP, SEXP set_sdSEXP) {

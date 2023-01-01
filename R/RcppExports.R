@@ -49,18 +49,6 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
     .Call(`_collapse_flagleadlCpp`, x, n, fill, ng, g, t, names)
 }
 
-fnthCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, ret = 1L, nthreads = 1L) {
-    .Call(`_collapse_fnthCpp`, x, Q, ng, g, gs, w, narm, ret, nthreads)
-}
-
-fnthmCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L, nthreads = 1L) {
-    .Call(`_collapse_fnthmCpp`, x, Q, ng, g, gs, w, narm, drop, ret, nthreads)
-}
-
-fnthlCpp <- function(x, Q = 0.5, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L, nthreads = 1L) {
-    .Call(`_collapse_fnthlCpp`, x, Q, ng, g, gs, w, narm, drop, ret, nthreads)
-}
-
 fscaleCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, set_sd = 1) {
     .Call(`_collapse_fscaleCpp`, x, ng, g, w, narm, set_mean, set_sd)
 }
