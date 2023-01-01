@@ -148,34 +148,36 @@ void R_init_collapse(DllInfo *dll) {
      after declaring cp_dist with the arguments of the function (fdist). See section 5.4.3 of Writing R Extensions:
      https://cran.r-project.org/doc/manuals/R-exts.html#Registering-native-routines
 
-     The C API is not documented. You need to look up functions
-     in the C code under src/, and perhaps also how it is used under R/. Feel free to request
-     export of additional C/C++ functions. I do not a-priori guarantee C API stability, so I
-     recommend you contact me if you want to use a C function in a package.
-     I am also happy to answer questions regarding the arguments and use of certain C functions. */
+     The C API is not documented, but I have indicated corresponding R functions for C functions callable from R.
+     For confident use, look up functions in the C code under src/, and where/how it is used under R/.
+     Feel free to request export of additional C/C++ functions. I do not a priori guarantee C API stability, so I
+     recommend you contact me if you want to use a C function in a package. I am always happy to answer questions
+     regarding the arguments and use of certain C functions. */
 
-  // Funtions that fully operate on R vectors (SEXP)
-  R_RegisterCCallable("collapse", "cp_TRA", (DL_FUNC) &TRAC);
-  R_RegisterCCallable("collapse", "cp_range", (DL_FUNC) &frange);
-  R_RegisterCCallable("collapse", "cp_dist", (DL_FUNC) &fdist);
-  R_RegisterCCallable("collapse", "cp_quantile", (DL_FUNC) &fquantileC);
-  R_RegisterCCallable("collapse", "cp_group", (DL_FUNC) &groupVec);          // Main hash-based grouping function: for atomic vectors and data frames
-  R_RegisterCCallable("collapse", "cp_group_at", (DL_FUNC) &groupAtVec);     // Same but only works with atomic vectors and has option to keep missing values
-  R_RegisterCCallable("collapse", "cp_unique", (DL_FUNC) &funiqueC);         // Unique values for atomic vector
-  R_RegisterCCallable("collapse", "cp_radixorder", (DL_FUNC) &Cradixsort);   // Radix ordering from pairlists (LISTSXP) of R vectors
-  R_RegisterCCallable("collapse", "cp_rbindlist", (DL_FUNC) &rbindlist);
-  R_RegisterCCallable("collapse", "cp_alloc", (DL_FUNC) &falloc);
-  R_RegisterCCallable("collapse", "cp_na_rm", (DL_FUNC) &Cna_rm);
-  R_RegisterCCallable("collapse", "cp_missing_cases", (DL_FUNC) &dt_na);
-  R_RegisterCCallable("collapse", "cp_whichv", (DL_FUNC) &whichv);
-  R_RegisterCCallable("collapse", "cp_anyallv", (DL_FUNC) &anyallv);
-  R_RegisterCCallable("collapse", "cp_setcopyv", (DL_FUNC) &setcopyv);
-  R_RegisterCCallable("collapse", "cp_multiassign", (DL_FUNC) &multiassign);
-  R_RegisterCCallable("collapse", "cp_vecgcd", (DL_FUNC) &vecgcd);
-  R_RegisterCCallable("collapse", "cp_all_funs", (DL_FUNC) &all_funs);
-  R_RegisterCCallable("collapse", "cp_subsetVector", (DL_FUNC) &subsetVector);
-  R_RegisterCCallable("collapse", "cp_subsetCols", (DL_FUNC) &subsetCols);
-  R_RegisterCCallable("collapse", "cp_subsetDataFrame", (DL_FUNC) &subsetDT);
+  // Funtions that fully operate on R vectors (SEXP)                           // Corresponding R function(s)
+  R_RegisterCCallable("collapse", "cp_TRA", (DL_FUNC) &TRAC);                  // TRA.default()
+  R_RegisterCCallable("collapse", "cp_setop", (DL_FUNC) &setop);               // setop()
+  R_RegisterCCallable("collapse", "cp_range", (DL_FUNC) &frange);              // frange()
+  R_RegisterCCallable("collapse", "cp_dist", (DL_FUNC) &fdist);                // fdist()
+  R_RegisterCCallable("collapse", "cp_quantile", (DL_FUNC) &fquantileC);       // .quantile()
+  R_RegisterCCallable("collapse", "cp_group", (DL_FUNC) &groupVec);            // group(): main hash-based grouping function: for atomic vectors and data frames
+  R_RegisterCCallable("collapse", "cp_group_at", (DL_FUNC) &groupAtVec);       // qG(.., sort = FALSE): same but only works with atomic vectors and has option to keep missing values
+  R_RegisterCCallable("collapse", "cp_unique", (DL_FUNC) &funiqueC);           // funique.default()
+  R_RegisterCCallable("collapse", "cp_radixorder", (DL_FUNC) &Cradixsort);     // radixorderv(): radix ordering from pairlists (LISTSXP) of R vectors
+  R_RegisterCCallable("collapse", "cp_rbindlist", (DL_FUNC) &rbindlist);       // data.table::rbindlist(), underlying collapse::unlist2d()
+  R_RegisterCCallable("collapse", "cp_alloc", (DL_FUNC) &falloc);              // falloc()
+  R_RegisterCCallable("collapse", "cp_na_rm", (DL_FUNC) &Cna_rm);              // na_rm()
+  R_RegisterCCallable("collapse", "cp_missing_cases", (DL_FUNC) &dt_na);       // missing_cases()
+  R_RegisterCCallable("collapse", "cp_whichv", (DL_FUNC) &whichv);             // whichv(), whichNA()
+  R_RegisterCCallable("collapse", "cp_anyallv", (DL_FUNC) &anyallv);           // anyv(), allv()
+  R_RegisterCCallable("collapse", "cp_allNA", (DL_FUNC) &allNAv);              // allNA()
+  R_RegisterCCallable("collapse", "cp_setcopyv", (DL_FUNC) &setcopyv);         // setv(), copyv()
+  R_RegisterCCallable("collapse", "cp_multiassign", (DL_FUNC) &multiassign);   // massign()
+  R_RegisterCCallable("collapse", "cp_vecgcd", (DL_FUNC) &vecgcd);             // vgcd()
+  R_RegisterCCallable("collapse", "cp_all_funs", (DL_FUNC) &all_funs);         // all_funs()
+  R_RegisterCCallable("collapse", "cp_subsetVector", (DL_FUNC) &subsetVector); // fsubset.default()
+  R_RegisterCCallable("collapse", "cp_subsetCols", (DL_FUNC) &subsetCols);     // get_vars(), fselect()
+  R_RegisterCCallable("collapse", "cp_subsetDataFrame", (DL_FUNC) &subsetDT);  // fsubset.data.frame()
 
   // Functions that (partially or fully) operate on C arrays (pointers)
   // These functions provide the ordering (1 indexed) of a single numeric R vector, or integer or double C arrays
