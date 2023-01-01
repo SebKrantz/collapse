@@ -169,6 +169,17 @@ GRPnames <- function(x, force.char = TRUE, sep = ".") { # , ...
   if(force.char) tochar(.subset2(groups, 1L)) else .subset2(groups, 1L) # paste0(groups[[1L]]) prints "NA" but is slow, if assign with rownames<-, cannot have duplicate row names. But, attr<- "row.names" is fine !!
 }
 
+GRPid <- function(x, sort = FALSE, ...) {
+  if(!missing(...) && any(names(dots <- list(...)) == "g")) {
+    g <- dots$g
+    if(!inherits(g, "GRP")) stop("g must be a 'GRP' object")
+    res <- g$group.id
+    if(!missing(x) && is.list(x)) return(lapply(x, function(y) res))
+    return(res)
+  }
+  return(GRP(x, sort = sort, return.groups = FALSE, return.order = FALSE, call = FALSE, ...)$group.id)
+}
+
 GRPN <- function(x, expand = TRUE, ...) {
   if(!missing(...) && any(names(dots <- list(...)) == "g")) {
     g <- dots$g

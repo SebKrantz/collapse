@@ -42,7 +42,7 @@
       FSF_mask <- substr(.FAST_STAT_FUN, 2L, 100L)
       assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, FSF_mask, paste0(FSF_mask, "_uw")), envir = clpns)
       assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, FSF_mask), envir = clpns)
-      ffnops <-  fsetdiff(.FAST_FUN_MOPS, c(.OPERATOR_FUN, "fNobs", "fNdistinct", "GRPN", "n"))
+      ffnops <-  fsetdiff(.FAST_FUN_MOPS, c(.OPERATOR_FUN, "fNobs", "fNdistinct", "GRPN", "GRPid", "n"))
       assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, substr(ffnops, 2L, 100L)), envir = clpns)
     } else {
       if(any(mask == "fast-stat-fun")) {

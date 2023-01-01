@@ -3,6 +3,18 @@
 
 # global macros
 
+# .COLLAPSE_NTHREADS <- 1L
+#
+# set_collapse <- function(...) {
+#   opts <- list(...)
+#   if(length(opts) > 1L || is.null(opts$nthreads)) stop("Can currently only set option 'nthreads'")
+#   nthreads <- as.integer(opts$nthreads)
+#   if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
+#   assign(".COLLAPSE_NTHREADS", nthreads, pos = getNamespace("collapse")) # not allowed!
+# }
+
+# TODO: need to create global option to change value of nthreads. Or, alternatively see of calls to .Options$collapse_nthreads are allowed
+# Could also do for na.rm default...
 
 .COLLAPSE_TOPICS <- c("collapse-documentation","fast-statistical-functions","fast-grouping-ordering",
                       "fast-data-manipulation","quick-conversion","advanced-aggregation",
@@ -22,7 +34,7 @@
 # ".default$|.matrix$|.data.frame$"
 # v <- grep("\\.|N|HD", objects("package:collapse"), invert = TRUE, value = TRUE) # getNamespaceExports("collapse")
 # grep("N", objects("package:collapse"), value = TRUE)
-# v <- c(v, "GRPN", "HDB", "HDW", "allNA", "whichNA", "replace_NA")
+# v <- c(v, "GRPN", "GRPid", "HDB", "HDW", "allNA", "whichNA", "replace_NA")
 # cat(v, sep = '", "')
 
 # all package objects..
@@ -55,7 +67,7 @@
                                "setrelabel", "setrename", "setRownames", "settfm", "settfmv", "setTRA", "settransform", "settransformv",
                                "setv", "slt", "slt<-", "smr", "ss", "STD", "t_list", "tfm", "tfm<-", "tfmv", "timeid", "to_plm", "TRA",
                                "unattrib", "unindex", "unlist2d", "varying", "vclasses", "vgcd", "vlabels", "vlabels<-", "vlengths",
-                               "vtypes", "W", "whichv", "wlddev", "GRPN", "HDB", "HDW", "allNA", "whichNA", "replace_NA")))
+                               "vtypes", "W", "whichv", "wlddev", "GRPN", "GRPid", "HDB", "HDW", "allNA", "whichNA", "replace_NA")))
 
 .COLLAPSE_GENERIC   <-   sort(unique(c("B","BY","D","Dlog","F","fsubset","fbetween","fdiff","ffirst","fgrowth","fhdbetween",
                            "fhdwithin","flag","flast","fmax","fmean","fmedian","fnth","fmin","fmode","varying",
@@ -75,12 +87,12 @@
 
 .OPERATOR_FUN <- c("STD","B","W","HDB","HDW","L","F","D","Dlog","G")
 
-.FAST_STAT_FUN_POLD <- c(.FAST_STAT_FUN, "fNobs","fNdistinct", "GRPN") # "n"
+.FAST_STAT_FUN_POLD <- c(.FAST_STAT_FUN, "fNobs","fNdistinct", "GRPN", "GRPid") # "n"
 
 .FAST_FUN_MOPS <- c(.FAST_STAT_FUN_POLD, "fcumsum","fscale","fbetween","fwithin",
                     "flag","fdiff","fgrowth","STD","B","W","L","F","D","Dlog","G")
 
-.FAST_STAT_FUN_EXT <- c(.FAST_STAT_FUN_POLD, paste0(setdiff(.FAST_STAT_FUN_POLD, "GRPN"), "_uw")) # "n"
+.FAST_STAT_FUN_EXT <- c(.FAST_STAT_FUN_POLD, paste0(setdiff(.FAST_STAT_FUN_POLD, c("GRPN", "GRPid")), "_uw")) # "n"
 
 
 

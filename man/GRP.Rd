@@ -18,6 +18,7 @@
 \alias{print.GRP}
 \alias{plot.GRP}
 \alias{GRPnames}
+\alias{GRPid}
 \alias{GRPN}
 \alias{as_factor_GRP}
 \title{Fast Grouping / \emph{collapse} Grouping Objects}
@@ -55,7 +56,9 @@ is_GRP(x)
 
 \method{length}{GRP}(x)                          # Length of data being grouped
 GRPN(x, expand = TRUE, \dots)        # Group sizes (default: expanded to match data length)
+GRPid(x, sort = FALSE, \dots)        # Group id (data length, same as GRP(.)$group.id)
 GRPnames(x, force.char = TRUE, sep = ".")  # Group names
+
 as_factor_GRP(x, ordered = FALSE)  # 'GRP'-object to (ordered) factor conversion
 
 # Efficiently split a vector using a 'GRP' object
@@ -86,7 +89,7 @@ fungroup(X, \dots)
 
   \item{.X}{a data frame or list.}
 
-  \item{x, g}{a 'GRP' object. For \code{gsplit/greorder}, \code{x} can be a vector of any type, or \code{NULL} to return the integer indices of the groups. \code{gsplit/greorder/GRPN} also support vectors or data frames to be passed to \code{g/x}.}
+  \item{x, g}{a 'GRP' object. For \code{gsplit/greorder}, \code{x} can be a vector of any type, or \code{NULL} to return the integer indices of the groups. \code{gsplit/greorder/GRPN/GRPid} also support vectors or data frames to be passed to \code{g/x}.}
 
   \item{by}{if \code{X} is a data frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
 
@@ -141,7 +144,7 @@ fungroup(X, \dots)
 
   \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other.}
 
-  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{gsplit}, \code{greorder} and \code{GRPN}: further arguments passed to \code{GRP} (if \code{g/x} is not already a 'GRP' object). For example the \code{by} argument could be used if a data frame is passed.}
+  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{gsplit}, \code{greorder}, \code{GRPN} and \code{GRPid}: further arguments passed to \code{GRP} (if \code{g/x} is not already a 'GRP' object). For example the \code{by} argument could be used if a data frame is passed.}
 }
 \details{
 \code{GRP} is a central function in the \emph{collapse} package because it provides, in the form of integer vectors, some key pieces of information to efficiently perform grouped operations at the \code{C/C++} level.
@@ -206,6 +209,7 @@ g <- GRP(mtcars, ~ cyl + vs + am)  # Saving the object
 print(g)                           # Printing it
 plot(g)                            # Plotting it
 GRPnames(g)                        # Retain group names
+GRPid(g)                           # Retain group id (same as g$group.id), useful inside fmutate()
 fsum(mtcars, g)                    # Compute the sum of mtcars, grouped by variables cyl, vs and am
 gsplit(mtcars$mpg, g)              # Use the object to split a vector
 gsplit(NULL, g)                    # The indices of the groups

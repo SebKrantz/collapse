@@ -26,11 +26,11 @@
 
 * Added function `fdist()`: A fast and versatile replacement for `stats::dist`. It computes a full euclidian distance matrix around 4x faster than `stats::dist` in serial mode, with additional gains possible through multithreading along the distance matrix columns (decreasing thread loads as the matrix is lower triangular). It also supports computing the distance of a matrix with a single row-vector, or simply between two vectors. E.g. `fdist(mat, mat[1, ])` is the same as `sqrt(colSums((t(mat) - mat[1, ])^2)))`, but about 20x faster in serial mode, and `fdist(x, y)` is the same as `sqrt(sum((x-y)^2))`, about 3x faster in serial mode. In both cases (sub-column level) multithreading is available. *Note* that `fdist` does not skip missing values i.e. `NA`'s will result in `NA` distances. There is also no internal implementation for integers or data frames. Such inputs will be coerced to numeric matrices. 
 
-
+* Added function `GRPid` to easily fetch the group id from a grouping object, especially inside grouped `fmutate()` calls. This addition was warranted especially by the new improved `fnth.default()` method which allows orderings to be supplied for performance improvements. See commends on `fnth()` and the example provided below. 
 
 * `fsummarize()` was added as a synonym to `fsummarise`. Thanks @arthurgailes for the PR. 
 
-* **C API**: *collapse* exports around 20 C functions that provide functionality that is either convenient or rather complicated to implement from scratch. The exported functions can be found at the bottom of `src/ExportSymbols.c`. The API does not include the *Fast Statistical Functions*, which I thought are too closely related to how *collapse* works internally to be of much use to a C programmer (e.g. they expect grouping objects or certain kinds of integer vectors). But you are free to request the export of additional functions, including C++ functions. 
+* **C API**: *collapse* exports around 40 C functions that provide functionality that is either convenient or rather complicated to implement from scratch. The exported functions can be found at the bottom of `src/ExportSymbols.c`. The API does not include the *Fast Statistical Functions*, which I thought are too closely related to how *collapse* works internally to be of much use to a C programmer (e.g. they expect grouping objects or certain kinds of integer vectors). But you are free to request the export of additional functions, including C++ functions. 
 
 ### Improvements
 
