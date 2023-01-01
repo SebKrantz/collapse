@@ -640,7 +640,7 @@ SEXP mode_impl(SEXP x, int narm, int ret) {
     case STRSXP:
       PROTECT(res = ScalarString(mode_string(STRING_PTR(x), &l, l, 1, narm, ret)));
       break;
-    default: error("Not Supported SEXP Type!");
+    default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 
   copyMostAttrib(x, res);
@@ -667,7 +667,7 @@ SEXP w_mode_impl(SEXP x, double *pw, int narm, int ret) {
     case STRSXP:
       PROTECT(res = ScalarString(w_mode_string(STRING_PTR(x), pw, &l, l, 1, narm, ret)));
       break;
-    default: error("Not Supported SEXP Type!");
+    default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 
   copyMostAttrib(x, res);
@@ -720,7 +720,7 @@ SEXP mode_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int na
           pres[gr] = pgs[gr] == 0 ? NA_STRING : mode_string(px + pst[gr]-1, po, pgs[gr], 1, narm, ret);
         break;
       }
-      default: error("Not Supported SEXP Type!");
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
     }
   } else { // Not sorted. Perhaps reordering x is faster??
     switch(tx) {
@@ -759,7 +759,7 @@ SEXP mode_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int na
           pres[gr] = pgs[gr] == 0 ? NA_STRING : mode_string(px, po + pst[gr]-1, pgs[gr], 0, narm, ret);
         break;
       }
-      default: error("Not Supported SEXP Type!");
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
     }
   }
 
@@ -813,7 +813,7 @@ SEXP w_mode_g_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int 
           pres[gr] = pgs[gr] == 0 ? NA_STRING : w_mode_string(px + pst[gr]-1, pw + pst[gr]-1, po, pgs[gr], 1, narm, ret);
         break;
       }
-      default: error("Not Supported SEXP Type!");
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
     }
   } else { // Not sorted. Perhaps reordering x is faster??
     switch(tx) {
@@ -852,7 +852,7 @@ SEXP w_mode_g_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int 
           pres[gr] = pgs[gr] == 0 ? NA_STRING : w_mode_string(px, pw, po + pst[gr]-1, pgs[gr], 0, narm, ret);
         break;
       }
-      default: error("Not Supported SEXP Type!");
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
     }
   }
 
@@ -1039,7 +1039,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         }
         break;
       }
-      default: error("Not Supported SEXP Type!");
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
     }
 
     matCopyAttr(res, x, Rdrop, /*ng=*/0);
@@ -1144,7 +1144,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         }
         break;
       }
-      default: error("Not Supported SEXP Type!");
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
     }
   } else { // Not sorted
     switch(tx) {
@@ -1220,7 +1220,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         }
         break;
       }
-      default: error("Not Supported SEXP Type!");
+      default: error("Not Supported SEXP Type: '%s'", type2char(tx));
     }
   }
 
