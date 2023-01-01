@@ -141,12 +141,20 @@ void R_init_collapse(DllInfo *dll) {
   R_registerRoutines(dll, CEntries, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
   R_forceSymbols(dll, TRUE);
-  // C API ------------------------------------------------------------------
-  // Functions start with cp_. Apart from a brief description on the right, the API is not documented.
-  // You need to look up the function in the C code under src/, and perhaps also how
-  // it is used under R/. Feel free to request export of additional C/C++ functions.
-  // I do not guarantee C API stability, but you are of course free to secure yourself
-  // by putting a package on CRAN that uses the API, together with appropriate tests...
+
+  /* C API
+
+     Functions start with cp_, and can be used using e.g. cp_dist = R_GetCCallable("collapse", "cp_dist");
+     See section 5.4.3 of Writing R Extensions:
+     https://cran.r-project.org/doc/manuals/R-exts.html#Registering-native-routines
+
+     The API is not documented. You need to look up the function
+     in the C code under src/, and perhaps also how it is used under R/. Feel free to request
+     export of additional C/C++ functions. I do not a-priori guarantee C API stability, so I
+     recommend you contact me if you want to use a C function in a package.
+     I am also happy to answer questions regarding the arguments and use of certain C functions. */
+
+  // Funtions that fully operate on R vectors (SEXP)
   R_RegisterCCallable("collapse", "cp_TRA", (DL_FUNC) &TRAC);
   R_RegisterCCallable("collapse", "cp_range", (DL_FUNC) &frange);
   R_RegisterCCallable("collapse", "cp_dist", (DL_FUNC) &fdist);
@@ -154,7 +162,7 @@ void R_init_collapse(DllInfo *dll) {
   R_RegisterCCallable("collapse", "cp_group", (DL_FUNC) &groupVec);          // Main hash-based grouping function: for atomic vectors and data frames
   R_RegisterCCallable("collapse", "cp_group_at", (DL_FUNC) &groupAtVec);     // Same but only works with atomic vectors and has option to keep missing values
   R_RegisterCCallable("collapse", "cp_unique", (DL_FUNC) &funiqueC);         // Unique values for atomic vector
-  R_RegisterCCallable("collapse", "cp_radixorder", (DL_FUNC) &Cradixsort);
+  R_RegisterCCallable("collapse", "cp_radixorder", (DL_FUNC) &Cradixsort);   // Radix ordering from pairlists (LISTSXP) of R vectors
   R_RegisterCCallable("collapse", "cp_rbindlist", (DL_FUNC) &rbindlist);
   R_RegisterCCallable("collapse", "cp_alloc", (DL_FUNC) &falloc);
   R_RegisterCCallable("collapse", "cp_na_rm", (DL_FUNC) &Cna_rm);
@@ -168,4 +176,26 @@ void R_init_collapse(DllInfo *dll) {
   R_RegisterCCallable("collapse", "cp_subsetVector", (DL_FUNC) &subsetVector);
   R_RegisterCCallable("collapse", "cp_subsetCols", (DL_FUNC) &subsetCols);
   R_RegisterCCallable("collapse", "cp_subsetDataFrame", (DL_FUNC) &subsetDT);
+
+  // Functions that (partially or fully) operate on C arrays (pointers)
+  // These functions provide the ordering (1 indexed) of a single numeric R vector, or integer or double C arrays
+  R_RegisterCCallable("collapse", "cp_num1radixorder", (DL_FUNC) &num1radixsort); // See bottom of base_radixsort.c
+  R_RegisterCCallable("collapse", "cp_dradixorder", (DL_FUNC) &dradixsort);
+  R_RegisterCCallable("collapse", "cp_iradixorder", (DL_FUNC) &iradixsort);
+  // These functions are all quantile / nth'element related, see fnth_fmedian_fquantile.c
+  R_RegisterCCallable("collapse", "cp_dquickselect_elem", (DL_FUNC) &dquickselect_elem); // These functions permute the input array
+  R_RegisterCCallable("collapse", "cp_iquickselect_elem", (DL_FUNC) &iquickselect_elem);
+  R_RegisterCCallable("collapse", "cp_dquickselect", (DL_FUNC) &dquickselect);
+  R_RegisterCCallable("collapse", "cp_iquickselect", (DL_FUNC) &iquickselect);
+  R_RegisterCCallable("collapse", "cp_nth_int", (DL_FUNC) &nth_int); // These functions don't permute the input array, and can remove NA's
+  R_RegisterCCallable("collapse", "cp_nth_double", (DL_FUNC) &nth_double);
+  R_RegisterCCallable("collapse", "cp_nth_int_ord", (DL_FUNC) &nth_int_ord);
+  R_RegisterCCallable("collapse", "cp_nth_double_ord", (DL_FUNC) &nth_double_ord);
+  R_RegisterCCallable("collapse", "cp_w_nth_int_ord", (DL_FUNC) &w_nth_int_ord); // Weighted quantiles
+  R_RegisterCCallable("collapse", "cp_w_nth_double_ord", (DL_FUNC) &w_nth_double_ord);
+  R_RegisterCCallable("collapse", "cp_w_nth_int_qsort", (DL_FUNC) &w_nth_int_qsort);
+  R_RegisterCCallable("collapse", "cp_w_nth_double_qsort", (DL_FUNC) &w_nth_double_qsort);
+  R_RegisterCCallable("collapse", "cp_nth_impl", (DL_FUNC) &nth_impl); // Estimate a (weighted) quantile on an R vector
+  R_RegisterCCallable("collapse", "cp_nth_ord_impl", (DL_FUNC) &nth_ord_impl);
+  R_RegisterCCallable("collapse", "cp_w_nth_ord_impl", (DL_FUNC) &w_nth_ord_impl);
 }

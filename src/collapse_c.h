@@ -127,4 +127,22 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads);
 // New: fquantile:
 SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEXP Rnames, SEXP checko);
+// Helper functions for C API
+double dquickselect_elem(double *x, const int n, const unsigned int elem, double h);
+double iquickselect_elem(int *x, const int n, const unsigned int elem, double h);
+double dquickselect(double *x, const int n, const int ret, const double Q);
+double iquickselect(int *x, const int n, const int ret, const double Q);
+double nth_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q);
+double nth_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q);
+double nth_int_ord(const int *restrict px, const int *restrict po, int l, const int narm, const int ret, const double Q);
+double nth_double_ord(const double *restrict px, const int *restrict po, int l, const int narm, const int ret, const double Q);
+double w_nth_int_ord(const int *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q);
+double w_nth_double_ord(const double *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q);
+double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const int *restrict po, double h,
+                       const int l, const int sorted, const int narm, const int ret, const double Q);
+double w_nth_double_qsort(const double *restrict px, const double *restrict pw, const int *restrict po, double h,
+                          const int l, const int sorted, const int narm, const int ret, const double Q);
+SEXP nth_impl(SEXP x, int narm, int ret, double Q);
+SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q);
+SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q);
 
