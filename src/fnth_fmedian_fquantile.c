@@ -1461,21 +1461,24 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
           for(int j = 0; j < l; ++j) pout[j] = REAL(nth_impl(px[j], narm, ret, Q))[0];
         }
       } else { // TODO: if narm = FALSE, can compute sumw beforehand
-        if(nthreads == 1) { // Can re-use ordering of x
+        // if(nthreads == 1) { // Can re-use ordering of x
           int *pxo = (int *) R_alloc(nrx, sizeof(int));
           for(int j = 0; j < l; ++j) {
             num1radixsort(pxo, TRUE, FALSE, px[j]);
             pout[j] = REAL(w_nth_ord_impl(px[j], pxo-1, pw, narm, ret, Q))[0];
           }
-        } else {
+      /*  } else {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < l; ++j) {
             int *pxo = (int *) Calloc(nrx, int);
-            num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
+            // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
+            // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
+            // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
             pout[j] = REAL(w_nth_ord_impl(px[j], pxo-1, pw, narm, ret, Q))[0];
             Free(pxo);
           }
         }
+      */
       }
       setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
       UNPROTECT(nprotect);
@@ -1491,21 +1494,24 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
         for(int j = 0; j < l; ++j) pout[j] = nth_impl(px[j], narm, ret, Q);
       }
     } else { // TODO: if narm = FALSE, can compute sumw beforehand
-      if(nthreads == 1) { // Can re-use ordering of x
+      // if(nthreads == 1) { // Can re-use ordering of x
         int *pxo = (int *) R_alloc(nrx, sizeof(int));
         for(int j = 0; j < l; ++j) {
           num1radixsort(pxo, TRUE, FALSE, px[j]);
           pout[j] = w_nth_ord_impl(px[j], pxo-1, pw, narm, ret, Q);
         }
-      } else {
+      /* } else {
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < l; ++j) {
           int *pxo = (int *) Calloc(nrx, int);
-          num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
+          // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
+          // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
+          // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
           pout[j] = w_nth_ord_impl(px[j], pxo-1, pw, narm, ret, Q);
           Free(pxo);
         }
       }
+      */
     }
 
   } else { // with groups: do the usual checking
@@ -1537,22 +1543,23 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       for(int j = 0; j < col; ++j) pres[j] = FUN(px + j*l, &l, l, 1, narm, ret, Q);  \
     }                                                                                \
   } else {                                                                           \
-    if(nthreads == 1) {                                                              \
+    /* if(nthreads == 1) { */                                                        \
       int *pxo = (int *) R_alloc(l, sizeof(int));                                    \
       for(int j = 0; j < col; ++j) {                                                 \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l);                                       \
         pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);          \
       }                                                                              \
-    } else {                                                                         \
+  } /* else {                                                                         \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) {                                                 \
         int *pxo = (int *) Calloc(l, int);                                           \
-        ORDFUN(pxo, TRUE, FALSE, l, px + j*l); /* Probably cannot be parallelized */ \
+        ORDFUN(pxo, TRUE, FALSE, l, px + j*l); // Currently cannot be parallelized   \
         pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);          \
         Free(pxo);                                                                   \
       }                                                                              \
     }                                                                                \
-  }
+  }                                                            \
+     */
 
 // The same by groups if data already sorted by groups. px and pw should be decremented by 1
 #undef COLWISE_NTH_GROUPED_SORTED
