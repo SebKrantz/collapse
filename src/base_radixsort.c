@@ -2082,7 +2082,9 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
 
 // Get the order of a single numeric column. Used internally for weighted quantile computations.
-// Similar to C API Function R_orderVector1()
+// Similar to C API Function R_orderVector1() but 1 indexed.
+// Note that due to reliance on global variables defined in this script, that are modified
+// in the sorting subroutines, neither this function nor the following two are safe to multithreading.
 void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   int n = -1, tmp;
   R_xlen_t nl = n;
