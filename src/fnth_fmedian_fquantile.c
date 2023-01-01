@@ -92,12 +92,12 @@ case 4: // quantile type 4: not exact for weighted case, and also bad properties
 #undef RETWQSWITCH
 #define RETWQSWITCH(sumw, mu)                                  \
 switch(ret) {                                                  \
-case 7:                                                        \
-case 1:                                                        \
-case 2: /* quantile type 7, average, or Lower element*/        \
+case 7: /* quantile type 7 */                                  \
   h = (sumw - mu) * Q;                                         \
   break;                                                       \
-case 3: /* upper element*/                                     \
+case 1:                                                        \
+case 2:                                                        \
+case 3: /* lower, average or upper element (adjust algorithm)*/\
   h = sumw * Q;                                                \
   break;                                                       \
 case 5: /* quantile type 5*/                                   \
@@ -519,17 +519,20 @@ double w_compute_h(const double *pw, const int *po, const int l, const int sorte
 #define WNTH_CORE                                                          \
 double wsum = 0.0, wb, a;                                                  \
 int k = 0;                                                                 \
-while(wsum <= h) wsum += pw[po[k++]];                                      \
-a = px[po[k == 0 ? 0 : k-1]];                                              \
-if((ret < 4 && (ret != 1 || wsum != h)) || k == 0 || k == l || h == 0.0)   \
-  return a;                                                                \
-if(ret == 1) { /* ret == 1: averaging, incl. zero weight elements */       \
+if(ret < 3) { /* lower (2), or average (1) element*/                       \
+  while(wsum < h) wsum += pw[po[k++]];                                     \
+  a = px[po[k == 0 ? 0 : k-1]];                                            \
+  if(ret == 2) return a;                                                   \
   wsum = 2.0; wb = px[po[k]];                                              \
   while(k < l-1 && pw[po[k]] == 0.0) {                                     \
     wb += px[po[++k]]; ++wsum;                                             \
   }                                                                        \
   return (a + wb) / wsum;                                                  \
 }                                                                          \
+while(wsum <= h) wsum += pw[po[k++]];                                      \
+a = px[po[k == 0 ? 0 : k-1]];                                              \
+if(ret == 3 || k == 0 || k == l || h == 0.0)                               \
+  return a;                                                                \
 wb = pw[po[k]];                                                            \
 if(wb == 0.0) { /* If zero weights, need to move forward*/                 \
   while(k < l-1 && wb == 0.0) wb = pw[po[++k]];                            \
@@ -542,29 +545,36 @@ return wb + h * (a - wb);
 // This is the same, just that the result is assigned. Needed for quicksort based implementations
 // Does not require incremented pointers (depending on the content of i_cc)
 #undef WNTH_CORE_QSORT
-#define WNTH_CORE_QSORT                                                    \
-double res, wsum = 0.0, wb, a;                                             \
-int k = 0;                                                                 \
-while(wsum <= h) wsum += pw[i_cc[k++]];                                    \
-a = x_cc[k == 0 ? 0 : k-1];                                                \
-if((ret < 4 && (ret != 1 || wsum != h)) || k == 0 || k == l || h == 0.0) { \
-  res = a;                                                                 \
-} else if(ret == 1) { /* ret == 1: averaging, incl. zero weight elements */\
-  wsum = 2.0; wb = px[k];                                                  \
-  while(k < l-1 && pw[i_cc[k]] == 0.0) {                                   \
-    wb += px[++k]; ++wsum;                                                 \
-  }                                                                        \
-  res = (a + wb) / wsum;                                                   \
-} else {                                                                   \
-  wb = pw[i_cc[k]];                                                        \
-  if(wb == 0.0)  /* If zero weights, need to move forward*/                \
-    while(k < l-1 && wb == 0.0) wb = pw[i_cc[++k]];                        \
-  if(wb == 0.0) res = a;                                                   \
-  else {                                                                   \
-    h = (wsum - h) / wb;                                                   \
-    wb = x_cc[k];                                                          \
-    res = wb + h * (a - wb);                                               \
-  }                                                                        \
+#define WNTH_CORE_QSORT                                                      \
+double res, wsum = 0.0, wb, a;                                               \
+int k = 0;                                                                   \
+if(ret < 3) { /* lower (2), or average (1) element*/                         \
+  while(wsum < h) wsum += pw[i_cc[k++]];                                     \
+  a = x_cc[k == 0 ? 0 : k-1];                                                \
+  if(ret == 2) res = a;                                                      \
+  else {                                                                     \
+    wsum = 2.0; wb = x_cc[k];                                                \
+    while(k < l-1 && pw[i_cc[k]] == 0.0) {                                   \
+      wb += x_cc[++k]; ++wsum;                                               \
+    }                                                                        \
+    res = (a + wb) / wsum;                                                   \
+  }                                                                          \
+} else {                                                                     \
+  while(wsum <= h) wsum += pw[i_cc[k++]];                                    \
+  a = x_cc[k == 0 ? 0 : k-1];                                                \
+  if(ret == 3 || k == 0 || k == l || h == 0.0) {                             \
+    res = a;                                                                 \
+  } else {                                                                   \
+    wb = pw[i_cc[k]];                                                        \
+    if(wb == 0.0)  /* If zero weights, need to move forward*/                \
+       while(k < l-1 && wb == 0.0) wb = pw[i_cc[++k]];                       \
+    if(wb == 0.0) res = a;                                                   \
+    else {                                                                   \
+      h = (wsum - h) / wb;                                                   \
+      wb = x_cc[k];                                                          \
+      res = wb + h * (a - wb);                                               \
+    }                                                                        \
+  }                                                                          \
 }
 
 // Finally, in the default vector method: also provide the option to pass an ordering vector of x, even without weights
@@ -585,7 +595,7 @@ return (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);
 // C-implementations for different data types, parallelizable ----------------------------------
 
 // TODO: single thread optimization: pass x_cc
-double nth_int(const int *px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
+double nth_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : sorted ? (double)px[0] : (double)px[po[0]-1];
 
   int *x_cc = (int *) Calloc(l, int), n = 0;
@@ -1362,7 +1372,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l);                                       \
         pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);          \
       }                                                                              \
-  } /* else {                                                                         \
+  } /* else {                                                                        \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) {                                                 \
         int *pxo = (int *) Calloc(l, int);                                           \
