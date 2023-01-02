@@ -97,7 +97,7 @@ case 7: /* quantile type 7 */                                  \
   break;                                                       \
 case 1:                                                        \
 case 2:                                                        \
-case 3: /* lower, average or upper element (adjust algorithm)*/\
+case 3: /* average, lower or upper element (adjust algorithm)*/\
   h = sumw * Q;                                                \
   break;                                                       \
 case 5: /* quantile type 5*/                                   \
@@ -600,23 +600,23 @@ double nth_int(const int *restrict px, const int *restrict po, const int l, cons
 
   int *x_cc = (int *) Calloc(l, int), n = 0;
   if(sorted) {
-    if(narm) {
+    // if(narm) {
       for(int i = 0; i != l; ++i) if(px[i] != NA_INTEGER) x_cc[n++] = px[i];
-    } else {
-      n = l;
-      memcpy(x_cc, px, l * sizeof(int));
-    }
+    // } else {
+    //   n = l;
+    //   memcpy(x_cc, px, l * sizeof(int));
+    // }
   } else {
     const int *pxm = px-1; // creating offset pointer to x
-    if(narm) {
+    // if(narm) {
       for(int i = 0; i != l; ++i) if(pxm[po[i]] != NA_INTEGER) x_cc[n++] = pxm[po[i]];
-    } else {
-      n = l;
-      for(int i = 0; i != l; ++i) x_cc[i] = pxm[po[i]];
-    }
+    // } else {
+    //   n = l;
+    //   for(int i = 0; i != l; ++i) x_cc[i] = pxm[po[i]];
+    // }
   }
 
-  double res = iquickselect(x_cc, n, ret, Q);
+  double res = (narm == 0 && n != l) ? NA_REAL : iquickselect(x_cc, n, ret, Q);
   Free(x_cc);
   return res;
 }
@@ -629,23 +629,23 @@ double nth_double(const double *restrict px, const int *restrict po, const int l
   int n = 0;
 
   if(sorted) {
-    if(narm) {
+    // if(narm) {
       for(int i = 0; i != l; ++i) if(NISNAN(px[i])) x_cc[n++] = px[i];
-    } else {
-      n = l;
-      memcpy(x_cc, px, l * sizeof(double));
-    }
+    // } else {
+    //   n = l;
+    //   memcpy(x_cc, px, l * sizeof(double));
+    // }
   } else {
     const double *pxm = px-1;
-    if(narm) {
+    // if(narm) {
       for(int i = 0; i != l; ++i) if(NISNAN(pxm[po[i]])) x_cc[n++] = pxm[po[i]];
-    } else {
-      n = l;
-      for(int i = 0; i != l; ++i) x_cc[i] = pxm[po[i]];
-    }
+    // } else {
+    //   n = l;
+    //   for(int i = 0; i != l; ++i) x_cc[i] = pxm[po[i]];
+    // }
   }
 
-  double res = dquickselect(x_cc, n, ret, Q);
+  double res = (narm == 0 && n != l) ? NA_REAL : dquickselect(x_cc, n, ret, Q);
   Free(x_cc);
   return res;
 }
@@ -653,20 +653,20 @@ double nth_double(const double *restrict px, const int *restrict po, const int l
 // Expects pointer px to be decremented by 1
 double nth_int_ord(const int *restrict px, const int *restrict po, int l, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : (double)px[po[0]];
-  if(narm) { // Adjusting l as necessary... do initial NA check at higher level where po is computed...
+  if(narm) { // Adjusting l as necessary... initial NA check done in fnthC()
     while(l != 0 && px[po[l-1]] == NA_INTEGER) --l;
     if(l <= 1) return l == 0 ? NA_REAL : (double)px[po[0]];
-  }
+  } else if(px[po[l-1]] == NA_INTEGER) return NA_REAL;
   NTH_ORDVEC;
 }
 
 // Expects pointer px to be decremented by 1
 double nth_double_ord(const double *restrict px, const int *restrict po, int l, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : px[po[0]];
-  if(narm) { // Adjusting l as necessary... TODO: do initial NA check at higher level where po is computed...
+  if(narm) { // Adjusting l as necessary... initial NA check done in fnthC()
     while(l != 0 && ISNAN(px[po[l-1]])) --l;
     if(l <= 1) return l == 0 ? NA_REAL : px[po[0]];
-  }
+  } else if(ISNAN(px[po[l-1]])) return NA_REAL;
   NTH_ORDVEC;
 }
 
@@ -677,10 +677,10 @@ double w_nth_int_ord(const int *restrict px, const double *restrict pw, const in
     if(sorted) return ISNAN(pw[1]) ? NA_REAL : (double)px[1];
     return ISNAN(pw[po[0]]) ? NA_REAL : (double)px[po[0]];
   }
-  if(narm) { // Adjusting l as necessary... TODO: do initial NA check at higher level where pxo is computed...
+  if(narm) { // Adjusting l as necessary... initial NA check done in fnthC()
     while(l != 0 && px[po[l-1]] == NA_INTEGER) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
-  }
+  } else if(px[po[l-1]] == NA_INTEGER) return NA_REAL;
   if(h == DBL_MIN) h = w_compute_h(pw+sorted, po, l, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
@@ -693,10 +693,10 @@ double w_nth_double_ord(const double *restrict px, const double *restrict pw, co
     if(sorted) return ISNAN(pw[1]) ? NA_REAL : px[1];
     return ISNAN(pw[po[0]]) ? NA_REAL : px[po[0]];
   }
-  if(narm) { // Adjusting l as necessary... do initial NA check at higher level where pxo is computed...
+  if(narm) { // Adjusting l as necessary... initial NA check done in fnthC()
     while(l != 0 && ISNAN(px[po[l-1]])) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
-  }
+  } else if(ISNAN(px[po[l-1]])) return NA_REAL;
   if(h == DBL_MIN) h = w_compute_h(pw+sorted, po, l, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
@@ -715,36 +715,41 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   int *x_cc = (int *) Calloc(l, int), *i_cc = (int *) Calloc(l, int), n = 0; // TODO: alloc i_cc afterwards if narm ??
 
   if(sorted) { // both the pointers to x and w need to be suitably incremented for grouped execution.
-    if(narm) {
+    // if(narm) {
       for(int i = 0; i != l; ++i) {
         if(px[i] != NA_INTEGER) {
           i_cc[n] = i+1;
           x_cc[n++] = px[i];
         }
       }
-    } else {
-      n = l;
-      for(int i = 0; i != l; ++i) {
-        i_cc[i] = i+1;
-        x_cc[i] = px[i];
-      }
-    }
+    // } else {
+    //   n = l;
+    //   for(int i = 0; i != l; ++i) {
+    //     i_cc[i] = i+1;
+    //     x_cc[i] = px[i];
+    //   }
+    // }
   } else {
     const int *pxm = px-1;
-    if(narm) {
+    // if(narm) {
       for(int i = 0; i != l; ++i) {
         if(pxm[po[i]] != NA_INTEGER) {
           i_cc[n] = po[i];
           x_cc[n++] = pxm[po[i]];
         }
       }
-    } else {
-      n = l;
-      for(int i = 0; i != l; ++i) {
-        i_cc[i] = po[i];
-        x_cc[i] = pxm[po[i]];
-      }
-    }
+    // } else {
+    //   n = l;
+    //   for(int i = 0; i != l; ++i) {
+    //     i_cc[i] = po[i];
+    //     x_cc[i] = pxm[po[i]];
+    //   }
+    // }
+  }
+
+  if(narm == 0 && n != l) {
+    Free(x_cc); Free(i_cc);
+    return NA_REAL;
   }
 
   // i_cc is one-indexed
@@ -753,15 +758,13 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   // TODO: Check if this makes sense...
   if(h == DBL_MIN) h = w_compute_h(pw+sorted, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) {
-    Free(x_cc);
-    Free(i_cc);
+    Free(x_cc); Free(i_cc);
     return NA_REAL;
   }
 
   WNTH_CORE_QSORT;
 
-  Free(x_cc);
-  Free(i_cc);
+  Free(x_cc); Free(i_cc);
   return res;
 }
 
@@ -778,36 +781,41 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   int *i_cc = (int *) Calloc(l, int), n = 0; // TODO: alloc afterwards if narm ??
 
   if(sorted) {
-    if(narm) {
+    // if(narm) {
       for(int i = 0; i != l; ++i) {
         if(NISNAN(px[i])) {
           i_cc[n] = i+1;
           x_cc[n++] = px[i];
         }
       }
-    } else {
-      n = l;
-      for(int i = 0; i != l; ++i) {
-        i_cc[i] = i+1;
-        x_cc[i] = px[i];
-      }
-    }
+    // } else {
+    //   n = l;
+    //   for(int i = 0; i != l; ++i) {
+    //     i_cc[i] = i+1;
+    //     x_cc[i] = px[i];
+    //   }
+    // }
   } else {
     const double *pxm = px-1;
-    if(narm) {
+    // if(narm) {
       for(int i = 0; i != l; ++i) {
         if(NISNAN(pxm[po[i]])) {
           i_cc[n] = po[i];
           x_cc[n++] = pxm[po[i]];
         }
       }
-    } else {
-      n = l;
-      for(int i = 0; i != l; ++i) {
-        i_cc[i] = po[i];
-        x_cc[i] = pxm[po[i]];
-      }
-    }
+    // } else {
+    //   n = l;
+    //   for(int i = 0; i != l; ++i) {
+    //     i_cc[i] = po[i];
+    //     x_cc[i] = pxm[po[i]];
+    //   }
+    // }
+  }
+
+  if(narm == 0 && n != l) {
+    Free(x_cc); Free(i_cc);
+    return NA_REAL;
   }
 
   // i_cc is one-indexed
@@ -1143,7 +1151,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   int nullg = isNull(g), nullw = isNull(w), nullo = isNull(o), l = length(x), narm = asLogical(Rnarm),
       ret = Rties2int(Rret), nprotect = 0;
 
-  if(l <= 1) return x;
+  if(l <= 1) return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
 
   CHECK_PROB(l);
 
@@ -1162,6 +1170,8 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
       for(unsigned int i = 0; i != l; ++i)
           if(pxo[i] < 1 || pxo[i] > l) error("Some elements in o are outside of range [1, length(x)]");
     }
+    if((TYPEOF(x) == REALSXP && ISNAN(REAL(x)[pxo[0]-1])) || ((TYPEOF(x) == INTSXP || TYPEOF(x) == LGLSXP) && INTEGER(x)[pxo[0]-1] == NA_INTEGER))
+      error("Found missing value at the beginning of the sample. Please use option na.last = TRUE (the default) when creasting ordering vectors for use with fnth().");
   }
 
   // Preprocessing w, computing ordering of x if not supplied
@@ -1493,7 +1503,7 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       narm = asLogical(Rnarm), ret = Rties2int(Rret), nthreads = asInteger(Rnthreads),
       nullg = isNull(g), nullw = isNull(w), nprotect = 1;
 
-  if(l <= 1) return x; // Prevents segfault for numeric(0) #101
+  if(l <= 1) return (TYPEOF(x) == REALSXP || TYPEOF(x) == INTSXP) ? x : ScalarReal(asReal(x)); // Prevents segfault for numeric(0) #101
   if(nthreads > col) nthreads = col;
   if(nthreads > max_threads) nthreads = max_threads;
 
