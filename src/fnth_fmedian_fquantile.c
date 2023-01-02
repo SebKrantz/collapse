@@ -522,7 +522,7 @@ int k = 0;                                                                 \
 if(ret < 3) { /* lower (2), or average (1) element*/                       \
   while(wsum < h) wsum += pw[po[k++]];                                     \
   a = px[po[k == 0 ? 0 : k-1]];                                            \
-  if(ret == 2) return a;                                                   \
+  if(ret == 2 || wsum > h) return a;                                       \
   wsum = 2.0; wb = px[po[k]];                                              \
   while(k < l-1 && pw[po[k]] == 0.0) {                                     \
     wb += px[po[++k]]; ++wsum;                                             \
@@ -551,7 +551,7 @@ int k = 0;                                                                   \
 if(ret < 3) { /* lower (2), or average (1) element*/                         \
   while(wsum < h) wsum += pw[i_cc[k++]];                                     \
   a = x_cc[k == 0 ? 0 : k-1];                                                \
-  if(ret == 2) res = a;                                                      \
+  if(ret == 2 || wsum > h) res = a;                                          \
   else {                                                                     \
     wsum = 2.0; wb = x_cc[k];                                                \
     while(k < l-1 && pw[i_cc[k]] == 0.0) {                                   \
