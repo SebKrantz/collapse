@@ -554,7 +554,7 @@ if(ret < 3) { /* lower (2), or average (1) element*/                         \
   if(ret == 2 || wsum != h) res = a;                                         \
   else {                                                                     \
     wsum = 2.0; wb = x_cc[k];                                                \
-    while(k < l-1 && pw[i_cc[k]] == 0.0) {                                   \
+    while(k < n-1 && pw[i_cc[k]] == 0.0) {                                   \
       wb += x_cc[++k]; ++wsum;                                               \
     }                                                                        \
     res = (a + wb) / wsum;                                                   \
@@ -562,12 +562,12 @@ if(ret < 3) { /* lower (2), or average (1) element*/                         \
 } else {                                                                     \
   while(wsum <= h) wsum += pw[i_cc[k++]];                                    \
   a = x_cc[k == 0 ? 0 : k-1];                                                \
-  if(ret == 3 || k == 0 || k == l || h == 0.0) {                             \
+  if(ret == 3 || k == 0 || k == n || h == 0.0) {                             \
     res = a;                                                                 \
   } else {                                                                   \
     wb = pw[i_cc[k]];                                                        \
     if(wb == 0.0)  /* If zero weights, need to move forward*/                \
-       while(k < l-1 && wb == 0.0) wb = pw[i_cc[++k]];                       \
+       while(k < n-1 && wb == 0.0) wb = pw[i_cc[++k]];                       \
     if(wb == 0.0) res = a;                                                   \
     else {                                                                   \
       h = (wsum - h) / wb;                                                   \
@@ -1318,7 +1318,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
           int *pxo = (int *) R_alloc(nrx, sizeof(int));
           for(int j = 0; j < l; ++j) {
             num1radixsort(pxo, TRUE, FALSE, px[j]);
-            pout[j] = REAL(w_nth_ord_impl(px[j], pxo-1, pw, narm, ret, Q))[0];
+            pout[j] = REAL(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q))[0];
           }
       /*  } else {
           #pragma omp parallel for num_threads(nthreads)
@@ -1327,7 +1327,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
             // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
             // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
             // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
-            pout[j] = REAL(w_nth_ord_impl(px[j], pxo-1, pw, narm, ret, Q))[0];
+            pout[j] = REAL(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q))[0];
             Free(pxo);
           }
         }
@@ -1351,7 +1351,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
         int *pxo = (int *) R_alloc(nrx, sizeof(int));
         for(int j = 0; j < l; ++j) {
           num1radixsort(pxo, TRUE, FALSE, px[j]);
-          pout[j] = w_nth_ord_impl(px[j], pxo-1, pw, narm, ret, Q);
+          pout[j] = w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q);
         }
       /* } else {
         #pragma omp parallel for num_threads(nthreads)
@@ -1360,7 +1360,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
           // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
           // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
           // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
-          pout[j] = w_nth_ord_impl(px[j], pxo-1, pw, narm, ret, Q);
+          pout[j] = w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q);
           Free(pxo);
         }
       }
