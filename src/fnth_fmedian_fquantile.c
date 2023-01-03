@@ -517,12 +517,12 @@ double w_compute_h(const double *pw, const int *po, const int l, const int sorte
 // Expects pointers px and pw to be decremented by one
 #undef WNTH_CORE
 #define WNTH_CORE                                                          \
-double wsum = 0.0, wb, a;                                                  \
-int k = 0;                                                                 \
+double wsum = pw[po[0]], wb, a;                                            \
+int k = 1;                                                                 \
 if(ret < 3) { /* lower (2), or average (1) element*/                       \
   while(wsum < h) wsum += pw[po[k++]];                                     \
-  a = px[po[k == 0 ? 0 : k-1]];                                            \
-  if(ret == 2 || wsum != h) return a;                                       \
+  a = px[po[k-1]];                                                         \
+  if(ret == 2 || wsum != h) return a;                                      \
   wsum = 2.0; wb = px[po[k]];                                              \
   while(k < l-1 && pw[po[k]] == 0.0) {                                     \
     wb += px[po[++k]]; ++wsum;                                             \
@@ -530,8 +530,8 @@ if(ret < 3) { /* lower (2), or average (1) element*/                       \
   return (a + wb) / wsum;                                                  \
 }                                                                          \
 while(wsum <= h) wsum += pw[po[k++]];                                      \
-a = px[po[k == 0 ? 0 : k-1]];                                              \
-if(ret == 3 || k == 0 || k == l || h == 0.0)                               \
+a = px[po[k-1]];                                                           \
+if(ret == 3 || k == 1 || k == l || h == 0.0)                               \
   return a;                                                                \
 wb = pw[po[k]];                                                            \
 if(wb == 0.0) { /* If zero weights, need to move forward*/                 \
@@ -546,11 +546,11 @@ return wb + h * (a - wb);
 // Does not require incremented pointers (depending on the content of i_cc)
 #undef WNTH_CORE_QSORT
 #define WNTH_CORE_QSORT                                                      \
-double res, wsum = 0.0, wb, a;                                               \
-int k = 0;                                                                   \
+double res, wsum = pw[i_cc[0]], wb, a;                                       \
+int k = 1;                                                                   \
 if(ret < 3) { /* lower (2), or average (1) element*/                         \
   while(wsum < h) wsum += pw[i_cc[k++]];                                     \
-  a = x_cc[k == 0 ? 0 : k-1];                                                \
+  a = x_cc[k-1];                                                             \
   if(ret == 2 || wsum != h) res = a;                                         \
   else {                                                                     \
     wsum = 2.0; wb = x_cc[k];                                                \
@@ -561,8 +561,8 @@ if(ret < 3) { /* lower (2), or average (1) element*/                         \
   }                                                                          \
 } else {                                                                     \
   while(wsum <= h) wsum += pw[i_cc[k++]];                                    \
-  a = x_cc[k == 0 ? 0 : k-1];                                                \
-  if(ret == 3 || k == 0 || k == n || h == 0.0) {                             \
+  a = x_cc[k-1];                                                             \
+  if(ret == 3 || k == 1 || k == n || h == 0.0) {                             \
     res = a;                                                                 \
   } else {                                                                   \
     wb = pw[i_cc[k]];                                                        \
@@ -897,11 +897,11 @@ SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) {
   SEXP res;
   switch(TYPEOF(x)) {
   case REALSXP:
-    res = ScalarReal(w_nth_double_ord(REAL(x)-1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q));
+    res = ScalarReal(w_nth_double_ord(REAL(x)-1, pw, pxo, DBL_MIN, l, 0, narm, ret, Q));
     break;
   case INTSXP:
   case LGLSXP:
-    res = ScalarReal(w_nth_int_ord(INTEGER(x)-1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q));
+    res = ScalarReal(w_nth_int_ord(INTEGER(x)-1, pw, pxo, DBL_MIN, l, 0, narm, ret, Q));
     break;
   default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
@@ -1400,7 +1400,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       int *pxo = (int *) R_alloc(l, sizeof(int));                                    \
       for(int j = 0; j < col; ++j) {                                                 \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l);                                       \
-        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);          \
+        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 0, narm, ret, Q);          \
       }                                                                              \
   } /* else {                                                                        \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
