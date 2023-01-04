@@ -68,13 +68,6 @@ wmedian <- function(x, w, na.rm = FALSE) wnth(x, 0.5, w, na.rm, "mean")
   # matrixStats::weightedMedian(x, w, ties = ties) -> doesn't always properly average if ties = "mean"...
 
 
-wBY <- function(x, f, FUN, w, ...) {
-  if(is.atomic(x) && !is.array(x)) return(mapply(FUN, split(x, f), split(w, f), ...))
-  wspl <- split(w, f)
-  if(is.atomic(x)) return(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...)))
-  qDF(dapply(x, function(xi) mapply(FUN, split(xi, f), wspl, ...), return = "matrix"))
-}
-
 for (FUN in 1:2) {
 
   if(FUN == 2L) {
@@ -177,25 +170,25 @@ test_that("fmedian with weights performs like wmedian (defined above)", {
   expect_equal(fmedian(mtcars, w = wdat, na.rm = FALSE), dapply(mtcars, wmedian, wdat))
   expect_equal(fmedian(mtcNA, w = wdat, na.rm = FALSE), dapply(mtcNA, wmedian, wdat))
   expect_equal(fmedian(mtcNA, w = wdat), dapply(mtcNA, wmedian, wdat, na.rm = TRUE))
-  expect_equal(fmedian(x, f, w), wBY(x, f, wmedian, w))
-  expect_equal(fmedian(x, f, w, na.rm = FALSE), wBY(x, f, wmedian, w))
-  expect_equal(fmedian(xNA, f, w, na.rm = FALSE), wBY(xNA, f, wmedian, w))
-  expect_equal(fmedian(xNA, f, w), wBY(xNA, f, wmedian, w, na.rm = TRUE))
-  expect_equal(fmedian(m, g, wdat), wBY(m, gf, wmedian, wdat))
-  expect_equal(fmedian(m, g, wdat, na.rm = FALSE), wBY(m, gf, wmedian, wdat))
-  expect_equal(fmedian(mNA, g, wdat, na.rm = FALSE),  wBY(mNA, gf, wmedian, wdat))
-  expect_equal(fmedian(mNA, g, wdat), wBY(mNA, gf, wmedian, wdat, na.rm = TRUE))
-  expect_equal(fmedian(mtcars, g, wdat), wBY(mtcars, gf, wmedian, wdat))
-  expect_equal(fmedian(mtcars, g, wdat, na.rm = FALSE), wBY(mtcars, gf, wmedian, wdat))
-  expect_equal(fmedian(mtcNA, g, wdat, na.rm = FALSE), wBY(mtcNA, gf, wmedian, wdat))
-  expect_equal(fmedian(mtcNA, g, wdat), wBY(mtcNA, gf, wmedian, wdat, na.rm = TRUE))
+  expect_equal(fmedian(x, f, w), BY(x, f, wmedian, w))
+  expect_equal(fmedian(x, f, w, na.rm = FALSE), BY(x, f, wmedian, w))
+  expect_equal(fmedian(xNA, f, w, na.rm = FALSE), BY(xNA, f, wmedian, w))
+  expect_equal(fmedian(xNA, f, w), BY(xNA, f, wmedian, w, na.rm = TRUE))
+  expect_equal(fmedian(m, g, wdat), BY(m, gf, wmedian, wdat))
+  expect_equal(fmedian(m, g, wdat, na.rm = FALSE), BY(m, gf, wmedian, wdat))
+  expect_equal(fmedian(mNA, g, wdat, na.rm = FALSE),  BY(mNA, gf, wmedian, wdat))
+  expect_equal(fmedian(mNA, g, wdat), BY(mNA, gf, wmedian, wdat, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, g, wdat), BY(mtcars, gf, wmedian, wdat))
+  expect_equal(fmedian(mtcars, g, wdat, na.rm = FALSE), BY(mtcars, gf, wmedian, wdat))
+  expect_equal(fmedian(mtcNA, g, wdat, na.rm = FALSE), BY(mtcNA, gf, wmedian, wdat))
+  expect_equal(fmedian(mtcNA, g, wdat), BY(mtcNA, gf, wmedian, wdat, na.rm = TRUE))
   # missing weights: Only supported if x is also missing...
   expect_equal(fmedian(NA, w = NA), wmedian(NA_real_, NA_real_))
   expect_equal(fmedian(NA, w = NA, na.rm = FALSE), wmedian(NA_real_, NA_real_))
   expect_equal(fmedian(xNA, w = wNA, na.rm = FALSE), wmedian(xNA, wNA))
   expect_equal(fmedian(xNA, w = wNA), wmedian(xNA, wNA, na.rm = TRUE))
-  expect_equal(fmedian(xNA, f, wNA, na.rm = FALSE), wBY(xNA, f, wmedian, wNA))
-  expect_equal(fmedian(xNA, f, wNA), wBY(xNA, f, wmedian, wNA, na.rm = TRUE))
+  expect_equal(fmedian(xNA, f, wNA, na.rm = FALSE), BY(xNA, f, wmedian, wNA))
+  expect_equal(fmedian(xNA, f, wNA), BY(xNA, f, wmedian, wNA, na.rm = TRUE))
 })
 
 test_that("fmedian performs numerically stable", {
@@ -503,22 +496,22 @@ test_that("fnth performs like nth (defined above)", {
   expect_equal(fnth(xNA, n, na.rm = FALSE), nth(xNA, n))
   expect_equal(fnth(xNA, n), nth(xNA, n, na.rm = TRUE))
   expect_equal(fnth(mtcars, n), fnth(m, n))
- # expect_equal(fnth(m, n), dapply(m, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
- # expect_equal(fnth(m, n, na.rm = FALSE), dapply(m, nth, n)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(m, n), dapply(m, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(m, n, na.rm = FALSE), dapply(m, nth, n)) # failed on oldrel-windows-ix86+x86_64
   expect_equal(fnth(mNA, n, na.rm = FALSE), dapply(mNA, nth, n))
   expect_equal(fnth(mNA, n), dapply(mNA, nth, n, na.rm = TRUE))
- # expect_equal(fnth(mtcars, n), dapply(mtcars, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
- # expect_equal(fnth(mtcars, n, na.rm = FALSE), dapply(mtcars, nth, n)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(mtcars, n), dapply(mtcars, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(mtcars, n, na.rm = FALSE), dapply(mtcars, nth, n)) # failed on oldrel-windows-ix86+x86_64
   expect_equal(fnth(mtcNA, n, na.rm = FALSE), dapply(mtcNA, nth, n))
   expect_equal(fnth(mtcNA, n), dapply(mtcNA, nth, n, na.rm = TRUE))
   f2 <- as.factor(rep(1:10, each = 10)[order(rnorm(100))])
- # expect_equal(fnth(x, n, f2), BY(x, f2, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
- # expect_equal(fnth(x, n, f2, na.rm = FALSE), BY(x, f2, nth, n)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(x, n, f2), BY(x, f2, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(x, n, f2, na.rm = FALSE), BY(x, f2, nth, n)) # failed on oldrel-windows-ix86+x86_64
   g2 <- GRP(rep(1:2, each = 16)[order(rnorm(32))])
- # expect_equal(fnth(m, n, g2), BY(m, g2, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
- # expect_equal(fnth(m, n, g2, na.rm = FALSE), BY(m, g2, nth, n)) # failed on oldrel-windows-ix86+x86_64
- # expect_equal(fnth(mtcars, n, g2), BY(mtcars, g2, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
- # expect_equal(fnth(mtcars, n, g2, na.rm = FALSE), BY(mtcars, g2, nth, n)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(m, n, g2), BY(m, g2, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(m, n, g2, na.rm = FALSE), BY(m, g2, nth, n)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(mtcars, n, g2), BY(mtcars, g2, nth, n, na.rm = TRUE)) # failed on oldrel-windows-ix86+x86_64
+  expect_equal(fnth(mtcars, n, g2, na.rm = FALSE), BY(mtcars, g2, nth, n)) # failed on oldrel-windows-ix86+x86_64
   for(i in 1:5) {
   n = runif(1, min = 1, max = 999) / 1000 # Probability needed for nth to work with groups
   expect_equal(fnth(1:3, n, ties = "min"), nth(1:3, n, na.rm = TRUE))
@@ -649,25 +642,25 @@ test_that("fnth with weights performs like wnth (defined above)", {
     expect_equal(fnth(mtcars, n, w = wdat, na.rm = FALSE, ties = t), dapply(mtcars, wnth, n, wdat, ties = t))
     expect_equal(fnth(mtcNA, n, w = wdat, na.rm = FALSE, ties = t), dapply(mtcNA, wnth, n, wdat, ties = t))
     expect_equal(fnth(mtcNA, n, w = wdat, ties = t), dapply(mtcNA, wnth, n, wdat, na.rm = TRUE, ties = t))
-    expect_equal(fnth(x, n, f, w, ties = t), wBY(x, f, wnth, n = n, w = w, ties = t))
-    expect_equal(fnth(x, n, f, w, na.rm = FALSE, ties = t), wBY(x, f, wnth, n = n, w = w, ties = t))
-    expect_equal(fnth(xNA, n, f, w, na.rm = FALSE, ties = t), wBY(xNA, f, wnth, n = n, w = w, ties = t))
-    expect_equal(fnth(xNA, n, f, w, ties = t), wBY(xNA, f, wnth, n = n, w = w, na.rm = TRUE, ties = t))
-    expect_equal(fnth(m, n, g, wdat, ties = t), wBY(m, gf, wnth, n = n, w = wdat, ties = t))
-    expect_equal(fnth(m, n, g, wdat, na.rm = FALSE, ties = t), wBY(m, gf, wnth, n = n, w = wdat, ties = t))
-    expect_equal(fnth(mNA, n, g, wdat, na.rm = FALSE, ties = t),  wBY(mNA, gf, wnth, n = n, w = wdat, ties = t))
-    expect_equal(fnth(mNA, n, g, wdat, ties = t), wBY(mNA, gf, wnth, n = n, w = wdat, na.rm = TRUE, ties = t))
-    expect_equal(fnth(mtcars, n, g, wdat, ties = t), wBY(mtcars, gf, wnth, n = n, w = wdat, ties = t))
-    expect_equal(fnth(mtcars, n, g, wdat, na.rm = FALSE, ties = t), wBY(mtcars, gf, wnth, n = n, w = wdat, ties = t))
-    expect_equal(fnth(mtcNA, n, g, wdat, na.rm = FALSE, ties = t), wBY(mtcNA, gf, wnth, n = n, w = wdat, ties = t))
-    expect_equal(fnth(mtcNA, n, g, wdat, ties = t), wBY(mtcNA, gf, wnth, w = wdat, n = n, na.rm = TRUE, ties = t))
+    expect_equal(fnth(x, n, f, w, ties = t), BY(x, f, wnth, n = n, w = w, ties = t))
+    expect_equal(fnth(x, n, f, w, na.rm = FALSE, ties = t), BY(x, f, wnth, n = n, w = w, ties = t))
+    expect_equal(fnth(xNA, n, f, w, na.rm = FALSE, ties = t), BY(xNA, f, wnth, n = n, w = w, ties = t))
+    expect_equal(fnth(xNA, n, f, w, ties = t), BY(xNA, f, wnth, n = n, w = w, na.rm = TRUE, ties = t))
+    expect_equal(fnth(m, n, g, wdat, ties = t), BY(m, gf, wnth, n = n, w = wdat, ties = t))
+    expect_equal(fnth(m, n, g, wdat, na.rm = FALSE, ties = t), BY(m, gf, wnth, n = n, w = wdat, ties = t))
+    expect_equal(fnth(mNA, n, g, wdat, na.rm = FALSE, ties = t),  BY(mNA, gf, wnth, n = n, w = wdat, ties = t))
+    expect_equal(fnth(mNA, n, g, wdat, ties = t), BY(mNA, gf, wnth, n = n, w = wdat, na.rm = TRUE, ties = t))
+    expect_equal(fnth(mtcars, n, g, wdat, ties = t), BY(mtcars, gf, wnth, n = n, w = wdat, ties = t))
+    expect_equal(fnth(mtcars, n, g, wdat, na.rm = FALSE, ties = t), BY(mtcars, gf, wnth, n = n, w = wdat, ties = t))
+    expect_equal(fnth(mtcNA, n, g, wdat, na.rm = FALSE, ties = t), BY(mtcNA, gf, wnth, n = n, w = wdat, ties = t))
+    expect_equal(fnth(mtcNA, n, g, wdat, ties = t), BY(mtcNA, gf, wnth, w = wdat, n = n, na.rm = TRUE, ties = t))
     # missing weights: Only supported if x is also missing...
     expect_equal(fnth(NA, n, w = NA, ties = t), wnth(NA_real_, n, NA_real_, ties = t))
     expect_equal(fnth(NA, n, w = NA, na.rm = FALSE, ties = t), wnth(NA_real_, n, NA_real_, ties = t))
     expect_equal(fnth(xNA, n, w = wNA, na.rm = FALSE, ties = t), wnth(xNA, n, wNA, ties = t))
     expect_equal(fnth(xNA, n, w = wNA, ties = t), wnth(xNA, n, wNA, na.rm = TRUE, ties = t))
-    expect_equal(fnth(xNA, n, f, wNA, na.rm = FALSE, ties = t), wBY(xNA, f, wnth, n = n, w = w, ties = t))
-    expect_equal(fnth(xNA, n, f, wNA, ties = t), wBY(xNA, f, wnth, n = n, w = w, na.rm = TRUE, ties = t))
+    expect_equal(fnth(xNA, n, f, wNA, na.rm = FALSE, ties = t), BY(xNA, f, wnth, n = n, w = w, ties = t))
+    expect_equal(fnth(xNA, n, f, wNA, ties = t), BY(xNA, f, wnth, n = n, w = w, na.rm = TRUE, ties = t))
     }
   }
 })
