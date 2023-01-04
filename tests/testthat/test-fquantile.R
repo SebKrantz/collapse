@@ -110,3 +110,128 @@ for(x in na_insert(mtcars)) {
   }
 }
 
+
+# Testing with fnth:
+.nthquantile <- function(x, probs = c(0.25, 0.5, 0.75), w = NULL, o = NULL, na.rm = TRUE,
+                         type = 7L, check.o = is.null(attr(o, "sorted"))) {
+    vapply(probs, fnth.default, 1.0, x = x, w = w, ties = type,
+           o = o, na.rm = na.rm, check.o = check.o, USE.NAMES = FALSE)
+}
+
+probs <- c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99)
+
+
+for(x in mtcars) {
+  for(o in list(NULL, radixorder(x))) {
+      for(t in 5:9) {
+        expect_true(all_obj_equal(
+          .quantile(x, probs, type = t, o = o),
+          .nthquantile(x, probs, type = t, o = o),
+          .nthquantile(x, probs, type = t, o = o, na.rm = FALSE)))
+        for(j in 1:2) {
+          w = rep(j + rnorm(1, sd = 0.05), 32)
+          expect_true(all_obj_equal(
+            .quantile(x, probs, type = t),
+            .nthquantile(x, probs, type = t, w = w, o = o, na.rm = FALSE),
+            .nthquantile(x, probs, type = t, w = w, o = o)))
+        }
+      }
+  }
+}
+
+expect_equal(.nthquantile(1:2), c(1.25, 1.50, 1.75))
+expect_equal(.nthquantile(1:3), c(1.5, 2.0, 2.5))
+expect_equal(.nthquantile(1:2, na.rm = FALSE), c(1.25, 1.50, 1.75))
+expect_equal(.nthquantile(1:3, na.rm = FALSE), c(1.5, 2.0, 2.5))
+
+for(na_rm in c(TRUE, FALSE)) {
+  for(t in 5:9) {
+    expect_equal(.nthquantile(0, type = t, na.rm = na_rm), c(0,0,0))
+    expect_equal(.nthquantile(c(0, 0), type = t, na.rm = na_rm), c(0,0,0))
+    expect_equal(.nthquantile(c(0, 0, 0), type = t, na.rm = na_rm), c(0,0,0))
+    expect_equal(.nthquantile(0L, type = t, na.rm = na_rm), rep.int(0L, 3))
+    expect_equal(.nthquantile(c(0L, 0L), type = t, na.rm = na_rm), rep.int(0L, 3))
+    expect_equal(.nthquantile(c(0L, 0L, 0L), type = t, na.rm = na_rm), rep.int(0L, 3))
+
+    expect_equal(.nthquantile(0, w = 1, type = t, na.rm = na_rm), c(0,0,0))
+    expect_equal(.nthquantile(c(0, 0), w = c(1, 1), type = t, na.rm = na_rm), c(0,0,0))
+    expect_equal(.nthquantile(c(0, 0, 0), w = c(1, 1, 1), type = t, na.rm = na_rm), c(0,0,0))
+    expect_equal(.nthquantile(0L, w = 1, type = t, na.rm = na_rm), rep.int(0L, 3))
+    expect_equal(.nthquantile(c(0L, 0L), w = c(1, 1), type = t, na.rm = na_rm), rep.int(0L, 3))
+    expect_equal(.nthquantile(c(0L, 0L, 0L), w = c(1, 1, 1), type = t, na.rm = na_rm), rep.int(0L, 3))
+
+    expect_equal(.nthquantile(NA_real_, type = t, na.rm = na_rm), rep(NA_real_, 3))
+    expect_equal(.nthquantile(NA_integer_, type = t, na.rm = na_rm), rep(NA_real_, 3))
+    expect_equal(.nthquantile(NA_real_, w = NA_real_, type = t, na.rm = na_rm), rep(NA_real_, 3))
+    expect_equal(.nthquantile(NA_integer_, w = NA_real_, type = t, na.rm = na_rm), rep(NA_real_, 3))
+    # expect_equal(.nthquantile(1, w = 0, type = t, na.rm = na_rm), rep(NA_real_, 3))
+    # expect_equal(.nthquantile(1L, w = 0, type = t, na.rm = na_rm), rep(NA_real_, 3))
+    # expect_error(.nthquantile(1, w = NA_real_, type = t, na.rm = na_rm))
+    # expect_error(.nthquantile(1L, w = NA_real_, type = t, na.rm = na_rm))
+  }
+}
+
+for(x in na_insert(airquality, 0.05)) {
+  for(o in list(NULL, radixorder(x))) {
+      for(t in 5:9) {
+        expect_equal(.quantile(x, probs, type = t, o = o),
+                     .nthquantile(x, probs, type = t, o = o))
+        for(j in 1:3) {
+          w = rep(j + rnorm(1, sd = 0.05), 153)
+          expect_equal(.quantile(x, probs, type = t, o = o),
+                       .nthquantile(x, probs, type = t, w = w, o = o))
+        }
+      }
+  }
+}
+
+# Testing behavior with zero weights
+for(x in mtcars) {
+  for(o in list(NULL, radixorder(x))) {
+      for(t in c(1:3, 5:9)) {
+        w = na_insert(abs(rnorm(32)), value = 0)
+        wn0 = w[w > 0]
+        xn0 = x[w > 0]
+        on0 = if(length(o)) radixorder(xn0) else NULL
+        if(t > 4) {
+          expect_true(all_obj_equal(
+            .quantile(x, probs, type = t, w = w, o = o),
+            .nthquantile(x, probs, type = t, w = w, o = o),
+            .nthquantile(x, probs, type = t, w = w, o = o, na.rm = FALSE),
+            .nthquantile(xn0, probs, type = t, w = wn0, o = on0),
+            .nthquantile(xn0, probs, type = t, w = wn0, o = on0, na.rm = FALSE)
+          ))
+        } else {
+          expect_true(all_obj_equal(
+            .nthquantile(x, probs, type = t, w = w, o = o),
+            .nthquantile(x, probs, type = t, w = w, o = o, na.rm = FALSE),
+            .nthquantile(xn0, probs, type = t, w = wn0, o = on0),
+            .nthquantile(xn0, probs, type = t, w = wn0, o = on0, na.rm = FALSE)
+          ))
+        }
+      }
+  }
+}
+
+# Zero weights and NA's
+for(x in na_insert(mtcars)) {
+  for(o in list(NULL, radixorder(x))) {
+      for(t in c(1:3, 5:9)) {
+        w = na_insert(abs(rnorm(32)), value = 0)
+        wn0 = w[w > 0]
+        xn0 = x[w > 0]
+        on0 = if(length(o)) radixorder(xn0) else NULL
+        if(t > 4) {
+          expect_true(all_obj_equal(
+                     .quantile(x, probs, type = t, w = w, o = o),
+                     .nthquantile(x, probs, type = t, w = w, o = o),
+                     .nthquantile(xn0, probs, type = t, w = wn0, o = on0)))
+        } else {
+          expect_equal(
+            .nthquantile(x, probs, type = t, w = w, o = o),
+            .nthquantile(xn0, probs, type = t, w = wn0, o = on0))
+        }
+      }
+  }
+}
+
