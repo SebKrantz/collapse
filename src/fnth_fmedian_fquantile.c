@@ -671,33 +671,31 @@ double nth_double_ord(const double *restrict px, const int *restrict po, int l, 
 }
 
 // Expects pointers px and pw to be decremented by 1
-double w_nth_int_ord(const int *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q) {
+double w_nth_int_ord(const int *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int narm, const int ret, const double Q) {
   if(l <= 1) { // TODO: what about NA_INTEGER and NA/0 weights??
     if(l == 0) return NA_REAL;
-    if(sorted) return ISNAN(pw[1]) ? NA_REAL : (double)px[1];
     return ISNAN(pw[po[0]]) ? NA_REAL : (double)px[po[0]];
   }
   if(narm) { // Adjusting l as necessary... initial NA check done in fnthC()
     while(l != 0 && px[po[l-1]] == NA_INTEGER) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
   } else if(px[po[l-1]] == NA_INTEGER) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw+sorted, po, l, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
 
 // Expects pointers px and pw to be decremented by 1
-double w_nth_double_ord(const double *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q) {
+double w_nth_double_ord(const double *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int narm, const int ret, const double Q) {
   if(l <= 1) {
     if(l == 0) return NA_REAL;
-    if(sorted) return ISNAN(pw[1]) ? NA_REAL : px[1];
     return ISNAN(pw[po[0]]) ? NA_REAL : px[po[0]];
   }
   if(narm) { // Adjusting l as necessary... initial NA check done in fnthC()
     while(l != 0 && ISNAN(px[po[l-1]])) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
   } else if(ISNAN(px[po[l-1]])) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw+sorted, po, l, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -897,11 +895,11 @@ SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) {
   SEXP res;
   switch(TYPEOF(x)) {
   case REALSXP:
-    res = ScalarReal(w_nth_double_ord(REAL(x)-1, pw, pxo, DBL_MIN, l, 0, narm, ret, Q));
+    res = ScalarReal(w_nth_double_ord(REAL(x)-1, pw, pxo, DBL_MIN, l, narm, ret, Q));
     break;
   case INTSXP:
   case LGLSXP:
-    res = ScalarReal(w_nth_int_ord(INTEGER(x)-1, pw, pxo, DBL_MIN, l, 0, narm, ret, Q));
+    res = ScalarReal(w_nth_int_ord(INTEGER(x)-1, pw, pxo, DBL_MIN, l, narm, ret, Q));
     break;
   default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
@@ -1014,7 +1012,7 @@ SEXP w_nth_g_ord_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, i
       double *px = REAL(x)-1;
       #pragma omp parallel for num_threads(nthreads)
       for(int gr = 0; gr < ng; ++gr)
-        pres[gr] = w_nth_double_ord(px, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);
+        pres[gr] = w_nth_double_ord(px, pw, po + pst[gr], DBL_MIN, pgs[gr], narm, ret, Q);
       break;
     }
     case INTSXP:
@@ -1022,7 +1020,7 @@ SEXP w_nth_g_ord_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, i
       int *px = INTEGER(x)-1;
       #pragma omp parallel for num_threads(nthreads)
       for(int gr = 0; gr < ng; ++gr)
-        pres[gr] = w_nth_int_ord(px, pw, po + pst[gr], DBL_MIN, pgs[gr], 0, narm, ret, Q);
+        pres[gr] = w_nth_int_ord(px, pw, po + pst[gr], DBL_MIN, pgs[gr], narm, ret, Q);
       break;
     }
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
@@ -1400,14 +1398,14 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       int *pxo = (int *) R_alloc(l, sizeof(int));                                    \
       for(int j = 0; j < col; ++j) {                                                 \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l);                                       \
-        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 0, narm, ret, Q);          \
+        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, narm, ret, Q);          \
       }                                                                              \
   } /* else {                                                                        \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) {                                                 \
         int *pxo = (int *) Calloc(l, int);                                           \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l); // Currently cannot be parallelized   \
-        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, 1, narm, ret, Q);          \
+        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, narm, ret, Q);             \
         Free(pxo);                                                                   \
       }                                                                              \
     }                                                                                \
