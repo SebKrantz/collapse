@@ -467,7 +467,7 @@ double dquickselect(double *x, const int n, const int ret, const double Q) {
   if((ret < 4 && (ret != 1 || n%2 == 1)) || elem == n-1 || h <= 0.0) return a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
-  if(ret == 1 || Q == 0.5) return (a+b)/2.0;
+  if(ret == 1) return (a+b)/2.0; //  || Q == 0.5 // TODO: test all quantile methods
   return a + h*(b-a); // same as (1-h)*a + h*b
 }
 
@@ -482,7 +482,7 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
   if((ret < 4 && (ret != 1 || n%2 == 1)) || elem == n-1 || h <= 0.0) return (double)a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
-  if(ret == 1 || Q == 0.5) return ((double)a+(double)b)/2.0;
+  if(ret == 1) return ((double)a+(double)b)/2.0; //  || Q == 0.5 // TODO: test all quantile methods
   return (double)a + h*(double)(b-a); // same as (1-h)*(double)a + h*(double)b
 }
 
@@ -522,16 +522,16 @@ int k = 1;                                                                 \
 if(ret < 3) { /* lower (2), or average (1) element*/                       \
   while(wsum < h) wsum += pw[po[k++]];                                     \
   a = px[po[k-1]];                                                         \
-  if(ret == 2 || wsum != h) return a;                                      \
+  if(ret == 2 || wsum != h) return a; /* h = sumw * Q must be > 0 here */  \
   wsum = 2.0; wb = px[po[k]];                                              \
-  while(k < l-1 && pw[po[k]] == 0.0) {                                     \
+  while(pw[po[k]] == 0.0) { /* l should never be reached, I tested it */   \
     wb += px[po[++k]]; ++wsum;                                             \
   }                                                                        \
   return (a + wb) / wsum;                                                  \
 }                                                                          \
 while(wsum <= h) wsum += pw[po[k++]];                                      \
 a = px[po[k-1]];                                                           \
-if(ret == 3 || k == 1 || k == l || h == 0.0)                               \
+if(ret == 3 || k == l || h == 0.0)                                         \
   return a;                                                                \
 wb = pw[po[k]];                                                            \
 if(wb == 0.0) { /* If zero weights, need to move forward*/                 \
@@ -551,10 +551,10 @@ int k = 1;                                                                   \
 if(ret < 3) { /* lower (2), or average (1) element*/                         \
   while(wsum < h) wsum += pw[i_cc[k++]];                                     \
   a = x_cc[k-1];                                                             \
-  if(ret == 2 || wsum != h) res = a;                                         \
+  if(ret == 2 || wsum != h) res = a; /* h = sumw * Q must be > 0 here */     \
   else {                                                                     \
     wsum = 2.0; wb = x_cc[k];                                                \
-    while(k < n-1 && pw[i_cc[k]] == 0.0) {                                   \
+    while(pw[i_cc[k]] == 0.0) { /* n should never be reached, I tested it */ \
       wb += x_cc[++k]; ++wsum;                                               \
     }                                                                        \
     res = (a + wb) / wsum;                                                   \
@@ -562,7 +562,7 @@ if(ret < 3) { /* lower (2), or average (1) element*/                         \
 } else {                                                                     \
   while(wsum <= h) wsum += pw[i_cc[k++]];                                    \
   a = x_cc[k-1];                                                             \
-  if(ret == 3 || k == 1 || k == n || h == 0.0) {                             \
+  if(ret == 3 || k == n || h == 0.0) {                                       \
     res = a;                                                                 \
   } else {                                                                   \
     wb = pw[i_cc[k]];                                                        \
@@ -585,10 +585,10 @@ if(ret < 3) { /* lower (2), or average (1) element*/                         \
 #define NTH_ORDVEC                                                         \
 double a, b, h;                                                            \
 RETQSWITCH(l);                                                             \
-int ih = h; a = px[po[ih]];                                                \
+int ih = h; a = px[po[ih]]; h -= ih;                                       \
 if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a; \
 b = px[po[ih+1]];                                                          \
-return (ret == 1 || Q == 0.5) ? (a+b)/2.0 : a + (h - ih) * (b - a);
+return (ret == 1) ? (a+b)/2.0 : a + h * (b - a); //  || Q == 0.5
 
 
 
