@@ -136,8 +136,8 @@ double nth_int(const int *restrict px, const int *restrict po, const int l, cons
 double nth_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q);
 double nth_int_ord(const int *restrict px, const int *restrict po, int l, const int narm, const int ret, const double Q);
 double nth_double_ord(const double *restrict px, const int *restrict po, int l, const int narm, const int ret, const double Q);
-double w_nth_int_ord(const int *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q);
-double w_nth_double_ord(const double *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int sorted, const int narm, const int ret, const double Q);
+double w_nth_int_ord(const int *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int narm, const int ret, const double Q);
+double w_nth_double_ord(const double *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int narm, const int ret, const double Q);
 double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const int *restrict po, double h,
                        const int l, const int sorted, const int narm, const int ret, const double Q);
 double w_nth_double_qsort(const double *restrict px, const double *restrict pw, const int *restrict po, double h,
