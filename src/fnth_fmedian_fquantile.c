@@ -1149,7 +1149,9 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   int nullg = isNull(g), nullw = isNull(w), nullo = isNull(o), l = length(x), narm = asLogical(Rnarm),
       ret = Rties2int(Rret), nprotect = 0;
 
-  if(l <= 1) return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
+  if(l < 1 || (l == 1 && nullw)) {
+    return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
+  }
 
   CHECK_PROB(l);
 
@@ -1175,6 +1177,10 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   // Preprocessing w, computing ordering of x if not supplied
   if(!nullw) {
     CHECK_WEIGHTS(l);
+    if(l == 1) {
+      if(ISNAN(pw[1])) return ScalarReal(NA_REAL);
+      return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
+    }
     if(nullo && nullg) { // for grouped execution use w_nth_g_qsort_impl() if o is not supplied.
       // nullo = 0;
       pxo = (int *) R_alloc(l, sizeof(int));
@@ -1501,7 +1507,10 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       narm = asLogical(Rnarm), ret = Rties2int(Rret), nthreads = asInteger(Rnthreads),
       nullg = isNull(g), nullw = isNull(w), nprotect = 1;
 
-  if(l <= 1) return (TYPEOF(x) == REALSXP || TYPEOF(x) == INTSXP) ? x : ScalarReal(asReal(x)); // Prevents segfault for numeric(0) #101
+  if(l < 1 || (l == 1 && nullw)) {
+    if(TYPEOF(x) == REALSXP || TYPEOF(x) == INTSXP || TYPEOF(x) == LGLSXP) return x;
+    error("Unsopported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
   if(nthreads > col) nthreads = col;
   if(nthreads > max_threads) nthreads = max_threads;
 
