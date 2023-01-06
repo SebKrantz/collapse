@@ -83,10 +83,10 @@ fmedian(x, \dots)
 
 }
 \details{
-For v1.9.0 \code{fnth} was completely rewritten in C and offers significantly enhanced speed and functionality. It uses a combination of quickselect, quicksort, and radixsort algorithms, combined with various (weighted) quantile algorithms and, where possible, OpenMP multithreading. The synthesis is as follows:
+For v1.9.0 \code{fnth} was completely rewritten in C and offers significantly enhanced speed and functionality. It uses a combination of quickselect, quicksort, and radixsort algorithms, combined with various (weighted) quantile algorithms and, where possible, OpenMP multithreading. This synthesis is as follows:
 
 \itemize{
-\item without weights, quickselect is used to determine a (lower) order statistic. If \code{ties \%!in\% c("min", "max")} a second order statistic is found by taking the max of the upper part of the partitioned array, and the two statistics are averaged using a simple mean (\code{ties = "mean"}), or weighted average according to a \code{\link{quantile}} method (\code{ties = "q5"-"q9"}). For \code{n = 0.5}, all supported quantile methods give the sample median. For matrices multithreading is always across columns, for vectors and data frames it is across groups unless \code{is.null(g)} for data frames.
+\item without weights, quickselect is used to determine a (lower) order statistic. If \code{ties \%!in\% c("min", "max")} a second order statistic is found by taking the max of the upper part of the partitioned array, and the two statistics are averaged using a simple mean (\code{ties = "mean"}), or weighted average according to a \code{\link{quantile}} method (\code{ties = "q5"-"q9"}). For \code{n = 0.5}, all supported quantile methods give the sample median. With matrices, multithreading is always across columns, for vectors and data frames it is across groups unless \code{is.null(g)} for data frames.
 
 \item with weights and no groups (\code{is.null(g)}), \code{\link{radixorder}} is called internally (on each column of \code{x}). The ordering is used to sum the weights in order and determine weighted order statistics or quantiles. More details below. It is currently not possible to multithread across columns because \code{\link{radixorder}} is not thread safe.
 
@@ -157,6 +157,13 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75)              # Faster groupin
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75, TRA = "/")   # Divide by third quartile
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%    # Faster selecting
       fnth(0.75, hp, "/")  # Divide mpg by its third weighted group-quartile, using hp as weights
+
+# Efficient grouped estimation of multiple quantiles
+mtcars \%>\% fgroup_by(cyl,vs,am) \%>\%
+    fmutate(o = radixorder(GRPid(), mpg)) \%>\%
+    fsummarise(mpg_Q1 = fnth(mpg, 0.25, o = o),
+               mpg_median = fmedian(mpg, o = o),
+               mpg_Q3 = fnth(mpg, 0.75, o = o))
 }
 
 ## fmedian()
