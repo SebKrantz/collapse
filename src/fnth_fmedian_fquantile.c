@@ -18,41 +18,41 @@ static inline void dswap(double *a, double *b)     {double  tmp=*a; *a=*b; *b=tm
 
 // Barebones quickselect algorithm from Numerical Recipes in C
 #undef QUICKSELECT
-#define QUICKSELECT(SWAP)                     \
-  unsigned int ir = n-1, l = 0, lp;           \
-  for(;;) {                                   \
-    lp = l+1;                                 \
-    if (ir <= lp) {                           \
-      if (ir == lp && x[ir] < x[l]) {         \
-        SWAP(x+l, x+ir);                      \
-      }                                       \
-      break;                                  \
-    } else {                                  \
-      unsigned int mid=(l+ir) >> 1;           \
-      SWAP(x+mid, x+lp);                      \
-      if (x[l] > x[ir]) {                     \
-        SWAP(x+l, x+ir);                      \
-      }                                       \
-      if (x[lp] > x[ir]) {                    \
-        SWAP(x+lp, x+ir);                     \
-      }                                       \
-      if (x[l] > x[lp]) {                     \
-        SWAP(x+l, x+lp);                      \
-      }                                       \
-      unsigned int i=lp, j=ir;                \
-      a=x[lp];                                \
-      for (;;) {                              \
-        do i++; while (x[i] < a);             \
-        do j--; while (x[j] > a);             \
-        if (j < i) break;                     \
-        SWAP(x+i, x+j);                       \
-      }                                       \
-      x[lp]=x[j];                             \
-      x[j]=a;                                 \
-      if (j >= elem) ir=j-1;                  \
-      if (j <= elem) l=i;                     \
-    }                                         \
-  }                                           \
+#define QUICKSELECT(SWAP)                                                         \
+  unsigned int ir = n-1, l = 0, lp;                                               \
+  for(;;) {                                                                       \
+    lp = l+1;                                                                     \
+    if (ir <= lp) {  /* Active partition contains 1 or 2 elements. */             \
+      if (ir == lp && x[ir] < x[l]) { /* Case of 2 elements. */                   \
+        SWAP(x+l, x+ir);                                                          \
+      }                                                                           \
+      break;                                                                      \
+    } else {                                                                      \
+      unsigned int mid=(l+ir) >> 1;  /* Choose median of left, center, and right elements as partitioning element a. */  \
+      SWAP(x+mid, x+lp); /* Also rearrange so that arr[l] ≤ arr[l+1] ≤ arr[ir] */ \
+      if (x[l] > x[ir]) {                                                         \
+        SWAP(x+l, x+ir);                                                          \
+      }                                                                           \
+      if (x[lp] > x[ir]) {                                                        \
+        SWAP(x+lp, x+ir);                                                         \
+      }                                                                           \
+      if (x[l] > x[lp]) {                                                         \
+        SWAP(x+l, x+lp);                                                          \
+      }                                                                           \
+      unsigned int i=lp, j=ir; /* Initialize pointers for partitioning. */        \
+      a=x[lp];    /* Partitioning element. */                                     \
+      for (;;) {  /* Beginning of innermost loop. */                              \
+        do i++; while (x[i] < a);  /* Scan up to find element > a. */             \
+        do j--; while (x[j] > a);  /* Scan down to find element < a. */           \
+        if (j < i) break;  /* Pointers crossed. Partitioning complete. */         \
+        SWAP(x+i, x+j);                                                           \
+      }            /* End of innermost loop. */                                   \
+      x[lp]=x[j];  /* Insert partitioning element. */                             \
+      x[j]=a;                                                                     \
+      if (j >= elem) ir=j-1; /* if index of partitioning element j is above median index */ \
+      if (j <= elem) l=i;    /* if index of partitioning element j is below median index */ \
+    }                                                                             \
+  }                                                                               \
   a = x[elem];
 
 // Quantile method switcher
