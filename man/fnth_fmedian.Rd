@@ -37,7 +37,7 @@ fmedian(x, \dots)
 \method{fnth}{grouped_df}(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE,
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
      ties = "q7", nthreads = 1L, \dots)
-\method{fmedian}{grouped_df}(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmedian}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
         use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
         ties = "mean", nthreads = 1L, \dots)
 
