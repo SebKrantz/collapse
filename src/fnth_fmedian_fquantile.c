@@ -1312,17 +1312,17 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       double *restrict pout = REAL(out);
       if(nullw) {
         if(nthreads == 1) {
-          for(int j = 0; j < l; ++j) pout[j] = REAL(nth_impl(px[j], narm, ret, Q))[0];
+          for(int j = 0; j < l; ++j) pout[j] = asReal(nth_impl(px[j], narm, ret, Q));
         } else {
           #pragma omp parallel for num_threads(nthreads)
-          for(int j = 0; j < l; ++j) pout[j] = REAL(nth_impl(px[j], narm, ret, Q))[0];
+          for(int j = 0; j < l; ++j) pout[j] = asReal(nth_impl(px[j], narm, ret, Q));
         }
       } else { // TODO: if narm = FALSE, can compute sumw beforehand
         // if(nthreads == 1) { // Can re-use ordering of x
           int *pxo = (int *) R_alloc(nrx, sizeof(int));
           for(int j = 0; j < l; ++j) {
             num1radixsort(pxo, TRUE, FALSE, px[j]);
-            pout[j] = REAL(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q))[0];
+            pout[j] = asReal(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q));
           }
       /*  } else {
           #pragma omp parallel for num_threads(nthreads)
@@ -1331,7 +1331,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
             // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
             // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
             // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
-            pout[j] = REAL(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q))[0];
+            pout[j] = asReal(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q));
             Free(pxo);
           }
         }
