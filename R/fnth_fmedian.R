@@ -2,7 +2,7 @@
 
 fnth <- function(x, n = 0.5, ...) UseMethod("fnth") # , x
 
-fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "mean", nthreads = 1L, o = NULL, check.o = is.null(attr(o, "sorted")), ...) {
+fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "q7", nthreads = 1L, o = NULL, check.o = is.null(attr(o, "sorted")), ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fnth.matrix(x, n, g, w, TRA, na.rm, use.g.names, ties = ties, nthreads = nthreads, ...))
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fnth, x, n, g, w, na.rm, ties, nthreads, o, check.o)
@@ -15,7 +15,7 @@ fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRU
   TRAC(x,res,g[[2L]],TRA, ...)
 }
 
-fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "mean", nthreads = 1L, ...) {
+fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = 1L, ...) {
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fnthm, x, n, g, w, na.rm, drop, ties, nthreads)
   if(is.null(TRA)) {
@@ -27,7 +27,7 @@ fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE
   TRAmC(x,res,g[[2L]],TRA, ...)
 }
 
-fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "mean", nthreads = 1L, ...) {
+fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = 1L, ...) {
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fnthl, x, n, g, w, na.rm, drop, ties, nthreads)
   if(is.null(TRA)) {
@@ -43,7 +43,7 @@ fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = 
 fnth.list <- function(x, ...) fnth.data.frame(x, ...)
 
 fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
-                             keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", nthreads = 1L, ...) {
+                             keep.group_vars = TRUE, keep.w = TRUE, ties = "q7", nthreads = 1L, ...) {
 
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
@@ -95,22 +95,22 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.
   } else return(TRAlC(x,.Call(C_fnthl,x,n,g,w,na.rm,FALSE,ties,nthreads),g[[2L]],TRA, ...))
 }
 
-# TODO: Should be ties = 7L?
+
 fmedian <- function(x, ...) UseMethod("fmedian") # , x
 
-fmedian.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, nthreads = 1L, ...)
-  fnth.default(x, 0.5, g, w, TRA, na.rm, use.g.names, 1L, nthreads, ...)
+fmedian.default <- function(x, ..., ties = "mean")
+  fnth.default(x, 0.5, ..., ties = ties)
 
-fmedian.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...)
-  fnth.matrix(x, 0.5, g, w, TRA, na.rm, use.g.names, drop, 1L, nthreads, ...)
+fmedian.matrix <- function(x, ..., ties = "mean")
+  fnth.matrix(x, 0.5, ..., ties = ties)
 
-fmedian.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...)
-  fnth.data.frame(x, 0.5, g, w, TRA, na.rm, use.g.names, drop, 1L, nthreads, ...)
+fmedian.data.frame <- function(x, ..., ties = "mean")
+  fnth.data.frame(x, 0.5, ..., ties = ties)
 
 fmedian.list <- fmedian.data.frame
 
 fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
-                            keep.group_vars = TRUE, keep.w = TRUE, nthreads = 1L, ...) {
+                            keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", nthreads = 1L, ...) {
 
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
@@ -145,19 +145,19 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.name
       if(gl) {
         if(keep.group_vars) {
           ax[["names"]] <- c(g[[5L]], names(sumw), nam[-gn])
-          return(setAttributes(c(g[[4L]], sumw, .Call(C_fnthl,x[-gn],0.5,g,w,na.rm,FALSE,1L,nthreads)), ax))
+          return(setAttributes(c(g[[4L]], sumw, .Call(C_fnthl,x[-gn],0.5,g,w,na.rm,FALSE,ties,nthreads)), ax))
         }
         ax[["names"]] <- c(names(sumw), nam[-gn])
-        return(setAttributes(c(sumw, .Call(C_fnthl,x[-gn],0.5,g,w,na.rm,FALSE,1L,nthreads)), ax))
+        return(setAttributes(c(sumw, .Call(C_fnthl,x[-gn],0.5,g,w,na.rm,FALSE,ties,nthreads)), ax))
       } else if(keep.group_vars) {
         ax[["names"]] <- c(g[[5L]], nam)
-        return(setAttributes(c(g[[4L]], .Call(C_fnthl,x,0.5,g,w,na.rm,FALSE,1L,nthreads)), ax))
-      } else return(setAttributes(.Call(C_fnthl,x,0.5,g,w,na.rm,FALSE,1L,nthreads), ax))
+        return(setAttributes(c(g[[4L]], .Call(C_fnthl,x,0.5,g,w,na.rm,FALSE,ties,nthreads)), ax))
+      } else return(setAttributes(.Call(C_fnthl,x,0.5,g,w,na.rm,FALSE,ties,nthreads), ax))
     } else if(keep.group_vars || (keep.w && length(sumw))) {
       ax[["names"]] <- c(nam[gn2], nam[-gn])
-      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(C_fnthl,x[-gn],0.5,g,w,na.rm,FALSE,1L,nthreads),g[[2L]],TRA, ...)), ax))
+      return(setAttributes(c(x[gn2],TRAlC(x[-gn],.Call(C_fnthl,x[-gn],0.5,g,w,na.rm,FALSE,ties,nthreads),g[[2L]],TRA, ...)), ax))
     }
     ax[["names"]] <- nam[-gn]
-    return(setAttributes(TRAlC(x[-gn],.Call(C_fnthl,x[-gn],0.5,g,w,na.rm,FALSE,1L,nthreads),g[[2L]],TRA, ...), ax))
+    return(setAttributes(TRAlC(x[-gn],.Call(C_fnthl,x[-gn],0.5,g,w,na.rm,FALSE,ties,nthreads),g[[2L]],TRA, ...), ax))
   } else return(TRAlC(x,.Call(C_fnthl,x,0.5,g,w,na.rm,FALSE,1L,nthreads),g[[2L]],TRA, ...))
 }
