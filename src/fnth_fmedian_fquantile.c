@@ -701,12 +701,12 @@ double w_nth_double_ord(const double *restrict px, const double *restrict pw, co
 }
 
 // Quicksort versions: only for grouped execution (too slow on bigger vectors compared to radix sort)
-// Expects pointer pw to be decremented by 1
+// Expects pointer pw to be decremented by 1 if sorted == 0
 double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const int *restrict po, double h,
                        const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) {
     if(l == 0) return NA_REAL;
-    if(sorted) return ISNAN(pw[1]) ? NA_REAL : (double)px[0];
+    if(sorted) return ISNAN(pw[0]) ? NA_REAL : (double)px[0];
     return ISNAN(pw[po[0]]) ? NA_REAL : (double)px[po[0]-1];
   }
 
@@ -716,14 +716,14 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
     // if(narm) {
       for(int i = 0; i != l; ++i) {
         if(px[i] != NA_INTEGER) {
-          i_cc[n] = i+1;
+          i_cc[n] = i;
           x_cc[n++] = px[i];
         }
       }
     // } else {
     //   n = l;
     //   for(int i = 0; i != l; ++i) {
-    //     i_cc[i] = i+1;
+    //     i_cc[i] = i;
     //     x_cc[i] = px[i];
     //   }
     // }
@@ -754,7 +754,7 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   R_qsort_int_I(x_cc, i_cc, 1, n);
 
   // TODO: Check if this makes sense...
-  if(h == DBL_MIN) h = w_compute_h(pw+sorted, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) {
     Free(x_cc); Free(i_cc);
     return NA_REAL;
@@ -766,12 +766,12 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   return res;
 }
 
-// Expects pointer pw to be decremented by 1
+// Expects pointer pw to be decremented by 1 if sorted == 0
 double w_nth_double_qsort(const double *restrict px, const double *restrict pw, const int *restrict po, double h,
                           const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) {
     if(l == 0) return NA_REAL;
-    if(sorted) return ISNAN(pw[1]) ? NA_REAL : px[0];
+    if(sorted) return ISNAN(pw[0]) ? NA_REAL : px[0];
     return ISNAN(pw[po[0]]) ? NA_REAL : px[po[0]-1];
   }
 
@@ -782,14 +782,14 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
     // if(narm) {
       for(int i = 0; i != l; ++i) {
         if(NISNAN(px[i])) {
-          i_cc[n] = i+1;
+          i_cc[n] = i;
           x_cc[n++] = px[i];
         }
       }
     // } else {
     //   n = l;
     //   for(int i = 0; i != l; ++i) {
-    //     i_cc[i] = i+1;
+    //     i_cc[i] = i;
     //     x_cc[i] = px[i];
     //   }
     // }
@@ -820,7 +820,8 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   R_qsort_I(x_cc, i_cc, 1, n);
 
   // TODO: Check if this makes sense...
-  if(h == DBL_MIN) h = w_compute_h(pw+sorted, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+
   if(ISNAN(h)) {
     Free(x_cc);
     Free(i_cc);
@@ -1137,7 +1138,7 @@ int Rties2int(SEXP x) {
     if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double). You supplied a vector of type: '%s'", type2char(TYPEOF(w))); \
     w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;           \
   }                                                              \
-  pw = REAL(w)-1; /* All function require decremented w pointer */
+  pw = REAL(w)-1; /* All functions require decremented w pointer */
 
 /*
    Function for atomic vectors: has extra arguments o and checko for passing external ordering vector.
