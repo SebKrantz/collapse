@@ -883,6 +883,18 @@ SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
   return res;
 }
 
+// for safe multithreading in fnthlC()
+double nth_impl_dbl(SEXP x, int narm, int ret, double Q) {
+  int l = length(x);
+  if(l <= 1) return NA_REAL;
+  switch(TYPEOF(x)) {
+    case REALSXP: return nth_double(REAL(x), &l, l, 1, narm, ret, Q);
+    case INTSXP:
+    case LGLSXP: return nth_int(INTEGER(x), &l, l, 1, narm, ret, Q);
+    default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+  }
+}
+
 SEXP nth_impl_noalloc(SEXP x, void* x_cc, int narm, int ret, double Q) {
   int l = length(x);
   if(l <= 1) return x;
@@ -906,6 +918,16 @@ SEXP nth_impl_noalloc(SEXP x, void* x_cc, int narm, int ret, double Q) {
   return res;
 }
 
+double nth_impl_noalloc_dbl(SEXP x, void* x_cc, int narm, int ret, double Q) {
+  int l = length(x);
+  if(l <= 1) return NA_REAL;
+  switch(TYPEOF(x)) {
+    case REALSXP: return nth_double_noalloc(REAL(x), &l, (double*)x_cc, l, 1, narm, ret, Q);
+    case INTSXP:
+    case LGLSXP: return nth_int_noalloc(INTEGER(x), &l, (int*)x_cc, l, 1, narm, ret, Q);
+    default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+  }
+}
 
 SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q) {
   int l = length(x);
@@ -957,6 +979,18 @@ SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) {
   copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
+}
+
+// Expects pointer pw to be decremented by 1
+double w_nth_ord_impl_dbl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) {
+  int l = length(x);
+  if(l <= 1) return NA_REAL;
+  switch(TYPEOF(x)) {
+    case REALSXP: return w_nth_double_ord(REAL(x)-1, pw, pxo, DBL_MIN, l, narm, ret, Q);
+    case INTSXP:
+    case LGLSXP: return w_nth_int_ord(INTEGER(x)-1, pw, pxo, DBL_MIN, l, narm, ret, Q);
+    default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+  }
 }
 
 // Expects pointer po to be decremented by 1
@@ -1332,6 +1366,39 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   }
 
 
+#undef COLWISE_NTH_LIST
+#define COLWISE_NTH_LIST(FUN_NA, FUN, WFUN)                    \
+if(nullw) {                                                    \
+  if(nthreads == 1) {                                          \
+    void *x_cc = Calloc(nrx, double);                          \
+    for(int j = 0; j != l; ++j) pout[j] = FUN_NA(px[j], x_cc, narm, ret, Q); \
+    Free(x_cc);                                                \
+  } else {                                                     \
+    _Pragma("omp parallel for num_threads(nthreads)")          \
+    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, ret, Q); \
+  }                                                            \
+} else { /* TODO: if narm = FALSE, can compute sumw beforehand */ \
+  int *pxo = (int *) R_alloc(nrx, sizeof(int));                \
+  for(int j = 0; j != l; ++j) {                                 \
+    num1radixsort(pxo, TRUE, FALSE, px[j]);                    \
+    pout[j] = WFUN(px[j], pxo, pw, narm, ret, Q);              \
+  }                                                            \
+}
+/* Multithreading: does not work with radixorder
+ * } else {
+   #pragma omp parallel for num_threads(nthreads)
+   for(int j = 0; j < l; ++j) {
+   int *pxo = (int *) Calloc(nrx, int);
+   // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
+   // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
+   // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
+   pout[j] = asReal(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q));
+   Free(pxo);
+   }
+  }
+   */
+
+
 // Function for lists / data frames
 SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {
 
@@ -1355,70 +1422,14 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
     if(nthreads > l) nthreads = l;
     if(drop) { // drop dimensions (return vector)
       double *restrict pout = REAL(out);
-      if(nullw) {
-        if(nthreads == 1) {
-          void *x_cc = Calloc(nrx, double);
-          for(int j = 0; j < l; ++j) pout[j] = REAL(nth_impl_noalloc(px[j], x_cc, narm, ret, Q))[0];
-          Free(x_cc);
-        } else {
-          #pragma omp parallel for num_threads(nthreads)
-          for(int j = 0; j < l; ++j) pout[j] = asReal(nth_impl(px[j], narm, ret, Q)); /* REAL() appears not thread safe */
-        }
-      } else { // TODO: if narm = FALSE, can compute sumw beforehand
-        // if(nthreads == 1) { // Can re-use ordering of x
-          int *pxo = (int *) R_alloc(nrx, sizeof(int));
-          for(int j = 0; j < l; ++j) {
-            num1radixsort(pxo, TRUE, FALSE, px[j]);
-            pout[j] = REAL(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q))[0];
-          }
-      /*  } else {
-          #pragma omp parallel for num_threads(nthreads)
-          for(int j = 0; j < l; ++j) {
-            int *pxo = (int *) Calloc(nrx, int);
-            // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
-            // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
-            // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
-            pout[j] = asReal(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q));
-            Free(pxo);
-          }
-        }
-      */
-      }
+      COLWISE_NTH_LIST(nth_impl_noalloc_dbl, nth_impl_dbl, w_nth_ord_impl_dbl);
       setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
       UNPROTECT(nprotect);
       return out;
     }
     // returns a list of atomic elements
     SEXP *restrict pout = SEXPPTR(out);
-    if(nullw) {
-      if(nthreads == 1) {
-        void *x_cc = Calloc(nrx, double);
-        for(int j = 0; j < l; ++j) pout[j] = nth_impl_noalloc(px[j], x_cc, narm, ret, Q);
-        Free(x_cc);
-      } else {
-        #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) pout[j] = nth_impl(px[j], narm, ret, Q);
-      }
-    } else { // TODO: if narm = FALSE, can compute sumw beforehand
-      // if(nthreads == 1) { // Can re-use ordering of x
-        int *pxo = (int *) R_alloc(nrx, sizeof(int));
-        for(int j = 0; j < l; ++j) {
-          num1radixsort(pxo, TRUE, FALSE, px[j]);
-          pout[j] = w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q);
-        }
-      /* } else {
-        #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) {
-          int *pxo = (int *) Calloc(nrx, int);
-          // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
-          // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
-          // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
-          pout[j] = w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q);
-          Free(pxo);
-        }
-      }
-      */
-    }
+    COLWISE_NTH_LIST(nth_impl_noalloc, nth_impl, w_nth_ord_impl);
 
   } else { // with groups: do the usual checking
 
