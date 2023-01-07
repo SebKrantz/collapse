@@ -587,7 +587,6 @@ return (ret == 1) ? (a+b)/2.0 : a + h * (b - a); //  || Q == 0.5
 
 // C-implementations for different data types, parallelizable ----------------------------------
 
-// TODO: single thread optimization: pass x_cc
 double nth_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : sorted ? (double)px[0] : (double)px[po[0]-1];
 
@@ -614,7 +613,21 @@ double nth_int(const int *restrict px, const int *restrict po, const int l, cons
   return res;
 }
 
-// TODO: single thread optimization: pass x_cc
+double nth_int_noalloc(const int *restrict px, const int *restrict po, int *x_cc, const int l, const int sorted, const int narm, const int ret, const double Q) {
+  if(l <= 1) return l == 0 ? NA_REAL : sorted ? (double)px[0] : (double)px[po[0]-1];
+
+  int n = 0;
+
+  if(sorted) {
+    for(int i = 0; i != l; ++i) if(px[i] != NA_INTEGER) x_cc[n++] = px[i];
+  } else {
+    const int *pxm = px-1; // creating offset pointer to x
+    for(int i = 0; i != l; ++i) if(pxm[po[i]] != NA_INTEGER) x_cc[n++] = pxm[po[i]];
+  }
+
+  return (narm == 0 && n != l) ? NA_REAL : iquickselect(x_cc, n, ret, Q);
+}
+
 double nth_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : sorted ? px[0] : px[po[0]-1];
 
@@ -641,6 +654,21 @@ double nth_double(const double *restrict px, const int *restrict po, const int l
   double res = (narm == 0 && n != l) ? NA_REAL : dquickselect(x_cc, n, ret, Q);
   Free(x_cc);
   return res;
+}
+
+double nth_double_noalloc(const double *restrict px, const int *restrict po, double *x_cc, const int l, const int sorted, const int narm, const int ret, const double Q) {
+  if(l <= 1) return l == 0 ? NA_REAL : sorted ? px[0] : px[po[0]-1];
+
+  int n = 0;
+
+  if(sorted) {
+    for(int i = 0; i != l; ++i) if(NISNAN(px[i])) x_cc[n++] = px[i];
+  } else {
+    const double *pxm = px-1;
+    for(int i = 0; i != l; ++i) if(NISNAN(pxm[po[i]])) x_cc[n++] = pxm[po[i]];
+  }
+
+  return (narm == 0 && n != l) ? NA_REAL : dquickselect(x_cc, n, ret, Q);
 }
 
 // Expects pointer px to be decremented by 1
@@ -854,6 +882,30 @@ SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
   UNPROTECT(1);
   return res;
 }
+
+SEXP nth_impl_noalloc(SEXP x, void* x_cc, int narm, int ret, double Q) {
+  int l = length(x);
+  if(l <= 1) return x;
+
+  SEXP res;
+  switch(TYPEOF(x)) {
+  case REALSXP:
+    res = ScalarReal(nth_double_noalloc(REAL(x), &l, (double*)x_cc, l, 1, narm, ret, Q));
+    break;
+  case INTSXP:
+  case LGLSXP:
+    res = ScalarReal(nth_int_noalloc(INTEGER(x), &l, (int*)x_cc, l, 1, narm, ret, Q));
+    break;
+  default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+  }
+
+  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return res;
+  PROTECT(res); // Needed ??
+  copyMostAttrib(x, res);
+  UNPROTECT(1);
+  return res;
+}
+
 
 SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q) {
   int l = length(x);
@@ -1305,17 +1357,19 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       double *restrict pout = REAL(out);
       if(nullw) {
         if(nthreads == 1) {
-          for(int j = 0; j < l; ++j) pout[j] = asReal(nth_impl(px[j], narm, ret, Q));
+          void *x_cc = Calloc(nrx, double);
+          for(int j = 0; j < l; ++j) pout[j] = REAL(nth_impl_noalloc(px[j], x_cc, narm, ret, Q))[0];
+          Free(x_cc);
         } else {
           #pragma omp parallel for num_threads(nthreads)
-          for(int j = 0; j < l; ++j) pout[j] = asReal(nth_impl(px[j], narm, ret, Q));
+          for(int j = 0; j < l; ++j) pout[j] = asReal(nth_impl(px[j], narm, ret, Q)); /* REAL() appears not thread safe */
         }
       } else { // TODO: if narm = FALSE, can compute sumw beforehand
         // if(nthreads == 1) { // Can re-use ordering of x
           int *pxo = (int *) R_alloc(nrx, sizeof(int));
           for(int j = 0; j < l; ++j) {
             num1radixsort(pxo, TRUE, FALSE, px[j]);
-            pout[j] = asReal(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q));
+            pout[j] = REAL(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q))[0];
           }
       /*  } else {
           #pragma omp parallel for num_threads(nthreads)
@@ -1338,7 +1392,9 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
     SEXP *restrict pout = SEXPPTR(out);
     if(nullw) {
       if(nthreads == 1) {
-        for(int j = 0; j < l; ++j) pout[j] = nth_impl(px[j], narm, ret, Q);
+        void *x_cc = Calloc(nrx, double);
+        for(int j = 0; j < l; ++j) pout[j] = nth_impl_noalloc(px[j], x_cc, narm, ret, Q);
+        Free(x_cc);
       } else {
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < l; ++j) pout[j] = nth_impl(px[j], narm, ret, Q);
@@ -1384,10 +1440,12 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
 // Iterate over matrix columns: for integers and doubles
 #undef COLWISE_NTH
-#define COLWISE_NTH(FUN, WFUN, ORDFUN)                                               \
+#define COLWISE_NTH(tdef, FUN, FUN_NA, WFUN, ORDFUN)                                 \
   if(nullw) {                                                                        \
     if(nthreads == 1) {                                                              \
-      for(int j = 0; j < col; ++j) pres[j] = FUN(px + j*l, &l, l, 1, narm, ret, Q);  \
+      tdef *x_cc = (tdef *) Calloc(l, tdef);                                         \
+      for(int j = 0; j < col; ++j) pres[j] = FUN_NA(px + j*l, &l, x_cc, l, 1, narm, ret, Q);  \
+      Free(x_cc);                                                                    \
     } else {                                                                         \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) pres[j] = FUN(px + j*l, &l, l, 1, narm, ret, Q);  \
@@ -1397,7 +1455,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       int *pxo = (int *) R_alloc(l, sizeof(int));                                    \
       for(int j = 0; j < col; ++j) {                                                 \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l);                                       \
-        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, narm, ret, Q);          \
+        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, narm, ret, Q);             \
       }                                                                              \
   } /* else {                                                                        \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
@@ -1520,13 +1578,13 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
     switch(tx) {
       case REALSXP: {
         double *px = REAL(x), *restrict pres = REAL(res);
-        COLWISE_NTH(nth_double, w_nth_double_ord, dradixsort);
+        COLWISE_NTH(double, nth_double, nth_double_noalloc, w_nth_double_ord, dradixsort);
         break;
       }
       case INTSXP:
       case LGLSXP: {  // Factor matrix not well defined object...
         int *px = INTEGER(x), *restrict pres = INTEGER(res);
-        COLWISE_NTH(nth_int, w_nth_int_ord, iradixsort);
+        COLWISE_NTH(int, nth_int, nth_int_noalloc, w_nth_int_ord, iradixsort);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(tx));
