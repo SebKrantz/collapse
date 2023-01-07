@@ -4,6 +4,8 @@
 #include "collapse_c.h"
 // #include <R_ext/Altrep.h>
 
+// Adapted from fsum.c
+
 double fmean_double_impl(const double *restrict px, const int narm, const int l) {
   if(narm) {
     int j = l-1, n = 1;
@@ -375,36 +377,184 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
   return out;
 }
 
+
+// For safe multithreading across data frame columns
+
+double fmean_impl_dbl(SEXP x, int narm, int nthreads) {
+  int l = length(x);
+  if(l < 1) return NA_REAL;
+  if(nthreads <= 1) switch(TYPEOF(x)) {
+    case REALSXP: return fmean_double_impl(REAL(x), narm, l);
+    case LGLSXP:
+    case INTSXP: return fmean_int_impl(INTEGER(x), narm, l);
+    default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
+  switch(TYPEOF(x)) {
+    case REALSXP: return fmean_double_omp_impl(REAL(x), narm, l, nthreads);
+    case LGLSXP:
+    case INTSXP: return fmean_int_omp_impl(INTEGER(x), narm, l, nthreads);
+    default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
+}
+
+SEXP fmean_impl_SEXP(SEXP x, int narm, int nthreads) {
+  return ScalarReal(fmean_impl_dbl(x, narm, nthreads));
+}
+
+double fmean_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads) {
+  int l = length(x);
+  if(l < 1) return NA_REAL;
+  if(TYPEOF(x) != REALSXP) {
+    if(TYPEOF(x) != INTSXP && TYPEOF(x) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+    x = PROTECT(coerceVector(x, REALSXP));
+    double res = (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l) :
+      fmean_weights_omp_impl(REAL(x), pw, narm, l, nthreads);
+    UNPROTECT(1);
+    return res;
+  }
+  return (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l) :
+    fmean_weights_omp_impl(REAL(x), pw, narm, l, nthreads);
+}
+
+SEXP fmean_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads) {
+  return ScalarReal(fmean_w_impl_dbl(x, pw, narm, nthreads));
+}
+
+SEXP fmean_g_impl(SEXP x, const int ng, const int *pg, const int *pgs, int narm) {
+  int l = length(x);
+  if(l < 1) return ScalarReal(NA_REAL);
+
+  SEXP res;
+  switch(TYPEOF(x)) {
+  case REALSXP: {
+    res = PROTECT(allocVector(REALSXP, ng));
+    fmean_double_g_impl(REAL(res), REAL(x), ng, pg, pgs, narm, l);
+    break;
+  }
+  case LGLSXP:
+  case INTSXP:  {
+    res = PROTECT(allocVector(REALSXP, ng));
+    fmean_int_g_impl(REAL(res), INTEGER(x), ng, pg, pgs, narm, l);
+    break;
+  }
+  default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
+
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  UNPROTECT(1);
+  return res;
+}
+
+SEXP fmean_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
+  int l = length(x), nprotect = 1;
+  if(l < 1) return ScalarReal(NA_REAL);
+
+  if(TYPEOF(x) != REALSXP) {
+    if(TYPEOF(x) != INTSXP && TYPEOF(x) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+    x = PROTECT(coerceVector(x, REALSXP)); ++nprotect;
+  }
+
+  SEXP res = PROTECT(allocVector(REALSXP, ng));
+  fmean_weights_g_impl(REAL(res), REAL(x), ng, pg, pw, narm, l);
+
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  UNPROTECT(nprotect);
+  return res;
+}
+
+
+#undef COLWISE_FMEAN_LIST
+#define COLWISE_FMEAN_LIST(FUN, WFUN)                                       \
+if(nwl) {                                                                  \
+  if(nthreads > 1 && l >= nthreads) {                                      \
+    _Pragma("omp parallel for num_threads(nthreads)")                      \
+    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, 1);              \
+  } else {                                                                 \
+    for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nthreads);      \
+  }                                                                        \
+} else {                                                                   \
+  double *restrict pw = REAL(w);                                           \
+  if(nthreads > 1 && l >= nthreads) {                                      \
+    _Pragma("omp parallel for num_threads(nthreads)")                      \
+    for(int j = 0; j < l; ++j) pout[j] = WFUN(px[j], pw, narm, 1);         \
+  } else {                                                                 \
+    for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nthreads); \
+  }                                                                        \
+}
+
+
 SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
-  const int l = length(x), ng = asInteger(Rng);
-  int nthreads = asInteger(Rnth), nprotect = 1;
+  int l = length(x), ng = asInteger(Rng), nthreads = asInteger(Rnth), nwl = isNull(w),
+    narm = asLogical(Rnarm), nprotect = 1;
+
+  // TODO: Disable multithreading if overall data size is small?
   if(l < 1) return x; // needed ??
   if(nthreads > max_threads) nthreads = max_threads;
+
+  if(!nwl) {
+    if(length(VECTOR_ELT(x, 0)) != length(w)) error("length(w) must match nrow(x)");
+    if(TYPEOF(w) != REALSXP) {
+      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weigths must be double or integer");
+      w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
+    }
+  }
+
   if(ng == 0 && asLogical(Rdrop)) {
     SEXP out = PROTECT(allocVector(REALSXP, l)), *restrict px = SEXPPTR(x);
     double *restrict pout = REAL(out);
-    if(nthreads > 1 && l >= nthreads) { // If high-dimensional: column-level parallelism
-      SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect;
-      #pragma omp parallel for num_threads(nthreads)
-      for(int j = 0; j < l; j++) pout[j] = asReal(fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth1)); // REAL()[0] should work here (result is always double), but seems to cause problems on some systems.
-    } else {
-      for(int j = 0; j != l; ++j) pout[j] = asReal(fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth)); // REAL()[0]
-    }
+    COLWISE_FMEAN_LIST(fmean_impl_dbl, fmean_w_impl_dbl);
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
     UNPROTECT(nprotect);
     return out;
   }
+
   SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
-  if((ng > 0 && nthreads > 1 && l > 1) || (ng == 0 && nthreads > 1 && nthreads >= l)) {
-    if(nthreads > l) nthreads = l;
-    SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect; // Needed if ng == 0, otherwise double multithreading
-    #pragma omp parallel for num_threads(nthreads)
-    for(int j = 0; j < l; j++) pout[j] = fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth1);
+
+  if(ng == 0) {
+    COLWISE_FMEAN_LIST(fmean_impl_SEXP, fmean_w_impl_SEXP);
+    // Needed because including it in an OpenMP loop together with ScalarReal() is not thread safe
+    for(int j = 0; j < l; ++j) {
+      SEXP xj = px[j];
+      if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts")))
+        copyMostAttrib(xj, pout[j]);
+    }
   } else {
-    for(int j = 0; j != l; ++j) pout[j] = fmeanC(px[j], Rng, g, gs, w, Rnarm, Rnth);
+    if(length(VECTOR_ELT(x, 0)) != length(g)) error("length(g) must match length(x)");
+    const int *restrict pg = INTEGER(g);
+    if(nthreads > l) nthreads = l;
+
+    if(nwl) { // no weights
+      int *restrict pgs = &nprotect;
+      if(!narm) {
+        if(length(gs) == ng) pgs = INTEGER(gs);
+        else {
+          SEXP gs_ = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
+          pgs = INTEGER(gs_)-1;
+          memset(pgs, 0, sizeof(int) * ng);
+          for(int i = 0, nrx = length(g); i != nrx; ++i) ++pgs[pg[i]];
+          ++pgs;
+        }
+      }
+
+      if(nthreads > 1 && l > 1) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < l; ++j) pout[j] = fmean_g_impl(px[j], ng, pg, pgs, narm);
+      } else {
+        for(int j = 0; j != l; ++j) pout[j] = fmean_g_impl(px[j], ng, pg, pgs, narm);
+      }
+    } else {
+      double *restrict pw = REAL(w);
+      if(nthreads > 1 && l > 1) {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < l; ++j) pout[j] = fmean_wg_impl(px[j], ng, pg, pw, narm);
+      } else {
+        for(int j = 0; j != l; ++j) pout[j] = fmean_wg_impl(px[j], ng, pg, pw, narm);
+      }
+    }
   }
-  // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
+
   DFcopyAttr(out, x, ng);
   UNPROTECT(nprotect);
   return out;
 }
+
