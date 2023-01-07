@@ -77,39 +77,41 @@ for (FUN in 1:2) {
   }
 
 test_that("fmedian performs like base::median", {
-  expect_equal(fmedian(NA), as.double(bmedian(NA)))
-  expect_equal(fmedian(NA, na.rm = FALSE), as.double(bmedian(NA)))
-  expect_equal(fmedian(1), bmedian(1, na.rm = TRUE))
-  expect_equal(fmedian(1:3), bmedian(1:3, na.rm = TRUE))
-  expect_equal(fmedian(-1:1), bmedian(-1:1, na.rm = TRUE))
-  expect_equal(fmedian(1, na.rm = FALSE), bmedian(1))
-  expect_equal(fmedian(1:3, na.rm = FALSE), bmedian(1:3))
-  expect_equal(fmedian(-1:1, na.rm = FALSE), bmedian(-1:1))
-  expect_equal(fmedian(x), bmedian(x, na.rm = TRUE))
-  expect_equal(fmedian(x, na.rm = FALSE), bmedian(x))
-  expect_equal(fmedian(xNA, na.rm = FALSE), bmedian(xNA))
-  expect_equal(fmedian(xNA), bmedian(xNA, na.rm = TRUE))
-  expect_equal(fmedian(mtcars), fmedian(m))
-  expect_equal(fmedian(m), dapply(m, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(m, na.rm = FALSE), dapply(m, bmedian))
-  expect_equal(fmedian(mNA, na.rm = FALSE), dapply(mNA, bmedian))
-  expect_equal(fmedian(mNA), dapply(mNA, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(mtcars), dapply(mtcars, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(mtcars, na.rm = FALSE), dapply(mtcars, bmedian))
-  expect_equal(fmedian(mtcNA, na.rm = FALSE), dapply(mtcNA, bmedian))
-  expect_equal(fmedian(mtcNA), dapply(mtcNA, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(x, f), BY(x, f, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(x, f, na.rm = FALSE), BY(x, f, bmedian))
-  expect_equal(fmedian(xNA, f, na.rm = FALSE), BY(xNA, f, bmedian))
-  expect_equal(fmedian(xNA, f), BY(xNA, f, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(m, g), BY(m, g, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(m, g, na.rm = FALSE), BY(m, g, bmedian))
-  expect_equal(fmedian(mNA, g, na.rm = FALSE), BY(mNA, g, bmedian))
-  expect_equal(fmedian(mNA, g), BY(mNA, g, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(mtcars, g), BY(mtcars, g, bmedian, na.rm = TRUE))
-  expect_equal(fmedian(mtcars, g, na.rm = FALSE), BY(mtcars, g, bmedian))
-  expect_equal(fmedian(mtcNA, g, na.rm = FALSE), BY(mtcNA, g, bmedian))
-  expect_equal(fmedian(mtcNA, g), BY(mtcNA, g, bmedian, na.rm = TRUE))
+  for(t in c(1L, 5:9)) { # All quantile methods should give the same median value estimate
+  expect_equal(fmedian(NA, ties = t), as.double(bmedian(NA)))
+  expect_equal(fmedian(NA, na.rm = FALSE, ties = t), as.double(bmedian(NA)))
+  expect_equal(fmedian(1, ties = t), bmedian(1, na.rm = TRUE))
+  expect_equal(fmedian(1:3, ties = t), bmedian(1:3, na.rm = TRUE))
+  expect_equal(fmedian(-1:1, ties = t), bmedian(-1:1, na.rm = TRUE))
+  expect_equal(fmedian(1, na.rm = FALSE, ties = t), bmedian(1))
+  expect_equal(fmedian(1:3, na.rm = FALSE, ties = t), bmedian(1:3))
+  expect_equal(fmedian(-1:1, na.rm = FALSE, ties = t), bmedian(-1:1))
+  expect_equal(fmedian(x, ties = t), bmedian(x, na.rm = TRUE))
+  expect_equal(fmedian(x, na.rm = FALSE, ties = t), bmedian(x))
+  expect_equal(fmedian(xNA, na.rm = FALSE, ties = t), bmedian(xNA))
+  expect_equal(fmedian(xNA, ties = t), bmedian(xNA, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, ties = t), fmedian(m))
+  expect_equal(fmedian(m, ties = t), dapply(m, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(m, na.rm = FALSE, ties = t), dapply(m, bmedian))
+  expect_equal(fmedian(mNA, na.rm = FALSE, ties = t), dapply(mNA, bmedian))
+  expect_equal(fmedian(mNA, ties = t), dapply(mNA, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, ties = t), dapply(mtcars, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, na.rm = FALSE, ties = t), dapply(mtcars, bmedian))
+  expect_equal(fmedian(mtcNA, na.rm = FALSE, ties = t), dapply(mtcNA, bmedian))
+  expect_equal(fmedian(mtcNA, ties = t), dapply(mtcNA, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(x, f, ties = t), BY(x, f, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(x, f, na.rm = FALSE, ties = t), BY(x, f, bmedian))
+  expect_equal(fmedian(xNA, f, na.rm = FALSE, ties = t), BY(xNA, f, bmedian))
+  expect_equal(fmedian(xNA, f, ties = t), BY(xNA, f, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(m, g, ties = t), BY(m, g, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(m, g, na.rm = FALSE, ties = t), BY(m, g, bmedian))
+  expect_equal(fmedian(mNA, g, na.rm = FALSE, ties = t), BY(mNA, g, bmedian))
+  expect_equal(fmedian(mNA, g, ties = t), BY(mNA, g, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, g, ties = t), BY(mtcars, g, bmedian, na.rm = TRUE))
+  expect_equal(fmedian(mtcars, g, na.rm = FALSE, ties = t), BY(mtcars, g, bmedian))
+  expect_equal(fmedian(mtcNA, g, na.rm = FALSE, ties = t), BY(mtcNA, g, bmedian))
+  expect_equal(fmedian(mtcNA, g, ties = t), BY(mtcNA, g, bmedian, na.rm = TRUE))
+  }
 })
 
 test_that("fmedian performs like fmedian with weights all equal", {
@@ -359,76 +361,76 @@ for (FUN in 1:2) {
 
 test_that("fnth gives a proper lower/upper/average weighted median on complete data", {
 
-  expect_identical(fnth(1:3, w = c(3,1,1)), 1)
+  expect_equal(fnth(1:3, w = c(3,1,1), ties = "mean"), 1)
   expect_true(all_identical(
-    fnth(1:3, w = c(3,1,1)),
+    fnth(1:3, w = c(3,1,1), ties = "mean"),
     fnth(1:3, w = c(3,1,1), ties = "min"),
     fnth(1:3, w = c(3,1,1), ties = "max"),
-    fnth(1:3, w = c(3,1,1), na.rm = FALSE),
+    fnth(1:3, w = c(3,1,1), ties = "mean", na.rm = FALSE),
     fnth(1:3, w = c(3,1,1), ties = "min", na.rm = FALSE),
     fnth(1:3, w = c(3,1,1), ties = "max", na.rm = FALSE),
-    fnth(1:3, g = rep(1,3), w = c(3,1,1), use.g.names = FALSE),
+    fnth(1:3, g = rep(1,3), w = c(3,1,1), use.g.names = FALSE, ties = "mean"),
     fnth(1:3, g = rep(1,3), w = c(3,1,1), use.g.names = FALSE, ties = "min"),
     fnth(1:3, g = rep(1,3), w = c(3,1,1), use.g.names = FALSE, ties = "max"),
-    fnth(1:3, g = rep(1,3), w = c(3,1,1), use.g.names = FALSE, na.rm = FALSE),
+    fnth(1:3, g = rep(1,3), w = c(3,1,1), use.g.names = FALSE, ties = "mean", na.rm = FALSE),
     fnth(1:3, g = rep(1,3), w = c(3,1,1), use.g.names = FALSE, ties = "min", na.rm = FALSE),
     fnth(1:3, g = rep(1,3), w = c(3,1,1), use.g.names = FALSE, ties = "max", na.rm = FALSE)))
 
-  expect_identical(fnth(1:3, w = c(1,1,3)), 3)
+  expect_identical(fnth(1:3, w = c(1,1,3), ties = "mean"), 3)
   expect_true(all_identical(
-    fnth(1:3, w = c(1,1,3)),
+    fnth(1:3, w = c(1,1,3), ties = "mean"),
     fnth(1:3, w = c(1,1,3), ties = "min"),
     fnth(1:3, w = c(1,1,3), ties = "max"),
-    fnth(1:3, w = c(1,1,3), na.rm = FALSE),
+    fnth(1:3, w = c(1,1,3), ties = "mean", na.rm = FALSE),
     fnth(1:3, w = c(1,1,3), ties = "min", na.rm = FALSE),
     fnth(1:3, w = c(1,1,3), ties = "max", na.rm = FALSE),
-    fnth(1:3, g = rep(1,3), w = c(1,1,3), use.g.names = FALSE),
+    fnth(1:3, g = rep(1,3), w = c(1,1,3), use.g.names = FALSE, ties = "mean"),
     fnth(1:3, g = rep(1,3), w = c(1,1,3), use.g.names = FALSE, ties = "min"),
     fnth(1:3, g = rep(1,3), w = c(1,1,3), use.g.names = FALSE, ties = "max"),
-    fnth(1:3, g = rep(1,3), w = c(1,1,3), use.g.names = FALSE, na.rm = FALSE),
+    fnth(1:3, g = rep(1,3), w = c(1,1,3), use.g.names = FALSE, ties = "mean", na.rm = FALSE),
     fnth(1:3, g = rep(1,3), w = c(1,1,3), use.g.names = FALSE, ties = "min", na.rm = FALSE),
     fnth(1:3, g = rep(1,3), w = c(1,1,3), use.g.names = FALSE, ties = "max", na.rm = FALSE)))
 
   w = c(0.15, 0.1, 0.2, 0.3, 0.25)
   y = seq_len(5) # [order(rnorm(5))]
-  expect_identical(fnth(y, w = w), 4)
+  expect_identical(fnth(y, w = w, ties = "mean"), 4)
   expect_true(all_identical(4,
-              fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE),
+              fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "mean"),
               fnth(y, w = w, ties = "min"),
               fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min"),
               fnth(y, w = w, ties = "max"),
               fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max"),
-              fnth(y, w = w, na.rm = FALSE),
-              fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE),
+              fnth(y, w = w, na.rm = FALSE, ties = "mean"),
+              fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE, ties = "mean"),
               fnth(y, w = w, ties = "min", na.rm = FALSE),
               fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min", na.rm = FALSE),
               fnth(y, w = w, ties = "max", na.rm = FALSE),
               fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max", na.rm = FALSE)))
   w = c(0.15, 0.2, 0.3, 0.25)
   y = seq_len(4) # [order(rnorm(4))]
-  expect_identical(fnth(y, w = w), 3)
+  expect_identical(fnth(y, w = w, ties = "mean"), 3)
   expect_true(all_identical(3,
-              fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE),
+              fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "mean"),
               fnth(y, w = w, ties = "min"),
               fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min"),
               fnth(y, w = w, ties = "max"),
               fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max"),
-              fnth(y, w = w, na.rm = FALSE),
-              fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE),
+              fnth(y, w = w, na.rm = FALSE, ties = "mean"),
+              fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE, ties = "mean"),
               fnth(y, w = w, ties = "min", na.rm = FALSE),
               fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min", na.rm = FALSE),
               fnth(y, w = w, ties = "max", na.rm = FALSE),
               fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max", na.rm = FALSE)))
 
   w = rep(0.25, 4)
-  expect_identical(fnth(y, w = w), 2.5)
-  expect_identical(2.5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE))
+  expect_identical(fnth(y, w = w, ties = "mean"), 2.5)
+  expect_identical(2.5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "mean"))
   expect_identical(fnth(y, w = w, ties = "min"), 2)
   expect_identical(2, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min"))
   expect_identical(fnth(y, w = w, ties = "max"), 3)
   expect_identical(3, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max"))
-  expect_identical(fnth(y, w = w, na.rm = FALSE), 2.5)
-  expect_identical(2.5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE))
+  expect_identical(fnth(y, w = w, na.rm = FALSE, ties = "mean"), 2.5)
+  expect_identical(2.5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE, ties = "mean"))
   expect_identical(fnth(y, w = w, ties = "min", na.rm = FALSE), 2)
   expect_identical(2, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min", na.rm = FALSE))
   expect_identical(fnth(y, w = w, ties = "max", na.rm = FALSE), 3)
@@ -438,27 +440,27 @@ test_that("fnth gives a proper lower/upper/average weighted median on complete d
   y = seq_len(5) #[order(rnorm(5))]
   expect_identical(fnth(y, w = w), 3)
   expect_true(all_identical(3,
-                            fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE),
+                            fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "mean"),
                             fnth(y, w = w, ties = "min"),
                             fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min"),
                             fnth(y, w = w, ties = "max"),
                             fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max"),
-                            fnth(y, w = w, na.rm = FALSE),
-                            fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE),
+                            fnth(y, w = w, na.rm = FALSE, ties = "mean"),
+                            fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE, ties = "mean"),
                             fnth(y, w = w, ties = "min", na.rm = FALSE),
                             fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min", na.rm = FALSE),
                             fnth(y, w = w, ties = "max", na.rm = FALSE),
                             fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max", na.rm = FALSE)))
 
   w = c(0.25, 0.25, 0, 0.25, 0.25)
-  expect_identical(fnth(y, w = w), 3)
-  expect_identical(3, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE))
+  expect_identical(fnth(y, w = w, ties = "mean"), 3)
+  expect_identical(3, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "mean"))
   expect_identical(fnth(y, w = w, ties = "min"), 2)
   expect_identical(2, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min"))
   expect_identical(fnth(y, w = w, ties = "max"), 4)
   expect_identical(4, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max"))
-  expect_identical(fnth(y, w = w, na.rm = FALSE), 3)
-  expect_identical(3, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE))
+  expect_identical(fnth(y, w = w, na.rm = FALSE, ties = "mean"), 3)
+  expect_identical(3, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE, ties = "mean"))
   expect_identical(fnth(y, w = w, ties = "min", na.rm = FALSE), 2)
   expect_identical(2, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min", na.rm = FALSE))
   expect_identical(fnth(y, w = w, ties = "max", na.rm = FALSE), 4)
@@ -466,14 +468,14 @@ test_that("fnth gives a proper lower/upper/average weighted median on complete d
 
   w = c(0.25, 0.25, 0, 0, 0.25, 0.25)
   y = seq_len(6) # [order(rnorm(6))]
-  expect_identical(fnth(y, w = w), 3.5)
-  expect_identical(3.5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE))
+  expect_identical(fnth(y, w = w, ties = "mean"), 3.5)
+  expect_identical(3.5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "mean"))
   expect_identical(fnth(y, w = w, ties = "min"), 2)
   expect_identical(2, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min"))
   expect_identical(fnth(y, w = w, ties = "max"), 5)
   expect_identical(5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "max"))
-  expect_identical(fnth(y, w = w, na.rm = FALSE), 3.5)
-  expect_identical(3.5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE))
+  expect_identical(fnth(y, w = w, na.rm = FALSE, ties = "mean"), 3.5)
+  expect_identical(3.5, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, na.rm = FALSE, ties = "mean"))
   expect_identical(fnth(y, w = w, ties = "min", na.rm = FALSE), 2)
   expect_identical(2, fnth(y, g = rep(1, length(y)), w = w, use.g.names = FALSE, ties = "min", na.rm = FALSE))
   expect_identical(fnth(y, w = w, ties = "max", na.rm = FALSE), 5)
