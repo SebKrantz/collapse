@@ -290,8 +290,6 @@ double fsum_int_omp_impl(const int *restrict px, const int narm, const int l, co
 SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
     narm = asLogical(Rnarm), nthreads = asInteger(Rnth), nprotect = 0, nwl = isNull(w);
-  if(narm) narm += asLogical(fill);
-  if(nthreads > max_threads) nthreads = max_threads;
   // ALTREP methods for compact sequences: not safe yet and not part of the API.
   // if(ALTREP(x) && ng == 0 && nwl) {
   // switch(tx) {
@@ -304,6 +302,8 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(l < 100000) nthreads = 1; // No improvements from multithreading on small data.
+  if(narm) narm += asLogical(fill);
+  if(nthreads > max_threads) nthreads = max_threads;
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out;
   if(!(ng == 0 && nwl && tx == INTSXP)) {
