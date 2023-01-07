@@ -4,7 +4,7 @@
 #include "collapse_c.h"
 // #include <R_ext/Altrep.h>
 
-void fsum_double_impl(double *restrict pout, const double *restrict px, const int narm, const int l) {
+double fsum_double_impl(const double *restrict px, const int narm, const int l) {
   double sum;
   if(narm == 1) {
     // Somehow this is faster than forward loop...
@@ -27,7 +27,7 @@ void fsum_double_impl(double *restrict pout, const double *restrict px, const in
       for(int i = 0; i != l; ++i) sum += px[i];
     }
   }
-  pout[0] = sum;
+  return sum;
 }
 
 void fsum_double_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const int narm, const int l) {
@@ -50,7 +50,7 @@ void fsum_double_g_impl(double *restrict pout, const double *restrict px, const 
   }
 }
 
-void fsum_double_omp_impl(double *restrict pout, const double *restrict px, const int narm, const int l, const int nth) {
+double fsum_double_omp_impl(const double *restrict px, const int narm, const int l, const int nth) {
   double sum;
   if(narm) {
     int j = 1;
@@ -65,7 +65,7 @@ void fsum_double_omp_impl(double *restrict pout, const double *restrict px, cons
     #pragma omp parallel for num_threads(nth) reduction(+:sum)
     for(int i = 0; i < l; ++i) sum += px[i]; // Cannot have break statements in OpenMP for loop
   }
-  pout[0] = sum;
+  return sum;
 }
 
 // This is unsafe...
@@ -89,7 +89,7 @@ void fsum_double_omp_impl(double *restrict pout, const double *restrict px, cons
 //   }
 // }
 
-void fsum_weights_impl(double *restrict pout, const double *restrict px, const double *restrict pw, const int narm, const int l) {
+double fsum_weights_impl(const double *restrict px, const double *restrict pw, const int narm, const int l) {
   double sum;
   if(narm == 1) {
     int j = l-1;
@@ -107,7 +107,7 @@ void fsum_weights_impl(double *restrict pout, const double *restrict px, const d
       for(int i = 0; i != l; ++i) sum += px[i] * pw[i];
     }
   }
-  pout[0] = sum;
+  return sum;
 }
 
 void fsum_weights_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const double *restrict pw, const int narm, const int l) {
@@ -131,7 +131,7 @@ void fsum_weights_g_impl(double *restrict pout, const double *restrict px, const
 }
 
 
-void fsum_weights_omp_impl(double *restrict pout, const double *restrict px, const double *restrict pw, const int narm, const int l, const int nth) {
+double fsum_weights_omp_impl(const double *restrict px, const double *restrict pw, const int narm, const int l, const int nth) {
   double sum;
   if(narm) {
     int j = 0;
@@ -148,7 +148,7 @@ void fsum_weights_omp_impl(double *restrict pout, const double *restrict px, con
     #pragma omp parallel for num_threads(nth) reduction(+:sum)
     for(int i = 0; i < l; ++i) sum += px[i] * pw[i];
   }
-  pout[0] = sum;
+  return sum;
 }
 
 // This is unsafe...
@@ -315,8 +315,8 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
     switch(tx) {
       case REALSXP:
         if(ng == 0) {
-          if(nth <= 1) fsum_double_impl(REAL(out), REAL(x), narm, l);
-          else fsum_double_omp_impl(REAL(out), REAL(x), narm, l, nth);
+          REAL(out)[0] = (nth <= 1) ? fsum_double_impl(REAL(x), narm, l) :
+                        fsum_double_omp_impl(REAL(x), narm, l, nth);
         } else fsum_double_g_impl(REAL(out), REAL(x), ng, INTEGER(g), narm, l);
         // If safe sub-column-level mutithreading can be developed...
         // if(nth <= 1) {
@@ -341,28 +341,22 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
         }
         break;
       }
-      default: error("Unsupported SEXP type");
+    default: error("Unsupported SEXP type: '%s'", type2char(tx));
     }
   } else {
     if(l != length(w)) error("length(w) must match length(x)");
-    int tw = TYPEOF(w);
-    SEXP xr, wr;
-    double *restrict px, *restrict pw;
-    if(tw != REALSXP) {
-      if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
-      wr = PROTECT(coerceVector(w, REALSXP));
-      pw = REAL(wr);
-      ++nprotect;
-    } else pw = REAL(w);
+    if(TYPEOF(w) != REALSXP) {
+      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weigths must be double or integer");
+      w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
+    }
     if(tx != REALSXP) {
-      if(tx != INTSXP) error("x must be double or integer");
-      xr = PROTECT(coerceVector(x, REALSXP));
-      px = REAL(xr);
-      ++nprotect;
-    } else px = REAL(x);
+      if(tx != INTSXP) error("Unsupported SEXP type: '%s'", type2char(tx));
+      x = PROTECT(coerceVector(x, REALSXP)); ++nprotect;
+    }
+    double *restrict px = REAL(x), *restrict pw = REAL(w);;
     if(ng == 0) {
-      if(nth <= 1) fsum_weights_impl(REAL(out), px, pw, narm, l);
-      else fsum_weights_omp_impl(REAL(out), px, pw, narm, l, nth);
+      REAL(out)[0] = (nth <= 1) ? fsum_weights_impl(px, pw, narm, l) :
+               fsum_weights_omp_impl(px, pw, narm, l, nth);
     } else fsum_weights_g_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
   if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
@@ -391,12 +385,12 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
         double *px = REAL(x), *pout = REAL(out);
         if(ng == 0) {
           if(nth <= 1) {
-            for(int j = 0; j != col; ++j) fsum_double_impl(pout + j, px + j*l, narm, l);
+            for(int j = 0; j != col; ++j) pout[j] = fsum_double_impl(px + j*l, narm, l);
           } else if(col >= nth) {
             #pragma omp parallel for num_threads(nth)
-            for(int j = 0; j < col; ++j) fsum_double_impl(pout + j, px + j*l, narm, l);
+            for(int j = 0; j < col; ++j) pout[j] = fsum_double_impl(px + j*l, narm, l);
           } else {
-            for(int j = 0; j != col; ++j) fsum_double_omp_impl(pout + j, px + j*l, narm, l, nth);
+            for(int j = 0; j != col; ++j) pout[j] = fsum_double_omp_impl(px + j*l, narm, l, nth);
           }
         } else {
           if(nth <= 1 || col == 1) {
@@ -444,41 +438,36 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
             }
           }
           if(anyoutl == 0) {
-            SEXP iout = PROTECT(coerceVector(out, INTSXP));
-            matCopyAttr(iout, x, Rdrop, ng);
-            UNPROTECT(2);
-            return iout;
+            out = PROTECT(coerceVector(out, INTSXP));
+            matCopyAttr(out, x, Rdrop, ng);
+            UNPROTECT(nprotect + 1);
+            return out;
           }
         }
         break;
       }
-      default: error("Unsupported SEXP type");
+      default: error("Unsupported SEXP type: '%s'", type2char(tx));
     }
   } else {
     if(l != length(w)) error("length(w) must match nrow(x)");
-    int tw = TYPEOF(w);
-    SEXP xr, wr;
-    double *px, *restrict pw, *pout = REAL(out);
-    if(tw != REALSXP) {
-      if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
-      wr = PROTECT(coerceVector(w, REALSXP));
-      pw = REAL(wr);
-      ++nprotect;
-    } else pw = REAL(w);
+    if(TYPEOF(w) != REALSXP) {
+      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weigths must be double or integer");
+      w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
+    }
     if(tx != REALSXP) {
-      if(tx != INTSXP) error("x must be double or integer");
-      xr = PROTECT(coerceVector(x, REALSXP));
-      px = REAL(xr);
-      ++nprotect;
-    } else px = REAL(x);
+      if(tx != INTSXP) error("Unsupported SEXP type: '%s'", type2char(tx));
+      x = PROTECT(coerceVector(x, REALSXP)); ++nprotect;
+    }
+    double *px = REAL(x), *restrict pw = REAL(w), *pout = REAL(out);
+
     if(ng == 0) {
       if(nth <= 1) {
-        for(int j = 0; j != col; ++j) fsum_weights_impl(pout + j, px + j*l, pw, narm, l);
+        for(int j = 0; j != col; ++j) pout[j] = fsum_weights_impl(px + j*l, pw, narm, l);
       } else if(col >= nth) {
         #pragma omp parallel for num_threads(nth)
-        for(int j = 0; j < col; ++j) fsum_weights_impl(pout + j, px + j*l, pw, narm, l);
+        for(int j = 0; j < col; ++j) pout[j] = fsum_weights_impl(px + j*l, pw, narm, l);
       } else {
-        for(int j = 0; j != col; ++j) fsum_weights_omp_impl(pout + j, px + j*l, pw, narm, l, nth);
+        for(int j = 0; j != col; ++j) pout[j] = fsum_weights_omp_impl(px + j*l, pw, narm, l, nth);
       }
     } else {
       if(nth <= 1 || col == 1) {
@@ -495,35 +484,176 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
   return out;
 }
 
+// For safe multithreading across data frame columns
+
+double fsum_impl_dbl(SEXP x, int narm, int nth) {
+  int l = length(x);
+  if(l < 1) return NA_REAL;
+  if(nth <= 1) switch(TYPEOF(x)) {
+    case REALSXP: return fsum_double_impl(REAL(x), narm, l);
+    case LGLSXP:
+    case INTSXP: return fsum_int_impl(INTEGER(x), narm, l);
+    default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
+  switch(TYPEOF(x)) {
+    case REALSXP: return fsum_double_omp_impl(REAL(x), narm, l, nth);
+    case LGLSXP:
+    case INTSXP: return fsum_int_omp_impl(INTEGER(x), narm, l, nth);
+    default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
+}
+
+SEXP fsum_impl_SEXP(SEXP x, int narm, int nth) {
+  SEXP res = ScalarReal(fsum_impl_dbl(x, narm, nth));
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
+    PROTECT(res);
+    copyMostAttrib(x, res);
+    UNPROTECT(1);
+  }
+  return res;
+}
+
+double fsum_w_impl_dbl(SEXP x, double *pw, int narm, int nth) {
+  int l = length(x);
+  if(l < 1) return NA_REAL;
+  if(TYPEOF(x) != REALSXP) {
+    if(TYPEOF(x) != INTSXP && TYPEOF(x) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+    x = PROTECT(coerceVector(x, REALSXP));
+    double res = (nth <= 1) ? fsum_weights_impl(REAL(x), pw, narm, l) :
+      fsum_weights_omp_impl(REAL(x), pw, narm, l, nth);
+    UNPROTECT(1);
+    return res;
+  }
+  return (nth <= 1) ? fsum_weights_impl(REAL(x), pw, narm, l) :
+    fsum_weights_omp_impl(REAL(x), pw, narm, l, nth);
+}
+
+SEXP fsum_w_impl_SEXP(SEXP x, double *pw, int narm, int nth) {
+  SEXP res = ScalarReal(fsum_w_impl_dbl(x, pw, narm, nth));
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
+    PROTECT(res);
+    copyMostAttrib(x, res);
+    UNPROTECT(1);
+  }
+  return res;
+}
+
+SEXP fsum_g_impl(SEXP x, const int ng, const int *pg, int narm) {
+  int l = length(x);
+  if(l < 1) return ScalarReal(NA_REAL);
+
+  SEXP res;
+  switch(TYPEOF(x)) {
+    case REALSXP: {
+      res = PROTECT(allocVector(REALSXP, ng));
+      fsum_double_g_impl(REAL(res), REAL(x), ng, pg, narm, l);
+      break;
+    }
+    case LGLSXP:
+    case INTSXP:  {
+      res = PROTECT(allocVector(INTSXP, ng));
+      fsum_int_g_impl(INTEGER(res), INTEGER(x), ng, pg, narm, l);
+      break;
+    }
+    default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
+
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  UNPROTECT(1);
+  return res;
+}
+
+SEXP fsum_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
+  int l = length(x), nprotect = 1;
+  if(l < 1) return ScalarReal(NA_REAL);
+
+  if(TYPEOF(x) != REALSXP) {
+    if(TYPEOF(x) != INTSXP && TYPEOF(x) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+    x = PROTECT(coerceVector(x, REALSXP)); ++nprotect;
+  }
+
+  SEXP res = PROTECT(allocVector(REALSXP, ng));
+  fsum_weights_g_impl(REAL(res), REAL(x), ng, pg, pw, narm, l);
+
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  UNPROTECT(1);
+  return res;
+}
+
+
+#undef COLWISE_FSUM_LIST
+#define COLWISE_FSUM_LIST(FUN, WFUN)                           \
+if(nwl) {                                                      \
+  if(nth > 1 && l >= nth) {                                    \
+    _Pragma("omp parallel for num_threads(nth)")               \
+    for(int j = 0; j < l; j++) pout[j] = FUN(px[j], narm, 1);  \
+  } else {                                                     \
+    for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nth); \
+  }                                                            \
+} else {                                                       \
+  double *restrict pw = REAL(w);                               \
+  if(nth > 1 && l >= nth) {                                    \
+    _Pragma("omp parallel for num_threads(nth)")               \
+    for(int j = 0; j < l; j++) pout[j] = WFUN(px[j], pw, narm, 1); \
+  } else {                                                     \
+    for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nth); \
+  }                                                            \
+}
+
+
 SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop, SEXP Rnth) {
-  int l = length(x), ng = asInteger(Rng), nth = asInteger(Rnth), nprotect = 1;
+  int l = length(x), ng = asInteger(Rng), nth = asInteger(Rnth), nwl = isNull(w),
+    narm = asLogical(Rnarm), nprotect = 1;
+
+  if(narm) narm += asLogical(fill);
   if(nth > max_threads) nth = max_threads;
   // TODO: Disable multithreading if overall data size is small?
   if(l < 1) return x; // needed ??
+
+  if(!nwl) {
+    if(length(VECTOR_ELT(x, 0)) != length(w)) error("length(w) must match nrow(x)");
+    if(TYPEOF(w) != REALSXP) {
+      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weigths must be double or integer");
+      w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
+    }
+  }
+
   if(ng == 0 && asLogical(Rdrop)) {
     SEXP out = PROTECT(allocVector(REALSXP, l)), *restrict px = SEXPPTR(x);
     double *restrict pout = REAL(out);
-    if(nth > 1 && l >= nth) { // If high-dimensional: column-level parallelism
-      SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect;
-      #pragma omp parallel for num_threads(nth)
-      for(int j = 0; j < l; j++) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth1));
-    } else {
-      for(int j = 0; j != l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth));
-    }
+    COLWISE_FSUM_LIST(fsum_impl_dbl, fsum_w_impl_dbl);
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
     UNPROTECT(nprotect);
     return out;
   }
+
   SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
-  if((ng > 0 && nth > 1 && l > 1) || (ng == 0 && nth > 1 && nth >= l)) {
-    if(nth > l) nth = l;
-    SEXP Rnth1 = PROTECT(ScalarInteger(1)); ++nprotect; // Needed if ng == 0, otherwise double multithreading
-    #pragma omp parallel for num_threads(nth)
-    for(int j = 0; j < l; j++) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth1);
+
+  if(ng == 0) {
+    COLWISE_FSUM_LIST(fsum_impl_SEXP, fsum_w_impl_SEXP);
   } else {
-    for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, fill, Rnth);
+    if(length(VECTOR_ELT(x, 0)) != length(g)) error("length(g) must match length(x)");
+    const int *restrict pg = INTEGER(g);
+
+    if(nth > l) nth = l;
+    if(nwl) { // no weights
+      if(nth > 1 && l > 1) {
+        #pragma omp parallel for num_threads(nth)
+        for(int j = 0; j < l; ++j) pout[j] = fsum_g_impl(px[j], ng, pg, narm);
+      } else {
+        for(int j = 0; j != l; ++j) pout[j] = fsum_g_impl(px[j], ng, pg, narm);
+      }
+    } else {
+      double *restrict pw = REAL(w);
+      if(nth > 1 && l > 1) {
+        #pragma omp parallel for num_threads(nth)
+        for(int j = 0; j < l; ++j) pout[j] = fsum_wg_impl(px[j], ng, pg, pw, narm);
+      } else {
+        for(int j = 0; j != l; ++j) pout[j] = fsum_wg_impl(px[j], ng, pg, pw, narm);
+      }
+    }
   }
-  // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
+
   DFcopyAttr(out, x, ng);
   UNPROTECT(nprotect);
   return out;
