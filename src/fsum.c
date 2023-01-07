@@ -352,7 +352,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
       if(tx != INTSXP) error("Unsupported SEXP type: '%s'", type2char(tx));
       x = PROTECT(coerceVector(x, REALSXP)); ++nprotect;
     }
-    double *restrict px = REAL(x), *restrict pw = REAL(w);;
+    double *restrict px = REAL(x), *restrict pw = REAL(w);
     if(ng == 0) {
       REAL(out)[0] = (nthreads <= 1) ? fsum_weights_impl(px, pw, narm, l) :
                fsum_weights_omp_impl(px, pw, narm, l, nthreads);
@@ -371,11 +371,11 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
       ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
       narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
       nthreads = asInteger(Rnth); // , cmth = nthreads > 1 && col >= nthreads;
-  if(narm) narm += asLogical(fill);
-  if(nthreads > max_threads) nthreads = max_threads;
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(l*col < 100000) nthreads = 1; // No gains from multithreading on small data
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
+  if(narm) narm += asLogical(fill);
+  if(nthreads > max_threads) nthreads = max_threads;
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector((nwl && ng > 0) ? tx : REALSXP, ng == 0 ? col : col * ng));
   if(nwl) {
