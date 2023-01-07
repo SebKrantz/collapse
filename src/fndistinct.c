@@ -236,27 +236,22 @@ int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int 
 
 // Implementations for R vectors -----------------------------------------------
 
-SEXP ndistinct_impl(SEXP x, int narm) {
-  int l = length(x), res;
-  if(l < 1) return ScalarInteger(0);
+int ndistinct_impl_int(SEXP x, int narm) {
+  int l = length(x);
+  if(l < 1) return 0;
   switch(TYPEOF(x)) {
-    case REALSXP:
-      res = ndistinct_double(REAL(x), &l, l, 1, narm);
-      break;
-  case INTSXP:  // TODO: optimize for plain integer??
-      res = isFactor(x) ? ndistinct_fct(INTEGER(x), &l, l, nlevels(x), 1, narm) :
-               ndistinct_int(INTEGER(x), &l, l, 1, narm);
-      break;
-    case LGLSXP:
-      res = ndistinct_logi(INTEGER(x), &l, l, 1, narm);
-      break;
-    case STRSXP:
-      res = ndistinct_string(STRING_PTR(x), &l, l, 1, narm);
-      break;
-    default: error("Not Supported SEXP Type!");
+    case REALSXP: return ndistinct_double(REAL(x), &l, l, 1, narm);
+    case INTSXP:  // TODO: optimize for plain integer??
+      return isFactor(x) ? ndistinct_fct(INTEGER(x), &l, l, nlevels(x), 1, narm) :
+                           ndistinct_int(INTEGER(x), &l, l, 1, narm);
+    case LGLSXP: return ndistinct_logi(INTEGER(x), &l, l, 1, narm);
+    case STRSXP: return ndistinct_string(STRING_PTR(x), &l, l, 1, narm);
+    default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
+}
 
-  return ScalarInteger(res);
+SEXP ndistinct_impl(SEXP x, int narm) {
+  return ScalarInteger(ndistinct_impl_int(x, narm));
 }
 
 // TODO: Optimize grouped distinct value count for logical vectors??
@@ -395,9 +390,13 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
   if(isNull(g) && asLogical(Rdrop)) {
     SEXP out = PROTECT(allocVector(INTSXP, l)), *restrict px = SEXPPTR(x);
     int *restrict pout = INTEGER(out);
-    if(nthreads > l) nthreads = l;
-    #pragma omp parallel for num_threads(nthreads)
-    for(int j = 0; j < l; ++j) pout[j] = INTEGER(ndistinct_impl(px[j], narm))[0];
+    if(nthreads <= 1) {
+      for(int j = 0; j != l; ++j) pout[j] = ndistinct_impl_int(px[j], narm);
+    } else {
+      if(nthreads > l) nthreads = l;
+      #pragma omp parallel for num_threads(nthreads)
+      for(int j = 0; j < l; ++j) pout[j] = ndistinct_impl_int(px[j], narm);
+    }
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
     UNPROTECT(1);
     return out;
@@ -405,11 +404,16 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
     SEXP out = PROTECT(allocVector(VECSXP, l)), sym_label = PROTECT(install("label")),
       *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
     if(isNull(g)) {
-      if(nthreads > l) nthreads = l;
-      #pragma omp parallel for num_threads(nthreads)
-      for(int j = 0; j < l; ++j) {
+      if(nthreads <= 1) {
+        for(int j = 0; j != l; ++j) pout[j] = ndistinct_impl(px[j], narm);
+      } else {
+        if(nthreads > l) nthreads = l;
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < l; ++j) pout[j] = ndistinct_impl(px[j], narm);
+      }
+      // Not thread safe and thus taken out
+      for(int j = 0; j != l; ++j) {
         SEXP xj = px[j];
-        pout[j] = ndistinct_impl(xj, narm);
         if(OBJECT(xj) == 0) copyMostAttrib(xj, pout[j]);
         else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
       }
