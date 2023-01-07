@@ -36,7 +36,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
   numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fndistinctC(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
 
   descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
-                                                           Quant = quantile(na_rm(x), probs = Qprobs)) else
+                                                           Quant = .quantile(x, probs = Qprobs, names = TRUE)) else # na_rm(x)
                                      function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
 
   descrcat <- if(table) function(x) {
