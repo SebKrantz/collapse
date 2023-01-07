@@ -489,21 +489,14 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 // With weights, either radix sort of the entire vector, and then passing through by groups,
 // or quicksort at the group-level
 
-// Expects pw to be decremented by 1 if unsorted e.g. pass pw + sorted
-double w_compute_h(const double *pw, const int *po, const int l, const int sorted, const int ret, const double Q) {
+// Expects pw and po to be consistent
+double w_compute_h(const double *pw, const int *po, const int l, const int ret, const double Q) {
   double sumw = 0.0, mu, h;
   int nw0 = 0;
-  if(sorted) {
-    for(int i = 0; i != l; ++i) {
-      if(pw[i] == 0.0) ++nw0; // TODO: nw0 += pw[i] == 0.0 ??
-      sumw += pw[i];
-    }
-  } else {
-    for(int i = 0; i != l; ++i) {
-      mu = pw[po[i]];
-      if(mu == 0.0) ++nw0; // TODO: nw0 += mu == 0.0 ??
-      sumw += mu;
-    }
+  for(int i = 0; i != l; ++i) {
+    mu = pw[po[i]];
+    if(mu == 0.0) ++nw0; // TODO: nw0 += mu == 0.0 ??
+    sumw += mu;
   }
   if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
   if(sumw < 0.0) error("Weights must be positive or zero");
@@ -680,7 +673,7 @@ double w_nth_int_ord(const int *restrict px, const double *restrict pw, const in
     while(l != 0 && px[po[l-1]] == NA_INTEGER) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
   } else if(px[po[l-1]] == NA_INTEGER) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -695,7 +688,7 @@ double w_nth_double_ord(const double *restrict px, const double *restrict pw, co
     while(l != 0 && ISNAN(px[po[l-1]])) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
   } else if(ISNAN(px[po[l-1]])) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -754,7 +747,7 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   R_qsort_int_I(x_cc, i_cc, 1, n);
 
   // TODO: Check if this makes sense...
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
   if(ISNAN(h)) {
     Free(x_cc); Free(i_cc);
     return NA_REAL;
@@ -820,7 +813,7 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   R_qsort_I(x_cc, i_cc, 1, n);
 
   // TODO: Check if this makes sense...
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, sorted, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
 
   if(ISNAN(h)) {
     Free(x_cc);
