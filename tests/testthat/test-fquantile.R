@@ -256,10 +256,10 @@ for(g in list(NULL, gmtc, gmtcus)) {
                      .nthquantile(x, probs, type = t, w = w, o = o, g = g),
                      .nthquantile(xn0, probs, type = t, w = wn0, o = on0)))
         } else {
-          expect_equal(
+          expect_true(all_obj_equal(
             .nthquantile(x, probs, type = t, w = w, o = o),
             .nthquantile(x, probs, type = t, w = w, o = o, g = g),
-            .nthquantile(xn0, probs, type = t, w = wn0, o = on0))
+            .nthquantile(xn0, probs, type = t, w = wn0, o = on0)))
         }
       }
     }
