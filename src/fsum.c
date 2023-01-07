@@ -130,7 +130,6 @@ void fsum_weights_g_impl(double *restrict pout, const double *restrict px, const
   }
 }
 
-
 double fsum_weights_omp_impl(const double *restrict px, const double *restrict pw, const int narm, const int l, const int nthreads) {
   double sum;
   if(narm) {
@@ -504,13 +503,15 @@ double fsum_impl_dbl(SEXP x, int narm, int nthreads) {
 }
 
 SEXP fsum_impl_SEXP(SEXP x, int narm, int nthreads) {
-  SEXP res = ScalarReal(fsum_impl_dbl(x, narm, nthreads));
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
-    PROTECT(res);
-    copyMostAttrib(x, res);
-    UNPROTECT(1);
-  }
-  return res;
+  return ScalarReal(fsum_impl_dbl(x, narm, nthreads));
+  // This is not thread safe... need to do separate serial loop
+  // SEXP res = ScalarReal(fsum_impl_dbl(x, narm, nthreads));
+  // if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
+  //   PROTECT(res);
+  //   copyMostAttrib(x, res);
+  //   UNPROTECT(1);
+  // }
+  // return res;
 }
 
 double fsum_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads) {
@@ -529,13 +530,15 @@ double fsum_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads) {
 }
 
 SEXP fsum_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads) {
-  SEXP res = ScalarReal(fsum_w_impl_dbl(x, pw, narm, nthreads));
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
-    PROTECT(res);
-    copyMostAttrib(x, res);
-    UNPROTECT(1);
-  }
-  return res;
+  return ScalarReal(fsum_w_impl_dbl(x, pw, narm, nthreads));
+  // This is not thread safe... need to do separate serial loop
+  // SEXP res = ScalarReal(fsum_w_impl_dbl(x, pw, narm, nthreads));
+  // if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
+  //   PROTECT(res);
+  //   copyMostAttrib(x, res);
+  //   UNPROTECT(1);
+  // }
+  // return res;
 }
 
 SEXP fsum_g_impl(SEXP x, const int ng, const int *pg, int narm) {
@@ -584,17 +587,17 @@ SEXP fsum_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
 #undef COLWISE_FSUM_LIST
 #define COLWISE_FSUM_LIST(FUN, WFUN)                           \
 if(nwl) {                                                      \
-  if(nthreads > 1 && l >= nthreads) {                                    \
-    _Pragma("omp parallel for num_threads(nthreads)")               \
-    for(int j = 0; j < l; j++) pout[j] = FUN(px[j], narm, 1);  \
+  if(nthreads > 1 && l >= nthreads) {                          \
+    _Pragma("omp parallel for num_threads(nthreads)")          \
+    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, 1);  \
   } else {                                                     \
     for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nthreads); \
   }                                                            \
 } else {                                                       \
   double *restrict pw = REAL(w);                               \
-  if(nthreads > 1 && l >= nthreads) {                                    \
-    _Pragma("omp parallel for num_threads(nthreads)")               \
-    for(int j = 0; j < l; j++) pout[j] = WFUN(px[j], pw, narm, 1); \
+  if(nthreads > 1 && l >= nthreads) {                          \
+    _Pragma("omp parallel for num_threads(nthreads)")          \
+    for(int j = 0; j < l; ++j) pout[j] = WFUN(px[j], pw, narm, 1); \
   } else {                                                     \
     for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nthreads); \
   }                                                            \
@@ -631,6 +634,12 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 
   if(ng == 0) {
     COLWISE_FSUM_LIST(fsum_impl_SEXP, fsum_w_impl_SEXP);
+    // Needed because including it in an OpenMP loop together with ScalarReal() is not thread safe
+    for(int j = 0; j < l; ++j) {
+      SEXP xj = px[j];
+      if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts")))
+        copyMostAttrib(xj, pout[j]);
+    }
   } else {
     if(length(VECTOR_ELT(x, 0)) != length(g)) error("length(g) must match length(x)");
     const int *restrict pg = INTEGER(g);
