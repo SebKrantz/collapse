@@ -34,7 +34,7 @@ void fsum_double_g_impl(double *restrict pout, const double *restrict px, const 
   if(narm == 1) {
     for(int i = ng; i--; ) pout[i] = NA_REAL; // Other way ?
     --pout;
-    for(int i = l; i--; ) {
+    for(int i = 0; i != l; ++i) {
       if(ISNAN(px[i])) continue; // faster way to code this ? -> Not Bad at all
       if(ISNAN(pout[pg[i]])) pout[pg[i]] = px[i];
       else pout[pg[i]] += px[i];
@@ -43,9 +43,9 @@ void fsum_double_g_impl(double *restrict pout, const double *restrict px, const 
     memset(pout, 0.0, sizeof(double) * ng);
     --pout;
     if(narm == 2) {
-      for(int i = l; i--; ) if(NISNAN(px[i])) pout[pg[i]] += px[i];
+      for(int i = 0; i != l; ++i) if(NISNAN(px[i])) pout[pg[i]] += px[i];
     } else {
-      for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+      for(int i = 0; i != l; ++i) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
     }
   }
 }
