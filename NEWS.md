@@ -8,6 +8,8 @@
 
 * The lead operator `F()` is not exported anymore from the package namespace, to avoid clashes with `base::F` flagged by multiple people. The operator is still part of the package and can be accessed using `collapse:::F`. I have also added an option `"collapse_export_F"`, such that setting `options(collapse_export_F = TRUE)` before loading the package exports the operator as before. Thanks @matthewross07 (#100), @edrubin (#194), and @arthurgailes (#347). 
 
+* Function `fnth()` has a new default `ties = "q7"`, which gives the same result as `quantile(..., type = 7)` (R's default). More details below. 
+
 ### Bug Fixes
 
 * `fmode()` gave wrong results for singleton groups (groups of size 1) on *unsorted* data. I had optimized `fmode()` for singleton groups to directly return the corresponding element, but it did not access the element through the (internal) ordering vector, so the first element/row of the entire vector/data was taken. The same mistake occurred for `fndistinct` if singleton groups were `NA`, which were counted as `1` instead of `0` under the `na.rm = TRUE` default (provided the first element of the vector/data was not `NA`). The mistake did not occur with data sorted by the groups, because here the data pointer already pointed to the first element of the group. (My apologies for this bug, it took me more than half a year to discover it, using *collapse* on a daily basis, and it escaped 700 unit tests as well).
@@ -33,6 +35,19 @@
 * **C API**: *collapse* exports around 40 C functions that provide functionality that is either convenient or rather complicated to implement from scratch. The exported functions can be found at the bottom of `src/ExportSymbols.c`. The API does not include the *Fast Statistical Functions*, which I thought are too closely related to how *collapse* works internally to be of much use to a C programmer (e.g. they expect grouping objects or certain kinds of integer vectors). But you are free to request the export of additional functions, including C++ functions. 
 
 ### Improvements
+
+* `fnth()` and `fmedian()` were rewritten in C, with significant gains in performance and versatility. Notably, `fnth()` now supports (grouped, weighted) continuous quantile estimation, like `fquantile()` (`fmedian()`, which is a wrapper around `fnth()`, can also estimate various quantile based weighted medians). The new default for `fnth()` is `ties = "q7"`, which gives the same result as `(f)quantile(..., type = 7)` (R's default). OpenMP multithreading across groups is also much more effective in both the weighted and unweighted case. Finally, `fnth.default` gained an additional argument `o` to pass an ordering vector, which can dramatically speed up repeated invocations of the function on the dame data: 
+
+  ```r
+  # Estimating multiple grouped quantiles on mpg: pre-computing an ordering can provide extra speed. 
+  mtcars %>% fgroup_by(cyl, vs, am) %>%
+      fmutate(o = radixorder(GRPid(), mpg)) %>% # On grouped data, need to account for GRPid()
+      fsummarise(mpg_Q1 = fnth(mpg, 0.25, o = o),
+                 mpg_median = fmedian(mpg, o = o),
+                 mpg_Q3 = fnth(mpg, 0.75, o = o))
+  # Note that this is not always faster. Quickselect can be very efficient, so it depends on the data, 
+  # the number of groups, whether they are sorted (which speeds up radixorder), etc...
+  ```
 
 * `BY` now supports data-length arguments to be passed e.g. `BY(mtcars, mtcars$cyl, fquantile, w = mtcars$wt)`, making it effectively a generic grouped `mapply` function as well. Furthermore, the grouped_df method now also expands grouping columns for output length > 1. 
 
