@@ -33,7 +33,7 @@ The Hash Function and inspiration was taken from the excellent \emph{kit} packag
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{GRPid}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 # Let's replicate what funique does

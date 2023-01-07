@@ -2082,6 +2082,9 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
 
 
 // Get the order of a single numeric column. Used internally for weighted quantile computations.
+// Similar to C API Function R_orderVector1() but 1 indexed.
+// Note that due to reliance on global variables defined in this script, that are modified
+// in the sorting subroutines, neither this function nor the following two are safe to multithreading.
 void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   int n = -1, tmp;
   R_xlen_t nl = n;
@@ -2149,3 +2152,50 @@ void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   free(xtmp);                xtmp=NULL;          xtmp_alloc=0;
   free(otmp);                otmp=NULL;          otmp_alloc=0;
 }
+
+// Also provide separate versions for integers and doubles: to order matrix columns in fnth.matrix() with weights
+
+void iradixsort(int *o, Rboolean NA_last, Rboolean decreasing, int n, int *x) {
+
+  nalast = (NA_last) ? 1 : -1; // 1=TRUE, -1=FALSE
+  order = (decreasing) ? -1 : 1;
+  gsmaxalloc = n; // upper limit for stack size (all size 1 groups). We'll detect and avoid that limit, but if just one non-1 group (say 2), that can't be avoided.
+  if (n > 0) o[0] = -1;
+  int tmp = isorted(x, n);
+  stackgrps = FALSE;   // only needed for multiple columns or grouping
+  if(tmp) { // -1 or 1.
+    if(tmp == 1) { // same as expected in 'order' (1 = increasing, -1 = decreasing)
+      for(int i = 0; i != n; ++i) o[i] = i + 1;
+    } else if (tmp == -1) { // -1 strictly opposite to -expected 'order'
+      for(int i = 0; i != n; ++i) o[i] = n - i;
+    }
+  } else isort(x, o, n);
+  gsfree(); // Needed !!
+  free(radix_xsub);          radix_xsub=NULL;    radix_xsuballoc=0;
+  free(xtmp);                xtmp=NULL;          xtmp_alloc=0;
+  free(otmp);                otmp=NULL;          otmp_alloc=0;
+}
+
+void dradixsort(int *o, Rboolean NA_last, Rboolean decreasing, int n, double *x) {
+
+  nalast = (NA_last) ? 1 : -1; // 1=TRUE, -1=FALSE
+  order = (decreasing) ? -1 : 1;
+  gsmaxalloc = n; // upper limit for stack size (all size 1 groups). We'll detect and avoid that limit, but if just one non-1 group (say 2), that can't be avoided.
+  if (n > 0) o[0] = -1;
+  twiddle = &dtwiddle;
+  is_nan  = &dnan;
+  int tmp = dsorted(x, n);
+  stackgrps = FALSE;   // only needed for multiple columns or grouping
+  if(tmp) { // -1 or 1.
+    if(tmp == 1) { // same as expected in 'order' (1 = increasing, -1 = decreasing)
+      for(int i = 0; i != n; ++i) o[i] = i + 1;
+    } else if (tmp == -1) { // -1 strictly opposite to -expected 'order'
+      for(int i = 0; i != n; ++i) o[i] = n - i;
+    }
+  } else dsort(x, o, n);
+  gsfree(); // Needed !!
+  free(radix_xsub);          radix_xsub=NULL;    radix_xsuballoc=0;
+  free(xtmp);                xtmp=NULL;          xtmp_alloc=0;
+  free(otmp);                otmp=NULL;          otmp_alloc=0;
+}
+

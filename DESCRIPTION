@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
 Version: 1.9.0.9000
-Date: 2022-10-29
+Date: 2023-01-07
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -17,32 +17,20 @@ Authors@R: c(
            )
 Description: A C/C++ based package for advanced data transformation and 
     statistical computing in R that is extremely fast, class-agnostic,
-    and programmer friendly through a flexible and parsimonious syntax.
-    It is well integrated with base R, 'dplyr' / (grouped) 'tibble', 
-    'data.table', 'sf', 'plm' (panel-series and data frames), and 
-    non-destructively handles other matrix or data frame based classes (like 
-    'ts', 'xts' / 'zoo', 'tsibble', ...)
-    --- Key Features: ---
-    (1) Advanced statistical programming: A full set of fast statistical functions 
-        supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast and programmable grouping, ordering, unique values/rows, 
-        factor generation and interactions. Fast and flexible functions for data 
-        manipulation, data object conversions, and memory efficient R programming.
-    (2) Advanced aggregation: Fast and easy multi-data-type, multi-function, weighted 
-        and parallelized data aggregation.
-    (3) Advanced transformations: Fast row/column arithmetic, (grouped) replacing 
-        and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, 
-        (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations, 
-        linear prediction, model fitting and testing exclusion restrictions.
-    (4) Advanced time-computations: Fast and flexible indexed time series and panel data classes. 
-        Fast (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
-        differences and (compounded) growth rates on (irregular) time series and panels. 
-        Multivariate auto-, partial- and cross-correlation functions for panel data. 
-        Panel data to (ts-)array conversions.
-    (5) List processing: Recursive list search, splitting, 
-        extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.
-    (6) Advanced data exploration: Fast (grouped, weighted, panel-decomposed) 
-        summary statistics and descriptive tools.
+    and programmer friendly through a flexible, parsimonious, and robust API.
+    Core functionality includes a rich set of S3 generic grouped and weighted 
+    statistical functions for vectors, matrices and data frames, providing
+    efficient low-level vecorization and OpenMP multithreading (reducing the 
+    need for iteration/vectorization in R). These are integrated with fast grouping 
+    and ordering algorithms, and efficient data manipulation/transformation functions 
+    (also callable from C). The package also provides a flexible and rigorous 
+    approch to time series and panel data in R. It further includes fast functions 
+    for common statistical procesures, detailed summary statistics, powerful tools 
+    to work with nested data, functions that enable memory efficient R programming, 
+    fast data object conversions, and helpers to effectively deal with variable 
+    labels and other attributes. It is well integrated with basic R, 'dplyr'/'tibble', 
+    'data.table', 'sf', 'plm' (panel-series and data frames), and accommodates many 
+    other matrix or data frame based classes (like 'ts', 'xts'/'zoo', 'tsibble').
 URL: https://sebkrantz.github.io/collapse/,  
      https://github.com/SebKrantz/collapse,
      https://twitter.com/collapse_R
