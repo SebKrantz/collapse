@@ -1143,11 +1143,11 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   int nullg = isNull(g), nullw = isNull(w), nullo = isNull(o), l = length(x), narm = asLogical(Rnarm),
       ret = Rties2int(Rret), nprotect = 0;
 
+  CHECK_PROB(l);
+
   if(l < 1 || (l == 1 && nullw)) {
     return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
   }
-
-  CHECK_PROB(l);
 
   // First the simplest case
   if(nullg && nullw && nullo) return nth_impl(x, narm, ret, Q);
@@ -1501,14 +1501,15 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       narm = asLogical(Rnarm), ret = Rties2int(Rret), nthreads = asInteger(Rnthreads),
       nullg = isNull(g), nullw = isNull(w), nprotect = 1;
 
-  if(l < 1 || (l == 1 && nullw)) {
-    if(TYPEOF(x) == REALSXP || TYPEOF(x) == INTSXP || TYPEOF(x) == LGLSXP) return x;
-    error("Unsopported SEXP type: '%s'", type2char(TYPEOF(x)));
-  }
   if(nthreads > col) nthreads = col;
   if(nthreads > max_threads) nthreads = max_threads;
 
   CHECK_PROB(l);
+
+  if(l < 1 || (l == 1 && nullw)) {
+    if(TYPEOF(x) == REALSXP || TYPEOF(x) == INTSXP || TYPEOF(x) == LGLSXP) return x;
+    error("Unsopported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
 
   double *restrict pw = &Q;
   if(!nullw) {
