@@ -576,7 +576,7 @@ SEXP fsum_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
   fsum_weights_g_impl(REAL(res), REAL(x), ng, pg, pw, narm, l);
 
   if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
-  UNPROTECT(1);
+  UNPROTECT(nprotect);
   return res;
 }
 
