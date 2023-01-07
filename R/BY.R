@@ -15,7 +15,7 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder 
   g <- GRP(g, return.groups = use.g.names, sort = sort, call = FALSE)
 
   # Computing result: unsimplified
-  if(!missing(...) && length(x) > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), length(x)))) {
+  if(!missing(...) && g[[1L]] > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), length(x)))) {
     asl <- lapply(dots[ln], gsplit, g)
     if(length(dots) > length(ln)) {
       mord <- dots[-ln]
@@ -87,7 +87,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
   g <- GRP(g, return.groups = use.g.names, sort = sort, call = FALSE)
   n <- length(g[[2L]])
 
-  if(!missing(...) && n > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), n))) {
+  if(!missing(...) && g[[1L]] > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), n))) {
     asl <- lapply(dots[ln], gsplit, g)
     if(length(dots) > length(ln)) {
       mord <- dots[-ln]
@@ -222,7 +222,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder =
   g <- GRP(g, return.groups = use.g.names, sort = sort, call = FALSE)
   n <- nrow(x)
 
-  if(!missing(...) && n > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), n))) {
+  if(!missing(...) && g[[1L]] > 1L && length(ln <- whichv(vlengths(dots <- list(...), FALSE), n))) {
     asl <- lapply(dots[ln], gsplit, g)
     if(length(dots) > length(ln)) {
       mord <- dots[-ln]
