@@ -865,24 +865,24 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
 
 // Implementations for R vectors ---------------------------------------------------------------
 
-SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
+// for safe multithreading in fnthlC()
+SEXP nth_impl_plain(SEXP x, int narm, int ret, double Q) {
   int l = length(x);
   if(l <= 1) return x;
 
-  SEXP res;
   switch(TYPEOF(x)) {
-    case REALSXP:
-      res = ScalarReal(nth_double(REAL(x), &l, l, 1, narm, ret, Q));
-      break;
+    case REALSXP: return ScalarReal(nth_double(REAL(x), &l, l, 1, narm, ret, Q));
     case INTSXP:
-    case LGLSXP:
-      res = ScalarReal(nth_int(INTEGER(x), &l, l, 1, narm, ret, Q));
-      break;
+    case LGLSXP:  return ScalarReal(nth_int(INTEGER(x), &l, l, 1, narm, ret, Q));
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
+}
 
-  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return res;
-  PROTECT(res); // Needed ??
+SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
+  if(length(x) <= 1) return x;
+  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts")))
+     return nth_impl_plain(x, narm, ret, Q);
+  SEXP res = PROTECT(nth_impl_plain(x, narm, ret, Q));
   copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
@@ -891,7 +891,7 @@ SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
 // for safe multithreading in fnthlC()
 double nth_impl_dbl(SEXP x, int narm, int ret, double Q) {
   int l = length(x);
-  if(l <= 1) return NA_REAL;
+  if(l < 1) return NA_REAL;
   switch(TYPEOF(x)) {
     case REALSXP: return nth_double(REAL(x), &l, l, 1, narm, ret, Q);
     case INTSXP:
@@ -900,32 +900,21 @@ double nth_impl_dbl(SEXP x, int narm, int ret, double Q) {
   }
 }
 
-SEXP nth_impl_noalloc(SEXP x, void* x_cc, int narm, int ret, double Q) {
+// for safe multithreading in fnthlC()
+SEXP nth_impl_noalloc_plain(SEXP x, void* x_cc, int narm, int ret, double Q) {
   int l = length(x);
   if(l <= 1) return x;
-
-  SEXP res;
   switch(TYPEOF(x)) {
-  case REALSXP:
-    res = ScalarReal(nth_double_noalloc(REAL(x), &l, (double*)x_cc, l, 1, narm, ret, Q));
-    break;
-  case INTSXP:
-  case LGLSXP:
-    res = ScalarReal(nth_int_noalloc(INTEGER(x), &l, (int*)x_cc, l, 1, narm, ret, Q));
-    break;
-  default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+    case REALSXP: return ScalarReal(nth_double_noalloc(REAL(x), &l, x_cc, l, 1, narm, ret, Q));
+    case INTSXP:
+    case LGLSXP: return ScalarReal(nth_int_noalloc(INTEGER(x), &l, x_cc, l, 1, narm, ret, Q));
+    default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
-
-  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return res;
-  PROTECT(res); // Needed ??
-  copyMostAttrib(x, res);
-  UNPROTECT(1);
-  return res;
 }
 
 double nth_impl_noalloc_dbl(SEXP x, void* x_cc, int narm, int ret, double Q) {
   int l = length(x);
-  if(l <= 1) return NA_REAL;
+  if(l < 1) return NA_REAL;
   switch(TYPEOF(x)) {
     case REALSXP: return nth_double_noalloc(REAL(x), &l, x_cc, l, 1, narm, ret, Q);
     case INTSXP:
@@ -958,29 +947,24 @@ SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q) {
 }
 
 // Expects pointer pw to be decremented by 1
-SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h) { // , int nthreads
+SEXP w_nth_ord_impl_plain(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h) {
   int l = length(x);
   if(l <= 1) return x;
 
-  // if(nthreads > 1) pxo = (int *)Calloc(l, int);
-  // num1radixsort(pxo, TRUE, FALSE, x);
-
-  SEXP res;
   switch(TYPEOF(x)) {
-    case REALSXP:
-      res = ScalarReal(w_nth_double_ord(REAL(x)-1, pw, pxo, h, l, narm, ret, Q));
-      break;
+    case REALSXP: return ScalarReal(w_nth_double_ord(REAL(x)-1, pw, pxo, h, l, narm, ret, Q));
     case INTSXP:
-    case LGLSXP:
-      res = ScalarReal(w_nth_int_ord(INTEGER(x)-1, pw, pxo, h, l, narm, ret, Q));
-      break;
+    case LGLSXP:  return ScalarReal(w_nth_int_ord(INTEGER(x)-1, pw, pxo, h, l, narm, ret, Q));
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
+}
 
-  // if(nthreads > 1) Free(pxo);
-
-  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return res;
-  PROTECT(res); // Needed ??
+// Expects pointer pw to be decremented by 1
+SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h) {
+  if(length(x) <= 1) return x;
+  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts")))
+     return w_nth_ord_impl_plain(x, pxo, pw, narm, ret, Q, h);
+  SEXP res = PROTECT(w_nth_ord_impl_plain(x, pxo, pw, narm, ret, Q, h));
   copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
@@ -989,7 +973,7 @@ SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, d
 // Expects pointer pw to be decremented by 1
 double w_nth_ord_impl_dbl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h) {
   int l = length(x);
-  if(l <= 1) return NA_REAL;
+  if(l < 1) return NA_REAL;
   switch(TYPEOF(x)) {
     case REALSXP: return w_nth_double_ord(REAL(x)-1, pw, pxo, h, l, narm, ret, Q);
     case INTSXP:
@@ -1432,7 +1416,7 @@ if(nullw) {                                                    \
    // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
    // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
    // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
-   pout[j] = asReal(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q, h));
+   pout[j] = w_nth_ord_impl_dbl(px[j], pxo, pw, narm, ret, Q, h);
    Free(pxo);
    }
   }
@@ -1470,7 +1454,13 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
     }
     // returns a list of atomic elements
     SEXP *restrict pout = SEXPPTR(out);
-    COLWISE_NTH_LIST(nth_impl_noalloc, nth_impl, w_nth_ord_impl);
+    COLWISE_NTH_LIST(nth_impl_noalloc_plain, nth_impl_plain, w_nth_ord_impl_plain);
+    // Needed because including it in an OpenMP loop together with ScalarReal() is not thread safe
+    for(int j = 0; j != l; ++j) {
+      SEXP xj = px[j];
+      if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts")))
+        copyMostAttrib(xj, pout[j]);
+    }
 
   } else { // with groups: do the usual checking
 
