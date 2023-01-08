@@ -1200,10 +1200,6 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
 
 // Functions for Export --------------------------------------------------------
 
-// TODO: Single thread optimization: re-use array for quickselect?? should be quite easy... just check if nthreads = 1,
-// otherwise assign pointer...
-// Also for multiple columns with weights if na.rm = FALSE, can compute h / sumw and supply repeatedly for each column
-
 int Rties2int(SEXP x) {
   int tx = TYPEOF(x);
   if(tx == INTSXP || tx == REALSXP || tx == LGLSXP) {
@@ -1422,6 +1418,7 @@ if(nullw) {                                                    \
   }
    */
 
+// TODO: Pre-compute weights at the group-level if narm = FALSE for list and matrix method
 
 // Function for lists / data frames
 SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {
