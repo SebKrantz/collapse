@@ -144,5 +144,5 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
                           const int l, const int sorted, const int narm, const int ret, const double Q);
 SEXP nth_impl(SEXP x, int narm, int ret, double Q);
 SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q);
-SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q);
+SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h);
 
