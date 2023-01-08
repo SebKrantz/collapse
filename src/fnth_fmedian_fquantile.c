@@ -1492,9 +1492,8 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 #define COLWISE_NTH(tdef, FUN, FUN_NA, WFUN, ORDFUN)                                 \
   if(nullw) {                                                                        \
     if(nthreads == 1) {                                                              \
-      tdef *x_cc = (tdef *) Calloc(l, tdef);                                         \
+      tdef *x_cc = (tdef *) R_alloc(l, sizeof(tdef));                                \
       for(int j = 0; j < col; ++j) pres[j] = FUN_NA(px + j*l, &l, x_cc, l, 1, narm, ret, Q);  \
-      Free(x_cc);                                                                    \
     } else {                                                                         \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) pres[j] = FUN(px + j*l, &l, l, 1, narm, ret, Q);  \
@@ -1520,14 +1519,15 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
 // The same by groups if data already sorted by groups. px and pw should be decremented by 1
 #undef COLWISE_NTH_GROUPED_SORTED
-#define COLWISE_NTH_GROUPED_SORTED(tdef, FUN, WFUN)                                  \
+#define COLWISE_NTH_GROUPED_SORTED(tdef, FUN, FUN_NA, WFUN)                          \
 if(nullw) {                                                                          \
   if(nthreads == 1) {                                                                \
+    tdef *x_cc = (tdef *) R_alloc(maxgrpn, sizeof(tdef));                            \
     for(int j = 0; j != col; ++j) {                                                  \
       int jng = j * ng;                                                              \
       tdef *pxj = px + j * l;                                                        \
       for(int gr = 0; gr != ng; ++gr)                                                \
-        pres[jng + gr] = FUN(pxj + pst[gr], po, pgs[gr], 1, narm, ret, Q);           \
+        pres[jng + gr] = FUN_NA(pxj + pst[gr], po, x_cc, pgs[gr], 1, narm, ret, Q);  \
     }                                                                                \
   } else {                                                                           \
     _Pragma("omp parallel for num_threads(nthreads)")                                \
@@ -1559,14 +1559,15 @@ if(nullw) {                                                                     
 
 // The more general case. po should be decremented by 1.
 #undef COLWISE_NTH_GROUPED_UNSORTED
-#define COLWISE_NTH_GROUPED_UNSORTED(tdef, FUN, WFUN)                                              \
+#define COLWISE_NTH_GROUPED_UNSORTED(tdef, FUN, FUN_NA, WFUN)                                      \
 if(nullw) {                                                                                        \
   if(nthreads == 1) {                                                                              \
+    tdef *x_cc = (tdef *) R_alloc(maxgrpn, sizeof(tdef));                                          \
     for(int j = 0; j != col; ++j) {                                                                \
       int jng = j * ng;                                                                            \
       tdef *pxj = px + j * l;                                                                      \
       for(int gr = 0; gr != ng; ++gr)                                                              \
-        pres[jng + gr] = FUN(pxj, po + pst[gr], pgs[gr], 0, narm, ret, Q);                         \
+        pres[jng + gr] = FUN_NA(pxj, po + pst[gr], x_cc, pgs[gr], 0, narm, ret, Q);                \
     }                                                                                              \
   } else {                                                                                         \
     _Pragma("omp parallel for num_threads(nthreads)")                                              \
@@ -1654,13 +1655,13 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
     switch(tx) {
       case REALSXP: {
         double *px = REAL(x)-1, *restrict pres = REAL(res);
-        COLWISE_NTH_GROUPED_SORTED(double, nth_double, w_nth_double_qsort);
+        COLWISE_NTH_GROUPED_SORTED(double, nth_double, nth_double_noalloc, w_nth_double_qsort);
         break;
       }
       case INTSXP:
       case LGLSXP: { // Factor matrix not well defined object...
         int *px = INTEGER(x)-1, *restrict pres = INTEGER(res);
-        COLWISE_NTH_GROUPED_SORTED(int, nth_int, w_nth_int_qsort);
+        COLWISE_NTH_GROUPED_SORTED(int, nth_int, nth_int_noalloc, w_nth_int_qsort);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(tx));
@@ -1669,13 +1670,13 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
     switch(tx) {
       case REALSXP: {
         double *px = REAL(x), *restrict pres = REAL(res);
-        COLWISE_NTH_GROUPED_UNSORTED(double, nth_double, w_nth_double_qsort);
+        COLWISE_NTH_GROUPED_UNSORTED(double, nth_double, nth_double_noalloc, w_nth_double_qsort);
         break;
       }
       case INTSXP:
       case LGLSXP: { // Factor matrix not well defined object...
         int *px = INTEGER(x), *restrict pres = INTEGER(res);
-        COLWISE_NTH_GROUPED_UNSORTED(int, nth_int, w_nth_int_qsort);
+        COLWISE_NTH_GROUPED_UNSORTED(int, nth_int, nth_int_noalloc, w_nth_int_qsort);
         break;
       }
       default: error("Not Supported SEXP Type: '%s'", type2char(tx));
