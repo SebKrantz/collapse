@@ -1456,7 +1456,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   double *restrict pw = &Q, h = DBL_MIN;
   if(!nullw) {
     CHECK_WEIGHTS(nrx);
-    if(nullg && !narm) h = w_compute_h(pw+1, &l, l, 1, ret, Q); // if no missing value removal, h is the same for all columns
+    if(nullg && !narm) h = w_compute_h(pw+1, &l, nrx, 1, ret, Q); // if no missing value removal, h is the same for all columns
   }
 
   if(nullg) { // No groups, multithreading across columns
