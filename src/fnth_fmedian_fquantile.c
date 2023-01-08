@@ -1046,6 +1046,49 @@ SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int nar
 }
 
 // Expects pointer po to be decremented by 1
+SEXP nth_g_impl_noalloc(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int narm, int ret, double Q, void* x_cc) {
+
+  SEXP res = PROTECT(allocVector(REALSXP, ng));
+  double *pres = REAL(res);
+
+  if(sorted) {
+    switch(TYPEOF(x)) {
+      case REALSXP: {
+        double *px = REAL(x)-1;
+        for(int gr = 0; gr != ng; ++gr) pres[gr] = nth_double_noalloc(px + pst[gr], po, x_cc, pgs[gr], 1, narm, ret, Q);
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: {
+        int *px = INTEGER(x)-1;
+        for(int gr = 0; gr != ng; ++gr) pres[gr] = nth_int_noalloc(px + pst[gr], po, x_cc, pgs[gr], 1, narm, ret, Q);
+        break;
+      }
+      default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+    }
+  } else {
+    switch(TYPEOF(x)) {
+      case REALSXP: {
+        double *px = REAL(x);
+        for(int gr = 0; gr != ng; ++gr) pres[gr] = nth_double_noalloc(px, po + pst[gr], x_cc, pgs[gr], 0, narm, ret, Q);
+        break;
+      }
+      case INTSXP:
+      case LGLSXP: {
+        int *px = INTEGER(x);
+        for(int gr = 0; gr != ng; ++gr) pres[gr] = nth_int_noalloc(px, po + pst[gr], x_cc, pgs[gr], 0, narm, ret, Q);
+        break;
+      }
+      default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+    }
+  }
+
+  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  UNPROTECT(1);
+  return res;
+}
+
+// Expects pointer po to be decremented by 1
 SEXP nth_g_ord_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int narm, int ret, double Q, int nthreads) {
 
   if(nthreads > ng) nthreads = ng;
@@ -1278,13 +1321,23 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   // Preprocessing g
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP *restrict pg = SEXPPTR(g), ord = pg[6];
-  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst;
+  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, maxgrpn = 0;
   if(l != length(pg[1])) error("length(g) must match length(x)");
+
+  int nthreads = asInteger(Rnthreads);
+  if(nthreads > max_threads) nthreads = max_threads;
 
   // Computing ordering vector if not supplied
   if(isNull(ord)) {
     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
-    for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
+    if(nthreads <= 1 && nullw) {
+      for(int i = 0; i != ng; ++i) {
+        if(pgs[i] > maxgrpn) maxgrpn = pgs[i];
+        cgs[i+2] = cgs[i+1] + pgs[i];
+      }
+    } else {
+      for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
+    }
     pst = cgs + 1;
     if(sorted || !nullo) po = &l;
     else {
@@ -1296,6 +1349,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   } else {
     if(nullo) po = INTEGER(ord)-1;
     pst = INTEGER(getAttrib(ord, install("starts")));
+    if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(ord, install("maxgrpn")));
   }
   /*
    * Previous version: computes po if overall ordering of x is supplied to o. This is made redundant by requiring
@@ -1328,10 +1382,8 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   }
    */
 
-  int nthreads = asInteger(Rnthreads);
-  if(nthreads > max_threads) nthreads = max_threads;
-
-  if(nullw && nullo) res = nth_g_impl(x, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+  if(nullw && nullo) res = nthreads <= 1 ? nth_g_impl_noalloc(x, ng, pgs, po, pst, sorted, narm, ret, Q, R_alloc(maxgrpn, TYPEOF(x) == REALSXP ? sizeof(double) : sizeof(int))) :
+                                           nth_g_impl(x, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
   else if(nullw) res = nth_g_ord_impl(x, ng, pgs, pxo-1, pst, narm, ret, Q, nthreads);
   else if(nullo) res = w_nth_g_qsort_impl(x, pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
   else res = w_nth_g_ord_impl(x, pw, ng, pgs, pxo-1, pst, narm, ret, Q, nthreads);
@@ -1345,11 +1397,18 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP"); \
   const SEXP *restrict pg = SEXPPTR(g), o = pg[6];             \
   ng = INTEGER(pg[0])[0];                                      \
-  int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst; \
+  int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, maxgrpn = 0; \
   if(nrx != length(pg[1])) error("length(g) must match nrow(x)"); \
   if(isNull(o)) {                                              \
     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1; \
-    for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i]; \
+    if(nthreads <= 1 && nullw) {                               \
+      for(int i = 0; i != ng; ++i) {                           \
+        if(pgs[i] > maxgrpn) maxgrpn = pgs[i];                 \
+        cgs[i+2] = cgs[i+1] + pgs[i];                          \
+      }                                                        \
+    } else {                                                   \
+      for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i]; \
+    }                                                          \
     pst = cgs + 1;                                             \
     if(sorted) po = &l;                                        \
     else {                                                     \
@@ -1361,6 +1420,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   } else {                                                     \
     po = INTEGER(o)-1;                                         \
     pst = INTEGER(getAttrib(o, install("starts")));            \
+    if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(o, install("maxgrpn"))); \
   }
 
 
@@ -1435,7 +1495,12 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
     SEXP *restrict pout = SEXPPTR(out);
     if(nullw) { // Parallelism at sub-column level
-      for(int j = 0; j < l; ++j) pout[j] = nth_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+      if(nthreads <= 1) {
+        void *x_cc = R_alloc(maxgrpn, sizeof(double));
+        for(int j = 0; j < l; ++j) pout[j] = nth_g_impl_noalloc(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, x_cc);
+      } else {
+        for(int j = 0; j < l; ++j) pout[j] = nth_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+      }
     } else { // Parallelism at sub-column level
       for(int j = 0; j < l; ++j) pout[j] = w_nth_g_qsort_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
     }
