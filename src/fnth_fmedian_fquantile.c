@@ -1511,14 +1511,14 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
       int *pxo = (int *) R_alloc(l, sizeof(int));                                    \
       for(int j = 0; j < col; ++j) {                                                 \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l);                                       \
-        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, narm, ret, Q);             \
+        pres[j] = WFUN(px + j*l - 1, pw, pxo, h, l, narm, ret, Q);                   \
       }                                                                              \
   } /* else {                                                                        \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) {                                                 \
         int *pxo = (int *) Calloc(l, int);                                           \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l); // Currently cannot be parallelized   \
-        pres[j] = WFUN(px + j*l - 1, pw, pxo, DBL_MIN, l, narm, ret, Q);             \
+        pres[j] = WFUN(px + j*l - 1, pw, pxo, h, l, narm, ret, Q);                   \
         Free(pxo);                                                                   \
       }                                                                              \
     }                                                                                \
@@ -1625,9 +1625,10 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
     error("Unsopported SEXP type: '%s'", type2char(TYPEOF(x)));
   }
 
-  double *restrict pw = &Q;
+  double *restrict pw = &Q, h = DBL_MIN;
   if(!nullw) {
     CHECK_WEIGHTS(l);
+    if(nullg && !narm) h = w_compute_h(pw+1, &l, l, 1, ret, Q);
   }
 
   if(nullg) {
