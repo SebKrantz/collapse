@@ -1328,10 +1328,9 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
     }
   }
 
-  SEXP res; // result
-
   // If no groups, return using suitable functions
   if(nullg) {
+    SEXP res; // result, could be put outside if() to avoid repetition below, but this seems to confuse rchk
     if(nullw) res = nth_ord_impl(x, pxo, narm, ret, Q);
     else res = w_nth_ord_impl(x, pxo, pw, narm, ret, Q, DBL_MIN);
     UNPROTECT(nprotect);
@@ -1374,6 +1373,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   }
    */
 
+  SEXP res; // result
   if(nullw && nullo) res = nthreads <= 1 ? nth_g_impl_noalloc(x, ng, pgs, po, pst, sorted, narm, ret, Q, R_alloc(maxgrpn, TYPEOF(x) == REALSXP ? sizeof(double) : sizeof(int))) :
                                            nth_g_impl(x, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
   else if(nullw) res = nth_g_ord_impl(x, ng, pgs, pxo-1, pst, narm, ret, Q, nthreads);
