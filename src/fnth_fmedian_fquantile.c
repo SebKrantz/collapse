@@ -927,9 +927,9 @@ double nth_impl_noalloc_dbl(SEXP x, void* x_cc, int narm, int ret, double Q) {
   int l = length(x);
   if(l <= 1) return NA_REAL;
   switch(TYPEOF(x)) {
-    case REALSXP: return nth_double_noalloc(REAL(x), &l, (double*)x_cc, l, 1, narm, ret, Q);
+    case REALSXP: return nth_double_noalloc(REAL(x), &l, x_cc, l, 1, narm, ret, Q);
     case INTSXP:
-    case LGLSXP: return nth_int_noalloc(INTEGER(x), &l, (int*)x_cc, l, 1, narm, ret, Q);
+    case LGLSXP: return nth_int_noalloc(INTEGER(x), &l, x_cc, l, 1, narm, ret, Q);
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
