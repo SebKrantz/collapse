@@ -467,7 +467,7 @@ double dquickselect(double *x, const int n, const int ret, const double Q) {
   if((ret < 4 && (ret != 1 || n%2 == 1)) || elem == n-1 || h <= 0.0) return a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
-  if(ret == 1) return (a+b)/2.0; //  || Q == 0.5 // TODO: test all quantile methods
+  if(ret == 1) return (a+b)/2.0; //  || Q == 0.5
   return a + h*(b-a); // same as (1-h)*a + h*b
 }
 
@@ -482,7 +482,7 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
   if((ret < 4 && (ret != 1 || n%2 == 1)) || elem == n-1 || h <= 0.0) return (double)a;
   b = x[elem+1];
   for(int i = elem+2; i < n; ++i) if(x[i] < b) b = x[i];
-  if(ret == 1) return ((double)a+(double)b)/2.0; //  || Q == 0.5 // TODO: test all quantile methods
+  if(ret == 1) return ((double)a+(double)b)/2.0; //  || Q == 0.5
   return (double)a + h*(double)(b-a); // same as (1-h)*(double)a + h*(double)b
 }
 
@@ -495,7 +495,7 @@ double w_compute_h(const double *pw, const int *po, const int l, const int ret, 
   int nw0 = 0;
   for(int i = 0; i != l; ++i) {
     mu = pw[po[i]];
-    if(mu == 0.0) ++nw0; // TODO: nw0 += mu == 0.0 ??
+    if(mu == 0.0) ++nw0; // nw0 += mu == 0.0 -> seems not faster...
     sumw += mu;
   }
   if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
@@ -693,7 +693,7 @@ double nth_double_ord(const double *restrict px, const int *restrict po, int l, 
 
 // Expects pointers px and pw to be decremented by 1
 double w_nth_int_ord(const int *restrict px, const double *restrict pw, const int *restrict po, double h, int l, const int narm, const int ret, const double Q) {
-  if(l <= 1) { // TODO: what about NA_INTEGER and NA/0 weights??
+  if(l <= 1) {
     if(l == 0) return NA_REAL;
     return ISNAN(pw[po[0]]) ? NA_REAL : (double)px[po[0]];
   }
@@ -716,7 +716,7 @@ double w_nth_double_ord(const double *restrict px, const double *restrict pw, co
     while(l != 0 && ISNAN(px[po[l-1]])) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
   } else if(ISNAN(px[po[l-1]])) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, ret, Q);
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -774,8 +774,7 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   // i_cc is one-indexed
   R_qsort_int_I(x_cc, i_cc, 1, n);
 
-  // TODO: Check if this makes sense...
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, ret, Q);
   if(ISNAN(h)) {
     Free(x_cc); Free(i_cc);
     return NA_REAL;
@@ -840,8 +839,7 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   // i_cc is one-indexed
   R_qsort_I(x_cc, i_cc, 1, n);
 
-  // TODO: Check if this makes sense...
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, ret, Q);  // TODO: should only be the case if narm = TRUE, otherwise h should be passed beforehand??
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, ret, Q);
 
   if(ISNAN(h)) {
     Free(x_cc);
