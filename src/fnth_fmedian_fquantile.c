@@ -490,13 +490,20 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 // or quicksort at the group-level
 
 // Expects pw and po to be consistent
-double w_compute_h(const double *pw, const int *po, const int l, const int ret, const double Q) {
+double w_compute_h(const double *pw, const int *po, const int l, const int sorted, const int ret, const double Q) {
   double sumw = 0.0, mu, h;
   int nw0 = 0;
-  for(int i = 0; i != l; ++i) {
-    mu = pw[po[i]];
-    if(mu == 0.0) ++nw0; // nw0 += mu == 0.0 -> seems not faster...
-    sumw += mu;
+  if(sorted) {
+    for(int i = 0; i != l; ++i) {
+      if(pw[i] == 0.0) ++nw0; // nw0 += pw[i] == 0.0 -> seems not faster...
+      sumw += pw[i];
+    }
+  } else {
+    for(int i = 0; i != l; ++i) {
+      mu = pw[po[i]];
+      if(mu == 0.0) ++nw0; // nw0 += mu == 0.0 -> seems not faster...
+      sumw += mu;
+    }
   }
   if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
   if(sumw < 0.0) error("Weights must be positive or zero");
@@ -701,7 +708,7 @@ double w_nth_int_ord(const int *restrict px, const double *restrict pw, const in
     while(l != 0 && px[po[l-1]] == NA_INTEGER) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
   } else if(px[po[l-1]] == NA_INTEGER) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, ret, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -716,7 +723,7 @@ double w_nth_double_ord(const double *restrict px, const double *restrict pw, co
     while(l != 0 && ISNAN(px[po[l-1]])) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
   } else if(ISNAN(px[po[l-1]])) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, ret, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -774,7 +781,7 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   // i_cc is one-indexed
   R_qsort_int_I(x_cc, i_cc, 1, n);
 
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, ret, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, ret, Q);
   if(ISNAN(h)) {
     Free(x_cc); Free(i_cc);
     return NA_REAL;
@@ -839,7 +846,7 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   // i_cc is one-indexed
   R_qsort_I(x_cc, i_cc, 1, n);
 
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, ret, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, ret, Q);
 
   if(ISNAN(h)) {
     Free(x_cc);
@@ -951,7 +958,7 @@ SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q) {
 }
 
 // Expects pointer pw to be decremented by 1
-SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) { // , int nthreads
+SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h) { // , int nthreads
   int l = length(x);
   if(l <= 1) return x;
 
@@ -960,14 +967,14 @@ SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) {
 
   SEXP res;
   switch(TYPEOF(x)) {
-  case REALSXP:
-    res = ScalarReal(w_nth_double_ord(REAL(x)-1, pw, pxo, DBL_MIN, l, narm, ret, Q));
-    break;
-  case INTSXP:
-  case LGLSXP:
-    res = ScalarReal(w_nth_int_ord(INTEGER(x)-1, pw, pxo, DBL_MIN, l, narm, ret, Q));
-    break;
-  default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
+    case REALSXP:
+      res = ScalarReal(w_nth_double_ord(REAL(x)-1, pw, pxo, h, l, narm, ret, Q));
+      break;
+    case INTSXP:
+    case LGLSXP:
+      res = ScalarReal(w_nth_int_ord(INTEGER(x)-1, pw, pxo, h, l, narm, ret, Q));
+      break;
+    default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 
   // if(nthreads > 1) Free(pxo);
@@ -980,13 +987,13 @@ SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) {
 }
 
 // Expects pointer pw to be decremented by 1
-double w_nth_ord_impl_dbl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q) {
+double w_nth_ord_impl_dbl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h) {
   int l = length(x);
   if(l <= 1) return NA_REAL;
   switch(TYPEOF(x)) {
-    case REALSXP: return w_nth_double_ord(REAL(x)-1, pw, pxo, DBL_MIN, l, narm, ret, Q);
+    case REALSXP: return w_nth_double_ord(REAL(x)-1, pw, pxo, h, l, narm, ret, Q);
     case INTSXP:
-    case LGLSXP: return w_nth_int_ord(INTEGER(x)-1, pw, pxo, DBL_MIN, l, narm, ret, Q);
+    case LGLSXP: return w_nth_int_ord(INTEGER(x)-1, pw, pxo, h, l, narm, ret, Q);
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
@@ -1346,7 +1353,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   // If no groups, return using suitable functions
   if(nullg) {
     if(nullw) res = nth_ord_impl(x, pxo, narm, ret, Q);
-    else res = w_nth_ord_impl(x, pxo, pw, narm, ret, Q);
+    else res = w_nth_ord_impl(x, pxo, pw, narm, ret, Q, DBL_MIN);
     UNPROTECT(nprotect);
     return res;
   }
@@ -1412,9 +1419,9 @@ if(nullw) {                                                    \
   }                                                            \
 } else { /* TODO: if narm = FALSE, can compute sumw beforehand */ \
   int *pxo = (int *) R_alloc(nrx, sizeof(int));                \
-  for(int j = 0; j != l; ++j) {                                 \
+  for(int j = 0; j != l; ++j) {                                \
     num1radixsort(pxo, TRUE, FALSE, px[j]);                    \
-    pout[j] = WFUN(px[j], pxo, pw, narm, ret, Q);              \
+    pout[j] = WFUN(px[j], pxo, pw, narm, ret, Q, h);           \
   }                                                            \
 }
 /* Multithreading: does not work with radixorder
@@ -1425,7 +1432,7 @@ if(nullw) {                                                    \
    // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
    // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
    // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
-   pout[j] = asReal(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q));
+   pout[j] = asReal(w_nth_ord_impl(px[j], pxo, pw, narm, ret, Q, h));
    Free(pxo);
    }
   }
@@ -1446,9 +1453,10 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
   CHECK_PROB(nrx);
 
-  double *restrict pw = &Q;
+  double *restrict pw = &Q, h = DBL_MIN;
   if(!nullw) {
     CHECK_WEIGHTS(nrx);
+    if(nullg && !narm) h = w_compute_h(pw+1, &l, l, 1, ret, Q); // if no missing value removal, h is the same for all columns
   }
 
   if(nullg) { // No groups, multithreading across columns
