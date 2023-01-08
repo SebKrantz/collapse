@@ -1260,6 +1260,39 @@ int Rties2int(SEXP x) {
   }                                                              \
   pw = REAL(w)-1; /* All functions require decremented w pointer */
 
+
+#undef CHECK_GROUPS
+#define CHECK_GROUPS(nrx, cond)                                                                                \
+if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");      \
+const SEXP *restrict pg = SEXPPTR(g), ord = pg[6];                                                             \
+ng = INTEGER(pg[0])[0];                                                                                        \
+int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, maxgrpn = 0; \
+if(nrx != length(pg[1])) error("length(g) must match nrow(x)");                                                \
+if(isNull(ord)) {                                                                                              \
+  int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;                   \
+  if(nthreads <= 1 && nullw) {                                                                                 \
+    for(int i = 0; i != ng; ++i) {                                                                             \
+      if(pgs[i] > maxgrpn) maxgrpn = pgs[i];                                                                   \
+      cgs[i+2] = cgs[i+1] + pgs[i];                                                                            \
+    }                                                                                                          \
+  } else {                                                                                                     \
+    for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];                                                 \
+  }                                                                                                            \
+  pst = cgs + 1;                                                                                               \
+  if((cond)) po = &l;                                                                                          \
+  else {                                                                                                       \
+    int *restrict count = (int *) Calloc(ng+1, int);                                                           \
+    po = (int *) R_alloc(nrx, sizeof(int)); --po;                                                              \
+    for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;                                     \
+    Free(count);                                                                                               \
+  }                                                                                                            \
+} else {                                                                                                       \
+  po = INTEGER(ord)-1;                                                                                         \
+  pst = INTEGER(getAttrib(ord, install("starts")));                                                            \
+  if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(ord, install("maxgrpn")));                          \
+}
+
+
 /*
    Function for atomic vectors: has extra arguments o and checko for passing external ordering vector.
    This is meant to speed up computation of several (grouped) quantiles on the same data.
@@ -1318,39 +1351,11 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
     return res;
   }
 
-  // Preprocessing g
-  if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-  const SEXP *restrict pg = SEXPPTR(g), ord = pg[6];
-  int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, maxgrpn = 0;
-  if(l != length(pg[1])) error("length(g) must match length(x)");
-
-  int nthreads = asInteger(Rnthreads);
+  int nthreads = asInteger(Rnthreads), ng;
   if(nthreads > max_threads) nthreads = max_threads;
 
-  // Computing ordering vector if not supplied
-  if(isNull(ord)) {
-    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
-    if(nthreads <= 1 && nullw) {
-      for(int i = 0; i != ng; ++i) {
-        if(pgs[i] > maxgrpn) maxgrpn = pgs[i];
-        cgs[i+2] = cgs[i+1] + pgs[i];
-      }
-    } else {
-      for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
-    }
-    pst = cgs + 1;
-    if(sorted || !nullo) po = &l;
-    else {
-      int *restrict count = (int *) Calloc(ng+1, int);
-      po = (int *) R_alloc(l, sizeof(int)); --po;
-      for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-      Free(count);
-    }
-  } else {
-    if(nullo) po = INTEGER(ord)-1;
-    pst = INTEGER(getAttrib(ord, install("starts")));
-    if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(ord, install("maxgrpn")));
-  }
+  // Preprocessing g
+  CHECK_GROUPS(l, sorted || !nullo);
   /*
    * Previous version: computes po if overall ordering of x is supplied to o. This is made redundant by requiring
    * the ordering o to now take into account the grouping (facilitated by R-level helper GRPid()), which provides
@@ -1392,36 +1397,6 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   return res;
 }
 
-#undef CHECK_GROUPS
-#define CHECK_GROUPS(nrx)                                      \
-  if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP"); \
-  const SEXP *restrict pg = SEXPPTR(g), o = pg[6];             \
-  ng = INTEGER(pg[0])[0];                                      \
-  int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, maxgrpn = 0; \
-  if(nrx != length(pg[1])) error("length(g) must match nrow(x)"); \
-  if(isNull(o)) {                                              \
-    int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1; \
-    if(nthreads <= 1 && nullw) {                               \
-      for(int i = 0; i != ng; ++i) {                           \
-        if(pgs[i] > maxgrpn) maxgrpn = pgs[i];                 \
-        cgs[i+2] = cgs[i+1] + pgs[i];                          \
-      }                                                        \
-    } else {                                                   \
-      for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i]; \
-    }                                                          \
-    pst = cgs + 1;                                             \
-    if(sorted) po = &l;                                        \
-    else {                                                     \
-      int *restrict count = (int *) Calloc(ng+1, int);         \
-      po = (int *) R_alloc(nrx, sizeof(int)); --po;            \
-      for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1; \
-      Free(count);                                             \
-    }                                                          \
-  } else {                                                     \
-    po = INTEGER(o)-1;                                         \
-    pst = INTEGER(getAttrib(o, install("starts")));            \
-    if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(o, install("maxgrpn"))); \
-  }
 
 
 #undef COLWISE_NTH_LIST
@@ -1491,7 +1466,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
   } else { // with groups: do the usual checking
 
-    CHECK_GROUPS(nrx);
+    CHECK_GROUPS(nrx, sorted);
 
     SEXP *restrict pout = SEXPPTR(out);
     if(nullw) { // Parallelism at sub-column level
@@ -1671,7 +1646,7 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
   // With groups
   int ng;
-  CHECK_GROUPS(l);
+  CHECK_GROUPS(l, sorted);
 
   SEXP res = PROTECT(allocVector(REALSXP, col * ng));
 
