@@ -621,55 +621,47 @@ SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int
 
 // Implementations for R vectors -----------------------------------------------
 
-SEXP mode_impl(SEXP x, int narm, int ret) {
+// Splitting this up to increase thread safety
+
+SEXP mode_impl_plain(SEXP x, int narm, int ret) {
   int l = length(x);
   if(l <= 1) return x;
 
-  SEXP res;
   switch(TYPEOF(x)) {
-    case REALSXP:
-      PROTECT(res = ScalarReal(mode_double(REAL(x), &l, l, 1, narm, ret)));
-      break;
-    case INTSXP:
-      PROTECT(res = ScalarInteger(isFactor(x) ? mode_fct_logi(INTEGER(x), &l, l, nlevels(x), 1, narm, ret) :
-                              mode_int(INTEGER(x), &l, l, 1, narm, ret)));
-      break;
-    case LGLSXP:
-      PROTECT(res = duplicate(ScalarLogical(mode_fct_logi(LOGICAL(x), &l, l, 1, 1, narm, ret))));
-      break;
-    case STRSXP:
-      PROTECT(res = ScalarString(mode_string(STRING_PTR(x), &l, l, 1, narm, ret)));
-      break;
+    case REALSXP: return ScalarReal(mode_double(REAL(x), &l, l, 1, narm, ret));
+    case INTSXP:  return ScalarInteger(isFactor(x) ? mode_fct_logi(INTEGER(x), &l, l, nlevels(x), 1, narm, ret) :
+                                    mode_int(INTEGER(x), &l, l, 1, narm, ret));
+    case LGLSXP: return duplicate(ScalarLogical(mode_fct_logi(LOGICAL(x), &l, l, 1, 1, narm, ret)));
+    case STRSXP: return ScalarString(mode_string(STRING_PTR(x), &l, l, 1, narm, ret));
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
+}
 
+SEXP mode_impl(SEXP x, int narm, int ret) {
+  if(length(x) <= 1) return x;
+  SEXP res = PROTECT(mode_impl_plain(x, narm, ret));
   copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
 
-SEXP w_mode_impl(SEXP x, double *pw, int narm, int ret) {
+SEXP w_mode_impl_plain(SEXP x, double *pw, int narm, int ret) {
   int l = length(x);
   if(l <= 1) return x;
 
-  SEXP res;
   switch(TYPEOF(x)) {
-    case REALSXP:
-      PROTECT(res = ScalarReal(w_mode_double(REAL(x), pw, &l, l, 1, narm, ret)));
-      break;
-    case INTSXP:
-      PROTECT(res = ScalarInteger(isFactor(x) ? w_mode_fct_logi(INTEGER(x), pw, &l, l, nlevels(x), 1, narm, ret) :
-                             w_mode_int(INTEGER(x), pw, &l, l, 1, narm, ret)));
-      break;
-    case LGLSXP:
-      PROTECT(res = duplicate(ScalarLogical(w_mode_fct_logi(LOGICAL(x), pw, &l, l, 1, 1, narm, ret))));
-      break;
-    case STRSXP:
-      PROTECT(res = ScalarString(w_mode_string(STRING_PTR(x), pw, &l, l, 1, narm, ret)));
-      break;
+    case REALSXP: return ScalarReal(w_mode_double(REAL(x), pw, &l, l, 1, narm, ret));
+    case INTSXP:  return ScalarInteger(isFactor(x) ? w_mode_fct_logi(INTEGER(x), pw, &l, l, nlevels(x), 1, narm, ret) :
+                                    w_mode_int(INTEGER(x), pw, &l, l, 1, narm, ret));
+    case LGLSXP:  return duplicate(ScalarLogical(w_mode_fct_logi(LOGICAL(x), pw, &l, l, 1, 1, narm, ret)));
+    case STRSXP:  return ScalarString(w_mode_string(STRING_PTR(x), pw, &l, l, 1, narm, ret));
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
+}
 
+SEXP w_mode_impl(SEXP x, double *pw, int narm, int ret) {
+  if(length(x) <= 1) return x;
+  SEXP res = PROTECT(w_mode_impl_plain(x, pw, narm, ret));
   copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
@@ -873,9 +865,9 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     if(length(w) != l) error("length(w) must match length(x)");
     if(TYPEOF(w) != REALSXP) {
       if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double)");
-      SEXP wd = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
-      pw = REAL(wd);
-    } else pw = REAL(w);
+      w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
+    }
+    pw = REAL(w);
   }
   if(nullg) {
     // if(TYPEOF(w) != REALSXP)
@@ -913,6 +905,7 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   return res;
 }
 
+
 // TODO: allow column-level parallelism??
 SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   int nullg = isNull(g), nullw = isNull(w), l = length(x), ng = 0, nprotect = 1,
@@ -922,8 +915,13 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
   if(nullg && nthreads > l) nthreads = l;
   if(nullg && nullw) {
-    #pragma omp parallel for num_threads(nthreads)
-    for(int j = 0; j < l; ++j) pout[j] = mode_impl(px[j], narm, ret);
+    if(nthreads <= 1) {
+      for(int j = 0; j != l; ++j) pout[j] = mode_impl(px[j], narm, ret);
+    } else {
+      #pragma omp parallel for num_threads(nthreads)
+      for(int j = 0; j < l; ++j) pout[j] = mode_impl_plain(px[j], narm, ret);
+      for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]); // Not thread safe and thus taken out...
+    }
   } else {
     int nrx = length(px[0]);
     double tmp = 0.0, *restrict pw = &tmp;
@@ -931,13 +929,18 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
       if(length(w) != nrx) error("length(w) must match nrow(x)");
       if(TYPEOF(w) != REALSXP) {
         if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double)");
-        SEXP wd = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
-        pw = REAL(wd);
-      } else pw = REAL(w);
+        w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
+      }
+      pw = REAL(w);
     }
     if(nullg) {
-      #pragma omp parallel for num_threads(nthreads)
-      for(int j = 0; j < l; ++j) pout[j] = w_mode_impl(px[j], pw, narm, ret);
+      if(nthreads <= 1) {
+        for(int j = 0; j != l; ++j) pout[j] = w_mode_impl(px[j], pw, narm, ret);
+      } else {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int j = 0; j < l; ++j) pout[j] = w_mode_impl_plain(px[j], pw, narm, ret);
+        for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]); // Not thread safe and thus taken out...
+      }
     } else {
       if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
       const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
@@ -971,6 +974,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   return out;
 }
 
+
 SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
@@ -986,9 +990,9 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
     if(length(w) != l) error("length(w) must match nrow(x)");
     if(TYPEOF(w) != REALSXP) {
       if(!(TYPEOF(w) == INTSXP || TYPEOF(w) == LGLSXP)) error("weights need to be double or integer/logical (internally coerced to double)");
-      SEXP wd = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
-      pw = REAL(wd);
-    } else pw = REAL(w);
+      w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
+    }
+    pw = REAL(w);
   }
 
   if(nullg) {

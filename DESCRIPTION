@@ -19,18 +19,19 @@ Description: A C/C++ based package for advanced data transformation and
     statistical computing in R that is extremely fast, class-agnostic,
     and programmer friendly through a flexible, parsimonious, and robust API.
     Core functionality includes a rich set of S3 generic grouped and weighted 
-    statistical functions for vectors, matrices and data frames, providing
-    efficient low-level vecorization and OpenMP multithreading (reducing the 
-    need for iteration/vectorization in R). These are integrated with fast grouping 
-    and ordering algorithms, and efficient data manipulation/transformation functions 
-    (also callable from C). The package also provides a flexible and rigorous 
-    approch to time series and panel data in R. It further includes fast functions 
-    for common statistical procesures, detailed summary statistics, powerful tools 
-    to work with nested data, functions that enable memory efficient R programming, 
-    fast data object conversions, and helpers to effectively deal with variable 
-    labels and other attributes. It is well integrated with basic R, 'dplyr'/'tibble', 
-    'data.table', 'sf', 'plm' (panel-series and data frames), and accommodates many 
-    other matrix or data frame based classes (like 'ts', 'xts'/'zoo', 'tsibble').
+    statistical functions for vectors, matrices and data frames, which provide
+    efficient low-level vecorizations and OpenMP multithreading (reducing the 
+    need for iteration/vectorization in R), and skip missing values by default. 
+    These are integrated with fast grouping and ordering algorithms (also callable 
+    from C), and efficient data manipulation functions. The package also provides 
+    a flexible and rigorous approch to time series and panel data in R. It further 
+    includes fast functions for common statistical procesures, detailed (grouped, 
+    weighted) summary statistics, powerful tools to work with nested data, fast 
+    data object conversions, functions for memory efficient R programming, and 
+    helpers to effectively deal with variable labels, attributes, and missing data. 
+    It is well integrated with basic R, 'dplyr'/'tibble', 'data.table', 'sf', 'plm' 
+    (panel-series and data frames), and accommodates (by virtue of smart internal 
+    attribute handling) many other classes (like 'ts', 'xts'/'zoo' or 'tsibble').
 URL: https://sebkrantz.github.io/collapse/,  
      https://github.com/SebKrantz/collapse,
      https://twitter.com/collapse_R
