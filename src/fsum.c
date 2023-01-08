@@ -287,9 +287,9 @@ double fsum_int_omp_impl(const int *restrict px, const int narm, const int l, co
 // }
 
 
-SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
+SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnthreads) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
-    narm = asLogical(Rnarm), nthreads = asInteger(Rnth), nprotect = 0, nwl = isNull(w);
+    narm = asLogical(Rnarm), nthreads = asInteger(Rnthreads), nprotect = 0, nwl = isNull(w);
   // ALTREP methods for compact sequences: not safe yet and not part of the API.
   // if(ALTREP(x) && ng == 0 && nwl) {
   // switch(tx) {
@@ -364,13 +364,13 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnth) {
   return out;
 }
 
-SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop, SEXP Rnth) {
+SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop, SEXP Rnthreads) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g),
       ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
       narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
-      nthreads = asInteger(Rnth); // , cmth = nthreads > 1 && col >= nthreads;
+      nthreads = asInteger(Rnthreads); // , cmth = nthreads > 1 && col >= nthreads;
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(l*col < 100000) nthreads = 1; // No gains from multithreading on small data
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
@@ -604,8 +604,8 @@ if(nwl) {                                                      \
 }
 
 
-SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop, SEXP Rnth) {
-  int l = length(x), ng = asInteger(Rng), nthreads = asInteger(Rnth), nwl = isNull(w),
+SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop, SEXP Rnthreads) {
+  int l = length(x), ng = asInteger(Rng), nthreads = asInteger(Rnthreads), nwl = isNull(w),
     narm = asLogical(Rnarm), nprotect = 1;
 
   // TODO: Disable multithreading if overall data size is small?
@@ -669,13 +669,13 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 }
 
 // If effective sub-column-level multithreading can be developed...
-// SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
+// SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
 //   SEXP dim = getAttrib(x, R_DimSymbol);
 //   if(isNull(dim)) error("x is not a matrix");
 //   int tx = TYPEOF(x), l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g),
 //     ng = asInteger(Rng), // ng1 = ng == 0 ? 1 : ng,
 //     narm = asLogical(Rnarm), nprotect = 1, nwl = isNull(w),
-//     nthreads = asInteger(Rnth), cmth = nthreads > 1 && col >= nthreads;
+//     nthreads = asInteger(Rnthreads), cmth = nthreads > 1 && col >= nthreads;
 //   if (l < 1) return x; // Prevents seqfault for numeric(0) #101
 //   if(nthreads < 100000) nthreads = 1; // No gains from multithreading on small data
 //   if(ng && l != length(g)) error("length(g) must match nrow(x)");
@@ -785,14 +785,14 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 // }
 
 // If effective sub-column-level multithreading can be developed...
-// SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
-//   int l = length(x), ng = asInteger(Rng), nthreads = asInteger(Rnth),
+// SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
+//   int l = length(x), ng = asInteger(Rng), nthreads = asInteger(Rnthreads),
 //     nprotect = 1, cmth = nthreads > 1 && l >= nthreads;
 //   // TODO: Disable multithreading if overall data size is small?
 //   if(l < 1) return x; // needed ??
-//   SEXP Rnth1;
+//   SEXP Rnthreads1;
 //   if(cmth) {
-//     Rnth1 = PROTECT(ScalarInteger(1));
+//     Rnthreads1 = PROTECT(ScalarInteger(1));
 //     ++nprotect;
 //   }
 //   if(ng == 0 && asLogical(Rdrop)) {
@@ -800,9 +800,9 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 //     double *pout = REAL(out);
 //     if(cmth) { // If high-dimensional: column-level parallelism
 //       #pragma omp parallel for num_threads(nthreads)
-//       for(int j = 0; j < l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, Rnth1));
+//       for(int j = 0; j < l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, Rnthreads1));
 //     } else {
-//       for(int j = 0; j != l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, Rnth));
+//       for(int j = 0; j != l; ++j) pout[j] = asReal(fsumC(px[j], Rng, g, w, Rnarm, Rnthreads));
 //     }
 //     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
 //     UNPROTECT(nprotect);
@@ -811,9 +811,9 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 //   SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
 //   if(cmth) {
 //     #pragma omp parallel for num_threads(nthreads)
-//     for(int j = 0; j < l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth1);
+//     for(int j = 0; j < l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnthreads1);
 //   } else {
-//     for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnth);
+//     for(int j = 0; j != l; ++j) pout[j] = fsumC(px[j], Rng, g, w, Rnarm, Rnthreads);
 //   }
 //   // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
 //   DFcopyAttr(out, x, ng);

@@ -209,9 +209,9 @@ void fmean_int_g_impl(double *restrict pout, const int *restrict px, const int n
 }
 
 
-SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth) {
+SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnthreads) {
   const int l = length(x), ng = asInteger(Rng), narm = asLogical(Rnarm), nwl = isNull(w);
-  int tx = TYPEOF(x), nthreads = asInteger(Rnth), nprotect = 1, *restrict pgs = &nprotect;
+  int tx = TYPEOF(x), nthreads = asInteger(Rnthreads), nprotect = 1, *restrict pgs = &nprotect;
   // ALTREP methods for compact sequences: not safe yet and not part of the API.
   // if(ALTREP(x) && ng == 0 && nwl) {
   // switch(tx) {
@@ -272,11 +272,11 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnth) {
   return out;
 }
 
-SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
+SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(isNull(dim)) error("x is not a matrix");
   const int l = INTEGER(dim)[0], col = INTEGER(dim)[1], *restrict pg = INTEGER(g), ng = asInteger(Rng), narm = asLogical(Rnarm);
-  int tx = TYPEOF(x), nthreads = asInteger(Rnth), nprotect = 1, *restrict pgs = &nprotect;
+  int tx = TYPEOF(x), nthreads = asInteger(Rnthreads), nprotect = 1, *restrict pgs = &nprotect;
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match nrow(x)");
   if(l*col < 100000) nthreads = 1; // No gains from multithreading on small data
@@ -479,8 +479,8 @@ if(nwl) {                                                                  \
 }
 
 
-SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnth) {
-  int l = length(x), ng = asInteger(Rng), nthreads = asInteger(Rnth), nwl = isNull(w),
+SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
+  int l = length(x), ng = asInteger(Rng), nthreads = asInteger(Rnthreads), nwl = isNull(w),
     narm = asLogical(Rnarm), nprotect = 1;
 
   // TODO: Disable multithreading if overall data size is small?
