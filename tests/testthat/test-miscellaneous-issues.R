@@ -228,9 +228,10 @@ test_that("0-length vectors give expected output", {
     FUN <- match.fun(i)
     if(i %!in% .c(fsum, fmin, fmax, fcumsum, fprod, fmean, fmedian, fnth)) {
       expect_true(all_identical(FUN(numeric(0)), FUN(integer(0)), numeric(0)))
-    } else if(i %!in% .c(fmean, fprod)) {
+    } else {
       expect_identical(FUN(numeric(0)), numeric(0))
-      expect_identical(FUN(integer(0)), integer(0))
+      if(i %in% .c(fmean, fprod, fnth, fmedian)) expect_identical(FUN(integer(0)), NA_real_)
+      else expect_identical(FUN(integer(0)), integer(0))
     }
   }
   funs <- .c(fmode, ffirst, flast)

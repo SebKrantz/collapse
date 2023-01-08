@@ -1231,8 +1231,8 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
 
   CHECK_PROB(l);
 
-  if(l < 1) return x;
-  if(l == 1 && nullw) return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
+  // if(l < 1) return x;
+  if(l < 1 || (l == 1 && nullw)) return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
 
   // First the simplest case
   if(nullg && nullw && nullo) return nth_impl(x, narm, ret, Q);
