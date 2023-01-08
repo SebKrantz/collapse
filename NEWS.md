@@ -78,8 +78,8 @@
 * Functions `frename()` and `setrename()` have an additional argument `.nse = TRUE`, conforming to the default non-standard evaluation of tagged vector expressions e.g. `frename(mtcars, mpg = newname)` is the same as `frename(mtcars, mpg = "newname")`. Setting `.nse = FALSE` allows `newname` to be a variable holding a name e.g. `newname = "othername"; frename(mtcars, mpg = newname, .nse = FALSE)`. Another use of the argument is that a (named) character vector can now be passed to the function to rename a (subset of) columns e.g. `cvec = letters[1:3]; frename(mtcars, cvec, cols = 4:6, .nse = FALSE)` (this works even with `.nse = TRUE`), and `names(cvec) = c("cyl", "vs", "am"); frename(mtcars, cvec, .nse = FALSE)`. Furthermore, `setrename()` now also returns the renamed data invisibly, and `relabel()` and `setrelabel()` have also gained similar flexibility to allow (named) lists or vectors of variable labels to be passed. *Note* that these function have no NSE capabilities, so they work essentially like `frename(..., .nse = FALSE)`.
 
 * Function `add_vars()` became a bit more flexible and also allows single vectors to be added with tags e.g. `add_vars(mtcars, log_mpg = log(mtcars$mpg), STD(mtcars))`, similar to `cbind`. However `add_vars()` continues to not replicate length 1 inputs. 
+* Safer multithreading: OpenMP multithreading over parts of the R API is minimized, reducing errors that occurred especially when multithreading across data frame columns. Also the number of threads supplied by the user to all OpenMP enabled functions is ensured to not exceed either of `omp_get_num_procs()`, `omp_get_thread_limit()`, and `omp_get_max_threads()`. 
 
-* Greater thread safety: the number of threads supplied by the user to functions like `fmean()` is ensured to not exceed either of `omp_get_num_procs()`, `omp_get_thread_limit()`, and `omp_get_max_threads()`. 
 
 # collapse 1.8.9
 
