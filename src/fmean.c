@@ -424,20 +424,16 @@ SEXP fmean_g_impl(SEXP x, const int ng, const int *pg, const int *pgs, int narm)
   int l = length(x);
   if(l < 1) return ScalarReal(NA_REAL);
 
-  SEXP res;
+  SEXP res = PROTECT(allocVector(REALSXP, ng));
   switch(TYPEOF(x)) {
-  case REALSXP: {
-    res = PROTECT(allocVector(REALSXP, ng));
-    fmean_double_g_impl(REAL(res), REAL(x), ng, pg, pgs, narm, l);
-    break;
-  }
-  case LGLSXP:
-  case INTSXP:  {
-    res = PROTECT(allocVector(REALSXP, ng));
-    fmean_int_g_impl(REAL(res), INTEGER(x), ng, pg, pgs, narm, l);
-    break;
-  }
-  default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+    case REALSXP:
+      fmean_double_g_impl(REAL(res), REAL(x), ng, pg, pgs, narm, l);
+      break;
+    case LGLSXP:
+    case INTSXP:
+      fmean_int_g_impl(REAL(res), INTEGER(x), ng, pg, pgs, narm, l);
+      break;
+    default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
   }
 
   if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
@@ -529,10 +525,9 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
         if(length(gs) == ng) pgs = INTEGER(gs);
         else {
           SEXP gs_ = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
-          pgs = INTEGER(gs_)-1;
+          pgs = INTEGER(gs_);
           memset(pgs, 0, sizeof(int) * ng);
-          for(int i = 0, nrx = length(g); i != nrx; ++i) ++pgs[pg[i]];
-          ++pgs;
+          for(int i = 0, nrx = length(g); i != nrx; ++i) ++pgs[pg[i]-1];
         }
       }
 
