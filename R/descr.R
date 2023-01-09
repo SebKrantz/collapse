@@ -1,17 +1,23 @@
 
-fsorttable <- function(x, srt) {
+# Super fast tabulation of a single atomic vector, with various sorting options
+fsorttable <- function(x, srt, w = NULL) {
   if(is.factor(x)) {
     lev <- attr(x, "levels")
-    t <- .Call(C_fwtabulate, x, NULL, length(lev), TRUE) # tabulate(x, nbins = length(lev)) # skips missing values !!
+    t <- .Call(C_fwtabulate, x, w, length(lev), !inherits(x, "na.included")) # tabulate(x, nbins = length(lev)) # skips missing values !!
     names(t) <- lev
     sorted <- TRUE
   } else {
     sorted <- FALSE
-    g <- .Call(C_group, x, TRUE, TRUE)
-    t <- attr(g, "group.sizes")
-    nam <- Csv(x, attr(g, "starts"))
-    names(t) <- nam
-    if(anyNA(nam)) t <- t[-whichNA(nam)] # TODO: speef up using fwtabulate and groupat?
+    g <- .Call(C_groupat, x, TRUE, FALSE) # FALSE = keeps NA
+    t <- .Call(C_fwtabulate, g, w, attr(g, "N.groups"), TRUE) # TRUE = check for NA's and skip them
+    names(t) <- Csv(x, attr(g, "starts"))
+    # This seems is slightly faster with not too many distinct values, but less straightforward
+    # g <- .Call(C_group, x, TRUE, is.null(w))
+    # t <- if(is.null(w)) attr(g, "group.sizes") else
+    #   .Call(C_fwtabulate, g, w, attr(g, "N.groups"), FALSE)
+    # nam <- Csv(x, attr(g, "starts"))
+    # names(t) <- nam
+    # if(anyNA(nam)) t <- t[-whichNA(nam)]
   }
   switch(srt,
     value = if(sorted || attr(o <- forder.int(names(t)), "sorted")) t else t[o],
@@ -22,36 +28,60 @@ fsorttable <- function(x, srt) {
     stop("sort.table must be one of 'value', 'freq' or 'none'"))
 }
 
+# Same for grouped data, building on qtab()
+sorttable2D <- function(x, f, srt, w = NULL) {
+  if(is.factor(x)) sorted <- TRUE
+  else {
+    sorted <- switch(srt, value = TRUE, FALSE)
+    x <- qF(x, sort = sorted)
+  }
+  t <- qtab(x, f, w = w, dnn = NULL)
+  switch(srt,
+         value = if(sorted || attr(o <- forder.int(dimnames(t)[[1L]]), "sorted")) t else t[o, , drop = FALSE],
+         freq = if(attr(o <- forder.int(frowSums(t), decreasing = TRUE), "sorted")) t else t[o, , drop = FALSE],
+         none = t,
+         stop("sort.table must be one of 'value', 'freq' or 'none'"))
+}
+# Extended version including totals and transpose option: better do that in print!
+# sorttable2D <- function(x, f, srt, w = NULL, transpose = FALSE) {
+#   if(is.factor(x)) sorted <- TRUE
+#   else {
+#     sorted <- switch(srt, value = TRUE, FALSE)
+#     x <- qF(x, sort = sorted)
+#   }
+#   if(transpose) {
+#     t <- qtab(f, x, w = w, dnn = NULL)
+#     tot <- unattrib(fsum.matrix(t))
+#     t <- rbind(t, Total = tot)
+#   } else {
+#     t <- qtab(x, f, w = w, dnn = NULL)
+#     tot <- if(is.double(w)) frowSums(t) else as.integer(frowSums(t))
+#     t <- cbind(t, Total = tot)
+#   }
+#   switch(srt,
+#          value = if(sorted || attr(o <- forder.int(dimnames(t)[[1L+transpose]]), "sorted")) t else if(transpose) t[, o, drop = FALSE] else t[o, , drop = FALSE],
+#          freq = if(attr(o <- forder.int(tot, decreasing = TRUE), "sorted")) t else if(transpose) t[, o, drop = FALSE] else t[o, , drop = FALSE],
+#          none = t,
+#          stop("sort.table must be one of 'value', 'freq' or 'none'"))
+# }
 
-descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
-                  Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), cols = NULL,
+
+# X = wlddev; by = ~ income; w = ~ POP;
+# cols = NULL; Ndistinct = TRUE; higher = TRUE; table = TRUE; sort.table = "freq"
+# Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99); Qtype = 7L
+# label.attr = 'label'; stepwise = FALSE; nam = "wlddev"; dotsok = TRUE
+# fndistinctC = collapse:::fndistinctC; fsumC = collapse:::fsumC;
+# fsorttable = collapse:::fsorttable; frowSums = collapse:::frowSums
+
+descr <- function(X, by = NULL, w = NULL, cols = NULL, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
+                  Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), Qtype = 7L,
                   label.attr = 'label', stepwise = FALSE, ...) {
+
+  # Getting input information
   nam <- l1orlst(as.character(substitute(X)))
-
-  armat <- function(x, y) c(x[1L], Ndist = y, x[-1L])
-  # natrm <- function(x) if(is.na(names(x)[length(x)])) x[-length(x)] else x # Remove NA from table !
-
   dotsok <- if(missing(...)) TRUE else names(substitute(c(...))[-1L]) %!in% c('pid','g')
 
-  numstats <- if(Ndistinct && dotsok) function(x, ...) armat(qsu.default(x, higher = higher, ...), fndistinctC(x)) else function(x, ...) qsu.default(x, higher = higher, ...)
-
-  descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
-                                                           Quant = .quantile(x, probs = Qprobs, names = TRUE)) else # na_rm(x)
-                                     function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
-
-  descrcat <- if(table) function(x) {
-                                    tab <- fsorttable(x, sort.table)
-                                    list(Class = class(x), Label = attr(x, label.attr),
-                                         Stats = if(Ndistinct) c(N = fsumC(tab), Ndist = length(tab)) else `names<-`(fsumC(tab), 'Nobs'),
-                                         Table = tab) # natrm(fnobs.default(x, x)) # table(x). fnobs is a lot Faster, but includes NA as level !
-                        } else
-                        function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                         Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), 'Nobs'))
-
-  descrdate <- function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), 'Nobs'),
-                                          `names<-`(frange(x), c("Min", "Max"))))
-
+  # Unclassing and (if necessary) transforming X
   if(is.list(X)) {
     is_sf <- inherits(X, "sf")
     # if(inherits(X, "POSIXlt")) X <- list(X = as.POSIXct(X))
@@ -64,13 +94,92 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
     X <- unclass(qDF(X))
     if(is_1D) names(X) <- nam
   }
-  if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
+
+  # Processing by and w arguments: inspired by qsu()
+  if(is.call(by) || is.call(w)) {
+    v <- NULL
+    if(is.call(by)) {
+      if(length(by) == 3L) {
+        v <- ckmatch(all.vars(by[[2L]]), names(X))
+        byn <- ckmatch(all.vars(by[[3L]]), names(X))
+      } else byn <- ckmatch(all.vars(by), names(X))
+      by <- GRP.default(X, byn, call = FALSE) # , ...
+    } else {
+      if(!is.null(by)) by <- GRP.default(by, call = FALSE) # , ...
+      byn <- NULL
+    }
+    if(is.call(w)) {
+      widn <- ckmatch(all.vars(w), names(X))
+      w <- eval(w[[2L]], X, attr(w, ".Environment"))
+    } else widn <- NULL
+    X <- X[if(length(v)) v else if(is.null(cols)) -c(byn, widn) else cols2int(cols, X, names(X), FALSE)]
+  } else {
+    if(!is.null(by)) by <- GRP.default(by, call = FALSE) # , ...
+    if(length(cols)) X <- X[cols2int(cols, X, names(X), FALSE)]
+  }
+
+  # Checking for numeric data
+  num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
+  Nnum <- bsum(num)
+
+  # Define functions to process numeric data
+  if(Nnum > 0L) {
+
+    if(Ndistinct && dotsok) {
+      armat <- if(is.null(by)) function(x, y) c(x[1L], Ndist = y, x[-1L]) else
+                               function(x, y) cbind(x[, 1L, drop = FALSE], Ndist = y, x[, -1L])
+      numstats <- function(x, ...) armat(qsu.default(x, by, w = w, higher = higher, ...), fndistinctC(x, by))
+    } else numstats <- function(x, ...) qsu.default(x, by, w = w, higher = higher, ...)
+
+    quantiles <- if(is.null(by)) function(x, ...) .quantile(x, Qprobs, w, type = Qtype, names = TRUE, ...) else
+                                 function(x, ...) BY.default(x, by, .quantile, probs = Qprobs, w = w, type = Qtype, names = TRUE, expand.wide = TRUE, ...)
+
+    # This function will be applied to different columns.
+    descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
+                                                             Quant = quantiles(x)) else
+                                       function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...))
+  } else descrnum <- function(x, ...) x
+
+  # Non-numeric data, assumed to have at least some categorical variables (could also be date)
+  if(Nnum != length(num)) {
+
+    if(table && !is.null(by)) {
+      f <- as_factor_GRP(by)
+      descrcat <- function(x) {
+        tab <- sorttable2D(x, f, sort.table, w)
+        list(Class = class(x), Label = attr(x, label.attr),
+             Stats = if(Ndistinct) rbind(N = fsum.matrix(tab), Ndist = fsum.matrix(tab > 0L)) else rbind(N = fsum.matrix(tab)), # Good ? Faster ???
+             Table = tab)
+      }
+    } else if(table) {
+      descrcat <- function(x) {
+        tab <- fsorttable(x, sort.table, w)
+        list(Class = class(x), Label = attr(x, label.attr),
+             Stats = if(Ndistinct) c(N = fsumC(tab), Ndist = length(tab)) else `names<-`(fsumC(tab), "N"),
+             Table = tab)
+      }
+    } else {
+      descrcat <- function(x) list(Class = class(x), Label = attr(x, label.attr),
+                                   Stats = if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), "N"))
+    }
+
+  }
+
+  descrdate <- if(is.null(by)) function(x) list(Class = class(x), Label = attr(x, label.attr),
+                                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), "N"), `names<-`(frange(x), c("Min", "Max")))) else
+                               function(x) list(Class = class(x), Label = attr(x, label.attr),
+                                                Stats = cbind(N = fnobs.default(x, by), Ndist = if(Ndistinct) fndistinctC(x, by) else NULL,
+                                                              Min = fmin.default(x, by, use.g.names = FALSE), Max = fmax.default(x, by, use.g.names = FALSE)))
+
+  # Result vector and attributes
   res <- vector('list', length(X))
+  ares <- list(names = names(X), name = nam, N = length(X[[1L]]),
+               arstat = !dotsok, table = table, groups = by, weights = w, class = "descr")
+
+  # Computation
   if(stepwise) { # This means we compute one by one, mainly for printing...
-    N <- length(X[[1L]])
-    attributes(res) <- list(names = names(X), name = nam, N = N,
-                            arstat = !dotsok, table = table, class = "descr")
-    cat('Dataset: ', nam,', ', length(res), ' Variables, N = ', N, "\n", sep = "")
+    attributes(res) <- ares
+    cat('Dataset: ', nam,', ', length(res), ' Variables, N = ', ares$N, "\n", sep = "")
     cat(paste(rep("-", .Options$width), collapse = ""), "\n", sep = "")
     for(i in seq_along(X)) {
       invisible(readline(prompt = sprintf("Press [enter] for variable %s/%s or [esc] to exit", i, length(res))))
@@ -79,9 +188,8 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
       print(res[i], noheader = TRUE)
     }
   } else {
-    num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
     res[num] <- lapply(X[num], descrnum, ...)
-    if(!all(num)) {
+    if(Nnum != length(num)) {
       date <- vapply(unattrib(X), is_date, TRUE)
       if(any(date)) {
         res[date] <- lapply(X[date], descrdate)
@@ -89,8 +197,7 @@ descr <- function(X, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table =
       } else cat <- !num
       res[cat] <- lapply(X[cat], descrcat)
     }
-    attributes(res) <- list(names = names(X), name = nam, N = length(X[[1L]]),
-                            arstat = !dotsok, table = table, class = "descr")
+    attributes(res) <- ares
   }
   return(if(stepwise) invisible(res) else res)
 }
