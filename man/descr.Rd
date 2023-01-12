@@ -26,8 +26,7 @@ descr(X, \dots)
       Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), Qtype = 7L,
       label.attr = "label", stepwise = FALSE, \dots)
 
-\method{as.data.frame}{descr}(x, \dots, gid = "Group", wsum = FALSE,
-              stringsAsFactors = !is.null(x$group))
+\method{as.data.frame}{descr}(x, \dots, gid = "Group")
 
 \method{print}{descr}(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE,
       summary = TRUE, reverse = FALSE, stepwise = FALSE, \dots)
@@ -78,8 +77,8 @@ character. The name of a label attribute to display for each variable (if variab
 \item{reverse}{logical. \code{TRUE} prints contents in reverse order, starting with the last column, so that the dataset can be analyzed by scrolling up the console after calling \code{descr}.}
 \item{stepwise}{logical. \code{TRUE} prints one variable at a time. The user needs to press [enter] to see the printout for the next variable. If called from \code{descr}, the computation is also done one variable at a time, and the finished 'descr' object is returned invisibly. }
 \item{gid}{character. Name assigned to the group-id column, when describing data by groups.}
-\item{wsum}{\code{TRUE} sums the weights by groups and adds them as a 'WeightSum' column. Alternatively a name for the column can be supplied. }
-\item{stringsAsFactors}{logical. Make factors from dimension names of 'qsu' array. Same as option to \code{\link{as.data.frame.table}}.}
+%\item{wsum}{\code{TRUE} sums the weights by groups and adds them as a 'WeightSum' column. Alternatively a name for the column can be supplied. }
+%\item{stringsAsFactors}{logical. Make factors from dimension names of 'qsu' array. Same as option to \code{\link{as.data.frame.table}}.}
 }
 \details{
 \code{descr} was heavily inspired by \code{Hmisc::describe}, but is much faster and has more advanced statistical capabilities. It is principally a wrapper around \code{\link{qsu}}, \code{\link{fquantile}}, and \code{\link{fndistinct}} for numeric variables, and computes frequency tables for categorical varibles using \code{\link{qtab}}. Date variables are summarized with \code{\link{fnobs}}, \code{\link{fndistinct}} and \code{\link{frange}}.

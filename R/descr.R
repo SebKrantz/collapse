@@ -76,9 +76,9 @@ sorttable2D <- function(x, f, srt, w = NULL) {
 # Expects X to be a plain list and nam the name of the dataset
 descr_core <- function(X, nam, by = NULL, w = NULL, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
                        Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), Qtype = 7L,
-                       label.attr = 'label', stepwise = FALSE, ...) {
+                       label.attr = "label", stepwise = FALSE, ...) {
 
-  dotsok <- if(missing(...)) TRUE else names(substitute(c(...))[-1L]) %!in% c('pid','g')
+  dotsok <- if(missing(...)) TRUE else names(substitute(c(...))[-1L]) %!in% c("pid", "g")
 
   # Checking for numeric data
   num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
@@ -89,12 +89,12 @@ descr_core <- function(X, nam, by = NULL, w = NULL, Ndistinct = TRUE, higher = T
 
     if(Ndistinct && dotsok) {
       armat <- if(is.null(by)) function(x, y) c(x[1L], Ndist = y, x[-1L]) else
-                               function(x, y) cbind(x[, 1L, drop = FALSE], Ndist = y, x[, -1L])
+                               function(x, y) cbind(x[, 1L, drop = FALSE], Ndist = y, x[, -1L, drop = FALSE])
       numstats <- function(x, ...) armat(qsu.default(x, by, w = w, higher = higher, ...), fndistinctC(x, by))
     } else numstats <- function(x, ...) qsu.default(x, by, w = w, higher = higher, ...)
 
-    quantiles <- if(is.null(by)) function(x, ...) .quantile(x, Qprobs, w, type = Qtype, names = TRUE, ...) else
-                                 function(x, ...) BY.default(x, by, .quantile, probs = Qprobs, w = w, type = Qtype, names = TRUE, expand.wide = TRUE, ...)
+    quantiles <- if(is.null(by)) function(x) .quantile(x, Qprobs, w, type = Qtype, names = TRUE) else
+                                 function(x) BY.default(x, by, .quantile, probs = Qprobs, w = w, type = Qtype, names = TRUE, expand.wide = TRUE)
 
     # This function will be applied to different columns.
     descrnum <- if(is.numeric(Qprobs)) function(x, ...) list(Class = class(x), Label = attr(x, label.attr), Stats = numstats(x, ...),
@@ -153,13 +153,12 @@ descr_core <- function(X, nam, by = NULL, w = NULL, Ndistinct = TRUE, higher = T
   # Computation
   if(stepwise) { # This means we compute one by one, mainly for printing...
     attributes(res) <- ares
-    cat('Dataset: ', nam,', ', length(res), ' Variables, N = ', ares$N, "\n", sep = "")
-    cat(paste(rep("-", .Options$width), collapse = ""), "\n", sep = "")
+    print(res, header = 2L) # Only header
     for(i in seq_along(X)) {
       invisible(readline(prompt = sprintf("Press [enter] for variable %s/%s or [esc] to exit", i, length(res))))
       xi <- X[[i]]
       res[[i]] <- if(is.numeric(xi)) descrnum(xi, ...) else if(is_date(xi)) descrdate(xi) else descrcat(xi)
-      print(res[i], noheader = TRUE)
+      print(res[i], header = FALSE)
     }
   } else {
     res[num] <- lapply(X[num], descrnum, ...)
@@ -181,7 +180,7 @@ descr <- function(X, ...) UseMethod("descr")
 
 descr.default <- function(X, by = NULL, w = NULL, cols = NULL, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
                           Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), Qtype = 7L,
-                          label.attr = 'label', stepwise = FALSE, ...) {
+                          label.attr = "label", stepwise = FALSE, ...) {
 
   # Getting input information
   nam <- l1orlst(as.character(substitute(X)))
@@ -229,7 +228,7 @@ descr.default <- function(X, by = NULL, w = NULL, cols = NULL, Ndistinct = TRUE,
 # Benefit of grouped_df method: better control on how data is grouped with fgroup_by(), selection with fselect() etc.
 descr.grouped_df <- function(X, w = NULL, Ndistinct = TRUE, higher = TRUE, table = TRUE, sort.table = "freq",
                              Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99), Qtype = 7L,
-                             label.attr = 'label', stepwise = FALSE, ...) {
+                             label.attr = "label", stepwise = FALSE, ...) {
 
   # Getting input information
   nam <- l1orlst(as.character(substitute(X)))
@@ -263,19 +262,19 @@ descr.grouped_df <- function(X, w = NULL, Ndistinct = TRUE, higher = TRUE, table
 `[.descr` <- function(x, ...) copyMostAttributes(.subset(x, ...), x)
 
 # Idea: compact = TRUE: combines stats and quantiles, and omits summaries of table frequencies. enable by default for grouped summaries
-print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, reverse = FALSE, stepwise = FALSE, noheader = FALSE, wsum = NULL) {
+print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, reverse = FALSE, stepwise = FALSE, header = TRUE, wsum = NULL) {
   w <- paste(rep("-", .Options$width), collapse = "")
   arstat <- attr(x, "arstat")
   DSname <- attr(x, "name")
   DSN <- attr(x, "N")
   cb <- function(...) if(t.table) cbind(...) else formatC(rbind(...), drop0trailing = TRUE)
   ct <- function(z) if(t.table) cbind(Freq = z) else z
-  if(reverse) x <- rev.default(x) else if(!noheader) {
+  if(reverse) x <- rev.default(x) else if(header) {
     cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
     cat(w, "\n", sep = "")
   }
   nam <- names(x) # Needs to be here
-  for(i in seq_along(x)) {
+  if(header < 2L) for(i in seq_along(x)) {
     if(stepwise) invisible(readline(prompt = sprintf("Press [enter] for variable %s/%s or [esc] to exit", i, length(x))))
     xi <- x[[i]]
     cat(nam[i]," (",strclp(xi[[1L]]),"): ",xi[[2L]], "\n", sep = "")
@@ -319,12 +318,12 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     cat(w, "\n", sep = "") # More compressed -> better !
     # cat("\n", w, "\n", sep = "")
   }
-  if(reverse && !noheader) cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
+  if(reverse && header) cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
   invisible(x)
 }
 
 print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, total = TRUE,
-                                reverse = FALSE, stepwise = FALSE, noheader = FALSE, wsum = NULL) {
+                                reverse = FALSE, stepwise = FALSE, header = TRUE, wsum = NULL) {
   w <- paste(rep("-", .Options$width), collapse = "")
   arstat <- attr(x, "arstat")
   DSname <- attr(x, "name")
@@ -332,20 +331,20 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
   g <- attr(x, "groups")
   wsuml <- !is.null(wsum)
   TN <- if(wsuml) wsum else DSN
-  if(!noheader) {
+  if(header) {
     gs <- g$group.sizes
     dim(gs) <- c(length(gs), 1L)
     dimnames(gs) <- list(GRPnames(g), "N")
     if(length(weights)) gs = cbind(gs, WeightSum = fsum(attr(x, "weights"), g, use.g.names = FALSE, fill = TRUE))
   }
-  if(reverse) x <- rev.default(x) else if(!noheader) {
+  if(reverse) x <- rev.default(x) else if(header) {
     cat('Dataset: ', DSname, ', ', length(x), ' Variables, N = ', DSN, if(wsuml) paste0(", WeightSum = ", wsum) else "",
         "\nGrouped by: ", paste(g$group.vars, collapse = ", "), " [", g$N.groups, "]\n", sep = "")
     print.table(gs)
     cat(w, "\n", sep = "")
   }
   nam <- names(x) # Needs to be here
-  for(i in seq_along(x)) {
+  if(header < 2L) for(i in seq_along(x)) {
     if(stepwise) invisible(readline(prompt = sprintf("Press [enter] for variable %s/%s or [esc] to exit", i, length(x))))
     xi <- x[[i]]
     cat(nam[i], " (", strclp(xi[[1L]]),"): ", xi[[2L]], "\n", sep = "")
@@ -390,7 +389,7 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     }
     cat(w, "\n", sep = "")
   }
-  if(reverse && !noheader) {
+  if(reverse && header) {
     cat("Grouped by: ", paste(g$group.vars, collapse = ", "), " [", g$N.groups, "]\n")
     print.table(gs)
     cat('\nDataset: ', DSname, ', ', length(x), ' Variables, N = ', DSN, if(wsuml) paste0(", WeightSum = ", wsum) else "", "\n", sep = "")
@@ -398,31 +397,41 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
   invisible(x)
 }
 
-print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, g.total = TRUE, summary = TRUE, reverse = FALSE, stepwise = FALSE, ...) {
-  noheader <- !missing(...) && isTRUE(list(...)$noheader)
+print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, total = TRUE, summary = TRUE, reverse = FALSE, stepwise = FALSE, ...) {
+  if(missing(...) || is.null(header <- list(...)$header)) header <- TRUE
   oldClass(x) <- NULL
   wsum <- if(is.null(weights <- attr(x, "weights"))) NULL else fsumC(weights)
   if(is.null(attr(x, "groups")))
-    print_descr_default(x, n, perc, digits, t.table, summary, reverse, stepwise, noheader, wsum) else
-    print_descr_grouped(x, n, perc, digits, t.table, summary, g.total, reverse, stepwise, noheader, wsum)
+    print_descr_default(x, n, perc, digits, t.table, summary, reverse, stepwise, header, wsum) else
+    print_descr_grouped(x, n, perc, digits, t.table, summary, total, reverse, stepwise, header, wsum)
 }
 
+
 # Note: This does not work for array stats (using g or pid.. )
-as.data.frame.descr <- function(x, ..., gid = "Group", stringsAsFactors = !is.null(x$groups)) {
-   if(attr(x, "arstat")) stop("Cannot handle arrays of statistics!")
-  has_tables <- attr(x, "table")
+as.data.frame.descr <- function(x, ..., gid = "Group") {
+   if(attr(x, "arstat")) stop("Cannot handle arrays of statistics created by passing the pid or g arguments to qsu.default()!")
+  g <- attr(x, "groups")
+  # w <- attr(x, "weights")
   nam <- attr(x, "names")
   attributes(x) <- NULL # faster lapply
-   if(has_tables) {
+  if(is.null(g)) {
      r <- lapply(x, function(z) c(list(Class = strclp(z[[1L]]), Label = null2NA(z[[2L]])),
-          unlist(`names<-`(lapply(z[names(z) != "Table"][-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
-   } else {
-     r <- lapply(x, function(z) c(list(Class = strclp(z[[1L]]), Label = null2NA(z[[2L]])),
-          unlist(`names<-`(lapply(z[-(1:2)], as.vector, "list"), NULL), recursive = FALSE)))
-   }
+                 as.vector(z[[3L]], "list"), if(is.null(quant <- z[["Quant"]])) NULL else as.vector(quant, "list")))
+  } else {
+    gnam <- GRPnames(g)
+    r <- lapply(x, function(z) c(list(Class = strclp(z[[1L]]), Label = null2NA(z[[2L]]), Group = gnam),
+               .Call(Cpp_mctl, z[[3L]], TRUE, 0L), if(is.null(quant <- z[["Quant"]])) NULL else .Call(Cpp_mctl, quant, TRUE, 0L)))
+  }
   names(r) <- nam
    r <- .Call(C_rbindlist, r, TRUE, TRUE, "Variable")
+   if(!is.null(g) && gid[1L] != "Group") names(r)[4L] <- gid[1L]
    if(allNA(r[["Label"]])) r[["Label"]] <- NULL
+   # if(length(w) && length(r[["WeightSum"]]) && length(r[["N"]])) { # Too complex...
+   #   nam <- c("WeightSum", "N", "Ndist")
+   #   ind <- match(nam, names(r))
+   #   r[sort.int() ind] <- r[ind]
+   #   names(r)[ind] <-
+   # }
    attr(r, "row.names") <- .set_row_names(length(r[[1L]]))
    class(r) <- "data.frame"
    r
