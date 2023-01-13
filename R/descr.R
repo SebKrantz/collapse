@@ -66,7 +66,7 @@ sorttable2D <- function(x, f, srt, w = NULL) {
 # }
 
 
-# X = wlddev; by = ~ income; w = ~ POP;
+# X = wlddev; by = ~ income; w = ~ replace_NA(POP);
 # cols = NULL; Ndistinct = TRUE; higher = TRUE; table = TRUE; sort.table = "freq"
 # Qprobs = c(0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99); Qtype = 7L
 # label.attr = 'label'; stepwise = FALSE; nam = "wlddev"; dotsok = TRUE
@@ -262,24 +262,32 @@ descr.grouped_df <- function(X, w = NULL, Ndistinct = TRUE, higher = TRUE, table
 `[.descr` <- function(x, ...) copyMostAttributes(.subset(x, ...), x)
 
 # Idea: compact = TRUE: combines stats and quantiles, and omits summaries of table frequencies. enable by default for grouped summaries
-print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE, reverse = FALSE, stepwise = FALSE, header = TRUE, wsum = NULL) {
+print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE,
+                                reverse = FALSE, stepwise = FALSE, header = TRUE, wsum = NULL) {
   w <- paste(rep("-", .Options$width), collapse = "")
   arstat <- attr(x, "arstat")
   DSname <- attr(x, "name")
   DSN <- attr(x, "N")
-  cb <- function(...) if(t.table) cbind(...) else formatC(rbind(...), drop0trailing = TRUE)
-  ct <- function(z) if(t.table) cbind(Freq = z) else z
+  wsuml <- !is.null(wsum)
+  TN <- if(wsuml) wsum else DSN
+  if(wsuml) {
+    cb <- function(a, b) if(t.table) cbind(WeightSum = a, Perc = b) else formatC(rbind(WeightSum = a, Perc = b), drop0trailing = TRUE)
+    ct <- function(z) if(t.table) cbind(WeightSum = z) else z
+  } else {
+    cb <- function(a, b) if(t.table) cbind(Freq = a, Perc = b) else formatC(rbind(Freq = a, Perc = b), drop0trailing = TRUE)
+    ct <- function(z) if(t.table) cbind(Freq = z) else z
+  }
   if(reverse) x <- rev.default(x) else if(header) {
-    cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
+    cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, if(wsuml) paste0(", WeightSum = ", wsum) else "", "\n", sep = "")
     cat(w, "\n", sep = "")
   }
   nam <- names(x) # Needs to be here
   if(header < 2L) for(i in seq_along(x)) {
     if(stepwise) invisible(readline(prompt = sprintf("Press [enter] for variable %s/%s or [esc] to exit", i, length(x))))
     xi <- x[[i]]
-    cat(nam[i]," (",strclp(xi[[1L]]),"): ",xi[[2L]], "\n", sep = "")
+    cat(nam[i], " (", strclp(xi[[1L]]), "): ", xi[[2L]], "\n", sep = "")
     stat <- xi[[3L]]
-    if(stat[[1L]] != DSN) cat("Statistics (", round((1-stat[[1L]]/DSN)*100, 2), "% NAs)\n", sep = "")
+    if(stat[[1L]] < TN) cat("Statistics (", round((1-stat[[1L]]/TN)*100, 2), "% NAs)\n", sep = "")
     else cat("Statistics\n")
     if(any(xi[[1L]] %in% c("Date", "POSIXct")))
       print.default(c(stat[1:2], as.character(`oldClass<-`(stat[3:4], xi[[1L]]))),
@@ -291,7 +299,7 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
         cat("Table\n")
         t <- unclass(xi[[4L]])
         if(length(t) <= n) {
-          if(perc) print.default(cb(Freq = t, Perc = round(t/bsum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
+          if(perc) print.default(cb(t, round(t/bsum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
             print.table(ct(t))
         } else {
           t1 <- t[seq_len(n)]
@@ -299,14 +307,14 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
           rem <- `names<-`(st-bsum(t1), sprintf("... %s Others", length(t)-n))
           if(perc) {
             pct <- unattrib(t1)/st*100
-            print.default(cb(Freq = c(t1, rem), Perc = round(c(pct, 100-bsum(pct)), digits)), right = TRUE, print.gap = 2, quote = FALSE)
+            print.default(cb(c(t1, rem), round(c(pct, 100-bsum(pct)), digits)), right = TRUE, print.gap = 2, quote = FALSE)
             # cat("...\n")
           } else {
             print.table(ct(c(t1, rem)))
             # cat("...\n")
           }
           if(summary) {
-            cat("\nSummary of Table Frequencies\n")
+            cat("\nSummary of Table", if(wsuml) "WeightSums\n" else "Frequencies\n")
             print.summaryDefault(summary.default(t), digits)
           }
         }
@@ -318,7 +326,7 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     cat(w, "\n", sep = "") # More compressed -> better !
     # cat("\n", w, "\n", sep = "")
   }
-  if(reverse && header) cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, "\n", sep = "")
+  if(reverse && header) cat('Dataset: ', DSname,', ',length(x), ' Variables, N = ', DSN, if(wsuml) paste0(", WeightSum = ", wsum) else "", "\n", sep = "")
   invisible(x)
 }
 
@@ -390,7 +398,7 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     cat(w, "\n", sep = "")
   }
   if(reverse && header) {
-    cat("Grouped by: ", paste(g$group.vars, collapse = ", "), " [", g$N.groups, "]\n")
+    cat("Grouped by: ", paste(g$group.vars, collapse = ", "), " [", g$N.groups, "]\n", sep = "")
     print.table(gs)
     cat('\nDataset: ', DSname, ', ', length(x), ' Variables, N = ', DSN, if(wsuml) paste0(", WeightSum = ", wsum) else "", "\n", sep = "")
   }
