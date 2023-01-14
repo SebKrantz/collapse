@@ -341,7 +341,7 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     gs <- g$group.sizes
     dim(gs) <- c(length(gs), 1L)
     dimnames(gs) <- list(GRPnames(g), "N")
-    if(length(weights)) gs = cbind(gs, WeightSum = fsum(attr(x, "weights"), g, use.g.names = FALSE, fill = TRUE))
+    if(wsuml) gs = cbind(gs, WeightSum = fsum(attr(x, "weights"), g, use.g.names = FALSE, fill = TRUE))
   }
   if(reverse) x <- rev.default(x) else if(header) {
     cat('Dataset: ', DSname, ', ', length(x), ' Variables, N = ', DSN, if(wsuml) paste0(", WeightSum = ", wsum) else "",
