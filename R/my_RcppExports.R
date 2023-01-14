@@ -90,8 +90,21 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
 }
 
 
+# fnthC <- function(x, n = 0.5, g = NULL, w = NULL, narm = TRUE, ret = 1L, nthreads = 1L, o = NULL, check.o = FALSE) {
+#   .Call(C_fnth, x, n, g, w, narm, ret, nthreads, o, check.o)
+# }
+#
+# fnthmC <- function(x, n = 0.5, g = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L, nthreads = 1L) {
+#   .Call(C_fnthm, x, n, g, w, narm, drop, ret, nthreads)
+# }
+#
+# fnthlC <- function(x, n = 0.5, g = NULL, w = NULL, narm = TRUE, drop = TRUE, ret = 1L, nthreads = 1L) {
+#   .Call(C_fnthl, x, n, g, w, narm, drop, ret, nthreads)
+# }
+
+
 fquantile <- function(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
-                      o = if(length(probs) > log10(length(x))) radixorder(x) else NULL,
+                      o = if(length(x) > 1e5L && length(probs) > log(length(x))) radixorder(x) else NULL,
                       na.rm = TRUE, type = 7L, names = TRUE,
                       check.o = is.null(attr(o, "sorted")))
   .Call(C_fquantile, x, probs, w, o, na.rm, type, names, check.o)

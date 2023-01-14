@@ -1200,10 +1200,6 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
 
 // Functions for Export --------------------------------------------------------
 
-// TODO: Single thread optimization: re-use array for quickselect?? should be quite easy... just check if nthreads = 1,
-// otherwise assign pointer...
-// Also for multiple columns with weights if na.rm = FALSE, can compute h / sumw and supply repeatedly for each column
-
 int Rties2int(SEXP x) {
   int tx = TYPEOF(x);
   if(tx == INTSXP || tx == REALSXP || tx == LGLSXP) {
@@ -1332,10 +1328,9 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
     }
   }
 
-  SEXP res; // result
-
   // If no groups, return using suitable functions
   if(nullg) {
+    SEXP res; // result, could be put outside if() to avoid repetition below, but this seems to confuse rchk
     if(nullw) res = nth_ord_impl(x, pxo, narm, ret, Q);
     else res = w_nth_ord_impl(x, pxo, pw, narm, ret, Q, DBL_MIN);
     UNPROTECT(nprotect);
@@ -1378,6 +1373,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   }
    */
 
+  SEXP res; // result
   if(nullw && nullo) res = nthreads <= 1 ? nth_g_impl_noalloc(x, ng, pgs, po, pst, sorted, narm, ret, Q, R_alloc(maxgrpn, TYPEOF(x) == REALSXP ? sizeof(double) : sizeof(int))) :
                                            nth_g_impl(x, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
   else if(nullw) res = nth_g_ord_impl(x, ng, pgs, pxo-1, pst, narm, ret, Q, nthreads);
@@ -1422,6 +1418,7 @@ if(nullw) {                                                    \
   }
    */
 
+// TODO: Pre-compute weights at the group-level if narm = FALSE for list and matrix method
 
 // Function for lists / data frames
 SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnthreads) {

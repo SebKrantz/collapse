@@ -20,7 +20,7 @@ fdist(x, v = NULL, ..., method = "euclidean", nthreads = 1L)
                  1 \tab\tab \code{"euclidean"}   \tab\tab euclidean distance \cr
                  2 \tab\tab \code{"euclidean_squared"} \tab\tab squared euclidean distance (more efficient) \cr
     }
-    \emph{Note:} The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}. See Examples.
+    %\emph{Note:} The mahalanobis distance can be computed using: \code{x_mahal = t(forwardsolve(t(chol(cov(x))), t(x)))}. See Examples.
   }
   \item{nthreads}{integer. The number of threads to use. If \code{v = NULL} (full distance matrix), multithreading is along the distance matrix columns (decreasing thread loads as matrix is lower triangular). If \code{v} is supplied, multithreading is at the sub-column level (across elements).}
 }
@@ -29,6 +29,8 @@ If \code{v = NULL}, a full lower-triangular distance matrix between the rows of 
 }
 \note{
 \code{fdist} does not check for missing values, so \code{NA}'s will result in \code{NA} distances.
+
+\code{kit::topn} is a suitable complimentary function to find nearest neighbors. It is very efficient and skips missing values by default.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -42,7 +44,8 @@ m = as.matrix(mtcars)
 str(fdist(m)) # Same as dist(m)
 
 # Distance with vector
-fdist(m, fmean(m))
+d = fdist(m, fmean(m))
+kit::topn(d, 5)  # Index of 5 nearest neighbours
 
 # Mahalanobis distance
 m_mahal = t(forwardsolve(t(chol(cov(m))), t(m)))

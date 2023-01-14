@@ -28,7 +28,7 @@ Fast Lags and Leads for Time Series and Panel Data
 \description{
 \code{flag} is an S3 generic to compute (sequences of) lags and leads. \code{L} and \code{F} are wrappers around \code{flag} representing the lag- and lead-operators, such that \code{L(x,-1) = F(x,1) = F(x)} and \code{L(x,-3:3) = F(x,3:-3)}. \code{L} and \code{F} provide more flexibility than \code{flag} when applied to data frames (i.e.  column subsetting, formula input and id-variable-preservation capabilities\dots), but are otherwise identical.
 
-\emph{Note:} Since v1.9.0, \code{F} is no longer exported, but can be accesssed using \code{collapse:::F}, or through setting \code{options(collapse_export_F = TRUE)} before loading the package. The syntax is the same as \code{L}.
+\emph{Note:} Since v1.9.0, \code{F} is no longer exported, but can be accessed using \code{collapse:::F}, or through setting \code{options(collapse_export_F = TRUE)} before loading the package. The syntax is the same as \code{L}.
 
 % (\code{flag} is more of a programmers function in style of the \link[=fast-statistical-functions]{Fast Statistical Functions} while \code{L} and \code{F} are more practical to use in regression formulas or for computations on data frames.)
 }

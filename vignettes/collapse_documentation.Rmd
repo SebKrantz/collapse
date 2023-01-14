@@ -42,7 +42,7 @@ There is an updated (2022) [cheatsheet](<https://raw.githubusercontent.com/SebKr
 
 There are also 5 vignettes which are available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website). The vignettes are:
 
-* [**Introduction to *collapse* **](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces all main features in a structured way
+* [**Introduction to *collapse* **](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces key features in a structured way
 
 * [***collapse* and *dplyr* **](<https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html>): Demonstrates the integration of collapse with *dplyr* / *tidyverse* workflows and associated performance improvements
 
@@ -52,7 +52,7 @@ There are also 5 vignettes which are available [online](<https://sebkrantz.githu
 
 * [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames
 
-Note that these vignettes currently (October 2022) do not cover major features introduced in versions 1.7 and 1.8. They have been updated if you see a 2022/23 in the date of the vignette.   
+**Note** that these vignettes currently do not cover major features introduced in versions 1.7 through 1.9. They have been updated if you see a 2022/23 in the date of the vignette. Updating them is currently not a priority for me, but you are welcome to help update them. 
 
 ## Blog
 

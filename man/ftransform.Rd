@@ -47,13 +47,14 @@ mtt(.data, ..., .keep = "all", .cols = NULL) # Shorthand for fmutate
 }
 \arguments{
     \item{.data}{a data frame or named list of columns.}
-    \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated like a list of \code{column = value} arguments. For \code{ftransformv} and \code{fcomputev}, \code{\dots} can be used to pass further arguments to \code{FUN}. \emph{Note:} The ellipsis (\code{\dots}) is always evaluated within the data frame (\code{.data}) environment. See Examples. \code{fmutate} supports \code{\link{across}} statements, and evaluates tagged vector expressions sequentially. }
+    \item{\dots}{further arguments of the form \code{column = value}. The \code{value} can be a combination of other columns, a scalar value, or \code{NULL}, which deletes \code{column}. Alternatively it is also possible to place a single list here, which will be treated like a list of \code{column = value} arguments. For \code{ftransformv} and \code{fcomputev}, \code{\dots} can be used to pass further arguments to \code{FUN}. The ellipsis (\code{\dots}) is always evaluated within the data frame (\code{.data}) environment. See Examples.
+\code{fmutate} additionally supports \code{\link{across}} statements, and evaluates tagged vector expressions sequentially. With grouped execution, \code{dots} can also contain arbitrary expressions that result in a list of data-length columns. See Examples.}
     \item{vars}{variables to be transformed by applying \code{FUN} to them: select using names, indices, a logical vector or a selector function (e.g. \code{is.numeric}). Since v1.7 \code{vars} is evaluated within the \code{.data} environment, permitting expressions on columns e.g. \code{c(col1, col3:coln)}.}
     \item{FUN}{a single function yielding a result of length \code{NROW(.data)} or 1. See also \code{apply}.}
     \item{apply}{logical. \code{TRUE} (default) will apply \code{FUN} to each column selected in \code{vars}; \code{FALSE} will apply \code{FUN} to the subsetted data frame i.e. \code{FUN(get_vars(.data, vars), ...)}. The latter is useful for \emph{collapse} functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.}
     \item{value}{a named list of replacements, it will be treated like an evaluated list of \code{column = value} arguments.}
     \item{keep}{select columns to preserve using column names, indices or a function (e.g. \code{is.numeric}). By default computed columns are added after the preserved ones, unless they are assigned the same name in which case the preserved columns will be replaced in order.}
-   \item{.keep}{either one of \code{"all", "used", "unused"} or \code{"none"} (see \code{\link[dplyr]{mutate}}), or columns names/indices/function as \code{keep}.}
+   \item{.keep}{either one of \code{"all", "used", "unused"} or \code{"none"} (see \code{\link[dplyr]{mutate}}), or columns names/indices/function as \code{keep}. \emph{Note} that this does not work well with \code{across()} or other expressions supported since v1.9.0. The only sensible option you have there is to supply a character vector of all columns in the final dataset that you want to keep.   }
 
    \item{.cols}{for expressions involving \code{.data}, \code{.cols} can be used to subset columns, e.g. \code{mtcars |> gby(cyl) |> mtt(broom::augment(lm(mpg ~., .data)), .cols = 1:7)}. Can pass column names, indices, a logical vector or a selector function (e.g. \code{is.numericr}).}
 }
@@ -81,7 +82,7 @@ The function \code{fcompute(v)} works just like \code{ftransform(v)}, but return
 \note{
 \code{ftransform} ignores grouped data. This is on purpose as it allows non-grouped transformation inside a pipeline on grouped data, and affords greater flexibility and performance in programming with the \code{.FAST_FUN}. In particular, you can run a nested pipeline inside \code{ftransform}, and decide which expressions should be grouped, and you can use the ad-hoc grouping functionality of the \code{.FAST_FUN}, allowing operations where different groupings are applied simultaneously in an expression. See Examples or the answer provided \href{https://stackoverflow.com/questions/67349744/using-ftransform-along-with-fgroup-by-from-collapse-r-package}{here}.
 
-\code{fmutate} on the other hand supports grouped operations just like \code{dplyr::mutate}, but works in two different ways depending on whether you use \code{.FAST_FUN} in an expression or other functions. See the Examples section of \code{\link{fsummarise}} for an illustration.
+\code{fmutate} on the other hand supports grouped operations just like \code{dplyr::mutate}, but works in two different ways depending on whether you use \code{.FAST_FUN} in an expression or other functions. See the Examples.
 }
 \value{
   The modified data frame \code{.data}, or, for \code{fcompute}, a new data frame with the columns computed on \code{.data}. All attributes of \code{.data} are preserved.
@@ -92,6 +93,42 @@ The function \code{fcompute(v)} works just like \code{ftransform(v)}, but return
 }
 
 \examples{
+library(magrittr)
+
+## fmutate() examples ---------------------------------------------------------------
+
+# Please note that expressions are vectorized whenever they contain 'ANY' fast function
+mtcars \%>\%
+  fgroup_by(cyl, vs, am) \%>\%
+  fmutate(mean_mpg = fmean(mpg),                     # Vectorized
+          mean_mpg_base = mean(mpg),                 # Non-vectorized
+          mpg_cumpr = fcumsum(mpg) / fsum(mpg),      # Vectorized
+          mpg_cumpr_base = cumsum(mpg) / sum(mpg),   # Non-vectorized
+          mpg_cumpr_mixed = fcumsum(mpg) / sum(mpg)) # Vectorized: division by overall sum
+
+# Using across: here fmean() gets vectorized across both groups and columns (requiring a single
+# call to fmean.data.frame which goes to C), whereas weighted.mean needs to be called many times.
+mtcars \%>\% fgroup_by(cyl, vs, am) \%>\%
+  fmutate(across(disp:qsec, list(mu = fmean, mu2 = weighted.mean), w = wt, .names = "flip"))
+
+# Can do more complex things...
+mtcars \%>\% fgroup_by(cyl) \%>\%
+  fmutate(res = resid(lm(mpg ~ carb + hp, weights = wt)))
+
+# Since v1.9.0: supports arbitrary expressions returning suitable lists
+\dontrun{
+mtcars \%>\% fgroup_by(cyl) \%>\%
+  fmutate(broom::augment(lm(mpg ~ carb + hp, weights = wt)))
+
+# Same thing using across() (supported before 1.9.0)
+modelfun <- function(data) broom::augment(lm(mpg ~ carb + hp, data, weights = wt))
+mtcars \%>\% fgroup_by(cyl) \%>\%
+  fmutate(across(c(mpg, carb, hp, wt), modelfun, .apply = FALSE))
+}
+
+
+## ftransform() / fcompute() examples: ----------------------------------------------
+
 ## ftransform modifies and returns a data.frame
 head(ftransform(airquality, Ozone = -Ozone))
 head(ftransform(airquality, new = -Ozone, Temp = (Temp-32)/1.8))
@@ -122,7 +159,6 @@ head(ftransformv(airquality, 1:3, fwithin, Month))
 # This calls fwithin.data.frame, and only groups one time -> 5x faster!
 head(ftransformv(airquality, 1:3, fwithin, Month, apply = FALSE))
 \donttest{ % No code relying on suggested package
-library(magrittr) # Pipe operators
 # This also works for grouped and panel data frames (calling fwithin.grouped_df)
 airquality \%>\% fgroup_by(Month) \%>\%
   ftransformv(1:3, fwithin, apply = FALSE) \%>\% head

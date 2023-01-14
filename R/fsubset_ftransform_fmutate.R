@@ -376,8 +376,8 @@ acr_get_cols <- function(.cols, d, nam, ce) {
   # if(is.integer(cols)) cols else (you are checking against length(cols) in setup_across)
 }
 
-# TODO: Implement for collap() ??
-acr_get_funs <- function(.fnsexp, .fns, ce) {
+# Also used in collap()
+acr_get_funs <- function(.fnsexp, .fns, ...) {
 
   if(is.function(.fns)) {
     namfun <- l1orlst(as.character(.fnsexp))
@@ -399,7 +399,7 @@ acr_get_funs <- function(.fnsexp, .fns, ce) {
   } else if(is.character(.fns)) {
     namfun <- names(.fns)
     names(.fns) <- .fns
-    .fns <- lapply(.fns, get, mode = "function", envir = ce) # lapply(.fns, match.fun())
+    .fns <- lapply(.fns, ...) # lapply(.fns, match.fun())
     if(is.null(namfun)) namfun <- names(.fns)
   } else stop(".fns must be a fucntion, list of functions or character vector of function names")
 
@@ -421,7 +421,7 @@ setup_across <- function(.cols, .fnsexp, .fns, .names, .apply, .transpose, .FFUN
   # return(list(.cols, .fns, .names, d))
   nam <- names(d)
   cols <- acr_get_cols(.cols, d, nam, ce)
-  funs <- acr_get_funs(.fnsexp, .fns, ce)
+  funs <- acr_get_funs(.fnsexp, .fns, get, mode = "function", envir = ce)
   namfun <- funs$namfun
   fun <- funs$funs
 
@@ -678,7 +678,6 @@ do_grouped_expr_list <- function(ei, .data, g, pe, .cols, ax, mutate = FALSE) {
 }
 
 
-# TODO: Preserves attributes ?? what about ftransform??
 fmutate <- function(.data, ..., .keep = "all", .cols = NULL) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- substitute(list(...))
