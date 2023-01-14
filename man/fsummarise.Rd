@@ -87,9 +87,6 @@ mtcars \%>\% fgroup_by(cyl) \%>\%
 mtcars \%>\% fgroup_by(cyl, vs, am) \%>\%
    fsummarise(mctl(cor(cbind(mpg, wt, carb)), names = TRUE))
 
-mtcars \%>\% fgroup_by(cyl, vs, am) \%>\%
-   fsummarise(mctl(lmtest::coeftest(lm(mpg ~ wt + carb)), names = TRUE))
-
 # This can also be achieved using across():
 corfun <- function(x) mctl(cor(x), names = TRUE)
 mtcars \%>\% fgroup_by(cyl, vs, am) \%>\%
