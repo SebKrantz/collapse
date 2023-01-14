@@ -261,7 +261,6 @@ descr.grouped_df <- function(X, w = NULL, Ndistinct = TRUE, higher = TRUE, table
 
 `[.descr` <- function(x, ...) copyMostAttributes(.subset(x, ...), x)
 
-# Idea: compact = TRUE: combines stats and quantiles, and omits summaries of table frequencies. enable by default for grouped summaries
 print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, summary = TRUE,
                                 reverse = FALSE, stepwise = FALSE, header = TRUE, wsum = NULL) {
   w <- paste(rep("-", .Options$width), collapse = "")
@@ -269,7 +268,6 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
   DSname <- attr(x, "name")
   DSN <- attr(x, "N")
   wsuml <- !is.null(wsum)
-  TN <- if(wsuml) wsum else DSN
   if(wsuml) {
     cb <- function(a, b) if(t.table) cbind(WeightSum = a, Perc = b) else formatC(rbind(WeightSum = a, Perc = b), drop0trailing = TRUE)
     ct <- function(z) if(t.table) cbind(WeightSum = z) else z
@@ -287,7 +285,8 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     xi <- x[[i]]
     cat(nam[i], " (", strclp(xi[[1L]]), "): ", xi[[2L]], "\n", sep = "")
     stat <- xi[[3L]]
-    if(stat[[1L]] < TN) cat("Statistics (", round((1-stat[[1L]]/TN)*100, 2), "% NAs)\n", sep = "")
+    TN <- if(wsuml && names(stat)[1L] == "WeightSum") wsum else DSN
+    if(stat[[1L]] < TN) cat("Statistics (", round((1-stat[[1L]]/TN)*100, digits), "% NAs)\n", sep = "")
     else cat("Statistics\n")
     if(any(xi[[1L]] %in% c("Date", "POSIXct")))
       print.default(c(stat[1:2], as.character(`oldClass<-`(stat[3:4], xi[[1L]]))),
@@ -338,7 +337,6 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
   DSN <- attr(x, "N")
   g <- attr(x, "groups")
   wsuml <- !is.null(wsum)
-  TN <- if(wsuml) wsum else DSN
   if(header) {
     gs <- g$group.sizes
     dim(gs) <- c(length(gs), 1L)
@@ -358,7 +356,8 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     cat(nam[i], " (", strclp(xi[[1L]]),"): ", xi[[2L]], "\n", sep = "")
     stat <- xi[[3L]]
     Ni <- fsum.matrix(stat[, 1L, drop = FALSE]) # to get the name
-    if(Ni < TN) cat("Statistics (", names(Ni), " = ", Ni, ", ", round((1-Ni/TN)*100, 2), "% NAs)\n", sep = "")
+    TN <- if(wsuml && names(Ni) == "WeightSum") wsum else DSN
+    if(Ni < TN) cat("Statistics (", names(Ni), " = ", Ni, ", ", round((1-Ni/TN)*100, digits), "% NAs)\n", sep = "")
     else cat("Statistics (", names(Ni), " = ", Ni, ")\n", sep = "")
     if(any(xi[[1L]] %in% c("Date", "POSIXct")))
       print.default(cbind(stat[, 1:2, drop = FALSE],
@@ -405,13 +404,17 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
   invisible(x)
 }
 
-print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, total = TRUE, summary = TRUE, reverse = FALSE, stepwise = FALSE, ...) {
+print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, total = TRUE, compact = FALSE,
+                        summary = !compact, reverse = FALSE, stepwise = FALSE, ...) {
   if(missing(...) || is.null(header <- list(...)$header)) header <- TRUE
   oldClass(x) <- NULL
   wsum <- if(is.null(weights <- attr(x, "weights"))) NULL else fsumC(weights)
-  if(is.null(attr(x, "groups")))
-    print_descr_default(x, n, perc, digits, t.table, summary, reverse, stepwise, header, wsum) else
-    print_descr_grouped(x, n, perc, digits, t.table, summary, total, reverse, stepwise, header, wsum)
+  if(is.null(attr(x, "groups"))) {
+    if(compact) x <- fdapply(x, function(z) if(is.null(z[["Quant"]])) z else c(z[1:2], list(Stats = c(z[[3L]], z[[4L]]))))
+    return(print_descr_default(x, n, perc, digits, t.table, summary, reverse, stepwise, header, wsum))
+  }
+  if(compact) x <- fdapply(x, function(z) if(is.null(z[["Quant"]])) z else c(z[1:2], list(Stats = cbind(z[[3L]], z[[4L]]))))
+  print_descr_grouped(x, n, perc, digits, t.table, summary, total, reverse, stepwise, header, wsum)
 }
 
 
