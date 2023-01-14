@@ -36,7 +36,6 @@
       var menu_anchor = $(links[pos]);
       menu_anchor.parent().addClass("active");
       menu_anchor.closest("li.dropdown").addClass("active");
-      $("#bloglink").removeClass("active");
     }
   });
 

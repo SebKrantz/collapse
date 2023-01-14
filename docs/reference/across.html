@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -83,7 +83,7 @@
 <dd><p>further arguments to <code>.fns</code>. Arguments are evaluated in the data environment and split by groups as well (for non-vectorized functions, if of the same length as the data).</p></dd>
 
   <dt>.names</dt>
-<dd><p>controls the naming of computed columns. <code>NULL</code> generates names of the form <code>coli_funj</code> if multiple functions are used. <code>.names = TRUE</code> enables this for a single function, <code>.names = FALSE</code> disables it for multiple functions (sensible for functions such as <code>.OPERATOR_FUN</code> that rename columns (if <code>.apply = FALSE</code>)). It is also possible to supply a function with two arguments for column and function names e.g. <code>function(c, f) paste0(f, "_", c)</code>. Finally, you can supply a custom vector of names which must match <code>length(.cols) * length(.fns)</code>.</p></dd>
+<dd><p>controls the naming of computed columns. <code>NULL</code> generates names of the form <code>coli_funj</code> if multiple functions are used. <code>.names = TRUE</code> enables this for a single function, <code>.names = FALSE</code> disables it for multiple functions (sensible for functions such as <code>.OPERATOR_FUN</code> that rename columns (if <code>.apply = FALSE</code>)). Setting <code>.names = "flip"</code> generates names of the form <code>funj_coli</code>. It is also possible to supply a function with two arguments for column and function names e.g. <code>function(c, f) paste0(f, "_", c)</code>. Finally, you can supply a custom vector of names which must match <code>length(.cols) * length(.fns)</code>.</p></dd>
 
   <dt>.apply</dt>
 <dd><p>controls whether functions are applied column-by-column (<code>TRUE</code>) or to multiple columns at once (<code>FALSE</code>). The default, <code>"auto"</code>, does the latter for vectorized functions, which have an efficient data frame method. It can also be sensible to use <code>.apply = FALSE</code> for non-vectorized functions, especially multivariate functions like <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></code> or <code><a href="pwcor_pwcov_pwnobs.html">pwcor</a></code>, or functions renaming the data. See Examples.</p></dd>
@@ -213,6 +213,28 @@
 <span class="r-in"><span class="co"># Note that the above still detects fmean as a fast function, the names of the list</span></span>
 <span class="r-in"><span class="co"># are irrelevant, but the function name must be typed or passed as a character vector,</span></span>
 <span class="r-in"><span class="co"># Otherwise functions will be executed by groups e.g. function(x) fmean(x) won't vectorize</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Same, naming in a different way</span></span>
+<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span class="r-in">    <span class="fu"><a href="fsummarise.html">fsummarise</a></span><span class="op">(</span><span class="fu">across</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">GINI</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">fmean</span>, sd <span class="op">=</span> <span class="va">fsd</span><span class="op">)</span>, w <span class="op">=</span> <span class="va">POP</span>, .names <span class="op">=</span> <span class="st">"flip"</span><span class="op">)</span>,</span>
+<span class="r-in">               sum_POP <span class="op">=</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span>, OECD <span class="op">=</span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">OECD</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  region              income   mu_PCGDP   sd_PCGDP mu_LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   East Asia &amp; Pacific         High income 29172.7552 14714.1754  76.83283</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   East Asia &amp; Pacific Lower middle income  1756.6480  1064.2676  64.25623</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   East Asia &amp; Pacific Upper middle income  2357.6168  2457.9024  68.40768</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Europe &amp; Central Asia         High income 29335.5511 13038.1111  75.66616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Europe &amp; Central Asia          Low income   803.2234   307.7395  62.45228</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Europe &amp; Central Asia Lower middle income  2256.9684   970.2648  68.48909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7 Europe &amp; Central Asia Upper middle income  7772.5035  3184.4987  68.01573</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sd_LIFEEX  mu_GINI  sd_GINI     sum_POP      OECD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  5.964994 32.79182 1.230489 11407808149 0.3076923</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  7.536813 36.07647 4.358228 22174820629 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  7.689033 39.94810 3.120103 69639871478 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  4.175866 32.25404 3.023778 27285316560 0.7027027</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  6.050875 32.22326 1.547793   311485944 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  2.452041 28.97857 4.573107  4511786205 0.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  4.796135 38.70512 4.233085 16972478305 0.0625000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 16 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Or we want to do more advanced things..</span></span>
 <span class="r-in"><span class="co"># Such as nesting data frames..</span></span>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -65,10 +65,10 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">frename</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="fu">rnm</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>     <span class="co"># Shorthand for frename()</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">frename</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu">rnm</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>     <span class="co"># Shorthand for frename()</span>
 
-<span class="fu">setrename</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
+<span class="fu">setrename</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
 <span class="fu">relabel</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, attrn <span class="op">=</span> <span class="st">"label"</span><span class="op">)</span>
 
@@ -81,10 +81,14 @@
 <dd><p>for <code>(f/set)rename</code>: an R object with a <code>"names"</code> attribute. For <code>(set)relabel</code>: a named list.</p></dd>
 
   <dt>...</dt>
-<dd><p>either tagged vector expressions of the form <code>name = newname</code> / <code>name = newlabel</code>, or a single function (+ optional arguments to the function) applied to all names/labels (of columns/elements selected in <code>cols</code>).</p></dd>
+<dd><p>either tagged vector expressions of the form <code>name = newname</code> / <code>name = newlabel</code>, a (named) vector of names/labels, or a single function (+ optional arguments to the function) applied to all names/labels (of columns/elements selected in <code>cols</code>).</p></dd>
 
   <dt>cols</dt>
 <dd><p>If <code>...</code> is a function, select a subset of columns/elements to rename/relabel using names, indices, a logical vector or a function applied to the columns if <code>.x</code> is a list (e.g. <code>is.numeric</code>).</p></dd>
+
+
+  <dt>.nse</dt>
+<dd><p>logical. <code>TRUE</code> allows non-standard evaluation of tagged vector expressions, allowing you to supply new names without quotes. Set to <code>FALSE</code> for programming or passing vectors of names.</p></dd>
 
 
   <dt>attrn</dt>
@@ -162,10 +166,40 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5              5.0             3.6          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6              5.4             3.9          1.7         0.4  setosa</span>
 <span class="r-in"></span>
+<span class="r-in"><span class="co">## Using vectors of names and programming</span></span>
+<span class="r-in"><span class="va">newname</span> <span class="op">=</span> <span class="st">"sepal_length"</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, Sepal.Length <span class="op">=</span> <span class="va">newname</span>, .nse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sepal_length Sepal.Width Petal.Length Petal.Width Species</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          4.7         3.2          1.3         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
+<span class="r-in"><span class="va">newnames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sepal_length"</span>, <span class="st">"sepal_width"</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">newnames</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sepal_length sepal_width Petal.Length Petal.Width Species</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          4.7         3.2          1.3         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
+<span class="r-in"><span class="va">newnames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Sepal.Length <span class="op">=</span> <span class="st">"sepal_length"</span>, Sepal.Width <span class="op">=</span> <span class="st">"sepal_width"</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">newnames</span>, .nse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   sepal_length sepal_width Petal.Length Petal.Width Species</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          4.7         3.2          1.3         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
+<span class="r-in"></span>
 <span class="r-in"><span class="co">## Renaming by reference</span></span>
 <span class="r-in"><span class="co"># setrename(iris, tolower)</span></span>
 <span class="r-in"><span class="co"># head(iris)</span></span>
 <span class="r-in"><span class="co"># rm(iris)</span></span>
+<span class="r-in"><span class="co"># etc...</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Relabelling (by reference)</span></span>
 <span class="r-in"><span class="co"># namlab(relabel(wlddev, PCGDP = "GDP per Capita", LIFEEX = "Life Expectancy"))</span></span>

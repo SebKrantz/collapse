@@ -23,7 +23,7 @@ It is made compatible with dplyr, data.table, sf and the plm approach to panel d
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -163,7 +163,7 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-in"><span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="efficient-programming.html">fnrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">d</span>, w <span class="op">=</span> <span class="va">w</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length  Sepal.Width Petal.Length  Petal.Width </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     5.806229     3.035701     3.711022     1.176345 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     5.890929     3.034252     3.803700     1.224128 </span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Grouped statistics...</span></span>
 <span class="r-in"><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span><span class="op">)</span></span>
@@ -175,9 +175,9 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-in"><span class="co"># Groupwise-weighted statistics...</span></span>
 <span class="r-in"><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> setosa         4.945319    3.391817     1.504468   0.2510371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> versicolor     5.884508    2.734637     4.191356   1.3023220</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> virginica      6.637368    2.965154     5.556812   2.0270993</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> setosa         5.037094    3.445080     1.478171   0.2504761</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> versicolor     5.987465    2.738086     4.223197   1.3002803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> virginica      6.556518    2.969709     5.456188   2.0178604</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Simple Transformations...</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fmode.html">fmode</a></span><span class="op">(</span><span class="va">d</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span>    <span class="co"># Replacing values with the mode</span></span>
@@ -188,7 +188,7 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4            5           3          1.5         0.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5            5           3          1.5         0.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6            5           3          1.5         0.2</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">d</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span>        <span class="co"># Subtracting the median</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">d</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span>        <span class="co"># Subtracting the median</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1         -0.7         0.5        -2.95        -1.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2         -0.9         0.0        -2.95        -1.1</span>
@@ -214,14 +214,14 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     6.521218    8.947698    0.9630101   0.5247707</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Weighted Transformations...</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fnth.html">fnth</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">0.75</span>, w <span class="op">=</span> <span class="va">w</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Replacing by the weighted 3rd quartile</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">0.75</span>, w <span class="op">=</span> <span class="va">w</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Replacing by the weighted 3rd quartile</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          6.4         3.3          5.1         1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2          6.4         3.3          5.1         1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3          6.4         3.3          5.1         1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4          6.4         3.3          5.1         1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5          6.4         3.3          5.1         1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6          6.4         3.3          5.1         1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          6.5         3.3          5.1         1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          6.5         3.3          5.1         1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          6.5         3.3          5.1         1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          6.5         3.3          5.1         1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          6.5         3.3          5.1         1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          6.5         3.3          5.1         1.8</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Grouped Transformations...</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Replacing values with the group variance</span></span>
@@ -256,7 +256,7 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   0.01837795  0.01808635   0.02051984  0.01626016</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   0.01997603  0.02100350   0.01915185  0.01626016</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   0.02157411  0.02275379   0.02325581  0.03252033</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span>     <span class="co"># Groupwise de-median</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span>     <span class="co"># Groupwise de-median</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          0.1         0.1         -0.1         0.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2         -0.1        -0.4         -0.1         0.0</span>
@@ -276,19 +276,19 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-in"><span class="co"># Grouped and weighted transformations...</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, <span class="st">"/"</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>         <span class="co"># weighted scaling</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     14.22575    9.641981     7.505919    1.864326</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     13.66788    8.264555     7.505919    1.864326</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     13.11000    8.815526     6.969782    1.864326</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, <span class="st">"-"</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>     <span class="co"># subtracting the weighted group-median</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     15.06754    9.693093     8.001069    1.682359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     14.47665    8.308365     8.001069    1.682359</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     13.88577    8.862256     7.429564    1.682359</span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, <span class="st">"-"</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>     <span class="co"># subtracting the weighted group-median</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0.1         0.1         -0.1           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         -0.1        -0.4         -0.1           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         -0.3        -0.2         -0.2           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0.0         0.1         -0.1           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         -0.2        -0.4         -0.1           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         -0.4        -0.2         -0.2           0</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fmode.html">fmode</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, <span class="st">"replace"</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span> <span class="co"># replace with weighted statistical mode</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          4.6         3.4          1.4         0.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.6         3.4          1.4         0.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3          4.6         3.4          1.4         0.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.4          1.5         0.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          5.1         3.4          1.5         0.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          5.1         3.4          1.5         0.2</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## Some more advanced transformations...</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>                             <span class="co"># Averaging (faster t.: fmean(d, TRA = "replace"))</span></span>
@@ -309,36 +309,36 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   -0.4433333  0.84266667       -2.058  -0.7993333</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span><span class="op">)</span><span class="op">)</span>                        <span class="co"># Grouped and weighted (same as fmean(d, f, w, "-"))</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0.15468133   0.1081831 -0.104468109 -0.05103707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  -0.04531867  -0.3918169 -0.104468109 -0.05103707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  -0.24531867  -0.1918169 -0.204468109 -0.05103707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  -0.34531867  -0.2918169 -0.004468109 -0.05103707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   0.05468133   0.2081831 -0.104468109 -0.05103707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   0.45468133   0.5081831  0.195531891  0.14896293</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   0.06290594  0.05492043  -0.07817112 -0.05047611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  -0.13709406 -0.44507957  -0.07817112 -0.05047611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  -0.33709406 -0.24507957  -0.17817112 -0.05047611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  -0.43709406 -0.34507957   0.02182888 -0.05047611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  -0.03709406  0.15492043  -0.07817112 -0.05047611</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   0.36290594  0.45492043   0.22182888  0.14952389</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, mean <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>              <span class="co"># Setting a custom mean</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.154681    5.108183     4.895532    4.948963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     4.954681    4.608183     4.895532    4.948963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     4.754681    4.808183     4.795532    4.948963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.654681    4.708183     4.995532    4.948963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5.054681    5.208183     4.895532    4.948963</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     5.454681    5.508183     5.195532    5.148963</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.062906     5.05492     4.921829    4.949524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     4.862906     4.55492     4.921829    4.949524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     4.662906     4.75492     4.821829    4.949524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.562906     4.65492     5.021829    4.949524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     4.962906     5.15492     4.921829    4.949524</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     5.362906     5.45492     5.221829    5.149524</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, theta <span class="op">=</span> <span class="fl">0.76</span><span class="op">)</span><span class="op">)</span>          <span class="co"># Quasi-centering i.e. d - theta*fbetween(d, f, w)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1.3415578   0.9222192    0.2566042 0.009211828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1.1415578   0.4222192    0.2566042 0.009211828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0.9415578   0.6222192    0.1566042 0.009211828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    0.8415578   0.5222192    0.3566042 0.009211828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    1.2415578   1.0222192    0.2566042 0.009211828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    1.6415578   1.3222192    0.5566042 0.209211828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    1.2718085   0.8817395    0.2765899 0.009638159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    1.0718085   0.3817395    0.2765899 0.009638159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    0.8718085   0.5817395    0.1765899 0.009638159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    0.7718085   0.4817395    0.3765899 0.009638159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    1.1718085   0.9817395    0.2765899 0.009638159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    1.5718085   1.2817395    0.5765899 0.209638159</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Preserving the overall mean of the data</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.960911    3.143884     3.606554    1.125308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.760911    2.643884     3.606554    1.125308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     5.560911    2.843884     3.506554    1.125308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     5.460911    2.743884     3.706554    1.125308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5.860911    3.243884     3.606554    1.125308</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     6.260911    3.543884     3.906554    1.325308</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.953835    3.089173     3.725529    1.173652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.753835    2.589173     3.725529    1.173652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     5.553835    2.789173     3.625529    1.173652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     5.453835    2.689173     3.825529    1.173652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5.853835    3.189173     3.725529    1.173652</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     6.253835    3.489173     4.025529    1.373652</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscale.html">fscale</a></span><span class="op">(</span><span class="va">d</span><span class="op">)</span><span class="op">)</span>                               <span class="co"># Scaling and centering</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   -0.8976739  1.01560199    -1.335752   -1.311052</span>
@@ -365,38 +365,38 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     4.237181    8.857277   0.26057397   -1.946667</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscale.html">fscale</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span><span class="op">)</span><span class="op">)</span>                         <span class="co"># Grouped and weighted scaling and centering</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0.4314623   0.2980285  -0.56009223  -0.4757487</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   -0.1264102  -1.0793974  -0.56009223  -0.4757487</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   -0.6842827  -0.5284271  -1.09622927  -0.4757487</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   -0.9632190  -0.8039123  -0.02395519  -0.4757487</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    0.1525260   0.5735136  -0.56009223  -0.4757487</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    1.2682711   1.3999692   1.04831889   1.3885774</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0.1858505   0.1520997   -0.4467518  -0.4245946</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   -0.4050333  -1.2326279   -0.4467518  -0.4245946</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   -0.9959171  -0.6787369   -1.0182567  -0.4245946</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   -1.2913590  -0.9556824    0.1247531  -0.4245946</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   -0.1095914   0.4290452   -0.4467518  -0.4245946</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    1.0721762   1.2598817    1.2677629   1.2577641</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscale.html">fscale</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, mean <span class="op">=</span> <span class="fl">5</span>, sd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span>       <span class="co"># Custom grouped and weighted scaling and centering</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     6.294387    5.894085     3.319723    3.572754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     4.620769    1.761808     3.319723    3.572754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     2.947152    3.414719     1.711312    3.572754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     2.110343    2.588263     4.928134    3.572754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5.457578    6.720541     3.319723    3.572754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8.804813    9.199908     8.144957    9.165732</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.557552    5.456299     3.659745    3.726216</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     3.784900    1.302116     3.659745    3.726216</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     2.012249    2.963789     1.945230    3.726216</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     1.125923    2.132953     5.374259    3.726216</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     4.671226    6.287136     3.659745    3.726216</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     8.216529    8.779645     8.803289    8.773292</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscale.html">fscale</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, mean <span class="op">=</span> <span class="cn">FALSE</span>,            <span class="co"># Preserving group means</span></span>
 <span class="r-in">            sd <span class="op">=</span> <span class="st">"within.sd"</span><span class="op">)</span><span class="op">)</span>                <span class="co"># and setting group-sd to fsd(fwithin(d, f, w), w = w)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.162078    3.488680     1.255648   0.1579544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     4.881812    3.040998     1.255648   0.1579544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     4.601547    3.220071     1.017470   0.1579544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.461414    3.130534     1.493826   0.1579544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5.021945    3.578217     1.255648   0.1579544</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     5.582476    3.846826     1.970182   0.5227194</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.131229    3.495053     1.292632   0.1627417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     4.831942    3.040094     1.292632   0.1627417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     4.532655    3.222078     1.055282   0.1627417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.383011    3.131086     1.529982   0.1627417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     4.981585    3.586044     1.292632   0.1627417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     5.580159    3.859019     2.004682   0.5103692</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fscale.html">fscale</a></span><span class="op">(</span><span class="va">d</span>, <span class="va">f</span>, <span class="va">w</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span>,   <span class="co"># Full harmonization of group means and variances,</span></span>
 <span class="r-in">            sd <span class="op">=</span> <span class="st">"within.sd"</span><span class="op">)</span><span class="op">)</span>                <span class="co"># while preserving the level and scale of the data.</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     6.022988    3.132565     3.462202    1.083262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.742723    2.684882     3.462202    1.083262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     5.462458    2.863955     3.224023    1.083262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     5.322325    2.774419     3.700380    1.083262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5.882856    3.222101     3.462202    1.083262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     6.443386    3.490710     4.176736    1.448027</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.985064    3.084225     3.618161    1.136394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.685777    2.629267     3.618161    1.136394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     5.386490    2.811250     3.380811    1.136394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     5.236847    2.720259     3.855511    1.136394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     5.835421    3.175217     3.618161    1.136394</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     6.433994    3.448192     4.330211    1.484021</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>                      <span class="co"># Use get_vars for fast selecting, gv is shortcut</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width</span>
@@ -562,8 +562,8 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f1</span><span class="op">)</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># A minor difference, larger on larger data</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               expr   min    lq    mean median    uq    max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 4.674 4.838 5.25415  4.961 5.207 25.092   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 4.387 4.633 4.78265  4.674 4.920  5.699   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 7.339 7.626 7.80435 7.7695 7.913  9.963   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 6.970 7.298 7.72932 7.4210 7.585 32.759   100</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Efficient interactions of vectors and/or factors</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0</span>
@@ -649,12 +649,12 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-in"> </span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">2</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># A remarkable performance gain..</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq      mean   median      uq     max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.296   2.6855   3.37102   3.1160   3.485  15.703</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 269.616 274.9460 281.67697 277.5085 282.039 417.380</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min      lq      mean   median       uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   3.813   4.961   9.81991   7.0315  12.1155</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 504.874 549.318 954.17578 577.9360 632.9990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     51.906   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  36059.582   100</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">sds</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span></span>
@@ -1375,29 +1375,29 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="st">"POP"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">POP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fnth.html">fnth</a></span><span class="op">(</span><span class="fl">0.75</span>, <span class="va">POP</span><span class="op">)</span>       <span class="co"># Weighted group third quartile</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       region              income     sum.POP     PCGDP   LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        East Asia &amp; Pacific         High income 11407808149 42190.805 81.72195</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        East Asia &amp; Pacific Lower middle income 22174820629  2358.120 69.86600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        East Asia &amp; Pacific Upper middle income 69639871478  3796.680 73.76600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      Europe &amp; Central Asia         High income 27285316560 37934.452 79.13171</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      Europe &amp; Central Asia          Low income   311485944  1024.859 68.73600</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      Europe &amp; Central Asia Lower middle income  4511786205  3106.039 70.16112</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      Europe &amp; Central Asia Upper middle income 16972478305 10535.126 70.57878</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Latin America &amp; Caribbean         High income  1466292826 13934.576 77.63000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Latin America &amp; Caribbean          Low income   429756890  1439.455 60.14800</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Latin America &amp; Caribbean Lower middle income  1290800630  2241.239 71.19500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    GINI        ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  33.5  743679993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  39.3 1838010010</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  42.4 2575899902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  34.7 1750219971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  33.6  372250000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  29.8  711700012</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  41.2 1790880005</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  54.8  158039993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  41.1  958979980</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 55.5  660250000</span>
+<span class="r-in">  <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">POP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="fl">0.75</span>, <span class="va">POP</span><span class="op">)</span>       <span class="co"># Weighted group third quartile</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       region              income     sum.POP      PCGDP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        East Asia &amp; Pacific         High income 11407808149  42230.713</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        East Asia &amp; Pacific Lower middle income 22174820629  -3345.296</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        East Asia &amp; Pacific Upper middle income 69639871478 -76090.575</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      Europe &amp; Central Asia         High income 27285316560  35519.405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      Europe &amp; Central Asia          Low income   311485944   1019.579</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      Europe &amp; Central Asia Lower middle income  4511786205   3094.985</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      Europe &amp; Central Asia Upper middle income 16972478305  10516.711</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Latin America &amp; Caribbean         High income  1466292826  13721.710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Latin America &amp; Caribbean          Low income   429756890   1412.995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Latin America &amp; Caribbean Lower middle income  1290800630   2237.602</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      LIFEEX     GINI        ODA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  81.70687 33.18681  753936016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  67.90257 37.58695 1842498257</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  73.55273 42.36915 2581604391</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  79.13144 34.70000 1750413453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  68.82871 33.50402  370609581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  70.15929 29.07949  721022130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  70.39212 41.20000 1796207111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  77.62316 54.86731  154145771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  60.26813 41.10000  957341289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 71.18520 55.50000  659567490</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -1410,7 +1410,7 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA -14.73417   NA -1191628485</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    NA -14.24917   NA -1145708502</span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span>                    <span class="co"># Grouped centering using the median</span></span>
+<span class="r-in"><span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span>                    <span class="co"># Grouped centering using the median</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP   LIFEEX GINI        ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA -17.5395   NA -144765007</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA -17.0235   NA  -29455002</span>
@@ -1422,14 +1422,14 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="st">"POP"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">POP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">.</span>, <span class="op">-</span><span class="va">country</span>, <span class="op">-</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="fnth.html">fnth</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="va">POP</span>, <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       country year   PCGDP LIFEEX GINI       ODA     POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960 405.549  46.04   NA 237720001 8996973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961 405.549  46.04   NA 237720001 9169410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Afghanistan 1962 405.549  46.04   NA 237720001 9351441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963 405.549  46.04   NA 237720001 9543205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964 405.549  46.04   NA 237720001 9744781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965 405.549  46.04   NA 237720001 9956320</span>
+<span class="r-in">  <span class="fu"><a href="fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="va">POP</span>, <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       country year    PCGDP   LIFEEX GINI       ODA     POP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960 406.9263 45.77653   NA 237988918 8996973</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961 406.9263 45.77653   NA 237988918 9169410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Afghanistan 1962 406.9263 45.77653   NA 237988918 9351441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963 406.9263 45.77653   NA 237988918 9543205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964 406.9263 45.77653   NA 237988918 9744781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965 406.9263 45.77653   NA 237988918 9956320</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fscale</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span>    <span class="co"># Standardizing</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP    LIFEEX GINI        ODA</span>
@@ -1486,7 +1486,7 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">region</span>, <span class="va">income</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="op">{</span></span>
 <span class="r-in">    <span class="fu"><a href="select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="fu"><a href="GRP.html">fgroup_vars</a></span><span class="op">(</span><span class="va">.</span>, <span class="st">"unique"</span><span class="op">)</span>,</span>
-<span class="r-in">             <span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">.</span>, keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"median_"</span><span class="op">)</span>,</span>
+<span class="r-in">             <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">.</span>, keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"median_"</span><span class="op">)</span>,</span>
 <span class="r-in">             <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">.</span>, keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"mean_"</span><span class="op">)</span>,</span>
 <span class="r-in">             <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">.</span>, keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"sd_"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in">  <span class="op">}</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
@@ -1536,20 +1536,20 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># With ftransform, can also easily do one or more grouped mutations on the fly..</span></span>
-<span class="r-in"><span class="fu"><a href="ftransform.html">settransform</a></span><span class="op">(</span><span class="va">wlddev</span>, median_ODA <span class="op">=</span> <span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="ftransform.html">settransform</a></span><span class="op">(</span><span class="va">wlddev</span>, median_ODA <span class="op">=</span> <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="ftransform.html">settransform</a></span><span class="op">(</span><span class="va">wlddev</span>, sd_ODA <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>,</span>
 <span class="r-in">                     mean_GDP <span class="op">=</span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/compound.html" class="external-link">%&lt;&gt;%</a></span> <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span><span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>median_ODA <span class="op">=</span> <span class="va">ODA</span>, median_GDP <span class="op">=</span> <span class="va">PCGDP</span><span class="op">)</span>,</span>
+<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/compound.html" class="external-link">%&lt;&gt;%</a></span> <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span><span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>median_ODA <span class="op">=</span> <span class="va">ODA</span>, median_GDP <span class="op">=</span> <span class="va">PCGDP</span><span class="op">)</span>,</span>
 <span class="r-in">                               <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># On a groped data frame it is also possible to grouped transform certain columns</span></span>
 <span class="r-in"><span class="co"># but perform aggregate operatins on others:</span></span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>gmedian_GDP <span class="op">=</span> <span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,</span>
-<span class="r-in">               omedian_GDP <span class="op">=</span> <span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PCGDP</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,  <span class="co"># "replace" preserves NA's</span></span>
-<span class="r-in">               omedian_GDP_fill <span class="op">=</span> <span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">tail</span></span>
+<span class="r-in">    <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>gmedian_GDP <span class="op">=</span> <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,</span>
+<span class="r-in">               omedian_GDP <span class="op">=</span> <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PCGDP</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,  <span class="co"># "replace" preserves NA's</span></span>
+<span class="r-in">               omedian_GDP_fill <span class="op">=</span> <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">tail</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        country iso3c       date year decade             region</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13171 Zimbabwe   ZWE 2016-01-01 2015   2010 Sub-Saharan Africa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13172 Zimbabwe   ZWE 2017-01-01 2016   2010 Sub-Saharan Africa</span>
@@ -1644,8 +1644,8 @@ The package is coded both in C and C++ and built with <em>Rcpp</em>, but also us
 <span class="r-in"><span class="co"># For grouped data frames use collapg</span></span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">country</span>, <span class="va">region</span>, <span class="va">income</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span class="r-in">  <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="collap.html">collapg</a></span><span class="op">(</span><span class="va">fmean</span>, <span class="va">ffirst</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>AMGDP <span class="op">=</span> <span class="va">PCGDP</span> <span class="op">&gt;</span> <span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>,</span>
-<span class="r-in">             AMODA <span class="op">=</span> <span class="va">ODA</span> <span class="op">&gt;</span> <span class="fu"><a href="fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">income</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-in">  <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>AMGDP <span class="op">=</span> <span class="va">PCGDP</span> <span class="op">&gt;</span> <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>,</span>
+<span class="r-in">             AMODA <span class="op">=</span> <span class="va">ODA</span> <span class="op">&gt;</span> <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">income</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          country                     region              income      PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    Afghanistan                 South Asia          Low income   483.8351</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2        Albania      Europe &amp; Central Asia Upper middle income  3127.1510</span>
