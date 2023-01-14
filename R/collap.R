@@ -61,21 +61,22 @@ mymatchfun <- function(FUN) {
 # Column-level parallel implementation
 applyfuns_internal <- function(data, by, FUN, fFUN, parallel, cores, ...) {
   oldClass(data) <- "data.frame" # Needed for correct method dispatch for fast functions...
-  if(is.list(FUN)) {
+  if(length(FUN) > 1L) {
     if(parallel) return(lapply(seq_along(FUN), function(i)
             if(fFUN[i]) mclapply(data, FUN[[i]], g = by, ..., use.g.names = FALSE, mc.cores = cores) else
-                        mclapply(data, copysplaplfun, by, FUN[[i]], ..., mc.cores = cores))) # BY.data.frame(data, by, FUN[[i]], ..., use.g.names = FALSE, parallel = parallel, mc.cores = cores)))
+              BY.data.frame(data, by, FUN[[i]], ..., use.g.names = FALSE, reorder = FALSE, return = "data.frame", parallel = parallel, mc.cores = cores))) # mclapply(data, copysplaplfun, by, FUN[[i]], ..., mc.cores = cores)
 
       return(lapply(seq_along(FUN), function(i)
               if(fFUN[i]) FUN[[i]](data, g = by, ..., use.g.names = FALSE) else
-                          lapply(data, copysplaplfun, by, FUN[[i]], ...))) # BY.data.frame(data, by, FUN[[i]], ..., use.g.names = FALSE)
+                   BY.data.frame(data, by, FUN[[i]], ..., use.g.names = FALSE, reorder = FALSE, return = "data.frame"))) # lapply(data, copysplaplfun, by, FUN[[i]], ...)
   }
+  if(is.list(FUN)) FUN <- FUN[[1L]]
 
   if(parallel) if(fFUN) return(list(mclapply(data, FUN, g = by, ..., use.g.names = FALSE, mc.cores = cores))) else
-        return(list(mclapply(data, copysplaplfun, by, FUN, ..., mc.cores = cores))) # list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE, parallel = parallel, mc.cores = cores))
+      return(list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE, reorder = FALSE, return = "data.frame", parallel = parallel, mc.cores = cores))) # return(list(mclapply(data, copysplaplfun, by, FUN, ..., mc.cores = cores)))
 
   if(fFUN) return(list(FUN(data, g = by, ..., use.g.names = FALSE)))
-  list(lapply(data, copysplaplfun, by, FUN, ...)) # list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE))
+  return(list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE, reorder = FALSE, return = "data.frame"))) # return(list(lapply(data, copysplaplfun, by, FUN, ...)))
 }
 
 
@@ -141,22 +142,17 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       numw <- 0L # length(X) + 1L
       namw <- l1orlst(as.character(substitute(w)))
     }
-    if(keep.w) { # what about function name for give.names ?? What about give.names and custom ???
-      if(is.function(wFUN)) {
-        namwFUN <- l1orn(as.character(substitute(wFUN)), "wFUN")
-      } else if(is.character(wFUN)) {
-        namwFUN <- wFUN
-        wFUN <- if(length(wFUN) > 1L) lapply(wFUN, mymatchfun) else mymatchfun(wFUN)
-      } else if(is.list(wFUN)) {
-        namwFUN <- names(wFUN)
-        if(is.null(namwFUN)) namwFUN <- all.vars(substitute(wFUN))
-      } else stop("wFUN needs to be a function, character vector of function names or list of functions!")
-      if(!all(namwFUN %in% .FAST_STAT_FUN_EXT)) stop("wFUN needs to be fast statistical functions, see print(.FAST_STAT_FUN)")
-      if(is.list(wFUN)) {
+    if(keep.w) { # what about function name for give.names ? What about give.names and custom ?
+      wFUN <- acr_get_funs(substitute(wFUN), wFUN, mymatchfun)
+      namwFUN <- wFUN$namfun
+      wFUN <- wFUN$funs
+      if(!all(names(wFUN) %in% .FAST_STAT_FUN_EXT)) stop("wFUN needs to be fast statistical functions, see print(.FAST_STAT_FUN)")
+      if(length(wFUN) > 1L) {
         namw <- paste(namwFUN, namw, sep = ".")
         by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(lapply(wFUN, function(f) f(w, g = by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, rep_len(numw, length(wFUN)))
       } else {
+        wFUN <- wFUN[[1L]]
         if(isTRUE(give.names)) namw <- paste(namwFUN, namw, sep = ".")
         by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(list(wFUN(w, g = by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, numw)  # need to accommodate any option of keep.by, keep.w and keep.col.order
@@ -182,27 +178,16 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
     nnul <- length(nnu) > 0L
 
     # Identifying FUN and catFUN:
-    if(nul) if(is.function(FUN)) {
-      namFUN <- l1orn(as.character(substitute(FUN)), "FUN")
-    } else if(is.character(FUN)) {
-      # FUN <- unlist(strsplit(FUN,",",fixed = TRUE), use.names = FALSE)
-      namFUN <- FUN
-      FUN <- if(length(FUN) > 1L) lapply(FUN, mymatchfun) else mymatchfun(FUN)
-    } else if(is.list(FUN)) {
-      namFUN <- names(FUN)
-      if(is.null(namFUN)) namFUN <- all.vars(substitute(FUN))
-    } else stop("FUN needs to be a function, character vector of function names or list of functions!")
-
-    if(nnul) if(is.function(catFUN)) {
-      namcatFUN <- l1orn(as.character(substitute(catFUN)), "catFUN")
-    } else if(is.character(catFUN)) {
-      # catFUN <- unlist(strsplit(catFUN,",",fixed = TRUE), use.names = FALSE)
-      namcatFUN <- catFUN
-      catFUN <- if(length(catFUN) > 1L) lapply(catFUN, mymatchfun) else mymatchfun(catFUN)
-    } else if(is.list(catFUN)) {
-      namcatFUN <- names(catFUN)
-      if(is.null(namcatFUN)) namcatFUN <- all.vars(substitute(catFUN))
-    } else stop("FUN needs to be a function, character vector of function names or list of functions!")
+    if(nul) {
+      FUN <- acr_get_funs(substitute(FUN), FUN, mymatchfun)
+      namFUN <- FUN$namfun
+      FUN <- FUN$funs
+    }
+    if(nnul) {
+      catFUN <- acr_get_funs(substitute(catFUN), catFUN, mymatchfun)
+      namcatFUN <- catFUN$namfun
+      catFUN <- catFUN$funs
+    }
 
     if(autorn) give.names <- !widel || length(FUN) > 1L || length(catFUN) > 1L
 
@@ -214,9 +199,9 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
         res[[1L]] <- list(by[[4L]]) # could add later using "c" ?
         ind <- 2L
       } else ind <- 1L
-      if(nul) res[[ind]] <- condsetn(applyfuns_internal(xnu, by, FUN, namFUN %in% .FAST_STAT_FUN_EXT,
+      if(nul) res[[ind]] <- condsetn(applyfuns_internal(xnu, by, FUN, names(FUN) %in% .FAST_STAT_FUN_EXT,
                                      parallel, mc.cores, ...), namFUN, give.names)
-      if(nnul) res[[lr]] <- condsetn(applyfuns_internal(xnnu, by, catFUN, namcatFUN %in% .FAST_STAT_FUN_EXT,
+      if(nnul) res[[lr]] <- condsetn(applyfuns_internal(xnnu, by, catFUN, names(catFUN) %in% .FAST_STAT_FUN_EXT,
                                      parallel, mc.cores, ...), namcatFUN, give.names)
       return(res)
     } # fastest using res list ?? or better combine at the end ??
@@ -362,24 +347,19 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
       namw <- l1orlst(as.character(substitute(w)))
     }
     if(keep.w) {
-      if(is.function(wFUN)) {
-        namwFUN <- l1orn(as.character(substitute(wFUN)), "wFUN")
-      } else if(is.character(wFUN)) {
-        namwFUN <- wFUN
-        wFUN <- if(length(wFUN) > 1L) lapply(wFUN, mymatchfun) else mymatchfun(wFUN)
-      } else if(is.list(wFUN)) {
-        namwFUN <- names(wFUN)
-        if(is.null(namwFUN)) namwFUN <- all.vars(substitute(wFUN))
-      } else stop("wFUN needs to be a function, character vector of function names or list of functions!")
-      if(!all(namwFUN %in% .FAST_STAT_FUN_EXT)) stop("wFUN needs to be fast statistical functions, see print(.FAST_STAT_FUN)")
-      if(is.list(wFUN)) {
+      wFUN <- acr_get_funs(substitute(wFUN), wFUN, mymatchfun)
+      namwFUN <- wFUN$namfun
+      wFUN <- wFUN$funs
+      if(!all(names(wFUN) %in% .FAST_STAT_FUN_EXT)) stop("wFUN needs to be fast statistical functions, see print(.FAST_STAT_FUN)")
+      if(length(wFUN) > 1L) {
         namw <- paste(namwFUN, namw, sep = ".")
         by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(lapply(wFUN, function(f) f(w, g = by, ..., use.g.names = FALSE)), namw))
         if(keep.col.order) numby <- c(if(keep.by) numby, rep_len(numw, length(wFUN)))
       } else {
+        wFUN <- wFUN[[1L]]
         if(isTRUE(give.names)) namw <- paste(namwFUN, namw, sep = ".")
         by[[4L]] <- c(if(keep.by) by[[4L]], `names<-`(list(wFUN(w, g = by, ..., use.g.names = FALSE)), namw))
-        if(keep.col.order) numby <- c(if(keep.by) numby, numw)
+        if(keep.col.order) numby <- c(if(keep.by) numby, numw)  # need to accommodate any option of keep.by, keep.w and keep.col.order
       }
       keep.by <- TRUE
     }
@@ -397,25 +377,16 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
     nnul <- length(nnu) > 0L
 
     # Identifying FUN and catFUN:
-    if(nul) if(is.function(FUN)) {
-      namFUN <- l1orn(as.character(substitute(FUN)), "FUN")
-    } else if(is.character(FUN)) {
-      namFUN <- FUN
-      FUN <- if(length(FUN) > 1L) lapply(FUN, mymatchfun) else mymatchfun(FUN)
-    } else if(is.list(FUN)) {
-      namFUN <- names(FUN)
-      if(is.null(namFUN)) namFUN <- all.vars(substitute(FUN))
-    } else stop("FUN needs to be a function, character vector of function names or list of functions!")
-
-    if(nnul) if(is.function(catFUN)) {
-      namcatFUN <- l1orn(as.character(substitute(catFUN)), "catFUN")
-    } else if(is.character(catFUN)) {
-      namcatFUN <- catFUN
-      catFUN <- if(length(catFUN) > 1L) lapply(catFUN, mymatchfun) else mymatchfun(catFUN)
-    } else if(is.list(catFUN)) {
-      namcatFUN <- names(catFUN)
-      if(is.null(namcatFUN)) namcatFUN <- all.vars(substitute(catFUN))
-    } else stop("FUN needs to be a function, character vector of function names or list of functions!")
+    if(nul) {
+      FUN <- acr_get_funs(substitute(FUN), FUN, mymatchfun)
+      namFUN <- FUN$namfun
+      FUN <- FUN$funs
+    }
+    if(nnul) {
+      catFUN <- acr_get_funs(substitute(catFUN), catFUN, mymatchfun)
+      namcatFUN <- catFUN$namfun
+      catFUN <- catFUN$funs
+    }
 
     if(autorn) give.names <- !widel || length(FUN) > 1L || length(catFUN) > 1L
 
@@ -427,9 +398,9 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
         res[[1L]] <- list(by[[4L]])
         ind <- 2L
       } else ind <- 1L
-      if(nul) res[[ind]] <- condsetn(applyfuns_internal(xnu, by, FUN, namFUN %in% .FAST_STAT_FUN_EXT,
+      if(nul) res[[ind]] <- condsetn(applyfuns_internal(xnu, by, FUN, names(FUN) %in% .FAST_STAT_FUN_EXT,
                                                         parallel, mc.cores, ...), namFUN, give.names)
-      if(nnul) res[[lr]] <- condsetn(applyfuns_internal(xnnu, by, catFUN, namcatFUN %in% .FAST_STAT_FUN_EXT,
+      if(nnul) res[[lr]] <- condsetn(applyfuns_internal(xnnu, by, catFUN, names(catFUN) %in% .FAST_STAT_FUN_EXT,
                                                         parallel, mc.cores, ...), namcatFUN, give.names)
       return(res)
     }
