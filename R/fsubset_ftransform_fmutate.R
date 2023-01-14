@@ -376,7 +376,7 @@ acr_get_cols <- function(.cols, d, nam, ce) {
   # if(is.integer(cols)) cols else (you are checking against length(cols) in setup_across)
 }
 
-# TODO: Implement for collap() ??
+# Also used in collap()
 acr_get_funs <- function(.fnsexp, .fns, ...) {
 
   if(is.function(.fns)) {
@@ -678,7 +678,6 @@ do_grouped_expr_list <- function(ei, .data, g, pe, .cols, ax, mutate = FALSE) {
 }
 
 
-# TODO: Preserves attributes ?? what about ftransform??
 fmutate <- function(.data, ..., .keep = "all", .cols = NULL) {
   if(!is.list(.data)) stop(".data needs to be a list of equal length columns or a data.frame")
   e <- substitute(list(...))
