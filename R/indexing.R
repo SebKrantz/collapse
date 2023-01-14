@@ -308,7 +308,7 @@ unindex <- function(x) {
   clx <- oldClass(x)
   if(is.list(x)) {
     oldClass(x) <- fsetdiff(clx, c("indexed_frame", "pdata.frame"))
-    x <- dapply(x, function(y) {
+    x <- fdapply(x, function(y) {
       attr(y, "index_df") <- NULL
       cly <- oldClass(y)
       oldClass(y) <- fsetdiff(cly, c("indexed_series", "pseries", if(length(cly) == 3L) class(unclass(y))))
