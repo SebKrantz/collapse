@@ -36,7 +36,7 @@
 
 ### Improvements
 
-* `fnth()` and `fmedian()` were rewritten in C, with significant gains in performance and versatility. Notably, `fnth()` now supports (grouped, weighted) continuous quantile estimation, like `fquantile()` (`fmedian()`, which is a wrapper around `fnth()`, can also estimate various quantile based weighted medians). The new default for `fnth()` is `ties = "q7"`, which gives the same result as `(f)quantile(..., type = 7)` (R's default). OpenMP multithreading across groups is also much more effective in both the weighted and unweighted case. Finally, `fnth.default` gained an additional argument `o` to pass an ordering vector, which can dramatically speed up repeated invocations of the function on the dame data: 
+* `fnth()` and `fmedian()` were rewritten in C, with significant gains in performance and versatility. Notably, `fnth()` now supports (grouped, weighted) continuous quantile estimation like `fquantile()` (`fmedian()`, which is a wrapper around `fnth()`, can also estimate various quantile based weighted medians). The new default for `fnth()` is `ties = "q7"`, which gives the same result as `(f)quantile(..., type = 7)` (R's default). OpenMP multithreading across groups is also much more effective in both the weighted and unweighted case. Finally, `fnth.default` gained an additional argument `o` to pass an ordering vector, which can dramatically speed up repeated invocations of the function on the dame data: 
 
   ```r
   # Estimating multiple grouped quantiles on mpg: pre-computing an ordering can provide extra speed. 
@@ -50,6 +50,9 @@
   ```
 
 * `BY` now supports data-length arguments to be passed e.g. `BY(mtcars, mtcars$cyl, fquantile, w = mtcars$wt)`, making it effectively a generic grouped `mapply` function as well. Furthermore, the grouped_df method now also expands grouping columns for output length > 1. 
+
+* `collap()`, which internally uses `BY` with non-*Fast Statistical Functions*, now also supports arbitrary further arguments passed down to functions to be split by groups. Thus users can also apply custom weighted functions with `collap()`. Furthermore, the parsing of the `FUN`, `catFUN` and `wFUN` arguments was improved and brought in-line with the parsing of `.fns` in `across()`. The main benefit of this is that *Fast Statistical Functions* are now also detected and optimizations carried out when passed in a list providing a new name e.g. `collap(data, ~ id, list(mean = fmean))` is now optimized! Thanks @ttrodrigz (#358) for requesting this.    
+
 
 * `radixorder` is about 25% faster on characters and doubles. This also benefits grouping performance. Note that `group()` may still be substantially faster on unsorted data, so if performance is critical try the `sort = FALSE` argument to functions like `fgroup_by` and compare. 
 
