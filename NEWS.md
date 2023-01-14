@@ -28,7 +28,7 @@
 
 * Added function `fdist()`: A fast and versatile replacement for `stats::dist`. It computes a full euclidian distance matrix around 4x faster than `stats::dist` in serial mode, with additional gains possible through multithreading along the distance matrix columns (decreasing thread loads as the matrix is lower triangular). It also supports computing the distance of a matrix with a single row-vector, or simply between two vectors. E.g. `fdist(mat, mat[1, ])` is the same as `sqrt(colSums((t(mat) - mat[1, ])^2)))`, but about 20x faster in serial mode, and `fdist(x, y)` is the same as `sqrt(sum((x-y)^2))`, about 3x faster in serial mode. In both cases (sub-column level) multithreading is available. *Note* that `fdist` does not skip missing values i.e. `NA`'s will result in `NA` distances. There is also no internal implementation for integers or data frames. Such inputs will be coerced to numeric matrices. 
 
-* Added function `GRPid` to easily fetch the group id from a grouping object, especially inside grouped `fmutate()` calls. This addition was warranted especially by the new improved `fnth.default()` method which allows orderings to be supplied for performance improvements. See commends on `fnth()` and the example provided below. 
+* Added function `GRPid()` to easily fetch the group id from a grouping object, especially inside grouped `fmutate()` calls. This addition was warranted especially by the new improved `fnth.default()` method which allows orderings to be supplied for performance improvements. See commends on `fnth()` and the example provided below. 
 
 * `fsummarize()` was added as a synonym to `fsummarise`. Thanks @arthurgailes for the PR. 
 
