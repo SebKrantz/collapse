@@ -24,7 +24,7 @@
 
 * Added functions `fcount()` and `fcountv()`: a versatile and blazing fast alternative to `dplyr::count`. It also works with vectors, matrices, as well as grouped and indexed data. 
 
-* Added function `fquantile()`: Fast (weighted) continuous quantile estimation (methods 5-9 following Hyndman and Fan (1996)), implemented fully in C based on a quickselect algorithm, and also supports an ordering vector as optional input to speed up the process. It is up to 2x faster than `stats::quantile` on larger vectors, but also especially fast on smaller data, where the R overhead of `stats::quantile` becomes burdensome. For maximum performance during repeated executions, a programmers version `.quantile()` with different defaults is also provided. 
+* Added function `fquantile()`: Fast (weighted) continuous quantile estimation (methods 5-9 following Hyndman and Fan (1996)), implemented fully in C based on quickselect and radixsort algorithms, and also supports an ordering vector as optional input to speed up the process. It is up to 2x faster than `stats::quantile` on larger vectors, but also especially fast on smaller data, where the R overhead of `stats::quantile` becomes burdensome. For maximum performance during repeated executions, a programmers version `.quantile()` with different defaults is also provided. 
 
 * Added function `fdist()`: A fast and versatile replacement for `stats::dist`. It computes a full euclidian distance matrix around 4x faster than `stats::dist` in serial mode, with additional gains possible through multithreading along the distance matrix columns (decreasing thread loads as the matrix is lower triangular). It also supports computing the distance of a matrix with a single row-vector, or simply between two vectors. E.g. `fdist(mat, mat[1, ])` is the same as `sqrt(colSums((t(mat) - mat[1, ])^2)))`, but about 20x faster in serial mode, and `fdist(x, y)` is the same as `sqrt(sum((x-y)^2))`, about 3x faster in serial mode. In both cases (sub-column level) multithreading is available. *Note* that `fdist` does not skip missing values i.e. `NA`'s will result in `NA` distances. There is also no internal implementation for integers or data frames. Such inputs will be coerced to numeric matrices. 
 
@@ -39,21 +39,21 @@
 * `fnth()` and `fmedian()` were rewritten in C, with significant gains in performance and versatility. Notably, `fnth()` now supports (grouped, weighted) continuous quantile estimation like `fquantile()` (`fmedian()`, which is a wrapper around `fnth()`, can also estimate various quantile based weighted medians). The new default for `fnth()` is `ties = "q7"`, which gives the same result as `(f)quantile(..., type = 7)` (R's default). OpenMP multithreading across groups is also much more effective in both the weighted and unweighted case. Finally, `fnth.default` gained an additional argument `o` to pass an ordering vector, which can dramatically speed up repeated invocations of the function on the dame data: 
 
   ```r
-  # Estimating multiple grouped quantiles on mpg: pre-computing an ordering can provide extra speed. 
+  # Estimating multiple weighted-grouped quantiles on mpg: pre-computing an ordering provides extra speed. 
   mtcars %>% fgroup_by(cyl, vs, am) %>%
       fmutate(o = radixorder(GRPid(), mpg)) %>% # On grouped data, need to account for GRPid()
-      fsummarise(mpg_Q1 = fnth(mpg, 0.25, o = o),
-                 mpg_median = fmedian(mpg, o = o),
-                 mpg_Q3 = fnth(mpg, 0.75, o = o))
-  # Note that this is not always faster. Quickselect can be very efficient, so it depends on the data, 
-  # the number of groups, whether they are sorted (which speeds up radixorder), etc...
+      fsummarise(mpg_Q1 = fnth(mpg, 0.25, o = o, w = wt),
+                 mpg_median = fmedian(mpg, o = o, w = wt),
+                 mpg_Q3 = fnth(mpg, 0.75, o = o, w = wt))
+  # Note that without weights this is not always faster. Quickselect can be very efficient, so it depends 
+  # on the data, the number of groups, whether they are sorted (which speeds up radixorder), etc...
   ```
 
 * `BY` now supports data-length arguments to be passed e.g. `BY(mtcars, mtcars$cyl, fquantile, w = mtcars$wt)`, making it effectively a generic grouped `mapply` function as well. Furthermore, the grouped_df method now also expands grouping columns for output length > 1. 
 
 * `collap()`, which internally uses `BY` with non-*Fast Statistical Functions*, now also supports arbitrary further arguments passed down to functions to be split by groups. Thus users can also apply custom weighted functions with `collap()`. Furthermore, the parsing of the `FUN`, `catFUN` and `wFUN` arguments was improved and brought in-line with the parsing of `.fns` in `across()`. The main benefit of this is that *Fast Statistical Functions* are now also detected and optimizations carried out when passed in a list providing a new name e.g. `collap(data, ~ id, list(mean = fmean))` is now optimized! Thanks @ttrodrigz (#358) for requesting this.    
 
-* `descr()`, by virtue of `fquantile` and the improvements to `BY`, supports full-blown grouped and weighted descriptions of data. This is implemented through additional `by` and `w` arguments. The function has also be turned into an S3 generic, with a default and a 'grouped_df' method. The 'descr' methods `as.data.frame` and `print` also feature various improvements, and a new `compact` argument to `print.descr`, allowing a more compact printout. Users will also notive improved performance, mainly due to `fquantile`: on the M1 `descr(wlddev)` is now 2x faster than `summary(wlddev)`, and 41x faster than `Hmisc::describe(wlddev)`. Thanks @statshero (#355)
+* `descr()`, by virtue of `fquantile` and the improvements to `BY`, supports full-blown grouped and weighted descriptions of data. This is implemented through additional `by` and `w` arguments. The function has also be turned into an S3 generic, with a default and a 'grouped_df' method. The 'descr' methods `as.data.frame` and `print` also feature various improvements, and a new `compact` argument to `print.descr`, allowing a more compact printout. Users will also notive improved performance, mainly due to `fquantile`: on the M1 `descr(wlddev)` is now 2x faster than `summary(wlddev)`, and 41x faster than `Hmisc::describe(wlddev)`. Thanks @statshero (#355).
 
 
 * `radixorder` is about 25% faster on characters and doubles. This also benefits grouping performance. Note that `group()` may still be substantially faster on unsorted data, so if performance is critical try the `sort = FALSE` argument to functions like `fgroup_by` and compare. 
