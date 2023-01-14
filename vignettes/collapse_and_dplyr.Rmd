@@ -771,12 +771,12 @@ GGDC10S %>%
 
 This section seeks to demonstrate that the functionality introduced in the preceding 2 sections indeed produces code that evaluates substantially faster than native *dplyr*. 
 
-To do this properly, the different components of a typical piped call (selecting / subsetting, ordering, grouping, and performing some computation) are bechmarked separately on 2 different data sizes.
+To do this properly, the different components of a typical piped call (selecting / subsetting, ordering, grouping, and performing some computation) are benchmarked separately on 2 different data sizes.
 
 All benchmarks are run on a Windows 8.1 laptop with a 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung 850 EVO SSD hard drive.
 
 ### 3.1 Data 
-Bechmarks are run on the original `GGDC10S` data used throughout this vignette and a larger dataset with approx. 1 million observations, obtained by replicating and row-binding `GGDC10S` 200 times while maintaining unique groups.
+Benchmarks are run on the original `GGDC10S` data used throughout this vignette and a larger dataset with approx. 1 million observations, obtained by replicating and row-binding `GGDC10S` 200 times while maintaining unique groups.
 
 ```{r, eval=RUNBENCH}
 # This shows the groups in GGDC10S

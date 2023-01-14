@@ -30,7 +30,7 @@ If \code{v = NULL}, a full lower-triangular distance matrix between the rows of 
 \note{
 \code{fdist} does not check for missing values, so \code{NA}'s will result in \code{NA} distances.
 
-\code{kit::topn} is a suitable complimentary function to find nearest neighbours. It is very efficient and skips missing values by default.
+\code{kit::topn} is a suitable complimentary function to find nearest neighbors. It is very efficient and skips missing values by default.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

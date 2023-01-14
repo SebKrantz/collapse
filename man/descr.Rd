@@ -83,7 +83,7 @@ character. The name of a label attribute to display for each variable (if variab
 %\item{stringsAsFactors}{logical. Make factors from dimension names of 'qsu' array. Same as option to \code{\link{as.data.frame.table}}.}
 }
 \details{
-\code{descr} was heavily inspired by \code{Hmisc::describe}, but is much faster and has more advanced statistical capabilities. It is principally a wrapper around \code{\link{qsu}}, \code{\link{fquantile}} (\code{.quantile}), and \code{\link{fndistinct}} for numeric variables, and computes frequency tables for categorical varibles using \code{\link{qtab}}. Date variables are summarized with \code{\link{fnobs}}, \code{\link{fndistinct}} and \code{\link{frange}}.
+\code{descr} was heavily inspired by \code{Hmisc::describe}, but is much faster and has more advanced statistical capabilities. It is principally a wrapper around \code{\link{qsu}}, \code{\link{fquantile}} (\code{.quantile}), and \code{\link{fndistinct}} for numeric variables, and computes frequency tables for categorical variables using \code{\link{qtab}}. Date variables are summarized with \code{\link{fnobs}}, \code{\link{fndistinct}} and \code{\link{frange}}.
 
 Since v1.9.0 grouped and weighted computations are fully supported. The use of sampling weights will produce a weighted mean, sd, skewness and kurtosis, and weighted quantiles for numeric data. For categorical data, tables will display the sum of weights instead of the frequencies, and percentage tables as well as the percentage of missing values indicated next to 'Statistics' in print, be relative to the total sum of weights. All this can be done by groups. Grouped (weighted) quantiles are computed using \code{\link{BY}}.
 
