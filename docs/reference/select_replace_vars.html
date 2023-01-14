@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.8.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
       </span>
     </div>
 
@@ -131,7 +131,7 @@
 <dd><p>the position where columns are added in the data frame. <code>"end"</code> (default) will append the data frame at the end (right) side. "front" will add columns in front (left). Alternatively one can pass a vector of positions (matching <code>length(value)</code> if value is a list). In that case the other columns will be shifted around the new ones while maintaining their order.</p></dd>
 
 <dt>...</dt>
-<dd><p>for <code>fselect</code>: column names and expressions e.g. <code>fselect(mtcars, newname = mpg, hp, carb:vs)</code>. for <code>get_vars</code>: further arguments passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></code>, if <code>regex = TRUE</code>. For <code>add_vars</code>: Same as <code>value</code>, a single argument passed may also be a vector or matrix, multiple arguments must each be a list (they are combined using <code>c(...)</code>).</p></dd>
+<dd><p>for <code>fselect</code>: column names and expressions e.g. <code>fselect(mtcars, newname = mpg, hp, carb:vs)</code>. for <code>get_vars</code>: further arguments passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></code>, if <code>regex = TRUE</code>. For <code>add_vars</code>: multiple lists/data frames or vectors (which should be given names e.g. <code>name = vector</code>). A single argument passed may also be an (unnamed) vector or matrix.</p></dd>
 
 </dl></div>
     <div id="details">
@@ -139,14 +139,14 @@
     <p><code>get_vars(&lt;-)</code> is around 2x faster than <code>`[.data.frame`</code> and 8x faster than <code>`[&lt;-.data.frame`</code>, so the common operation <code>data[cols] &lt;- someFUN(data[cols])</code> can be made 10x more efficient (abstracting from computations performed by <code>someFUN</code>) using <code>get_vars(data, cols) &lt;- someFUN(get_vars(data, cols))</code> or the shorthand <code>gv(data, cols) &lt;- someFUN(gv(data, cols))</code>.</p>
 <p>Similarly type-wise operations like <code>data[sapply(data, is.numeric)]</code> or <code>data[sapply(data, is.numeric)] &lt;- value</code> are facilitated and more efficient using <code>num_vars(data)</code> and <code>num_vars(data) &lt;- value</code> or the shortcuts <code>nv</code> and <code>nv&lt;-</code> etc.</p>
 <p><code>fselect</code> provides an efficient alternative to <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code>, allowing the selection of variables based on expressions evaluated within the data frame, see Examples. It is about 100x faster than <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code> but also more simple as it does not provide special methods (except for 'sf' and 'data.table' which are handled internally) .</p>
-<p>Finally, <code>add_vars(data1, data2, data3, ...)</code> is a lot faster than <code>cbind(data1, data2, data3, ...)</code>, and preserves the attributes of <code>data1</code> (i.e. it is like adding columns to <code>data1</code>). The replacement function <code>add_vars(data) &lt;- someFUN(get_vars(data, cols))</code> efficiently appends <code>data</code> with computed columns. The <code>pos</code> argument allows adding columns at positions other than the end (right) of the data frame, see Examples.</p>
+<p>Finally, <code>add_vars(data1, data2, data3, ...)</code> is a lot faster than <code>cbind(data1, data2, data3, ...)</code>, and preserves the attributes of <code>data1</code> (i.e. it is like adding columns to <code>data1</code>). The replacement function <code>add_vars(data) &lt;- someFUN(get_vars(data, cols))</code> efficiently appends <code>data</code> with computed columns. The <code>pos</code> argument allows adding columns at positions other than the end (right) of the data frame, see Examples. <em>Note</em> that <code>add_vars</code> does not check duplicated column names or <code>NULL</code> columns, and does not evaluate expressions in a data environment, or replicate length 1 inputs like <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></code>. All of this is provided by <code><a href="ftransform.html">ftransform</a></code>.</p>
 <p>All functions introduced here perform their operations class-independent. They all basically work like this: (1) save the attributes of <code>x</code>, (2) unclass <code>x</code>, (3) subset, replace or append <code>x</code> as a list, (4) modify the "names" component of the attributes of <code>x</code> accordingly and (5) efficiently attach the attributes again to the result from step (3).
 Thus they can freely be applied to data.table's, grouped tibbles, panel data frames and other classes and will return an object of exactly the same class and the same attributes.</p>
 <p><!-- % secure w.r.t. redefinitions of \code{`[.data.frame`} or \code{`[&lt;-.data.frame`} for other classes (i.e. data.table's, tibbles etc.) and preserve all attributes of the data --></p>
     </div>
     <div id="note">
     <h2>Note</h2>
-    <p>The functions here only check the length of the first column, which is one of the reasons why they are so fast. When lists of unequal-length columns are offered as replacements this yields a malformed data frame (which will also print a warning in the console i.e. you will notice that).</p>
+    <p>In many cases functions here only check the length of the first column, which is one of the reasons why they are so fast. When lists of unequal-length columns are offered as replacements this yields a malformed data frame (which will also print a warning in the console i.e. you will notice that).</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -321,6 +321,45 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">12</span>,<span class="fl">14</span>,<span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>                   <span class="co"># Deleting</span></span>
 <span class="r-in"></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">wlddev</span>, new <span class="op">=</span> <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>                  <span class="co"># Can also add columns like this</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   LIFEEX GINI       ODA     POP new</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 32.446   NA 116769997 8996973  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 32.962   NA 232080002 9169410  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 33.471   NA 112839996 9351441  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 33.971   NA 237720001 9543205  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 34.463   NA 295920013 9744781  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu">nv</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span>, new <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>   <span class="co"># etc...</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Afghanistan   AFG 1963-01-01 1962   1960 South Asia Low income FALSE    NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   LIFEEX GINI       ODA     POP  STD.year STD.decade STD.PCGDP STD.LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 32.446   NA 116769997 8996973 -1.703821  -1.460378        NA  -2.775283</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 32.962   NA 232080002 9169410 -1.647027  -1.460378        NA  -2.730321</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 33.471   NA 112839996 9351441 -1.590233  -1.460378        NA  -2.685969</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   STD.GINI    STD.ODA    STD.POP new</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       NA -0.3890241 -0.1493233  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       NA -0.2562874 -0.1476348  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       NA -0.3935480 -0.1458523  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span>, mpg <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>      <span class="co"># add_vars does not check names!</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               mpg cyl disp  hp drat    wt  qsec vs am gear carb mpg cyl disp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4      21   6  160 110  3.9 2.620 16.46  0  1    4    4  21   6  160</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag  21   6  160 110  3.9 2.875 17.02  0  1    4    4  21   6  160</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                hp drat    wt  qsec vs am gear carb mpg mpg cyl disp  hp drat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     110  3.9 2.620 16.46  0  1    4    4  21  21   6  160 110  3.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 110  3.9 2.875 17.02  0  1    4    4  21  21   6  160 110  3.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                  wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     2.620 16.46  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 2.875 17.02  0  1    4    4</span>
 </code></pre></div>
     </div>
   </div>

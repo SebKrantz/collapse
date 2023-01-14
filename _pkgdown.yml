@@ -32,12 +32,12 @@ navbar:
 
 articles:
 - title: collapse Documentation and Resources
-  desc: Provides an overview of all available package documentation
+  desc: Provides an overview of all available package documentation. Please consult this first to see what is up to date.
   navbar: collapse Documentation and Resources
   contents:
   - collapse_documentation
 - title: Introduction to collapse
-  desc: Introduces all main features in a structured way
+  desc: Introduces central features in a structured way
   navbar: Introduction to collapse
   contents:
   - collapse_intro
@@ -68,24 +68,24 @@ reference:
 - contents:
   - "fast-statistical-functions"
   - fmean
-  - fmedian
+  - fnth-fmedian
   - fmode
   - fsum
   - fprod
   - "fvar-fsd"
   - "fmin-fmax"
-  - fnth
   - "ffirst-flast"
   - fnobs
   - fndistinct
 - title: "Fast Grouping and Ordering"
-  desc: "Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering, unique values / rows, factor generation and interactions, run-length type grouping and grouping of time-sequences."
+  desc: "Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering, unique values / rows and counts, factor generation and interactions, run-length type grouping and grouping of time-sequences."
 - contents:
   - "fast-grouping-ordering"
   - GRP
   - radixorder
   - group
   - funique
+  - fcount
   - qF
   - fdroplevels
   - groupid
@@ -161,13 +161,18 @@ reference:
   - descr
   - "pwcor-pwcov-pwnobs"
   - varying
+- title: "Other Statistical"
+  desc: "Fast euclidean distance computations, (weighted) sample quantiles, and range of vector."
+- contents:
+  - fdist
+  - fquantile
 - title: "Recode and Replace Values"
   desc: "Efficiently recode and replace values in matrix-like objects."
 - contents:
   - "recode-replace"
   - pad
 - title: "(Memory) Efficient Programming"
-  desc: "Small functions to make R programming more efficient."
+  desc: "Functions to make R programming more efficient."
 - contents:
   - "efficient-programming"
 - title: "Small (Helper) Functions"
