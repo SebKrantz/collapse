@@ -31,7 +31,7 @@ BY(x, \dots)
   \item{x}{a vector, matrix, data frame or alike object.}
   \item{g}{a \code{\link{GRP}} object, or a factor / atomic vector / list of atomic vectors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{FUN}{a function, can be scalar- or vector-valued. For vector valued functions see also \code{reorder} and \code{expand.wide}.}
-  \item{\dots}{further arguments to \code{FUN}, or to \code{BY.data.frame} for the 'grouped_df' method.}
+  \item{\dots}{further arguments to \code{FUN}, or to \code{BY.data.frame} for the 'grouped_df' method. Since v1.9.0 data length arguments are also split by groups.}
   \item{use.g.names}{logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). For vector-valued functions (row-)names are only generated if the function itself creates names for the statistics e.g. \code{quantile()} adds names, \code{range()} or \code{log()} don't. No row-names are generated on \emph{data.table}'s.}
   \item{sort}{logical. Sort the groups? Internally passed to \code{\link{GRP}}, and only effective if \code{g} is not already a factor or \code{\link{GRP}} object.}
   \item{reorder}{logical. If a vector-valued function is passed that preserves the data length, \code{TRUE} will reorder the result such that the elements/rows match the original data. \code{FALSE} just combines the data in order of the groups (i.e. all elements of the first group in first-appearance order followed by all elements in the second group etc..). \emph{Note} that if \code{reorder = FALSE}, grouping variables, names or rownames are only retained if the grouping is on sorted data, see \code{\link{GRP}}. }
@@ -43,7 +43,7 @@ BY(x, \dots)
 %    \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.}
 }
 \details{
-\code{BY} is a frugal re-implementation of the Split-Apply-Combine computing paradigm. It is faster than \code{\link{tapply}}, \code{\link{by}}, \code{\link{aggregate}} and \emph{(d)plyr}, and preserves data attributes just like \code{\link{dapply}}.  % and more versatile though not faster than \emph{dplyr}
+\code{BY} is a re-implementation of the Split-Apply-Combine computing paradigm. It is faster than \code{\link{tapply}}, \code{\link{by}}, \code{\link{aggregate}} and \emph{(d)plyr}, and preserves data attributes just like \code{\link{dapply}}.  % and more versatile though not faster than \emph{dplyr}
 
 %I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution.
 
@@ -67,17 +67,17 @@ g <- GRP(iris$Species)   # A grouping
 ## default vector method
 BY(v, g, sum)                                # Sum by species
 head(BY(v, g, scale))                        # Scale by species (please use fscale instead)
-BY(v, g, quantile)                           # Species quantiles: by default stacked
-BY(v, g, quantile, expand.wide = TRUE)       # Wide format
+BY(v, g, fquantile)                          # Species quantiles: by default stacked
+BY(v, g, fquantile, expand.wide = TRUE)      # Wide format
 
 ## matrix method
 m <- qM(num_vars(iris))
 BY(m, g, sum)                          # Also return as matrix
 BY(m, g, sum, return = "data.frame")   # Return as data.frame.. also works for computations below
 head(BY(m, g, scale))
-BY(m, g, quantile)
-BY(m, g, quantile, expand.wide = TRUE)
-ml <- BY(m, g, quantile, expand.wide = TRUE, # Return as list of matrices
+BY(m, g, fquantile)
+BY(m, g, fquantile, expand.wide = TRUE)
+ml <- BY(m, g, fquantile, expand.wide = TRUE, # Return as list of matrices
          return = "list")
 ml
 # Unlisting to Data Frame
@@ -87,9 +87,9 @@ unlist2d(ml, idcols = "Variable", row.names = "Species")
 BY(num_vars(iris), g, sum)             # Also returns a data.fram
 BY(num_vars(iris), g, sum, return = 2) # Return as matrix.. also works for computations below
 head(BY(num_vars(iris), g, scale))
-BY(num_vars(iris), g, quantile)
-BY(num_vars(iris), g, quantile, expand.wide = TRUE)
-BY(num_vars(iris), g, quantile,        # Return as list of matrices
+BY(num_vars(iris), g, fquantile)
+BY(num_vars(iris), g, fquantile, expand.wide = TRUE)
+BY(num_vars(iris), g, fquantile,       # Return as list of matrices
    expand.wide = TRUE, return = "list")
 \donttest{ % No code relying on suggested package
 ## grouped data frame method
