@@ -1,6 +1,6 @@
 # collapse 1.9.0
 
-*collapse* 1.9.0 released min of January 2023, provides improvements in performance and versatility in many areas, as well as greater statistical capabilities, most notably efficient (grouped, weighted) estimation of sample quantiles. 
+*collapse* 1.9.0 released mid of January 2023, provides improvements in performance and versatility in many areas, as well as greater statistical capabilities, most notably efficient (grouped, weighted) estimation of sample quantiles. 
 
 ### Changes to functionality
 
