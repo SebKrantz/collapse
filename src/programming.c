@@ -888,7 +888,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
 
   SEXP res = PROTECT(allocVector(REALSXP, l));
   double *px = REAL(x), *pres = REAL(res);
-  memset(pres, 0, sizeof(double) * l);
+  memset(pres, 0, sizeof(double) * l); // '\0'
 
   if(nullv) { // Full distance matrix
     if(nthreads > 1) {
@@ -897,25 +897,25 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
       for (int k = 1; k < nrow; ++k) { // Row vectors to compute distances with
         int nmk = nrow - k;
         double *presk = pres + l - nmk*(nmk+1)/2, // https://en.wikipedia.org/wiki/1_%2B_2_%2B_3_%2B_4_%2B_%E2%8B%AF
-               *pxj = px + k, v = pxj[-1], tmp;
+               *pxj = px + k, v = px[k-1], tmp;
         for (int j = 0; j < ncol; ++j) { // Elements of the row vector at hand
           for(int i = 0; i < nmk; ++i) { // All remaining rows to compute the distance to
             tmp = pxj[i] - v;
             presk[i] += tmp * tmp;
           }
-          pxj += nrow; v = pxj[-1];
+          v = pxj[nrow-1]; pxj += nrow;
         }
       }
     } else {
       double *presk = pres, *pxj, v, tmp;
       for (int k = 1, nmk = nrow; k != nrow; ++k) { // Row vectors to compute distances with
-        --nmk; pxj = px + k; v = pxj[-1];
+        --nmk; pxj = px + k; v = px[k-1];
         for (int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
             tmp = pxj[i] - v;
             presk[i] += tmp * tmp;
           }
-          pxj += nrow; v = pxj[-1];
+          v = pxj[nrow-1]; pxj += nrow;
         }
         presk += nmk;
       }
