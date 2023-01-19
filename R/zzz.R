@@ -9,10 +9,10 @@
   clpns <- parent.env(environment())
   .collapse_env <- new.env()
   assign(".collapse_env", .collapse_env, envir = clpns)
-  .opt <- new.env()
-  .opt$nthreads <- 1L
-  .opt$na.rm <- TRUE
-  assign(".opt", .opt, envir = clpns)
+  .op <- new.env()
+  .op$nthreads <- 1L
+  .op$na.rm <- TRUE
+  assign(".op", .op, envir = clpns)
 
   mask <- getOption("collapse_mask")
 

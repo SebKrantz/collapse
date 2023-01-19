@@ -18,24 +18,24 @@
 ffirst(x, \dots)
 flast(x, \dots)
 
-\method{ffirst}{default}(x, g = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+\method{ffirst}{default}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
        use.g.names = TRUE, \dots)
-\method{flast}{default}(x, g = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+\method{flast}{default}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
       use.g.names = TRUE, \dots)
 
-\method{ffirst}{matrix}(x, g = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+\method{ffirst}{matrix}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
        use.g.names = TRUE, drop = TRUE, \dots)
-\method{flast}{matrix}(x, g = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+\method{flast}{matrix}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
       use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{ffirst}{data.frame}(x, g = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+\method{ffirst}{data.frame}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
        use.g.names = TRUE, drop = TRUE, \dots)
-\method{flast}{data.frame}(x, g = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+\method{flast}{data.frame}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
       use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{ffirst}{grouped_df}(x, TRA = NULL, na.rm = .opt[["na.rm"]],
+\method{ffirst}{grouped_df}(x, TRA = NULL, na.rm = .op[["na.rm"]],
        use.g.names = FALSE, keep.group_vars = TRUE, \dots)
-\method{flast}{grouped_df}(x, TRA = NULL, na.rm = .opt[["na.rm"]],
+\method{flast}{grouped_df}(x, TRA = NULL, na.rm = .op[["na.rm"]],
       use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{
