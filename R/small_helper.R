@@ -342,7 +342,7 @@ whichv <- function(x, value, invert = FALSE) .Call(C_whichv, x, value, invert)
 "%!=%" <- function(x, value) .Call(C_whichv, x, value, TRUE)
 whichNA <- function(x, invert = FALSE) .Call(C_whichv, x, NA, invert)
 
-frange <- function(x, na.rm = TRUE) .Call(C_frange, x, na.rm)
+frange <- function(x, na.rm = .ce[["na.rm"]]) .Call(C_frange, x, na.rm)
 alloc <- function(value, n) .Call(C_alloc, value, n)
 vgcd <- function(x) .Call(C_vecgcd, x)
 fdist <- function(x, v = NULL, ..., method = "euclidean", nthreads = .ce[["nthreads"]]) .Call(C_fdist, if(is.atomic(x)) x else qM(x), v, method, nthreads)

@@ -12,16 +12,16 @@ The \code{\link{TRA}} argument can further be used to transform \code{x} using i
 \usage{
 fmean(x, \dots)
 
-\method{fmean}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmean}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
       use.g.names = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
-\method{fmean}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmean}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
       use.g.names = TRUE, drop = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
-\method{fmean}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmean}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
       use.g.names = TRUE, drop = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
-\method{fmean}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmean}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
       use.g.names = FALSE, keep.group_vars = TRUE,
       keep.w = TRUE, nthreads = .ce[["nthreads"]], \dots)
 }

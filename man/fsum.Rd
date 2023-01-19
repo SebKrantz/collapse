@@ -11,16 +11,16 @@
 \usage{
 fsum(x, \dots)
 
-\method{fsum}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsum}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
      use.g.names = TRUE, fill = FALSE, nthreads = .ce[["nthreads"]], \dots)
 
-\method{fsum}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsum}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
      use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .ce[["nthreads"]], \dots)
 
-\method{fsum}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsum}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
      use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .ce[["nthreads"]], \dots)
 
-\method{fsum}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsum}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
      use.g.names = FALSE, keep.group_vars = TRUE,
      keep.w = TRUE, fill = FALSE, nthreads = .ce[["nthreads"]], \dots)
 }
