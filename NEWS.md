@@ -1,3 +1,9 @@
+# collapse 1.9.1
+
+* Fixed minor C/C++ issues flagged by CRAN's detailed checks.
+
+* Added functions `set_collapse()` and `get_collapse()`, allowing you to globally set defaults for the `nthreads` and `na.rm` arguments to all functions in the package. E.g. `set_collapse(nthreads = 4, na.rm = FALSE)` could be a suitable setting for larger data without missing values. This is implemented using an internal environment by the name of `.op`, such that these defaults are received using e.g. `.op[["nthreads"]]`, at the computational cost of a few nanoseconds (8-10x faster than `getOption("nthreads")` which would take about 1 microsecond). `.op` is not accessible by the user, so function `get_collapse()` can be used to retrieve settings. Exempt from this are functions `.quantile`, and a new function `.range` (alias of `frange`), which go directly to C for maximum performance in repeated executions, and are not affected by these global settings. Function `descr()`, which internally calls a bunch of statistical functions, is also not affected by these settings. 
+
 # collapse 1.9.0
 
 *collapse* 1.9.0 released mid of January 2023, provides improvements in performance and versatility in many areas, as well as greater statistical capabilities, most notably efficient (grouped, weighted) estimation of sample quantiles. 

@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.9.0
-Date: 2023-01-14
+Version: 1.9.1
+Date: 2023-01-19
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch"),
@@ -17,11 +17,10 @@ Authors@R: c(
            )
 Description: A C/C++ based package for advanced data transformation and 
     statistical computing in R that is extremely fast, class-agnostic,
-    and programmer friendly through a flexible, parsimonious, and robust API.
-    Core functionality includes a rich set of S3 generic grouped and weighted 
-    statistical functions for vectors, matrices and data frames, which provide
-    efficient low-level vectorizations and OpenMP multithreading (reducing the 
-    need for iteration/vectorization in R), and skip missing values by default. 
+    and programmer friendly through a flexible and robust API. Core functionality 
+    includes a rich set of S3 generic grouped and weighted statistical functions 
+    for vectors, matrices and data frames, which provide efficient low-level 
+    vectorizations, OpenMP multithreading, and skip missing values by default. 
     These are integrated with fast grouping and ordering algorithms (also callable 
     from C), and efficient data manipulation functions. The package also provides 
     a flexible and rigorous approach to time series and panel data in R. It further 
