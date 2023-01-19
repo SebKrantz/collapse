@@ -6,9 +6,13 @@
 
   # https://stackoverflow.com/questions/12598242/global-variables-in-packages-in-r
   # https://stackoverflow.com/questions/49056642/r-how-to-make-variable-available-to-namespace-at-loading-time?noredirect=1&lq=1
-  .collapse_env <- new.env()
   clpns <- parent.env(environment())
+  .collapse_env <- new.env()
   assign(".collapse_env", .collapse_env, envir = clpns)
+  .ce <- new.env()
+  .ce$nthreads <- 1L
+  .ce$na.rm <- TRUE
+  assign(".ce", .ce, envir = clpns)
 
   mask <- getOption("collapse_mask")
 

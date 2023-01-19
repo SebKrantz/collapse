@@ -1,17 +1,24 @@
 
-# .NA_RM <- TRUE
+# Global Options
+set_collapse <- function(...) {
+  opts <- list(...)
+  nam <- names(opts)
+  if(any(nam %!in% c("nthreads", "na.rm"))) stop("Currently only supports options 'nthreads' and 'na.rm'")
+  if(length(opts$nthreads)) {
+    nthreads <- as.integer(opts$nthreads)
+    if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
+    .ce$nthreads <- nthreads
+  }
+  if(length(opts$na.rm)) {
+    na.rm <- as.logical(opts$na.rm)
+    if(is.na(na.rm)) stop("na.rm needs to evaluate to TRUE or FALSE")
+    .ce$na.rm <- na.rm
+  }
+}
+
+get_collapse <- function(opts) if(length(opts) == 1L) .ce[[opts]] else `names<-`(lapply(opts, function(x) .ce[[x]]), opts)
 
 # global macros
-
-# .COLLAPSE_NTHREADS <- 1L
-#
-# set_collapse <- function(...) {
-#   opts <- list(...)
-#   if(length(opts) > 1L || is.null(opts$nthreads)) stop("Can currently only set option 'nthreads'")
-#   nthreads <- as.integer(opts$nthreads)
-#   if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
-#   assign(".COLLAPSE_NTHREADS", nthreads, pos = getNamespace("collapse")) # not allowed!
-# }
 
 # TODO: need to create global option to change value of nthreads. Or, alternatively see of calls to .Options$collapse_nthreads are allowed
 # Could also do for na.rm default...

@@ -1,9 +1,22 @@
 \name{collapse-options}
 \alias{collapse-options}
-
+\alias{set_collapse}
+\alias{get_collapse}
+\alias{.ce}
 \title{\emph{collapse} Package Options}
+\description{Global options affecting package operation. There are 2 kinds of options, those implemented using \code{\link{options}} (retrievable using \code{\link{getOption}}), and those implemented, to avoid the performance overhead of \code{\link{getOption}}, using \code{set_collapse} (retrievable using \code{get_collapse}). The latter are implemented using an \link{environment} called \code{.ce} contained in the package namespace.}
 
-\description{
+\usage{
+set_collapse(\dots)
+get_collapse(opts)
+}
+\arguments{
+\item{\dots}{comma separated options. Currently only \code{nthreads = integer} or \code{na.rm = TRUE|FALSE} are supported. These are added to \code{.ce}.}
+\item{opts}{character. A vector of options to receive from \code{.ce}. If more than one option is requested, a named list is returned.}
+
+}
+
+\section{Options Set using \code{options()}}{
 \itemize{
 \item \code{option("collapse_unused_arg_action")} regulates how generic functions (such as the \link[=fast-statistical-functions]{Fast Statistical Functions}) in the package react when an unknown argument is passed to a method. The default action is \code{"warning"} which issues a warning. Other options are \code{"error"}, \code{"message"} or \code{"none"}, whereby the latter enables silent swallowing of such arguments.
 
@@ -33,9 +46,21 @@ In General, this option is for your convenience, if you want to write visually m
 % \item \code{option("collapse_DT_alloccol")} sets how many empty columns \emph{collapse} data manipulation functions like \code{ftransform} allocate when taking a shallow copy of \emph{data.table}'s. The default is \code{100L}. Note that the \emph{data.table} default is \code{getOption("datatable.alloccol") = 1024L}. I chose a lower default because shallow copies are taken by each data manipulation function if you manipulate \emph{data.table}'s with collapse, and the cost increases with the number of overallocated columns. With 100 columns, the cost is 2-5 microseconds per copy.
 }
 }
+\note{
+Options \code{"collapse_mask"} and \code{"collapse_export_F"} need to be set before the package is loaded, which means befor any component of the package is accessed in any way, including the loading of packages that depend on \emph{collapse}.
+}
 
 \seealso{
   \link[=collapse-documentation]{Collapse Overview}, \link{collapse-package}
+}
+
+\examples{
+# Setting the defaults
+set_collapse(nthreads = 1L, na.rm = TRUE)
+
+# Getting the defaults
+get_collapse("nthreads")
+get_collapse(c("nthreads", "na.rm"))
 }
 
 \keyword{documentation}
