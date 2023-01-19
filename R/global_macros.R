@@ -2,7 +2,7 @@
 # Global Options
 set_collapse <- function(...) {
   opts <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
-  ce_old <- as.list(.op)
+  op_old <- as.list(.op)
   nam <- names(opts)
   if(any(nam %!in% c("nthreads", "na.rm"))) stop("Currently only supports options 'nthreads' and 'na.rm'")
   if(length(opts$nthreads)) {
@@ -15,7 +15,7 @@ set_collapse <- function(...) {
     if(is.na(na.rm)) stop("na.rm needs to be TRUE or FALSE")
     .op$na.rm <- na.rm
   }
-  invisible(ce_old)
+  invisible(op_old)
 }
 
 get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(length(opts) == 1L) .op[[opts]] else `names<-`(lapply(opts, function(x) .op[[x]]), opts)
