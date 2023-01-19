@@ -13,16 +13,16 @@
 fndistinct(x, \dots)
 
 \method{fndistinct}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, nthreads = 1L, \dots)
+           use.g.names = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
 \method{fndistinct}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
+           use.g.names = TRUE, drop = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
 \method{fndistinct}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
+           use.g.names = TRUE, drop = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
 \method{fndistinct}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
-           use.g.names = FALSE, keep.group_vars = TRUE, nthreads = 1L, \dots)
+           use.g.names = FALSE, keep.group_vars = TRUE, nthreads = .ce[["nthreads"]], \dots)
 }
 \arguments{
 \item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}

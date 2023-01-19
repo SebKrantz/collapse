@@ -13,17 +13,17 @@ The \code{\link{TRA}} argument can further be used to transform \code{x} using i
 fmean(x, \dots)
 
 \method{fmean}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, nthreads = 1L, \dots)
+      use.g.names = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
 \method{fmean}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
+      use.g.names = TRUE, drop = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
 \method{fmean}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-      use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
+      use.g.names = TRUE, drop = TRUE, nthreads = .ce[["nthreads"]], \dots)
 
 \method{fmean}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
       use.g.names = FALSE, keep.group_vars = TRUE,
-      keep.w = TRUE, nthreads = 1L, \dots)
+      keep.w = TRUE, nthreads = .ce[["nthreads"]], \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
