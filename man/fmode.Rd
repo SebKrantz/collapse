@@ -12,18 +12,18 @@ The \code{\link{TRA}} argument can further be used to transform \code{x} using i
 \usage{
 fmode(x, \dots)
 
-\method{fmode}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
-      use.g.names = TRUE, ties = "first", nthreads = .ce[["nthreads"]], \dots)
+\method{fmode}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+      use.g.names = TRUE, ties = "first", nthreads = .opt[["nthreads"]], \dots)
 
-\method{fmode}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
-      use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = .ce[["nthreads"]], \dots)
+\method{fmode}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+      use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = .opt[["nthreads"]], \dots)
 
-\method{fmode}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
-      use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = .ce[["nthreads"]], \dots)
+\method{fmode}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+      use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = .opt[["nthreads"]], \dots)
 
-\method{fmode}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
+\method{fmode}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
       use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-      ties = "first", nthreads = .ce[["nthreads"]], \dots)
+      ties = "first", nthreads = .opt[["nthreads"]], \dots)
 }
 \arguments{
 \item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}

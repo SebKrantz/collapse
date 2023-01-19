@@ -8,7 +8,7 @@ Fast and Flexible Distance Computations
 A fast and flexible replacement for \code{\link{dist}}, to compute euclidean distances.
 }
 \usage{
-fdist(x, v = NULL, ..., method = "euclidean", nthreads = .ce[["nthreads"]])
+fdist(x, v = NULL, ..., method = "euclidean", nthreads = .opt[["nthreads"]])
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

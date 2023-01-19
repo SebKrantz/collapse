@@ -13,7 +13,7 @@ A faster alternative to \code{\link{quantile}} (written fully in C), that suppor
 fquantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
           o = if(length(x) > 1e5L && length(probs) > log(length(x)))
               radixorder(x) else NULL,
-          na.rm = .ce[["na.rm"]], type = 7L, names = TRUE,
+          na.rm = .opt[["na.rm"]], type = 7L, names = TRUE,
           check.o = is.null(attr(o, "sorted")))
 
 # Programmers version: no names, intelligent defaults, or checks
@@ -21,7 +21,7 @@ fquantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
           na.rm = TRUE, type = 7L, names = FALSE, check.o = FALSE)
 
 # Fast range (min and max)
-frange(x, na.rm = .ce[["na.rm"]])
+frange(x, na.rm = .opt[["na.rm"]])
 .range(x, na.rm = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.

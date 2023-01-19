@@ -105,7 +105,7 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
 
 fquantile <- function(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
                       o = if(length(x) > 1e5L && length(probs) > log(length(x))) radixorder(x) else NULL,
-                      na.rm = .ce[["na.rm"]], type = 7L, names = TRUE,
+                      na.rm = .opt[["na.rm"]], type = 7L, names = TRUE,
                       check.o = is.null(attr(o, "sorted")))
   .Call(C_fquantile, x, probs, w, o, na.rm, type, names, check.o)
 

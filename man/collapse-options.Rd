@@ -2,22 +2,22 @@
 \alias{collapse-options}
 \alias{set_collapse}
 \alias{get_collapse}
-\alias{.ce}
+\alias{.opt}
 \title{\emph{collapse} Package Options}
-\description{Global options affecting package operation. There are 2 kinds of options, those implemented using \code{\link{options}} (retrievable using \code{\link{getOption}}), and those implemented (to avoid the performance overhead of \code{getOption()}) using \code{set_collapse()} (retrievable using \code{get_collapse()}). The latter are implemented using an \link{environment} called \code{.ce} contained in the package namespace.}
+\description{Global options affecting package operation. There are 2 kinds of options, those implemented using \code{\link{options}} (retrievable using \code{\link{getOption}}), and those implemented (to avoid the performance overhead of \code{getOption()}) using \code{set_collapse()} (retrievable using \code{get_collapse()}). The latter are implemented using an \link{environment} called \code{.opt} contained in the package namespace.}
 
 \usage{
 set_collapse(\dots)
 get_collapse(opts = NULL)
 }
 \arguments{
-\item{\dots}{either comma separated options, or a list of options. Currently only options \code{nthreads = integer} or \code{na.rm = TRUE|FALSE} are supported. These are added to \code{.ce}.}
-\item{opts}{character. A vector of options to receive from \code{.ce}, or \code{NULL} for all options.}
+\item{\dots}{either comma separated options, or a list of options. Currently only options \code{nthreads = integer} or \code{na.rm = TRUE|FALSE} are supported. These are added to \code{.opt}.}
+\item{opts}{character. A vector of options to receive from \code{.opt}, or \code{NULL} for all options.}
 
 }
 
 \value{
-\code{set_collapse()} returns the old content of \code{.ce} invisibly as a list. \code{get_collapse()}, if called with only one option, returns the value of the option, and otherwise a list.
+\code{set_collapse()} returns the old content of \code{.opt} invisibly as a list. \code{get_collapse()}, if called with only one option, returns the value of the option, and otherwise a list.
 }
 
 \section{Options Set Using \code{options()}}{

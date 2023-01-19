@@ -2,23 +2,23 @@
 # Global Options
 set_collapse <- function(...) {
   opts <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
-  ce_old <- as.list(.ce)
+  ce_old <- as.list(.opt)
   nam <- names(opts)
   if(any(nam %!in% c("nthreads", "na.rm"))) stop("Currently only supports options 'nthreads' and 'na.rm'")
   if(length(opts$nthreads)) {
     nthreads <- as.integer(opts$nthreads)
     if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
-    .ce$nthreads <- nthreads
+    .opt$nthreads <- nthreads
   }
   if(length(opts$na.rm)) {
     na.rm <- as.logical(opts$na.rm)
     if(is.na(na.rm)) stop("na.rm needs to be TRUE or FALSE")
-    .ce$na.rm <- na.rm
+    .opt$na.rm <- na.rm
   }
   invisible(ce_old)
 }
 
-get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.ce) else if(length(opts) == 1L) .ce[[opts]] else `names<-`(lapply(opts, function(x) .ce[[x]]), opts)
+get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.opt) else if(length(opts) == 1L) .opt[[opts]] else `names<-`(lapply(opts, function(x) .opt[[x]]), opts)
 
 # Global Macros
 

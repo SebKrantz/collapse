@@ -3,7 +3,7 @@
 
 fmean <- function(x, ...) UseMethod("fmean") # , x
 
-fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]], use.g.names = TRUE, nthreads = .ce[["nthreads"]], ...) {
+fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]], use.g.names = TRUE, nthreads = .opt[["nthreads"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fmean.matrix(x, g, w, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -27,7 +27,7 @@ fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm
   TRAC(x,.Call(C_fmean,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,nthreads),g[[2L]],TRA, ...)
 }
 
-fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]], use.g.names = TRUE, drop = TRUE, nthreads = .ce[["nthreads"]], ...) {
+fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]], use.g.names = TRUE, drop = TRUE, nthreads = .opt[["nthreads"]], ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fmeanm,x,0L,0L,NULL,w,na.rm,drop,nthreads))
@@ -50,7 +50,7 @@ fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"
   TRAmC(x,.Call(C_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop,nthreads),g[[2L]],TRA, ...)
 }
 
-fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]], use.g.names = TRUE, drop = TRUE, nthreads = .ce[["nthreads"]], ...) {
+fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]], use.g.names = TRUE, drop = TRUE, nthreads = .opt[["nthreads"]], ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fmeanl,x,0L,0L,NULL,w,na.rm,drop,nthreads))
@@ -76,8 +76,8 @@ fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na
 
 fmean.list <- function(x, ...) fmean.data.frame(x, ...)
 
-fmean.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]], use.g.names = FALSE,
-                             keep.group_vars = TRUE, keep.w = TRUE, nthreads = .ce[["nthreads"]], ...) {
+fmean.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]], use.g.names = FALSE,
+                             keep.group_vars = TRUE, keep.w = TRUE, nthreads = .opt[["nthreads"]], ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   wsym <- substitute(w)

@@ -11,18 +11,18 @@
 \usage{
 fsum(x, \dots)
 
-\method{fsum}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
-     use.g.names = TRUE, fill = FALSE, nthreads = .ce[["nthreads"]], \dots)
+\method{fsum}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+     use.g.names = TRUE, fill = FALSE, nthreads = .opt[["nthreads"]], \dots)
 
-\method{fsum}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
-     use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .ce[["nthreads"]], \dots)
+\method{fsum}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+     use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .opt[["nthreads"]], \dots)
 
-\method{fsum}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
-     use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .ce[["nthreads"]], \dots)
+\method{fsum}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
+     use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .opt[["nthreads"]], \dots)
 
-\method{fsum}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .ce[["na.rm"]],
+\method{fsum}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .opt[["na.rm"]],
      use.g.names = FALSE, keep.group_vars = TRUE,
-     keep.w = TRUE, fill = FALSE, nthreads = .ce[["nthreads"]], \dots)
+     keep.w = TRUE, fill = FALSE, nthreads = .opt[["nthreads"]], \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
