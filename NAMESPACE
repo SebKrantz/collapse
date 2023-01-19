@@ -333,6 +333,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(`%/=%`)
  export(alloc)
  export(frange)
+ export(.range)
  export(fquantile)
  export(.quantile)
  export(fdist)

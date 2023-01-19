@@ -2,6 +2,7 @@
 \alias{fquantile}
 \alias{.quantile}
 \alias{frange}
+\alias{.range}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Weighted) Sample Quantiles and Range}
@@ -21,6 +22,7 @@ fquantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
 
 # Fast range (min and max)
 frange(x, na.rm = .ce[["na.rm"]])
+.range(x, na.rm = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
