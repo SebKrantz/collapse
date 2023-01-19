@@ -18,10 +18,8 @@ set_collapse <- function(...) {
 
 get_collapse <- function(opts) if(length(opts) == 1L) .ce[[opts]] else `names<-`(lapply(opts, function(x) .ce[[x]]), opts)
 
-# global macros
+# Global Macros
 
-# TODO: need to create global option to change value of nthreads. Or, alternatively see of calls to .Options$collapse_nthreads are allowed
-# Could also do for na.rm default...
 
 .COLLAPSE_TOPICS <- c("collapse-documentation","fast-statistical-functions","fast-grouping-ordering",
                       "fast-data-manipulation","quick-conversion","advanced-aggregation",
