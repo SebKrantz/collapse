@@ -129,6 +129,10 @@ fsumC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, fill = FALSE, nthre
     .Call(C_fsum, x, ng, g, w, narm, fill, nthreads)
 }
 
+fsummCcc <- function(x, w = NULL, drop = TRUE) {
+  .Call(C_fsumm, x, 0L, 0L, w, FALSE, FALSE, drop, 1L)
+}
+
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {
     .Call(Cpp_fvarsd, x, ng, g, gs, w, narm, stable_algo, sd)
 }

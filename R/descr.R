@@ -51,7 +51,7 @@ sorttable2D <- function(x, f, srt, w = NULL) {
 #   }
 #   if(transpose) {
 #     t <- qtab(f, x, w = w, dnn = NULL)
-#     tot <- unattrib(fsum.matrix(t))
+#     tot <- unattrib(fsummCcc(t))
 #     t <- rbind(t, Total = tot)
 #   } else {
 #     t <- qtab(x, f, w = w, dnn = NULL)
@@ -109,9 +109,9 @@ descr_core <- function(X, nam, by = NULL, w = NULL, Ndistinct = TRUE, higher = T
       f <- as_factor_GRP(by)
 
       tabstats <- if(Ndistinct && is.null(w))
-        function(tab) cbind(N = fsum.matrix(tab), Ndist = fsum.matrix(tab > 0L)) else if(Ndistinct)
-        function(tab) cbind(WeightSum = fsum.matrix(tab), Ndist = fsum.matrix(tab > 0L)) else if(is.null(w))
-        function(tab) cbind(N = fsum.matrix(tab)) else function(tab) cbind(WeightSum = fsum.matrix(tab))
+        function(tab) cbind(N = fsummCcc(tab), Ndist = fsummCcc(tab > 0L)) else if(Ndistinct)
+        function(tab) cbind(WeightSum = fsummCcc(tab), Ndist = fsummCcc(tab > 0L)) else if(is.null(w))
+        function(tab) cbind(N = fsummCcc(tab)) else function(tab) cbind(WeightSum = fsummCcc(tab))
 
       descrcat <- function(x) {
         tab <- sorttable2D(x, f, sort.table, w)
@@ -143,7 +143,7 @@ descr_core <- function(X, nam, by = NULL, w = NULL, Ndistinct = TRUE, higher = T
                                                 Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), "N"), `names<-`(frange(x), c("Min", "Max")))) else
                                function(x) list(Class = class(x), Label = attr(x, label.attr),
                                                 Stats = cbind(N = fnobs.default(x, by), Ndist = if(Ndistinct) fndistinctC(x, by) else NULL,
-                                                              Min = fmin.default(x, by, use.g.names = FALSE), Max = fmax.default(x, by, use.g.names = FALSE)))
+                                                              Min = fmin.default(x, by, na.rm = TRUE, use.g.names = FALSE), Max = fmax.default(x, by, na.rm = TRUE, use.g.names = FALSE)))
 
   # Result vector and attributes
   res <- vector('list', length(X))
@@ -355,7 +355,7 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     xi <- x[[i]]
     cat(nam[i], " (", strclp(xi[[1L]]),"): ", xi[[2L]], "\n", sep = "")
     stat <- xi[[3L]]
-    Ni <- fsum.matrix(stat[, 1L, drop = FALSE]) # to get the name
+    Ni <- fsummCcc(stat[, 1L, drop = FALSE]) # to get the name
     TN <- if(wsuml && names(Ni) == "WeightSum") wsum else DSN
     if(Ni < TN) cat("Statistics (", names(Ni), " = ", Ni, ", ", round((1-Ni/TN)*100, digits), "% NAs)\n", sep = "")
     else cat("Statistics (", names(Ni), " = ", Ni, ")\n", sep = "")
@@ -372,11 +372,11 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
         if(total) t <- cbind(t, Total = if(is.integer(t)) as.integer(frowSums(t)) else frowSums(t))
         if(nrow(t) <= n) { # TODO: revisit !
           tab <- t
-          if(perc) pct <- fsum.matrix(tab, TRA = "%")
+          if(perc) pct <- fsum.matrix(tab, TRA = "%", na.rm = FALSE, nthreads = 1L)
         } else {
           t1 <- t[seq_len(n), , drop = FALSE]
-          st <- fsum.matrix(t, drop = FALSE)
-          rem <- st - fsum.matrix(t1)
+          st <- fsummCcc(t, drop = FALSE)
+          rem <- st - fsummCcc(t1)
           dimnames(rem)[[1L]] <- sprintf("... %s Others", nrow(t)-n)
           tab <- rbind(t1, rem)
           if(perc) pct <- tab %r/% st * 100 # dimnames(tab)[[2L]] <- paste0(dimnames(tab)[[2L]], "\nFreq  Perc")
