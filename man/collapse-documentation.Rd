@@ -70,7 +70,7 @@ Data and Global Macros \tab\tab Groningen Growth and Development Centre 10-Secto
 }
 
 
-}
+
 
 
 \section{Details}{
