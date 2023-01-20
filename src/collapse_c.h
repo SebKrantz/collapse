@@ -13,7 +13,8 @@ extern int max_threads;
 inline SEXP my_ScalarLogical(int x)
 {
   SEXP ans = allocVector(LGLSXP, 1);
-  SET_SCALAR_LVAL(ans, x);
+  // SET_SCALAR_LVAL(ans, x); // Not part of the API
+  LOGICAL(ans)[0] = x;
   return ans;
 }
 
