@@ -20,7 +20,7 @@ It performs simple and weighted aggregations, multi-type aggregations automatica
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.1</span>
       </span>
     </div>
 
@@ -151,7 +151,7 @@ It performs simple and weighted aggregations, multi-type aggregations automatica
     <h2>Details</h2>
     <p><code>collap</code> automatically checks each function passed to it whether it is a <a href="fast-statistical-functions.html">Fast Statistical Function</a> (i.e. whether the function name is contained in <code>.FAST_STAT_FUN</code>). If the function is a fast statistical function, <code>collap</code> only does the grouping and then calls the function to carry out the grouped computations (vectorized in C/C++), resulting in high aggregation speeds, even with weights. If the function is not one of <code>.FAST_STAT_FUN</code>, <code><a href="BY.html">BY</a></code> is called internally to perform the computation. The resulting computations from each function are put into a list and recombined to produce the desired output format as controlled by the <code>return</code> argument. This is substantially slower, particularly with many groups.</p>
 <p>When setting <code>parallel = TRUE</code> on a non-windows computer, aggregations will efficiently be parallelized at the column level using <code>mclapply</code> utilizing <code>mc.cores</code> cores. Some <a href="fast-statistical-functions.html">Fast Statistical Function</a> support multithreading i.e. have an <code>nthreads</code> argument that can be passed to <code>collap</code>. Using C-level multithreading is much more effective than R-level parallelism, and also works on Windows, but the two should never be combined.</p>
-<p>When the <code>w</code> argument is used, the weights are passed to all functions excecpt for <code>wFUN</code>. This may be undesirable in settings like <code>collap(data, ~ id, custom = list(fsum = ..., fmean = ...), w = ~ weights)</code> where we wish to aggregate some columns using the weighted mean, and others using a simple sum or another unweighted statistic. <!-- %Since many \link[=fast-statistical-functions]{Fast Statistical Functions} including \code{\link{fsum}} support weights, the above computes a weighted mean and a weighted sum. A couple of workarounds were outlined \href{https://github.com/SebKrantz/collapse/issues/96}{here}, but \emph{collapse} 1.5.0 incorporates an easy solution into \code{collap}: -->
+<p>When the <code>w</code> argument is used, the weights are passed to all functions except for <code>wFUN</code>. This may be undesirable in settings like <code>collap(data, ~ id, custom = list(fsum = ..., fmean = ...), w = ~ weights)</code> where we wish to aggregate some columns using the weighted mean, and others using a simple sum or another unweighted statistic. <!-- %Since many \link[=fast-statistical-functions]{Fast Statistical Functions} including \code{\link{fsum}} support weights, the above computes a weighted mean and a weighted sum. A couple of workarounds were outlined \href{https://github.com/SebKrantz/collapse/issues/96}{here}, but \emph{collapse} 1.5.0 incorporates an easy solution into \code{collap}: -->
 Therefore it is possible to append <a href="fast-statistical-functions.html">Fast Statistical Functions</a> by <code>_uw</code> to yield an unweighted computation. So for the above example one can specify: <code>collap(data, ~ id, custom = list(fsum_uw = ..., fmean = ...), w = ~ weights)</code> to get the weighted mean and the simple sum. <em>Note</em> that the <code>_uw</code> functions are not available for use outside collap. Thus one also needs to quote them when passing to the <code>FUN</code> or <code>catFUN</code> arguments, e.g. use <code>collap(data, ~ id, fmean, "fmode_uw", w = ~ weights)</code>. <!-- %\emph{Note} also that it is never necessary for functions passed to \code{wFUN} to be appended like this, as the weights are never used to aggregate themselves. --></p>
     </div>
     <div id="value">
@@ -263,14 +263,14 @@ Therefore it is possible to append <a href="fast-statistical-functions.html">Fas
 <span class="r-in"><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="efficient-programming.html">fnrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="op">~</span> <span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>                           <span class="co"># Some random weights..</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    weights Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 34.85137     5.007570    3.447817     1.465864   0.2334398     setosa</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 36.05852     5.911016    2.769994     4.261595   1.3269501 versicolor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 42.41710     6.498924    2.941049     5.458707   1.9899170  virginica</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 36.54716     5.003058    3.428455     1.477223   0.2418522     setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 34.14693     5.929806    2.754688     4.252394   1.3144173 versicolor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 41.93264     6.535029    3.004267     5.555391   2.0607617  virginica</span>
 <span class="r-in"><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="va">iris</span><span class="op">$</span><span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>                        <span class="co"># Note this behavior..</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species  weights Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 34.85137     5.007570    3.447817     1.465864   0.2334398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 36.05852     5.911016    2.769994     4.261595   1.3269501</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 42.41710     6.498924    2.941049     5.458707   1.9899170</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 36.54716     5.003058    3.428455     1.477223   0.2418522</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 34.14693     5.929806    2.754688     4.252394   1.3144173</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 41.93264     6.535029    3.004267     5.555391   2.0607617</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor</span>
@@ -278,9 +278,9 @@ Therefore it is possible to append <a href="fast-statistical-functions.html">Fas
 <span class="r-in"><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="va">iris</span><span class="op">$</span><span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span>,</span>
 <span class="r-in">       keep.by <span class="op">=</span> <span class="cn">FALSE</span>, keep.w <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.007570    3.447817     1.465864   0.2334398     setosa</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.911016    2.769994     4.261595   1.3269501 versicolor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     6.498924    2.941049     5.458707   1.9899170  virginica</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.003058    3.428455     1.477223   0.2418522     setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.929806    2.754688     4.252394   1.3144173 versicolor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     6.535029    3.004267     5.555391   2.0607617  virginica</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"></span>
