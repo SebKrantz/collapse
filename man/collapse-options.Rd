@@ -4,7 +4,7 @@
 \alias{get_collapse}
 \alias{.op}
 \title{\emph{collapse} Package Options}
-\description{Global options affecting package operation. There are 2 kinds of options, those implemented using \code{\link{options}} (retrievable using \code{\link{getOption}}), and those implemented (to avoid the performance overhead of \code{getOption()}) using \code{set_collapse()} (retrievable using \code{get_collapse()}). The latter are implemented using an \link{environment} called \code{.op} contained in the package namespace.}
+\description{Global options affecting package operation. There are 2 kinds of options, those set using \code{\link{options}} (retrievable using \code{\link{getOption}}), and those set (to avoid the performance overhead of \code{getOption()}) using \code{set_collapse()} (retrievable using \code{get_collapse()}). The latter are implemented using an \link{environment} called \code{.op} contained in the package namespace.}
 
 \usage{
 set_collapse(\dots)
