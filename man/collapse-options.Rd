@@ -50,7 +50,7 @@ In General, this option is for your convenience, if you want to write visually m
 }
 }
 \note{
-Options \code{"collapse_mask"} and \code{"collapse_export_F"} need to be set before the package is loaded, which means befor any component of the package is accessed in any way, including the loading of packages that depend on \emph{collapse}.
+Options \code{"collapse_mask"} and \code{"collapse_export_F"} need to be set before the package is loaded, which means before any component of the package is accessed in any way, including the loading of packages that depend on \emph{collapse}.
 
 A safe way to set them is by using a \code{\link{.Rprofile}} file in your user or project directory (see also \href{https://www.statmethods.net/interface/customizing.html}{here}, the user-level file is located at \code{file.path(Sys.getenv("HOME"), ".Rprofile")} and can be edited using \code{file.edit(Sys.getenv("HOME"), ".Rprofile")}), or by using a \href{https://fastverse.github.io/fastverse/articles/fastverse_intro.html#custom-fastverse-configurations-for-projects}{\code{.fastverse}} configuration file in the project directory.
 }
