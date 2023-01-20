@@ -178,7 +178,7 @@ if(probs[0] == 0.0 || probs[np-1] == 1.0) {                                   \
 */
 #define FQUANTILE_CORE(QFUN)                                                  \
   double h, Q;                                                                \
-  int ih;                                                                     \
+  int ih = 0; /* To avoid -Wmaybe-uninitialized */                            \
   for(int i = 0, offset = 0; i < np; ++i) {                                   \
     Q = probs[i];                                                             \
     if(Q > 0.0 && Q < 1.0) {                                                  \
@@ -460,7 +460,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
 double dquickselect(double *x, const int n, const int ret, const double Q) {
   if(n == 0) return NA_REAL;
   unsigned int elem;
-  double a, b, h;
+  double a, b, h = 0.0; /* To avoid -Wmaybe-uninitialized */
   RETQSWITCH(n);
   elem = h; h -= elem; // need to subtract elem
   QUICKSELECT(dswap);
@@ -475,7 +475,7 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
   if(n == 0) return NA_REAL;
   unsigned int elem;
   int a, b;
-  double h;
+  double h = 0.0; /* To avoid -Wmaybe-uninitialized */
   RETQSWITCH(n);
   elem = h; h -= elem; // need to subtract elem
   QUICKSELECT(iswap);
@@ -491,7 +491,7 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 
 // Expects pw and po to be consistent
 double w_compute_h(const double *pw, const int *po, const int l, const int sorted, const int ret, const double Q) {
-  double sumw = 0.0, mu, h;
+  double sumw = 0.0, mu, h = 0.0; /* To avoid -Wmaybe-uninitialized */
   int nw0 = 0;
   if(sorted) {
     for(int i = 0; i != l; ++i) {
@@ -583,7 +583,7 @@ if(ret < 3) { /* lower (2), or average (1) element*/                         \
 // Expects pointer px to be decremented by 1
 #undef NTH_ORDVEC
 #define NTH_ORDVEC                                                         \
-double a, b, h;                                                            \
+double a, b, h = 0.0; /* To avoid -Wmaybe-uninitialized */                 \
 RETQSWITCH(l);                                                             \
 int ih = h; a = px[po[ih]]; h -= ih;                                       \
 if((ret < 4 && (ret != 1 || l%2 == 1)) || ih == l-1 || h <= 0.0) return a; \
