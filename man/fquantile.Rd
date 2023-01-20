@@ -2,6 +2,7 @@
 \alias{fquantile}
 \alias{.quantile}
 \alias{frange}
+\alias{.range}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast (Weighted) Sample Quantiles and Range}
@@ -12,7 +13,7 @@ A faster alternative to \code{\link{quantile}} (written fully in C), that suppor
 fquantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
           o = if(length(x) > 1e5L && length(probs) > log(length(x)))
               radixorder(x) else NULL,
-          na.rm = TRUE, type = 7L, names = TRUE,
+          na.rm = .op[["na.rm"]], type = 7L, names = TRUE,
           check.o = is.null(attr(o, "sorted")))
 
 # Programmers version: no names, intelligent defaults, or checks
@@ -20,7 +21,8 @@ fquantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
           na.rm = TRUE, type = 7L, names = FALSE, check.o = FALSE)
 
 # Fast range (min and max)
-frange(x, na.rm = TRUE)
+frange(x, na.rm = .op[["na.rm"]])
+.range(x, na.rm = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -34,7 +36,7 @@ frange(x, na.rm = TRUE)
   \item{check.o}{logical. If \code{o} is supplied, \code{TRUE} runs through \code{o} once and checks that it is valid, i.e. that each element is in \code{[1, length(x)]}. Set to \code{FALSE} for significant speedup if \code{o} is known to be valid. }
 }
 \details{
-\code{fquantile} is implemented using a quickselect algorithm in C, inspired by \emph{data.table}'s \code{gmedian}. The algorithm is applied incrementally to different sections of the array to find individual quantiles. If many quantile probabilities are requested, sorting the whole array with the fast \code{\link{radixorder}} algorithm is more efficient. The default thereshold for this (\code{length(x) > 1e5L && length(probs) > log(length(x))}) is conservative, given that quickselect is generally more efficient on longitudinal data with similar values repeated by groups. With random data, my investigations yield that a threshold of \code{length(probs) > log10(length(x))} would be more appropriate.
+\code{fquantile} is implemented using a quickselect algorithm in C, inspired by \emph{data.table}'s \code{gmedian}. The algorithm is applied incrementally to different sections of the array to find individual quantiles. If many quantile probabilities are requested, sorting the whole array with the fast \code{\link{radixorder}} algorithm is more efficient. The default threshold for this (\code{length(x) > 1e5L && length(probs) > log(length(x))}) is conservative, given that quickselect is generally more efficient on longitudinal data with similar values repeated by groups. With random data, my investigations yield that a threshold of \code{length(probs) > log10(length(x))} would be more appropriate.
 
 Weighted quantile estimation, in a nutshell, is done by internally calling \code{radixorder(x)} (unless \code{o} is supplied), and summing the weights in order until the lowest required order statistic \code{j} is found, which corresponds to exceeding a target sum of weights that is a function of the probability \code{p}, the quantile method (see \code{\link{quantile}}), the total sum of weights, and the average weight. For quantile type 7 the target sum is \code{sumwp = (sum(w) - mean(w)) * p} (resembling \code{(n - 1) * p} in the unweighted case). Then, a continuous index \code{h} in [0, 1] is determined as one minus the difference between the sum of weights associated with \code{j} and the target sum, divided by the weight of element \code{j+1}, that is \code{h = 1 - (sumwj - sumwp) / w[j+1]}. A weighted quantile can then be computed as a weighted average of 2 order statistics, exactly as in the unweighted case: \code{WQ[i](p) = (1 - h) x[j] + h x[j+1]}. If the order statistic \code{j+1} has a zero weight, \code{j+2} is taken (or \code{j+3} if \code{j+2} also has zero weight etc..). The Examples section provides a demonstration in R that is roughly equivalent to the algorithm just outlined.
 

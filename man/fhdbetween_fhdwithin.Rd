@@ -39,39 +39,41 @@ fhdbetween(x, \dots)
        HDB(x, \dots)
        HDW(x, \dots)
 
-\method{fhdbetween}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
-\method{fhdwithin}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
-\method{HDB}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
-\method{HDW}{default}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
+\method{fhdbetween}{default}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", \dots)
+\method{fhdwithin}{default}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", \dots)
+\method{HDB}{default}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", \dots)
+\method{HDW}{default}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", \dots)
 
-\method{fhdbetween}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
-\method{fhdwithin}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", \dots)
-\method{HDB}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", lm.method = "qr", \dots)
-\method{HDW}{matrix}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", \dots)
+\method{fhdbetween}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", \dots)
+\method{fhdwithin}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", \dots)
+\method{HDB}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "HDB.",
+    lm.method = "qr", \dots)
+\method{HDW}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "HDW.",
+    lm.method = "qr", \dots)
 
-\method{fhdbetween}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
+\method{fhdbetween}{data.frame}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
            variable.wise = FALSE, lm.method = "qr", \dots)
-\method{fhdwithin}{data.frame}(x, fl, w = NULL, na.rm = TRUE, fill = FALSE,
+\method{fhdwithin}{data.frame}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
           variable.wise = FALSE, lm.method = "qr", \dots)
-\method{HDB}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
+\method{HDB}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
     variable.wise = FALSE, stub = "HDB.", lm.method = "qr", \dots)
-\method{HDW}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
+\method{HDW}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
     variable.wise = FALSE, stub = "HDW.", lm.method = "qr", \dots)
 
 # Methods for indexed data / compatibility with plm:
 
-\method{fhdbetween}{pseries}(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{fhdwithin}{pseries}(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{HDB}{pseries}(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, \dots)
-\method{HDW}{pseries}(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, \dots)
+\method{fhdbetween}{pseries}(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, \dots)
+\method{fhdwithin}{pseries}(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, \dots)
+\method{HDB}{pseries}(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, \dots)
+\method{HDW}{pseries}(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, \dots)
 
-\method{fhdbetween}{pdata.frame}(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE,
+\method{fhdbetween}{pdata.frame}(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE,
            variable.wise = TRUE, \dots)
-\method{fhdwithin}{pdata.frame}(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE,
+\method{fhdwithin}{pdata.frame}(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE,
           variable.wise = TRUE, \dots)
-\method{HDB}{pdata.frame}(x, effect = "all", w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{HDB}{pdata.frame}(x, effect = "all", w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
     fill = TRUE, variable.wise = TRUE, stub = "HDB.", \dots)
-\method{HDW}{pdata.frame}(x, effect = "all", w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{HDW}{pdata.frame}(x, effect = "all", w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
     fill = TRUE, variable.wise = TRUE, stub = "HDW.", \dots)
 }
 

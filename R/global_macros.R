@@ -1,25 +1,32 @@
 
-# .NA_RM <- TRUE
+# Global Options
+set_collapse <- function(...) {
+  opts <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
+  op_old <- as.list(.op)
+  nam <- names(opts)
+  if(any(nam %!in% c("nthreads", "na.rm"))) stop("Currently only supports options 'nthreads' and 'na.rm'")
+  if(length(opts$nthreads)) {
+    nthreads <- as.integer(opts$nthreads)
+    if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
+    .op$nthreads <- nthreads
+  }
+  if(length(opts$na.rm)) {
+    na.rm <- as.logical(opts$na.rm)
+    if(is.na(na.rm)) stop("na.rm needs to be TRUE or FALSE")
+    .op$na.rm <- na.rm
+  }
+  invisible(op_old)
+}
 
-# global macros
+get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(length(opts) == 1L) .op[[opts]] else `names<-`(lapply(opts, function(x) .op[[x]]), opts)
 
-# .COLLAPSE_NTHREADS <- 1L
-#
-# set_collapse <- function(...) {
-#   opts <- list(...)
-#   if(length(opts) > 1L || is.null(opts$nthreads)) stop("Can currently only set option 'nthreads'")
-#   nthreads <- as.integer(opts$nthreads)
-#   if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
-#   assign(".COLLAPSE_NTHREADS", nthreads, pos = getNamespace("collapse")) # not allowed!
-# }
+# Global Macros
 
-# TODO: need to create global option to change value of nthreads. Or, alternatively see of calls to .Options$collapse_nthreads are allowed
-# Could also do for na.rm default...
 
 .COLLAPSE_TOPICS <- c("collapse-documentation","fast-statistical-functions","fast-grouping-ordering",
                       "fast-data-manipulation","quick-conversion","advanced-aggregation",
                       "data-transformations","time-series-panel-series","list-processing",
-                      "summary-statistics","recode-replace","efficient-programming","small-helpers")
+                      "summary-statistics","recode-replace","efficient-programming","small-helpers","collapse-options")
 
 # .COLLAPSE_TOPICS <- c("collapse-documentation","A1-fast-statistical-functions","A2-fast-grouping-ordering",
 #                       "A3-fast-data-manipulation","A4-quick-conversion","A5-advanced-aggregation",

@@ -2,7 +2,7 @@
 
 fnth <- function(x, n = 0.5, ...) UseMethod("fnth") # , x
 
-fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ties = "q7", nthreads = 1L, o = NULL, check.o = is.null(attr(o, "sorted")), ...) {
+fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ties = "q7", nthreads = .op[["nthreads"]], o = NULL, check.o = is.null(attr(o, "sorted")), ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fnth.matrix(x, n, g, w, TRA, na.rm, use.g.names, ties = ties, nthreads = nthreads, ...))
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fnth, x, n, g, w, na.rm, ties, nthreads, o, check.o)
@@ -15,7 +15,7 @@ fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRU
   TRAC(x,res,g[[2L]],TRA, ...)
 }
 
-fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = 1L, ...) {
+fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = .op[["nthreads"]], ...) {
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fnthm, x, n, g, w, na.rm, drop, ties, nthreads)
   if(is.null(TRA)) {
@@ -27,7 +27,7 @@ fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE
   TRAmC(x,res,g[[2L]],TRA, ...)
 }
 
-fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = 1L, ...) {
+fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = .op[["nthreads"]], ...) {
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fnthl, x, n, g, w, na.rm, drop, ties, nthreads)
   if(is.null(TRA)) {
@@ -42,8 +42,8 @@ fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = 
 
 fnth.list <- function(x, ...) fnth.data.frame(x, ...)
 
-fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
-                             keep.group_vars = TRUE, keep.w = TRUE, ties = "q7", nthreads = 1L, ...) {
+fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
+                             keep.group_vars = TRUE, keep.w = TRUE, ties = "q7", nthreads = .op[["nthreads"]], ...) {
 
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
@@ -109,8 +109,8 @@ fmedian.data.frame <- function(x, ..., ties = "mean")
 
 fmedian.list <- fmedian.data.frame
 
-fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
-                            keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", nthreads = 1L, ...) {
+fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
+                            keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", nthreads = .op[["nthreads"]], ...) {
 
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE

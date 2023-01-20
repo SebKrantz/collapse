@@ -12,17 +12,17 @@
 \usage{
 fndistinct(x, \dots)
 
-\method{fndistinct}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, nthreads = 1L, \dots)
+\method{fndistinct}{default}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
+           use.g.names = TRUE, nthreads = .op[["nthreads"]], \dots)
 
-\method{fndistinct}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
+\method{fndistinct}{matrix}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
+           use.g.names = TRUE, drop = TRUE, nthreads = .op[["nthreads"]], \dots)
 
-\method{fndistinct}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-           use.g.names = TRUE, drop = TRUE, nthreads = 1L, \dots)
+\method{fndistinct}{data.frame}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
+           use.g.names = TRUE, drop = TRUE, nthreads = .op[["nthreads"]], \dots)
 
-\method{fndistinct}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
-           use.g.names = FALSE, keep.group_vars = TRUE, nthreads = 1L, \dots)
+\method{fndistinct}{grouped_df}(x, TRA = NULL, na.rm = .op[["na.rm"]],
+           use.g.names = FALSE, keep.group_vars = TRUE, nthreads = .op[["nthreads"]], \dots)
 }
 \arguments{
 \item{x}{a vector, matrix, data frame or grouped data frame (class 'grouped_df').}

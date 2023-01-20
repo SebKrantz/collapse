@@ -11,16 +11,16 @@
 \usage{
 fprod(x, \dots)
 
-\method{fprod}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fprod}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
       use.g.names = TRUE, \dots)
 
-\method{fprod}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fprod}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
       use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{fprod}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fprod}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
       use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{fprod}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fprod}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
       use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 \arguments{

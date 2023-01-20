@@ -17,24 +17,24 @@
 fmax(x, \dots)
 fmin(x, \dots)
 
-\method{fmax}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmax}{default}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = TRUE, \dots)
-\method{fmin}{default}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmin}{default}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = TRUE, \dots)
 
-\method{fmax}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmax}{matrix}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = TRUE, drop = TRUE, \dots)
-\method{fmin}{matrix}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, \dots)
-
-\method{fmax}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, \dots)
-\method{fmin}{data.frame}(x, g = NULL, TRA = NULL, na.rm = TRUE,
+\method{fmin}{matrix}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = TRUE, drop = TRUE, \dots)
 
-\method{fmax}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
+\method{fmax}{data.frame}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
+     use.g.names = TRUE, drop = TRUE, \dots)
+\method{fmin}{data.frame}(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
+     use.g.names = TRUE, drop = TRUE, \dots)
+
+\method{fmax}{grouped_df}(x, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = FALSE, keep.group_vars = TRUE, \dots)
-\method{fmin}{grouped_df}(x, TRA = NULL, na.rm = TRUE,
+\method{fmin}{grouped_df}(x, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = FALSE, keep.group_vars = TRUE, \dots)
 }
 \arguments{

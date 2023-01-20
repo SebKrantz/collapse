@@ -25,31 +25,31 @@ Fast (Grouped, Weighted) Scaling and Centering of Matrix-like Objects
 fscale(x, \dots)
    STD(x, \dots)
 
-\method{fscale}{default}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
-\method{STD}{default}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
+\method{fscale}{default}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
+\method{STD}{default}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
 
-\method{fscale}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
-\method{STD}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
+\method{fscale}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
+\method{STD}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1,
     stub = "STD.", \dots)
 
-\method{fscale}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
-\method{STD}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{fscale}{data.frame}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
+\method{STD}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
     mean = 0, sd = 1, stub = "STD.", keep.by = TRUE, keep.w = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
-\method{fscale}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
-\method{STD}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
+\method{fscale}{pseries}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
+\method{STD}{pseries}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
 
-\method{fscale}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, \dots)
-\method{STD}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{fscale}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
+\method{STD}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
     mean = 0, sd = 1, stub = "STD.", keep.ids = TRUE, keep.w = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
-\method{fscale}{grouped_df}(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
+\method{fscale}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1,
        keep.group_vars = TRUE, keep.w = TRUE, \dots)
-\method{STD}{grouped_df}(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1,
+\method{STD}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1,
     stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.

@@ -2,7 +2,7 @@
 
 fsum <- function(x, ...) UseMethod("fsum") # , x
 
-fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, fill = FALSE, nthreads = 1L, ...) {
+fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, fill = FALSE, nthreads = .op[["nthreads"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fsum.matrix(x, g, w, TRA, na.rm, use.g.names, fill = fill, nthreads = nthreads, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -26,7 +26,7 @@ fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
   TRAC(x,.Call(C_fsum,x,g[[1L]],g[[2L]],w,na.rm,fill,nthreads),g[[2L]],TRA, ...)
 }
 
-fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = 1L, ...) {
+fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .op[["nthreads"]], ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fsumm,x,0L,0L,w,na.rm,fill,drop,nthreads))
@@ -49,7 +49,7 @@ fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.n
   TRAmC(x,.Call(C_fsumm,x,g[[1L]],g[[2L]],w,na.rm,fill,FALSE,nthreads),g[[2L]],TRA, ...)
 }
 
-fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = 1L, ...) {
+fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .op[["nthreads"]], ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fsuml,x,0L,0L,w,na.rm,fill,drop,nthreads))
@@ -75,8 +75,8 @@ fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use
 
 fsum.list <- function(x, ...) fsum.data.frame(x, ...)
 
-fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
-                             keep.group_vars = TRUE, keep.w = TRUE, fill = FALSE, nthreads = 1L, ...) {
+fsum.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
+                             keep.group_vars = TRUE, keep.w = TRUE, fill = FALSE, nthreads = .op[["nthreads"]], ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   wsym <- substitute(w)

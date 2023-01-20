@@ -3,7 +3,7 @@
 
 ffirst <- function(x, ...) UseMethod("ffirst") # , x
 
-ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(ffirst.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -27,7 +27,7 @@ ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = 
   TRAC(x,.Call(C_ffirst,x,g[[1L]],g[[2L]],g$group.starts,na.rm),g[[2L]],TRA, ...)
 }
 
-ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_ffirstm,x,0L,0L,NULL,na.rm,drop))
@@ -50,7 +50,7 @@ ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
   TRAmC(x,.Call(C_ffirstm,x,g[[1L]],g[[2L]],g$group.starts,na.rm,FALSE),g[[2L]],TRA, ...)
 }
 
-ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) if(drop) return(unlist(.Call(C_ffirstl,x,0L,0L,NULL,na.rm))) else return(.Call(C_ffirstl,x,0L,0L,NULL,na.rm))
@@ -76,7 +76,7 @@ ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
 
 ffirst.list <- function(x, ...) ffirst.data.frame(x, ...)
 
-ffirst.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+ffirst.grouped_df <- function(x, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   nam <- attr(x, "names")

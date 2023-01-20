@@ -12,7 +12,7 @@ ford <- function(x, g = NULL) {
 
 fcumsum <- function(x, ...) UseMethod("fcumsum") # , x
 
-fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
+fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fcumsum", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(length(o) && check.o) o <- ford(o, g)
@@ -21,7 +21,7 @@ fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, c
   .Call(C_fcumsum,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
-fcumsum.pseries <- function(x, na.rm = TRUE, fill = FALSE, shift = "time", ...) {
+fcumsum.pseries <- function(x, na.rm = .op[["na.rm"]], fill = FALSE, shift = "time", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- uncl2pix(x)
   g <- index[[1L]]
@@ -31,7 +31,7 @@ fcumsum.pseries <- function(x, na.rm = TRUE, fill = FALSE, shift = "time", ...) 
       .Call(C_fcumsum,x,fnlevels(g),g,o,na.rm,fill)
 }
 
-fcumsum.matrix <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
+fcumsum.matrix <- function(x, g = NULL, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(length(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsumm,x,0L,0L,o,na.rm,fill))
@@ -39,7 +39,7 @@ fcumsum.matrix <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, ch
   .Call(C_fcumsumm,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
-fcumsum.grouped_df <- function(x, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, keep.ids = TRUE, ...) {
+fcumsum.grouped_df <- function(x, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   osym <- substitute(o)
@@ -63,7 +63,7 @@ fcumsum.grouped_df <- function(x, o = NULL, na.rm = TRUE, fill = FALSE, check.o 
   .Call(C_fcumsuml,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
 
-fcumsum.data.frame <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, ...) {
+fcumsum.data.frame <- function(x, g = NULL, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(length(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsuml,x,0L,0L,o,na.rm,fill))
@@ -73,7 +73,7 @@ fcumsum.data.frame <- function(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE
 
 fcumsum.list <- function(x, ...) fcumsum.data.frame(x, ...)
 
-fcumsum.pdata.frame <- function(x, na.rm = TRUE, fill = FALSE, shift = "time", ...) {
+fcumsum.pdata.frame <- function(x, na.rm = .op[["na.rm"]], fill = FALSE, shift = "time", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- uncl2pix(x)
   g <- index[[1L]]

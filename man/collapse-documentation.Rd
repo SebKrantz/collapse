@@ -63,22 +63,14 @@ Other Statistical \tab\tab Fast euclidean distance computations, (weighted) samp
 
 Data and Global Macros \tab\tab Groningen Growth and Development Centre 10-Sector Database, World Bank World Development dataset, and some global macros containing links to the topical documentation pages (including this page), all exported objects (excluding exported S3 methods and depreciated functions), all generic functions (excluding depreciated), the 2 datasets, all fast functions, all fast statistical (scalar-valued) functions, and all transformation operators (these are not infix functions but function shortcuts resembling operators in a statistical sense, such as the lag/lead operators \code{L}/\code{F}, both wrapping \code{flag}, see \code{\link{.OPERATOR_FUN}}).  \tab\tab \code{\link{GGDC10S}, \link{wlddev}, .COLLAPSE_TOPICS, .COLLAPSE_ALL, .COLLAPSE_GENERIC, .COLLAPSE_DATA, .FAST_FUN, .FAST_STAT_FUN, .OPERATOR_FUN} \cr\cr\cr
 
-}
-}
 
-\section{\link[=collapse-options]{Package Options}}{
-
-\itemize{
-\item \code{options("collapse_unused_arg_action")} sets the action taken by generic statistical functions when unknown arguments are passed to a method. The default is \code{"warning"}.
-
-\item \code{options("collapse_mask")} can be used to export copies of functions starting with \code{"f"} when loading the package, removing the leading \code{"f"} (e.g. also exporting \code{subset} as a clone to \code{fsubset}). This will mask like-named base R or \emph{dplyr} functions.
-
-\item \code{options("collapse_export_F")} can also be called before loading the package to export the lead operator \code{F} (exported by default previous to v1.9.0), but now not exported to avoid problems with \code{base::F}. Alternatively, the operator can be accessed using \code{collapse:::F}.
-
-% \item When manipulating \emph{data.table}'s, you can set how many columns \emph{collapse} functions overallocate with \code{option("collapse_DT_alloccol")}. The default is \code{100L}.
-}
+\link[=collapse-options]{Package Options} \tab\tab \code{set_collapse}/\code{get_collapse} can be used to globally set/get the defaults for \code{na.rm} and \code{nthreads} arguments found in many functions. \code{options("collapse_unused_arg_action")} sets the action taken by generic statistical functions when unknown arguments are passed to a method. The default is \code{"warning"}. \code{options("collapse_mask")} can be used to export copies of functions starting with \code{"f"} when loading the package, removing the leading \code{"f"} (e.g. also exporting \code{subset} as a clone to \code{fsubset}). \code{options("collapse_export_F")} can also be set before loading the package to export the lead operator \code{F} (exported by default previous to v1.9.0).  \tab\tab \code{set_collapse}, \code{get_collapse} \cr\cr\cr
 
 }
+}
+
+
+
 
 
 \section{Details}{

@@ -44,46 +44,46 @@ fbetween(x, \dots)
        B(x, \dots)
        W(x, \dots)
 
-\method{fbetween}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{default}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, \dots)
-\method{B}{default}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{W}{default}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, \dots)
+\method{fbetween}{default}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
+\method{fwithin}{default}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
+\method{B}{default}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
+\method{W}{default}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
 
-\method{fbetween}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, \dots)
-\method{B}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", \dots)
-\method{W}{matrix}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, stub = "W.", \dots)
+\method{fbetween}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
+\method{fwithin}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
+\method{B}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "B.", \dots)
+\method{W}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, stub = "W.", \dots)
 
-\method{fbetween}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{data.frame}(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, \dots)
-\method{B}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{fbetween}{data.frame}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
+\method{fwithin}{data.frame}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
+\method{B}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
   fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, \dots)
-\method{W}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{W}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
   mean = 0, theta = 1, stub = "W.", keep.by = TRUE, keep.w = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
-\method{fbetween}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, \dots)
-\method{B}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{W}{pseries}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, \dots)
+\method{fbetween}{pseries}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
+\method{fwithin}{pseries}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
+\method{B}{pseries}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
+\method{W}{pseries}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
 
-\method{fbetween}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, \dots)
-\method{fwithin}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, \dots)
-\method{B}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{fbetween}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
+\method{fwithin}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
+\method{B}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
   fill = FALSE, stub = "B.", keep.ids = TRUE, keep.w = TRUE, \dots)
-\method{W}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE,
+\method{W}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
   mean = 0, theta = 1, stub = "W.", keep.ids = TRUE, keep.w = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
-\method{fbetween}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
+\method{fbetween}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
          keep.group_vars = TRUE, keep.w = TRUE, \dots)
-\method{fwithin}{grouped_df}(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
+\method{fwithin}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
         keep.group_vars = TRUE, keep.w = TRUE, \dots)
-\method{B}{grouped_df}(x, w = NULL, na.rm = TRUE, fill = FALSE,
+\method{B}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
   stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
-\method{W}{grouped_df}(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
+\method{W}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
   stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 

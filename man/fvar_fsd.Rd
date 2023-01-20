@@ -17,25 +17,25 @@
 fvar(x, \dots)
 fsd(x, \dots)
 
-\method{fvar}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fvar}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = TRUE, stable.algo = TRUE, \dots)
-\method{fsd}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsd}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
     use.g.names = TRUE, stable.algo = TRUE, \dots)
 
-\method{fvar}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fvar}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
-\method{fsd}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsd}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
 
-\method{fvar}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fvar}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
-\method{fsd}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsd}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
 
-\method{fvar}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fvar}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
      stable.algo = TRUE, \dots)
-\method{fsd}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fsd}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
     stable.algo = TRUE, \dots)
 }

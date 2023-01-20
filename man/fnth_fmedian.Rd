@@ -21,25 +21,25 @@ Fast (Grouped, Weighted) N'th Element/Quantile for Matrix-Like Objects
 fnth(x, n = 0.5, \dots)
 fmedian(x, \dots)
 
-\method{fnth}{default}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, ties = "q7", nthreads = 1L,
+\method{fnth}{default}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
+     use.g.names = TRUE, ties = "q7", nthreads = .op[["nthreads"]],
      o = NULL, check.o = is.null(attr(o, "sorted")), \dots)
 \method{fmedian}{default}(x, \dots, ties = "mean")
 
-\method{fnth}{matrix}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = 1L, \dots)
+\method{fnth}{matrix}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
+     use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = .op[["nthreads"]], \dots)
 \method{fmedian}{matrix}(x, \dots, ties = "mean")
 
-\method{fnth}{data.frame}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE,
-     use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = 1L, \dots)
+\method{fnth}{data.frame}(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
+     use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = .op[["nthreads"]], \dots)
 \method{fmedian}{data.frame}(x, \dots, ties = "mean")
 
-\method{fnth}{grouped_df}(x, n = 0.5, w = NULL, TRA = NULL, na.rm = TRUE,
+\method{fnth}{grouped_df}(x, n = 0.5, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-     ties = "q7", nthreads = 1L, \dots)
-\method{fmedian}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = TRUE,
+     ties = "q7", nthreads = .op[["nthreads"]], \dots)
+\method{fmedian}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
         use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-        ties = "mean", nthreads = 1L, \dots)
+        ties = "mean", nthreads = .op[["nthreads"]], \dots)
 
 }
 \arguments{

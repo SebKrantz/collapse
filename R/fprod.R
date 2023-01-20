@@ -3,7 +3,7 @@
 
 fprod <- function(x, ...) UseMethod("fprod") # , x
 
-fprod.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+fprod.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fprod.matrix(x, g, w, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -27,7 +27,7 @@ fprod.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g
   TRAC(x,.Call(C_fprod,x,g[[1L]],g[[2L]],w,na.rm),g[[2L]],TRA, ...)
 }
 
-fprod.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fprod.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fprodm,x,0L,0L,w,na.rm,drop))
@@ -50,7 +50,7 @@ fprod.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.
   TRAmC(x,.Call(C_fprodm,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TRA, ...)
 }
 
-fprod.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fprod.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fprodl,x,0L,0L,w,na.rm,drop))
@@ -76,7 +76,7 @@ fprod.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = TRUE, us
 
 fprod.list <- function(x, ...) fprod.data.frame(x, ...)
 
-fprod.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = TRUE, use.g.names = FALSE,
+fprod.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
                             keep.group_vars = TRUE, keep.w = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE

@@ -17,21 +17,22 @@ Fast (Grouped, Ordered) Cumulative Sum for Matrix-Like Objects
 \usage{
 fcumsum(x, \dots)
 
-\method{fcumsum}{default}(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, \dots)
+\method{fcumsum}{default}(x, g = NULL, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, \dots)
 
-\method{fcumsum}{matrix}(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, \dots)
+\method{fcumsum}{matrix}(x, g = NULL, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, \dots)
 
-\method{fcumsum}{data.frame}(x, g = NULL, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, \dots)
+\method{fcumsum}{data.frame}(x, g = NULL, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
-\method{fcumsum}{pseries}(x, na.rm = TRUE, fill = FALSE, shift = "time", \dots)
+\method{fcumsum}{pseries}(x, na.rm = .op[["na.rm"]], fill = FALSE, shift = "time", \dots)
 
-\method{fcumsum}{pdata.frame}(x, na.rm = TRUE, fill = FALSE, shift = "time", \dots)
+\method{fcumsum}{pdata.frame}(x, na.rm = .op[["na.rm"]], fill = FALSE, shift = "time", \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
-\method{fcumsum}{grouped_df}(x, o = NULL, na.rm = TRUE, fill = FALSE, check.o = TRUE, keep.ids = TRUE, \dots)
+\method{fcumsum}{grouped_df}(x, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE,
+        keep.ids = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

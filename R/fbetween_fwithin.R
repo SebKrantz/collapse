@@ -5,7 +5,7 @@ ckm <- function(x) if(is.double(x)) x else if(is.character(x) && x == "overall.m
 
 fwithin <- function(x, ...) UseMethod("fwithin") # , x
 
-fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
+fwithin.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fwithin.matrix(x, g, w, na.rm, mean, theta, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
@@ -13,7 +13,7 @@ fwithin.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta
   .Call(Cpp_BW,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
-fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
+fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
   res <- if(is.matrix(x))
@@ -23,14 +23,14 @@ fwithin.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, th
   pseries_to_numeric(res)
 }
 
-fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
+fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BWm,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   g <- G_guo(g)
   .Call(Cpp_BWm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
-fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
+fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   g <- G_guo(g)
@@ -39,13 +39,13 @@ fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, th
 
 fwithin.list <- function(x, ...) fwithin.data.frame(x, ...)
 
-fwithin.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
+fwithin.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
   .Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
 
-fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
+fwithin.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
                                keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
@@ -76,18 +76,18 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
 
 W <- function(x, ...) UseMethod("W") # , x
 
-W.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...) {
+W.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(W.matrix(x, g, w, na.rm, mean, theta, ...))
   fwithin.default(x, g, w, na.rm, mean, theta, ...)
 }
 
-W.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, theta = 1, ...)
+W.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...)
   fwithin.pseries(x, effect, w, na.rm, mean, theta, ...)
 
-W.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, theta = 1, stub = "W.", ...)
+W.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, stub = "W.", ...)
   add_stub(fwithin.matrix(x, g, w, na.rm, mean, theta, ...), stub)
 
-W.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
+W.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
                          stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
@@ -114,7 +114,7 @@ W.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, theta = 1,
   add_stub(.Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE), stub)
 }
 
-W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE, mean = 0, theta = 1,
+W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
                           stub = "W.", keep.ids = TRUE, keep.w = TRUE, ...) {
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -154,7 +154,7 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   } else return(.Call(Cpp_BWl,`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
 }
 
-W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
                          mean = 0, theta = 1, stub = "W.", keep.by = TRUE, keep.w = TRUE, ...) {
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -213,7 +213,7 @@ W.list <- function(x, ...) W.data.frame(x, ...)
 
 fbetween <- function(x, ...) UseMethod("fbetween") # , x
 
-fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+fbetween.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fbetween.matrix(x, g, w, na.rm, fill, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
@@ -221,7 +221,7 @@ fbetween.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, 
   .Call(Cpp_BW,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
-fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
   res <- if(is.matrix(x))
@@ -231,14 +231,14 @@ fbetween.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALS
   pseries_to_numeric(res)
 }
 
-fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BWm,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
   g <- G_guo(g)
   .Call(Cpp_BWm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
 
-fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
   g <- G_guo(g)
@@ -247,13 +247,13 @@ fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALS
 
 fbetween.list <- function(x, ...) fbetween.data.frame(x, ...)
 
-fbetween.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+fbetween.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
   .Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill)
 }
 
-fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
+fbetween.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
                                 keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
@@ -285,18 +285,18 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
 
 B <- function(x, ...) UseMethod("B") # , x
 
-B.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, ...) {
+B.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(B.matrix(x, g, w, na.rm, fill, ...))
   fbetween.default(x, g, w, na.rm, fill, ...)
 }
 
-B.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, fill = FALSE, ...)
+B.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...)
   fbetween.pseries(x, effect, w, na.rm, fill, ...)
 
-B.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, fill = FALSE, stub = "B.", ...)
+B.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "B.", ...)
   add_stub(fbetween.matrix(x, g, w, na.rm, fill, ...), stub)
 
-B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
+B.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
                          stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
@@ -323,7 +323,7 @@ B.grouped_df <- function(x, w = NULL, na.rm = TRUE, fill = FALSE,
   add_stub(.Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill), stub)
 }
 
-B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
+B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
                           stub = "B.", keep.ids = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
@@ -362,7 +362,7 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = T
   } else return(.Call(Cpp_BWl,`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill))
 }
 
-B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = TRUE,
+B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
                          fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.call(by) || is.call(w)) {

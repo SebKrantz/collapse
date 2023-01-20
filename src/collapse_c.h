@@ -9,6 +9,14 @@
 
 extern int max_threads;
 
+// https://github.com/wch/r-source/blob/trunk/src/include/Rinlinedfuns.h
+inline SEXP my_ScalarLogical(int x)
+{
+  SEXP ans = allocVector(LGLSXP, 1);
+  SET_SCALAR_LVAL(ans, x);
+  return ans;
+}
+
 // from base_radixsort.h (with significant modifications)
 SEXP Cradixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 void num1radixsort(int *, Rboolean, Rboolean, SEXP);

@@ -3,7 +3,7 @@
 
 fmin <- function(x, ...) UseMethod("fmin") # , x
 
-fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fmin.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -27,7 +27,7 @@ fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
   TRAC(x,.Call(C_fmin,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRA, ...)
 }
 
-fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fminm,x,0L,0L,na.rm,drop))
@@ -50,7 +50,7 @@ fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
   TRAmC(x,.Call(C_fminm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRA, ...)
 }
 
-fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fminl,x,0L,0L,na.rm,drop))
@@ -76,7 +76,7 @@ fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
 
 fmin.list <- function(x, ...) fmin.data.frame(x, ...)
 
-fmin.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+fmin.grouped_df <- function(x, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   nam <- attr(x, "names")
@@ -114,7 +114,7 @@ fmin.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, ke
 
 fmax <- function(x, ...) UseMethod("fmax") # , x
 
-fmax.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+fmax.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fmax.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -138,7 +138,7 @@ fmax.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
   TRAC(x,.Call(C_fmax,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRA, ...)
 }
 
-fmax.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fmax.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fmaxm,x,0L,0L,na.rm,drop))
@@ -161,7 +161,7 @@ fmax.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRU
   TRAmC(x,.Call(C_fmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRA, ...)
 }
 
-fmax.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+fmax.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fmaxl,x,0L,0L,na.rm,drop))
@@ -187,7 +187,7 @@ fmax.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names =
 
 fmax.list <- function(x, ...) fmax.data.frame(x, ...)
 
-fmax.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+fmax.grouped_df <- function(x, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   nam <- attr(x, "names")

@@ -105,7 +105,7 @@ flagleadlCpp <- function(x, n = 1L, fill = NULL, ng = 0L, g = 0L, t = NULL, name
 
 fquantile <- function(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
                       o = if(length(x) > 1e5L && length(probs) > log(length(x))) radixorder(x) else NULL,
-                      na.rm = TRUE, type = 7L, names = TRUE,
+                      na.rm = .op[["na.rm"]], type = 7L, names = TRUE,
                       check.o = is.null(attr(o, "sorted")))
   .Call(C_fquantile, x, probs, w, o, na.rm, type, names, check.o)
 
@@ -127,6 +127,10 @@ fscalelCpp <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, set_mean = 0, 
 
 fsumC <- function(x, ng = 0L, g = 0L, w = NULL, narm = TRUE, fill = FALSE, nthreads = 1L) {
     .Call(C_fsum, x, ng, g, w, narm, fill, nthreads)
+}
+
+fsummCcc <- function(x, w = NULL, drop = TRUE) {
+  .Call(C_fsumm, x, 0L, 0L, w, FALSE, FALSE, drop, 1L)
 }
 
 fvarsdCpp <- function(x, ng = 0L, g = 0L, gs = NULL, w = NULL, narm = TRUE, stable_algo = TRUE, sd = TRUE) {

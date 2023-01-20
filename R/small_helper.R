@@ -342,10 +342,11 @@ whichv <- function(x, value, invert = FALSE) .Call(C_whichv, x, value, invert)
 "%!=%" <- function(x, value) .Call(C_whichv, x, value, TRUE)
 whichNA <- function(x, invert = FALSE) .Call(C_whichv, x, NA, invert)
 
-frange <- function(x, na.rm = TRUE) .Call(C_frange, x, na.rm)
+frange <- function(x, na.rm = .op[["na.rm"]]) .Call(C_frange, x, na.rm)
+.range <- function(x, na.rm = TRUE) .Call(C_frange, x, na.rm)
 alloc <- function(value, n) .Call(C_alloc, value, n)
 vgcd <- function(x) .Call(C_vecgcd, x)
-fdist <- function(x, v = NULL, ..., method = "euclidean", nthreads = 1L) .Call(C_fdist, if(is.atomic(x)) x else qM(x), v, method, nthreads)
+fdist <- function(x, v = NULL, ..., method = "euclidean", nthreads = .op[["nthreads"]]) .Call(C_fdist, if(is.atomic(x)) x else qM(x), v, method, nthreads)
 
 allNA <- function(x) .Call(C_allNA, x, TRUE) # True means give error for unsupported vector types, not FALSE.
 anyv <- function(x, value) .Call(C_anyallv, x, value, FALSE)

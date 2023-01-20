@@ -3,7 +3,7 @@
 
 flast <- function(x, ...) UseMethod("flast") # , x
 
-flast.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, ...) {
+flast.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(flast.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -27,7 +27,7 @@ flast.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = T
   TRAC(x,.Call(C_flast,x,g[[1L]],g[[2L]],na.rm),g[[2L]],TRA, ...)
 }
 
-flast.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+flast.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_flastm,x,0L,0L,na.rm,drop))
@@ -50,7 +50,7 @@ flast.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TR
   TRAmC(x,.Call(C_flastm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRA, ...)
 }
 
-flast.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
+flast.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) if(drop) return(unlist(.Call(C_flastl,x,0L,0L,na.rm))) else return(.Call(C_flastl,x,0L,0L,na.rm))
@@ -76,7 +76,7 @@ flast.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names 
 
 flast.list <- function(x, ...) flast.data.frame(x, ...)
 
-flast.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, ...) {
+flast.grouped_df <- function(x, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE, keep.group_vars = TRUE, ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   nam <- attr(x, "names")

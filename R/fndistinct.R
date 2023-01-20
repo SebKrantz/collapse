@@ -1,7 +1,7 @@
 
 fndistinct <- function(x, ...) UseMethod("fndistinct") # , x
 
-fndistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, nthreads = 1L, ...) {
+fndistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, nthreads = .op[["nthreads"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fndistinct.matrix(x, g, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fndistinct,x,g,na.rm,nthreads)
@@ -14,7 +14,7 @@ fndistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.name
   TRAC(x,res,g[[2L]],TRA, ...)
 }
 
-fndistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...) {
+fndistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, nthreads = .op[["nthreads"]], ...) {
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fndistinctm,x,g,na.rm,drop,nthreads)
   if(is.null(TRA)) {
@@ -26,7 +26,7 @@ fndistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names
   TRAmC(x,res,g[[2L]],TRA, ...)
 }
 
-fndistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.names = TRUE, drop = TRUE, nthreads = 1L, ...) {
+fndistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, nthreads = .op[["nthreads"]], ...) {
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fndistinctl,x,g,na.rm,drop,nthreads)
   if(is.null(TRA)) {
@@ -41,7 +41,7 @@ fndistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = TRUE, use.g.n
 
 fndistinct.list <- function(x, ...) fndistinct.data.frame(x, ...)
 
-fndistinct.grouped_df <- function(x, TRA = NULL, na.rm = TRUE, use.g.names = FALSE, keep.group_vars = TRUE, nthreads = 1L, ...) {
+fndistinct.grouped_df <- function(x, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE, keep.group_vars = TRUE, nthreads = .op[["nthreads"]], ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   nam <- attr(x, "names")

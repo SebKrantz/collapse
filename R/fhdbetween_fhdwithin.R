@@ -272,7 +272,7 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
 
 fhdwithin <- function(x, ...) UseMethod("fhdwithin") # , x
 
-fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+fhdwithin.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, ...))
   ax <- attributes(x)
   if(na.rm) {
@@ -326,7 +326,7 @@ fhdwithin.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
     return(setAttributes(x, ax))
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
-fhdwithin.pseries <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, ...) {
+fhdwithin.pseries <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, ...) {
   if(is.matrix(x)) stop("higher-dimensional centering of matrix pseries is currently not supported. You can use fhdwithin.matrix(x, ix(x), fill = TRUE)")
   ix <- findex(x)
   namix <- attr(ix, "names")
@@ -360,7 +360,7 @@ fhdwithin.pseries <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = 
 }
 
 # x = mNA; fl = m; lm.method = "qr"
-fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -416,7 +416,7 @@ fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.met
 }
 
 # x = collapse:::colsubset(pwlddev, is.numeric)
-fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...) {
+fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, variable.wise = TRUE, ...) {
   ix <- findex(x)
   namix <- attr(ix, "names")
   if(is.character(effect) && length(effect) == 1L && effect == "all") {
@@ -456,7 +456,7 @@ fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = TRUE, fil
 }
 
 # x = data[5:6]; fl = data[-(5:6)]; variable.wise = TRUE
-fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
+fhdwithin.data.frame <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
 
   if(na.rm) {
@@ -535,19 +535,19 @@ fhdwithin.list <- function(x, ...) fhdwithin.data.frame(x, ...)
 # Note: could also do Mudlack and add means to second regression -> better than two-times centering ??
 HDW <- function(x, ...) UseMethod("HDW") # , x
 
-HDW.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+HDW.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(HDW.matrix(x, fl, w, na.rm, fill, lm.method, ...))
   fhdwithin.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
-HDW.pseries <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, ...)
+HDW.pseries <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, ...)
   fhdwithin.pseries(x, effect, w, na.rm, fill, ...)
 
-HDW.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDW.", lm.method = "qr", ...)
+HDW.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "HDW.", lm.method = "qr", ...)
   add_stub(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
 
 # x = mtcars; fl = ~ qF(cyl):carb; w = wdat; stub = FALSE
-HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
+HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
                            variable.wise = FALSE, stub = "HDW.", lm.method = "qr", ...) {
   if(is.call(fl)) {
     ax <- attributes(x)
@@ -613,7 +613,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
  add_stub(fhdwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
 }
 
-HDW.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+HDW.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = TRUE,
                             variable.wise = TRUE, stub = "HDW.", ...)
 add_stub(fhdwithin.pdata.frame(fcolsubset(x, cols2intrmgn(which(attr(x, "names") %in% attr(findex(x), "nam")), cols, x)), effect, w, na.rm, fill, variable.wise, ...), stub)
 
@@ -635,7 +635,7 @@ HDW.list <- function(x, ...) HDW.data.frame(x, ...)
 fhdbetween <- function(x, ...) UseMethod("fhdbetween") # , x
 
 
-fhdbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+fhdbetween.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...))
   ax <- attributes(x)
   if(na.rm) {
@@ -695,10 +695,10 @@ fhdbetween.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.m
 }
 
 
-fhdbetween.pseries <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, ...)
+fhdbetween.pseries <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, ...)
   fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
-fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -757,11 +757,11 @@ fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.me
   } else return(setAttributes(demean(x, fl, w, ..., means = TRUE), ax))
 }
 
-fhdbetween.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, variable.wise = TRUE, ...)
+fhdbetween.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, variable.wise = TRUE, ...)
   fhdwithin.pdata.frame(x, effect, w, na.rm, fill, variable.wise, ..., means = TRUE)
 
 
-fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
+fhdbetween.data.frame <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, variable.wise = FALSE, lm.method = "qr", ...) {
   ax <- attributes(x)
 
   if(na.rm) {
@@ -841,19 +841,19 @@ fhdbetween.list <- function(x, ...) fhdbetween.data.frame(x, ...)
 
 HDB <- function(x, ...) UseMethod("HDB") # , x
 
-HDB.default <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, lm.method = "qr", ...) {
+HDB.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(HDB.matrix(x, fl, w, na.rm, fill, lm.method, ...))
   fhdbetween.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
-HDB.pseries <- function(x, effect = "all", w = NULL, na.rm = TRUE, fill = TRUE, ...)
+HDB.pseries <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, ...)
   fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
 
-HDB.matrix <- function(x, fl, w = NULL, na.rm = TRUE, fill = FALSE, stub = "HDB.", lm.method = "qr", ...)
+HDB.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "HDB.", lm.method = "qr", ...)
   add_stub(fhdbetween.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
 
-HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fill = FALSE,
+HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
                            variable.wise = FALSE, stub = "HDB.", lm.method = "qr", ...) {
   if(is.call(fl)) {
     ax <- attributes(x)
@@ -924,7 +924,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = TRUE, fil
 }
 
 
-HDB.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.rm = TRUE, fill = TRUE,
+HDB.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = TRUE,
                             variable.wise = TRUE, stub = "HDB.", ...)
   add_stub(fhdwithin.pdata.frame(fcolsubset(x, cols2intrmgn(which(attr(x, "names") %in% attr(findex(x), "nam")), cols, x)), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
 

@@ -72,7 +72,7 @@ fFtest.default <- function(y, exc, X = NULL, w = NULL, full.df = TRUE, ...) {
                                   c("R-Sq.","DF1","DF2","F-Stat.","P-Value")))
     oldClass(res) <- c("fFtest","matrix")
   } else {
-    u <- fhdwithin.default(y, exc, w, na.rm = TRUE, ...) # Residuals
+    u <- fhdwithin.default(y, exc, w, na.rm = .op[["na.rm"]], ...) # Residuals
     miss <- attr(u, "na.rm")
     if(!is.null(miss)) w <- w[-miss]
     if(full.df && length(miss) && !is.atomic(exc) && !is.numeric(exc)) {

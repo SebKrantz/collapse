@@ -7,7 +7,7 @@ csd <- function(x) if(is.double(x)) x else if(is.character(x) && x == "within.sd
 
 fscale <- function(x, ...) UseMethod("fscale") # , x
 
-fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
+fscale.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fscale.matrix(x, g, w, na.rm, mean, sd, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
@@ -15,7 +15,7 @@ fscale.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1
   .Call(Cpp_fscale,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
-fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
+fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
   res <- if(is.matrix(x))
@@ -25,14 +25,14 @@ fscale.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd 
   pseries_to_numeric(res)
 }
 
-fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
+fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscalem,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
   g <- G_guo(g)
   .Call(Cpp_fscalem,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
-fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.group_vars = TRUE, keep.w = TRUE, ...) {
+fscale.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- substitute(w)
@@ -59,7 +59,7 @@ fscale.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, keep.
   .Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
 
-fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
+fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
   g <- G_guo(g)
@@ -68,7 +68,7 @@ fscale.data.frame <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd 
 
 fscale.list <- function(x, ...) fscale.data.frame(x, ...)
 
-fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
+fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- group_effect(x, effect)
   .Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
@@ -79,18 +79,18 @@ fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0,
 
 STD <- function(x, ...) UseMethod("STD") # , x
 
-STD.default <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...) {
+STD.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(STD.matrix(x, g, w, na.rm, mean, sd, ...))
   fscale.default(x, g, w, na.rm, mean, sd, ...)
 }
 
-STD.pseries <- function(x, effect = 1L, w = NULL, na.rm = TRUE, mean = 0, sd = 1, ...)
+STD.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...)
   fscale.pseries(x, effect, w, na.rm, mean, sd, ...)
 
-STD.matrix <- function(x, g = NULL, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", ...)
+STD.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = "STD.", ...)
   add_stub(fscale.matrix(x, g, w, na.rm, mean, sd, ...), stub)
 
-STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
+STD.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- substitute(w)
@@ -118,7 +118,7 @@ STD.grouped_df <- function(x, w = NULL, na.rm = TRUE, mean = 0, sd = 1, stub = "
 
 # updated (best) version !
 STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
-                            na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.ids = TRUE,
+                            na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = "STD.", keep.ids = TRUE,
                             keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
@@ -162,7 +162,7 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
 
 # updated, fast and data.table proof version !
 STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
-                           na.rm = TRUE, mean = 0, sd = 1, stub = "STD.", keep.by = TRUE,
+                           na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = "STD.", keep.by = TRUE,
                            keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
 
