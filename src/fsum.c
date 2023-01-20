@@ -40,7 +40,7 @@ void fsum_double_g_impl(double *restrict pout, const double *restrict px, const 
       else pout[pg[i]] += px[i];
     }
   } else {
-    memset(pout, 0.0, sizeof(double) * ng);
+    memset(pout, 0, sizeof(double) * ng);
     --pout;
     if(narm == 2) {
       for(int i = 0; i != l; ++i) if(NISNAN(px[i])) pout[pg[i]] += px[i];
@@ -80,7 +80,7 @@ double fsum_double_omp_impl(const double *restrict px, const int narm, const int
 //       }
 //     }
 //   } else {
-//     memset(pout, 0.0, sizeof(double) * ng);
+//     memset(pout, 0, sizeof(double) * ng);
 //     #pragma omp parallel for num_threads(nthreads) reduction(+:pout[:ng]) // shared(pout)
 //     for(int i = 0; i < l; ++i) {
 //       // #pragma omp atomic
@@ -120,7 +120,7 @@ void fsum_weights_g_impl(double *restrict pout, const double *restrict px, const
       else pout[pg[i]] += px[i] * pw[i];
     }
   } else {
-    memset(pout, 0.0, sizeof(double) * ng);
+    memset(pout, 0, sizeof(double) * ng);
     --pout;
     if(narm == 2) {
       for(int i = l; i--; ) if(NISNAN(px[i]) && NISNAN(pw[i])) pout[pg[i]] += px[i] * pw[i];
@@ -161,7 +161,7 @@ double fsum_weights_omp_impl(const double *restrict px, const double *restrict p
 //       else pout[pg[i]-1] += px[i] * pw[i];
 //     }
 //   } else {
-//     memset(pout, 0.0, sizeof(double) * ng);
+//     memset(pout, 0, sizeof(double) * ng);
 //     #pragma omp parallel for num_threads(nthreads) reduction(+:pout[:ng])
 //     for(int i = 0; i < l; ++i) pout[pg[i]-1] += px[i] * pw[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
 //   }
@@ -675,6 +675,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
     } else {
       double *restrict pw = REAL(w);
       if(nthreads > 1 && l > 1) {
+        int nrx = length(g);
         for(int j = 0, dup = 0; j != l; ++j) {
           SEXP xj = px[j], outj;
           SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ng));
@@ -686,7 +687,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
           }
         }
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) fsum_weights_g_impl(REAL(pout[j]), REAL(px[j]), ng, pg, pw, narm, length(px[j]));
+        for(int j = 0; j < l; ++j) fsum_weights_g_impl(REAL(pout[j]), REAL(px[j]), ng, pg, pw, narm, nrx);
       } else {
         for(int j = 0; j != l; ++j) pout[j] = fsum_wg_impl(px[j], ng, pg, pw, narm);
       }
