@@ -20,7 +20,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.1</span>
       </span>
     </div>
 
@@ -591,12 +591,12 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, <span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>less accurate nanosecond times to avoid potential integer overflows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr     min       lq      mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 127.264 134.9925 144.43357</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE)  52.849  54.8375  57.53079</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   median       uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  142.352 151.4745 194.627   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   56.949  59.5320  80.155   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr    min      lq     mean  median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 77.490 80.9135 86.06269 83.3735</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE) 32.267 34.7885 40.78557 36.6130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  87.043 146.124   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  42.599 139.359   100</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

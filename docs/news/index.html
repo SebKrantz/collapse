@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.1</span>
       </span>
     </div>
 
@@ -60,7 +60,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.9.0" id="collapse-190">collapse 1.9.0<a class="anchor" aria-label="anchor" href="#collapse-190"></a></h2>
+<h2 class="page-header" data-toc-text="1.9.1" id="collapse-191">collapse 1.9.1<a class="anchor" aria-label="anchor" href="#collapse-191"></a></h2>
+<ul><li><p>Fixed minor C/C++ issues flagged by CRAN’s detailed checks.</p></li>
+<li><p>Added functions <code><a href="../reference/collapse-options.html">set_collapse()</a></code> and <code><a href="../reference/collapse-options.html">get_collapse()</a></code>, allowing you to globally set defaults for the <code>nthreads</code> and <code>na.rm</code> arguments to all functions in the package. E.g. <code>set_collapse(nthreads = 4, na.rm = FALSE)</code> could be a suitable setting for larger data without missing values. This is implemented using an internal environment by the name of <code>.op</code>, such that these defaults are received using e.g. <code>.op[["nthreads"]]</code>, at the computational cost of a few nanoseconds (8-10x faster than <code>getOption("nthreads")</code> which would take about 1 microsecond). <code>.op</code> is not accessible by the user, so function <code><a href="../reference/collapse-options.html">get_collapse()</a></code> can be used to retrieve settings. Exempt from this are functions <code>.quantile</code>, and a new function <code>.range</code> (alias of <code>frange</code>), which go directly to C for maximum performance in repeated executions, and are not affected by these global settings. Function <code><a href="../reference/descr.html">descr()</a></code>, which internally calls a bunch of statistical functions, is also not affected by these settings.</p></li>
+<li><p>Further improvements in thread safety for <code><a href="../reference/fsum.html">fsum()</a></code> and <code><a href="../reference/fmean.html">fmean()</a></code> in grouped computations across data frame columns. All OpenMP enabled functions in <em>collapse</em> can now be considered thread safe i.e. they pass the full battery of tests in multithreaded mode.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="1.9.0" id="collapse-190">collapse 1.9.0<small>2023-01-15</small><a class="anchor" aria-label="anchor" href="#collapse-190"></a></h2>
 <p><em>collapse</em> 1.9.0 released mid of January 2023, provides improvements in performance and versatility in many areas, as well as greater statistical capabilities, most notably efficient (grouped, weighted) estimation of sample quantiles.</p>
 <div class="section level4">
 <h4 id="changes-to-functionality-1-9-0">Changes to functionality<a class="anchor" aria-label="anchor" href="#changes-to-functionality-1-9-0"></a></h4>
