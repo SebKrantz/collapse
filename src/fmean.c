@@ -47,7 +47,7 @@ double fmean_double_omp_impl(const double *restrict px, const int narm, const in
 }
 
 void fmean_double_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const int *restrict pgs, const int narm, const int l) {
-  memset(pout, 0.0, sizeof(double) * ng);
+  memset(pout, 0, sizeof(double) * ng);
   if(narm) {
     int *restrict n = (int*)Calloc(ng, int);
     for(int i = 0, gi; i != l; ++i) {
@@ -117,7 +117,7 @@ double fmean_weights_omp_impl(const double *restrict px, const double *restrict 
 
 void fmean_weights_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const double *restrict pw, const int narm, const int l) {
   double *restrict sumw = (double*)Calloc(ng, double);
-  memset(pout, 0.0, sizeof(double) * ng);
+  memset(pout, 0, sizeof(double) * ng);
   if(narm) {
     for(int i = 0, gi; i != l; ++i) {
       if(ISNAN(px[i]) || ISNAN(pw[i])) continue;
@@ -186,7 +186,7 @@ double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, c
 }
 
 void fmean_int_g_impl(double *restrict pout, const int *restrict px, const int ng, const int *restrict pg, const int *restrict pgs, const int narm, const int l) {
-  memset(pout, 0.0, sizeof(double) * ng);
+  memset(pout, 0, sizeof(double) * ng);
   if(narm) {
     int *restrict n = (int*)Calloc(ng, int);
     for(int i = 0, gi; i != l; ++i) {
@@ -441,6 +441,20 @@ SEXP fmean_g_impl(SEXP x, const int ng, const int *pg, const int *pgs, int narm)
   return res;
 }
 
+void fmean_g_omp_impl(SEXP x, void *pres, const int ng, const int *pg, const int *pgs, int narm) {
+  switch(TYPEOF(x)) {
+    case REALSXP:
+      fmean_double_g_impl(pres, REAL(x), ng, pg, pgs, narm, length(x));
+      break;
+    case LGLSXP:
+    case INTSXP:
+      fmean_int_g_impl(pres, INTEGER(x), ng, pg, pgs, narm, length(x));
+      break;
+    default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
+}
+
+
 SEXP fmean_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
   int l = length(x), nprotect = 1;
   if(l < 1) return ScalarReal(NA_REAL);
@@ -532,16 +546,32 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
       }
 
       if(nthreads > 1 && l > 1) {
+        for(int j = 0; j != l; ++j) {
+          SEXP xj = px[j], outj;
+          SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ng));
+          if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
+        }
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) pout[j] = fmean_g_impl(px[j], ng, pg, pgs, narm);
+        for(int j = 0; j < l; ++j) fmean_g_omp_impl(px[j], DATAPTR(pout[j]), ng, pg, pgs, narm);
       } else {
         for(int j = 0; j != l; ++j) pout[j] = fmean_g_impl(px[j], ng, pg, pgs, narm);
       }
     } else {
       double *restrict pw = REAL(w);
       if(nthreads > 1 && l > 1) {
+        int nrx = length(g);
+        for(int j = 0, dup = 0; j != l; ++j) {
+          SEXP xj = px[j], outj;
+          SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ng));
+          if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
+          if(TYPEOF(xj) != REALSXP) {
+            if(TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
+            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; px = SEXPPTR(x); dup = 1;}
+            SET_VECTOR_ELT(x, j, coerceVector(xj, REALSXP));
+          }
+        }
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) pout[j] = fmean_wg_impl(px[j], ng, pg, pw, narm);
+        for(int j = 0; j < l; ++j) fmean_weights_g_impl(REAL(pout[j]), REAL(px[j]), ng, pg, pw, narm, nrx);
       } else {
         for(int j = 0; j != l; ++j) pout[j] = fmean_wg_impl(px[j], ng, pg, pw, narm);
       }
