@@ -566,6 +566,19 @@ SEXP fsum_g_impl(SEXP x, const int ng, const int *pg, int narm) {
   return res;
 }
 
+void fsum_g_omp_impl(SEXP x, void *pres, const int ng, const int *pg, int narm) {
+  switch(TYPEOF(x)) {
+    case REALSXP:
+      fsum_double_g_impl(pres, REAL(x), ng, pg, narm, length(x));
+      break;
+    case LGLSXP:
+    case INTSXP:
+      fsum_int_g_impl(pres, INTEGER(x), ng, pg, narm, length(x));
+      break;
+    default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
+  }
+}
+
 SEXP fsum_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
   int l = length(x), nprotect = 1;
   if(l < 1) return ScalarReal(NA_REAL);
@@ -582,6 +595,8 @@ SEXP fsum_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
   UNPROTECT(nprotect);
   return res;
 }
+
+
 
 
 #undef COLWISE_FSUM_LIST
@@ -647,16 +662,31 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
     if(nthreads > l) nthreads = l;
     if(nwl) { // no weights
       if(nthreads > 1 && l > 1) {
+        for(int j = 0; j != l; ++j) {
+          SEXP xj = px[j], outj;
+          SET_VECTOR_ELT(out, j, outj = allocVector(TYPEOF(px[j]) == REALSXP ? REALSXP : INTSXP, ng));
+          if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
+        }
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) pout[j] = fsum_g_impl(px[j], ng, pg, narm);
+        for(int j = 0; j < l; ++j) fsum_g_omp_impl(px[j], DATAPTR(pout[j]), ng, pg, narm);
       } else {
         for(int j = 0; j != l; ++j) pout[j] = fsum_g_impl(px[j], ng, pg, narm);
       }
     } else {
       double *restrict pw = REAL(w);
       if(nthreads > 1 && l > 1) {
+        for(int j = 0, dup = 0; j != l; ++j) {
+          SEXP xj = px[j], outj;
+          SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ng));
+          if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
+          if(TYPEOF(xj) != REALSXP) {
+            if(TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
+            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; px = SEXPPTR(x); dup = 1;}
+            SET_VECTOR_ELT(x, j, coerceVector(xj, REALSXP));
+          }
+        }
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) pout[j] = fsum_wg_impl(px[j], ng, pg, pw, narm);
+        for(int j = 0; j < l; ++j) fsum_weights_g_impl(REAL(pout[j]), REAL(px[j]), ng, pg, pw, narm, length(px[j]));
       } else {
         for(int j = 0; j != l; ++j) pout[j] = fsum_wg_impl(px[j], ng, pg, pw, narm);
       }
