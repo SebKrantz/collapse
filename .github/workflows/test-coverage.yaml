@@ -28,12 +28,13 @@ jobs:
 
       - name: Test coverage
         run: |
-          covr::codecov(
+          Sys.setenv(NCRAN = TRUE, NMAC = TRUE, LOCAL = TRUE, OMP = TRUE)
+          suppressWarnings(covr::codecov(
             type = "all",
             quiet = FALSE,
             clean = FALSE,
             install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package")
-          )
+          ))
         shell: Rscript {0}
 
       - name: Show testthat output
