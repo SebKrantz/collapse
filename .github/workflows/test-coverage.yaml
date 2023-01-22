@@ -28,11 +28,8 @@ jobs:
 
       - name: Test coverage
         run: |
-          library(covr)
-          options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS=""))
-          Sys.setenv(NCRAN = TRUE, NMAC = TRUE)
-          suppressWarnings(
-          codecov(
+          Sys.setenv(NCRAN = TRUE, NMAC = TRUE, OMP = TRUE)
+          suppressWarnings(covr::codecov(
             type = "all",
             quiet = FALSE,
             clean = FALSE,
