@@ -28,16 +28,12 @@ jobs:
 
       - name: Test coverage
         run: |
-          library(covr)
-          options(covr.flags = c(CXXFLAGS = "-O2", LDFLAGS=""))
-          Sys.setenv(NCRAN = TRUE, NMAC = TRUE)
-          suppressWarnings(
-          codecov(
+          covr::codecov(
             type = "all",
             quiet = FALSE,
-            clean = FALSE,
+            clean = TRUE,
             install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package")
-          ))
+          )
         shell: Rscript {0}
 
       - name: Show testthat output
