@@ -622,8 +622,7 @@ SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int
 // Implementations for R vectors -----------------------------------------------
 
 // https://github.com/wch/r-source/blob/trunk/src/include/Rinlinedfuns.h
-inline SEXP my_ScalarLogical(int x)
-{
+SEXP my_ScalarLogical(int x) {
   SEXP ans = allocVector(LGLSXP, 1);
   // SET_SCALAR_LVAL(ans, x); // Not part of the API
   LOGICAL(ans)[0] = x;
