@@ -46,11 +46,14 @@ In General, this option is for your convenience, if you want to write visually m
 
 \item \code{option("collapse_export_F")}, if set to \code{TRUE}, exports the lead operator \code{F} in the package namespace. The operator was exported by default until v1.9.0, but is now hidden inside the package due to too many problems with \code{base::F}. Alternatively, the operator can be accessed using \code{collapse:::F}.
 
+
 % \item \code{option("collapse_DT_alloccol")} sets how many empty columns \emph{collapse} data manipulation functions like \code{ftransform} allocate when taking a shallow copy of \emph{data.table}'s. The default is \code{100L}. Note that the \emph{data.table} default is \code{getOption("datatable.alloccol") = 1024L}. I chose a lower default because shallow copies are taken by each data manipulation function if you manipulate \emph{data.table}'s with collapse, and the cost increases with the number of overallocated columns. With 100 columns, the cost is 2-5 microseconds per copy.
+
+\item \code{option("collapse_nthreads")} and \code{option("collapse_na.rm")} can be set before loading the package to initialize \emph{collapse} with different defaults than \code{nthreads = 1L} and \code{na.rm = TRUE} (e.g. using an \code{\link{.Rprofile}} file). Once loaded, these options have no effect, and users need to use \code{set_collapse()} to change the argument defaults.
 }
 }
 \note{
-Options \code{"collapse_mask"} and \code{"collapse_export_F"} need to be set before the package is loaded, which means before any component of the package is accessed in any way, including the loading of packages that depend on \emph{collapse}.
+Options \code{"collapse_mask"} and \code{"collapse_export_F"} (and \code{"collapse_nthreads"}, \code{"collapse_na.rm"}) need to be set before the package is loaded, which means before any component of the package is accessed in any way, including the loading of packages that depend on \emph{collapse}.
 
 A safe way to set them is by using a \code{\link{.Rprofile}} file in your user or project directory (see also \href{https://www.statmethods.net/interface/customizing.html}{here}, the user-level file is located at \code{file.path(Sys.getenv("HOME"), ".Rprofile")} and can be edited using \code{file.edit(Sys.getenv("HOME"), ".Rprofile")}), or by using a \href{https://fastverse.github.io/fastverse/articles/fastverse_intro.html#custom-fastverse-configurations-for-projects}{\code{.fastverse}} configuration file in the project directory.
 }
@@ -60,10 +63,10 @@ A safe way to set them is by using a \code{\link{.Rprofile}} file in your user o
 }
 
 \examples{
-# Setting the (new) defaults
-oldopts = set_collapse(nthreads = 1, na.rm = TRUE)
+# Setting new values
+oldopts = set_collapse(nthreads = 2, na.rm = FALSE)
 
-# Getting the (new) defaults
+# Getting the values
 get_collapse()
 get_collapse("nthreads")
 
