@@ -18,7 +18,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.2</span>
       </span>
     </div>
 
@@ -81,6 +81,10 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="fu">qsu</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, pid <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, higher <span class="op">=</span> <span class="cn">FALSE</span>,
     array <span class="op">=</span> <span class="cn">TRUE</span>, vlabels <span class="op">=</span> <span class="cn">FALSE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
 
+<span class="co"># S3 method for grouped_df</span>
+<span class="fu">qsu</span><span class="op">(</span><span class="va">x</span>, pid <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, higher <span class="op">=</span> <span class="cn">FALSE</span>,
+    array <span class="op">=</span> <span class="cn">TRUE</span>, vlabels <span class="op">=</span> <span class="cn">FALSE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
+
 <span class="co"># Methods for indexed data / compatibility with plm:</span>
 
 <span class="co"># S3 method for pseries</span>
@@ -118,10 +122,10 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <dd><p><em>(p)data.frame method</em>: Same as <code>g</code>, but also allows one- or two-sided formulas i.e. <code>~ group1 + group2</code> or <code>var1 + var2 ~ group1 + group2</code>. See Examples.</p></dd>
 
   <dt>pid</dt>
-<dd><p>same input as <code>g/by</code>: Specify a panel-identifier to also compute statistics on between- and within- transformed data. Data frame method also supports one- or two-sided formulas. Transformations are taken independently from grouping with <code>g/by</code> (grouped statistics are computed on the transformed data if <code>g/by</code> is also used). However, passing any LHS variables to <code>pid</code> will overwrite any <code>LHS</code> variables passed to <code>by</code>.</p></dd>
+<dd><p>same input as <code>g/by</code>: Specify a panel-identifier to also compute statistics on between- and within- transformed data. Data frame method also supports one- or two-sided formulas, grouped_df method supports expressions evaluated in the data environment. Transformations are taken independently from grouping with <code>g/by</code> (grouped statistics are computed on the transformed data if <code>g/by</code> is also used). However, passing any LHS variables to <code>pid</code> will overwrite any <code>LHS</code> variables passed to <code>by</code>.</p></dd>
 
   <dt>w</dt>
-<dd><p>a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if <code>pid</code> is used.</p></dd>
+<dd><p>a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if <code>pid</code> is used. Data frame method supports formula, grouped_df method supports expression.</p></dd>
 
   <dt>cols</dt>
 <dd><p>select columns to summarize using column names, indices, a logical vector or a function (e.g. <code>is.numeric</code>). Two-sided formulas passed to <code>by</code> or <code>pid</code> overwrite <code>cols</code>.</p></dd>
@@ -395,6 +399,44 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 18 matrix slice(s) ]</span>
 <span class="r-in"></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Grouped summary</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘magrittr’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:testthat’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     equals, is_less_than, not</span>
+<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">qsu</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                N        Mean          SD         Min</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1467  10513.2441  14383.5507    132.0776</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       2243  25992.9618  26435.1316    366.9354</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   1976   7628.4477   8818.5055   1005.4085</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa   842  13878.4213  18419.7912    578.5996</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                180    48699.76  24196.2855  16405.9053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   382   1235.9256   1611.2232    265.9625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2380   1840.0259   2596.0104    164.3366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                    Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         71992.1517</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       196061.417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   88391.3331</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  116232.753</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America               113236.091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8476.564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          20532.9523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> , , LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                N     Mean       SD      Min      Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific         1807  65.9445  10.1633   18.907   85.078</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia       3046  72.1625   5.7602   45.369  85.4171</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Latin America &amp; Caribbean   2107  68.3486   7.3768   41.762  82.1902</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Middle East &amp; North Africa  1226  66.2508   9.8306   29.919  82.8049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> North America                144  76.2867   3.5734  68.8978  82.0488</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   480  57.5585  11.3004   32.446   78.921</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2860   51.581   8.6876   26.172  74.5146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"></span>
 <span class="r-in"><span class="co"># Panel Data Summaries ---------------------</span></span>
 <span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, pid <span class="op">=</span> <span class="op">~</span> <span class="va">iso3c</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># Adding between and within countries statistics</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , country: Country Name</span>
@@ -442,11 +484,11 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># This is the exact variance decomposion</span></span>
-<span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">B</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">B</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># What qsu does is calculate</span></span>
-<span class="r-in"><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">rbind</a></span><span class="op">(</span>Overall <span class="op">=</span> <span class="fu">qsu</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
+<span class="r-in"><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span>Overall <span class="op">=</span> <span class="fu">qsu</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,</span>
 <span class="r-in">           Between <span class="op">=</span> <span class="fu">qsu</span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span>, <span class="co"># Aggregation instead of between-transform</span></span>
 <span class="r-in">           Within <span class="op">=</span> <span class="fu">qsu</span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same as qsu(W(x, g) + fmean(x))</span></span>
 <span class="r-in"><span class="va">r</span><span class="op">[</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">r</span><span class="op">[</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">/</span> <span class="va">r</span><span class="op">[</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">]</span></span>
@@ -742,28 +784,28 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-in"><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># Generate random weights</span></span>
 <span class="r-in"><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, w <span class="op">=</span> <span class="va">weights</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>     <span class="co"># Computed weighted mean, SD, skewness and kurtosis</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean          SD          Min             Max     Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year     13176    1990.0732     19.7339         1960            2020   0.0068</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade   13176    1985.6339     19.6138         1960            2020   0.0414</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     9470   12225.0216  22147.3495     132.0776      196061.417   4.8037</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   11670      64.2644     12.8287       18.907         85.4171  -0.9113</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean           SD          Min             Max     Skew</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -            -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -            -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -            -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year     13176    1990.0643      19.7605         1960            2020  -0.0189</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade   13176    1985.6173      19.6786         1960            2020   0.0086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -            -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -            -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -            -            -               -        -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     9470   11992.1361   21352.4215     132.0776      196061.417   4.8508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   11670      64.1494      12.9122       18.907         85.4171  -0.9415</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country         -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> iso3c           -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> date            -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year       4.2946</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade     4.2753</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year       4.3949</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade     4.4176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region          -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> income          -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OECD            -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     45.5109</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX      6.352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     48.9102</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     6.2313</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"><span class="va">weightsNA</span> <span class="op">&lt;-</span> <span class="va">weights</span>                        <span class="co"># Weights may contain missing values.. inserting 1000</span></span>
 <span class="r-in"><span class="va">weightsNA</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
@@ -772,24 +814,24 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> country  13176           -           -            -               -        -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176           -           -            -               -        -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> date     13176           -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year     12176   1990.0208     19.6588         1960            2020   0.0155</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade   12176   1985.5849     19.5379         1960            2020   0.0492</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year     12176   1990.0874     19.7306         1960            2020  -0.0478</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade   12176   1985.6323     19.6215         1960            2020  -0.0157</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region   13176           -           -            -               -        -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> income   13176           -           -            -               -        -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176           -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     8740  12176.0082  22088.4013     132.0776      196061.417   4.8428</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   10787      64.252     12.8484       18.907         85.4171  -0.9367</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c          -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date           -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year      4.2936</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade    4.2516</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD           -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP    46.5769</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX    6.4508</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     8754  12088.1223  21640.4877     132.0776      196061.417   4.8745</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   10781     64.1564     12.8624       18.907         85.4171  -0.9479</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c           -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date            -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year       4.3334</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade     4.3577</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region          -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income          -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD            -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP       49.05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     6.2583</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Grouped and panel-summaries can also be weighted in the same manner</span></span>
