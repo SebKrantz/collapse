@@ -1,3 +1,14 @@
+# collapse 1.9.2
+
+* Further fix to an Address Sanitizer issue as required by CRAN (eliminating an unused out of bounds access at the end of a loop). 
+
+* `qsu()` finally has a grouped_df method. 
+
+* Added options `option("collapse_nthreads")` and `option("collapse_na.rm")`, which allow you to load *collapse* with different defaults e.g. through an `.Rprofile` or `.fastverse` configuration file. Once *collapse* is loaded, these options take no effect, and users need to use `set_collapse()` to change `.op[["nthreads"]]` and `.op[["na.rm"]]` interactively. 
+
+* Exported method `plot.psmat()` (can be useful to plot time series matrices).
+
+
 # collapse 1.9.1
 
 * Fixed minor C/C++ issues flagged by CRAN's detailed checks.
