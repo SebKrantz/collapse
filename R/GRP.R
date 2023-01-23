@@ -431,7 +431,7 @@ print.GRP_df <- function(x, ...) {
     # Groups: # if(any(g[[6L]])) "ordered groups" else "unordered groups", -> ordered 99% of times...
     cat("\nGrouped by: ", paste(g[[5L]], collapse = ", "), stats, "\n")
     if(inherits(x, "pdata.frame"))
-      message("\nNote: 'pdata.frame' methods for flag, fdiff, fgrowth, fcumsum, fbetween, fwithin, fscale and varying\n      take precedence over the 'grouped_df' methods for these functions.")
+      message("\nNote: 'pdata.frame' methods for flag, fdiff, fgrowth, fcumsum, fbetween, fwithin, fscale, qsu and varying\n      take precedence over the 'grouped_df' methods for these functions.")
   }
 }
 

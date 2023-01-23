@@ -3,6 +3,7 @@
 \alias{qsu.default}
 \alias{qsu.matrix}
 \alias{qsu.data.frame}
+\alias{qsu.grouped_df}
 \alias{qsu.pseries}
 \alias{qsu.pdata.frame}
 \alias{qsu.sf}
@@ -29,6 +30,9 @@ qsu(x, \dots)
 \method{qsu}{data.frame}(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE,
     array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
 
+\method{qsu}{grouped_df}(x, pid = NULL, w = NULL, higher = FALSE,
+    array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
+
 # Methods for indexed data / compatibility with plm:
 
 \method{qsu}{pseries}(x, g = NULL, w = NULL, effect = 1L, higher = FALSE,
@@ -53,8 +57,8 @@ qsu(x, \dots)
   \item{x}{a vector, matrix, data frame, 'indexed_series' ('pseries') or 'indexed_frame' ('pdata.frame').}
   \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}.}
   \item{by}{\emph{(p)data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1 + group2} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
-  \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. Data frame method also supports one- or two-sided formulas. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data if \code{g/by} is also used). However, passing any LHS variables to \code{pid} will overwrite any \code{LHS} variables passed to \code{by}.}
-  \item{w}{a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if \code{pid} is used.}
+  \item{pid}{same input as \code{g/by}: Specify a panel-identifier to also compute statistics on between- and within- transformed data. Data frame method also supports one- or two-sided formulas, grouped_df method supports expressions evaluated in the data environment. Transformations are taken independently from grouping with \code{g/by} (grouped statistics are computed on the transformed data if \code{g/by} is also used). However, passing any LHS variables to \code{pid} will overwrite any \code{LHS} variables passed to \code{by}.}
+  \item{w}{a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if \code{pid} is used. Data frame method supports formula, grouped_df method supports expression.}
   \item{cols}{select columns to summarize using column names, indices, a logical vector or a function (e.g. \code{is.numeric}). Two-sided formulas passed to \code{by} or \code{pid} overwrite \code{cols}.}
 
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
@@ -125,6 +129,9 @@ qsu(wlddev, PCGDP + LIFEEX ~ income)        # Summarize GDP per Capita and Life 
 stats <- qsu(wlddev, ~ region + income,     # World Bank Income Level
              cols = 9:10, higher = TRUE)    # Same variables, by both region and income
 aperm(stats)                                # A different perspective on the same stats
+
+library(magrittr) # Grouped summary
+wlddev \%>\% fgroup_by(region) \%>\% fselect(PCGDP, LIFEEX) \%>\% qsu()
 
 # Panel Data Summaries ---------------------
 qsu(wlddev, pid = ~ iso3c, vlabels = TRUE)   # Adding between and within countries statistics
