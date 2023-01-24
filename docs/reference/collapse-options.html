@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.2</span>
       </span>
     </div>
 
@@ -104,11 +104,13 @@ In General, this option is for your convenience, if you want to write visually m
 <p><!-- %Thus for production code I generally recommend not using it, unless you can ensure that the option is always set before any code is run, and that \emph{collapse} is always attached after \emph{dplyr}. --></p>
 <p><!-- % Note also that I have not yet investigated in much detail the impact on internal codes of replacing basic R functions like \code{sum}, \code{min} and \code{max} in the package. In terms of unit testing it seems to be quite ok (a number of tests break where I compare fast statistical functions to base functions because of the \code{na.rm = TRUE} default, but otherwise no major issues arise). In general, while this option is cool and can be of great help in translating existing \emph{dplyr} codes to \emph{collapse}, it is experimental and not the best idea for new production code. --></p></li>
 <li><p><code>option("collapse_export_F")</code>, if set to <code>TRUE</code>, exports the lead operator <code>F</code> in the package namespace. The operator was exported by default until v1.9.0, but is now hidden inside the package due to too many problems with <code><a href="https://rdrr.io/r/base/logical.html" class="external-link">base::F</a></code>. Alternatively, the operator can be accessed using <code>collapse:::F</code>.</p>
+
 <p><!-- % \item \code{option("collapse_DT_alloccol")} sets how many empty columns \emph{collapse} data manipulation functions like \code{ftransform} allocate when taking a shallow copy of \emph{data.table}'s. The default is \code{100L}. Note that the \emph{data.table} default is \code{getOption("datatable.alloccol") = 1024L}. I chose a lower default because shallow copies are taken by each data manipulation function if you manipulate \emph{data.table}'s with collapse, and the cost increases with the number of overallocated columns. With 100 columns, the cost is 2-5 microseconds per copy. --></p></li>
+<li><p><code>option("collapse_nthreads")</code> and <code>option("collapse_na.rm")</code> can be set before loading the package to initialize <em>collapse</em> with different defaults than <code>nthreads = 1L</code> and <code>na.rm = TRUE</code> (e.g. using an <code><a href="https://rdrr.io/r/base/Startup.html" class="external-link">.Rprofile</a></code> file). Once loaded, these options have no effect, and users need to use <code>set_collapse()</code> to change the argument defaults.</p></li>
 </ul></div>
     <div id="note">
     <h2>Note</h2>
-    <p>Options <code>"collapse_mask"</code> and <code>"collapse_export_F"</code> need to be set before the package is loaded, which means before any component of the package is accessed in any way, including the loading of packages that depend on <em>collapse</em>.</p>
+    <p>Options <code>"collapse_mask"</code> and <code>"collapse_export_F"</code> (and <code>"collapse_nthreads"</code>, <code>"collapse_na.rm"</code>) need to be set before the package is loaded, which means before any component of the package is accessed in any way, including the loading of packages that depend on <em>collapse</em>.</p>
 <p>A safe way to set them is by using a <code><a href="https://rdrr.io/r/base/Startup.html" class="external-link">.Rprofile</a></code> file in your user or project directory (see also <a href="https://www.statmethods.net/interface/customizing.html" class="external-link">here</a>, the user-level file is located at <code>file.path(Sys.getenv("HOME"), ".Rprofile")</code> and can be edited using <code>file.edit(Sys.getenv("HOME"), ".Rprofile")</code>), or by using a <a href="https://fastverse.github.io/fastverse/articles/fastverse_intro.html#custom-fastverse-configurations-for-projects" class="external-link"><code>.fastverse</code></a> configuration file in the project directory.</p>
     </div>
     <div id="see-also">
@@ -118,19 +120,19 @@ In General, this option is for your convenience, if you want to write visually m
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Setting the (new) defaults</span></span>
-<span class="r-in"><span class="va">oldopts</span> <span class="op">=</span> <span class="fu">set_collapse</span><span class="op">(</span>nthreads <span class="op">=</span> <span class="fl">1</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Setting new values</span></span>
+<span class="r-in"><span class="va">oldopts</span> <span class="op">=</span> <span class="fu">set_collapse</span><span class="op">(</span>nthreads <span class="op">=</span> <span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># Getting the (new) defaults</span></span>
+<span class="r-in"><span class="co"># Getting the values</span></span>
 <span class="r-in"><span class="fu">get_collapse</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $nthreads</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $na.rm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span class="fu">get_collapse</span><span class="op">(</span><span class="st">"nthreads"</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Resetting</span></span>
 <span class="r-in"><span class="fu">set_collapse</span><span class="op">(</span><span class="va">oldopts</span><span class="op">)</span></span>

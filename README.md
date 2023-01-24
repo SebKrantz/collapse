@@ -68,8 +68,8 @@ install.packages("collapse", repos = "https://fastverse.r-universe.dev")
 remotes::install_github("SebKrantz/collapse")
 
 # Install previous versions from the CRAN Archive (requires compilation)
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.7.6.tar.gz", 
-                 repos = NULL, type = "source") # Older: 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.8.9.tar.gz", 
+                 repos = NULL, type = "source") # Older: 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
 ```
 <!--
 # install the development version
@@ -91,7 +91,7 @@ In addition, *collapse* provides 5 vignettes (available online):
 
 * [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames.
 
-*Note* that these vignettes currently (October 2022) do not cover major features introduced in versions 1.7 and 1.8. They have been updated if you see a 2022/23 in the date of the vignette.
+*Note* that these vignettes currently do not cover major features introduced in versions 1.7 through 1.9. They have been updated if you see a 2022/23 in the date of the vignette.
 
 ### Cheatsheet (v1.8.8)
 

@@ -121,6 +121,48 @@ qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FAL
   qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, stable.algo, ...)
 }
 
+qsu.grouped_df <- function(x, pid = NULL, w = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = TRUE, ...) {
+  if(!missing(...)) unused_arg_action(match.call(), ...)
+  wsym <- substitute(w)
+  pidsym <- substitute(pid)
+  by <- GRP.grouped_df(x, call = FALSE)
+  is_sf <- inherits(x, "sf")
+  class(x) <- NULL
+  if(is_sf) x[[attr(x, "sf_column")]] <- NULL
+
+  # Getting group indices
+  byn <- which(names(x) %in% by[[5L]])
+
+  if(!is.null(pidsym)) {
+    pid <- eval(pidsym, x, parent.frame()) # This allows pid to be a function of multiple variables
+    if(length(pidn <- which(names(x) %in% all.vars(pidsym)))) {
+      if(any(byn %in% pidn)) stop("Panel-ids coincide with grouping variables!")
+      byn <- c(byn, pidn)
+    }
+  }
+
+  # Processing weights and combining indices with group indices
+  if(!is.null(wsym)) {
+    w <- eval(wsym, x, parent.frame()) # This allows w to be a function of multiple variables
+    if(length(wn <- which(names(x) %in% all.vars(wsym)))) {
+      if(any(byn %in% wn)) stop("Weights coincide with grouping variables!")
+      byn <- c(byn, wn)
+    }
+  }
+
+  if(length(byn)) x <- x[-byn] # Subsetting x
+
+  # Get vlabels
+  if(is.function(vlabels) || vlabels)
+    names(x) <- if(is.function(vlabels)) vlabels(x) else
+      paste(names(x), setv(vlabels(x, use.names = FALSE), NA, ""), sep = ": ")
+
+  if(is.null(pid)) return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],0L,0L,w,stable.algo,array,GRPnames(by))))
+  pid <- G_guo(pid)
+  drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],pid[[1L]],pid[[2L]],w,stable.algo,array,GRPnames(by)))
+}
+
+
 qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   pid <- group_effect(x, effect)

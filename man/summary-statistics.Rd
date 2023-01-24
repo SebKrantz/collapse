@@ -23,9 +23,9 @@
 }
 \section{Table of Functions}{
   \tabular{lllll}{\emph{ Function / S3 Generic }   \tab\tab \emph{ Methods }   \tab\tab \emph{ Description }  \cr
-                 \code{\link{qsu}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame}  \tab\tab Fast (grouped, weighted, panel-decomposed) summary statistics \cr
+                 \code{\link{qsu}} \tab\tab \code{default, matrix, data.frame, grouped_df, pseries, pdata.frame, sf}  \tab\tab Fast (grouped, weighted, panel-decomposed) summary statistics \cr
                  \code{\link{qtab}} \tab\tab No methods, for data frames or vectors  \tab\tab Fast (weighted) cross tabulation \cr
-                 \code{\link{descr}} \tab\tab No methods, for data frames or lists of vectors  \tab\tab Detailed statistical description of data frame \cr
+                 \code{\link{descr}} \tab\tab \code{default, grouped_df}  (default method handles most objects)  \tab\tab Detailed statistical description of data frame \cr
                  \code{\link{pwcor}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise (weighted) correlations \cr
                  \code{\link{pwcov}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise (weighted) covariances \cr
                  \code{\link{pwnobs}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise observation counts \cr
