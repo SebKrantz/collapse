@@ -341,4 +341,17 @@ test_that("fdist works properly", {
   expect_equal(fdist(m, fmean(m), method = "euclidean_squared"), unattrib(colSums((t(m) - fmean(m))^2)))
   expect_equal(fdist(m[, 1], m[, 3]), sqrt(sum((m[, 1] - m[, 3])^2)))
   expect_equal(fdist(m[, 1], m[, 3], method = "euclidean_squared"), sum((m[, 1] - m[, 3])^2))
+  if(Sys.getenv("OMP") == "TRUE") {
+    oldopts = set_collapse(nthreads = 2)
+    expect_equal(fdist(m), fdist(mtcars))
+    expect_equal(fdist(m), fdist(m, method = 1L))
+    expect_equal(fdist(m, method = "euclidean_squared"), fdist(m, method = 2L))
+    expect_equal(fdist(m), `attr<-`(dist(m), "call", NULL))
+    expect_equal(unattrib(fdist(m, method = "euclidean_squared")), unattrib(dist(m))^2)
+    expect_equal(fdist(m, fmean(m)), unattrib(sqrt(colSums((t(m) - fmean(m))^2))))
+    expect_equal(fdist(m, fmean(m), method = "euclidean_squared"), unattrib(colSums((t(m) - fmean(m))^2)))
+    expect_equal(fdist(m[, 1], m[, 3]), sqrt(sum((m[, 1] - m[, 3])^2)))
+    expect_equal(fdist(m[, 1], m[, 3], method = "euclidean_squared"), sum((m[, 1] - m[, 3])^2))
+    set_collapse(oldopts)
+  }
 })
