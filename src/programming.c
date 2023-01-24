@@ -894,11 +894,11 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
     if(nthreads > 1) {
       if(nthreads > nrow-1) nthreads = nrow-1;
       #pragma omp parallel for num_threads(nthreads)
-      for (int k = 1; k < nrow; ++k) { // Row vectors to compute distances with
+      for(int k = 1; k < nrow; ++k) { // Row vectors to compute distances with
         int nmk = nrow - k;
         double *presk = pres + l - nmk*(nmk+1)/2, // https://en.wikipedia.org/wiki/1_%2B_2_%2B_3_%2B_4_%2B_%E2%8B%AF
-               *pxj = px + k, v = px[k-1], tmp;
-        for (int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
+               *pxj = px + k, v, tmp;
+        for(int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           v = pxj[-1];
           for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
             tmp = pxj[i] - v;
@@ -909,9 +909,9 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
       }
     } else {
       double *presk = pres, *pxj, v, tmp;
-      for (int k = 1, nmk = nrow; k != nrow; ++k) { // Row vectors to compute distances with
-        --nmk; pxj = px + k; v = px[k-1];
-        for (int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
+      for(int k = 1, nmk = nrow; k != nrow; ++k) { // Row vectors to compute distances with
+        pxj = px + k; --nmk;
+        for(int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           v = pxj[-1];
           for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
             tmp = pxj[i] - v;
