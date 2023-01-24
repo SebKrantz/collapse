@@ -244,7 +244,7 @@ int ndistinct_impl_int(SEXP x, int narm) {
     case INTSXP:  // TODO: optimize for plain integer??
       return isFactor(x) ? ndistinct_fct(INTEGER(x), &l, l, nlevels(x), 1, narm) :
                            ndistinct_int(INTEGER(x), &l, l, 1, narm);
-    case LGLSXP: return ndistinct_logi(INTEGER(x), &l, l, 1, narm);
+    case LGLSXP: return ndistinct_logi(LOGICAL(x), &l, l, 1, narm);
     case STRSXP: return ndistinct_string(STRING_PTR(x), &l, l, 1, narm);
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
