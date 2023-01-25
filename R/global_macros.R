@@ -80,7 +80,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                            "fhdwithin","flag","flast","fmax","fmean","fmedian","fnth","fmin","fmode","varying",
                            "fndistinct","fnobs","fprod","fscale","fsd","fsum","fcumsum","fvar","fwithin","funique",
                            "G","GRP","HDB","HDW","L","psacf","psccf","psmat","pspacf","qsu", "rsplit","fdroplevels",
-                           "STD","TRA","W")))
+                           "STD","TRA","W", "descr")))
 
 .COLLAPSE_DATA <- c("GGDC10S", "wlddev")
 
