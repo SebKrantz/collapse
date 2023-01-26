@@ -6,6 +6,7 @@
 \alias{funique.pseries}
 \alias{funique.pdata.frame}
 \alias{fnunique}
+\alias{fduplicated}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Unique Elements / Rows
@@ -33,7 +34,8 @@ funique(x, \dots)
 \method{funique}{pdata.frame}(x, cols = NULL, sort = FALSE, method = "auto", drop.index.levels = "id", \dots)
 
 
-fnunique(x) # Fast NROW(unique(x))
+fnunique(x)                  # Fast NROW(unique(x)), for vectors and lists
+fduplicated(x, all = FALSE)  # Fast duplicates(x), for vectors and lists
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -49,6 +51,7 @@ fnunique(x) # Fast NROW(unique(x))
 \item{cols}{compute unique rows according to a subset of columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. \code{is.character}). \emph{Note:} All columns are returned. }
 \item{\dots}{arguments passed to \code{\link{radixorderv}}, e.g. \code{decreasing} or \code{na.last}. Only applicable if \code{method = "radix"}.}
 \item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
+\item{all}{logical. \code{TRUE} retorts all duplicated values, including the first occurrence.}
 }
 \details{
 If all values/rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{group}} for some additional computational details.
@@ -61,7 +64,7 @@ Methods for indexed data also subset the index accordingly.
 No matrix method is provided. Please see \code{kit::funique} for a fast alternative with a matrix method. % The \emph{kit} version is also often faster for vectors.
 }
 \value{
-\code{x} with duplicate elements/rows removed. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.
+\code{funique} returns \code{x} with duplicate elements/rows removed, \code{fnunique} returns and integer giving the number of unique values/rows, \code{fduplicated} gives a logical vector with \code{TRUE} indicating duplicated elements/rows. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.
 }
 \seealso{
 \code{\link{fndistinct}}, \code{\link{group}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.
@@ -71,6 +74,8 @@ funique(mtcars$cyl)
 funique(gv(mtcars, c(2,8,9)))
 funique(mtcars, cols = c(2,8,9))
 fnunique(gv(mtcars, c(2,8,9)))
+fduplicated(gv(mtcars, c(2,8,9)))
+fduplicated(gv(mtcars, c(2,8,9)), all = TRUE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

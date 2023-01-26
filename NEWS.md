@@ -1,3 +1,7 @@
+# collapse 1.9.3
+
+* Added function `fduplicated()`, for vectors and lists / data frames. Thanks @NicChr (#373)
+
 # collapse 1.9.2
 
 * Further fix to an Address Sanitizer issue as required by CRAN (eliminating an unused out of bounds access at the end of a loop). 

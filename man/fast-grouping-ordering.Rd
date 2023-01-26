@@ -42,7 +42,7 @@
                  \code{\link{group}}  \tab\tab No methods, for data frames and vectors  \tab\tab Hash-based grouping + grouping information \cr
                  \code{\link{GRP}} \tab\tab \code{default, GRP, factor, qG, grouped_df, pseries, pdata.frame}  \tab\tab Fast grouping and a flexible grouping object \cr
                  \code{\link{fgroup_by}} \tab\tab No methods, for data frames  \tab\tab Fast grouped data frame \cr
-                 \code{\link{funique}}, \code{\link{fnunique}} \tab\tab \code{default, data.frame, sf, pseries, pdata.frame, list}  \tab\tab Fast (number of) unique values/rows \cr
+                 \code{\link{funique}}, \code{\link{fnunique}}, \code{\link{fduplicated}} \tab\tab \code{default, data.frame, sf, pseries, pdata.frame, list}  \tab\tab Fast (number of) unique values/rows \cr
                 \code{\link[=fcount]{fcount(v)}} \tab\tab Internal generic, supports vectors, matrices, data.frames, lists, grouped_df and pdata.frame \tab\tab Fast group counts \cr
                  \code{\link{qF}} \tab\tab No methods, for vectors \tab\tab Quick factor generation \cr
                  \code{\link{qG}} \tab\tab No methods, for vectors \tab\tab Quick grouping of vectors and a 'factor-light' class \cr

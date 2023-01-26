@@ -59,7 +59,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                                "fcount", "fcountv", "fcumsum", "fdiff", "fdim", "fdist", "fdroplevels", "ffirst", "fFtest",
                                "fgroup_by", "fgroup_vars", "fgrowth", "fhdbetween", "fhdwithin", "findex", "findex_by",
                                "finteraction", "flag", "flast", "flm", "fmax", "fmean", "fmedian", "fmin", "fmode", "fmutate",
-                               "fncol", "fndistinct", "fnlevels", "fnobs", "fnrow", "fnth", "fnunique", "fprod", "fquantile",
+                               "fncol", "fndistinct", "fnlevels", "fnobs", "fnrow", "fnth", "fnunique", "fduplicated", "fprod", "fquantile",
                                "frange", "frename", "fscale", "fsd", "fselect", "fselect<-", "fsubset", "fsum", "fsummarise",
                                "fsummarize", "ftransform", "ftransform<-", "ftransformv", "fungroup", "funique", "fvar",
                                "fwithin", "G", "gby", "get_elem", "get_vars", "get_vars<-", "GGDC10S", "greorder", "group",
