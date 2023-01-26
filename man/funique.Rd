@@ -53,7 +53,7 @@ fduplicated(x, all = FALSE)  # Fast duplicated(x), for vectors and lists
 \item{cols}{compute unique rows according to a subset of columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. \code{is.character}). \emph{Note:} All columns are returned. }
 \item{\dots}{arguments passed to \code{\link{radixorderv}}, e.g. \code{decreasing} or \code{na.last}. Only applicable if \code{method = "radix"}.}
 \item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
-\item{all}{logical. \code{TRUE} retorts all duplicated values, including the first occurrence.}
+\item{all}{logical. \code{TRUE} returns all duplicated values, including the first occurrence.}
 }
 \details{
 If all values/rows are already unique, then \code{x} is returned. Otherwise a copy of \code{x} with duplicate rows removed is returned.  See \code{\link{group}} for some additional computational details.
