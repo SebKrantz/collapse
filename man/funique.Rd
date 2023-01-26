@@ -16,6 +16,8 @@ Fast Unique Elements / Rows
 
 \code{fnunique} is an alternative to \code{NROW(unique(x))} (or \code{data.table::uniqueN, kit::uniqLen, dplyr::n_distinct}).
 
+\code{fduplicated} is an alternative to \code{\link{duplicated}}.
+
 The \emph{collapse} versions are versatile and highly competitive. % on data frames.
 }
 \usage{
@@ -35,7 +37,7 @@ funique(x, \dots)
 
 
 fnunique(x)                  # Fast NROW(unique(x)), for vectors and lists
-fduplicated(x, all = FALSE)  # Fast duplicates(x), for vectors and lists
+fduplicated(x, all = FALSE)  # Fast duplicated(x), for vectors and lists
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
