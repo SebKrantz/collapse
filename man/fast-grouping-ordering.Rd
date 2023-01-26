@@ -15,7 +15,7 @@
 
 \item \code{\link{fgroup_by}} provides a fast replacement for \code{dplyr::group_by}, creating a grouped data frame (or data.table / tibble etc.) with a 'GRP' object attached. This grouped frame can be used for grouped operations using \emph{collapse}'s fast functions. % \emph{dplyr} functions will treat this tibble like an ordinary (non-grouped) one.
 
-\item \code{\link{funique}} is a faster version of \code{\link{unique}}. The data frame method also allows selecting unique rows according to a subset of the columns. \code{\link{fnunique}} efficiently calculates the number of unique values/rows.
+\item \code{\link{funique}} is a faster version of \code{\link{unique}}. The data frame method also allows selecting unique rows according to a subset of the columns. \code{\link{fnunique}} efficiently calculates the number of unique values/rows. \code{\link{fduplicated}} is a fast alternative to \code{\link{duplicated}}.
 
 \item \code{\link{fcount}} computes group counts based on a subset of columns in the data, and is a fast replacement for \code{dplyr::count}. \code{\link{fcountv}} is a programmers version of the function.
 
