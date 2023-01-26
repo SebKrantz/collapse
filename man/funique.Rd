@@ -16,7 +16,7 @@ Fast Unique Elements / Rows
 
 \code{fnunique} is an alternative to \code{NROW(unique(x))} (or \code{data.table::uniqueN, kit::uniqLen, dplyr::n_distinct}).
 
-\code{fduplicated} is an alternative to \code{\link{duplicated}}.
+\code{fduplicated} is an alternative to \code{\link{duplicated}} (or \code{duplicated.data.table}, \code{kit::fduplicated}).
 
 The \emph{collapse} versions are versatile and highly competitive. % on data frames.
 }
@@ -63,7 +63,7 @@ The \emph{sf} method simply ignores the geometry column when determining unique 
 Methods for indexed data also subset the index accordingly.
 }
 \note{
-No matrix method is provided. Please see \code{kit::funique} for a fast alternative with a matrix method. % The \emph{kit} version is also often faster for vectors.
+No matrix method is provided. Please use the alternatives provided in package \emph{kit} with matrices. % The \emph{kit} version is also often faster for vectors.
 }
 \value{
 \code{funique} returns \code{x} with duplicate elements/rows removed, \code{fnunique} returns and integer giving the number of unique values/rows, \code{fduplicated} gives a logical vector with \code{TRUE} indicating duplicated elements/rows. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.
