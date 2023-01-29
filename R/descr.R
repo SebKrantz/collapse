@@ -140,7 +140,7 @@ descr_core <- function(X, nam, by = NULL, w = NULL, Ndistinct = TRUE, higher = T
   }
 
   descrdate <- if(is.null(by)) function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), "N"), `names<-`(frange(x), c("Min", "Max")))) else
+                                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), "N"), `names<-`(.range(x), c("Min", "Max")))) else
                                function(x) list(Class = class(x), Label = attr(x, label.attr),
                                                 Stats = cbind(N = fnobs.default(x, by), Ndist = if(Ndistinct) fndistinctC(x, by) else NULL,
                                                               Min = fmin.default(x, by, na.rm = TRUE, use.g.names = FALSE), Max = fmax.default(x, by, na.rm = TRUE, use.g.names = FALSE)))
