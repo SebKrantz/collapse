@@ -10,7 +10,7 @@ A versatile and computationally more efficient replacement for \code{\link{table
 }
 \usage{
 qtab(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
-     dnn = "auto", sort = TRUE, na.exclude = TRUE,
+     dnn = "auto", sort = .op[["sort"]], na.exclude = TRUE,
      drop = FALSE, method = "auto")
 
 qtable(...) # Long-form: to facilitate replacement of table()

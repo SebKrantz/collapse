@@ -61,7 +61,7 @@
     </div>
 
     <div class="ref-description">
-    <p>A substantially faster replacement for <code><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></code>.</p>
+    <p>A substantially faster replacement for <code><a href="https://Rdatatable.gitlab.io/data.table/reference/fdroplevels.html" class="external-link">droplevels</a></code>.</p>
     </div>
 
     <div id="ref-usage">
@@ -85,7 +85,7 @@
 </dl></div>
     <div id="details">
     <h2>Details</h2>
-    <p><code><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></code> passes a factor from which levels are to be dropped to <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></code>, which first calls <code><a href="https://Rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">unique</a></code> and then <code><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></code> to drop unused levels. Both functions internally use a hash table, which is highly inefficient. <code>fdroplevels</code> does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, <code>x</code> is simply returned. Any missing values found in <code>x</code> are efficiently skipped in the process of checking and replacing levels. All other attributes of <code>x</code> are preserved.</p>
+    <p><code><a href="https://Rdatatable.gitlab.io/data.table/reference/fdroplevels.html" class="external-link">droplevels</a></code> passes a factor from which levels are to be dropped to <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></code>, which first calls <code><a href="https://Rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">unique</a></code> and then <code><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></code> to drop unused levels. Both functions internally use a hash table, which is highly inefficient. <code>fdroplevels</code> does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, <code>x</code> is simply returned. Any missing values found in <code>x</code> are efficiently skipped in the process of checking and replacing levels. All other attributes of <code>x</code> are preserved.</p>
     </div>
     <div id="value">
     <h2>Value</h2>
@@ -120,30 +120,30 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [67] versicolor versicolor versicolor versicolor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 30 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Levels: setosa versicolor</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">fdroplevels</span><span class="op">(</span><span class="va">f</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">fdroplevels</span><span class="op">(</span><span class="va">f</span><span class="op">)</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fdroplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">fNA</span> <span class="op">&lt;-</span> <span class="fu"><a href="efficient-programming.html">na_insert</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">fdroplevels</span><span class="op">(</span><span class="va">fNA</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] setosa     setosa     setosa     setosa     setosa     &lt;NA&gt;      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] setosa     setosa     setosa     setosa     setosa     setosa    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13] setosa     setosa     setosa     setosa     setosa     setosa    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19] setosa     setosa     setosa     setosa     setosa     setosa    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25] setosa     setosa     setosa     setosa     setosa     setosa    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] setosa     &lt;NA&gt;       &lt;NA&gt;       setosa     setosa     setosa    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [37] &lt;NA&gt;       setosa     setosa     setosa     setosa     &lt;NA&gt;      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] &lt;NA&gt;       setosa     setosa     setosa     setosa     setosa    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] setosa     setosa     &lt;NA&gt;       setosa     setosa     setosa    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] setosa     setosa     &lt;NA&gt;       setosa     setosa     setosa    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] &lt;NA&gt;       setosa     setosa     setosa     setosa     setosa    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] setosa     setosa     setosa     setosa     &lt;NA&gt;       setosa    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] setosa     setosa     setosa     setosa     setosa     setosa    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] setosa     setosa     setosa     setosa     setosa     setosa    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [43] setosa     setosa     setosa     setosa     setosa     setosa    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [49] &lt;NA&gt;       setosa     &lt;NA&gt;       versicolor &lt;NA&gt;       versicolor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] setosa     setosa     versicolor versicolor versicolor versicolor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [55] versicolor versicolor versicolor versicolor versicolor versicolor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [61] versicolor versicolor versicolor versicolor versicolor versicolor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [61] versicolor &lt;NA&gt;       &lt;NA&gt;       versicolor versicolor versicolor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [67] versicolor versicolor versicolor versicolor</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 30 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Levels: setosa versicolor</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">fdroplevels</span><span class="op">(</span><span class="va">fNA</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="va">fNA</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">fdroplevels</span><span class="op">(</span><span class="va">fNA</span><span class="op">)</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fdroplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="va">fNA</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">fdroplevels</span><span class="op">(</span><span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">fdroplevels</span><span class="op">(</span><span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/fdroplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in fdroplevels(ss(iris, 1:100)):</span> inherits(x, "factor") is not TRUE</span>
 </code></pre></div>
     </div>
   </div>

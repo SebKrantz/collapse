@@ -84,7 +84,7 @@ GRP <- function(X, ...) UseMethod("GRP") # , X
 # Added... could also do in GRP.default... but this is better, no match.call etc... match.call takes 4 microseconds. could do both ?? think about possible applications...
 GRP.GRP <- function(X, ...) X
 
-GRP.default <- function(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last = TRUE,
+GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE,
                         return.groups = TRUE, return.order = sort, method = "auto",
                         call = TRUE, ...) {
 
@@ -276,7 +276,7 @@ as.factor_GRP <- function(x, ordered = FALSE) {
   as_factor_GRP(x, ordered)
 }
 
-finteraction <- function(..., factor = TRUE, ordered = FALSE, sort = factor, method = "auto") { # does it drop levels ? -> Yes !
+finteraction <- function(..., factor = TRUE, ordered = FALSE, sort = factor && .op[["sort"]], method = "auto") { # does it drop levels ? -> Yes !
   X <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
   if(factor) return(as_factor_GRP(GRP.default(X, sort = sort, return.order = FALSE, method = method, call = FALSE), ordered))
   if(sort || method == "radix") {
@@ -365,7 +365,7 @@ GRP.pseries <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups =
 GRP.pdata.frame <- function(X, effect = 1L, ..., group.sizes = TRUE, return.groups = TRUE, call = TRUE)
   GRP.pseries(X, effect, ..., group.sizes = group.sizes, return.groups = return.groups, call = call)
 
-fgroup_by <- function(.X, ..., sort = TRUE, decreasing = FALSE, na.last = TRUE, return.groups = TRUE, return.order = sort, method = "auto") {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
+fgroup_by <- function(.X, ..., sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE, return.groups = TRUE, return.order = sort, method = "auto") {          #   e <- substitute(list(...)) # faster but does not preserve attributes of unique groups !
   clx <- oldClass(.X)
   oldClass(.X) <- NULL
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
@@ -675,7 +675,7 @@ as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
   as_factor_qG(x, ordered, na.exclude)
 }
 
-qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
+qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]], drop = FALSE,
                keep.attr = TRUE, method = "auto") {
   if(is.factor(x) && sort) {
     if(!keep.attr && !all(names(ax <- attributes(x)) %in% c("levels", "class")))
@@ -702,7 +702,7 @@ qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
          stop("Unknown method:", method))
 }
 
-qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
+qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]],
                return.groups = FALSE, method = "auto") {
   if(inherits(x, c("factor", "qG"))) {
     nainc <- inherits(x, "na.included")

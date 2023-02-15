@@ -11,7 +11,7 @@ set_collapse(\dots)
 get_collapse(opts = NULL)
 }
 \arguments{
-\item{\dots}{either comma separated options, or a list of options. Currently only options \code{nthreads = integer} or \code{na.rm = TRUE|FALSE} are supported. These are added to \code{.op}.}
+\item{\dots}{either comma separated options, or a list of options. Currently only options \code{nthreads = integer}, \code{na.rm = TRUE|FALSE}, and \code{sort = TRUE|FALSE} (only for grouping and factor generation) are supported. These are added to \code{.op}.}
 \item{opts}{character. A vector of options to receive from \code{.op}, or \code{NULL} for all options.}
 
 }
@@ -49,7 +49,7 @@ In General, this option is for your convenience, if you want to write visually m
 
 % \item \code{option("collapse_DT_alloccol")} sets how many empty columns \emph{collapse} data manipulation functions like \code{ftransform} allocate when taking a shallow copy of \emph{data.table}'s. The default is \code{100L}. Note that the \emph{data.table} default is \code{getOption("datatable.alloccol") = 1024L}. I chose a lower default because shallow copies are taken by each data manipulation function if you manipulate \emph{data.table}'s with collapse, and the cost increases with the number of overallocated columns. With 100 columns, the cost is 2-5 microseconds per copy.
 
-\item \code{option("collapse_nthreads")} and \code{option("collapse_na.rm")} can be set before loading the package to initialize \emph{collapse} with different defaults than \code{nthreads = 1L} and \code{na.rm = TRUE} (e.g. using an \code{\link{.Rprofile}} file). Once loaded, these options have no effect, and users need to use \code{set_collapse()} to change the argument defaults.
+\item \code{option("collapse_nthreads")}, \code{option("collapse_na.rm")} and \code{option("collapse_sort")}  can be set before loading the package to initialize \emph{collapse} with different defaults than \code{nthreads = 1L}, \code{na.rm = TRUE} and \code{sort = TRUE} (e.g. using an \code{\link{.Rprofile}} file). Once loaded, these options have no effect, and users need to use \code{set_collapse()} to change the argument defaults.
 }
 }
 \note{

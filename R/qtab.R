@@ -1,7 +1,7 @@
 
 
 qtab <- function(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
-                   dnn = "auto", sort = TRUE,
+                   dnn = "auto", sort = .op[["sort"]],
                    na.exclude = TRUE, drop = FALSE, method = "auto") {
   ll <- ...length() == 1L && is.list(..1)
   l <- if(ll) unclass(..1) else list(...)

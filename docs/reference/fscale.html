@@ -350,20 +350,20 @@
 <span class="r-in"><span class="va">weights</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fscale</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,<span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span>, <span class="va">weights</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP    LIFEEX GINI        ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA -1.608890   NA -0.6048261</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA -1.557696   NA -0.5444973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    NA -1.507196   NA -0.6068822</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    NA -1.457589   NA -0.5415466</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA -1.408776   NA -0.5110970</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    NA -1.360658   NA -0.4870723</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA -1.700734   NA -0.7387070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA -1.651327   NA -0.6838580</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    NA -1.602590   NA -0.7405764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    NA -1.554716   NA -0.6811752</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA -1.507607   NA -0.6534914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    NA -1.461168   NA -0.6316489</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">STD</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span><span class="va">iso3c</span>, <span class="va">weights</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c STD.PCGDP STD.LIFEEX STD.GINI    STD.ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG        NA  -1.608890       NA -0.6048261</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG        NA  -1.557696       NA -0.5444973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   AFG        NA  -1.507196       NA -0.6068822</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG        NA  -1.457589       NA -0.5415466</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG        NA  -1.408776       NA -0.5110970</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG        NA  -1.360658       NA -0.4870723</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG        NA  -1.700734       NA -0.7387070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG        NA  -1.651327       NA -0.6838580</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   AFG        NA  -1.602590       NA -0.7405764</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG        NA  -1.554716       NA -0.6811752</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG        NA  -1.507607       NA -0.6534914</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG        NA  -1.461168       NA -0.6316489</span>
 <span class="r-in"> </span>
 <span class="r-in"><span class="co"># Grouped data</span></span>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
@@ -409,41 +409,41 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  iso3c  [216 | 61 (0)] </span>
 <span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">STD</span><span class="op">(</span><span class="va">weights</span><span class="op">)</span> <span class="co"># weighted standardizing</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    STD.PCGDP  STD.LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         NA -1.60888978</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         NA -1.55769565</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         NA -1.50719601</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         NA -1.45758930</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         NA -1.40877629</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         NA -1.36065777</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         NA -1.31283690</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8         NA -1.26481760</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9         NA -1.21630223</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10        NA -1.16699316</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11        NA -1.11649352</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12        NA -1.06480332</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13        NA -1.01212099</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14        NA -0.95834731</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15        NA -0.90328386</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16        NA -0.84673220</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17        NA -0.78849392</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18        NA -0.72846979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19        NA -0.66656061</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20        NA -0.60296480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21        NA -0.53758315</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22        NA -0.47021723</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23        NA -0.40136311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24        NA -0.33121921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25        NA -0.26018240</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26        NA -0.18864951</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27        NA -0.11671977</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28        NA -0.04479004</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 29        NA  0.02654442</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 30        NA  0.09698596</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 31        NA  0.16554244</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 32        NA  0.23181701</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 33        NA  0.29551203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 34        NA  0.35652829</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 35        NA  0.41466736</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         NA -1.70073415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         NA -1.65132719</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         NA -1.60259049</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         NA -1.55471553</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5         NA -1.50760657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6         NA -1.46116787</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         NA -1.41501641</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8         NA -1.36867345</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9         NA -1.32185174</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10        NA -1.27426404</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11        NA -1.22552733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12        NA -1.17564163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13        NA -1.12479843</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14        NA -1.07290197</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15        NA -1.01976077</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16        NA -0.96518332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17        NA -0.90897812</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18        NA -0.85104943</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19        NA -0.79130148</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20        NA -0.72992579</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21        NA -0.66682660</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22        NA -0.60181241</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23        NA -0.53536197</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24        NA -0.46766678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25        NA -0.39910984</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26        NA -0.33007416</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27        NA -0.26065547</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28        NA -0.19123678</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29        NA -0.12239260</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30        NA -0.05441016</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31        NA  0.01175303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32        NA  0.07571397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33        NA  0.13718541</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34        NA  0.19607161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35        NA  0.25218106</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13141 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  iso3c  [216 | 61 (0)] </span>

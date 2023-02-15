@@ -13,15 +13,15 @@ Split-Apply-Combine Computing % (Efficient)
 \usage{
 BY(x, \dots)
 
-\method{BY}{default}(x, g, FUN, \dots, use.g.names = TRUE, sort = TRUE, reorder = TRUE,
+\method{BY}{default}(x, g, FUN, \dots, use.g.names = TRUE, sort = .op[["sort"]], reorder = TRUE,
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same", "vector", "list"))
 
-\method{BY}{matrix}(x, g, FUN, \dots, use.g.names = TRUE, sort = TRUE, reorder = TRUE,
+\method{BY}{matrix}(x, g, FUN, \dots, use.g.names = TRUE, sort = .op[["sort"]], reorder = TRUE,
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same", "matrix", "data.frame", "list"))
 
-\method{BY}{data.frame}(x, g, FUN, \dots, use.g.names = TRUE, sort = TRUE, reorder = TRUE,
+\method{BY}{data.frame}(x, g, FUN, \dots, use.g.names = TRUE, sort = .op[["sort"]], reorder = TRUE,
    expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
    return = c("same", "matrix", "data.frame", "list"))
 

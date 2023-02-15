@@ -66,7 +66,7 @@ Methods for indexed data also subset the index accordingly.
 No matrix method is provided. Please use the alternatives provided in package \emph{kit} with matrices. % The \emph{kit} version is also often faster for vectors.
 }
 \value{
-\code{funique} returns \code{x} with duplicate elements/rows removed, \code{fnunique} returns and integer giving the number of unique values/rows, \code{fduplicated} gives a logical vector with \code{TRUE} indicating duplicated elements/rows. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.
+\code{funique} returns \code{x} with duplicate elements/rows removed, \code{fnunique} returns an integer giving the number of unique values/rows, \code{fduplicated} gives a logical vector with \code{TRUE} indicating duplicated elements/rows. % sorted in ascending order if \code{sort = TRUE}, and in order of first occurrence if \code{sort = FALSE}.
 }
 \seealso{
 \code{\link{fndistinct}}, \code{\link{group}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}.

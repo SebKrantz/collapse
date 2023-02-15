@@ -34,7 +34,7 @@ There are also several conversion methods to and from 'GRP' objects. Notable amo
 \usage{
 GRP(X, \dots)
 
-\method{GRP}{default}(X, by = NULL, sort = TRUE, decreasing = FALSE, na.last = TRUE,
+\method{GRP}{default}(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE,
     return.groups = TRUE, return.order = sort, method = "auto",
     call = TRUE, \dots)
 
@@ -68,10 +68,10 @@ gsplit(x, g, use.g.names = FALSE, \dots)
 greorder(x, g, \dots)
 
 # Fast, class-agnostic pendant to dplyr::group_by for use with fast functions, see details
-fgroup_by(.X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
+fgroup_by(.X, \dots, sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE,
           return.groups = TRUE, return.order = sort, method = "auto")
 # Shorthand for fgroup_by
-      gby(.X, \dots, sort = TRUE, decreasing = FALSE, na.last = TRUE,
+      gby(.X, \dots, sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE,
           return.groups = TRUE, return.order = sort, method = "auto")
 
 # Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by

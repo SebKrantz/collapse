@@ -85,7 +85,7 @@ applyfuns_internal <- function(data, by, FUN, fFUN, parallel, cores, ...) {
 
 # keep.w toggle w being kept even if passed externally ? -> Also not done with W, B , etc !! -> but they also don't keep by ..
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
-                   keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = TRUE, decreasing = FALSE,
+                   keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = .op[["sort"]], decreasing = FALSE,
                    na.last = TRUE, return.order = sort, method = "auto", parallel = FALSE, mc.cores = 2L,
                    return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
 
@@ -310,7 +310,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
 # collapv: allows vector input to by and w
 collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
-                    keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = TRUE, decreasing = FALSE,
+                    keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = .op[["sort"]], decreasing = FALSE,
                     na.last = TRUE, return.order = sort, method = "auto", parallel = FALSE, mc.cores = 2L,
                     return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
 

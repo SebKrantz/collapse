@@ -18,17 +18,17 @@ Fast Factor Generation, Interactions and Vector Grouping
 \emph{collapse} internally makes optimal use of factors and 'qG' objects when passed as grouping vectors to statistical functions (\code{g/by}, or \code{t} arguments) i.e. typically no further grouping or ordering is performed and objects are used directly by statistical C/C++ code.
 }
 \usage{
-qF(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE, drop = FALSE,
+qF(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]], drop = FALSE,
    keep.attr = TRUE, method = "auto")
 
-qG(x, ordered = FALSE, na.exclude = TRUE, sort = TRUE,
+qG(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]],
    return.groups = FALSE, method = "auto")
 
 is_qG(x)
 
 as_factor_qG(x, ordered = FALSE, na.exclude = TRUE)
 
-finteraction(\dots, factor = TRUE, ordered = FALSE, sort = factor,
+finteraction(\dots, factor = TRUE, ordered = FALSE, sort = factor && .op[["sort"]],
              method = "auto")
 itn(\dots) # Shorthand for finteraction
 }
