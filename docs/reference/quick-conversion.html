@@ -194,13 +194,19 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">qDT</span><span class="op">(</span><span class="va">mtcars</span>, <span class="st">"cars"</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Saving row.names when converting data frame to data.table</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 cars   mpg   cyl  disp    hp  drat    wt  qsec    vs    am</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:         Mazda RX4  21.0     6   160   110  3.90 2.620 16.46     0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     Mazda RX4 Wag  21.0     6   160   110  3.90 2.875 17.02     0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        Datsun 710  22.8     4   108    93  3.85 2.320 18.61     1     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:    Hornet 4 Drive  21.4     6   258   110  3.08 3.215 19.44     1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     gear  carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    &lt;num&gt; &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:     4     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:     3     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">cylF</span> <span class="op">&lt;-</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>                  <span class="co"># Factor from atomic vector</span></span>
 <span class="r-in"><span class="va">cylF</span></span>

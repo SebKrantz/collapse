@@ -647,7 +647,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-in"><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="fu">to_plm</span><span class="op">(</span><span class="va">wldi</span><span class="op">)</span>, effect <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x14a740c38&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x1678b5270&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))-- L(G(LIFEEX, 5, p = 1/5), c(0, 5))L5 </span>
@@ -752,39 +752,40 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span class="r-in"><span class="va">wldidt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">wldidt</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span>      <span class="co"># Works like a data.table...</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           country iso3c       date year decade                    region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1: Afghanistan   AFG 1961-01-01 1960   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2: Afghanistan   AFG 1962-01-01 1961   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3: Afghanistan   AFG 1963-01-01 1962   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4: Afghanistan   AFG 1964-01-01 1963   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5: Afghanistan   AFG 1965-01-01 1964   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            income  OECD    PCGDP LIFEEX GINI       ODA     POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:  Low income FALSE       NA 32.446   NA 116769997 8996973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:  Low income FALSE       NA 32.962   NA 232080002 9169410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:  Low income FALSE       NA 33.471   NA 112839996 9351441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:  Low income FALSE       NA 33.971   NA 237720001 9543205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:  Low income FALSE       NA 34.463   NA 295920013 9744781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 6 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           country  iso3c       date  year decade                    region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;char&gt; &lt;fctr&gt;     &lt;Date&gt; &lt;int&gt;  &lt;int&gt;                    &lt;fctr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1: Afghanistan    AFG 1961-01-01  1960   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2: Afghanistan    AFG 1962-01-01  1961   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3: Afghanistan    AFG 1963-01-01  1962   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4: Afghanistan    AFG 1964-01-01  1963   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            income   OECD    PCGDP LIFEEX  GINI       ODA     POP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;fctr&gt; &lt;lgcl&gt;    &lt;num&gt;  &lt;num&gt; &lt;num&gt;     &lt;num&gt;   &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:  Low income  FALSE       NA 32.446    NA 116769997 8996973</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:  Low income  FALSE       NA 32.962    NA 232080002 9169410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:  Low income  FALSE       NA 33.471    NA 112839996 9351441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:  Low income  FALSE       NA 33.971    NA 237720001 9543205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [17] | year [61] </span>
 <span class="r-in"><span class="va">wldidt</span><span class="op">[</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2000</span><span class="op">]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           country iso3c       date year decade             region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1: Afghanistan   AFG 2002-01-01 2001   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2: Afghanistan   AFG 2003-01-01 2002   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3: Afghanistan   AFG 2004-01-01 2003   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4: Afghanistan   AFG 2005-01-01 2004   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5: Afghanistan   AFG 2006-01-01 2005   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    income  OECD     PCGDP LIFEEX GINI        ODA      POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:          Low income FALSE        NA 56.308   NA  682969971 21606988</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:          Low income FALSE  330.3036 56.784   NA 1790479980 22600770</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:          Low income FALSE  343.0809 57.271   NA 1972890015 23680871</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:          Low income FALSE  333.2167 57.772   NA 2681449951 24726684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    5:          Low income FALSE  357.2347 58.290   NA 3306389893 25654277</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 6 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           country  iso3c       date  year decade             region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;char&gt; &lt;fctr&gt;     &lt;Date&gt; &lt;int&gt;  &lt;int&gt;             &lt;fctr&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1: Afghanistan    AFG 2002-01-01  2001   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2: Afghanistan    AFG 2003-01-01  2002   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3: Afghanistan    AFG 2004-01-01  2003   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4: Afghanistan    AFG 2005-01-01  2004   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    income   OECD     PCGDP LIFEEX  GINI        ODA      POP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    &lt;fctr&gt; &lt;lgcl&gt;     &lt;num&gt;  &lt;num&gt; &lt;num&gt;      &lt;num&gt;    &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:          Low income  FALSE        NA 56.308    NA  682969971 21606988</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:          Low income  FALSE  330.3036 56.784    NA 1790479980 22600770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:          Low income  FALSE  343.0809 57.271    NA 1972890015 23680871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:          Low income  FALSE  333.2167 57.772    NA 2681449951 24726684</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [216] | year [20 (61)] </span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>sum_PCGDP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span> <span class="co"># Aggregation unindexes the result</span></span>
+<span class="r-in"><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">.</a></span><span class="op">(</span>sum_PCGDP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span> <span class="co"># Aggregation unindexes the result</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    country   sum_PCGDP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;char&gt;       &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:           Afghanistan    8709.031</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2:               Albania  112769.600</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3:               Algeria  211936.285</span>
@@ -798,6 +799,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 216:              Zimbabwe   73166.158</span>
 <span class="r-in"><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span><span class="op">]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    country       PCGDP   LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;char&gt;       &lt;num&gt;    &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:           Afghanistan    8709.031 2951.830</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2:               Albania  112769.600 4300.816</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3:               Algeria  211936.285 3813.774</span>
@@ -811,8 +813,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 216:              Zimbabwe   73166.158 3272.016</span>
 <span class="r-in"><span class="co"># This also works but is a bit inefficient since the index is subset and then dropped</span></span>
 <span class="r-in"><span class="co"># -&gt; better unindex beforehand</span></span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2000</span>, <span class="fu">.</span><span class="op">(</span>sum_PCGDP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span></span>
+<span class="r-in"><span class="va">wldidt</span><span class="op">[</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2000</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">.</a></span><span class="op">(</span>sum_PCGDP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    country  sum_PCGDP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;char&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:           Afghanistan   8709.031</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2:               Albania  73832.383</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3:               Algeria  84017.769</span>
@@ -966,6 +969,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: zoo</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘zoo’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:data.table’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     yearmon, yearqtr</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     as.Date, as.Date.numeric</span>

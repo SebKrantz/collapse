@@ -74,7 +74,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">GRP</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># S3 method for default</span>
-<span class="fu">GRP</span><span class="op">(</span><span class="va">X</span>, by <span class="op">=</span> <span class="cn">NULL</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,
+<span class="fu">GRP</span><span class="op">(</span><span class="va">X</span>, by <span class="op">=</span> <span class="cn">NULL</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,
     return.groups <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span>,
     call <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
 
@@ -114,10 +114,10 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="fu">greorder</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># Fast, class-agnostic pendant to dplyr::group_by for use with fast functions, see details</span>
-<span class="fu">fgroup_by</span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,
+<span class="fu">fgroup_by</span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,
           return.groups <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
 <span class="co"># Shorthand for fgroup_by</span>
-      <span class="fu">gby</span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,
+      <span class="fu">gby</span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,
           return.groups <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
 
 <span class="co"># Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by</span>
@@ -591,12 +591,12 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, <span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>less accurate nanosecond times to avoid potential integer overflows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr    min      lq     mean  median</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 77.490 80.9135 86.06269 83.3735</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE) 32.267 34.7885 40.78557 36.6130</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr    min      lq     mean median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 77.203 79.6835 83.92782 82.164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE) 32.103 33.2715 37.49614 34.645</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  87.043 146.124   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  42.599 139.359   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  85.403 117.055   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  37.228  86.264   100</span>
 <span class="r-in"></span>
 </code></pre></div>
     </div>

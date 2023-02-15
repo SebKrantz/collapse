@@ -71,17 +71,17 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">qF</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>,
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">qF</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>,
    keep.attr <span class="op">=</span> <span class="cn">TRUE</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
 
-<span class="fu">qG</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="cn">TRUE</span>,
+<span class="fu">qG</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>,
    return.groups <span class="op">=</span> <span class="cn">FALSE</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
 
 <span class="fu">is_qG</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 
 <span class="fu">as_factor_qG</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="fu">finteraction</span><span class="op">(</span><span class="va">...</span>, factor <span class="op">=</span> <span class="cn">TRUE</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, sort <span class="op">=</span> <span class="va">factor</span>,
+<span class="fu">finteraction</span><span class="op">(</span><span class="va">...</span>, factor <span class="op">=</span> <span class="cn">TRUE</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, sort <span class="op">=</span> <span class="va">factor</span> <span class="op">&amp;&amp;</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>,
              method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
 <span class="fu">itn</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co"># Shorthand for finteraction</span></code></pre></div>
     </div>
@@ -165,8 +165,8 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf</span><span class="op">)</span>, <span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf2</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min      lq     mean  median       uq      max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 92.250 100.368 120.9742 105.001 113.5495  334.560   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 86.223  94.874 127.8573  98.646 107.7685 2149.302   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 88.765 96.1450 136.6797 99.7735 124.9270 1300.110   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 83.968 90.5485 107.2995 93.0905 113.4675  277.242   100</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>  <span class="co"># Interacting two variables (can be factors)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0 6.0 4.1 6.1 8.0 6.1 8.0 4.1 4.1 6.1 6.1 8.0 8.0 8.0 8.0 8.0 8.0 4.1 4.1</span>

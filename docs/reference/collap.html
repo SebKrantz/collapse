@@ -74,14 +74,14 @@ It performs simple and weighted aggregations, multi-type aggregations automatica
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># Main function: allows formula and data input to `by` and `w` arguments</span>
 <span class="fu">collap</span><span class="op">(</span><span class="va">X</span>, <span class="va">by</span>, FUN <span class="op">=</span> <span class="va">fmean</span>, catFUN <span class="op">=</span> <span class="va">fmode</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, wFUN <span class="op">=</span> <span class="va">fsum</span>,
        custom <span class="op">=</span> <span class="cn">NULL</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, keep.col.order <span class="op">=</span> <span class="cn">TRUE</span>,
-       sort <span class="op">=</span> <span class="cn">TRUE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>,
+       sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>,
        method <span class="op">=</span> <span class="st">"auto"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">2L</span>,
        return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wide"</span>,<span class="st">"list"</span>,<span class="st">"long"</span>,<span class="st">"long_dupl"</span><span class="op">)</span>, give.names <span class="op">=</span> <span class="st">"auto"</span>, <span class="va">...</span><span class="op">)</span>
 
 <span class="co"># Programmer function: allows column names and indices input to `by` and `w` arguments</span>
 <span class="fu">collapv</span><span class="op">(</span><span class="va">X</span>, <span class="va">by</span>, FUN <span class="op">=</span> <span class="va">fmean</span>, catFUN <span class="op">=</span> <span class="va">fmode</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, wFUN <span class="op">=</span> <span class="va">fsum</span>,
         custom <span class="op">=</span> <span class="cn">NULL</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, keep.col.order <span class="op">=</span> <span class="cn">TRUE</span>,
-        sort <span class="op">=</span> <span class="cn">TRUE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>,
+        sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>,
         method <span class="op">=</span> <span class="st">"auto"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">2L</span>,
         return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wide"</span>,<span class="st">"list"</span>,<span class="st">"long"</span>,<span class="st">"long_dupl"</span><span class="op">)</span>, give.names <span class="op">=</span> <span class="st">"auto"</span>, <span class="va">...</span><span class="op">)</span>
 
@@ -263,14 +263,14 @@ Therefore it is possible to append <a href="fast-statistical-functions.html">Fas
 <span class="r-in"><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="efficient-programming.html">fnrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="op">~</span> <span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>                           <span class="co"># Some random weights..</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    weights Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 36.54716     5.003058    3.428455     1.477223   0.2418522     setosa</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 34.14693     5.929806    2.754688     4.252394   1.3144173 versicolor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 41.93264     6.535029    3.004267     5.555391   2.0607617  virginica</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 40.07789     5.007749    3.434648     1.475863   0.2571539     setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 36.87547     5.915367    2.729415     4.223168   1.3019730 versicolor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 43.28448     6.548494    2.994715     5.503613   2.0649472  virginica</span>
 <span class="r-in"><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="va">iris</span><span class="op">$</span><span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>                        <span class="co"># Note this behavior..</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species  weights Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 36.54716     5.003058    3.428455     1.477223   0.2418522</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 34.14693     5.929806    2.754688     4.252394   1.3144173</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 41.93264     6.535029    3.004267     5.555391   2.0607617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 40.07789     5.007749    3.434648     1.475863   0.2571539</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 36.87547     5.915367    2.729415     4.223168   1.3019730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 43.28448     6.548494    2.994715     5.503613   2.0649472</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor</span>
@@ -278,9 +278,9 @@ Therefore it is possible to append <a href="fast-statistical-functions.html">Fas
 <span class="r-in"><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="va">iris</span><span class="op">$</span><span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span>,</span>
 <span class="r-in">       keep.by <span class="op">=</span> <span class="cn">FALSE</span>, keep.w <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.003058    3.428455     1.477223   0.2418522     setosa</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.929806    2.754688     4.252394   1.3144173 versicolor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     6.535029    3.004267     5.555391   2.0607617  virginica</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.007749    3.434648     1.475863   0.2571539     setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.915367    2.729415     4.223168   1.3019730 versicolor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     6.548494    2.994715     5.503613   2.0649472  virginica</span>
 <span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"></span>
