@@ -20,14 +20,14 @@ It performs simple and weighted aggregations, multi-type aggregations automatica
 # Main function: allows formula and data input to `by` and `w` arguments
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
        custom = NULL, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
-       sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = sort,
+       sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE, return.order = sort,
        method = "auto", parallel = FALSE, mc.cores = 2L,
        return = c("wide","list","long","long_dupl"), give.names = "auto", \dots)
 
 # Programmer function: allows column names and indices input to `by` and `w` arguments
 collapv(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
         custom = NULL, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
-        sort = TRUE, decreasing = FALSE, na.last = TRUE, return.order = sort,
+        sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE, return.order = sort,
         method = "auto", parallel = FALSE, mc.cores = 2L,
         return = c("wide","list","long","long_dupl"), give.names = "auto", \dots)
 

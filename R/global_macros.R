@@ -4,7 +4,7 @@ set_collapse <- function(...) {
   opts <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
   op_old <- as.list(.op)
   nam <- names(opts)
-  if(any(nam %!in% c("nthreads", "na.rm"))) stop("Currently only supports options 'nthreads' and 'na.rm'")
+  if(any(nam %!in% c("nthreads", "na.rm", "sort"))) stop("Currently only supports options 'nthreads', 'na.rm' and 'sort'")
   if(length(opts$nthreads)) {
     nthreads <- as.integer(opts$nthreads)
     if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
@@ -14,6 +14,11 @@ set_collapse <- function(...) {
     na.rm <- as.logical(opts$na.rm)
     if(is.na(na.rm)) stop("na.rm needs to be TRUE or FALSE")
     .op$na.rm <- na.rm
+  }
+  if(length(opts$sort)) {
+    sort <- as.logical(opts$sort)
+    if(is.na(sort)) stop("sort needs to be TRUE or FALSE")
+    .op$sort <- sort
   }
   invisible(op_old)
 }

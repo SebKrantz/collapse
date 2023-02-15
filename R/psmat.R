@@ -16,8 +16,8 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
     # message("No timevar provided: Assuming Balanced Panel")
     return(.Call(Cpp_psmat,x, g, NULL, transpose))
   } else {
-    if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
-                      t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, return.order = FALSE, call = FALSE))
+    if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, sort = TRUE, na.exclude = FALSE) else if(is_GRP(t))
+                      t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, sort = TRUE, return.order = FALSE, call = FALSE))
     return(.Call(Cpp_psmat,x, g, t, transpose))
     }
   }
@@ -51,7 +51,7 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
       if(is.call(t)) { # If time-variable supplied !
         tv <- ckmatch(all.vars(t), nam, "Unknown time variable:")
         v <- fsetdiff(v, tv)
-        t <- eval(if(length(tv) == 1L) t[[2L]] else attr(terms.formula(t), "variables"), x, attr(t, ".Environment")) # if(length(t) == 1L) x[[t]] else GRP.default(x, t, call = FALSE)
+        t <- eval(if(length(tv) == 1L) t[[2L]] else attr(terms.formula(t), "variables"), x, attr(t, ".Environment")) # if(length(t) == 1L) x[[t]] else GRP.default(x, t, sort = TRUE, call = FALSE)
       }
       x <- x[v]
     } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
@@ -62,8 +62,8 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
         # message("No timevar provided: Assuming Balanced Panel")
         res <- lapply(x, psmatCpp, by, NULL, transpose)
       } else {
-        if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, na.exclude = FALSE) else if(is_GRP(t))
-                  t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, return.order = FALSE, call = FALSE))
+        if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, sort = TRUE, na.exclude = FALSE) else if(is_GRP(t))
+                  t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, sort = TRUE, return.order = FALSE, call = FALSE))
         res <- lapply(x, psmatCpp, by, t, transpose)
       }
   }

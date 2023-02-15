@@ -2,7 +2,7 @@
 BY <- function(x, ...) UseMethod("BY")
 
 
-BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder = TRUE,
+BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]], reorder = TRUE,
                        expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                        return = c("same", "vector", "list")) {
 
@@ -74,7 +74,7 @@ copysplmaplfun <- function(x, g, FUN, asl, mord) copyMostAttributes(unlist(.mapp
 splaplfun <- function(x, g, FUN, ...) unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE)
 splmaplfun <- function(x, g, FUN, asl, mord) unlist(.mapply(FUN, c(list(gsplit(x, g)), asl), mord), FALSE, FALSE)
 
-BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder = TRUE,
+BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]], reorder = TRUE,
                           expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                           return = c("same", "matrix", "data.frame", "list")) {
 
@@ -209,7 +209,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reord
 
 BY.list <- function(x, ...) BY.data.frame(x, ...)
 
-BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = TRUE, reorder = TRUE,
+BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]], reorder = TRUE,
                       expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
                       return = c("same", "matrix", "data.frame", "list")) {
 
