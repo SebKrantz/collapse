@@ -4,6 +4,8 @@
 
 * `sort` option added to `set_collapse()` to be able to set unordered grouping as a default. E.g. setting `set_collapse(sort = FALSE)` will affect `collap()`, `BY()`, `GRP()`, `fgroup_by()`, `qF()`, `qG()`, `finteraction()`, `qtab()` and internal use of these functions for ad-hoc grouping in fast statistical functions. Other uses of `sort`, for example in `funique()` where the default is `sort = FALSE`, are not affected by the global default setting. 
 
+* Fixed a small bug in `group()` / `funique()` resulting in an unnecessary memory allocation error in rare cases. Thanks @NicChr (#381).
+
 # collapse 1.9.2
 
 * Further fix to an Address Sanitizer issue as required by CRAN (eliminating an unused out of bounds access at the end of a loop). 
