@@ -847,6 +847,8 @@ fnunique <- function(x) {
     attr(.Call(C_group, x, FALSE, FALSE), "N.groups")
 }
 
+any_duplicated <- function(x) fnunique(x) < (if(is.atomic(x)) length(x) else .Call(C_fnrow, x))
+
 fduplicated <- function(x, all = FALSE) {
   if(all) {
     g <- .Call(C_group, x, FALSE, FALSE)

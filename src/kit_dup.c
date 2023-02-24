@@ -379,20 +379,20 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
     if(tx == INTSXP && (isFactor(x) || inherits(x, "qG"))) {
       K = isFactor(x) ? nlevels(x)+1 : asInteger(getAttrib(x, install("N.groups")))+1;
       anyNA = !inherits(x, "na.included");
-      if(K * ng <= 3 * n) {
+      if((size_t)K * ng <= (size_t)n * 3) {
         tx = 1000;
-        M = (size_t)(K * ng + 1);
+        M = (size_t)K * ng + 1;
       } else K = 0;
     }
     if(K == 0) {
-      const size_t n2 = 2U * (size_t) n;
+      const size_t n2 = 2U * (size_t)n;
       M = 256;
       K = 8;
       while (M < n2) {
         M *= 2;
         K++;
       }
-      M += ng; // Here we addd the number of previous groups...
+      M += ng; // Here we add the number of previous groups...
     }
   } else if (tx == LGLSXP) {
     M = (size_t)ng * 3 + 1;
