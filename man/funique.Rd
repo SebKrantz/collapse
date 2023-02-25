@@ -17,9 +17,11 @@ Fast Unique Elements / Rows
 
 \code{fnunique} is an alternative to \code{NROW(unique(x))} (or \code{data.table::uniqueN, kit::uniqLen, dplyr::n_distinct}).
 
-\code{fduplicated} is an alternative to \code{\link{duplicated}} (or \code{duplicated.data.table}, \code{kit::fduplicated}). \code{any_duplicated(x)} is faster than \code{any(fduplicated(x))}.
+\code{fduplicated} is an alternative to \code{\link{duplicated}} (or \code{duplicated.data.table}, \code{kit::fduplicated}).
 
 The \emph{collapse} versions are versatile and highly competitive. % on data frames.
+
+\code{any_duplicated(x)} is faster than \code{any(fduplicated(x))}. \emph{Note} that for atomic vectors, \code{\link{anyDuplicated}} is currently more efficient if there are duplicates at the beginning of the vector.
 }
 \usage{
 funique(x, \dots)
@@ -63,6 +65,8 @@ If all values/rows are already unique, then \code{x} is returned. Otherwise a co
 The \emph{sf} method simply ignores the geometry column when determining unique values.
 
 Methods for indexed data also subset the index accordingly.
+
+\code{any_duplicated} is currently simply implemented as \code{fnunique(x) < NROW(x)}, which means it does not have facilities to terminate early, and users are advised to use \code{\link{anyDuplicated}} with atomic vectors if chances are high that there are duplicates at the beginning of the vector. With no duplicate values or data frames, \code{any_duplicated} is considerably faster than \code{\link{anyDuplicated}}.
 }
 \note{
 No matrix method is provided. Please use the alternatives provided in package \emph{kit} with matrices. % The \emph{kit} version is also often faster for vectors.
