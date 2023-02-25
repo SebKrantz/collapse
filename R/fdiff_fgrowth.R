@@ -96,7 +96,7 @@ fgrowth <- function(x, n = 1, diff = 1, ...) UseMethod("fgrowth") # , x
 fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fgrowth", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
+  if(logdiff) x <- if(scale == 1) baselog(x) else baselog(x) %*=% scale
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t),4L-logdiff,scale,stubs,power))
   g <- G_guo(g)
   .Call(Cpp_fdiffgrowth,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
@@ -105,7 +105,7 @@ fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, l
 fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, shift = "time", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- uncl2pix(x)
-  if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
+  if(logdiff) x <- if(scale == 1) baselog(x) else baselog(x) %*=% scale
   g <- index[[1L]]
   t <- switch(shift, time = index[[2L]], row = NULL, stop("'shift' must be either 'time' or 'row'"))
   if(length(t) && !inherits(x, "indexed_series")) t <- plm_check_time(t)
@@ -118,7 +118,7 @@ fgrowth.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scal
 
 fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(logdiff) x <- if(scale == 1) baselog(x) else scale * baselog(x)
+  if(logdiff) x <- if(scale == 1) baselog(x) else baselog(x) %*=% scale
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthm,x,n,diff,fill,0L,0L,NULL,G_t(t),4L-logdiff,scale,stubs,power))
   g <- G_guo(g)
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
@@ -137,7 +137,7 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
       if(anyDuplicated.default(gn)) stop("timevar coincides with grouping variables!")
     }
   }
-  cld <- function(x) if(!logdiff) x else if(scale != 1) fdapply(x, function(y) scale * baselog(y)) else fdapply(x, baselog)
+  cld <- function(x) if(!logdiff) x else if(scale == 1) fdapply(x, baselog) else fdapply(x, baselog) %*=% scale
   if(length(gn)) {
     ax <- attributes(x)
     res <- .Call(Cpp_fdiffgrowthl,cld(.subset(x, -gn)),n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
@@ -150,7 +150,7 @@ fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff 
 
 fgrowth.data.frame <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
-  if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, function(y) scale * baselog(y))
+  if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, baselog) %*=% scale
   if(is.null(g)) return(.Call(Cpp_fdiffgrowthl,x,n,diff,fill,0L,0L,NULL,G_t(t),4L-logdiff,scale,stubs,power))
   g <- G_guo(g)
   .Call(Cpp_fdiffgrowthl,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
@@ -161,7 +161,7 @@ fgrowth.list <- function(x, ...) fgrowth.data.frame(x, ...)
 fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, shift = "time", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- uncl2pix(x)
-  if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, function(y) scale * baselog(y))
+  if(logdiff) x <- if(scale == 1) fdapply(x, baselog) else fdapply(x, baselog) %*=% scale
   g <- index[[1L]]
   t <- switch(shift, time = index[[2L]], row = NULL, stop("'shift' must be either 'time' or 'row'"))
   if(length(t) && !inherits(x, "indexed_frame")) t <- plm_check_time(t)
@@ -175,7 +175,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
 
-  cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, function(k) rho * baselog(k)), y)
+  cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, baselog) %*=% rho, y)
 
   if(is.call(by) || is.call(t)) {
     ax <- attributes(x)
@@ -249,7 +249,7 @@ DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill 
   t <- switch(shift, time = index[[2L]], row = NULL, stop("'shift' must be either 'time' or 'row'"))
   if(length(t) && !any(ax$class == "indexed_frame")) t <- plm_check_time(t)
 
-  cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, function(k) rho * baselog(k)), y)
+  cld <- function(y) switch(return, y, fdapply(y, baselog), if(rho == 1) fdapply(y, baselog) else fdapply(y, baselog) %*=% rho, y)
 
   if(length(gn) && length(cols)) {
     class(x) <- NULL # Works for multiple lags !
