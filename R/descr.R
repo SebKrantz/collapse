@@ -161,7 +161,7 @@ descr_core <- function(X, nam, by = NULL, w = NULL, Ndistinct = TRUE, higher = T
       print(res[i], header = FALSE)
     }
   } else {
-    res[num] <- lapply(X[num], descrnum, ...)
+    if(Nnum) res[num] <- lapply(X[num], descrnum, ...)
     if(Nnum != length(num)) {
       date <- vapply(unattrib(X), is_date, TRUE)
       if(any(date)) {
