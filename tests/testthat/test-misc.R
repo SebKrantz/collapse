@@ -10,6 +10,7 @@ F <- getNamespace("collapse")$F
 test_that("descr, pwcor, pwcov, pwnobs", {
 
   expect_visible(descr(wlddev))
+  expect_equal(lapply(wlddev, descr) %>% get_elem("i") %>% unattrib(), unattrib(descr(wlddev)))
   expect_visible(as.data.frame(descr(wlddev)))
   expect_output(print(descr(wlddev)))
   expect_visible(descr(GGDC10S))
