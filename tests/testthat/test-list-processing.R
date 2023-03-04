@@ -91,7 +91,7 @@ if(NCRAN)
 test_that("has_elem works well", {
   expect_true(has_elem(l, is.matrix))
   expect_true(has_elem(l, is.data.frame))
-  expect_false(has_elem(l, is.data.frame, DF.as.list = TRUE))
+  expect_true(has_elem(l, is.data.frame, DF.as.list = TRUE))
   expect_true(has_elem(l, is_categorical))
   expect_false(has_elem(l, is_date))
   expect_false(has_elem(l, is_qG))
