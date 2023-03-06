@@ -4,6 +4,8 @@
 
 * Fixed a small bug in `descr()` introduced in v1.9.0, producing an error if a data frame contained no numeric columns - because an internal function was not defined in that case. 
 
+* `fmean()` and `fsum()` with `na.rm = FALSE, nthreads = 1` and `g = NULL` now utilize Single Instruction Multiple Data (SIMD) vectorization by default (if OpenMP is enabled), enabling extreme aggregation speeds. 
+
 # collapse 1.9.3
 
 * Added functions `fduplicated()` and `any_duplicated()`, for vectors and lists / data frames. Thanks @NicChr (#373)

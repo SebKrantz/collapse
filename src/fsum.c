@@ -4,7 +4,7 @@
 #include "collapse_c.h"
 // #include <R_ext/Altrep.h>
 
-double fsum_double_impl(const double *restrict px, const int narm, const int l) {
+double fsum_double_impl(const double *restrict px, const int narm, const int l, const int simd) {
   double sum;
   if(narm == 1) {
     // Somehow this is faster than forward loop...
@@ -22,8 +22,11 @@ double fsum_double_impl(const double *restrict px, const int narm, const int l) 
         if(ISNAN(px[i])) continue; // Somehow continue statements with backwards loops are faster...
         sum += px[i];
       }
+    } else if(simd) {
+      // Should just be fast, don't stop for NA's
+      #pragma omp for simd
+      for(int i = 0; i != l; ++i) sum += px[i];
     } else {
-     // Should just be fast, don't stop for NA's
       for(int i = 0; i != l; ++i) sum += px[i];
     }
   }
@@ -89,7 +92,7 @@ double fsum_double_omp_impl(const double *restrict px, const int narm, const int
 //   }
 // }
 
-double fsum_weights_impl(const double *restrict px, const double *restrict pw, const int narm, const int l) {
+double fsum_weights_impl(const double *restrict px, const double *restrict pw, const int narm, const int l, const int simd) {
   double sum;
   if(narm == 1) {
     int j = l-1;
@@ -102,8 +105,11 @@ double fsum_weights_impl(const double *restrict px, const double *restrict pw, c
     sum = 0;
     if(narm) {
       for(int i = 0; i != l; ++i) if(NISNAN(px[i]) && NISNAN(pw[i])) sum += px[i] * pw[i];
-    } else {
+    } else if(simd) {
       // Also here speed is key...
+      #pragma omp for simd
+      for(int i = 0; i != l; ++i) sum += px[i] * pw[i];
+    } else {
       for(int i = 0; i != l; ++i) sum += px[i] * pw[i];
     }
   }
@@ -314,7 +320,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnthrea
     switch(tx) {
       case REALSXP:
         if(ng == 0) {
-          REAL(out)[0] = (nthreads <= 1) ? fsum_double_impl(REAL(x), narm, l) :
+          REAL(out)[0] = (nthreads <= 1) ? fsum_double_impl(REAL(x), narm, l, 1) :
                         fsum_double_omp_impl(REAL(x), narm, l, nthreads);
         } else fsum_double_g_impl(REAL(out), REAL(x), ng, INTEGER(g), narm, l);
         // If safe sub-column-level mutithreading can be developed...
@@ -354,7 +360,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnthrea
     }
     double *restrict px = REAL(x), *restrict pw = REAL(w);
     if(ng == 0) {
-      REAL(out)[0] = (nthreads <= 1) ? fsum_weights_impl(px, pw, narm, l) :
+      REAL(out)[0] = (nthreads <= 1) ? fsum_weights_impl(px, pw, narm, l, 1) :
                fsum_weights_omp_impl(px, pw, narm, l, nthreads);
     } else fsum_weights_g_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
@@ -384,10 +390,10 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
         double *px = REAL(x), *pout = REAL(out);
         if(ng == 0) {
           if(nthreads <= 1) {
-            for(int j = 0; j != col; ++j) pout[j] = fsum_double_impl(px + j*l, narm, l);
+            for(int j = 0; j != col; ++j) pout[j] = fsum_double_impl(px + j*l, narm, l, 1);
           } else if(col >= nthreads) {
             #pragma omp parallel for num_threads(nthreads)
-            for(int j = 0; j < col; ++j) pout[j] = fsum_double_impl(px + j*l, narm, l);
+            for(int j = 0; j < col; ++j) pout[j] = fsum_double_impl(px + j*l, narm, l, 0);
           } else {
             for(int j = 0; j != col; ++j) pout[j] = fsum_double_omp_impl(px + j*l, narm, l, nthreads);
           }
@@ -461,10 +467,10 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 
     if(ng == 0) {
       if(nthreads <= 1) {
-        for(int j = 0; j != col; ++j) pout[j] = fsum_weights_impl(px + j*l, pw, narm, l);
+        for(int j = 0; j != col; ++j) pout[j] = fsum_weights_impl(px + j*l, pw, narm, l, 1);
       } else if(col >= nthreads) {
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < col; ++j) pout[j] = fsum_weights_impl(px + j*l, pw, narm, l);
+        for(int j = 0; j < col; ++j) pout[j] = fsum_weights_impl(px + j*l, pw, narm, l, 0);
       } else {
         for(int j = 0; j != col; ++j) pout[j] = fsum_weights_omp_impl(px + j*l, pw, narm, l, nthreads);
       }
@@ -485,11 +491,11 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 
 // For safe multithreading across data frame columns
 
-double fsum_impl_dbl(SEXP x, int narm, int nthreads) {
+double fsum_impl_dbl(SEXP x, int narm, int nthreads, int simd) {
   int l = length(x);
   if(l < 1) return NA_REAL;
   if(nthreads <= 1) switch(TYPEOF(x)) {
-    case REALSXP: return fsum_double_impl(REAL(x), narm, l);
+    case REALSXP: return fsum_double_impl(REAL(x), narm, l, simd);
     case LGLSXP:
     case INTSXP: return fsum_int_impl(INTEGER(x), narm, l);
     default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
@@ -502,8 +508,8 @@ double fsum_impl_dbl(SEXP x, int narm, int nthreads) {
   }
 }
 
-SEXP fsum_impl_SEXP(SEXP x, int narm, int nthreads) {
-  return ScalarReal(fsum_impl_dbl(x, narm, nthreads));
+SEXP fsum_impl_SEXP(SEXP x, int narm, int nthreads, int simd) {
+  return ScalarReal(fsum_impl_dbl(x, narm, nthreads, simd));
   // This is not thread safe... need to do separate serial loop
   // SEXP res = ScalarReal(fsum_impl_dbl(x, narm, nthreads));
   // if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
@@ -514,23 +520,23 @@ SEXP fsum_impl_SEXP(SEXP x, int narm, int nthreads) {
   // return res;
 }
 
-double fsum_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads) {
+double fsum_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads, int simd) {
   int l = length(x);
   if(l < 1) return NA_REAL;
   if(TYPEOF(x) != REALSXP) {
     if(TYPEOF(x) != INTSXP && TYPEOF(x) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
     x = PROTECT(coerceVector(x, REALSXP));
-    double res = (nthreads <= 1) ? fsum_weights_impl(REAL(x), pw, narm, l) :
+    double res = (nthreads <= 1) ? fsum_weights_impl(REAL(x), pw, narm, l, simd) :
       fsum_weights_omp_impl(REAL(x), pw, narm, l, nthreads);
     UNPROTECT(1);
     return res;
   }
-  return (nthreads <= 1) ? fsum_weights_impl(REAL(x), pw, narm, l) :
+  return (nthreads <= 1) ? fsum_weights_impl(REAL(x), pw, narm, l, simd) :
     fsum_weights_omp_impl(REAL(x), pw, narm, l, nthreads);
 }
 
-SEXP fsum_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads) {
-  return ScalarReal(fsum_w_impl_dbl(x, pw, narm, nthreads));
+SEXP fsum_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads, int simd) {
+  return ScalarReal(fsum_w_impl_dbl(x, pw, narm, nthreads, simd));
   // This is not thread safe... need to do separate serial loop
   // SEXP res = ScalarReal(fsum_w_impl_dbl(x, pw, narm, nthreads));
   // if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
@@ -604,17 +610,17 @@ SEXP fsum_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
 if(nwl) {                                                      \
   if(nthreads > 1 && l >= nthreads) {                          \
     _Pragma("omp parallel for num_threads(nthreads)")          \
-    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, 1);  \
+    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, 1, 0);  \
   } else {                                                     \
-    for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nthreads); \
+    for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nthreads, 1); \
   }                                                            \
 } else {                                                       \
   double *restrict pw = REAL(w);                               \
   if(nthreads > 1 && l >= nthreads) {                          \
     _Pragma("omp parallel for num_threads(nthreads)")          \
-    for(int j = 0; j < l; ++j) pout[j] = WFUN(px[j], pw, narm, 1); \
+    for(int j = 0; j < l; ++j) pout[j] = WFUN(px[j], pw, narm, 1, 0); \
   } else {                                                     \
-    for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nthreads); \
+    for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nthreads, 1); \
   }                                                            \
 }
 
