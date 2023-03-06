@@ -6,7 +6,7 @@
 
 // Adapted from fsum.c
 
-double fmean_double_impl(const double *restrict px, const int narm, const int l) {
+double fmean_double_impl(const double *restrict px, const int narm, const int l, const int simd) {
   if(narm) {
     int j = l-1, n = 1;
     double mean = px[j];
@@ -19,12 +19,17 @@ double fmean_double_impl(const double *restrict px, const int narm, const int l)
     return  mean / n;
   }
   double mean = 0;
-  for(int i = 0; i != l; ++i) {
-    if(ISNAN(px[i])) {
-      mean = px[i];
-      break;
+  if(simd) {
+    #pragma omp for simd
+    for(int i = 0; i != l; ++i) mean += px[i];
+  } else {
+    for(int i = 0; i != l; ++i) {
+      if(ISNAN(px[i])) {
+        mean = px[i];
+        break;
+      }
+      mean += px[i];
     }
-    mean += px[i];
   }
   return mean / l;
 }
@@ -69,7 +74,7 @@ void fmean_double_g_impl(double *restrict pout, const double *restrict px, const
   }
 }
 
-double fmean_weights_impl(const double *restrict px, const double *restrict pw, const int narm, const int l) {
+double fmean_weights_impl(const double *restrict px, const double *restrict pw, const int narm, const int l, const int simd) {
   double mean, sumw;
   if(narm) {
     int j = l-1;
@@ -83,13 +88,21 @@ double fmean_weights_impl(const double *restrict px, const double *restrict pw, 
     }
   } else {
     mean = 0, sumw = 0;
-    for(int i = 0; i != l; ++i) {
-      if(ISNAN(px[i]) || ISNAN(pw[i])) {
-        mean = px[i] + pw[i];
-        break;
+    if(simd) {
+      #pragma omp for simd
+      for(int i = 0; i != l; ++i) {
+        mean += px[i] * pw[i];
+        sumw += pw[i];
       }
-      mean += px[i] * pw[i];
-      sumw += pw[i];
+    } else {
+      for(int i = 0; i != l; ++i) {
+        if(ISNAN(px[i]) || ISNAN(pw[i])) {
+          mean = px[i] + pw[i];
+          break;
+        }
+        mean += px[i] * pw[i];
+        sumw += pw[i];
+      }
     }
   }
   return mean / sumw;
@@ -240,7 +253,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnthread
     switch(tx) {
       case REALSXP: {
         if(ng > 0) fmean_double_g_impl(REAL(out), REAL(x), ng, INTEGER(g), pgs, narm, l);
-        else REAL(out)[0] = (nthreads <= 1) ? fmean_double_impl(REAL(x), narm, l) : fmean_double_omp_impl(REAL(x), narm, l, nthreads);
+        else REAL(out)[0] = (nthreads <= 1) ? fmean_double_impl(REAL(x), narm, l, 1) : fmean_double_omp_impl(REAL(x), narm, l, nthreads);
         break;
       }
       case INTSXP: {
@@ -262,7 +275,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnthread
     }
     double *restrict px = REAL(x), *restrict pw = REAL(w);
     if(ng == 0) {
-      REAL(out)[0] = (nthreads <= 1) ? fmean_weights_impl(px, pw, narm, l) :
+      REAL(out)[0] = (nthreads <= 1) ? fmean_weights_impl(px, pw, narm, l, 1) :
               fmean_weights_omp_impl(px, pw, narm, l, nthreads);
     } else fmean_weights_g_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
@@ -299,10 +312,10 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
         const double *px = REAL(x);
         if(ng == 0) {
           if(nthreads <= 1) {
-            for(int j = 0; j != col; ++j) pout[j] = fmean_double_impl(px + j*l, narm, l);
+            for(int j = 0; j != col; ++j) pout[j] = fmean_double_impl(px + j*l, narm, l, 1);
           } else if(col >= nthreads) {
             #pragma omp parallel for num_threads(nthreads)
-            for(int j = 0; j < col; ++j) pout[j] = fmean_double_impl(px + j*l, narm, l);
+            for(int j = 0; j < col; ++j) pout[j] = fmean_double_impl(px + j*l, narm, l, 0);
           } else {
             for(int j = 0; j != col; ++j) pout[j] = fmean_double_omp_impl(px + j*l, narm, l, nthreads);
           }
@@ -355,10 +368,10 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
 
     if(ng == 0) {
       if(nthreads <= 1) {
-        for(int j = 0; j != col; ++j) pout[j] = fmean_weights_impl(px + j*l, pw, narm, l);
+        for(int j = 0; j != col; ++j) pout[j] = fmean_weights_impl(px + j*l, pw, narm, l, 1);
       } else if(col >= nthreads) {
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < col; ++j) pout[j] = fmean_weights_impl(px + j*l, pw, narm, l);
+        for(int j = 0; j < col; ++j) pout[j] = fmean_weights_impl(px + j*l, pw, narm, l, 0);
       } else {
         for(int j = 0; j != col; ++j) pout[j] = fmean_weights_omp_impl(px + j*l, pw, narm, l, nthreads);
       }
@@ -380,11 +393,11 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
 
 // For safe multithreading across data frame columns
 
-double fmean_impl_dbl(SEXP x, int narm, int nthreads) {
+double fmean_impl_dbl(SEXP x, int narm, int nthreads, int simd) {
   int l = length(x);
   if(l < 1) return NA_REAL;
   if(nthreads <= 1) switch(TYPEOF(x)) {
-    case REALSXP: return fmean_double_impl(REAL(x), narm, l);
+    case REALSXP: return fmean_double_impl(REAL(x), narm, l, simd);
     case LGLSXP:
     case INTSXP: return fmean_int_impl(INTEGER(x), narm, l);
     default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
@@ -397,27 +410,27 @@ double fmean_impl_dbl(SEXP x, int narm, int nthreads) {
   }
 }
 
-SEXP fmean_impl_SEXP(SEXP x, int narm, int nthreads) {
-  return ScalarReal(fmean_impl_dbl(x, narm, nthreads));
+SEXP fmean_impl_SEXP(SEXP x, int narm, int nthreads, int simd) {
+  return ScalarReal(fmean_impl_dbl(x, narm, nthreads, simd));
 }
 
-double fmean_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads) {
+double fmean_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads, int simd) {
   int l = length(x);
   if(l < 1) return NA_REAL;
   if(TYPEOF(x) != REALSXP) {
     if(TYPEOF(x) != INTSXP && TYPEOF(x) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
     x = PROTECT(coerceVector(x, REALSXP));
-    double res = (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l) :
+    double res = (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l, simd) :
       fmean_weights_omp_impl(REAL(x), pw, narm, l, nthreads);
     UNPROTECT(1);
     return res;
   }
-  return (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l) :
+  return (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l, simd) :
     fmean_weights_omp_impl(REAL(x), pw, narm, l, nthreads);
 }
 
-SEXP fmean_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads) {
-  return ScalarReal(fmean_w_impl_dbl(x, pw, narm, nthreads));
+SEXP fmean_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads, int simd) {
+  return ScalarReal(fmean_w_impl_dbl(x, pw, narm, nthreads, simd));
 }
 
 SEXP fmean_g_impl(SEXP x, const int ng, const int *pg, const int *pgs, int narm) {
@@ -474,21 +487,21 @@ SEXP fmean_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
 
 
 #undef COLWISE_FMEAN_LIST
-#define COLWISE_FMEAN_LIST(FUN, WFUN)                                       \
+#define COLWISE_FMEAN_LIST(FUN, WFUN)                                      \
 if(nwl) {                                                                  \
   if(nthreads > 1 && l >= nthreads) {                                      \
     _Pragma("omp parallel for num_threads(nthreads)")                      \
-    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, 1);              \
+    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, 1, 0);           \
   } else {                                                                 \
-    for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nthreads);      \
+    for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nthreads, 1);   \
   }                                                                        \
 } else {                                                                   \
   double *restrict pw = REAL(w);                                           \
   if(nthreads > 1 && l >= nthreads) {                                      \
     _Pragma("omp parallel for num_threads(nthreads)")                      \
-    for(int j = 0; j < l; ++j) pout[j] = WFUN(px[j], pw, narm, 1);         \
+    for(int j = 0; j < l; ++j) pout[j] = WFUN(px[j], pw, narm, 1, 0);      \
   } else {                                                                 \
-    for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nthreads); \
+    for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nthreads, 1); \
   }                                                                        \
 }
 
