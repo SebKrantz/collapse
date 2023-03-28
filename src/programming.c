@@ -452,13 +452,21 @@ SEXP setop_core(SEXP x, SEXP val, SEXP op, SEXP roww) {
 
 #define OPSWITCH(e)                                  \
   switch(o) {                                        \
-  case 1: for(int i = 0; i != n; ++i) px[i] += e;    \
+  case 1:                                            \
+    _Pragma("omp simd")                              \
+    for(int i = 0; i != n; ++i) px[i] += e;          \
     break;                                           \
-  case 2: for(int i = 0; i != n; ++i) px[i] -= e;    \
+  case 2:                                            \
+    _Pragma("omp simd")                              \
+    for(int i = 0; i != n; ++i) px[i] -= e;          \
     break;                                           \
-  case 3: for(int i = 0; i != n; ++i) px[i] *= e;    \
+  case 3:                                            \
+    _Pragma("omp simd")                              \
+    for(int i = 0; i != n; ++i) px[i] *= e;          \
     break;                                           \
-  case 4: for(int i = 0; i != n; ++i) px[i] /= e;    \
+  case 4:                                            \
+    _Pragma("omp simd")                              \
+    for(int i = 0; i != n; ++i) px[i] /= e;          \
     break;                                           \
   default: error("unsupported operation");           \
   }
@@ -509,29 +517,33 @@ if(nv == 1 || nv == n) {
   if((rwl == 0 && nr != nv) || (rwl && nc != nv))
     error("length of vector must match matrix rows/columns or the size of the matrix itself");
 
-#define OPSWITCHMAT(e)                               \
-  switch(o) {                                        \
-  case 1: for(int j = 0, cj; j != nc; ++j)  {        \
-    cj = j * nr;                                     \
-    for(int i = 0; i != nr; ++i) px[cj + i] += e;    \
-  }                                                  \
-  break;                                             \
-  case 2: for(int j = 0, cj; j != nc; ++j)  {        \
-    cj = j * nr;                                     \
-    for(int i = 0; i != nr; ++i) px[cj + i] -= e;    \
-  }                                                  \
-  break;                                             \
-  case 3: for(int j = 0, cj; j != nc; ++j)  {        \
-    cj = j * nr;                                     \
-    for(int i = 0; i != nr; ++i) px[cj + i] *= e;    \
-  }                                                  \
-  break;                                             \
-  case 4: for(int j = 0, cj; j != nc; ++j)  {        \
-    cj = j * nr;                                     \
-    for(int i = 0; i != nr; ++i) px[cj + i] /= e;    \
-  }                                                  \
-  break;                                             \
-  default: error("unsupported operation");           \
+#define OPSWITCHMAT(e)                                 \
+  switch(o) {                                          \
+  case 1: for(int j = 0, cj; j != nc; ++j)  {          \
+    cj = j * nr;                                       \
+    _Pragma("omp simd")                                \
+      for(int i = 0; i != nr; ++i) px[cj + i] += e;    \
+  }                                                    \
+  break;                                               \
+  case 2: for(int j = 0, cj; j != nc; ++j)  {          \
+    cj = j * nr;                                       \
+    _Pragma("omp simd")                                \
+      for(int i = 0; i != nr; ++i) px[cj + i] -= e;    \
+  }                                                    \
+  break;                                               \
+  case 3: for(int j = 0, cj; j != nc; ++j)  {          \
+    cj = j * nr;                                       \
+    _Pragma("omp simd")                                \
+      for(int i = 0; i != nr; ++i) px[cj + i] *= e;    \
+  }                                                    \
+  break;                                               \
+  case 4: for(int j = 0, cj; j != nc; ++j)  {          \
+    cj = j * nr;                                       \
+    _Pragma("omp simd")                                \
+      for(int i = 0; i != nr; ++i) px[cj + i] /= e;    \
+  }                                                    \
+  break;                                               \
+  default: error("unsupported operation");             \
   }
 
 switch(tx) {
