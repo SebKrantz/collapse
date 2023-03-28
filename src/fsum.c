@@ -1,6 +1,3 @@
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include "collapse_c.h"
 // #include <R_ext/Altrep.h>
 
@@ -643,7 +640,8 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
   }
 
   if(ng == 0 && asLogical(Rdrop)) {
-    SEXP out = PROTECT(allocVector(REALSXP, l)), *restrict px = SEXPPTR(x);
+    SEXP out = PROTECT(allocVector(REALSXP, l));
+    const SEXP *restrict px = SEXPPTR_RO(x);
     double *restrict pout = REAL(out);
     COLWISE_FSUM_LIST(fsum_impl_dbl, fsum_w_impl_dbl);
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
@@ -651,7 +649,8 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
     return out;
   }
 
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out);
+  const SEXP *restrict px = SEXPPTR_RO(x);
 
   if(ng == 0) {
     COLWISE_FSUM_LIST(fsum_impl_SEXP, fsum_w_impl_SEXP);
@@ -688,7 +687,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
           if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
           if(TYPEOF(xj) != REALSXP) {
             if(TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
-            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; px = SEXPPTR(x); dup = 1;}
+            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; px = SEXPPTR_RO(x); dup = 1;}
             SET_VECTOR_ELT(x, j, coerceVector(xj, REALSXP));
           }
         }
