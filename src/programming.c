@@ -284,6 +284,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
 
   #define setcopyvLOOPLVEC1                                     \
   if(tv == INTSXP) {                                            \
+    _Pragma("omp simd")                                         \
     for(int i = 0; i != lv; ++i) px[pv[i]-1] = r;               \
   } else if(invert == 0) {                                      \
     for(int i = 0; i != n; ++i) if(pv[i] > 0) px[i] = r;        \
@@ -294,8 +295,10 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   #define setcopyvLOOPLVEC                                      \
   if(tv == INTSXP) {                                            \
     if(lr == n) {                                               \
+      _Pragma("omp simd")                                       \
       for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[pv[i]-1];   \
     } else {                                                    \
+      _Pragma("omp simd")                                       \
       for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[i];         \
     }                                                           \
   } else if(invert == 0) {                                      \
@@ -906,24 +909,26 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
       for(int k = 1; k < nrow; ++k) { // Row vectors to compute distances with
         int nmk = nrow - k;
         double *presk = pres + l - nmk*(nmk+1)/2, // https://en.wikipedia.org/wiki/1_%2B_2_%2B_3_%2B_4_%2B_%E2%8B%AF
-               *pxj = px + k, v, tmp;
+               *pxj = px + k, v;
         for(int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           v = pxj[-1];
+          #pragma omp simd
           for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
-            tmp = pxj[i] - v;
+            double tmp = pxj[i] - v;
             presk[i] += tmp * tmp;
           }
           pxj += nrow;
         }
       }
     } else {
-      double *presk = pres, *pxj, v, tmp;
+      double *presk = pres, *pxj, v;
       for(int k = 1, nmk = nrow; k != nrow; ++k) { // Row vectors to compute distances with
         pxj = px + k; --nmk;
         for(int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           v = pxj[-1];
+          #pragma omp simd
           for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
-            tmp = pxj[i] - v;
+            double tmp = pxj[i] - v;
             presk[i] += tmp * tmp;
           }
           pxj += nrow;
@@ -942,7 +947,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         if(nthreads > nrow) nthreads = nrow;
         for (int j = 0; j < ncol; ++j) {
           double *pxj = px + j * nrow, v = pv[j];
-          #pragma omp parallel for num_threads(nthreads)
+          #pragma omp parallel for simd num_threads(nthreads)
           for (int i = 0; i < nrow; ++i) {
             double tmp = pxj[i] - v;
             pres[i] += tmp * tmp;
@@ -950,9 +955,10 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         }
       } else {
         for (int j = 0; j != ncol; ++j) {
-          double *pxj = px + j * nrow, v = pv[j], tmp;
+          double *pxj = px + j * nrow, v = pv[j];
+          #pragma omp simd
           for (int i = 0; i != nrow; ++i) {
-            tmp = pxj[i] - v;
+            double tmp = pxj[i] - v;
             pres[i] += tmp * tmp;
           }
         }
@@ -967,9 +973,9 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
           dres += tmp * tmp;
         }
       } else {
-        double tmp;
+        #pragma omp simd reduction(+:dres)
         for (int i = 0; i != ncol; ++i) {
-          tmp = px[i] - pv[i];
+          double tmp = px[i] - pv[i];
           dres += tmp * tmp;
         }
       }
@@ -981,9 +987,10 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
   // Square Root
   if(ret == 1) {
     if(nthreads > 1) {
-      #pragma omp parallel for num_threads(nthreads)
+      #pragma omp parallel for simd num_threads(nthreads)
       for (size_t i = 0; i < l; ++i) pres[i] = sqrt(pres[i]);
     } else {
+      #pragma omp simd
       for (size_t i = 0; i != l; ++i) pres[i] = sqrt(pres[i]);
     }
   }
