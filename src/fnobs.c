@@ -23,7 +23,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int i = 0; i != l; ++i) if(length(px[i])) ++n;
         break;
       }
@@ -53,7 +53,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int i = 0; i != l; ++i) if(length(px[i])) ++pn[pg[i]];
         break;
       }
@@ -111,7 +111,7 @@ SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int j = 0; j != col; ++j) {
           int nj = 0, end = l * j + l;
           for(int i = l * j; i != end; ++i) if(length(px[i])) ++nj;
@@ -153,7 +153,7 @@ SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x)-l;
+        const SEXP *px = SEXPPTR_RO(x)-l;
         for(int j = 0; j != col; ++j) {
           pn += ng; px += l;
           for(int i = 0; i != l; ++i) if(length(px[i])) ++pn[pg[i]];
@@ -173,7 +173,8 @@ SEXP fnobslC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
   int l = length(x), ng = asInteger(Rng);
   if(l < 1) return x;
   if(asLogical(Rdrop) && ng == 0) {
-    SEXP out = PROTECT(allocVector(INTSXP, l)), *px = SEXPPTR(x);
+    SEXP out = PROTECT(allocVector(INTSXP, l));
+    const SEXP *px = SEXPPTR_RO(x);
     int *pout = INTEGER(out);
     for(int j = 0; j != l; ++j) pout[j] = INTEGER(fnobsC(px[j], Rng, g))[0];
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));

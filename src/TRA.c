@@ -130,7 +130,7 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
       if(nog) {
         for(int i = 0; i != l; ++i) pout[i] = xAG;
       } else {
-        SEXP *AG = SEXPPTR(xAG)-1;
+        const SEXP *AG = SEXPPTR_RO(xAG)-1;
         for(int i = 0; i != l; ++i) pout[i] = AG[pg[i]];
       }
       break;
@@ -618,7 +618,7 @@ SEXP TRAlC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
 
   // This is allocated anyway, but not returned if set = TRUE
   SEXP out = PROTECT(allocVector(VECSXP, l));
-  SEXP *px = SEXPPTR(x);
+  const SEXP *px = SEXPPTR_RO(x);
 
   // Need SET_VECTOR_ELT here because we are allocating... (otherwise sometimes segfault)
 #define RETLOOPS(v)                                                                       \
@@ -646,7 +646,7 @@ SEXP TRAlC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
 
   switch(TYPEOF(xAG)) {
     case VECSXP: {
-      SEXP *pAG = SEXPPTR(xAG);
+      const SEXP *pAG = SEXPPTR_RO(xAG);
       RETLOOPS(pAG[j])
       break;
     }

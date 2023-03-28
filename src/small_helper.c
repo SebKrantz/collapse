@@ -103,9 +103,9 @@ SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs) {
   // we take the R API (INTEGER()[i], REAL()[i], etc) outside loops for the simple types even when not parallel. For this
   // type list case (VECSXP) it might be that some items are ALTREP for example, so we really should use the heavier
   // _ELT accessor (VECTOR_ELT) inside the loop in this case.
-  SEXP *px = SEXPPTR(x);
+  const SEXP *px = SEXPPTR_RO(x);
 
-  for(int j = l; j--; ) { // This can go in any direction..
+  for(int j = 0; j != l; ++j) { // This can go in any direction..
     // SEXP column = VECTOR_ELT(x, j);
     int *pcolumn = INTEGER(px[j]), jp = j+1;
     for(int i = pgs[j]; i--; ) pout[pcolumn[i]] = jp; // This can go in any direction...
@@ -119,7 +119,7 @@ SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
   int l = length(x), tr = TYPEOF(rows), ss = asInteger(s), rs = LENGTH(rows);
   SEXP out = PROTECT(allocVector(VECSXP, l));
   // SEXP *px = VECTOR_PTR(x); // -> Depreciated interface: https://github.com/hadley/r-internals/blob/ea892fa79bbffe961e78dbe9c90ce4ca3bf2d9bc/vectors.md
-  SEXP *px = SEXPPTR(x);
+  const SEXP *px = SEXPPTR_RO(x);
   double dfill = asReal(fill);
 
   if(tr == INTSXP) {
@@ -234,7 +234,8 @@ SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam) {
     return labx;
   }
   SEXP res = PROTECT(allocVector(STRSXP, l));
-  SEXP *pres = STRING_PTR(res), *px = SEXPPTR(x);
+  SEXP *pres = STRING_PTR(res);
+  const SEXP *px = SEXPPTR_RO(x);
   for(int i = 0; i < l; ++i) {
     SEXP labxi = getAttrib(px[i], sym_attrn);
     pres[i] = labxi == R_NilValue ? NA_STRING : STRING_ELT(labxi, 0);
@@ -253,7 +254,7 @@ SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind) { // , SEXP sc
  if(length(attrn) != 1) error("exactly one attribute 'attrn' must be given");
  if(TYPEOF(x) != VECSXP) error("X must be a list");
  int nprotect = 1, l = length(x), tv = TYPEOF(value); // , scl = asLogical(sc);
- SEXP *px = SEXPPTR(x); // , xsc;
+ const SEXP *px = SEXPPTR_RO(x); // , xsc;
  // if(scl) { // Create shallow copy
  //   if(INHERITS(x, char_datatable)) {
  //     xsc = PROTECT(Calloccol(x));
@@ -263,13 +264,13 @@ SEXP setvlabels(SEXP x, SEXP attrn, SEXP value, SEXP ind) { // , SEXP sc
  //   ++nprotect;
  //   px = SEXPPTR(xsc);
  // }
- SEXP *pv = px;
+ const SEXP *pv = px;
  if(tv != NILSXP) {
    if(tv == VECSXP || tv == STRSXP) {
-    pv = SEXPPTR(value);
+    pv = SEXPPTR_RO(value);
    } else {
     SEXP vl = PROTECT(coerceVector(value, VECSXP));
-    pv = SEXPPTR(vl); ++nprotect;
+    pv = SEXPPTR_RO(vl); ++nprotect;
    }
  }
  SEXP sym_attrn = PROTECT(installChar(STRING_ELT(attrn, 0)));

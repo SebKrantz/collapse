@@ -1,6 +1,3 @@
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include "collapse_c.h"
 
 SEXP Cna_rm(SEXP x) {
@@ -46,7 +43,7 @@ SEXP Cna_rm(SEXP x) {
     return out;
   }
   case VECSXP: {
-    const SEXP *xd = SEXPPTR(x);
+    const SEXP *xd = SEXPPTR_RO(x);
     for (int i = 0; i != n; ++i) if(length(xd[i]) == 0) ++k;
     if(k == 0) return x;
     SEXP out = PROTECT(allocVector(VECSXP, n - k));
@@ -590,10 +587,10 @@ return(x);
 SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
   // IF x is a list, call function repeatedly..
   if(TYPEOF(x) == VECSXP) {
-    SEXP *px = SEXPPTR(x);
+    const SEXP *px = SEXPPTR_RO(x);
     int lx = length(x);
     if(TYPEOF(val) == VECSXP) { // val is list: must match length(x)
-      SEXP *pv = SEXPPTR(val);
+      const SEXP *pv = SEXPPTR_RO(val);
       if(lx != length(val)) error("length(X) must match length(V)");
       for(int i = 0; i != lx; ++i) setop_core(px[i], pv[i], op, roww);
     } else if (length(val) == 1 || asLogical(roww) == 0) { // val is a scalar or vector but rowwise = FALSE
@@ -627,7 +624,7 @@ SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
 SEXP vtypes(SEXP x, SEXP isnum) {
   int tx = TYPEOF(x);
   if(tx != VECSXP) return ScalarInteger(tx);
-  SEXP *px = SEXPPTR(x); // This is ok, even if x contains ALTREP objects..
+  const SEXP *px = SEXPPTR_RO(x); // This is ok, even if x contains ALTREP objects..
   int n = length(x);
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *pans = INTEGER(ans);
@@ -757,7 +754,7 @@ SEXP vlengths(SEXP x, SEXP usenam) {
   if(ALTREP(x)) {
     for(int i = 0; i != n; ++i) pans[i] = length(VECTOR_ELT(x, i));
   } else {
-    SEXP *px = SEXPPTR(x);
+    const SEXP *px = SEXPPTR_RO(x);
     for(int i = 0; i != n; ++i) pans[i] = length(px[i]);
   }
   if(asLogical(usenam)) {
