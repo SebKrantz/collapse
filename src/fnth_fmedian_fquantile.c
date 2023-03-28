@@ -1,6 +1,3 @@
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include "collapse_c.h"
 
 /*
