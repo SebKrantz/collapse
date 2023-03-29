@@ -4,9 +4,7 @@
 
 * Fixed a small bug in `descr()` introduced in v1.9.0, producing an error if a data frame contained no numeric columns - because an internal function was not defined in that case. 
 
-* `fmean()` and `fsum()` with `na.rm = FALSE, nthreads = 1` and `g = NULL` now utilize Single Instruction Multiple Data (SIMD) vectorization by default (if OpenMP is enabled), enabling extreme aggregation speeds. 
-
-* `TRA()`, `setop()`, and related operators `%r+%`, `%+=%` etc., `setv()` and `fdist()` also received SIMD instructions. Whether these are utilized during compilation depends on your system. 
+* `fmean()` and `fsum()` with `g = NULL`, as well as `TRA()`, `setop()`, and related operators `%r+%`, `%+=%` etc., `setv()` and `fdist()` now utilize Single Instruction Multiple Data (SIMD) vectorization by default (if OpenMP is enabled), enabling extreme computing speeds. Whether these instructions are utilized during compilation depends on your system. 
 
 # collapse 1.9.3
 
