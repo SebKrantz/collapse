@@ -1,6 +1,3 @@
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include "collapse_c.h"
 
 /*
@@ -1251,7 +1248,7 @@ int Rties2int(SEXP x) {
 #undef CHECK_GROUPS
 #define CHECK_GROUPS(nrx, cond)                                                                                \
 if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");      \
-const SEXP *restrict pg = SEXPPTR(g), ord = pg[6];                                                             \
+const SEXP *restrict pg = SEXPPTR_RO(g), ord = pg[6];                                                             \
 ng = INTEGER(pg[0])[0];                                                                                        \
 int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, maxgrpn = 0; \
 if(nrx != length(pg[1])) error("length(g) must match nrow(x)");                                                \
@@ -1429,7 +1426,8 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   if(l < 1) return x;
   if(nthreads > max_threads) nthreads = max_threads;
 
-  SEXP out = PROTECT(allocVector(nullg && drop ? REALSXP : VECSXP, l)), *restrict px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(nullg && drop ? REALSXP : VECSXP, l));
+  const SEXP *restrict px = SEXPPTR_RO(x);
   int nrx = length(px[0]);
 
   CHECK_PROB(nrx);

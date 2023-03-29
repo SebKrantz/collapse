@@ -38,7 +38,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
           break;
         }
         case VECSXP: {
-          SEXP *px = SEXPPTR(x);
+          const SEXP *px = SEXPPTR_RO(x);
           while(length(px[j]) == 0 && j != end) ++j;
           SET_VECTOR_ELT(out, 0, px[j]);
           break;

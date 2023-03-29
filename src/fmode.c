@@ -1,8 +1,6 @@
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-#include "kit.h"
 #include "collapse_c.h"
+#include "kit.h"
+
 
 static double NEG_INF = -1.0/0.0;
 
@@ -882,7 +880,7 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     return w_mode_impl(x, pw, asLogical(Rnarm), asInteger(Rret));
   }
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-  const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
+  const SEXP *restrict pg = SEXPPTR_RO(g), o = pg[6];
   int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, nthreads = asInteger(Rnthreads);
   if(l != length(pg[1])) error("length(g) must match length(x)");
   if(isNull(o)) {
@@ -950,7 +948,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
       }
     } else {
       if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-      const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
+      const SEXP *restrict pg = SEXPPTR_RO(g), o = pg[6];
       ng = INTEGER(pg[0])[0];
       int sorted = LOGICAL(pg[5])[1] == 1, *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst;
       if(nrx != length(pg[1])) error("length(g) must match nrow(x)");
@@ -1060,7 +1058,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
 
   // With groups
   if(TYPEOF(g) != VECSXP || !inherits(g, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-  const SEXP *restrict pg = SEXPPTR(g), o = pg[6];
+  const SEXP *restrict pg = SEXPPTR_RO(g), o = pg[6];
   int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst, gl = length(pg[1]);
   if(l != gl) error("length(g) must match nrow(x)");
   SEXP res = PROTECT(allocVector(tx, ng * col));

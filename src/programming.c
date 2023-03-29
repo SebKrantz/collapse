@@ -1,6 +1,3 @@
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include "collapse_c.h"
 
 SEXP Cna_rm(SEXP x) {
@@ -46,7 +43,7 @@ SEXP Cna_rm(SEXP x) {
     return out;
   }
   case VECSXP: {
-    const SEXP *xd = SEXPPTR(x);
+    const SEXP *xd = SEXPPTR_RO(x);
     for (int i = 0; i != n; ++i) if(length(xd[i]) == 0) ++k;
     if(k == 0) return x;
     SEXP out = PROTECT(allocVector(VECSXP, n - k));
@@ -287,6 +284,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
 
   #define setcopyvLOOPLVEC1                                     \
   if(tv == INTSXP) {                                            \
+    _Pragma("omp simd")                                         \
     for(int i = 0; i != lv; ++i) px[pv[i]-1] = r;               \
   } else if(invert == 0) {                                      \
     for(int i = 0; i != n; ++i) if(pv[i] > 0) px[i] = r;        \
@@ -297,8 +295,10 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   #define setcopyvLOOPLVEC                                      \
   if(tv == INTSXP) {                                            \
     if(lr == n) {                                               \
+      _Pragma("omp simd")                                       \
       for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[pv[i]-1];   \
     } else {                                                    \
+      _Pragma("omp simd")                                       \
       for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[i];         \
     }                                                           \
   } else if(invert == 0) {                                      \
@@ -455,13 +455,21 @@ SEXP setop_core(SEXP x, SEXP val, SEXP op, SEXP roww) {
 
 #define OPSWITCH(e)                                  \
   switch(o) {                                        \
-  case 1: for(int i = 0; i != n; ++i) px[i] += e;    \
+  case 1:                                            \
+    _Pragma("omp simd")                              \
+    for(int i = 0; i != n; ++i) px[i] += e;          \
     break;                                           \
-  case 2: for(int i = 0; i != n; ++i) px[i] -= e;    \
+  case 2:                                            \
+    _Pragma("omp simd")                              \
+    for(int i = 0; i != n; ++i) px[i] -= e;          \
     break;                                           \
-  case 3: for(int i = 0; i != n; ++i) px[i] *= e;    \
+  case 3:                                            \
+    _Pragma("omp simd")                              \
+    for(int i = 0; i != n; ++i) px[i] *= e;          \
     break;                                           \
-  case 4: for(int i = 0; i != n; ++i) px[i] /= e;    \
+  case 4:                                            \
+    _Pragma("omp simd")                              \
+    for(int i = 0; i != n; ++i) px[i] /= e;          \
     break;                                           \
   default: error("unsupported operation");           \
   }
@@ -512,29 +520,33 @@ if(nv == 1 || nv == n) {
   if((rwl == 0 && nr != nv) || (rwl && nc != nv))
     error("length of vector must match matrix rows/columns or the size of the matrix itself");
 
-#define OPSWITCHMAT(e)                               \
-  switch(o) {                                        \
-  case 1: for(int j = 0, cj; j != nc; ++j)  {        \
-    cj = j * nr;                                     \
-    for(int i = 0; i != nr; ++i) px[cj + i] += e;    \
-  }                                                  \
-  break;                                             \
-  case 2: for(int j = 0, cj; j != nc; ++j)  {        \
-    cj = j * nr;                                     \
-    for(int i = 0; i != nr; ++i) px[cj + i] -= e;    \
-  }                                                  \
-  break;                                             \
-  case 3: for(int j = 0, cj; j != nc; ++j)  {        \
-    cj = j * nr;                                     \
-    for(int i = 0; i != nr; ++i) px[cj + i] *= e;    \
-  }                                                  \
-  break;                                             \
-  case 4: for(int j = 0, cj; j != nc; ++j)  {        \
-    cj = j * nr;                                     \
-    for(int i = 0; i != nr; ++i) px[cj + i] /= e;    \
-  }                                                  \
-  break;                                             \
-  default: error("unsupported operation");           \
+#define OPSWITCHMAT(e)                                 \
+  switch(o) {                                          \
+  case 1: for(int j = 0, cj; j != nc; ++j)  {          \
+    cj = j * nr;                                       \
+    _Pragma("omp simd")                                \
+      for(int i = 0; i != nr; ++i) px[cj + i] += e;    \
+  }                                                    \
+  break;                                               \
+  case 2: for(int j = 0, cj; j != nc; ++j)  {          \
+    cj = j * nr;                                       \
+    _Pragma("omp simd")                                \
+      for(int i = 0; i != nr; ++i) px[cj + i] -= e;    \
+  }                                                    \
+  break;                                               \
+  case 3: for(int j = 0, cj; j != nc; ++j)  {          \
+    cj = j * nr;                                       \
+    _Pragma("omp simd")                                \
+      for(int i = 0; i != nr; ++i) px[cj + i] *= e;    \
+  }                                                    \
+  break;                                               \
+  case 4: for(int j = 0, cj; j != nc; ++j)  {          \
+    cj = j * nr;                                       \
+    _Pragma("omp simd")                                \
+      for(int i = 0; i != nr; ++i) px[cj + i] /= e;    \
+  }                                                    \
+  break;                                               \
+  default: error("unsupported operation");             \
   }
 
 switch(tx) {
@@ -590,10 +602,10 @@ return(x);
 SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
   // IF x is a list, call function repeatedly..
   if(TYPEOF(x) == VECSXP) {
-    SEXP *px = SEXPPTR(x);
+    const SEXP *px = SEXPPTR_RO(x);
     int lx = length(x);
     if(TYPEOF(val) == VECSXP) { // val is list: must match length(x)
-      SEXP *pv = SEXPPTR(val);
+      const SEXP *pv = SEXPPTR_RO(val);
       if(lx != length(val)) error("length(X) must match length(V)");
       for(int i = 0; i != lx; ++i) setop_core(px[i], pv[i], op, roww);
     } else if (length(val) == 1 || asLogical(roww) == 0) { // val is a scalar or vector but rowwise = FALSE
@@ -627,7 +639,7 @@ SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
 SEXP vtypes(SEXP x, SEXP isnum) {
   int tx = TYPEOF(x);
   if(tx != VECSXP) return ScalarInteger(tx);
-  SEXP *px = SEXPPTR(x); // This is ok, even if x contains ALTREP objects..
+  const SEXP *px = SEXPPTR_RO(x); // This is ok, even if x contains ALTREP objects..
   int n = length(x);
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *pans = INTEGER(ans);
@@ -757,7 +769,7 @@ SEXP vlengths(SEXP x, SEXP usenam) {
   if(ALTREP(x)) {
     for(int i = 0; i != n; ++i) pans[i] = length(VECTOR_ELT(x, i));
   } else {
-    SEXP *px = SEXPPTR(x);
+    const SEXP *px = SEXPPTR_RO(x);
     for(int i = 0; i != n; ++i) pans[i] = length(px[i]);
   }
   if(asLogical(usenam)) {
@@ -897,24 +909,26 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
       for(int k = 1; k < nrow; ++k) { // Row vectors to compute distances with
         int nmk = nrow - k;
         double *presk = pres + l - nmk*(nmk+1)/2, // https://en.wikipedia.org/wiki/1_%2B_2_%2B_3_%2B_4_%2B_%E2%8B%AF
-               *pxj = px + k, v, tmp;
+               *pxj = px + k, v;
         for(int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           v = pxj[-1];
+          #pragma omp simd
           for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
-            tmp = pxj[i] - v;
+            double tmp = pxj[i] - v;
             presk[i] += tmp * tmp;
           }
           pxj += nrow;
         }
       }
     } else {
-      double *presk = pres, *pxj, v, tmp;
+      double *presk = pres, *pxj, v;
       for(int k = 1, nmk = nrow; k != nrow; ++k) { // Row vectors to compute distances with
         pxj = px + k; --nmk;
         for(int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           v = pxj[-1];
+          #pragma omp simd
           for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
-            tmp = pxj[i] - v;
+            double tmp = pxj[i] - v;
             presk[i] += tmp * tmp;
           }
           pxj += nrow;
@@ -933,7 +947,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         if(nthreads > nrow) nthreads = nrow;
         for (int j = 0; j < ncol; ++j) {
           double *pxj = px + j * nrow, v = pv[j];
-          #pragma omp parallel for num_threads(nthreads)
+          #pragma omp parallel for simd num_threads(nthreads)
           for (int i = 0; i < nrow; ++i) {
             double tmp = pxj[i] - v;
             pres[i] += tmp * tmp;
@@ -941,9 +955,10 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         }
       } else {
         for (int j = 0; j != ncol; ++j) {
-          double *pxj = px + j * nrow, v = pv[j], tmp;
+          double *pxj = px + j * nrow, v = pv[j];
+          #pragma omp simd
           for (int i = 0; i != nrow; ++i) {
-            tmp = pxj[i] - v;
+            double tmp = pxj[i] - v;
             pres[i] += tmp * tmp;
           }
         }
@@ -958,9 +973,9 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
           dres += tmp * tmp;
         }
       } else {
-        double tmp;
+        #pragma omp simd reduction(+:dres)
         for (int i = 0; i != ncol; ++i) {
-          tmp = px[i] - pv[i];
+          double tmp = px[i] - pv[i];
           dres += tmp * tmp;
         }
       }
@@ -972,9 +987,10 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
   // Square Root
   if(ret == 1) {
     if(nthreads > 1) {
-      #pragma omp parallel for num_threads(nthreads)
+      #pragma omp parallel for simd num_threads(nthreads)
       for (size_t i = 0; i < l; ++i) pres[i] = sqrt(pres[i]);
     } else {
+      #pragma omp simd
       for (size_t i = 0; i != l; ++i) pres[i] = sqrt(pres[i]);
     }
   }

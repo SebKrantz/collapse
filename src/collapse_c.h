@@ -1,7 +1,12 @@
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 #include <R.h>
 #include <Rinternals.h>
 
 #define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
+#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
+
 #define NISNAN(x) ((x) == (x))  // opposite of ISNAN for doubles
 // Faster than Rinternals version (which uses math library version)
 #undef ISNAN

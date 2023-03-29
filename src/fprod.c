@@ -218,7 +218,8 @@ SEXP fprodlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
   int l = length(x), ng = asInteger(Rng);
   if(l < 1) return x; // needed ??
   if(ng == 0 && asLogical(Rdrop)) {
-    SEXP out = PROTECT(allocVector(REALSXP, l)), *px = SEXPPTR(x);
+    SEXP out = PROTECT(allocVector(REALSXP, l));
+    const SEXP *px = SEXPPTR_RO(x);
     double *pout = REAL(out);
     for(int j = 0; j != l; ++j) pout[j] = REAL(fprodC(px[j], Rng, g, w, Rnarm))[0];
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));

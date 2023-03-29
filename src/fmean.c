@@ -1,35 +1,31 @@
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 #include "collapse_c.h"
 // #include <R_ext/Altrep.h>
 
 // Adapted from fsum.c
 
-double fmean_double_impl(const double *restrict px, const int narm, const int l, const int simd) {
+double fmean_double_impl(const double *restrict px, const int narm, const int l) {
   if(narm) {
-    int j = l-1, n = 1;
-    double mean = px[j];
-    while(ISNAN(mean) && j!=0) mean = px[--j];
-    if(j != 0) for(int i = j; i--; ) {
-      if(ISNAN(px[i])) continue;
-      mean += px[i];
-      ++n;
+    int j = 1, n = 1;
+    double mean = px[0];
+    while(ISNAN(mean) && j!=l) mean = px[j++];
+    if(j != l) {
+      #pragma omp simd reduction(+:mean,n)
+      for(int i = j; i != l; ++i) {
+          int tmp = NISNAN(px[i]);
+          mean += tmp ? px[i] : 0.0;
+          n += tmp ? 1 : 0;
+      }
     }
     return  mean / n;
   }
   double mean = 0;
-  if(simd) {
-    #pragma omp for simd
-    for(int i = 0; i != l; ++i) mean += px[i];
-  } else {
-    for(int i = 0; i != l; ++i) {
-      if(ISNAN(px[i])) {
-        mean = px[i];
-        break;
-      }
-      mean += px[i];
-    }
+  #pragma omp simd reduction(+:mean)
+  for(int i = 0; i != l; ++i) {
+    // if(ISNAN(px[i])) {
+    //   mean = px[i];
+    //   break;
+    // }
+    mean += px[i];
   }
   return mean / l;
 }
@@ -38,15 +34,15 @@ double fmean_double_omp_impl(const double *restrict px, const int narm, const in
   double mean = 0;
   if(narm) {
     int n = 0;
-    #pragma omp parallel for num_threads(nthreads) reduction(+:mean,n)
+    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,n)
     for(int i = 0; i < l; ++i) {
-      if(ISNAN(px[i])) continue;
-      mean += px[i];
-      ++n;
+      int tmp = NISNAN(px[i]);
+      mean += tmp ? px[i] : 0.0;
+      n += tmp ? 1 : 0;
     }
     return n == 0 ? NA_REAL : mean / n;
   }
-  #pragma omp parallel for num_threads(nthreads) reduction(+:mean)
+  #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean)
   for(int i = 0; i < l; ++i) mean += px[i];
   return mean / l;
 }
@@ -74,35 +70,31 @@ void fmean_double_g_impl(double *restrict pout, const double *restrict px, const
   }
 }
 
-double fmean_weights_impl(const double *restrict px, const double *restrict pw, const int narm, const int l, const int simd) {
+double fmean_weights_impl(const double *restrict px, const double *restrict pw, const int narm, const int l) {
   double mean, sumw;
   if(narm) {
-    int j = l-1;
-    while((ISNAN(px[j]) || ISNAN(pw[j])) && j!=0) --j;
+    int j = 0, end = l-1;
+    while((ISNAN(px[j]) || ISNAN(pw[j])) && j!=end) ++j;
     sumw = pw[j];
     mean = px[j] * sumw;
-    if(j != 0) for(int i = j; i--; ) {
-      if(ISNAN(px[i]) || ISNAN(pw[i])) continue;
-      mean += px[i] * pw[i];
-      sumw += pw[i];
+    if(j != end) {
+      #pragma omp simd reduction(+:mean,sumw)
+      for(int i = j+1; i != l; ++i) {
+        int tmp = NISNAN(px[i]) && NISNAN(pw[i]);
+        mean += tmp ? px[i] * pw[i] : 0.0;
+        sumw += tmp ? pw[i] : 0.0;
+      }
     }
   } else {
     mean = 0, sumw = 0;
-    if(simd) {
-      #pragma omp for simd
-      for(int i = 0; i != l; ++i) {
-        mean += px[i] * pw[i];
-        sumw += pw[i];
-      }
-    } else {
-      for(int i = 0; i != l; ++i) {
-        if(ISNAN(px[i]) || ISNAN(pw[i])) {
-          mean = px[i] + pw[i];
-          break;
-        }
-        mean += px[i] * pw[i];
-        sumw += pw[i];
-      }
+    #pragma omp simd reduction(+:mean,sumw)
+    for(int i = 0; i != l; ++i) {
+      // if(ISNAN(px[i]) || ISNAN(pw[i])) {
+      //   mean = px[i] + pw[i];
+      //   break;
+      // }
+      mean += px[i] * pw[i];
+      sumw += pw[i];
     }
   }
   return mean / sumw;
@@ -111,15 +103,15 @@ double fmean_weights_impl(const double *restrict px, const double *restrict pw, 
 double fmean_weights_omp_impl(const double *restrict px, const double *restrict pw, const int narm, const int l, const int nthreads) {
   double mean = 0, sumw = 0;
   if(narm) {
-    #pragma omp parallel for num_threads(nthreads) reduction(+:mean,sumw)
+    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,sumw)
     for(int i = 0; i < l; ++i) {
-      if(ISNAN(px[i]) || ISNAN(pw[i])) continue;
-      mean += px[i] * pw[i];
-      sumw += pw[i];
+      int tmp = NISNAN(px[i]) && NISNAN(pw[i]);
+      mean += tmp ? px[i] * pw[i] : 0.0;
+      sumw += tmp ? pw[i] : 0.0;
     }
     if(mean == 0 && sumw == 0) sumw = NA_REAL;
   } else {
-    #pragma omp parallel for num_threads(nthreads) reduction(+:mean,sumw)
+    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,sumw)
     for(int i = 0; i < l; ++i) {
       mean += px[i] * pw[i];
       sumw += pw[i];
@@ -183,15 +175,15 @@ double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, c
   double dmean;
   if(narm) {
     int n = 0;
-    #pragma omp parallel for num_threads(nthreads) reduction(+:mean,n)
+    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,n)
     for(int i = 0; i < l; ++i) {
-      if(px[i] == NA_INTEGER) continue;
-      mean += px[i];
-      ++n;
+      int tmp = px[i] != NA_INTEGER;
+      mean += tmp ? px[i] : 0;
+      n += tmp ? 1 : 0;
     }
     dmean = n == 0 ? NA_REAL : (double)mean / n;
   } else {
-    #pragma omp parallel for num_threads(nthreads) reduction(+:mean)
+    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean)
     for(int i = 0; i < l; ++i) mean += px[i];
     dmean = (double)mean / l;
   }
@@ -253,7 +245,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnthread
     switch(tx) {
       case REALSXP: {
         if(ng > 0) fmean_double_g_impl(REAL(out), REAL(x), ng, INTEGER(g), pgs, narm, l);
-        else REAL(out)[0] = (nthreads <= 1) ? fmean_double_impl(REAL(x), narm, l, 1) : fmean_double_omp_impl(REAL(x), narm, l, nthreads);
+        else REAL(out)[0] = (nthreads <= 1) ? fmean_double_impl(REAL(x), narm, l) : fmean_double_omp_impl(REAL(x), narm, l, nthreads);
         break;
       }
       case INTSXP: {
@@ -275,7 +267,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnthread
     }
     double *restrict px = REAL(x), *restrict pw = REAL(w);
     if(ng == 0) {
-      REAL(out)[0] = (nthreads <= 1) ? fmean_weights_impl(px, pw, narm, l, 1) :
+      REAL(out)[0] = (nthreads <= 1) ? fmean_weights_impl(px, pw, narm, l) :
               fmean_weights_omp_impl(px, pw, narm, l, nthreads);
     } else fmean_weights_g_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
@@ -312,10 +304,10 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
         const double *px = REAL(x);
         if(ng == 0) {
           if(nthreads <= 1) {
-            for(int j = 0; j != col; ++j) pout[j] = fmean_double_impl(px + j*l, narm, l, 1);
+            for(int j = 0; j != col; ++j) pout[j] = fmean_double_impl(px + j*l, narm, l);
           } else if(col >= nthreads) {
             #pragma omp parallel for num_threads(nthreads)
-            for(int j = 0; j < col; ++j) pout[j] = fmean_double_impl(px + j*l, narm, l, 0);
+            for(int j = 0; j < col; ++j) pout[j] = fmean_double_impl(px + j*l, narm, l);
           } else {
             for(int j = 0; j != col; ++j) pout[j] = fmean_double_omp_impl(px + j*l, narm, l, nthreads);
           }
@@ -368,10 +360,10 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
 
     if(ng == 0) {
       if(nthreads <= 1) {
-        for(int j = 0; j != col; ++j) pout[j] = fmean_weights_impl(px + j*l, pw, narm, l, 1);
+        for(int j = 0; j != col; ++j) pout[j] = fmean_weights_impl(px + j*l, pw, narm, l);
       } else if(col >= nthreads) {
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < col; ++j) pout[j] = fmean_weights_impl(px + j*l, pw, narm, l, 0);
+        for(int j = 0; j < col; ++j) pout[j] = fmean_weights_impl(px + j*l, pw, narm, l);
       } else {
         for(int j = 0; j != col; ++j) pout[j] = fmean_weights_omp_impl(px + j*l, pw, narm, l, nthreads);
       }
@@ -393,11 +385,11 @@ SEXP fmeanmC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
 
 // For safe multithreading across data frame columns
 
-double fmean_impl_dbl(SEXP x, int narm, int nthreads, int simd) {
+double fmean_impl_dbl(SEXP x, int narm, int nthreads) {
   int l = length(x);
   if(l < 1) return NA_REAL;
   if(nthreads <= 1) switch(TYPEOF(x)) {
-    case REALSXP: return fmean_double_impl(REAL(x), narm, l, simd);
+    case REALSXP: return fmean_double_impl(REAL(x), narm, l);
     case LGLSXP:
     case INTSXP: return fmean_int_impl(INTEGER(x), narm, l);
     default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
@@ -410,27 +402,27 @@ double fmean_impl_dbl(SEXP x, int narm, int nthreads, int simd) {
   }
 }
 
-SEXP fmean_impl_SEXP(SEXP x, int narm, int nthreads, int simd) {
-  return ScalarReal(fmean_impl_dbl(x, narm, nthreads, simd));
+SEXP fmean_impl_SEXP(SEXP x, int narm, int nthreads) {
+  return ScalarReal(fmean_impl_dbl(x, narm, nthreads));
 }
 
-double fmean_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads, int simd) {
+double fmean_w_impl_dbl(SEXP x, double *pw, int narm, int nthreads) {
   int l = length(x);
   if(l < 1) return NA_REAL;
   if(TYPEOF(x) != REALSXP) {
     if(TYPEOF(x) != INTSXP && TYPEOF(x) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
     x = PROTECT(coerceVector(x, REALSXP));
-    double res = (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l, simd) :
+    double res = (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l) :
       fmean_weights_omp_impl(REAL(x), pw, narm, l, nthreads);
     UNPROTECT(1);
     return res;
   }
-  return (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l, simd) :
+  return (nthreads <= 1) ? fmean_weights_impl(REAL(x), pw, narm, l) :
     fmean_weights_omp_impl(REAL(x), pw, narm, l, nthreads);
 }
 
-SEXP fmean_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads, int simd) {
-  return ScalarReal(fmean_w_impl_dbl(x, pw, narm, nthreads, simd));
+SEXP fmean_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads) {
+  return ScalarReal(fmean_w_impl_dbl(x, pw, narm, nthreads));
 }
 
 SEXP fmean_g_impl(SEXP x, const int ng, const int *pg, const int *pgs, int narm) {
@@ -487,21 +479,21 @@ SEXP fmean_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
 
 
 #undef COLWISE_FMEAN_LIST
-#define COLWISE_FMEAN_LIST(FUN, WFUN)                                      \
+#define COLWISE_FMEAN_LIST(FUN, WFUN)                                       \
 if(nwl) {                                                                  \
   if(nthreads > 1 && l >= nthreads) {                                      \
     _Pragma("omp parallel for num_threads(nthreads)")                      \
-    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, 1, 0);           \
+    for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, 1);              \
   } else {                                                                 \
-    for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nthreads, 1);   \
+    for(int j = 0; j != l; ++j) pout[j] = FUN(px[j], narm, nthreads);      \
   }                                                                        \
 } else {                                                                   \
   double *restrict pw = REAL(w);                                           \
   if(nthreads > 1 && l >= nthreads) {                                      \
     _Pragma("omp parallel for num_threads(nthreads)")                      \
-    for(int j = 0; j < l; ++j) pout[j] = WFUN(px[j], pw, narm, 1, 0);      \
+    for(int j = 0; j < l; ++j) pout[j] = WFUN(px[j], pw, narm, 1);         \
   } else {                                                                 \
-    for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nthreads, 1); \
+    for(int j = 0; j != l; ++j) pout[j] = WFUN(px[j], pw, narm, nthreads); \
   }                                                                        \
 }
 
@@ -523,7 +515,8 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
   }
 
   if(ng == 0 && asLogical(Rdrop)) {
-    SEXP out = PROTECT(allocVector(REALSXP, l)), *restrict px = SEXPPTR(x);
+    SEXP out = PROTECT(allocVector(REALSXP, l));
+    const SEXP *restrict px = SEXPPTR_RO(x);
     double *restrict pout = REAL(out);
     COLWISE_FMEAN_LIST(fmean_impl_dbl, fmean_w_impl_dbl);
     setAttrib(out, R_NamesSymbol, getAttrib(x, R_NamesSymbol));
@@ -531,7 +524,9 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
     return out;
   }
 
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out);
+  const SEXP *restrict px = SEXPPTR_RO(x);
+
 
   if(ng == 0) {
     COLWISE_FMEAN_LIST(fmean_impl_SEXP, fmean_w_impl_SEXP);
@@ -579,7 +574,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
           if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
           if(TYPEOF(xj) != REALSXP) {
             if(TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
-            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; px = SEXPPTR(x); dup = 1;}
+            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; px = SEXPPTR_RO(x); dup = 1;}
             SET_VECTOR_ELT(x, j, coerceVector(xj, REALSXP));
           }
         }
