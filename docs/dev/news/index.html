@@ -63,6 +63,7 @@
 <h2 class="page-header" data-toc-text="1.9.3.9000" id="collapse-1939000">collapse 1.9.3.9000<a class="anchor" aria-label="anchor" href="#collapse-1939000"></a></h2>
 <ul><li><p>Improvements in <code>get_elem()/has_elem()</code>: Option <code>invert = TRUE</code> is implemented in a more robust way, and a function passed to <code>get_elem()/has_elem()</code> is now applied to all elements in the list, including elements that are themselves list-like. This enables the use of <code>inherits</code> to find list-like objects inside a broader list-structure e.g. <code>get_elem(l, inherits, what = "lm")</code> fetches all linear model objects inside <code>l</code>.</p></li>
 <li><p>Fixed a small bug in <code><a href="../reference/descr.html">descr()</a></code> introduced in v1.9.0, producing an error if a data frame contained no numeric columns - because an internal function was not defined in that case.</p></li>
+<li><p><code><a href="../reference/fmean.html">fmean()</a></code> and <code><a href="../reference/fsum.html">fsum()</a></code> with <code>na.rm = FALSE, nthreads = 1</code> and <code>g = NULL</code> now utilize Single Instruction Multiple Data (SIMD) parallelism by default, enabling extreme aggregation speeds. This is not possible with missing values (<code>na.rm = TRUE</code>) which involves checks inside loops.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.3" id="collapse-193">collapse 1.9.3<small>2023-02-27</small><a class="anchor" aria-label="anchor" href="#collapse-193"></a></h2>

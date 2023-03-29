@@ -140,10 +140,11 @@ descr_core <- function(X, nam, by = NULL, w = NULL, Ndistinct = TRUE, higher = T
   }
 
   descrdate <- if(is.null(by)) function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                                Stats = c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), "N"), `names<-`(.range(x), c("Min", "Max")))) else
+                                                Stats = `attr<-`(c(if(Ndistinct) c(N = fnobsC(x), Ndist = fndistinctC(x)) else `names<-`(fnobsC(x), "N"), `names<-`(.range(x), c("Min", "Max"))), "attrib", attributes(x))) else
                                function(x) list(Class = class(x), Label = attr(x, label.attr),
-                                                Stats = cbind(N = fnobs.default(x, by), Ndist = if(Ndistinct) fndistinctC(x, by) else NULL,
-                                                              Min = fmin.default(x, by, na.rm = TRUE, use.g.names = FALSE), Max = fmax.default(x, by, na.rm = TRUE, use.g.names = FALSE)))
+                                                Stats = `attr<-`(cbind(N = fnobs.default(x, by), Ndist = if(Ndistinct) fndistinctC(x, by) else NULL,
+                                                                       Min = fmin.default(x, by, na.rm = TRUE, use.g.names = FALSE),
+                                                                       Max = fmax.default(x, by, na.rm = TRUE, use.g.names = FALSE)), "attrib", attributes(x)))
 
   # Result vector and attributes
   res <- vector('list', length(X))
@@ -289,7 +290,7 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     if(stat[[1L]] < TN) cat("Statistics (", round((1-stat[[1L]]/TN)*100, digits), "% NAs)\n", sep = "")
     else cat("Statistics\n")
     if(any(xi[[1L]] %in% c("Date", "POSIXct")))
-      print.default(c(stat[1:2], as.character(`oldClass<-`(stat[3:4], xi[[1L]]))),
+      print.default(c(stat[1:2], as.character(setAttributes(stat[3:4], attr(stat, "attrib")))),
                      quote = FALSE, right = TRUE, print.gap = 2)
     else print.qsu(stat, digits)
     if(length(xi) > 3L) {
@@ -361,7 +362,7 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     else cat("Statistics (", names(Ni), " = ", Ni, ")\n", sep = "")
     if(any(xi[[1L]] %in% c("Date", "POSIXct")))
       print.default(cbind(stat[, 1:2, drop = FALSE],
-                          matrix(as.character(`oldClass<-`(stat[, 3:4], xi[[1L]])),
+                          matrix(as.character(setAttributes(stat[, 3:4], attr(stat, "attrib"))),
                                  ncol = 2, dimnames =  list(NULL, c("Min", "Max")))),
                     quote = FALSE, right = TRUE, print.gap = 2)
     else print.qsu(stat, digits)
