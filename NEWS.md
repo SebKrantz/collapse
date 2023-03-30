@@ -4,7 +4,7 @@
 
 * Fixed a small bug in `descr()` introduced in v1.9.0, producing an error if a data frame contained no numeric columns - because an internal function was not defined in that case. Also, POSIXct columns are handled better in print - preserving the time zone (thanks @cdignam-chwy #392).
 
-* `fmean()` and `fsum()` with `g = NULL`, as well as `TRA()`, `setop()`, and related operators `%r+%`, `%+=%` etc., `setv()` and `fdist()` now utilize Single Instruction Multiple Data (SIMD) vectorization by default (if OpenMP is enabled), enabling potentially very fast computing speeds. Whether these instructions are utilized during compilation depends on your system. 
+* `fmean()` and `fsum()` with `g = NULL`, as well as `TRA()`, `setop()`, and related operators `%r+%`, `%+=%` etc., `setv()` and `fdist()` now utilize Single Instruction Multiple Data (SIMD) vectorization by default (if OpenMP is enabled), enabling potentially very fast computing speeds. Whether these instructions are utilized during compilation depends on your system. In general, if you want to max out *collapse* on your system, consider compiling from source with `CFLAGS += -O3 -march=native -fopenmp` and `CXXFLAGS += -O3 -march=native` in your [`.R/Makevars`](https://cran.r-project.org/doc/manuals/r-devel/R-admin.html#Customizing-package-compilation).
 
 # collapse 1.9.3
 
