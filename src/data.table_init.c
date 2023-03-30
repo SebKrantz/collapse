@@ -3,20 +3,8 @@
  and licensed under a Mozilla Public License 2.0 (MPL-2.0) license.
 */
 
-#ifdef _OPENMP
-  #include <omp.h>
-  #define OMP_NUM_PROCS omp_get_num_procs()
-  #define OMP_THREAD_LIMIT omp_get_thread_limit()
-  #define OMP_MAX_THREADS omp_get_max_threads()
-#else
-  #define OMP_NUM_PROCS 1
-  #define OMP_THREAD_LIMIT 1
-  #define OMP_MAX_THREADS 1
-#endif
-
-
+#include "collapse_c.h" // Needs to be first because includes OpenMP, to avoid namespace conflicts.
 #include "data.table.h"
-#include "collapse_c.h"
 #include <Rdefines.h>
 // #include <R_ext/Rdynload.h>
 // #include <R_ext/Visibility.h>

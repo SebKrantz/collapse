@@ -1,5 +1,5 @@
+#include "collapse_c.h" // Needs to be first because includes OpenMP
 #include "kit.h"
-#include "collapse_c.h"
 
 // C-implementations for different data types ----------------------------------
 // TODO: outsource and memset hash table?
