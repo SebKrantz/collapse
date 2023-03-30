@@ -10,7 +10,7 @@ double fmean_double_impl(const double *restrict px, const int narm, const int l)
     while(ISNAN(mean) && j!=l) mean = px[j++];
     if(j != l) {
       #pragma omp simd reduction(+:mean,n)
-      for(int i = j; i != l; ++i) {
+      for(int i = j; i < l; ++i) {
           int tmp = NISNAN(px[i]);
           mean += tmp ? px[i] : 0.0;
           n += tmp ? 1 : 0;
@@ -20,7 +20,7 @@ double fmean_double_impl(const double *restrict px, const int narm, const int l)
   }
   double mean = 0;
   #pragma omp simd reduction(+:mean)
-  for(int i = 0; i != l; ++i) {
+  for(int i = 0; i < l; ++i) {
     // if(ISNAN(px[i])) {
     //   mean = px[i];
     //   break;
@@ -79,7 +79,7 @@ double fmean_weights_impl(const double *restrict px, const double *restrict pw, 
     mean = px[j] * sumw;
     if(j != end) {
       #pragma omp simd reduction(+:mean,sumw)
-      for(int i = j+1; i != l; ++i) {
+      for(int i = j+1; i < l; ++i) {
         int tmp = NISNAN(px[i]) && NISNAN(pw[i]);
         mean += tmp ? px[i] * pw[i] : 0.0;
         sumw += tmp ? pw[i] : 0.0;
@@ -88,7 +88,7 @@ double fmean_weights_impl(const double *restrict px, const double *restrict pw, 
   } else {
     mean = 0, sumw = 0;
     #pragma omp simd reduction(+:mean,sumw)
-    for(int i = 0; i != l; ++i) {
+    for(int i = 0; i < l; ++i) {
       // if(ISNAN(px[i]) || ISNAN(pw[i])) {
       //   mean = px[i] + pw[i];
       //   break;

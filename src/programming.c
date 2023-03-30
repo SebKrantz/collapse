@@ -913,7 +913,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         for(int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           v = pxj[-1];
           #pragma omp simd
-          for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
+          for(int i = 0; i < nmk; ++i) { // All remaining rows to compute the distance to
             double tmp = pxj[i] - v;
             presk[i] += tmp * tmp;
           }
@@ -927,7 +927,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         for(int j = 0; j != ncol; ++j) { // Elements of the row vector at hand
           v = pxj[-1];
           #pragma omp simd
-          for(int i = 0; i != nmk; ++i) { // All remaining rows to compute the distance to
+          for(int i = 0; i < nmk; ++i) { // All remaining rows to compute the distance to
             double tmp = pxj[i] - v;
             presk[i] += tmp * tmp;
           }
@@ -957,7 +957,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         for (int j = 0; j != ncol; ++j) {
           double *pxj = px + j * nrow, v = pv[j];
           #pragma omp simd
-          for (int i = 0; i != nrow; ++i) {
+          for (int i = 0; i < nrow; ++i) {
             double tmp = pxj[i] - v;
             pres[i] += tmp * tmp;
           }
@@ -974,7 +974,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         }
       } else {
         #pragma omp simd reduction(+:dres)
-        for (int i = 0; i != ncol; ++i) {
+        for (int i = 0; i < ncol; ++i) {
           double tmp = px[i] - pv[i];
           dres += tmp * tmp;
         }
@@ -991,7 +991,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
       for (size_t i = 0; i < l; ++i) pres[i] = sqrt(pres[i]);
     } else {
       #pragma omp simd
-      for (size_t i = 0; i != l; ++i) pres[i] = sqrt(pres[i]);
+      for (size_t i = 0; i < l; ++i) pres[i] = sqrt(pres[i]);
     }
   }
 
