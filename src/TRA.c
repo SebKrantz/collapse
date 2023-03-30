@@ -137,11 +137,9 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
     {
       SEXP *pout = SEXPPTR(out);
       if(nog) {
-        #pragma omp simd
         for(int i = 0; i < l; ++i) pout[i] = xAG;
       } else {
         const SEXP *AG = SEXPPTR_RO(xAG)-1;
-        #pragma omp simd
         for(int i = 0; i < l; ++i) pout[i] = AG[pg[i]];
       }
       break;
