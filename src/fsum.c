@@ -9,17 +9,17 @@ double fsum_double_impl(const double *restrict px, const int narm, const int l) 
     while(ISNAN(sum) && j!=l) sum = px[j++];
     if(j != l) {
       #pragma omp simd reduction(+:sum)
-      for(int i = j; i != l; ++i) sum += NISNAN(px[i]) ? px[i] : 0.0;
+      for(int i = j; i < l; ++i) sum += NISNAN(px[i]) ? px[i] : 0.0;
     }
   } else {
     sum = 0;
     if(narm) {
       #pragma omp simd reduction(+:sum)
-      for(int i = 0; i != l; ++i) sum += NISNAN(px[i]) ? px[i] : 0.0;
+      for(int i = 0; i < l; ++i) sum += NISNAN(px[i]) ? px[i] : 0.0;
     } else {
      // Should just be fast, don't stop for NA's
       #pragma omp simd reduction(+:sum)
-      for(int i = 0; i != l; ++i) sum += px[i];
+      for(int i = 0; i < l; ++i) sum += px[i];
     }
   }
   return sum;
@@ -92,17 +92,17 @@ double fsum_weights_impl(const double *restrict px, const double *restrict pw, c
     sum = px[j] * pw[j];
     if(j != end) {
       #pragma omp simd reduction(+:sum)
-      for(int i = j+1; i != l; ++i) sum += (NISNAN(px[i]) && NISNAN(pw[i])) ? px[i] * pw[i] : 0.0;
+      for(int i = j+1; i < l; ++i) sum += (NISNAN(px[i]) && NISNAN(pw[i])) ? px[i] * pw[i] : 0.0;
     }
   } else {
     sum = 0;
     if(narm) {
       #pragma omp simd reduction(+:sum)
-      for(int i = 0; i != l; ++i) sum += (NISNAN(px[i]) && NISNAN(pw[i])) ? px[i] * pw[i] : 0.0;
+      for(int i = 0; i < l; ++i) sum += (NISNAN(px[i]) && NISNAN(pw[i])) ? px[i] * pw[i] : 0.0;
     } else {
       // Also here speed is key...
       #pragma omp simd reduction(+:sum)
-      for(int i = 0; i != l; ++i) sum += px[i] * pw[i];
+      for(int i = 0; i < l; ++i) sum += px[i] * pw[i];
     }
   }
   return sum;

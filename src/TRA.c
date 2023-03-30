@@ -83,11 +83,11 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
       if(nog) {
         double AG = asReal(xAG);
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG;
+        for(int i = 0; i < l; ++i) pout[i] = AG;
       } else {
         double *AG = REAL(xAG)-1;
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG[pg[i]];
+        for(int i = 0; i < l; ++i) pout[i] = AG[pg[i]];
       }
       break;
     }
@@ -98,11 +98,11 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
       if(nog) {
         int AG = asInteger(xAG);
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG;
+        for(int i = 0; i < l; ++i) pout[i] = AG;
       } else {
         int *AG = INTEGER(xAG)-1;
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG[pg[i]];
+        for(int i = 0; i < l; ++i) pout[i] = AG[pg[i]];
       }
       break;
     }
@@ -112,10 +112,10 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
       if(nog) {
         Rcomplex AG = asComplex(xAG);
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG;
+        for(int i = 0; i < l; ++i) pout[i] = AG;
       } else {
         Rcomplex *AG = COMPLEX(xAG)-1;
-        for(int i = 0; i != l; ++i) pout[i] = AG[pg[i]];
+        for(int i = 0; i < l; ++i) pout[i] = AG[pg[i]];
       }
       break;
     }
@@ -125,11 +125,11 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
       if(nog) {
         SEXP AG = asChar(xAG);
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG;
+        for(int i = 0; i < l; ++i) pout[i] = AG;
       } else {
         SEXP *AG = STRING_PTR(xAG)-1;
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG[pg[i]];
+        for(int i = 0; i < l; ++i) pout[i] = AG[pg[i]];
       }
       break;
     }
@@ -137,12 +137,10 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
     {
       SEXP *pout = SEXPPTR(out);
       if(nog) {
-        #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = xAG;
+        for(int i = 0; i < l; ++i) pout[i] = xAG;
       } else {
         const SEXP *AG = SEXPPTR_RO(xAG)-1;
-        #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG[pg[i]];
+        for(int i = 0; i < l; ++i) pout[i] = AG[pg[i]];
       }
       break;
     }
@@ -152,11 +150,11 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
       if(nog) {
         Rbyte AG = RAW_ELT(xAG, 0);
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG;
+        for(int i = 0; i < l; ++i) pout[i] = AG;
       } else {
         Rbyte *AG = RAW(xAG)-1;
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = AG[pg[i]];
+        for(int i = 0; i < l; ++i) pout[i] = AG[pg[i]];
       }
       break;
     }
@@ -212,11 +210,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           double AG = asReal(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? NA_REAL : AG;
+          for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? NA_REAL : AG;
         } else {
           double *AG = REAL(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? NA_REAL : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? NA_REAL : AG[pg[i]];
         }
         break;
       }
@@ -226,11 +224,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           int AG = asInteger(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? NA_INTEGER : AG;
+          for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? NA_INTEGER : AG;
         } else {
           int *AG = INTEGER(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? NA_INTEGER : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? NA_INTEGER : AG[pg[i]];
         }
         break;
       }
@@ -239,11 +237,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           SEXP AG = asChar(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? NA_STRING : AG;
+          for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? NA_STRING : AG;
         } else {
           SEXP *AG = STRING_PTR(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? NA_STRING : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? NA_STRING : AG[pg[i]];
         }
         break;
       }
@@ -262,11 +260,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           double AG = asReal(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AG;
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AG;
         } else {
           double *AG = REAL(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AG[pg[i]];
         }
         break;
       }
@@ -276,11 +274,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           int AG = asInteger(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AG;
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AG;
         } else {
           int *AG = INTEGER(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AG[pg[i]];
         }
         break;
       }
@@ -289,11 +287,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           SEXP AG = asChar(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AG;
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AG;
         } else {
           SEXP *AG = STRING_PTR(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AG[pg[i]];
         }
         break;
       }
@@ -311,11 +309,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           double AG = asReal(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AG;
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AG;
         } else {
           double *AG = REAL(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AG[pg[i]];
         }
         break;
       }
@@ -325,11 +323,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           int AG = asInteger(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AG;
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AG;
         } else {
           int *AG = INTEGER(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AG[pg[i]];
         }
         break;
       }
@@ -338,11 +336,11 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         if(nog) {
           SEXP AG = asChar(xAG);
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AG;
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AG;
         } else {
           SEXP *AG = STRING_PTR(xAG)-1;
           #pragma omp simd
-          for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AG[pg[i]];
+          for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AG[pg[i]];
         }
         break;
       }
@@ -392,20 +390,20 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
         if(txAG != REALSXP && txAG != INTSXP && txAG != LGLSXP) error("STATS needs to be numeric to replace NA's in numeric data!");
         double AG = asReal(xAG);
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? AG : px[i];
+        for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? AG : px[i];
       } else {
         switch(txAG) {
           case REALSXP: {
             double *AG = REAL(xAG)-1;
             #pragma omp simd
-            for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? AG[pg[i]] : px[i];
+            for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? AG[pg[i]] : px[i];
             break;
           }
           case LGLSXP:
           case INTSXP: {
             int *AG = INTEGER(xAG)-1;
             #pragma omp simd
-            for(int i = 0; i != l; ++i) pout[i] = ISNAN(px[i]) ? AG[pg[i]] : px[i];
+            for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? AG[pg[i]] : px[i];
             break;
           }
           case STRSXP: error("Cannot replace missing values in double with a string");
@@ -422,20 +420,20 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
         if(txAG != REALSXP && txAG != INTSXP && txAG != LGLSXP) error("STATS needs to be numeric to replace NA's in numeric data!");
         int AG = asInteger(xAG);
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? AG : px[i];
+        for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? AG : px[i];
       } else {
         switch(txAG) {
           case REALSXP: {
             double *AG = REAL(xAG)-1;
             #pragma omp simd
-            for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? AG[pg[i]] : px[i];
+            for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? AG[pg[i]] : px[i];
             break;
           }
           case LGLSXP:
           case INTSXP: {
             int *AG = INTEGER(xAG)-1;
             #pragma omp simd
-            for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_INTEGER) ? AG[pg[i]] : px[i];
+            for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? AG[pg[i]] : px[i];
             break;
           }
           case STRSXP: error("Cannot replace missing values in integer with a string");
@@ -450,7 +448,7 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
       if(nog) {
         SEXP AG = asChar(xAG);
         #pragma omp simd
-        for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_STRING) ? AG : px[i];
+        for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? AG : px[i];
       } else {
         switch(txAG) {
           case REALSXP:
@@ -459,7 +457,7 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
           case STRSXP: {
             SEXP *AG = STRING_PTR(xAG)-1;
             #pragma omp simd
-            for(int i = 0; i != l; ++i) pout[i] = (px[i] == NA_STRING) ? AG[pg[i]] : px[i];
+            for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? AG[pg[i]] : px[i];
             break;
           }
           default: error("Not supported SEXP type!");
@@ -493,36 +491,36 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
       switch(ret) {                                                                    \
       case 3:                                                                          \
         _Pragma("omp simd")                                                            \
-        for(int i = 0; i != l; ++i) pout[i] = px[i] - AGx;                             \
+        for(int i = 0; i < l; ++i) pout[i] = px[i] - AGx;                              \
         break;                                                                         \
       case 4: error("This transformation can only be performed with groups!");         \
       case 5: {                                                                        \
         double v = 1 / AGx;                                                            \
         _Pragma("omp simd")                                                            \
-        for(int i = 0; i != l; ++i) pout[i] = px[i] * v;                               \
+        for(int i = 0; i < l; ++i) pout[i] = px[i] * v;                                \
         break;                                                                         \
       }                                                                                \
       case 6: {                                                                        \
         double v = 100 / AGx;                                                          \
         _Pragma("omp simd")                                                            \
-        for(int i = 0; i != l; ++i) pout[i] = px[i] * v;                               \
+        for(int i = 0; i < l; ++i) pout[i] = px[i] * v;                                \
         break;                                                                         \
       }                                                                                \
       case 7:                                                                          \
         _Pragma("omp simd")                                                            \
-        for(int i = 0; i != l; ++i) pout[i] = px[i] + AGx;                             \
+        for(int i = 0; i < l; ++i) pout[i] = px[i] + AGx;                              \
         break;                                                                         \
       case 8:                                                                          \
         _Pragma("omp simd")                                                            \
-        for(int i = 0; i != l; ++i) pout[i] = px[i] * AGx;                             \
+        for(int i = 0; i < l; ++i) pout[i] = px[i] * AGx;                              \
         break;                                                                         \
       case 9:                                                                          \
         _Pragma("omp simd")                                                            \
-        for(int i = 0; i != l; ++i) pout[i] = modulus_impl(px[i], AGx);                \
+        for(int i = 0; i < l; ++i) pout[i] = modulus_impl(px[i], AGx);                 \
         break;                                                                         \
       case 10:                                                                         \
         _Pragma("omp simd")                                                            \
-        for(int i = 0; i != l; ++i) pout[i] = remainder_impl(px[i], AGx);              \
+        for(int i = 0; i < l; ++i) pout[i] = remainder_impl(px[i], AGx);               \
         break;                                                                         \
       default: error("Unknown Transformation");                                        \
       }
@@ -559,7 +557,7 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
       switch(ret) {                                                           \
         case 3:                                                               \
           _Pragma("omp simd")                                                 \
-          for(int i = 0; i != l; ++i) pout[i] = px[i] - pAG[pg[i]];           \
+          for(int i = 0; i < l; ++i) pout[i] = px[i] - pAG[pg[i]];            \
           break;                                                              \
         case 4:                                                               \
           {                                                                   \
@@ -577,32 +575,32 @@ SEXP retoth(SEXP x, SEXP xAG, SEXP g, int ret, int set) {
             OM /= n;                                                          \
             double dOM = (double)OM;                                          \
             _Pragma("omp simd")                                               \
-            for(int i = 0; i != l; ++i) pout[i] += dOM;                       \
+            for(int i = 0; i < l; ++i) pout[i] += dOM;                        \
             break;                                                            \
           }                                                                   \
         case 5:                                                               \
           _Pragma("omp simd")                                                 \
-          for(int i = 0; i != l; ++i) pout[i] = px[i] / pAG[pg[i]];           \
+          for(int i = 0; i < l; ++i) pout[i] = px[i] / pAG[pg[i]];            \
           break;                                                              \
         case 6:                                                               \
           _Pragma("omp simd")                                                 \
-          for(int i = 0; i != l; ++i) pout[i] = px[i] / pAG[pg[i]] * 100;     \
+          for(int i = 0; i < l; ++i) pout[i] = px[i] / pAG[pg[i]] * 100;      \
           break;                                                              \
         case 7:                                                               \
           _Pragma("omp simd")                                                 \
-          for(int i = 0; i != l; ++i) pout[i] = px[i] + pAG[pg[i]];           \
+          for(int i = 0; i < l; ++i) pout[i] = px[i] + pAG[pg[i]];            \
           break;                                                              \
         case 8:                                                               \
           _Pragma("omp simd")                                                 \
-          for(int i = 0; i != l; ++i) pout[i] = px[i] * pAG[pg[i]];           \
+          for(int i = 0; i < l; ++i) pout[i] = px[i] * pAG[pg[i]];            \
           break;                                                              \
         case 9:                                                               \
           _Pragma("omp simd")                                                 \
-          for(int i = 0; i != l; ++i) pout[i] = modulus_impl(px[i], pAG[pg[i]]);     \
+          for(int i = 0; i < l; ++i) pout[i] = modulus_impl(px[i], pAG[pg[i]]);     \
           break;                                                              \
         case 10:                                                              \
           _Pragma("omp simd")                                                 \
-          for(int i = 0; i != l; ++i) pout[i] = remainder_impl(px[i], pAG[pg[i]]);  \
+          for(int i = 0; i < l; ++i) pout[i] = remainder_impl(px[i], pAG[pg[i]]);  \
           break;                                                              \
         default: error("Unknown Transformation");                             \
       }
@@ -779,14 +777,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                 int s = j * row, e = s + row;
                 double AGj = pAG[j];
                 #pragma omp simd
-                for(int i = s; i != e; ++i) pout[i] = AGj;
+                for(int i = s; i < e; ++i) pout[i] = AGj;
               }
             } else {
               for(int j = 0; j != col; ++j) {
                 int s = j * row;
                 double *AG = pAG + j * ng - 1;
                 #pragma omp simd
-                for(int i = 0; i != row; ++i) pout[i + s] = AG[pg[i]];
+                for(int i = 0; i < row; ++i) pout[i + s] = AG[pg[i]];
               }
             }
             break;
@@ -799,13 +797,13 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
               for(int j = 0; j != col; ++j) {
                 int s = j * row, e = s + row, AGj = pAG[j];
                 #pragma omp simd
-                for(int i = s; i != e; ++i) pout[i] = AGj;
+                for(int i = s; i < e; ++i) pout[i] = AGj;
               }
             } else {
               for(int j = 0; j != col; ++j) {
                 int s = j * row, *AG = pAG + j * ng - 1;
                 #pragma omp simd
-                for(int i = 0; i != row; ++i) pout[i + s] = AG[pg[i]];
+                for(int i = 0; i < row; ++i) pout[i + s] = AG[pg[i]];
               }
             }
             break;
@@ -818,14 +816,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                 int s = j * row, e = s + row;
                 SEXP AGj = pAG[j];
                 #pragma omp simd
-                for(int i = s; i != e; ++i) pout[i] = AGj;
+                for(int i = s; i < e; ++i) pout[i] = AGj;
               }
             } else {
               for(int j = 0; j != col; ++j) {
                 int s = j * row;
                 SEXP *AG = pAG + j * ng - 1;
                 #pragma omp simd
-                for(int i = 0; i != row; ++i) pout[i + s] = AG[pg[i]];
+                for(int i = 0; i < row; ++i) pout[i + s] = AG[pg[i]];
               }
             }
             break;
@@ -848,14 +846,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                     int s = j * row, e = s + row;
                     double AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (ISNAN(px[i])) ? NA_REAL : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (ISNAN(px[i])) ? NA_REAL : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row;
                     double *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? NA_REAL : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? NA_REAL : AG[pg[i]];
                   }
                 }
                 break;
@@ -868,13 +866,13 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, e = s + row, AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (ISNAN(px[i])) ? NA_INTEGER : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (ISNAN(px[i])) ? NA_INTEGER : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? NA_INTEGER : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? NA_INTEGER : AG[pg[i]];
                   }
                 }
                 break;
@@ -887,14 +885,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                     int s = j * row, e = s + row;
                     SEXP AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (ISNAN(px[i])) ? NA_STRING : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (ISNAN(px[i])) ? NA_STRING : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row;
                     SEXP *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? NA_STRING : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? NA_STRING : AG[pg[i]];
                   }
                 }
                 break;
@@ -916,14 +914,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                     int s = j * row, e = s + row;
                     double AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_REAL : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row;
                     double *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_REAL : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_REAL : AG[pg[i]];
                   }
                 }
                 break;
@@ -936,13 +934,13 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, e = s + row, AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_INTEGER : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_INTEGER : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_INTEGER : AG[pg[i]];
                   }
                 }
                 break;
@@ -955,14 +953,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                     int s = j * row, e = s + row;
                     SEXP AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row;
                     SEXP *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_STRING : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? NA_STRING : AG[pg[i]];
                   }
                 }
                 break;
@@ -983,14 +981,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                     int s = j * row, e = s + row;
                     double AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_REAL : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row;
                     double *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_REAL : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_REAL : AG[pg[i]];
                   }
                 }
                 break;
@@ -1003,13 +1001,13 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, e = s + row, AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_INTEGER : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_INTEGER : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_INTEGER : AG[pg[i]];
                   }
                 }
                 break;
@@ -1022,14 +1020,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
                     int s = j * row, e = s + row;
                     SEXP AGj = pAG[j];
                     #pragma omp simd
-                    for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AGj;
+                    for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AGj;
                   }
                 } else {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row;
                     SEXP *AG = pAG + j * ng - 1;
                     #pragma omp simd
-                    for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_STRING : AG[pg[i]];
+                    for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? NA_STRING : AG[pg[i]];
                   }
                 }
                 break;
@@ -1076,14 +1074,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
               int s = j * row, e = s + row;
               double AGj = pAG[j];
               #pragma omp simd
-              for(int i = s; i != e; ++i) pout[i] = (ISNAN(px[i])) ? AGj : px[i];
+              for(int i = s; i < e; ++i) pout[i] = (ISNAN(px[i])) ? AGj : px[i];
             }
           } else {
             for(int j = 0; j != col; ++j) {
               int s = j * row;
               double *AG = pAG + j * ng - 1;
               #pragma omp simd
-              for(int i = 0; i != row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? AG[pg[i]] : px[i + s];
+              for(int i = 0; i < row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? AG[pg[i]] : px[i + s];
             }
           }
           break;
@@ -1097,13 +1095,13 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
               int s = j * row, e = s + row;
               double AGj = pAG[j];
               #pragma omp simd
-              for(int i = s; i != e; ++i) pout[i] = (ISNAN(px[i])) ? AGj : px[i];
+              for(int i = s; i < e; ++i) pout[i] = (ISNAN(px[i])) ? AGj : px[i];
             }
           } else {
             for(int j = 0; j != col; ++j) {
               int s = j * row, *AG = pAG + j * ng - 1;
               #pragma omp simd
-              for(int i = 0; i != row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? AG[pg[i]] : px[i + s];
+              for(int i = 0; i < row; ++i) pout[i + s] = (ISNAN(px[i + s])) ? AG[pg[i]] : px[i + s];
             }
           }
           break;
@@ -1125,14 +1123,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
             for(int j = 0; j != col; ++j) {
               int s = j * row, e = s + row, AGj = pAG[j];
               #pragma omp simd
-              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? AGj : px[i];
+              for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_INTEGER) ? AGj : px[i];
             }
           } else {
             for(int j = 0; j != col; ++j) {
               int s = j * row;
               double *AG = pAG + j * ng - 1;
               #pragma omp simd
-              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? AG[pg[i]] : px[i + s];
+              for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? AG[pg[i]] : px[i + s];
             }
           }
           break;
@@ -1145,13 +1143,13 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
             for(int j = 0; j != col; ++j) {
               int s = j * row, e = s + row, AGj = pAG[j];
               #pragma omp simd
-              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_INTEGER) ? AGj : px[i];
+              for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_INTEGER) ? AGj : px[i];
             }
           } else {
             for(int j = 0; j != col; ++j) {
               int s = j * row, *AG = pAG + j * ng - 1;
               #pragma omp simd
-              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? AG[pg[i]] : px[i + s];
+              for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_INTEGER) ? AG[pg[i]] : px[i + s];
             }
           }
           break;
@@ -1176,14 +1174,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
               int s = j * row, e = s + row;
               SEXP AGj = pAG[j];
               #pragma omp simd
-              for(int i = s; i != e; ++i) pout[i] = (px[i] == NA_STRING) ? AGj : px[i];
+              for(int i = s; i < e; ++i) pout[i] = (px[i] == NA_STRING) ? AGj : px[i];
             }
           } else {
             for(int j = 0; j != col; ++j) {
               int s = j * row;
               SEXP *AG = pAG + j * ng - 1;
               #pragma omp simd
-              for(int i = 0; i != row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? AG[pg[i]] : px[i + s];
+              for(int i = 0; i < row; ++i) pout[i + s] = (px[i + s] == NA_STRING) ? AG[pg[i]] : px[i + s];
             }
           }
           break;
