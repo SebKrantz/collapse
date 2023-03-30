@@ -1,4 +1,4 @@
-#include "collapse_c.h"
+#include "collapse_c.h" // Needs to be first because includes OpenMP
 #include "kit.h"
 
 

@@ -1,6 +1,14 @@
 #ifdef _OPENMP
-#include <omp.h>
+  #include <omp.h>
+  #define OMP_NUM_PROCS omp_get_num_procs()
+  #define OMP_THREAD_LIMIT omp_get_thread_limit()
+  #define OMP_MAX_THREADS omp_get_max_threads()
+#else
+  #define OMP_NUM_PROCS 1
+  #define OMP_THREAD_LIMIT 1
+  #define OMP_MAX_THREADS 1
 #endif
+
 #include <R.h>
 #include <Rinternals.h>
 
