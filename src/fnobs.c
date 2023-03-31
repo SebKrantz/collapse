@@ -181,7 +181,8 @@ SEXP fnobslC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
     UNPROTECT(1);
     return out;
   } else {
-    SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
+    SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
+    const SEXP *px = SEXPPTR_RO(x);
     for(int j = 0; j != l; ++j) pout[j] = fnobsC(px[j], Rng, g);
     DFcopyAttr(out, x, ng);
     UNPROTECT(1);

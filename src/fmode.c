@@ -917,7 +917,8 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     narm = asLogical(Rnarm), ret = asInteger(Rret), nthreads = asInteger(Rnthreads);
   if(l < 1) return x;
   if(nthreads > max_threads) nthreads = max_threads;
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out), *restrict px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out);
+  const SEXP *restrict px = SEXPPTR_RO(x);
   if(nullg && nthreads > l) nthreads = l;
   if(nullg && nullw) {
     if(nthreads <= 1) {

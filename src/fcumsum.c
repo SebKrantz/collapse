@@ -278,7 +278,8 @@ SEXP fcumsummC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
 SEXP fcumsumlC(SEXP x, SEXP Rng, SEXP g, SEXP o, SEXP Rnarm, SEXP Rfill) {
   int l = length(x);
   if(l < 1) return x; // Prevents seqfault for numeric(0) #101
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
+  const SEXP *px = SEXPPTR_RO(x);
   for(int j = 0; j != l; ++j) pout[j] = fcumsumC(px[j], Rng, g, o, Rnarm, Rfill);
   SHALLOW_DUPLICATE_ATTRIB(out, x);
   UNPROTECT(1);
