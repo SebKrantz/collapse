@@ -294,10 +294,13 @@ SEXP setcolorder(SEXP x, SEXP o) {
   }
   Free(seen);
 
-  SEXP *tmp = Calloc(ncol, SEXP);
-  SEXP *xd = SEXPPTR(x), *namesd = STRING_PTR(names);
+  SEXP *tmp = Calloc(ncol, SEXP), *namesd = STRING_PTR(names);
+  const SEXP *xd = SEXPPTR_RO(x);
   for (int i=0; i != ncol; ++i) tmp[i] = xd[od[i]-1];
-  memcpy(xd, tmp, ncol*sizeof(SEXP)); // sizeof is type size_t so no overflow here
+  for (int i=0; i != ncol; ++i) SET_VECTOR_ELT(x, i, tmp[i]);
+  // SEXP *xd = SEXPPTR(x);
+  // for (int i=0; i != ncol; ++i) tmp[i] = xd[od[i]-1];
+  // memcpy(xd, tmp, ncol*sizeof(SEXP)); // sizeof is type size_t so no overflow here
   for (int i=0; i != ncol; ++i) tmp[i] = namesd[od[i]-1];
   memcpy(namesd, tmp, ncol*sizeof(SEXP));
   // No need to change key (if any); sorted attribute is column names not positions
