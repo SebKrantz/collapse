@@ -1,3 +1,7 @@
+# collapse 1.9.5
+
+* Using `DATAPTR_RO` to point to R lists because of the use of `ALTLISTS` R-devel. 
+
 # collapse 1.9.4
 
 * Improvements in `get_elem()/has_elem()`: Option `invert = TRUE` is implemented more robustly, and a function passed to `get_elem()/has_elem()` is now applied to all elements in the list, including elements that are themselves list-like. This enables the use of `inherits` to find list-like objects inside a broader list structure e.g. `get_elem(l, inherits, what = "lm")` fetches all linear model objects inside `l`. 
