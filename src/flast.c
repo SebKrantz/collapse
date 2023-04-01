@@ -107,7 +107,8 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = R_NilValue;
         --pout;
         for(int i = l; i--; ) {
@@ -141,7 +142,8 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = gl[i] == NA_INTEGER ? R_NilValue : px[gl[i]];
         break;
       }
@@ -184,7 +186,8 @@ SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
     ++pgl;
   } else pgl = &l;
   SEXP out = PROTECT(allocVector(VECSXP, l));
-  SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+  const SEXP *px = SEXPPTR_RO(x);
+  SEXP *pout = SEXPPTR(out);
   for(int j = 0; j != l; ++j) pout[j] = flast_impl(px[j], ng, g, narm, pgl);
   DFcopyAttr(out, x, ng);
   UNPROTECT(nprotect);
@@ -252,7 +255,8 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
       }
       case STRSXP:
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int j = 0; j != col; ++j) pout[j] = px[j * l + l-1];
         break;
       }
@@ -300,7 +304,8 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng * col; i--; ) pout[i] = R_NilValue;
         --pout;
         for(int j = 0; j != col; ++j) {
@@ -345,7 +350,8 @@ SEXP flastmC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int j = 0; j != col; ++j) {
           for(int i = ng; i--; ) pout[i] = pgl[i] == NA_INTEGER ? R_NilValue : px[pgl[i]];
           px += l; pout += ng;

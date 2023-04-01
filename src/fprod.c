@@ -226,7 +226,8 @@ SEXP fprodlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
     UNPROTECT(1);
     return out;
   }
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out), *px = SEXPPTR(x);
+  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
+  const SEXP *px = SEXPPTR_RO(x);
   for(int j = 0; j != l; ++j) pout[j] = fprodC(px[j], Rng, g, w, Rnarm);
   // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
   DFcopyAttr(out, x, ng);

@@ -88,7 +88,8 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
     case STRSXP:
     case VECSXP:
     case EXPRSXP: {
-      SEXP *vd = SEXPPTR(target), value = SEXPPTR(source)[0];
+      SEXP *vd = SEXPPTR(target);
+      const SEXP value = SEXPPTR_RO(source)[0];
       for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
     default:
@@ -112,7 +113,8 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
     case STRSXP:
     case VECSXP:
     case EXPRSXP: {
-      SEXP *ptgt = SEXPPTR(target) + from, *ptcol = SEXPPTR(source);
+      SEXP *ptgt = SEXPPTR(target) + from;
+      const SEXP *ptcol = SEXPPTR_RO(source);
       for(int i = 0; i != n; ++i) ptgt[i] = ptcol[i];
       break;
     }

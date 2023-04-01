@@ -115,7 +115,8 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = R_NilValue; // R_NilValue or just leave empty ??
         --pout;
         for(int i = 0; i != l; ++i) {
@@ -160,7 +161,8 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x)-1, *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x)-1;
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = gl[i] == NA_INTEGER ? R_NilValue : px[gl[i]];
         break;
       }
@@ -225,7 +227,8 @@ SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm) {
   } else pgl = &l; // To avoid Wmaybe uninitialized..
   // return ffirst_impl(VECTOR_ELT(x, 0), ng, g, narm, pgl);
   SEXP out = PROTECT(allocVector(VECSXP, l));
-  SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+  const SEXP *px = SEXPPTR_RO(x);
+  SEXP *pout = SEXPPTR(out);
   for(int j = 0; j != l; ++j) pout[j] = ffirst_impl(px[j], ng, g, narm, pgl);
   DFcopyAttr(out, x, ng);
   UNPROTECT(nprotect);
@@ -269,7 +272,8 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int j = 0, i = 0; j != col; ++j) {
           while(length(px[i]) == 0 && i != end) ++i;
           pout[j] = px[i]; px += l; i = 0;
@@ -293,7 +297,8 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
       }
       case STRSXP:
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int j = 0; j != col; ++j) pout[j] = px[j * l];
         break;
       }
@@ -342,7 +347,8 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng * col; i--; ) pout[i] = R_NilValue;
         --pout;
         for(int j = 0; j != col; ++j) {
@@ -391,7 +397,8 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case VECSXP: {
-        SEXP *px = SEXPPTR(x)-1, *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x)-1;
+        SEXP *pout = SEXPPTR(out);
         for(int j = 0; j != col; ++j) {
           for(int i = ng; i--; ) pout[i] = pgl[i] == NA_INTEGER ? R_NilValue : px[pgl[i]];
           px += l; pout += ng;

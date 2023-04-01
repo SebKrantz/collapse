@@ -101,8 +101,8 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   SEXP names = PROTECT(getAttrib(dt, R_NamesSymbol)); protecti++;
   SEXP newnames = PROTECT(allocVector(STRSXP, n)); protecti++;
 
-  SEXP *pdt = SEXPPTR(dt), *pnewdt = SEXPPTR(newdt),
-    *pnam = STRING_PTR(names), *pnnam = STRING_PTR(newnames);
+  const SEXP *pdt = SEXPPTR_RO(dt), *pnam = STRING_PTR(names);
+  SEXP *pnewdt = SEXPPTR(newdt), *pnnam = STRING_PTR(newnames);
 
   const int l = isNull(cols) ? LENGTH(dt) : length(cols);
   if (isNull(cols)) {
@@ -222,7 +222,8 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // we take the R API (INTEGER()[i], REAL()[i], etc) outside loops for the simple types even when not parallel. For this
       // type list case (VECSXP) it might be that some items are ALTREP for example, so we really should use the heavier
       // _ELT accessor (VECTOR_ELT) inside the loop in this case.
-      SEXP *restrict sp = SEXPPTR(source)-1, *restrict ap = SEXPPTR(ans);
+      const SEXP *restrict sp = SEXPPTR_RO(source)-1;
+      SEXP *restrict ap = SEXPPTR(ans);
       PARLOOP(R_NilValue);
     } break;
     case CPLXSXP : {
@@ -431,7 +432,8 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
     }
   }
   SEXP ans = PROTECT(allocVector(VECSXP, ncol));
-  SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
+  const SEXP *px = SEXPPTR_RO(x);
+  SEXP *pans = SEXPPTR(ans);
   for(int i = 0; i != ncol; ++i) {
     pans[i] = px[pcols[i]-1]; // SET_VECTOR_ELT(ans, i, VECTOR_ELT(x, pcols[i]-1));
   }
@@ -533,7 +535,9 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
   // SET_TRUELENGTH(ans, LENGTH(ans));
   // SETLENGTH(ans, LENGTH(cols));
   int ansn;
-  SEXP *px = SEXPPTR(x), *pans = SEXPPTR(ans);
+  const SEXP *px = SEXPPTR_RO(x);
+  SEXP *pans = SEXPPTR(ans);
+
   if (isNull(rows)) {
     ansn = nrow;
     for (int i = 0; i != ncol; ++i) {

@@ -412,7 +412,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
       const SEXP r = VECTOR_ELT(rep, 0);
       setcopyvLOOPLVEC1
     } else {
-      const SEXP *restrict pr = SEXPPTR(rep);
+      const SEXP *restrict pr = SEXPPTR_RO(rep);
       setcopyvLOOPLVEC
     }
     break;
