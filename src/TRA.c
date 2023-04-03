@@ -1224,14 +1224,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
         int s = j * row, e = s + row;                                              \
         double AGj = pAG[j];                                                       \
         _Pragma("omp simd")                                                        \
-        for(int i = s; i != e; ++i) pout[i] = px[i] - AGj;                         \
+        for(int i = s; i < e; ++i) pout[i] = px[i] - AGj;                          \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
         _Pragma("omp simd")                                                        \
-        for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] - AG[pg[i]];         \
+        for(int i = 0; i < row; ++i) pout[i + s] = px[i + s] - AG[pg[i]];          \
       }                                                                            \
     }                                                                              \
     break;                                                                         \
@@ -1254,7 +1254,7 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
         OM /= n;                                                                   \
         double OMD = (double)OM;                                                   \
         _Pragma("omp simd")                                                        \
-        for(int i = 0; i != row; ++i) pout[i + s] += OMD;                          \
+        for(int i = 0; i < row; ++i) pout[i + s] += OMD;                           \
       }                                                                            \
       break;                                                                       \
     }                                                                              \
@@ -1264,14 +1264,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
         int s = j * row, e = s + row;                                              \
         double AGj = 1 / pAG[j];                                                   \
         _Pragma("omp simd")                                                        \
-        for(int i = s; i != e; ++i) pout[i] = px[i] * AGj;                         \
+        for(int i = s; i < e; ++i) pout[i] = px[i] * AGj;                          \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
         _Pragma("omp simd")                                                        \
-        for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] * (1 / AG[pg[i]]);   \
+        for(int i = 0; i < row; ++i) pout[i + s] = px[i + s] * (1 / AG[pg[i]]);    \
       }                                                                            \
     }                                                                              \
     break;                                                                         \
@@ -1282,14 +1282,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
         int s = j * row, e = s + row;                                              \
         double AGj = 100 / pAG[j];                                                 \
         _Pragma("omp simd")                                                        \
-        for(int i = s; i != e; ++i) pout[i] = px[i] * AGj;                         \
+        for(int i = s; i < e; ++i) pout[i] = px[i] * AGj;                          \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
         _Pragma("omp simd")                                                        \
-        for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] * (100 / AG[pg[i]]); \
+        for(int i = 0; i < row; ++i) pout[i + s] = px[i + s] * (100 / AG[pg[i]]);  \
       }                                                                            \
     }                                                                              \
     break;                                                                         \
@@ -1300,14 +1300,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
         int s = j * row, e = s + row;                                              \
         double AGj = pAG[j];                                                       \
         _Pragma("omp simd")                                                        \
-        for(int i = s; i != e; ++i) pout[i] = px[i] + AGj;                         \
+        for(int i = s; i < e; ++i) pout[i] = px[i] + AGj;                          \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
         _Pragma("omp simd")                                                        \
-        for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] + AG[pg[i]];         \
+        for(int i = 0; i < row; ++i) pout[i + s] = px[i + s] + AG[pg[i]];          \
       }                                                                            \
     }                                                                              \
     break;                                                                         \
@@ -1318,14 +1318,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
         int s = j * row, e = s + row;                                              \
         double AGj = pAG[j];                                                       \
         _Pragma("omp simd")                                                        \
-        for(int i = s; i != e; ++i) pout[i] = px[i] * AGj;                         \
+        for(int i = s; i < e; ++i) pout[i] = px[i] * AGj;                          \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
         _Pragma("omp simd")                                                        \
-        for(int i = 0; i != row; ++i) pout[i + s] = px[i + s] * AG[pg[i]];         \
+        for(int i = 0; i < row; ++i) pout[i + s] = px[i + s] * AG[pg[i]];          \
       }                                                                            \
     }                                                                              \
     break;                                                                         \
@@ -1336,14 +1336,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
         int s = j * row, e = s + row;                                              \
         double AGj = pAG[j];                                                       \
         _Pragma("omp simd")                                                        \
-        for(int i = s; i != e; ++i) pout[i] = modulus_impl(px[i], AGj);            \
+        for(int i = s; i < e; ++i) pout[i] = modulus_impl(px[i], AGj);             \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
         _Pragma("omp simd")                                                        \
-        for(int i = 0; i != row; ++i) pout[i + s] = modulus_impl(px[i + s], AG[pg[i]]);   \
+        for(int i = 0; i < row; ++i) pout[i + s] = modulus_impl(px[i + s], AG[pg[i]]);   \
       }                                                                            \
     }                                                                              \
     break;                                                                         \
@@ -1354,14 +1354,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
         int s = j * row, e = s + row;                                              \
         double AGj = pAG[j];                                                       \
         _Pragma("omp simd")                                                        \
-        for(int i = s; i != e; ++i) pout[i] = remainder_impl(px[i], AGj);          \
+        for(int i = s; i < e; ++i) pout[i] = remainder_impl(px[i], AGj);           \
       }                                                                            \
     } else {                                                                       \
       for(int j = 0; j != col; ++j) {                                              \
         int s = j * row;                                                           \
         double *AG = pAG + j * ng - 1;                                             \
         _Pragma("omp simd")                                                        \
-        for(int i = 0; i != row; ++i) pout[i + s] = remainder_impl(px[i + s], AG[pg[i]]);\
+        for(int i = 0; i < row; ++i) pout[i + s] = remainder_impl(px[i + s], AG[pg[i]]);\
       }                                                                            \
     }                                                                              \
     break;                                                                         \
