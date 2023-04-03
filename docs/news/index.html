@@ -61,7 +61,8 @@
 
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.5" id="collapse-195">collapse 1.9.5<a class="anchor" aria-label="anchor" href="#collapse-195"></a></h2>
-<ul><li>Using <code>DATAPTR_RO</code> to point to R lists because of the use of <code>ALTLISTS</code> R-devel.</li>
+<ul><li><p>Using <code>DATAPTR_RO</code> to point to R lists because of the use of <code>ALTLISTS</code> R-devel.</p></li>
+<li><p>Replacing <code>!=</code> loop controls for SIMD loops with <code>&lt;</code> to ensure compatibility on all platforms. Thanks <a href="https://github.com/albertus82" class="external-link">@albertus82</a> (<a href="https://github.com/SebKrantz/collapse/issues/399" class="external-link">#399</a>).</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="1.9.4" id="collapse-194">collapse 1.9.4<small>2023-03-31</small><a class="anchor" aria-label="anchor" href="#collapse-194"></a></h2>
