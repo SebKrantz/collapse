@@ -404,8 +404,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   }
   case VECSXP:
   {
-    if(set && ALTREP(x)) error("cannot modify ALTREP list by reference");
-    SEXP *restrict px = set ? SEXPPTR(x) : SEXPPTR(ans);
+    SEXP *restrict px = (set == 0) ? SEXPPTR(ans) : ALTREP(x) ? (SEXP *)ALTVEC_DATAPTR(x) : SEXPPTR(x);
     if(lv == 1 && ind1 == 0) error("Cannot compare lists to a value");
     // if(tr != VECSXP) error("If X is a list and xlist = TRUE, R also needs to be a list");
     const int *restrict pv = INTEGER(val); // ALTREP(val) ? (const int *)ALTVEC_DATAPTR(val) :
