@@ -285,7 +285,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   #define setcopyvLOOPLVEC1                                     \
   if(tv == INTSXP) {                                            \
     _Pragma("omp simd")                                         \
-    for(int i = 0; i != lv; ++i) px[pv[i]-1] = r;               \
+    for(int i = 0; i < lv; ++i) px[pv[i]-1] = r;                \
   } else if(invert == 0) {                                      \
     for(int i = 0; i != n; ++i) if(pv[i] > 0) px[i] = r;        \
   } else {                                                      \
@@ -296,10 +296,10 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   if(tv == INTSXP) {                                            \
     if(lr == n) {                                               \
       _Pragma("omp simd")                                       \
-      for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[pv[i]-1];   \
+      for(int i = 0; i < lv; ++i) px[pv[i]-1] = pr[pv[i]-1];    \
     } else {                                                    \
       _Pragma("omp simd")                                       \
-      for(int i = 0; i != lv; ++i) px[pv[i]-1] = pr[i];         \
+      for(int i = 0; i < lv; ++i) px[pv[i]-1] = pr[i];          \
     }                                                           \
   } else if(invert == 0) {                                      \
     for(int i = 0; i != n; ++i) if(pv[i] > 0) px[i] = pr[i];    \
@@ -404,6 +404,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   }
   case VECSXP:
   {
+    if(set && ALTREP(x)) error("cannot modify ALTREP list by reference");
     SEXP *restrict px = set ? SEXPPTR(x) : SEXPPTR(ans);
     if(lv == 1 && ind1 == 0) error("Cannot compare lists to a value");
     // if(tr != VECSXP) error("If X is a list and xlist = TRUE, R also needs to be a list");
@@ -457,19 +458,19 @@ SEXP setop_core(SEXP x, SEXP val, SEXP op, SEXP roww) {
   switch(o) {                                        \
   case 1:                                            \
     _Pragma("omp simd")                              \
-    for(int i = 0; i != n; ++i) px[i] += e;          \
+    for(int i = 0; i < n; ++i) px[i] += e;           \
     break;                                           \
   case 2:                                            \
     _Pragma("omp simd")                              \
-    for(int i = 0; i != n; ++i) px[i] -= e;          \
+    for(int i = 0; i < n; ++i) px[i] -= e;           \
     break;                                           \
   case 3:                                            \
     _Pragma("omp simd")                              \
-    for(int i = 0; i != n; ++i) px[i] *= e;          \
+    for(int i = 0; i < n; ++i) px[i] *= e;           \
     break;                                           \
   case 4:                                            \
     _Pragma("omp simd")                              \
-    for(int i = 0; i != n; ++i) px[i] /= e;          \
+    for(int i = 0; i < n; ++i) px[i] /= e;           \
     break;                                           \
   default: error("unsupported operation");           \
   }
@@ -525,25 +526,25 @@ if(nv == 1 || nv == n) {
   case 1: for(int j = 0, cj; j != nc; ++j)  {          \
     cj = j * nr;                                       \
     _Pragma("omp simd")                                \
-      for(int i = 0; i != nr; ++i) px[cj + i] += e;    \
+      for(int i = 0; i < nr; ++i) px[cj + i] += e;     \
   }                                                    \
   break;                                               \
   case 2: for(int j = 0, cj; j != nc; ++j)  {          \
     cj = j * nr;                                       \
     _Pragma("omp simd")                                \
-      for(int i = 0; i != nr; ++i) px[cj + i] -= e;    \
+      for(int i = 0; i < nr; ++i) px[cj + i] -= e;     \
   }                                                    \
   break;                                               \
   case 3: for(int j = 0, cj; j != nc; ++j)  {          \
     cj = j * nr;                                       \
     _Pragma("omp simd")                                \
-      for(int i = 0; i != nr; ++i) px[cj + i] *= e;    \
+      for(int i = 0; i < nr; ++i) px[cj + i] *= e;     \
   }                                                    \
   break;                                               \
   case 4: for(int j = 0, cj; j != nc; ++j)  {          \
     cj = j * nr;                                       \
     _Pragma("omp simd")                                \
-      for(int i = 0; i != nr; ++i) px[cj + i] /= e;    \
+      for(int i = 0; i < nr; ++i) px[cj + i] /= e;     \
   }                                                    \
   break;                                               \
   default: error("unsupported operation");             \
