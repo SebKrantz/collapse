@@ -48,7 +48,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
     UNPROTECT(1);
   }
 
-  SEXP *pres = SEXPPTR(res);
+  const SEXP *restrict pres = SEXPPTR_RO(res);
   // If grouping is sorted
   if(LOGICAL(ord)[1] == 1) { // This only works if data is already ordered in order of the groups
     int count = 0;
