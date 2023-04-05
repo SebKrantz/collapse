@@ -44,7 +44,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 \code{use.g.names} \tab \tab logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s. \cr
 
-\code{nthreads} \tab \tab integer. The number of threads to utilize. Supported by \code{\link{fsum}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}} and \code{\link{fndistinct}}. \cr
+\code{nthreads} \tab \tab integer. The number of threads to utilize. Supported by \code{\link{fsum}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fnth}}, \code{\link{fmode}} and \code{\link{fndistinct}}. \cr
 
 \code{drop} \tab \tab \emph{matrix and data.frame methods:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}. \cr
 
