@@ -63,9 +63,9 @@ Please see the documentation of individual functions.
 }
 \section{Related Functionality}{
 \itemize{
-\item Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in \code{\link{qsu}}.
+\item Functions \code{\link{fquantile}} and \code{\link{frange}} are for atomic vectors.
 
-\item Function \code{\link{frange}} efficiently computes the minimum and maximum on atomic vectors.
+\item Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in \code{\link{qsu}}.
 
 \item The vector-valued functions and operators \code{\link{fcumsum}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fhdbetween]{fhdbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fhdwithin]{fhdwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are grouped under \link[=data-transformations]{Data Transformations} and \link[=time-series-panel-series]{Time Series and Panel Series}. These functions also support \link[=indexing]{indexed data} (\emph{plm}).
 }
