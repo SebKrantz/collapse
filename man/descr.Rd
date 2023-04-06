@@ -70,7 +70,7 @@ character. The name of a label attribute to display for each variable (if variab
 
 \item{x}{an object of class 'descr'.}
 \item{n}{integer. The maximum number of table elements to print for categorical variables. If the number of distinct elements is \code{<= n}, the whole table is printed. Otherwise the remaining items are summed into an '... \%s Others' category.}
-\item{perc}{logical. \code{TRUE} (default) adds percentages to the frequencies in the table for categorical variables.}
+\item{perc}{logical. \code{TRUE} (default) adds percentages to the frequencies in the table for categorical variables, and, if \code{!is.null(by)}, the percentage of observations in each group.}
 \item{digits}{integer. The number of decimals to print in statistics, quantiles and percentage tables.}
 \item{t.table}{logical. \code{TRUE} (default) prints a transposed table.}
 \item{total}{logical. \code{TRUE} (default) adds a 'Total' column for grouped tables (when using \code{by} argument).}

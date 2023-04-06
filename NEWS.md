@@ -1,3 +1,7 @@
+# collapse 1.9.5.9000
+
+* `print.descr()` with groups and option `perc = TRUE` (the default) also shows percentages of the group frequencies for each variable. 
+
 # collapse 1.9.5
 
 * Using `DATAPTR_RO` to point to R lists because of the use of `ALTLISTS` R-devel. 
