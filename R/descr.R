@@ -342,12 +342,16 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     gs <- g$group.sizes
     dim(gs) <- c(length(gs), 1L)
     dimnames(gs) <- list(GRPnames(g), "N")
-    if(wsuml) gs = cbind(gs, WeightSum = fsum(attr(x, "weights"), g, use.g.names = FALSE, fill = TRUE))
+    if(wsuml) gs <- cbind(gs, WeightSum = fsum(attr(x, "weights"), g, use.g.names = FALSE, fill = TRUE))
+    if(perc) {
+      gs <- if(wsuml) cbind(gs, setColnames(round(fsum(gs, TRA = "%"), digits), c("Perc", "Perc")))[, c(1L, 3L, 2L, 4L)] else
+        cbind(gs, Perc = round(fsum(drop(gs), TRA = "%"), digits))
+    }
   }
   if(reverse) x <- rev.default(x) else if(header) {
     cat('Dataset: ', DSname, ', ', length(x), ' Variables, N = ', DSN, if(wsuml) paste0(", WeightSum = ", wsum) else "",
         "\nGrouped by: ", paste(g$group.vars, collapse = ", "), " [", g$N.groups, "]\n", sep = "")
-    print.table(gs)
+    print.qsu(gs, digits)
     cat(w, "\n", sep = "")
   }
   nam <- names(x) # Needs to be here
@@ -360,12 +364,16 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     TN <- if(wsuml && names(Ni) == "WeightSum") wsum else DSN
     if(Ni < TN) cat("Statistics (", names(Ni), " = ", Ni, ", ", round((1-Ni/TN)*100, digits), "% NAs)\n", sep = "")
     else cat("Statistics (", names(Ni), " = ", Ni, ")\n", sep = "")
-    if(any(xi[[1L]] %in% c("Date", "POSIXct")))
-      print.default(cbind(stat[, 1:2, drop = FALSE],
-                          matrix(as.character(setAttributes(stat[, 3:4], attr(stat, "attrib"))),
+    if(any(xi[[1L]] %in% c("Date", "POSIXct"))) {
+      stat12 <- stat[, 1:2, drop = FALSE]
+      if(perc) stat12 <- cbind(stat12[, 1L, drop = FALSE], Perc = round(stat12[, 1L]/bsum(stat12[, 1L])*100, digits), stat12[, 2L, drop = FALSE])
+      print.default(cbind(stat12, matrix(as.character(setAttributes(stat[, 3:4], attr(stat, "attrib"))),
                                  ncol = 2, dimnames =  list(NULL, c("Min", "Max")))),
                     quote = FALSE, right = TRUE, print.gap = 2)
-    else print.qsu(stat, digits)
+    } else {
+      if(perc) stat <- cbind(stat[, 1L, drop = FALSE], Perc = stat[, 1L]/bsum(stat[, 1L])*100, stat[, -1L, drop = FALSE])
+      print.qsu(stat, digits)
+    }
     if(length(xi) > 3L) { # Table or quantiles
       if(names(xi)[4L] == "Table") {
         if(perc) cat("\nTable (", if(wsuml) "WeightSum" else "Freq", " Perc)\n", sep = "") else cat("\nTable\n")
@@ -399,7 +407,7 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
   }
   if(reverse && header) {
     cat("Grouped by: ", paste(g$group.vars, collapse = ", "), " [", g$N.groups, "]\n", sep = "")
-    print.table(gs)
+    print.qsu(gs, digits)
     cat('\nDataset: ', DSname, ', ', length(x), ' Variables, N = ', DSN, if(wsuml) paste0(", WeightSum = ", wsum) else "", "\n", sep = "")
   }
   invisible(x)
