@@ -44,7 +44,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 
 \code{use.g.names} \tab \tab logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for \emph{data.table}'s. \cr
 
-\code{nthreads} \tab \tab integer. The number of threads to utilize. Supported by \code{\link{fsum}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}} and \code{\link{fndistinct}}. \cr
+\code{nthreads} \tab \tab integer. The number of threads to utilize. Supported by \code{\link{fsum}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fnth}}, \code{\link{fmode}} and \code{\link{fndistinct}}. \cr
 
 \code{drop} \tab \tab \emph{matrix and data.frame methods:} Logical. \code{TRUE} drops dimensions and returns an atomic vector if \code{g = NULL} and \code{TRA = NULL}. \cr
 
@@ -63,9 +63,9 @@ Please see the documentation of individual functions.
 }
 \section{Related Functionality}{
 \itemize{
-\item Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in \code{\link{qsu}}.
+\item Functions \code{\link{fquantile}} and \code{\link{frange}} are for atomic vectors.
 
-\item Function \code{\link{frange}} efficiently computes the minimum and maximum on atomic vectors.
+\item Panel-decomposed (i.e. between and within) statistics as well as grouped and weighted skewness and kurtosis are implemented in \code{\link{qsu}}.
 
 \item The vector-valued functions and operators \code{\link{fcumsum}}, \code{\link[=fscale]{fscale/STD}}, \code{\link[=fbetween]{fbetween/B}}, \code{\link[=fhdbetween]{fhdbetween/HDB}}, \code{\link[=fwithin]{fwithin/W}}, \code{\link[=fhdwithin]{fhdwithin/HDW}}, \code{\link[=flag]{flag/L/F}}, \code{\link[=fdiff]{fdiff/D/Dlog}} and \code{\link[=fgrowth]{fgrowth/G}} are grouped under \link[=data-transformations]{Data Transformations} and \link[=time-series-panel-series]{Time Series and Panel Series}. These functions also support \link[=indexing]{indexed data} (\emph{plm}).
 }

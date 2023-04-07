@@ -44,50 +44,51 @@ Timmer, M. P., de Vries, G. J., & de Vries, K. (2015). "Patterns of Structural C
 \examples{
 namlab(GGDC10S, class = TRUE)
 # aperm(qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE))
-
 \donttest{
 library(data.table)
+library(magrittr)
 library(ggplot2)
 
 ## World Regions Structural Change Plot
 
-dat <- GGDC10S
-fselect(dat, AGR:OTH) <- replace_outliers(dapply(fselect(dat, AGR:OTH), `*`, 1 / dat$SUM),
-                                          0, NA, "min")
-dat$Variable <- recode_char(dat$Variable, VA = "Value Added Share", EMP = "Employment Share")
-dat <- collap(dat, ~ Variable + Region + Year, cols = 6:15)
-dat <- melt(qDT(dat), 1:3, variable.name = "Sector", na.rm = TRUE)
+GGDC10S \%>\%
+  fmutate(across(AGR:OTH, `*`, 1 / SUM),
+          Variable = fifelse(Variable == "VA","Value Added Share", "Employment Share")) \%>\%
+  replace_outliers(0, NA, "min") \%>\%
+  collap( ~ Variable + Region + Year, cols = 6:15) \%>\% qDT() \%>\%
+  melt(1:3, variable.name = "Sector", na.rm = TRUE) \%>\%
 
-ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
-  geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
-  theme_linedraw(base_size = 14) + facet_grid(Variable ~ Region, scales = "free_x") +
-  scale_fill_manual(values = sub("#00FF66FF", "#00CC66", rainbow(10))) +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 7), expand = c(0, 0))+
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0),
-                     labels = scales::percent) +
-  theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
-        strip.background = element_rect(colour = "grey30", fill = "grey30"))
+  ggplot(aes(x = Year, y = value, fill = Sector)) +
+    geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
+    theme_linedraw(base_size = 14) + facet_grid(Variable ~ Region, scales = "free_x") +
+    scale_fill_manual(values = sub("#00FF66", "#00CC66", rainbow(10))) +
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 7), expand = c(0, 0))+
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0),
+                       labels = scales::percent) +
+    theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
+          strip.background = element_rect(colour = "grey30", fill = "grey30"))
 
 # A function to plot the structural change of an arbitrary country
 
 plotGGDC <- function(ctry) {
-dat <- fsubset(GGDC10S, Country == ctry, Variable, Year, AGR:SUM)
-fselect(dat, AGR:OTH) <- replace_outliers(dapply(fselect(dat, AGR:OTH), `*`, 1 / dat$SUM),
-                                          0, NA, "min")
-dat$SUM <- NULL
-dat$Variable <- recode_char(dat$Variable, VA = "Value Added Share", EMP = "Employment Share")
-dat <- melt(qDT(dat), 1:2, variable.name = "Sector", na.rm = TRUE)
 
-ggplot(aes(x = Year, y = value, fill = Sector), data = dat) +
-  geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
-  theme_linedraw(base_size = 14) + facet_wrap( ~ Variable) +
-  scale_fill_manual(values = sub("#00FF66", "#00CC66", rainbow(10))) +
-  scale_x_continuous(breaks = scales::pretty_breaks(n = 7), expand = c(0, 0)) +
-  scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0),
-                     labels = scales::percent) +
-  theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
-        strip.background = element_rect(colour = "grey20", fill = "grey20"),
-        strip.text = element_text(face = "bold"))
+  GGDC10S \%>\%
+  fsubset(Country == ctry, Variable, Year, AGR:SUM) \%>\%
+  fmutate(across(AGR:OTH, `*`, 1 / SUM), SUM = NULL,
+          Variable = fifelse(Variable == "VA","Value Added Share", "Employment Share")) \%>\%
+  replace_outliers(0, NA, "min") \%>\% qDT() \%>\%
+  melt(1:2, variable.name = "Sector", na.rm = TRUE) \%>\%
+
+  ggplot(aes(x = Year, y = value, fill = Sector)) +
+    geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
+    theme_linedraw(base_size = 14) + facet_wrap( ~ Variable) +
+    scale_fill_manual(values = sub("#00FF66", "#00CC66", rainbow(10))) +
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 7), expand = c(0, 0)) +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0),
+                       labels = scales::percent) +
+    theme(axis.text.x = element_text(angle = 315, hjust = 0, margin = ggplot2::margin(t = 0)),
+          strip.background = element_rect(colour = "grey20", fill = "grey20"),
+          strip.text = element_text(face = "bold"))
 }
 
 plotGGDC("BWA")

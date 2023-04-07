@@ -49,7 +49,7 @@ A vector of quantiles. If \code{names = TRUE}, \code{fquantile} generates names 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fnth}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 frange(mtcars$mpg)

@@ -1988,7 +1988,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   ustr_alloc = 0;
 
   if (retGrp) {
-    int maxgrpn = NA_INTEGER;
+    int maxgrpn = 0; // formerly: NA_INTEGER;
     ngrp = gsngrp[flip];
     SEXP s_starts = retStarts ? install("starts") : install("group.sizes");
     setAttrib(ans, s_starts, x = allocVector(INTSXP, ngrp));
