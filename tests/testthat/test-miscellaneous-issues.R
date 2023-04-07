@@ -393,4 +393,20 @@ test_that("singleton groups are handled properly by all statistical functions", 
 })
 
 
+test_that("functions work for data frames with zero rows", {
+  mtc0 <- qDF(mtcars)[NULL, ]
+  expect_equal(mtc0, funique(mtc0))
+  expect_equal(mtc0, funique(mtc0, sort = TRUE))
+  expect_equal(mtc0, roworderv(mtc0))
+  expect_visible(colorder(mtc0, mpg, hp))
+  expect_visible(GRP(mtc0))
+  expect_visible(fgroup_by(mtc0, cyl, vs, am))
+  expect_visible(GRP(mtc0, sort = FALSE))
+  expect_visible(fgroup_by(mtc0, cyl, vs, am, sort = FALSE))
+  expect_visible(fduplicated(mtc0))
+  expect_false(any_duplicated(mtc0))
+  expect_visible(fselect(mtc0, hp, carb))
+  expect_visible(get_vars(mtc0, 9:8))
+})
+
 options(warn = 1)

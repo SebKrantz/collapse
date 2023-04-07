@@ -748,7 +748,7 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]],
 
 radixuniquevec <- function(x, sort, na.last = TRUE, decreasing = FALSE) {
   o <- .Call(C_radixsort, na.last, decreasing, TRUE, FALSE, sort, pairlist(x))
-  if(attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted"))) return(x)
+  if(attr(o, "maxgrpn") <= 1L && (!sort || attr(o, "sorted"))) return(x)
   Csv(x, if(attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts")))
 }
 
@@ -771,7 +771,7 @@ funique.data.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", ..
   # if(!missing(...)) unused_arg_action(match.call(), ...)
   use.group <- switch(method, auto = !sort, hash = TRUE, radix = FALSE, stop("method needs to be 'auto', 'hash' or 'radix'."))
   o <- switchGRP(if(is.null(cols)) x else colsubset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...)
-  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) # return(x)
+  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") <= 1L && (!sort || attr(o, "sorted")))) # return(x)
      return(if(inherits(x, "data.table")) alc(x) else x)
   st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
   rn <- attr(x, "row.names")
@@ -803,7 +803,7 @@ funique.sf <- function(x, cols = NULL, sort = FALSE, method = "auto", ...) {
   cols <- if(is.null(cols)) whichv(attr(x, "names"), attr(x, "sf_column"), TRUE) else
                             cols2int(cols, x, attr(x, "names"), FALSE)
   o <- switchGRP(.subset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...)
-  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) return(x)
+  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") <= 1L && (!sort || attr(o, "sorted")))) return(x)
   st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
   rn <- attr(x, "row.names")
   res <- .Call(C_subsetDT, x, st, seq_along(unclass(x)), FALSE)
@@ -816,7 +816,7 @@ funique.pseries <- function(x, sort = FALSE, method = "auto", drop.index.levels 
   if(is.array(x)) stop("funique currently only supports atomic vectors and data.frames")
   use.group <- switch(method, auto = !sort, hash = TRUE, radix = FALSE, stop("method needs to be 'auto', 'hash' or 'radix'."))
   o <- switchGRP(x, starts = TRUE, sort = sort, use.group = use.group, ...)
-  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) return(x)
+  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") <= 1L && (!sort || attr(o, "sorted")))) return(x)
   st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
   res <- Csv(x, st)
   if(length(names(x))) names(res) <- Csv(names(x), st)
@@ -829,7 +829,7 @@ funique.pseries <- function(x, sort = FALSE, method = "auto", drop.index.levels 
 funique.pdata.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", drop.index.levels = "id", ...) {
   use.group <- switch(method, auto = !sort, hash = TRUE, radix = FALSE, stop("method needs to be 'auto', 'hash' or 'radix'."))
   o <- switchGRP(if(is.null(cols)) x else colsubset(x, cols), starts = TRUE, sort = sort, use.group = use.group, ...)
-  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") == 1L && (!sort || attr(o, "sorted")))) # return(x)
+  if((use.group && length(o) == attr(o, "N.groups")) || (!use.group && attr(o, "maxgrpn") <= 1L && (!sort || attr(o, "sorted")))) # return(x)
     return(if(inherits(x, "data.table")) alc(x) else x)
   st <- if(use.group || attr(o, "sorted")) attr(o, "starts") else Csv(o, attr(o, "starts"))
   rn <- attr(x, "row.names")
