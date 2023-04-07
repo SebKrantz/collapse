@@ -290,7 +290,7 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
     if(stat[[1L]] < TN) cat("Statistics (", round((1-stat[[1L]]/TN)*100, digits), "% NAs)\n", sep = "")
     else cat("Statistics\n")
     if(any(xi[[1L]] %in% c("Date", "POSIXct")))
-      print.default(c(stat[1:2], as.character(setAttributes(stat[3:4], attr(stat, "attrib")))),
+      print.default(c(stat[1:2], setNames(as.character(setAttributes(stat[3:4], attr(stat, "attrib"))), c("Min", "Max"))),
                      quote = FALSE, right = TRUE, print.gap = 2)
     else print.qsu(stat, digits)
     if(length(xi) > 3L) {
