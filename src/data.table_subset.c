@@ -280,10 +280,10 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
 
                   bool stop = false;
                   // #pragma omp parallel for num_threads(getDTthreads())
-                  #pragma omp simd
+                  #pragma omp simd reduction(|:stop)
                   for (int i = 0; i < n; ++i) {
                     int elem = idxp[i];
-                    stop = (elem<1 && elem!=NA_INTEGER) || elem>max;
+                    stop |= (elem<1 && elem!=NA_INTEGER) || elem>max;
                   }
                   if (!stop) return(idx); // most common case to return early: no 0, no negative; all idx either NA or in range [1-max]
 
