@@ -6,7 +6,7 @@
 
 * Added SIMD vectorization for `fsubset()`. 
 
-* `vlengths()` now also works for strings, and is hence a much faster version of both `lengths()` and `nchar()`. 
+* `vlengths()` now also works for strings, and is hence a much faster version of both `lengths()` and `nchar()`. Also for atomic vectors the behavior is like `lengths()`, e.g. `vlengths(rnorm(10))` gives `rep(1L, 10)`. 
 
 # collapse 1.9.5
 
