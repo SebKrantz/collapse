@@ -68,7 +68,7 @@ na_insert(X, prop = 0.1,    # Insert missing values at random
           value = NA)
 missing_cases(X, cols=NULL, # The opposite of complete.cases(), faster for DF's.
   prop = 0, count = FALSE)  # See also kit::panyNA(), kit::pallNA(), kit::pcountNA()
-vlengths(X, use.names=TRUE) # Faster version of lengths() (in C, no method dispatch)
+vlengths(X, use.names=TRUE) # Faster lengths() and nchar() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
