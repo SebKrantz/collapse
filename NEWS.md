@@ -4,6 +4,8 @@
 
 * `funique(mtcars[NULL, ], sort = TRUE)` gave an error (for data frame with zero rows). Thanks @NicChr (#406).
 
+* Added SIMD vectorization for `fsubset()`. 
+
 # collapse 1.9.5
 
 * Using `DATAPTR_RO` to point to R lists because of the use of `ALTLISTS` on R-devel. 

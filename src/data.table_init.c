@@ -21,16 +21,15 @@ SEXP char_dataframe;
 SEXP char_datatable;
 SEXP char_sf;
 SEXP sym_sorted;
-// not currently needed (base_radixsort uses install), but perhaps later..
-// SEXP sym_maxgrpn;
-// SEXP sym_starts;
-// SEXP char_starts;
 SEXP sym_index;
 SEXP sym_index_df;
-SEXP sym_inherits;
 SEXP sym_sf_column;
 SEXP SelfRefSymbol;
 SEXP sym_datatable_locked;
+// SEXP sym_inherits;
+// SEXP sym_maxgrpn;
+// SEXP sym_starts;
+// SEXP char_starts;
 // SEXP sym_collapse_DT_alloccol;
 
 int max_threads;
@@ -139,15 +138,14 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   // look odd (and devs in future might be tempted to remove them). Avoiding passing install() to API calls
   // keeps the code neat and readable. Also see grep's added to CRAN_Release.cmd to find such calls.
 
-  // not currently needed (base_radixsort uses install), but perhaps later..
   sym_sorted  = install("sorted");
-  // sym_maxgrpn = install("maxgrpn");
   sym_index   = install("index");
   sym_index_df   = install("index_df");
-  sym_inherits = install("inherits");
   sym_sf_column = install("sf_column");
   SelfRefSymbol = install(".internal.selfref");
   sym_datatable_locked = install(".data.table.locked");
+  // sym_inherits = install("inherits");
+  // sym_maxgrpn = install("maxgrpn");
   // sym_collapse_DT_alloccol = install("collapse_DT_alloccol");
 
   max_threads = OMP_NUM_PROCS;

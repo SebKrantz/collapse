@@ -3,6 +3,7 @@
  and licensed under a Mozilla Public License 2.0 (MPL-2.0) license.
 */
 
+#include "collapse_c.h"
 #include "data.table.h"
 
 // selfref stuff is taken from data.tables assign.c
@@ -175,12 +176,14 @@ static void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
 
   #define PARLOOP(_NAVAL_)                                        \
   if (anyNA) {                                                    \
-    for (int i = 0; i != n; ++i) {                                \
+    _Pragma("omp simd")                                           \
+    for (int i = 0; i < n; ++i) {                                 \
       int elem = idxp[i];                                         \
       ap[i] = elem==NA_INTEGER ? _NAVAL_ : sp[elem];              \
     }                                                             \
   } else {                                                        \
-    for (int i = 0; i != n; ++i) {                                \
+    _Pragma("omp simd")                                           \
+    for (int i = 0; i < n; ++i) {                                 \
       ap[i] = sp[idxp[i]];                                        \
     }                                                             \
   }
@@ -277,10 +280,10 @@ SEXP convertNegAndZeroIdx(SEXP idx, SEXP maxArg, SEXP allowOverMax)
 
                   bool stop = false;
                   // #pragma omp parallel for num_threads(getDTthreads())
-                  for (int i = 0; i != n; ++i) {
-                    if (stop) continue;
+                  #pragma omp simd
+                  for (int i = 0; i < n; ++i) {
                     int elem = idxp[i];
-                    if ((elem<1 && elem!=NA_INTEGER) || elem>max) stop=true;
+                    stop = (elem<1 && elem!=NA_INTEGER) || elem>max;
                   }
                   if (!stop) return(idx); // most common case to return early: no 0, no negative; all idx either NA or in range [1-max]
 
