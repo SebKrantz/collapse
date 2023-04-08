@@ -6,6 +6,8 @@
 
 * Added SIMD vectorization for `fsubset()`. 
 
+* `vlengths()` now also works for strings, and is hence a much faster version of both `lengths()` and `nchar()`. 
+
 # collapse 1.9.5
 
 * Using `DATAPTR_RO` to point to R lists because of the use of `ALTLISTS` on R-devel. 
