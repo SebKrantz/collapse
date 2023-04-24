@@ -5,7 +5,7 @@
 Data Apply
 }
 \description{
-\code{dapply} efficiently applies functions to columns or rows of matrix-like objects and by default returns an object of the same type and with the same attributes. Alternatively it is possible to return the result in a plain matrix or data.frame. A simple parallelism is also available.
+\code{dapply} efficiently applies functions to columns or rows of matrix-like objects and by default returns an object of the same type and with the same attributes (unless the result is scalar and \code{drop = TRUE}). Alternatively it is possible to return the result in a plain matrix or data.frame. A simple parallelism is also available.
 }
 \usage{
 dapply(X, FUN, \dots, MARGIN = 2, parallel = FALSE, mc.cores = 1L,
