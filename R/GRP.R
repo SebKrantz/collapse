@@ -514,7 +514,7 @@ condCopyAttrib <- function(x, d) {
   if(is.object(x)) return(x)
   cld <- oldClass(d)
   condalcSA(x, list(names = attr(x, "names"),
-                    row.names = .set_row_names(length(x[[1L]])),
+                    row.names = .set_row_names(.Call(C_fnrow, x)),
                     class = cld[cld %!in% c("GRP_df", "grouped_df", "sf", "pdata.frame", "indexed_frame")]),
             any(cld == "data.table"))
   # attr(d, "groups") <- NULL

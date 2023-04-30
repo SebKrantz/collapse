@@ -32,12 +32,12 @@ get_vars_indl <- function(x, indl, return = "data")
   oldClass(x) <- NULL
   if(is.list(value)) {
     oldClass(value) <- NULL # fastest ?? if(is.object(value)) oldClass(value) <- NULL ??
-    if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
+    if(.Call(C_fnrow, value) != .Call(C_fnrow, x)) stop("NROW(value) must match nrow(x)")
     if(length(value) != length(ind)) stop("NCOL(value) must match selected variables") # length(num_vars(x))
     x[ind] <- value
     if(length(nam <- names(value))) names(x)[ind] <- nam #  == length(ind)
   } else {
-    if(NROW(unclass(value)) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
+    if(NROW(unclass(value)) != .Call(C_fnrow, x)) stop("NROW(value) must match nrow(x)")
     if(length(ind) != 1L) stop("NCOL(value) must match selected variables") # length(num_vars(x))
     x[[ind]] <- value
   }
@@ -186,8 +186,7 @@ gvr <- function(x, vars, return = "data", ...) {
   lx <- length(x)
   if(is.list(value)) {
     oldClass(value) <- NULL # fastest ?
-    # This works with zero row data frames, but not with zero column ones
-    if(length(value[[1L]]) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
+    if(.Call(C_fnrow, value) != .Call(C_fnrow, x)) stop("NROW(value) must match nrow(x)")
     # res <- c(x, value)  # FASTER than commented out below
     if(is.character(pos)) switch(pos,
           end = {
@@ -215,7 +214,7 @@ gvr <- function(x, vars, return = "data", ...) {
     # ax[["names"]] <- if(length(nam <- names(value)))  c(ax[["names"]], nam) else
     #   c(ax[["names"]], paste0("V", ind))
   } else {
-    if(NROW(value) != length(x[[1L]])) stop("NROW(value) must match nrow(x)")
+    if(NROW(value) != .Call(C_fnrow, x)) stop("NROW(value) must match nrow(x)")
     # res <- c(x, list(value)) # FASTER than below ? -> Nope
     # ax[["names"]] <- c(ax[["names"]], paste0("V", lx+1L))
     nam <- l1orlst(as.character(substitute(value)))

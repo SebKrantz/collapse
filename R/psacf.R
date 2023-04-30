@@ -53,7 +53,7 @@ psacf.data.frame <- function(x, by, t = NULL, cols = is.numeric, lag.max = NULL,
     x <- x[v]
   } else if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
   lx <- length(x)
-  nrx <- length(x[[1L]])
+  nrx <- .Call(C_fnrow, x)
   snames <- names(x)
   attributes(x) <- NULL # already class is 0... Necessary ?
   getacf <- function(ng, g) {
@@ -129,7 +129,7 @@ psacf.pdata.frame <- function(x, cols = is.numeric, lag.max = NULL, type = c("co
   index <- uncl2pix(x)
   clx <- oldClass(x)
   oldClass(x) <- NULL
-  nrx <- length(x[[1L]])
+  nrx <- .Call(C_fnrow, x)
   if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
   lx <- length(x)
   snames <- names(x)

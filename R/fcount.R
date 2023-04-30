@@ -12,7 +12,7 @@ fcount_core <- function(x, g, w = NULL, name = "N", add = FALSE) {
   #     res <- g$groups
   #     res[[name[1L]]] <- g$group.sizes
   #   }
-  #   attr(res, "row.names") <- .set_row_names(length(res[[1L]]))
+  #   attr(res, "row.names") <- .set_row_names(.Call(C_fnrow, res))
   #   oldClass(res) <- "data.frame"
   #   return(res)
   # }

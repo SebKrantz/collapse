@@ -100,7 +100,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
   }
   ax <- attributes(X)
   oldClass(X) <- NULL
-  if(length(X[[1L]]) == 0L) stop("data passed to collap() has 0 rows.") #160, 0 rows can cause segfault...
+  if(.Call(C_fnrow, X) == 0L) stop("data passed to collap() has 0 rows.") #160, 0 rows can cause segfault...
   nam <- names(X)
   # attributes(X) <- NULL
   # attr(X, "class") <- "data.frame" # class needed for method dispatch of fast functions, not for BY !
@@ -303,7 +303,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
-  ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
+  ax[["row.names"]] <- .set_row_names(.Call(C_fnrow, res))
   return(condalcSA(res, ax, DTl))
 }
 
@@ -325,7 +325,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   }
   ax <- attributes(X)
   oldClass(X) <- NULL
-  if(length(X[[1L]]) == 0L) stop("data passed to collapv() has 0 rows.") #160, 0 rows can cause segfault...
+  if(.Call(C_fnrow, X) == 0L) stop("data passed to collapv() has 0 rows.") #160, 0 rows can cause segfault...
   nam <- names(X)
 
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
@@ -494,7 +494,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
 
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
   ax[["names"]] <- names(res)
-  ax[["row.names"]] <- .set_row_names(length(res[[1L]]))
+  ax[["row.names"]] <- .set_row_names(.Call(C_fnrow, res))
   return(condalcSA(res, ax, DTl))
 }
 

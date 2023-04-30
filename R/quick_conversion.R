@@ -48,7 +48,7 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
     } else if(!isFALSE(row.names.col)) {
       ax <- attributes(X)
       X <- c(list(ax[["row.names"]]), X)
-      ax[["row.names"]] <- .set_row_names(length(X[[1L]])) # this is ok, X is a list ...
+      ax[["row.names"]] <- .set_row_names(.Call(C_fnrow, X)) # this is ok, X is a list ...
       ax[["names"]] <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", ax[["names"]])
       setattributes(X, ax)
     }
@@ -61,10 +61,10 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
   attributes(X) <- NULL
   if(is.null(nam)) nam <- paste0("V", seq_along(X))
   if(is.null(rn) || is.numeric(rn)) {
-    rn <- .set_row_names(length(X[[1L]]))
+    rn <- .set_row_names(.Call(C_fnrow, X))
   } else if(!isFALSE(row.names.col)) {
     X <- c(list(rn), X)
-    rn <- .set_row_names(length(X[[1L]]))
+    rn <- .set_row_names(.Call(C_fnrow, X))
     nam <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", nam)
   }
   # slower: !!
@@ -129,7 +129,7 @@ qDT_raw <- function(X, row.names.col, keep.attr, DT_class, X_nam) {
       nam <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", nam)
     }
     names(X) <- nam
-    attr(X, "row.names") <- .set_row_names(length(X[[1L]]))
+    attr(X, "row.names") <- .set_row_names(.Call(C_fnrow, X))
   }
   return(`oldClass<-`(X, DT_class))
 }

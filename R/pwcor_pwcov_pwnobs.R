@@ -7,7 +7,7 @@ pwnobs <- function(X) {
   dg <- fnobs.data.frame(X)
   oldClass(X) <- NULL
   n <- length(X)
-  nr <- length(X[[1L]])
+  nr <- .Call(C_fnrow, X)
   N.mat <- diag(dg)
   for (i in 1:(n - 1L)) {
     miss <- is.na(X[[i]]) # faster than complete.cases, also for large data ! // subsetting X[[j]] faster ?? -> NOPE !

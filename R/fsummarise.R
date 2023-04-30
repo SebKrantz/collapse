@@ -143,7 +143,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
       res[gi] <- .Call(C_subsetDT, res, rep.int(1L, maxlr), gi, FALSE)
     }
   }
-  ax[c("names", "row.names")] <- list(names(res), .set_row_names(length(res[[1L]])))
+  ax[c("names", "row.names")] <- list(names(res), .set_row_names(.Call(C_fnrow, res)))
   return(condalcSA(res, ax, any(cld == "data.table")))
 }
 

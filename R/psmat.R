@@ -27,7 +27,7 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
   if(!missing(...)) unused_arg_action(match.call(), ...)
   oldClass(x) <- NULL # Setting globally !
   if(is.atomic(by) && length(by) == 1L) {
-    nr <- length(x[[1L]])
+    nr <- .Call(C_fnrow, x)
     n <- round(by)
     if(length(cols)) x <- x[cols2int(cols, x, names(x), FALSE)]
     if(transpose) {
