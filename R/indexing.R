@@ -487,8 +487,8 @@ print.index_df <- function(x, topn = 5, ...) {
     oldClass(x) <- clx
     if(any(clx == "data.table")) return(alc(x)) else return(x)
   }
-  if(length(value) != length(x[[1L]])) {
-    if(length(value) == 1L) value <- alloc(value, length(x[[1L]]))
+  if(length(value) != .Call(C_fnrow, x)) {
+    if(length(value) == 1L) value <- alloc(value, .Call(C_fnrow, x))
     else stop("length(value) must match nrow(x)")
   }
   attr(value, "index_df") <- .Call(C_createeptr, attr(x, "index_df"))
@@ -520,8 +520,8 @@ print.index_df <- function(x, topn = 5, ...) {
     oldClass(x) <- clx
     if(any(clx == "data.table")) return(alc(x)) else return(x)
   }
-  if(length(value) != length(x[[1L]])) {
-    if(length(value) == 1L) value <- alloc(value, length(x[[1L]]))
+  if(length(value) != .Call(C_fnrow, x)) {
+    if(length(value) == 1L) value <- alloc(value, .Call(C_fnrow, x))
     else stop("length(value) must match nrow(x)")
   }
   attr(value, "index_df") <- .Call(C_createeptr, attr(x, "index_df"))

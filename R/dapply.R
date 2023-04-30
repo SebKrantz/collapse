@@ -7,7 +7,7 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE,
     dX <- dim(X)
     if(length(dX) != 2L) stop("dapply cannot handle vectors or higher-dimensional arrays")
     res <- if(rowwl) aplyfun(.Call(Cpp_mrtl, X, FALSE, 0L), FUN, ...) else aplyfun(.Call(Cpp_mctl, X, FALSE, 0L), FUN, ...)
-    lx1 <- length(res[[1L]])
+    lx1 <- .Call(C_fnrow, res)
     if(lx1 == 1L && drop) return(`names<-`(unlist(res, use.names = FALSE), dimnames(X)[[if(rowwl) 1L else 2L]]))
     switch(return[1L], same = {
              ax <- attributes(X)
@@ -26,9 +26,9 @@ dapply <- function(X, FUN, ..., MARGIN = 2, parallel = FALSE,
     ax <- attributes(X)
     attributes(X) <- NULL
     res <- if(rowwl) aplyfun(.Call(Cpp_mrtl, do.call(cbind, X), FALSE, 0L), FUN, ...) else aplyfun(X, FUN, ...)
-    lx1 <- length(res[[1L]])
+    lx1 <- .Call(C_fnrow, res)
     if(lx1 == 1L && drop) return(`names<-`(unlist(res, use.names = FALSE), if(rowwl) charorNULL(ax[["row.names"]]) else ax[["names"]]))
-    dX <- c(length(X[[1L]]), length(X))
+    dX <- c(.Call(C_fnrow, X), length(X))
     switch(return[1L], same = retmatl <- FALSE, matrix = {
       ax <- list(dim = dX, dimnames = list(charorNULL(ax[["row.names"]]), ax[["names"]]))
       retmatl <- TRUE

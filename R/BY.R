@@ -118,11 +118,11 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"
         isDTl <- inherits(x, "data.table")
         ax[["names"]] <- names(res)
         ax[["row.names"]] <- if(use.g.names && !isDTl && length(gn <- GRPnames(g))) gn else
-          .set_row_names(length(res[[1L]]))
+          .set_row_names(.Call(C_fnrow, res))
       } else {
         isDTl <- FALSE
         ax <- list(names = names(res),
-                   row.names = if(use.g.names && length(gn <- GRPnames(g))) gn else .set_row_names(length(res[[1L]])),
+                   row.names = if(use.g.names && length(gn <- GRPnames(g))) gn else .set_row_names(.Call(C_fnrow, res)),
                    class = "data.frame")
       }
       return(condalcSA(res, ax, isDTl))
@@ -188,7 +188,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"
       rn <- if(nrow(res) == n && is.character(rownam) && rownam[1L] != "1" && (reorder || isTRUE(g$ordered[2L]))) rownam else NULL
     } else {
       res <- if(multi) aplyfun(x, copysplmaplfun, g, FUN, asl, mord) else aplyfun(x, copysplaplfun, g, FUN, ...) # isDTL ? -> Not needed as data.tables cannot have character row-names anyway.
-      rn <- if(length(res[[1L]]) != n || !(reorder || isTRUE(g$ordered[2L]))) .set_row_names(length(res[[1L]])) else NULL
+      rn <- if(.Call(C_fnrow, res) != n || !(reorder || isTRUE(g$ordered[2L]))) .set_row_names(.Call(C_fnrow, res)) else NULL
     }
   }
 
@@ -249,7 +249,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]], 
         function(y) .Call(Cpp_mctl, do.call(rbind, lapply(gsplit(y, g), FUN, ...)), TRUE, 0L)
       res <- unlist(aplyfun(.Call(Cpp_mctl, x, TRUE, 0L), splitfun), recursive = FALSE, use.names = TRUE)
       ax <- list(names = names(res),
-                 row.names = if(use.g.names && length(gn <- GRPnames(g))) gn else .set_row_names(length(res[[1L]])),
+                 row.names = if(use.g.names && length(gn <- GRPnames(g))) gn else .set_row_names(.Call(C_fnrow, res)),
                  class = "data.frame")
     } else { # Return a matrix
       splitfun2 <- if(multi) function(y) do.call(rbind, .mapply(FUN, c(list(gsplit(y, g)), asl), mord)) else
@@ -310,7 +310,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]], 
       if(nrow(res) != n || !(reorder || isTRUE(g$ordered[2L]))) dn <- list(NULL, dn[[2L]])
 
     } else { # Return data frame
-      rn <- if(length(res[[1L]]) == n && (reorder || isTRUE(g$ordered[2L]))) dn[[1L]] else NULL
+      rn <- if(.Call(C_fnrow, res) == n && (reorder || isTRUE(g$ordered[2L]))) dn[[1L]] else NULL
     }
 
   }
@@ -328,7 +328,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]], 
     ax[["dimnames"]] <- dn
   } else { # Returning a data.frame
     ax <- list(names = dn[[2L]],
-               row.names = if(length(rn)) rn else .set_row_names(length(res[[1L]])),
+               row.names = if(length(rn)) rn else .set_row_names(.Call(C_fnrow, res)),
                class = "data.frame")
   }
 

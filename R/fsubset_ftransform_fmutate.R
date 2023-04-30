@@ -158,7 +158,7 @@ ftransform_core <- function(X, value) { # value is unclassed, X has all attribut
   namX <- names(X) # !length also detects character(0)
   if(!length(namX) || fanyDuplicated(namX)) stop("All columns of .data have to be uniquely named")
   le <- vlengths(value, FALSE)
-  nr <- length(X[[1L]])
+  nr <- .Call(C_fnrow, X)
   rl <- le == nr # checking if computed values have the right length
   inx <- match(nam, namX) # calling names on a plain list is really fast -> no need to save objects..
   matched <- !is.na(inx)
@@ -232,7 +232,7 @@ ftransformv <- function(.data, vars, FUN, ..., apply = TRUE) {
     oldClass(.data) <- NULL
   }
   le <- vlengths(value, FALSE)
-  nr <- length(.data[[1L]])
+  nr <- .Call(C_fnrow, .data)
   if(allv(le, nr)) .data[vars] <- value else if(allv(le, 1L))
     .data[vars] <- lapply(value, alloc, nr) else {
       if(apply) names(value) <- names(.data)[vars]
@@ -542,7 +542,7 @@ mutate_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) { # g is 
   # return(fcal)
   # return(eval(fcal, c(list(.data_ = .data_), data), setup$ce))
   lv <- vlengths(value, FALSE)
-  nr <- length(data[[1L]])
+  nr <- .Call(C_fnrow, data)
   if(allv(lv, nr)) return(value)
   if(allv(lv, 1L)) return(lapply(value, alloc, nr))
   stop("Without groups, NROW(value) must either be 1 or nrow(.data)")
@@ -687,7 +687,7 @@ fmutate <- function(.data, ..., .keep = "all", .cols = NULL) {
   pe <- parent.frame()
   cld <- oldClass(.data) # This needs to be called cld, because across fetches it from here !!
   oldClass(.data) <- NULL
-  nr <- length(.data[[1L]])
+  nr <- .Call(C_fnrow, .data)
   namdata <- names(.data)
   if(is.null(namdata) || fanyDuplicated(namdata)) stop("All columns of .data have to be uniquely named")
   if(!is.character(.keep)) .keep <- cols2char(.keep, .data, namdata) # allowing .keep to be NULL

@@ -452,7 +452,7 @@ as.data.frame.descr <- function(x, ..., gid = "Group") {
    #   r[sort.int() ind] <- r[ind]
    #   names(r)[ind] <-
    # }
-   attr(r, "row.names") <- .set_row_names(length(r[[1L]]))
+   attr(r, "row.names") <- .set_row_names(.Call(C_fnrow, r))
    class(r) <- "data.frame"
    r
 }
