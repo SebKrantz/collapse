@@ -8,6 +8,8 @@
 
 * `vlengths()` now also works for strings, and is hence a much faster version of both `lengths()` and `nchar()`. Also for atomic vectors the behavior is like `lengths()`, e.g. `vlengths(rnorm(10))` gives `rep(1L, 10)`. 
 
+* In `collap[v/g]()`, the `...` argument is now placed after the `custom` argument instead of after the last argument, in order to better guard against unwanted partial argument matching. In particular, previously the `n` argument passed to `fnth` was partially matched to `na.last`. Thanks @ummel for alerting me of this (#421). 
+
 # collapse 1.9.5
 
 * Using `DATAPTR_RO` to point to R lists because of the use of `ALTLISTS` on R-devel. 

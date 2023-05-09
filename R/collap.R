@@ -85,9 +85,10 @@ applyfuns_internal <- function(data, by, FUN, fFUN, parallel, cores, ...) {
 
 # keep.w toggle w being kept even if passed externally ? -> Also not done with W, B , etc !! -> but they also don't keep by ..
 collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
+                   ...,
                    keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = .op[["sort"]], decreasing = FALSE,
                    na.last = TRUE, return.order = sort, method = "auto", parallel = FALSE, mc.cores = 2L,
-                   return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
+                   return = c("wide","list","long","long_dupl"), give.names = "auto") {
 
   return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
   widel <- return == 1L
@@ -259,8 +260,8 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
                                          fFUN[i], parallel, mc.cores, w = w, ...)[[1L]])
     }
     # Better to do this check afterwards, because custom names may make column names unique...
-    if(autorn) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
-    if(give.names) names(res[[ind]]) <- namFUN
+    if(autorn && widel) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
+    if(!widel || give.names) names(res[[ind]]) <- namFUN
 
     if(keep.col.order && return != 2L) { # && widel
       o <- unlist(custom, use.names = FALSE)
@@ -270,7 +271,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
   # if(parallel) stopCluster(cl)
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
-    if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
+    # if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
       res <- unlist(res, FALSE)
       if(return == 2L) {
         ax[["row.names"]] <- .set_row_names(by[[1L]])
@@ -298,7 +299,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
         }
         if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu)) else c(1L, o + 1L)
       }
-    } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
+    # } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
 
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
@@ -309,10 +310,10 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
 
 # collapv: allows vector input to by and w
-collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
+collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL, ...,
                     keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE, sort = .op[["sort"]], decreasing = FALSE,
                     na.last = TRUE, return.order = sort, method = "auto", parallel = FALSE, mc.cores = 2L,
-                    return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
+                    return = c("wide","list","long","long_dupl"), give.names = "auto") {
 
   return <- switch(return[1L], wide = 1L, list = 2L, long = 3L, long_dupl = 4L, stop("Unknown return output option"))
   widel <- return == 1L
@@ -451,8 +452,8 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
                            fFUN[i], parallel, mc.cores, w = w, ...)[[1L]])
     }
     # Better to do this check afterwards, because custom names may make column names unique...
-    if(autorn) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
-    if(give.names) names(res[[ind]]) <- namFUN
+    if(autorn && widel) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
+    if(!widel || give.names) names(res[[ind]]) <- namFUN
 
     if(keep.col.order && return != 2L) {
       o <- unlist(custom, use.names = FALSE)
@@ -461,7 +462,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   }
 
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
-    if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
+    # if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
       res <- unlist(res, FALSE)
       if(return == 2L) {
         ax[["row.names"]] <- .set_row_names(by[[1L]])
@@ -489,7 +490,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
         }
         if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(!keep.by) NULL else numby, nu, nnu)) else c(1L, o + 1L)
       }
-    } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
+    # } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
 
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
@@ -501,8 +502,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
 
 # For dplyr integration: takes grouped_df as input
 collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
-                    keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE, parallel = FALSE, mc.cores = 2L,
-                    return = c("wide","list","long","long_dupl"), give.names = "auto", ...) {
+                    keep.group_vars = TRUE, ...) {
   by <- GRP.grouped_df(X, return.groups = keep.group_vars, call = FALSE)
   if(is.null(by[[4L]])) keep.group_vars <- FALSE
   if(is.null(custom)) ngn <- attr(X, "names") %!in% by[[5L]] # Note: this always leaves grouping columns on the left still !
@@ -515,15 +515,23 @@ collapg <- function(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN 
       wchar <- if(length(wsym) == 1L) as.character(wsym) else deparse(wsym)
       assign(wchar,  eval(wsym, X, parent.frame())) # needs to be here !! (before subsetting!!)
       if(is.null(custom)) X <- fcolsubset(X, ngn & !windl) # else X <- X # Needed ?? -> nope !!
-      expr <- substitute(collap(X, by, FUN, catFUN, cols, NULL, wFUN, custom,
-                                keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, TRUE, "auto", parallel,
-                                mc.cores, return, give.names, ...))
+      expr <- substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom, ...,
+                                keep.by = keep.group_vars,
+                                sort = TRUE,
+                                decreasing = FALSE,
+                                na.last = TRUE,
+                                return.order = TRUE,
+                                method = "auto"))
       expr[[7L]] <- as.symbol(wchar) # best solution !!
       return(eval(expr))
     }
   }
   if(is.null(custom)) X <- fcolsubset(X, ngn) # else X <- X # because of non-standard eval.. X is "."
-  return(eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom,
-         keep.group_vars, keep.w, keep.col.order, TRUE, FALSE, TRUE, TRUE, "auto", parallel,
-         mc.cores, return, give.names, ...))))
+  return(eval(substitute(collap(X, by, FUN, catFUN, cols, w, wFUN, custom, ...,
+                                keep.by = keep.group_vars,
+                                sort = TRUE,
+                                decreasing = FALSE,
+                                na.last = TRUE,
+                                return.order = TRUE,
+                                method = "auto"))))
 }

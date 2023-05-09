@@ -19,23 +19,21 @@ It performs simple and weighted aggregations, multi-type aggregations automatica
 \usage{
 # Main function: allows formula and data input to `by` and `w` arguments
 collap(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
-       custom = NULL, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
+       custom = NULL, \dots, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
        sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE, return.order = sort,
        method = "auto", parallel = FALSE, mc.cores = 2L,
-       return = c("wide","list","long","long_dupl"), give.names = "auto", \dots)
+       return = c("wide","list","long","long_dupl"), give.names = "auto")
 
 # Programmer function: allows column names and indices input to `by` and `w` arguments
 collapv(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
-        custom = NULL, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
+        custom = NULL, \dots, keep.by = TRUE, keep.w = TRUE, keep.col.order = TRUE,
         sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE, return.order = sort,
         method = "auto", parallel = FALSE, mc.cores = 2L,
-        return = c("wide","list","long","long_dupl"), give.names = "auto", \dots)
+        return = c("wide","list","long","long_dupl"), give.names = "auto")
 
 # Auxiliary function: for grouped data ('grouped_df') input + non-standard evaluation
-collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, custom = NULL,
-        keep.group_vars = TRUE, keep.w = TRUE, keep.col.order = TRUE,
-        parallel = FALSE, mc.cores = 2L,
-        return = c("wide","list","long","long_dupl"), give.names = "auto", \dots)
+collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum,
+        custom = NULL, keep.group_vars = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -57,7 +55,7 @@ collapg(X, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wFUN = fsum, cust
 \item{return}{character. Control the output format when aggregating with multiple functions or performing custom aggregation. "wide" (default) returns a wider data frame with added columns for each additional function. "list" returns a list of data frames - one for each function. "long" adds a column "Function" and row-binds the results from different functions using \code{data.table::rbindlist}. "long.dupl" is a special option for aggregating multi-type data using multiple \code{FUN} but only one \code{catFUN} or vice-versa. In that case the format is long and data aggregated using only one function is duplicated. See Examples.}
 \item{give.names}{logical. Create unique names of aggregated columns by adding a prefix 'FUN.var'. \code{'auto'} will automatically create such prefixes whenever multiple functions are applied to a column. % By default \code{"."} is used as a separator between 'FUN' and 'var'. It is also possible to choose a different separator by specifying \code{give.names = "_"}, for example.
 }
-\item{\dots}{additional arguments passed to all functions supplied to \code{FUN}, \code{catFUN}, \code{wFUN} or \code{custom}. Since v1.9.0 these are also split by groups for non-\link[=fast-statistical-functions]{Fast Statistical Functions}. The behavior of \link[=fast-statistical-functions]{Fast Statistical Functions} with unused arguments is regulated by \code{option("collapse_unused_arg_action")} and defaults to \code{"warning"}. }
+\item{\dots}{additional arguments passed to all functions supplied to \code{FUN}, \code{catFUN}, \code{wFUN} or \code{custom}. Since v1.9.0 these are also split by groups for non-\link[=fast-statistical-functions]{Fast Statistical Functions}. The behavior of \link[=fast-statistical-functions]{Fast Statistical Functions} with unused arguments is regulated by \code{option("collapse_unused_arg_action")} and defaults to \code{"warning"}. \code{collapg} also allows other arguments to \code{collap} except for \code{sort, decreasing, na.last, return.order, method} and \code{keep.by}.}
 }
 
 \details{
