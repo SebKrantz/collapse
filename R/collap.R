@@ -260,8 +260,8 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
                                          fFUN[i], parallel, mc.cores, w = w, ...)[[1L]])
     }
     # Better to do this check afterwards, because custom names may make column names unique...
-    if(autorn) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
-    if(give.names) names(res[[ind]]) <- namFUN
+    if(autorn && widel) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
+    if(!widel || give.names) names(res[[ind]]) <- namFUN
 
     if(keep.col.order && return != 2L) { # && widel
       o <- unlist(custom, use.names = FALSE)
@@ -452,8 +452,8 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
                            fFUN[i], parallel, mc.cores, w = w, ...)[[1L]])
     }
     # Better to do this check afterwards, because custom names may make column names unique...
-    if(autorn) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
-    if(give.names) names(res[[ind]]) <- namFUN
+    if(autorn && widel) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
+    if(!widel || give.names) names(res[[ind]]) <- namFUN
 
     if(keep.col.order && return != 2L) {
       o <- unlist(custom, use.names = FALSE)
