@@ -271,7 +271,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
   # if(parallel) stopCluster(cl)
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
-    if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
+    # if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
       res <- unlist(res, FALSE)
       if(return == 2L) {
         ax[["row.names"]] <- .set_row_names(by[[1L]])
@@ -299,7 +299,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
         }
         if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu)) else c(1L, o + 1L)
       }
-    } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
+    # } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
 
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
@@ -462,7 +462,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
   }
 
   if(widel) res <- unlist(unlist(res, FALSE), FALSE) else {
-    if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
+    # if(length(FUN) > 1L || length(catFUN) > 1L || length(custom) > 1L) {
       res <- unlist(res, FALSE)
       if(return == 2L) {
         ax[["row.names"]] <- .set_row_names(by[[1L]])
@@ -490,7 +490,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
         }
         if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(!keep.by) NULL else numby, nu, nnu)) else c(1L, o + 1L)
       }
-    } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
+    # } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
 
   if(keep.col.order) .Call(C_setcolorder, res, o) # data.table:::Csetcolorder
