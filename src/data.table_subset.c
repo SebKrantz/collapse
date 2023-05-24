@@ -607,10 +607,13 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
 SEXP subsetVector(SEXP x, SEXP idx, SEXP checkidx) { // idx is 1-based passed from R level
   bool anyNA = false; //, orderedSubset=false;
   int nprotect=0;
-  if (isNull(x))
-    error("Internal error: NULL can not be subset. It is invalid for a data.table to contain a NULL column.");      // # nocov
-  if (asLogical(checkidx) && check_idx(idx, length(x), &anyNA) != NULL) // , &orderedSubset
-    error("Internal error: CsubsetVector is internal-use-only but has received negatives, zeros or out-of-range");  // # nocov
+  if (isNull(x)) error("Internal error: NULL can not be subset. It is invalid for a data.table to contain a NULL column.");      // # nocov
+  if (asLogical(checkidx) && check_idx(idx, length(x), &anyNA) != NULL) { // , &orderedSubset
+    SEXP max = PROTECT(ScalarInteger(length(x))); nprotect++;
+    idx = PROTECT(convertNegAndZeroIdx(idx, max, ScalarLogical(TRUE))); nprotect++;
+    const char *err = check_idx(idx, length(x), &anyNA); // , &orderedSubset
+    if (err != NULL) error(err);
+  }
   SEXP ans = PROTECT(allocVector(TYPEOF(x), length(idx))); nprotect++;
   copyMostAttrib(x, ans);
   subsetVectorRaw(ans, x, idx, anyNA);

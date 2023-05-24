@@ -37,7 +37,7 @@ ss(x, i, j, check = TRUE)
   \item{.x}{object to be subsetted according to different methods.}
   \item{x}{a data frame / list, matrix or vector/array (only \code{i}).}
   \item{subset}{logical expression indicating elements or rows to keep:
-    missing values are taken as \code{FALSE}. The default, matrix and pseries methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames; the data frame method also supports logical vectors or row-indices). }
+    missing values are taken as \code{FALSE}. The default, matrix and pseries methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames). }
   \item{\dots}{For the matrix or data frame method: multiple comma-separated expressions indicating columns to select. Otherwise: further arguments to be passed to or from other methods.}
   \item{drop}{passed on to \code{[} indexing operator. Only available for the matrix method.}
   \item{i}{positive or negative row-indices or a logical vector to subset the rows of \code{x}.}
@@ -51,7 +51,7 @@ ss(x, i, j, check = TRUE)
 
   For ordinary vectors, \code{subset} can be integer or logical, subsetting is done in C and more efficient than \code{[} for large vectors.
 
-  For matrices the implementation is all base-R but slightly more efficient and more versatile than \code{\link{subset.matrix}}. Thus it is possible to \code{subset} matrix rows using logical or integer vectors, or character vectors matching rownames. The \code{drop} argument is passed on to the indexing method for matrices.
+  For matrices the implementation is all base-R but slightly more efficient and more versatile than \code{\link{subset.matrix}}. Thus it is possible to \code{subset} matrix rows using logical or integer vectors, or character vectors matching rownames. The \code{drop} argument is passed on to the \code{[} method for matrices.
 
   For both matrices and data frames, the \code{\dots} argument can be used to subset columns, and is evaluated in a non-standard way. Thus it can support vectors of column names, indices or logical vectors, but also multiple comma separated column names passed without quotes, each of which may also be replaced by a sequence of columns i.e. \code{col1:coln}, and new column names may be assigned e.g. \code{fsubset(data, col1 > 20, newname =  col2, col3:col6)} (see examples).
 
