@@ -54,7 +54,7 @@ double fsum_double_omp_impl(const double *restrict px, const int narm, const int
     if(j != l) {
       #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
       for(int i = j; i < l; ++i) sum += NISNAN(px[i]) ? px[i] : 0.0;
-    } else if(narm == 2) sum = 0;
+    } else if(narm == 2) sum = 0.0;
   } else {
     sum = 0;
     #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
@@ -137,7 +137,7 @@ double fsum_weights_omp_impl(const double *restrict px, const double *restrict p
       sum = px[j] * pw[j];
       #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
       for(int i = j+1; i < l; ++i) sum += (NISNAN(px[i]) && NISNAN(pw[i])) ? px[i] * pw[i] : 0.0;
-    } else sum = narm == 1 ? NA_REAL : 0;
+    } else sum = narm == 1 ? NA_REAL : 0.0;
   } else {
     sum = 0;
     #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
