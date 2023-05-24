@@ -105,7 +105,7 @@ double fmean_weights_omp_impl(const double *restrict px, const double *restrict 
   if(narm) {
     #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,sumw)
     for(int i = 0; i < l; ++i) {
-      int tmp = NISNAN(px[i]) && NISNAN(pw[i]);
+      int tmp = NISNAN(px[i]) + NISNAN(pw[i]) == 2; // && doesn't vectorize for some reason
       mean += tmp ? px[i] * pw[i] : 0.0;
       sumw += tmp ? pw[i] : 0.0;
     }
