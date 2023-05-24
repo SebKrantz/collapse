@@ -248,17 +248,26 @@ static const char *check_idx(SEXP idx, int max, bool *anyNA_out) // , bool *orde
 // single cache efficient sweep with prefetch, so very low priority to go parallel
 {
   if (!isInteger(idx)) error("Internal error. 'idx' is type '%s' not 'integer'", type2char(TYPEOF(idx))); // # nocov
-    bool anyNA = false; // anyLess=false,
+    bool anyNA = false, stop = false; // anyLess=false,
   // int last = INT32_MIN;
   int *idxp = INTEGER(idx), n = LENGTH(idx);
-  for (int i = 0; i != n; ++i) {
+
+  #pragma omp simd reduction(|:stop,anyNA)
+  for (int i = 0; i < n; ++i) {
     int elem = idxp[i];
-    if (elem<=0 && elem!=NA_INTEGER) return "Internal inefficiency: idx contains negatives or zeros. Should have been dealt with earlier.";  // e.g. test 762  (TODO-fix)
-    if (elem>max) return "Internal inefficiency: idx contains an item out-of-range. Should have been dealt with earlier.";                   // e.g. test 1639.64
-    anyNA |= elem==NA_INTEGER;
-    // anyLess |= elem<last;
-    // last = elem;
+    stop |= (elem<1 && elem!=NA_INTEGER) || elem>max;
+    anyNA |= elem == NA_INTEGER;
   }
+  if(stop) return "Internal inefficiency: idx contains an item out-of-range. Should have been dealt with earlier.";
+  // previous solution: slower
+  // for (int i = 0; i != n; ++i) {
+  //   int elem = idxp[i];
+  //   if (elem<=0 && elem!=NA_INTEGER) return "Internal inefficiency: idx contains negatives or zeros. Should have been dealt with earlier.";  // e.g. test 762  (TODO-fix)
+  //   if (elem>max) return "Internal inefficiency: idx contains an item out-of-range. Should have been dealt with earlier.";                   // e.g. test 1639.64
+  //   anyNA |= elem==NA_INTEGER;
+  //   // anyLess |= elem<last;
+  //   // last = elem;
+  // }
   *anyNA_out = anyNA;
   // *orderedSubset_out = !anyLess; // for the purpose of ordered keys elem==last is allowed
   return NULL;
