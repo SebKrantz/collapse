@@ -20,7 +20,7 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -71,19 +71,19 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">qF</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>,
-   keep.attr <span class="op">=</span> <span class="cn">TRUE</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
-
-<span class="fu">qG</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>,
-   return.groups <span class="op">=</span> <span class="cn">FALSE</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
-
-<span class="fu">is_qG</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="fu">as_factor_qG</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu">finteraction</span><span class="op">(</span><span class="va">...</span>, factor <span class="op">=</span> <span class="cn">TRUE</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, sort <span class="op">=</span> <span class="va">factor</span> <span class="op">&amp;&amp;</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>,
-             method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
-<span class="fu">itn</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co"># Shorthand for finteraction</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qF</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>   keep.attr <span class="op">=</span> <span class="cn">TRUE</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">qG</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>   return.groups <span class="op">=</span> <span class="cn">FALSE</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">is_qG</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">as_factor_qG</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">finteraction</span><span class="op">(</span><span class="va">...</span>, factor <span class="op">=</span> <span class="cn">TRUE</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, sort <span class="op">=</span> <span class="va">factor</span> <span class="op">&amp;&amp;</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>             method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span><span class="fu">itn</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co"># Shorthand for finteraction</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -147,32 +147,32 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">cylF</span> <span class="op">&lt;-</span> <span class="fu">qF</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>     <span class="co"># Factor from atomic vector</span></span>
-<span class="r-in"><span class="va">cylG</span> <span class="op">&lt;-</span> <span class="fu">qG</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>     <span class="co"># Quick-group from atomic vector</span></span>
-<span class="r-in"><span class="va">cylG</span>                       <span class="co"># See the simple structure of this object</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">cylF</span> <span class="op">&lt;-</span> <span class="fu">qF</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>     <span class="co"># Factor from atomic vector</span></span></span>
+<span class="r-in"><span><span class="va">cylG</span> <span class="op">&lt;-</span> <span class="fu">qG</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>     <span class="co"># Quick-group from atomic vector</span></span></span>
+<span class="r-in"><span><span class="va">cylG</span>                       <span class="co"># See the simple structure of this object</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 2 2 1 2 3 2 3 1 1 2 2 3 3 3 3 3 3 1 1 1 1 3 3 3 3 1 1 1 3 2 3 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"N.groups")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "qG"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">cf</span>  <span class="op">&lt;-</span> <span class="fu">qF</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>  <span class="co"># Bigger data</span></span>
-<span class="r-in"><span class="va">cf2</span> <span class="op">&lt;-</span> <span class="fu">qF</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, na.exclude <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># With na.included class</span></span>
-<span class="r-in"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co"># cf2 is faster in grouped operations because no missing value check is performed</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf</span><span class="op">)</span>, <span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf2</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cf</span>  <span class="op">&lt;-</span> <span class="fu">qF</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>  <span class="co"># Bigger data</span></span></span>
+<span class="r-in"><span><span class="va">cf2</span> <span class="op">&lt;-</span> <span class="fu">qF</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, na.exclude <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># With na.included class</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co"># cf2 is faster in grouped operations because no missing value check is performed</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf</span><span class="op">)</span>, <span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min      lq     mean  median       uq      max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 88.765 96.1450 136.6797 99.7735 124.9270 1300.110   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 83.968 90.5485 107.2995 93.0905 113.4675  277.242   100</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>  <span class="co"># Interacting two variables (can be factors)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min      lq     mean median      uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 89.585 90.3230 91.58703 90.487 90.8970 127.592   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 84.788 85.4235 86.64243 85.649 86.2845  95.448   100</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>  <span class="co"># Interacting two variables (can be factors)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0 6.0 4.1 6.1 8.0 6.1 8.0 4.1 4.1 6.1 6.1 8.0 8.0 8.0 8.0 8.0 8.0 4.1 4.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [20] 4.1 4.1 8.0 8.0 8.0 8.0 4.1 4.0 4.1 8.0 6.0 8.0 4.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Levels: 4.0 4.1 6.0 6.1 8.0</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>           <span class="co"># A more crude example..</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>           <span class="co"># A more crude example..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 21.6.160.110.3.9.2.62.16.46.0.1.4.4    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2] 21.6.160.110.3.9.2.875.17.02.0.1.4.4   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3] 22.8.4.108.93.3.85.2.32.18.61.1.1.4.1  </span>
@@ -180,20 +180,20 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5] 18.7.8.360.175.3.15.3.44.17.02.0.0.3.2 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6] 18.1.6.225.105.2.76.3.46.20.22.1.0.3.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 32 Levels: 10.4.8.460.215.3.5.424.17.82.0.0.3.4 ...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span>, factor <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># Returns 'qG', by default unsorted</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span>, factor <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># Returns 'qG', by default unsorted</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1 1 2 3 4 3 4 2 2 3 3 4 4 4 4 4 4 2 2 2 2 4 4 4 4 2 5 2 4 1 4 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"N.groups")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "qG"          "na.included"</span>
-<span class="r-in"><span class="fu"><a href="group.html">group</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"vs"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="co"># Same thing. Use whatever syntax is more convenient</span></span>
+<span class="r-in"><span><span class="fu"><a href="group.html">group</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"vs"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="co"># Same thing. Use whatever syntax is more convenient</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1 1 2 3 4 3 4 2 2 3 3 4 4 4 4 4 4 2 2 2 2 4 4 4 4 2 5 2 4 1 4 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"N.groups")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "qG"          "na.included"</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -208,7 +208,7 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

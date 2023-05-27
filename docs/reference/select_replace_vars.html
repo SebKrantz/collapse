@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,46 +65,46 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co">## Select and replace variables, analgous to dplyr::select but significantly faster</span>
-<span class="fu">fselect</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>
-<span class="fu">fselect</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-<span class="fu">slt</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>   <span class="co"># Shorthand for fselect</span>
-<span class="fu">slt</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>            <span class="co"># Shorthand for fselect&lt;-</span>
-
-<span class="co">## Select and replace columns by names, indices, logical vectors,</span>
-<span class="co">## regular expressions or using functions to identify columns</span>
-
-<span class="fu">get_vars</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, regex <span class="op">=</span> <span class="cn">FALSE</span>, rename <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-      <span class="fu">gv</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, <span class="va">...</span><span class="op">)</span>   <span class="co"># Shorthand for get_vars</span>
-     <span class="fu">gvr</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, <span class="va">...</span><span class="op">)</span>   <span class="co"># Shorthand for get_vars(..., regex = TRUE)</span>
-
-<span class="fu">get_vars</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, regex <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-      <span class="fu">gv</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>           <span class="co"># Shorthand for get_vars&lt;-</span>
-     <span class="fu">gvr</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>           <span class="co"># Shorthand for get_vars&lt;-(..., regex = TRUE)</span>
-
-<span class="co">## Add columns at any position within a data.frame</span>
-
-<span class="fu">add_vars</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span>
-<span class="fu">add_vars</span><span class="op">(</span><span class="va">x</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-      <span class="fu">av</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span>             <span class="co"># Shorthand for add_vars</span>
-      <span class="fu">av</span><span class="op">(</span><span class="va">x</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>         <span class="co"># Shorthand for add_vars&lt;-</span>
-
-<span class="co">## Select and replace columns by data type</span>
-
-<span class="fu">num_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>
-<span class="fu">num_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-      <span class="fu">nv</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>       <span class="co"># Shorthand for num_vars</span>
-      <span class="fu">nv</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>               <span class="co"># Shorthand for num_vars&lt;-</span>
-<span class="fu">cat_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>       <span class="co"># Categorical variables, see is_categorical</span>
-<span class="fu">cat_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-<span class="fu">char_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>
-<span class="fu">char_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-<span class="fu">fact_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>
-<span class="fu">fact_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-<span class="fu">logi_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>
-<span class="fu">logi_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-<span class="fu">date_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>      <span class="co"># See is_date</span>
-<span class="fu">date_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co">## Select and replace variables, analgous to dplyr::select but significantly faster</span></span>
+<span><span class="fu">fselect</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="fu">fselect</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">slt</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>   <span class="co"># Shorthand for fselect</span></span>
+<span><span class="fu">slt</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>            <span class="co"># Shorthand for fselect&lt;-</span></span>
+<span></span>
+<span><span class="co">## Select and replace columns by names, indices, logical vectors,</span></span>
+<span><span class="co">## regular expressions or using functions to identify columns</span></span>
+<span></span>
+<span><span class="fu">get_vars</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, regex <span class="op">=</span> <span class="cn">FALSE</span>, rename <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>      <span class="fu">gv</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, <span class="va">...</span><span class="op">)</span>   <span class="co"># Shorthand for get_vars</span></span>
+<span>     <span class="fu">gvr</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, return <span class="op">=</span> <span class="st">"data"</span>, <span class="va">...</span><span class="op">)</span>   <span class="co"># Shorthand for get_vars(..., regex = TRUE)</span></span>
+<span></span>
+<span><span class="fu">get_vars</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, regex <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span>      <span class="fu">gv</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>           <span class="co"># Shorthand for get_vars&lt;-</span></span>
+<span>     <span class="fu">gvr</span><span class="op">(</span><span class="va">x</span>, <span class="va">vars</span>, <span class="va">...</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>           <span class="co"># Shorthand for get_vars&lt;-(..., regex = TRUE)</span></span>
+<span></span>
+<span><span class="co">## Add columns at any position within a data.frame</span></span>
+<span></span>
+<span><span class="fu">add_vars</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span></span>
+<span><span class="fu">add_vars</span><span class="op">(</span><span class="va">x</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span>      <span class="fu">av</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span>             <span class="co"># Shorthand for add_vars</span></span>
+<span>      <span class="fu">av</span><span class="op">(</span><span class="va">x</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>         <span class="co"># Shorthand for add_vars&lt;-</span></span>
+<span></span>
+<span><span class="co">## Select and replace columns by data type</span></span>
+<span></span>
+<span><span class="fu">num_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="fu">num_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span>      <span class="fu">nv</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>       <span class="co"># Shorthand for num_vars</span></span>
+<span>      <span class="fu">nv</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>               <span class="co"># Shorthand for num_vars&lt;-</span></span>
+<span><span class="fu">cat_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>       <span class="co"># Categorical variables, see is_categorical</span></span>
+<span><span class="fu">cat_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">char_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="fu">char_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">fact_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="fu">fact_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">logi_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
+<span><span class="fu">logi_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">date_vars</span><span class="op">(</span><span class="va">x</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span>      <span class="co"># See is_date</span></span>
+<span><span class="fu">date_vars</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -155,8 +155,8 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Wold Development Data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, Country <span class="op">=</span> <span class="va">country</span>, Year <span class="op">=</span> <span class="va">year</span>, <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="co"># Fast dplyr-like selecting</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Wold Development Data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, Country <span class="op">=</span> <span class="va">country</span>, Year <span class="op">=</span> <span class="va">year</span>, <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="co"># Fast dplyr-like selecting</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Country Year       ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960 116769997</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961 232080002</span>
@@ -164,7 +164,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963 237720001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964 295920013</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965 341839996</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">-</span><span class="va">country</span>, <span class="op">-</span><span class="va">year</span>, <span class="op">-</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">-</span><span class="va">country</span>, <span class="op">-</span><span class="va">year</span>, <span class="op">-</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c       date decade     region     income  OECD LIFEEX GINI       ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG 1961-01-01   1960 South Asia Low income FALSE 32.446   NA 116769997</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG 1962-01-01   1960 South Asia Low income FALSE 32.962   NA 232080002</span>
@@ -179,7 +179,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 9744781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 9956320</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country year PCGDP LIFEEX GINI       ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960    NA 32.446   NA 116769997</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961    NA 32.962   NA 232080002</span>
@@ -187,7 +187,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963    NA 33.971   NA 237720001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964    NA 34.463   NA 295920013</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965    NA 34.948   NA 341839996</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">-</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">-</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD     POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE 8996973</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE 9169410</span>
@@ -195,8 +195,8 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE 9744781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan   AFG 1966-01-01 1965   1960 South Asia Low income FALSE 9956320</span>
-<span class="r-in"><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>          <span class="co"># Efficient deleting</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fselect</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>          <span class="co"># Efficient deleting</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c       date decade     region     income  OECD     POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG 1961-01-01   1960 South Asia Low income FALSE 8996973</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG 1962-01-01   1960 South Asia Low income FALSE 9169410</span>
@@ -204,9 +204,9 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG 1964-01-01   1960 South Asia Low income FALSE 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG 1965-01-01   1960 South Asia Low income FALSE 9744781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG 1966-01-01   1960 South Asia Low income FALSE 9956320</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">num_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span>                                     <span class="co"># Select numeric variables</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">num_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span>                                     <span class="co"># Select numeric variables</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   year decade PCGDP LIFEEX GINI       ODA     POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1960   1960    NA 32.446   NA 116769997 8996973</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 1961   1960    NA 32.962   NA 232080002 9169410</span>
@@ -214,7 +214,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 1963   1960    NA 33.971   NA 237720001 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 1964   1960    NA 34.463   NA 295920013 9744781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 1965   1960    NA 34.948   NA 341839996 9956320</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">cat_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span>                                     <span class="co"># Select categorical (non-numeric) vars</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">cat_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span>                                     <span class="co"># Select categorical (non-numeric) vars</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date     region     income  OECD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 South Asia Low income FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 South Asia Low income FALSE</span>
@@ -222,7 +222,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan   AFG 1964-01-01 South Asia Low income FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan   AFG 1965-01-01 South Asia Low income FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan   AFG 1966-01-01 South Asia Low income FALSE</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">is_categorical</span><span class="op">)</span><span class="op">)</span>                     <span class="co"># Same thing</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">is_categorical</span><span class="op">)</span><span class="op">)</span>                     <span class="co"># Same thing</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date     region     income  OECD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 South Asia Low income FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 South Asia Low income FALSE</span>
@@ -230,11 +230,11 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan   AFG 1964-01-01 South Asia Low income FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan   AFG 1965-01-01 South Asia Low income FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan   AFG 1966-01-01 South Asia Low income FALSE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">num_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">num_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>                       <span class="co"># Replace Numeric Variables by themselves</span></span>
-<span class="r-in"><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>,<span class="va">is.numeric</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>,<span class="va">is.numeric</span><span class="op">)</span> <span class="co"># Same thing</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span>                               <span class="co"># Select columns 9 through 12, 2x faster</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">num_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">num_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>                       <span class="co"># Replace Numeric Variables by themselves</span></span></span>
+<span class="r-in"><span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>,<span class="va">is.numeric</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>,<span class="va">is.numeric</span><span class="op">)</span> <span class="co"># Same thing</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span>                               <span class="co"># Select columns 9 through 12, 2x faster</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP LIFEEX GINI       ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA 32.446   NA 116769997</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA 32.962   NA 232080002</span>
@@ -242,7 +242,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    NA 33.971   NA 237720001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA 34.463   NA 295920013</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    NA 34.948   NA 341839996</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">-</span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>                            <span class="co"># All except columns 9 through 12</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">-</span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>                            <span class="co"># All except columns 9 through 12</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD     POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE 8996973</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE 9169410</span>
@@ -250,7 +250,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan   AFG 1964-01-01 1963   1960 South Asia Low income FALSE 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan   AFG 1965-01-01 1964   1960 South Asia Low income FALSE 9744781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan   AFG 1966-01-01 1965   1960 South Asia Low income FALSE 9956320</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PCGDP"</span>,<span class="st">"LIFEEX"</span>,<span class="st">"GINI"</span>,<span class="st">"ODA"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Select using column names</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PCGDP"</span>,<span class="st">"LIFEEX"</span>,<span class="st">"GINI"</span>,<span class="st">"ODA"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Select using column names</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP LIFEEX GINI       ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA 32.446   NA 116769997</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA 32.962   NA 232080002</span>
@@ -258,7 +258,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    NA 33.971   NA 237720001</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA 34.463   NA 295920013</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    NA 34.948   NA 341839996</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="st">"[[:upper:]]"</span>, regex <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>        <span class="co"># Same thing: match upper-case var. names</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="st">"[[:upper:]]"</span>, regex <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>        <span class="co"># Same thing: match upper-case var. names</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    OECD PCGDP LIFEEX GINI       ODA     POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 FALSE    NA 32.446   NA 116769997 8996973</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 FALSE    NA 32.962   NA 232080002 9169410</span>
@@ -266,7 +266,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 FALSE    NA 33.971   NA 237720001 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 FALSE    NA 34.463   NA 295920013 9744781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 FALSE    NA 34.948   NA 341839996 9956320</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">gvr</span><span class="op">(</span><span class="va">wlddev</span>, <span class="st">"[[:upper:]]"</span><span class="op">)</span><span class="op">)</span>                           <span class="co"># Same thing</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">gvr</span><span class="op">(</span><span class="va">wlddev</span>, <span class="st">"[[:upper:]]"</span><span class="op">)</span><span class="op">)</span>                           <span class="co"># Same thing</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    OECD PCGDP LIFEEX GINI       ODA     POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 FALSE    NA 32.446   NA 116769997 8996973</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 FALSE    NA 32.962   NA 232080002 9169410</span>
@@ -274,10 +274,10 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 FALSE    NA 33.971   NA 237720001 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 FALSE    NA 34.463   NA 295920013 9744781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 FALSE    NA 34.948   NA 341839996 9956320</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>           <span class="co"># 9x faster wlddev[9:12] &lt;- wlddev[9:12]</span></span>
-<span class="r-in"><span class="fu">add_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu">gv</span><span class="op">(</span><span class="va">wlddev</span>,<span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>     <span class="co"># Add Standardized columns 9 through 12</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>                                               <span class="co"># gv and av are shortcuts</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>           <span class="co"># 9x faster wlddev[9:12] &lt;- wlddev[9:12]</span></span></span>
+<span class="r-in"><span><span class="fu">add_vars</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu">gv</span><span class="op">(</span><span class="va">wlddev</span>,<span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>     <span class="co"># Add Standardized columns 9 through 12</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>                                               <span class="co"># gv and av are shortcuts</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
@@ -289,10 +289,10 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 33.471   NA 112839996 9351441        NA  -1.552023       NA -0.6517082</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 33.971   NA 237720001 9543205        NA  -1.502678       NA -0.5925063</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">14</span><span class="op">:</span><span class="fl">17</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>                            <span class="co"># Efficient Deleting added columns again</span></span>
-<span class="r-in"><span class="fu">av</span><span class="op">(</span><span class="va">wlddev</span>, <span class="st">"front"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu">gv</span><span class="op">(</span><span class="va">wlddev</span>,<span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>  <span class="co"># Again adding in Front</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">14</span><span class="op">:</span><span class="fl">17</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>                            <span class="co"># Efficient Deleting added columns again</span></span></span>
+<span class="r-in"><span><span class="fu">av</span><span class="op">(</span><span class="va">wlddev</span>, <span class="st">"front"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu">gv</span><span class="op">(</span><span class="va">wlddev</span>,<span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>  <span class="co"># Again adding in Front</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   STD.PCGDP STD.LIFEEX STD.GINI    STD.ODA     country iso3c       date year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA  -1.653181       NA -0.6498451 Afghanistan   AFG 1961-01-01 1960</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2        NA  -1.602256       NA -0.5951801 Afghanistan   AFG 1962-01-01 1961</span>
@@ -304,10 +304,10 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   1960 South Asia Low income FALSE    NA 33.471   NA 112839996 9351441</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   1960 South Asia Low income FALSE    NA 33.971   NA 237720001 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
-<span class="r-in"><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>                              <span class="co"># Deleting</span></span>
-<span class="r-in"><span class="fu">av</span><span class="op">(</span><span class="va">wlddev</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">12</span>,<span class="fl">14</span>,<span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">wlddev</span>,<span class="op">~</span><span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, <span class="co"># Adding next to original variables</span></span>
-<span class="r-in">                               keep.by <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>                              <span class="co"># Deleting</span></span></span>
+<span class="r-in"><span><span class="fu">av</span><span class="op">(</span><span class="va">wlddev</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">12</span>,<span class="fl">14</span>,<span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">wlddev</span>,<span class="op">~</span><span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, <span class="co"># Adding next to original variables</span></span></span>
+<span class="r-in"><span>                               keep.by <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
@@ -319,9 +319,9 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3      NA 33.471 -15.72617   NA     NA 112839996 -1374708502 9351441</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4      NA 33.971 -15.22617   NA     NA 237720001 -1249828497 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
-<span class="r-in"><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">12</span>,<span class="fl">14</span>,<span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>                   <span class="co"># Deleting</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">wlddev</span>, new <span class="op">=</span> <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>                  <span class="co"># Can also add columns like this</span></span>
+<span class="r-in"><span><span class="fu">get_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>,<span class="fl">12</span>,<span class="fl">14</span>,<span class="fl">16</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="cn">NULL</span>                   <span class="co"># Deleting</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">wlddev</span>, new <span class="op">=</span> <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>                  <span class="co"># Can also add columns like this</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
@@ -335,7 +335,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 33.971   NA 237720001 9543205  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 34.463   NA 295920013 9744781  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu">nv</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span>, new <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>   <span class="co"># etc...</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu">nv</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span>, new <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>   <span class="co"># etc...</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
@@ -349,8 +349,8 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       NA -0.2562874 -0.1476348  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3       NA -0.3935480 -0.1458523  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span>, mpg <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>      <span class="co"># add_vars does not check names!</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">add_vars</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span>, mpg <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>      <span class="co"># add_vars does not check names!</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               mpg cyl disp  hp drat    wt  qsec vs am gear carb mpg cyl disp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4      21   6  160 110  3.9 2.620 16.46  0  1    4    4  21   6  160</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag  21   6  160 110  3.9 2.875 17.02  0  1    4    4  21   6  160</span>
@@ -374,7 +374,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

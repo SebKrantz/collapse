@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,36 +65,36 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-<span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fmax</span><span class="op">(</span><span class="va">x</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fmin</span><span class="op">(</span><span class="va">x</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -155,46 +155,46 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## default vector method</span></span>
-<span class="r-in"><span class="va">mpg</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span></span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Maximum value</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## default vector method</span></span></span>
+<span class="r-in"><span><span class="va">mpg</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span></span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Maximum value</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 33.9</span>
-<span class="r-in"><span class="fu">fmin</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Minimum value (all examples below use fmax but apply to fmin)</span></span>
+<span class="r-in"><span><span class="fu">fmin</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Minimum value (all examples below use fmax but apply to fmin)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 10.4</span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>              <span class="co"># Simple transformation: Take percentage of maximum value</span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>              <span class="co"># Simple transformation: Take percentage of maximum value</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  61.94690  61.94690  67.25664  63.12684  55.16224  53.39233  42.18289</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8]  71.97640  67.25664  56.63717  52.50737  48.37758  51.03245  44.83776</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15]  30.67847  30.67847  43.36283  95.57522  89.67552 100.00000  63.42183</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [22]  45.72271  44.83776  39.23304  56.63717  80.53097  76.69617  89.67552</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [29]  46.60767  58.11209  44.24779  63.12684</span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>             <span class="co"># Grouped maximum value</span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>             <span class="co"># Grouped maximum value</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4    6    8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 33.9 21.4 19.2 </span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>       <span class="co"># More groups..</span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>       <span class="co"># More groups..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  26.0  24.4  33.9  21.0  21.4  19.2  15.8 </span>
-<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span> <span class="co"># Precomputing groups gives more speed !</span></span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span> <span class="co"># Precomputing groups gives more speed !</span></span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  26.0  24.4  33.9  21.0  21.4  19.2  15.8 </span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>           <span class="co"># Groupwise percentage of maximum value</span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>           <span class="co"># Groupwise percentage of maximum value</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 100.00000 100.00000  67.25664 100.00000  97.39583  84.57944  74.47917</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 100.00000  93.44262  89.71963  83.17757  85.41667  90.10417  79.16667</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15]  54.16667  54.16667  76.56250  95.57522  89.67552 100.00000  88.11475</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [22]  80.72917  79.16667  69.27083 100.00000  80.53097 100.00000  89.67552</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [29] 100.00000  93.80952  94.93671  63.12684</span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>     <span class="co"># Groupwise replace by maximum value</span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>     <span class="co"># Groupwise replace by maximum value</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 21.0 21.0 33.9 21.4 19.2 21.4 19.2 24.4 24.4 21.4 21.4 19.2 19.2 19.2 19.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [16] 19.2 19.2 33.9 33.9 33.9 24.4 19.2 19.2 19.2 19.2 33.9 26.0 33.9 15.8 21.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31] 15.8 33.9</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## data.frame method</span></span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## data.frame method</span></span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     mpg     cyl    disp      hp    drat      wt    qsec      vs      am    gear </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  33.900   8.000 472.000 335.000   4.930   5.424  22.900   1.000   1.000   5.000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   8.000 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fmax</span><span class="op">(</span><span class="va">mtcars</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fmax</span><span class="op">(</span><span class="va">mtcars</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg cyl     disp       hp     drat       wt     qsec  vs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         61.94690  75 33.89831 32.83582 79.10751 48.30383 71.87773   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     61.94690  75 33.89831 32.83582 79.10751 53.00516 74.32314   0</span>
@@ -209,7 +209,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      0   60 12.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   0   60 25.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             0   60 12.5</span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 24.4   4 146.7  97 3.92 3.190 22.90  1  0    4    2</span>
@@ -218,7 +218,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 21.4   6 258.0 123 3.92 3.460 20.22  1  0    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 19.2   8 472.0 245 3.73 5.424 18.00  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># No row-names generated</span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># No row-names generated</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 24.4   4 146.7  97 3.92 3.190 22.90  1  0    4    2</span>
@@ -227,15 +227,15 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 21.4   6 258.0 123 3.92 3.460 20.22  1  0    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 19.2   8 472.0 245 3.73 5.424 18.00  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## matrix method</span></span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## matrix method</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     mpg     cyl    disp      hp    drat      wt    qsec      vs      am    gear </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  33.900   8.000 472.000 335.000   4.930   5.424  22.900   1.000   1.000   5.000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   8.000 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fmax</span><span class="op">(</span><span class="va">m</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fmax</span><span class="op">(</span><span class="va">m</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg cyl     disp       hp     drat       wt     qsec  vs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         61.94690  75 33.89831 32.83582 79.10751 48.30383 71.87773   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     61.94690  75 33.89831 32.83582 79.10751 53.00516 74.32314   0</span>
@@ -250,7 +250,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      0   60 12.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   0   60 25.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             0   60 12.5</span>
-<span class="r-in"><span class="fu">fmax</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span> <span class="co"># etc..</span></span>
+<span class="r-in"><span><span class="fu">fmax</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span> <span class="co"># etc..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 24.4   4 146.7  97 3.92 3.190 22.90  1  0    4    2</span>
@@ -259,10 +259,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 21.4   6 258.0 123 3.92 3.460 20.22  1  0    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 19.2   8 472.0 245 3.73 5.424 18.00  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmax</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmax</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -273,7 +273,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0  21.4  258    123  3.92  3.46  20.2     4     4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0  19.2  472    245  3.73  5.42  18       3     4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1  15.8  351    335  4.22  3.57  14.6     5     8</span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmax</span><span class="op">(</span><span class="st">"%"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmax</span><span class="op">(</span><span class="st">"%"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   cyl, vs, am [7]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb</span>
@@ -288,8 +288,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     4     1     0 100   100    63.9  94.1 100    87.3   100 100  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     4     1     0  93.4  96.0  97.9 100    98.7 100     100 100  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     6     1     0  89.7  65.0 100   100    99.4  90.5   100 100  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22 more rows</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmax</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22 more rows</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmax</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Adding missing grouping variables: `cyl`, `vs`, `am`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 4</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am   mpg</span>
@@ -301,7 +301,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0  21.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0  19.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1  15.8</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -316,7 +316,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

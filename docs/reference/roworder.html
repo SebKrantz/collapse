@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,10 +65,10 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">roworder</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu">roworderv</span><span class="op">(</span><span class="va">X</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, neworder <span class="op">=</span> <span class="cn">NULL</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>,
-          na.last <span class="op">=</span> <span class="cn">TRUE</span>, pos <span class="op">=</span> <span class="st">"front"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">roworder</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">roworderv</span><span class="op">(</span><span class="va">X</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, neworder <span class="op">=</span> <span class="cn">NULL</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>          na.last <span class="op">=</span> <span class="cn">TRUE</span>, pos <span class="op">=</span> <span class="st">"front"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -114,7 +114,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworder</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">Month</span>, <span class="op">-</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworder</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">Month</span>, <span class="op">-</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   115     223  5.7   79     5  30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    45     252 14.9   81     5  29</span>
@@ -122,7 +122,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    37     279  7.4   76     5  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    36     118  8.0   72     5   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    34     307 12.0   66     5  17</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworder</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">Month</span>, <span class="op">-</span><span class="va">Ozone</span>, na.last <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Removes the missing values in Ozone</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworder</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">Month</span>, <span class="op">-</span><span class="va">Ozone</span>, na.last <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Removes the missing values in Ozone</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   115     223  5.7   79     5  30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    45     252 14.9   81     5  29</span>
@@ -130,9 +130,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    37     279  7.4   76     5  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    36     118  8.0   72     5   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    34     307 12.0   66     5  17</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Same in standard evaluation</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Month"</span>, <span class="st">"Ozone"</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Same in standard evaluation</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Month"</span>, <span class="st">"Ozone"</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   115     223  5.7   79     5  30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    45     252 14.9   81     5  29</span>
@@ -140,7 +140,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    37     279  7.4   76     5  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    36     118  8.0   72     5   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    34     307 12.0   66     5  17</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Month"</span>, <span class="st">"Ozone"</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span>, na.last <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Month"</span>, <span class="st">"Ozone"</span><span class="op">)</span>, decreasing <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">FALSE</span>, <span class="cn">TRUE</span><span class="op">)</span>, na.last <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   115     223  5.7   79     5  30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    45     252 14.9   81     5  29</span>
@@ -148,9 +148,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    37     279  7.4   76     5  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    36     118  8.0   72     5   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    34     307 12.0   66     5  17</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Custom reordering</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">mtcars</span>, neworder <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Bring rows 3 and 4 to the front</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Custom reordering</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">mtcars</span>, neworder <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Bring rows 3 and 4 to the front</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
@@ -158,7 +158,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">mtcars</span>, neworder <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Bring them to the end</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">mtcars</span>, neworder <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, pos <span class="op">=</span> <span class="st">"end"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Bring them to the end</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
@@ -166,7 +166,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           18.1   6 225.0 105 2.76 3.460 20.22  1  0    3    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">mtcars</span>, neworder <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>    <span class="co"># Bring rows with vs == 1 to the top</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworderv</span><span class="op">(</span><span class="va">mtcars</span>, neworder <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>    <span class="co"># Bring rows with vs == 1 to the top</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215 19.44  1  0    3    1</span>
@@ -188,7 +188,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

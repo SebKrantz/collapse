@@ -24,7 +24,7 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -76,22 +76,22 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 </ul></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># Converting between matrices, data frames / tables / tibbles</span>
-
- <span class="fu">qDF</span><span class="op">(</span><span class="va">X</span>, row.names.col <span class="op">=</span> <span class="cn">FALSE</span>, keep.attr <span class="op">=</span> <span class="cn">FALSE</span>, class <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span>
- <span class="fu">qDT</span><span class="op">(</span><span class="va">X</span>, row.names.col <span class="op">=</span> <span class="cn">FALSE</span>, keep.attr <span class="op">=</span> <span class="cn">FALSE</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data.table"</span>, <span class="st">"data.frame"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">qTBL</span><span class="op">(</span><span class="va">X</span>, row.names.col <span class="op">=</span> <span class="cn">FALSE</span>, keep.attr <span class="op">=</span> <span class="cn">FALSE</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tbl_df"</span>,<span class="st">"tbl"</span>,<span class="st">"data.frame"</span><span class="op">)</span><span class="op">)</span>
-  <span class="fu">qM</span><span class="op">(</span><span class="va">X</span>,                        keep.attr <span class="op">=</span> <span class="cn">FALSE</span>, class <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="co"># Programmer functions: matrix rows or columns to list / DF / DT - fully in C++</span>
-
-<span class="fu">mctl</span><span class="op">(</span><span class="va">X</span>, names <span class="op">=</span> <span class="cn">FALSE</span>, return <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span>
-<span class="fu">mrtl</span><span class="op">(</span><span class="va">X</span>, names <span class="op">=</span> <span class="cn">FALSE</span>, return <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span>
-
-<span class="co"># Converting factors or factor columns</span>
-
-  <span class="fu">as_numeric_factor</span><span class="op">(</span><span class="va">X</span>, keep.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">as_character_factor</span><span class="op">(</span><span class="va">X</span>, keep.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># Converting between matrices, data frames / tables / tibbles</span></span>
+<span></span>
+<span> <span class="fu">qDF</span><span class="op">(</span><span class="va">X</span>, row.names.col <span class="op">=</span> <span class="cn">FALSE</span>, keep.attr <span class="op">=</span> <span class="cn">FALSE</span>, class <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span></span>
+<span> <span class="fu">qDT</span><span class="op">(</span><span class="va">X</span>, row.names.col <span class="op">=</span> <span class="cn">FALSE</span>, keep.attr <span class="op">=</span> <span class="cn">FALSE</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"data.table"</span>, <span class="st">"data.frame"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">qTBL</span><span class="op">(</span><span class="va">X</span>, row.names.col <span class="op">=</span> <span class="cn">FALSE</span>, keep.attr <span class="op">=</span> <span class="cn">FALSE</span>, class <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tbl_df"</span>,<span class="st">"tbl"</span>,<span class="st">"data.frame"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">qM</span><span class="op">(</span><span class="va">X</span>,                        keep.attr <span class="op">=</span> <span class="cn">FALSE</span>, class <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Programmer functions: matrix rows or columns to list / DF / DT - fully in C++</span></span>
+<span></span>
+<span><span class="fu">mctl</span><span class="op">(</span><span class="va">X</span>, names <span class="op">=</span> <span class="cn">FALSE</span>, return <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span></span>
+<span><span class="fu">mrtl</span><span class="op">(</span><span class="va">X</span>, names <span class="op">=</span> <span class="cn">FALSE</span>, return <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Converting factors or factor columns</span></span>
+<span></span>
+<span>  <span class="fu">as_numeric_factor</span><span class="op">(</span><span class="va">X</span>, keep.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">as_character_factor</span><span class="op">(</span><span class="va">X</span>, keep.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -161,11 +161,11 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Basic Examples</span></span>
-<span class="r-in"><span class="va">mtcarsM</span> <span class="op">&lt;-</span> <span class="fu">qM</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>                   <span class="co"># Matrix from data.frame</span></span>
-<span class="r-in"><span class="va">mtcarsDT</span> <span class="op">&lt;-</span> <span class="fu">qDT</span><span class="op">(</span><span class="va">mtcarsM</span><span class="op">)</span>                <span class="co"># data.table from matrix columns</span></span>
-<span class="r-in"><span class="va">mtcarsTBL</span> <span class="op">&lt;-</span> <span class="fu">qTBL</span><span class="op">(</span><span class="va">mtcarsM</span><span class="op">)</span>              <span class="co"># tibble from matrix columns</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">mrtl</span><span class="op">(</span><span class="va">mtcarsM</span>, <span class="cn">TRUE</span>, <span class="st">"data.frame"</span><span class="op">)</span><span class="op">)</span> <span class="co"># data.frame from matrix rows, etc..</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Basic Examples</span></span></span>
+<span class="r-in"><span><span class="va">mtcarsM</span> <span class="op">&lt;-</span> <span class="fu">qM</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>                   <span class="co"># Matrix from data.frame</span></span></span>
+<span class="r-in"><span><span class="va">mtcarsDT</span> <span class="op">&lt;-</span> <span class="fu">qDT</span><span class="op">(</span><span class="va">mtcarsM</span><span class="op">)</span>                <span class="co"># data.table from matrix columns</span></span></span>
+<span class="r-in"><span><span class="va">mtcarsTBL</span> <span class="op">&lt;-</span> <span class="fu">qTBL</span><span class="op">(</span><span class="va">mtcarsM</span><span class="op">)</span>              <span class="co"># tibble from matrix columns</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">mrtl</span><span class="op">(</span><span class="va">mtcarsM</span>, <span class="cn">TRUE</span>, <span class="st">"data.frame"</span><span class="op">)</span><span class="op">)</span> <span class="co"># data.frame from matrix rows, etc..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     Mazda RX4 Mazda RX4 Wag Datsun 710 Hornet 4 Drive Hornet Sportabout Valiant</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mpg        21            21       22.8           21.4              18.7    18.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> cyl         6             6        4.0            6.0               8.0     6.0</span>
@@ -185,7 +185,7 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 <span class="r-out co"><span class="r-pr">#&gt;</span> mpg         30.4           15.8         19.7            15       21.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> cyl          4.0            8.0          6.0             8        4.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 4 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">qDF</span><span class="op">(</span><span class="va">mtcarsM</span>, <span class="st">"cars"</span><span class="op">)</span><span class="op">)</span>              <span class="co"># Adding a row.names column when converting from matrix</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">qDF</span><span class="op">(</span><span class="va">mtcarsM</span>, <span class="st">"cars"</span><span class="op">)</span><span class="op">)</span>              <span class="co"># Adding a row.names column when converting from matrix</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
@@ -193,32 +193,26 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">qDT</span><span class="op">(</span><span class="va">mtcars</span>, <span class="st">"cars"</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Saving row.names when converting data frame to data.table</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 cars   mpg   cyl  disp    hp  drat    wt  qsec    vs    am</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:         Mazda RX4  21.0     6   160   110  3.90 2.620 16.46     0     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     Mazda RX4 Wag  21.0     6   160   110  3.90 2.875 17.02     0     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        Datsun 710  22.8     4   108    93  3.85 2.320 18.61     1     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:    Hornet 4 Drive  21.4     6   258   110  3.08 3.215 19.44     1     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     gear  carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    &lt;num&gt; &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     4     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:     4     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:     3     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">cylF</span> <span class="op">&lt;-</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>                  <span class="co"># Factor from atomic vector</span></span>
-<span class="r-in"><span class="va">cylF</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">qDT</span><span class="op">(</span><span class="va">mtcars</span>, <span class="st">"cars"</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Saving row.names when converting data frame to data.table</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">cylF</span> <span class="op">&lt;-</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>                  <span class="co"># Factor from atomic vector</span></span></span>
+<span class="r-in"><span><span class="va">cylF</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6 6 4 6 8 6 8 4 4 6 6 8 8 8 8 8 8 4 4 4 4 8 8 8 8 4 4 4 8 6 8 4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Levels: 4 6 8</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Factor to numeric conversions</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">mtcars</span>,  <span class="fu">as_numeric_factor</span><span class="op">(</span><span class="fu"><a href="dapply.html">dapply</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">qF</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Factor to numeric conversions</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">mtcars</span>,  <span class="fu">as_numeric_factor</span><span class="op">(</span><span class="fu"><a href="dapply.html">dapply</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">qF</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -233,7 +227,7 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,14 +65,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">frename</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">rnm</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>     <span class="co"># Shorthand for frename()</span>
-
-<span class="fu">setrename</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="fu">relabel</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, attrn <span class="op">=</span> <span class="st">"label"</span><span class="op">)</span>
-
-<span class="fu">setrelabel</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, attrn <span class="op">=</span> <span class="st">"label"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">frename</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">rnm</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>     <span class="co"># Shorthand for frename()</span></span>
+<span></span>
+<span><span class="fu">setrename</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, .nse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">relabel</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, attrn <span class="op">=</span> <span class="st">"label"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">setrelabel</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, attrn <span class="op">=</span> <span class="st">"label"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -112,9 +112,9 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Using tagged expressions</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, Sepal.Length <span class="op">=</span> <span class="va">SL</span>, Sepal.Width <span class="op">=</span> <span class="va">SW</span>,</span>
-<span class="r-in">                   Petal.Length <span class="op">=</span> <span class="va">PL</span>, Petal.Width <span class="op">=</span> <span class="va">PW</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Using tagged expressions</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, Sepal.Length <span class="op">=</span> <span class="va">SL</span>, Sepal.Width <span class="op">=</span> <span class="va">SW</span>,</span></span>
+<span class="r-in"><span>                   Petal.Length <span class="op">=</span> <span class="va">PL</span>, Petal.Width <span class="op">=</span> <span class="va">PW</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    SL  SW  PL  PW Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 5.1 3.5 1.4 0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 4.9 3.0 1.4 0.2  setosa</span>
@@ -122,8 +122,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 4.6 3.1 1.5 0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 5.0 3.6 1.4 0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 5.4 3.9 1.7 0.4  setosa</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, Sepal.Length <span class="op">=</span> <span class="st">"S L"</span>, Sepal.Width <span class="op">=</span> <span class="st">"S W"</span>,</span>
-<span class="r-in">                   Petal.Length <span class="op">=</span> <span class="st">"P L"</span>, Petal.Width <span class="op">=</span> <span class="st">"P W"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, Sepal.Length <span class="op">=</span> <span class="st">"S L"</span>, Sepal.Width <span class="op">=</span> <span class="st">"S W"</span>,</span></span>
+<span class="r-in"><span>                   Petal.Length <span class="op">=</span> <span class="st">"P L"</span>, Petal.Width <span class="op">=</span> <span class="st">"P W"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   S L S W P L P W Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 5.1 3.5 1.4 0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 4.9 3.0 1.4 0.2  setosa</span>
@@ -131,9 +131,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 4.6 3.1 1.5 0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 5.0 3.6 1.4 0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 5.4 3.9 1.7 0.4  setosa</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Using a function</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">tolower</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Using a function</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">tolower</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   sepal.length sepal.width petal.length petal.width species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
@@ -141,7 +141,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">tolower</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">tolower</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   sepal.length sepal.width Petal.Length Petal.Width Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
@@ -149,7 +149,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">tolower</span>, cols <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">tolower</span>, cols <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   sepal.length sepal.width petal.length petal.width Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
@@ -157,7 +157,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">paste</span>, <span class="st">"new"</span>, sep <span class="op">=</span> <span class="st">"_"</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">paste</span>, <span class="st">"new"</span>, sep <span class="op">=</span> <span class="st">"_"</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length_new Sepal.Width_new Petal.Length Petal.Width Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1              5.1             3.5          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2              4.9             3.0          1.4         0.2  setosa</span>
@@ -165,10 +165,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4              4.6             3.1          1.5         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5              5.0             3.6          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6              5.4             3.9          1.7         0.4  setosa</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Using vectors of names and programming</span></span>
-<span class="r-in"><span class="va">newname</span> <span class="op">=</span> <span class="st">"sepal_length"</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, Sepal.Length <span class="op">=</span> <span class="va">newname</span>, .nse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Using vectors of names and programming</span></span></span>
+<span class="r-in"><span><span class="va">newname</span> <span class="op">=</span> <span class="st">"sepal_length"</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, Sepal.Length <span class="op">=</span> <span class="va">newname</span>, .nse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   sepal_length Sepal.Width Petal.Length Petal.Width Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
@@ -176,8 +176,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
-<span class="r-in"><span class="va">newnames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sepal_length"</span>, <span class="st">"sepal_width"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">newnames</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">newnames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sepal_length"</span>, <span class="st">"sepal_width"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">newnames</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   sepal_length sepal_width Petal.Length Petal.Width Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
@@ -185,8 +185,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
-<span class="r-in"><span class="va">newnames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Sepal.Length <span class="op">=</span> <span class="st">"sepal_length"</span>, Sepal.Width <span class="op">=</span> <span class="st">"sepal_width"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">newnames</span>, .nse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">newnames</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Sepal.Length <span class="op">=</span> <span class="st">"sepal_length"</span>, Sepal.Width <span class="op">=</span> <span class="st">"sepal_width"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">frename</span><span class="op">(</span><span class="va">iris</span>, <span class="va">newnames</span>, .nse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   sepal_length sepal_width Petal.Length Petal.Width Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          5.1         3.5          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2          4.9         3.0          1.4         0.2  setosa</span>
@@ -194,18 +194,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4          4.6         3.1          1.5         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5          5.0         3.6          1.4         0.2  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6          5.4         3.9          1.7         0.4  setosa</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Renaming by reference</span></span>
-<span class="r-in"><span class="co"># setrename(iris, tolower)</span></span>
-<span class="r-in"><span class="co"># head(iris)</span></span>
-<span class="r-in"><span class="co"># rm(iris)</span></span>
-<span class="r-in"><span class="co"># etc...</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Relabelling (by reference)</span></span>
-<span class="r-in"><span class="co"># namlab(relabel(wlddev, PCGDP = "GDP per Capita", LIFEEX = "Life Expectancy"))</span></span>
-<span class="r-in"><span class="co"># namlab(relabel(wlddev, toupper))</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Renaming by reference</span></span></span>
+<span class="r-in"><span><span class="co"># setrename(iris, tolower)</span></span></span>
+<span class="r-in"><span><span class="co"># head(iris)</span></span></span>
+<span class="r-in"><span><span class="co"># rm(iris)</span></span></span>
+<span class="r-in"><span><span class="co"># etc...</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Relabelling (by reference)</span></span></span>
+<span class="r-in"><span><span class="co"># namlab(relabel(wlddev, PCGDP = "GDP per Capita", LIFEEX = "Life Expectancy"))</span></span></span>
+<span class="r-in"><span><span class="co"># namlab(relabel(wlddev, toupper))</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -220,7 +220,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

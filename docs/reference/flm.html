@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -133,30 +133,30 @@ flm(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...)</code></pre></di
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Simple usage</span></span>
-<span class="r-in"><span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Same thing in programming usage</span></span>
-<span class="r-in"><span class="fu">flm</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hp"</span>,<span class="st">"carb"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span>, add.icpt <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Simple usage</span></span></span>
+<span class="r-in"><span><span class="va">coef</span> <span class="op">&lt;-</span> <span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Same thing in programming usage</span></span></span>
+<span class="r-in"><span><span class="fu">flm</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hp"</span>,<span class="st">"carb"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span>, add.icpt <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    [,1]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 28.48401839</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> hp          -0.06834996</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> carb         0.33207257</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Check this is correct</span></span>
-<span class="r-in"><span class="va">lmcoef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, weights <span class="op">=</span> <span class="va">wt</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/drop.html" class="external-link">drop</a></span><span class="op">(</span><span class="va">coef</span><span class="op">)</span>, <span class="va">lmcoef</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Check this is correct</span></span></span>
+<span class="r-in"><span><span class="va">lmcoef</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, weights <span class="op">=</span> <span class="va">wt</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/drop.html" class="external-link">drop</a></span><span class="op">(</span><span class="va">coef</span><span class="op">)</span>, <span class="va">lmcoef</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Multi-dependent variable (only some methods)</span></span>
-<span class="r-in"><span class="fu">flm</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">qsec</span><span class="op">)</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Multi-dependent variable (only some methods)</span></span></span>
+<span class="r-in"><span><span class="fu">flm</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">qsec</span><span class="op">)</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg        qsec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept) 28.48401839 20.77946948</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> hp          -0.06834996 -0.01409167</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> carb         0.33207257 -0.25468102</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Returning raw results from solver: different for different methods</span></span>
-<span class="r-in"><span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, return.raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Returning raw results from solver: different for different methods</span></span></span>
+<span class="r-in"><span><span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, return.raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $qr</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       (Intercept)            hp          carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]  -5.6568542 -829.78980772 -15.909902577</span>
@@ -219,13 +219,13 @@ flm(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...)</code></pre></di
 <span class="r-out co"><span class="r-pr">#&gt;</span> $pivoted</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, method <span class="op">=</span> <span class="st">"qr"</span>, return.raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, method <span class="op">=</span> <span class="st">"qr"</span>, return.raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)          hp        carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 30.04025415 -0.07290396  0.26470042 </span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co"># Test that all methods give the same result</span></span>
-<span class="r-in"><span class="fu"><a href="small-helpers.html">all_obj_equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span>
-<span class="r-in">  <span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, w <span class="op">=</span> <span class="va">wt</span>, method <span class="op">=</span> <span class="va">i</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co"># Test that all methods give the same result</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="small-helpers.html">all_obj_equal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">flm</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span>, w <span class="op">=</span> <span class="va">wt</span>, method <span class="op">=</span> <span class="va">i</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Registered S3 methods overwritten by 'RcppEigen':</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   method               from         </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   predict.fastLm       RcppArmadillo</span>
@@ -233,7 +233,7 @@ flm(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...)</code></pre></di
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   summary.fastLm       RcppArmadillo</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>   print.summary.fastLm RcppArmadillo</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -248,7 +248,7 @@ flm(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...)</code></pre></di
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

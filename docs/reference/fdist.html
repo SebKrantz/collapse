@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,7 +65,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, v <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, method <span class="op">=</span> <span class="st">"euclidean"</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, v <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span>, method <span class="op">=</span> <span class="st">"euclidean"</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -104,52 +104,52 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Distance matrix</span></span>
-<span class="r-in"><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">fdist</span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same as dist(m)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Distance matrix</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">fdist</span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same as dist(m)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  'dist' num [1:496] 0.615 54.909 98.113 210.337 65.472 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "Size")= int 32</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "Labels")= chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "Diag")= logi FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "Upper")= logi FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  - attr(*, "method")= chr "euclidean"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Distance with vector</span></span>
-<span class="r-in"><span class="va">d</span> <span class="op">=</span> <span class="fu">fdist</span><span class="op">(</span><span class="va">m</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">kit</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kit/man/topn.html" class="external-link">topn</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">5</span><span class="op">)</span>  <span class="co"># Index of 5 nearest neighbours</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Distance with vector</span></span></span>
+<span class="r-in"><span><span class="va">d</span> <span class="op">=</span> <span class="fu">fdist</span><span class="op">(</span><span class="va">m</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">kit</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kit/man/topn.html" class="external-link">topn</a></span><span class="op">(</span><span class="va">d</span>, <span class="fl">5</span><span class="op">)</span>  <span class="co"># Index of 5 nearest neighbours</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 15 16 17 31 19</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Mahalanobis distance</span></span>
-<span class="r-in"><span class="va">m_mahal</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/backsolve.html" class="external-link">forwardsolve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">fdist</span><span class="op">(</span><span class="va">m_mahal</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">m_mahal</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Mahalanobis distance</span></span></span>
+<span class="r-in"><span><span class="va">m_mahal</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/backsolve.html" class="external-link">forwardsolve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fdist</span><span class="op">(</span><span class="va">m_mahal</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">m_mahal</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 2.991099 2.878877 2.989507 2.469155 2.330035 2.979523 3.022627 3.167072</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] 4.753222 3.520384 3.325489 3.078332 2.365275 2.454885 3.346836 2.944842</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17] 3.501088 3.013076 3.867089 3.208810 3.665023 2.495443 2.405554 3.417825</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25] 2.591927 1.909395 4.284409 3.741747 4.644675 3.339588 4.380911 3.144643</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/mahalanobis.html" class="external-link">mahalanobis</a></span><span class="op">(</span><span class="va">m</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/mahalanobis.html" class="external-link">mahalanobis</a></span><span class="op">(</span><span class="va">m</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cov</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 2.991099 2.878877 2.989507 2.469155 2.330035 2.979523 3.022627 3.167072</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] 4.753222 3.520384 3.325489 3.078332 2.365275 2.454885 3.346836 2.944842</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17] 3.501088 3.013076 3.867089 3.208810 3.665023 2.495443 2.405554 3.417825</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25] 2.591927 1.909395 4.284409 3.741747 4.644675 3.339588 4.380911 3.144643</span>
-<span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="co"># Distance of two vectors</span></span>
-<span class="r-in"><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, nthreads <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co"># Distance of two vectors</span></span></span>
+<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, nthreads <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min        lq      mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y)  945.009  986.5010 1017.4958 1000.052 1012.556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2)  486.506  510.8805  544.1418  526.071  539.396</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 2513.997 2816.9255 3511.1404 2912.907 3492.441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min        lq      mean    median        uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y)  235.504  251.5555  320.8266  278.7795  307.7255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2)  481.422  488.9865  596.3503  515.3290  566.1690</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 2686.238 2821.9890 3748.8657 2959.5235 3401.7495</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1311.344   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   901.590   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  7779.955   100</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   934.800   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1372.270   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  9941.885   100</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -164,7 +164,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

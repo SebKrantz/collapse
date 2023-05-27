@@ -24,7 +24,7 @@ the result is not simplified / unlisted.
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -75,7 +75,7 @@ the result is not simplified / unlisted.
 </ol></div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">rapply2d</span><span class="op">(</span><span class="va">l</span>, <span class="va">FUN</span>, <span class="va">...</span>, classes <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rapply2d</span><span class="op">(</span><span class="va">l</span>, <span class="va">FUN</span>, <span class="va">...</span>, classes <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -111,33 +111,33 @@ the result is not simplified / unlisted.
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">rapply2d</span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">rapply2d</span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         vs         am       gear       carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500   0.406250   3.687500   2.812500 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]][[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         vs         am       gear       carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500   0.406250   3.687500   2.812500 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[2]][[2]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         vs         am       gear       carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500   0.406250   3.687500   2.812500 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="fu">rapply2d</span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="fu">rapply2d</span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id.1 .id.2      mpg    cyl     disp       hp     drat      wt     qsec</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375 0.40625 3.6875 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125</span>
@@ -156,7 +156,7 @@ the result is not simplified / unlisted.
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

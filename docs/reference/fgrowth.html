@@ -19,7 +19,7 @@ Fast Growth Rates for Time Series and Panel Data — fgrowth"><meta property="og
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -68,58 +68,58 @@ Fast Growth Rates for Time Series and Panel Data</h1>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-      <span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>,
-        logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,
-  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>,
-        logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>,
-        stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,
-  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>,
-        logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>,
-        stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, by <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>,
-  fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>,
-  keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for indexed data / compatibility with plm:</span>
-
-<span class="co"># S3 method for pseries</span>
-<span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>,
-        power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>,
-  power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>,
-        power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,
-  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for grouped data frame / compatibility with dplyr:</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,
-        scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>,
-        keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,
-  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>      <span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>        logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>        logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>        stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>        logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>        stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, by <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>,</span>
+<span>  fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
+<span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>        power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>        power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for grouped data frame / compatibility with dplyr:</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>        scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>,</span>
+<span>        keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -134,7 +134,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <dd><p>integer. A vector of integers &gt; 1 indicating the order of taking growth rates, e.g. <code>diff = 2</code> means computing the growth rate of the growth rate.</p></dd>
 
   <dt>g</dt>
-<dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, or atomic vector / list of vectors (internally grouped with <code><a href="group.html">group</a></code>) used to group <code>x</code>.</p></dd>
+<dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, or atomic vector / list of vectors (internally grouped with <code><a href="group.html">group</a></code>) used to group <code>x</code>. <em>Note</em> that without <code>t</code>, all values in a group need to be consecutive and in the right order. See Details of <code><a href="flag.html">flag</a></code>.</p></dd>
 
   <dt>by</dt>
 <dd><p><em>data.frame method</em>: Same as <code>g</code>, but also allows one- or two-sided formulas i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>. See Examples.</p></dd>
@@ -164,7 +164,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <dd><p><em>pseries / pdata.frame methods</em>: character. <code>"time"</code> or <code>"row"</code>. See <code><a href="flag.html">flag</a></code> for details.</p></dd>
 
   <dt>keep.ids</dt>
-<dd><p><em>data.frame / pdata.frame / grouped_df methods</em>: Logical. Drop all identifiers from the output (which includes all variables passed to <code>by</code> or <code>t</code>). <em>Note</em>: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the <code>"groups"</code> / <code>"index"</code> attributes are kept.</p></dd>
+<dd><p><em>data.frame / pdata.frame / grouped_df methods</em>: Logical. Drop all identifiers from the output (which includes all variables passed to <code>by</code> or <code>t</code> using formulas). <em>Note</em>: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the <code>"groups"</code> / <code>"index"</code> attributes are kept.</p></dd>
 
   <dt>...</dt>
 <dd><p>arguments to be passed to or from other methods.</p></dd>
@@ -187,8 +187,8 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Simple Time Series: AirPassengers</span></span>
-<span class="r-in"><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                      <span class="co"># Growth rate, same as fgrowth(AirPassengers)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Simple Time Series: AirPassengers</span></span></span>
+<span class="r-in"><span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                      <span class="co"># Growth rate, same as fgrowth(AirPassengers)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Jan         Feb         Mar         Apr         May         Jun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949          NA   5.3571429  11.8644068  -2.2727273  -6.2015504  11.5702479</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  -2.5423729   9.5652174  11.9047619  -4.2553191  -7.4074074  19.2000000</span>
@@ -202,7 +202,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952   5.5045872   5.2173913 -13.6363636  -8.6124402  -9.9476440  12.7906977</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953   8.6419753   3.0303030 -12.8676471 -10.9704641 -14.6919431  11.6666667</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, logdiff <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># Log-difference</span></span>
+<span class="r-in"><span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, logdiff <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># Log-difference</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Jan         Feb         Mar         Apr         May         Jun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949          NA   5.2185753  11.2117298  -2.2989518  -6.4021859  10.9484233</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  -2.5752496   9.1349779  11.2477983  -4.3485112  -7.6961041  17.5632569</span>
@@ -216,7 +216,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952   5.3584246   5.0858417 -14.6603474  -9.0060824 -10.4778951  12.0363682</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953   8.2887660   2.9852963 -13.7741925 -11.6202008 -15.8901283  11.0348057</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>                <span class="co"># Growth rate of growth rate</span></span>
+<span class="r-in"><span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>                <span class="co"># Growth rate of growth rate</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Jan           Feb           Mar           Apr           May</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949            NA            NA   121.4689266  -119.1558442   172.8682171</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  -118.8861985  -476.2318841    24.4588745  -135.7446809    74.0740741</span>
@@ -236,7 +236,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952    15.5031995  -228.5801714</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953    33.9227124  -179.4086022</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">12</span><span class="op">)</span>                  <span class="co"># Seasonal growth rate (data is monthly)</span></span>
+<span class="r-in"><span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">12</span><span class="op">)</span>                  <span class="co"># Seasonal growth rate (data is monthly)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Jan        Feb        Mar        Apr        May        Jun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949         NA         NA         NA         NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  2.6785714  6.7796610  6.8181818  4.6511628  3.3057851 10.3703704</span>
@@ -250,8 +250,8 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 15.5778894 21.6080402 13.5869565 17.9012346 17.8082192 16.8674699</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 14.7826087 12.3966942 13.3971292 10.4712042  4.6511628  3.6082474</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">2</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>     <span class="co"># Sequence of leaded/lagged and iterated growth rates</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">2</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>     <span class="co"># Sequence of leaded/lagged and iterated growth rates</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            F2G1       F2G2       F2G3        FG1        FG2         FG3  --</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] -15.151515 -266.66667   77.97753  -5.084746  -52.05811   -90.63805 112</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  -8.527132   91.86047 -285.94592 -10.606061 -556.06061   757.77959 118</span>
@@ -265,19 +265,19 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -2.272727 -119.1558 -198.0957  9.322034         NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -6.201550  172.8682 -245.0774 -8.333333 -146.66667   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># let's do some visual analysis</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># let's do some visual analysis</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="fgrowth-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/window.html" class="external-link">window</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">12</span><span class="op">)</span>, <span class="co"># Taking seasonal growth rate removes most seasonal variation</span></span>
-<span class="r-in">                <span class="fl">1950</span><span class="op">)</span>, <span class="st">"periodic"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stl</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/window.html" class="external-link">window</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">12</span><span class="op">)</span>, <span class="co"># Taking seasonal growth rate removes most seasonal variation</span></span></span>
+<span class="r-in"><span>                <span class="fl">1950</span><span class="op">)</span>, <span class="st">"periodic"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="fgrowth-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Time Series Matrix of 4 EU Stock Market Indicators, recorded 260 days per year</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">EuStockMarkets</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">260</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># Plot series and annual growth rates</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Time Series Matrix of 4 EU Stock Market Indicators, recorded 260 days per year</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">EuStockMarkets</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">260</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># Plot series and annual growth rates</span></span></span>
 <span class="r-plt img"><img src="fgrowth-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">L260G1.DAX</span> <span class="op">~</span><span class="va">.</span>, <span class="fu">G</span><span class="op">(</span><span class="va">EuStockMarkets</span>,<span class="fl">260</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Annual growth rate of DAX regressed on the</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">L260G1.DAX</span> <span class="op">~</span><span class="va">.</span>, <span class="fu">G</span><span class="op">(</span><span class="va">EuStockMarkets</span>,<span class="fl">260</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Annual growth rate of DAX regressed on the</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = L260G1.DAX ~ ., data = G(EuStockMarkets, 260))</span>
@@ -300,11 +300,11 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.8585,	Adjusted R-squared:  0.8582 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic:  3226 on 3 and 1596 DF,  p-value: &lt; 2.2e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in">                                                    <span class="co"># growth rates of the other indicators</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## World Development Panel Data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fgrowth</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">1</span>,                    <span class="co"># Computes growth rates of numeric variables</span></span>
-<span class="r-in">             <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>              <span class="co"># fgrowth requires external inputs..</span></span>
+<span class="r-in"><span>                                                    <span class="co"># growth rates of the other indicators</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## World Development Panel Data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fgrowth</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fl">1</span>, <span class="fl">1</span>,                    <span class="co"># Computes growth rates of numeric variables</span></span></span>
+<span class="r-in"><span>             <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>              <span class="co"># fgrowth requires external inputs..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         year decade PCGDP   LIFEEX GINI       ODA      POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1         NA     NA    NA       NA   NA        NA       NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.05102041      0    NA 1.590335   NA  98.74969 1.916611</span>
@@ -312,7 +312,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.05096840      0    NA 1.493830   NA 110.66998 2.050636</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 0.05094244      0    NA 1.448294   NA  24.48259 2.112246</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.05091650      0    NA 1.407306   NA  15.51770 2.170793</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="op">~</span><span class="va">country</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>                  <span class="co"># Growth of numeric variables, id's attached</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="op">~</span><span class="va">country</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>                  <span class="co"># Growth of numeric variables, id's attached</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country year G1.decade G1.PCGDP G1.LIFEEX G1.GINI    G1.ODA   G1.POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960        NA       NA        NA      NA        NA       NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961         0       NA  1.590335      NA  98.74969 1.916611</span>
@@ -320,7 +320,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963         0       NA  1.493830      NA 110.66998 2.050636</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964         0       NA  1.448294      NA  24.48259 2.112246</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965         0       NA  1.407306      NA  15.51770 2.170793</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="op">~</span><span class="va">country</span><span class="op">)</span><span class="op">)</span>                         <span class="co"># Without t: Works because data is ordered</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="op">~</span><span class="va">country</span><span class="op">)</span><span class="op">)</span>                         <span class="co"># Without t: Works because data is ordered</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country    G1.year G1.decade G1.PCGDP G1.LIFEEX G1.GINI    G1.ODA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan         NA        NA       NA        NA      NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 0.05102041         0       NA  1.590335      NA  98.74969</span>
@@ -335,7 +335,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 2.050636</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 2.112246</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 2.170793</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Growth of GDP per Capita &amp; Life Expectancy</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Growth of GDP per Capita &amp; Life Expectancy</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country year G1.PCGDP G1.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960       NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961       NA  1.590335</span>
@@ -343,7 +343,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963       NA  1.493830</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964       NA  1.448294</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965       NA  1.407306</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Same, also retaining original series</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Same, also retaining original series</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country year PCGDP G1.PCGDP LIFEEX G1.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960    NA       NA 32.446        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961    NA       NA 32.962  1.590335</span>
@@ -351,8 +351,8 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963    NA       NA 33.971  1.493830</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964    NA       NA 34.463  1.448294</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965    NA       NA 34.948  1.407306</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,          <span class="co"># Dropping id columns</span></span>
-<span class="r-in">       keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">G</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,          <span class="co"># Dropping id columns</span></span></span>
+<span class="r-in"><span>       keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP G1.PCGDP LIFEEX G1.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA       NA 32.446        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    NA       NA 32.962  1.590335</span>
@@ -360,7 +360,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    NA       NA 33.971  1.493830</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA       NA 34.463  1.448294</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    NA       NA 34.948  1.407306</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -375,7 +375,7 @@ Fast Growth Rates for Time Series and Panel Data</h1>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

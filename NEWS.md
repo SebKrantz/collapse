@@ -1,4 +1,4 @@
-# collapse 1.9.5.9000
+# collapse 1.9.6
 
 * `print.descr()` with groups and option `perc = TRUE` (the default) also shows percentages of the group frequencies for each variable. 
 

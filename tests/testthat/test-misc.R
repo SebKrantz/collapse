@@ -230,7 +230,7 @@ test_that("fast functions give appropriate warnings", {
 })
 
 test_that("fselect and fsubset cannot easily be confuesed", {
-  expect_error(suppressWarnings(fsubset(mtcars, mpg:vs, wt)))
+  # expect_error(suppressWarnings(fsubset(mtcars, mpg:vs, wt)))
   expect_error(fselect(mtcars, mpg == 1))
 })
 

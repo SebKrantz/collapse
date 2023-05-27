@@ -19,7 +19,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -69,76 +69,76 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
- <span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-       <span class="fu">B</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-       <span class="fu">W</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">B</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">W</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">B</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"B."</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">W</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, stub <span class="op">=</span> <span class="st">"W."</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">B</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-  fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"B."</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">W</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-  mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, stub <span class="op">=</span> <span class="st">"W."</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for indexed data / compatibility with plm:</span>
-
-<span class="co"># S3 method for pseries</span>
-<span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">B</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">W</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">B</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-  fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"B."</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">W</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-  mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, stub <span class="op">=</span> <span class="st">"W."</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for grouped data frame / compatibility with dplyr:</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,
-         keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>,
-        keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">B</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,
-  stub <span class="op">=</span> <span class="st">"B."</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">W</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>,
-  stub <span class="op">=</span> <span class="st">"W."</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span> <span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>       <span class="fu">B</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>       <span class="fu">W</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">B</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">W</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">B</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"B."</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">W</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, stub <span class="op">=</span> <span class="st">"W."</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">B</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"B."</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">W</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, stub <span class="op">=</span> <span class="st">"W."</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
+<span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">B</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">W</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">B</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"B."</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">W</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>, stub <span class="op">=</span> <span class="st">"W."</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for grouped data frame / compatibility with dplyr:</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>         keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fwithin</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>        keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">B</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  stub <span class="op">=</span> <span class="st">"B."</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">W</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  stub <span class="op">=</span> <span class="st">"W."</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -211,8 +211,8 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Simple centering and averaging</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Simple centering and averaging</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg    cyl     disp       hp     drat      wt     qsec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
@@ -227,7 +227,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.4375 0.40625 3.6875 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.4375 0.40625 3.6875 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">B</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">B</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      B.mpg  B.cyl   B.disp     B.hp   B.drat    B.wt   B.qsec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
@@ -242,7 +242,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.4375 0.40625 3.6875 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.4375 0.40625 3.6875 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         mpg     cyl        disp       hp       drat       wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          0.909375 -0.1875  -70.721875 -36.6875  0.3034375 -0.59725</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      0.909375 -0.1875  -70.721875 -36.6875  0.3034375 -0.34225</span>
@@ -257,7 +257,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.59125  0.5625 -0.40625 -0.6875 -1.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.82875 -0.4375 -0.40625 -0.6875 -0.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.37125  0.5625 -0.40625 -0.6875 -1.8125</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       W.mpg   W.cyl      W.disp     W.hp     W.drat     W.wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          0.909375 -0.1875  -70.721875 -36.6875  0.3034375 -0.59725</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      0.909375 -0.1875  -70.721875 -36.6875  0.3034375 -0.34225</span>
@@ -272,11 +272,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.59125  0.5625 -0.40625 -0.6875 -1.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.82875 -0.4375 -0.40625 -0.6875 -0.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.37125  0.5625 -0.40625 -0.6875 -1.8125</span>
-<span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span> <span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span> <span class="op">+</span> <span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Groupwise centering and averaging</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Groupwise centering and averaging</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg cyl     disp        hp     drat       wt     qsec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         19.74286   6 183.3143 122.28571 3.585714 3.117143 17.97714</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     19.74286   6 183.3143 122.28571 3.585714 3.117143 17.97714</span>
@@ -291,7 +291,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    0.5714286 0.4285714 3.857143 3.428571</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 0.0000000 0.1428571 3.285714 3.500000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           0.5714286 0.4285714 3.857143 3.428571</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         mpg cyl       disp        hp        drat          wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          1.257143   0 -23.314286 -12.28571  0.31428571 -0.49714286</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      1.257143   0 -23.314286 -12.28571  0.31428571 -0.24214286</span>
@@ -306,10 +306,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     1.4628571  0.42857143 -0.4285714 -0.85714286 -2.4285714</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  0.2478571  0.00000000 -0.1428571 -0.28571429 -1.5000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            2.2428571  0.42857143 -0.4285714 -0.85714286 -2.4285714</span>
-<span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">fbetween</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="fu">fwithin</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span><span class="op">)</span>    <span class="co"># Center the 5 series in this dataset by country</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span><span class="op">)</span>    <span class="co"># Center the 5 series in this dataset by country</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c W.PCGDP  W.LIFEEX W.GINI       W.ODA    W.POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG      NA -16.75117     NA -1370778502 -9365285</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG      NA -16.23517     NA -1255468497 -9192848</span>
@@ -317,8 +317,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG      NA -15.22617     NA -1249828497 -8819053</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG      NA -14.73417     NA -1191628485 -8617477</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG      NA -14.24917     NA -1145708502 -8405938</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,<span class="st">"iso3c"</span><span class="op">)</span>,     <span class="co"># Same thing done manually using fwithin..</span></span>
-<span class="r-in">      <span class="fu"><a href="small-helpers.html">add_stub</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,<span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>, <span class="st">"W."</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,<span class="st">"iso3c"</span><span class="op">)</span>,     <span class="co"># Same thing done manually using fwithin..</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="small-helpers.html">add_stub</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,<span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>, <span class="st">"W."</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c W.PCGDP  W.LIFEEX W.GINI       W.ODA    W.POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG      NA -16.75117     NA -1370778502 -9365285</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG      NA -16.23517     NA -1255468497 -9192848</span>
@@ -326,11 +326,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG      NA -15.22617     NA -1249828497 -8819053</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG      NA -14.73417     NA -1191628485 -8617477</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG      NA -14.24917     NA -1145708502 -8405938</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Using B() and W() for fixed-effects regressions:</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Several ways of running the same regression with cyl-fixed effects</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mpg</span>,<span class="va">cyl</span><span class="op">)</span> <span class="op">~</span> <span class="fu">W</span><span class="op">(</span><span class="va">carb</span>,<span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>                     <span class="co"># Centering each individually</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Using B() and W() for fixed-effects regressions:</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Several ways of running the same regression with cyl-fixed effects</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mpg</span>,<span class="va">cyl</span><span class="op">)</span> <span class="op">~</span> <span class="fu">W</span><span class="op">(</span><span class="va">carb</span>,<span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>                     <span class="co"># Centering each individually</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = W(mpg, cyl) ~ W(carb, cyl), data = mtcars)</span>
@@ -339,7 +339,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)  W(carb, cyl)  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   -2.822e-16    -4.655e-01  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span>, stub <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>           <span class="co"># Centering the entire data</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span>, stub <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>           <span class="co"># Centering the entire data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, stub = FALSE))</span>
@@ -348,8 +348,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)         carb  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  -2.822e-16   -4.655e-01  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span>, stub <span class="op">=</span> <span class="cn">FALSE</span>,            <span class="co"># Here only the intercept changes</span></span>
-<span class="r-in">                        mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span>, stub <span class="op">=</span> <span class="cn">FALSE</span>,            <span class="co"># Here only the intercept changes</span></span></span>
+<span class="r-in"><span>                        mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, stub = FALSE, </span>
@@ -359,7 +359,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)         carb  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     21.3999      -0.4655  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="fu">B</span><span class="op">(</span><span class="va">carb</span>,<span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>                     <span class="co"># Procedure suggested by</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="fu">B</span><span class="op">(</span><span class="va">carb</span>,<span class="va">cyl</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>                     <span class="co"># Procedure suggested by</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ carb + B(carb, cyl), data = mtcars)</span>
@@ -368,20 +368,20 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  (Intercept)          carb  B(carb, cyl)  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      34.8297       -0.4655       -4.7750  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="co"># ..Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data</span></span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"within"</span><span class="op">)</span>   <span class="co"># "Proof"..</span></span>
+<span class="r-in"><span><span class="co"># ..Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data</span></span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"within"</span><span class="op">)</span>   <span class="co"># "Proof"..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x123afb238&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x10e010be0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -0.46551 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># This takes the interaction of cyl, vs and am as fixed effects</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">~</span> <span class="fu">W</span><span class="op">(</span><span class="va">carb</span><span class="op">)</span>, data <span class="op">=</span> <span class="fu"><a href="indexing.html">iby</a></span><span class="op">(</span><span class="va">mtcars</span>, id <span class="op">=</span> <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># This takes the interaction of cyl, vs and am as fixed effects</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">~</span> <span class="fu">W</span><span class="op">(</span><span class="va">carb</span><span class="op">)</span>, data <span class="op">=</span> <span class="fu"><a href="indexing.html">iby</a></span><span class="op">(</span><span class="va">mtcars</span>, id <span class="op">=</span> <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = W(mpg) ~ W(carb), data = iby(mtcars, id = finteraction(cyl, </span>
@@ -391,7 +391,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)      W(carb)  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  -1.306e-15   -9.413e-01  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, stub <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, stub <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ carb, data = W(mtcars, ~cyl + vs + am, stub = FALSE))</span>
@@ -400,7 +400,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)         carb  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  -1.306e-15   -9.413e-01  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="fu">B</span><span class="op">(</span><span class="va">carb</span>,<span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="fu">B</span><span class="op">(</span><span class="va">carb</span>,<span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ carb + B(carb, list(cyl, vs, am)), data = mtcars)</span>
@@ -411,9 +411,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> B(carb, list(cyl, vs, am))  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    -1.8057  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Now with cyl fixed effects weighted by hp:</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mpg</span>,<span class="va">cyl</span>,<span class="va">hp</span><span class="op">)</span> <span class="op">~</span> <span class="fu">W</span><span class="op">(</span><span class="va">carb</span>,<span class="va">cyl</span>,<span class="va">hp</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Now with cyl fixed effects weighted by hp:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu">W</span><span class="op">(</span><span class="va">mpg</span>,<span class="va">cyl</span>,<span class="va">hp</span><span class="op">)</span> <span class="op">~</span> <span class="fu">W</span><span class="op">(</span><span class="va">carb</span>,<span class="va">cyl</span>,<span class="va">hp</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = W(mpg, cyl, hp) ~ W(carb, cyl, hp), data = mtcars)</span>
@@ -422,7 +422,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>      (Intercept)  W(carb, cyl, hp)  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           0.1747           -0.4469  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span>, <span class="op">~</span> <span class="va">hp</span>, stub <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span>, <span class="op">~</span> <span class="va">hp</span>, stub <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, ~hp, stub = FALSE))</span>
@@ -431,7 +431,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)         carb  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      0.1747      -0.4469  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="fu">B</span><span class="op">(</span><span class="va">carb</span>,<span class="va">cyl</span>,<span class="va">hp</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>       <span class="co"># WRONG ! Gives a different coefficient!!</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="fu">B</span><span class="op">(</span><span class="va">carb</span>,<span class="va">cyl</span>,<span class="va">hp</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>       <span class="co"># WRONG ! Gives a different coefficient!!</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ carb + B(carb, cyl, hp), data = mtcars)</span>
@@ -440,15 +440,15 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>      (Intercept)              carb  B(carb, cyl, hp)  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          34.1833           -0.4383           -4.2638  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Manual variance components (random-effects) estimation</span></span>
-<span class="r-in"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>  <span class="co"># Get residuals from pooled OLS</span></span>
-<span class="r-in"><span class="va">sig2_u</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sig2_e</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="va">res</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="cn">T</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">sig2_alpha</span> <span class="op">&lt;-</span> <span class="va">sig2_u</span> <span class="op">-</span> <span class="va">sig2_e</span></span>
-<span class="r-in"><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">sig2_alpha</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">sig2_alpha</span> <span class="op">+</span> <span class="cn">T</span> <span class="op">*</span> <span class="va">sig2_e</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span>, theta <span class="op">=</span> <span class="va">theta</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span>, stub <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Manual variance components (random-effects) estimation</span></span></span>
+<span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>  <span class="co"># Get residuals from pooled OLS</span></span></span>
+<span class="r-in"><span><span class="va">sig2_u</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sig2_e</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu">fwithin</span><span class="op">(</span><span class="va">res</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="cn">T</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">sig2_alpha</span> <span class="op">&lt;-</span> <span class="va">sig2_u</span> <span class="op">-</span> <span class="va">sig2_e</span></span></span>
+<span class="r-in"><span><span class="va">theta</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">sig2_alpha</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">sig2_alpha</span> <span class="op">+</span> <span class="cn">T</span> <span class="op">*</span> <span class="va">sig2_e</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, data <span class="op">=</span> <span class="fu">W</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span>, theta <span class="op">=</span> <span class="va">theta</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span>, stub <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ carb, data = W(mtcars, ~cyl, theta = theta, </span>
@@ -458,18 +458,18 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)         carb  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     21.8727      -0.6336  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co"># A slightly different method to obtain theta...</span></span>
-<span class="r-in"><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co"># A slightly different method to obtain theta...</span></span></span>
+<span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x123afb238&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x10e010be0&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)        carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    22.40631    -0.68522 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -484,7 +484,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

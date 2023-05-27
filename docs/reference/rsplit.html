@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,18 +65,18 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">rsplit</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">rsplit</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, flatten <span class="op">=</span> <span class="cn">FALSE</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">rsplit</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, flatten <span class="op">=</span> <span class="cn">FALSE</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span>,
-       drop.dim <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">rsplit</span><span class="op">(</span><span class="va">x</span>, <span class="va">by</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, flatten <span class="op">=</span> <span class="cn">FALSE</span>, cols <span class="op">=</span> <span class="cn">NULL</span>,
-       keep.by <span class="op">=</span> <span class="cn">FALSE</span>, simplify <span class="op">=</span> <span class="cn">TRUE</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">rsplit</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, flatten <span class="op">=</span> <span class="cn">FALSE</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">rsplit</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, flatten <span class="op">=</span> <span class="cn">FALSE</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>       drop.dim <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">rsplit</span><span class="op">(</span><span class="va">x</span>, <span class="va">by</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, flatten <span class="op">=</span> <span class="cn">FALSE</span>, cols <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>       keep.by <span class="op">=</span> <span class="cn">FALSE</span>, simplify <span class="op">=</span> <span class="cn">TRUE</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -128,7 +128,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -138,7 +138,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 18.7 14.3 16.4 17.3 15.2 10.4 10.4 14.7 15.5 15.2 13.3 19.2 15.8 15.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl  disp hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8   4 108.0 93 3.85 2.320 18.61  1  1    4    1</span>
@@ -169,8 +169,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood 10.4   8 472.0 205 2.93 5.25 17.98  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 8 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`$`1`</span>
@@ -235,7 +235,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># Same thing</span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># Same thing</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`$`1`</span>
@@ -300,7 +300,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`$`1`</span>
@@ -367,8 +367,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, flatten <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, flatten <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4.0.1`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               mpg  disp hp drat   wt qsec gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2  26 120.3 91 4.43 2.14 16.7    5    2</span>
@@ -419,8 +419,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L 15.8  351 264 4.22 3.17 14.5    5    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora  15.0  301 335 3.54 3.57 14.6    5    8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">cyl</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -430,7 +430,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`8`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 18.7 14.3 16.4 17.3 15.2 10.4 10.4 14.7 15.5 15.2 13.3 19.2 15.8 15.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">cyl</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">~</span> <span class="va">cyl</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710     22.8</span>
@@ -472,7 +472,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L      15.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora       15.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`$`1`</span>
@@ -542,7 +542,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`4`$`0`$`1`</span>
@@ -612,10 +612,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Split this sectoral data, first by Variable (Emloyment and Value Added), then by Country</span></span>
-<span class="r-in"><span class="va">GGDCspl</span> <span class="op">&lt;-</span> <span class="fu">rsplit</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">~</span> <span class="va">Variable</span> <span class="op">+</span> <span class="va">Country</span>, cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">GGDCspl</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Split this sectoral data, first by Variable (Emloyment and Value Added), then by Country</span></span></span>
+<span class="r-in"><span><span class="va">GGDCspl</span> <span class="op">&lt;-</span> <span class="fu">rsplit</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">~</span> <span class="va">Variable</span> <span class="op">+</span> <span class="va">Country</span>, cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">GGDCspl</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ EMP:List of 42</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ ARG:'data.frame':	62 obs. of  11 variables:</span>
@@ -3509,9 +3509,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ SUM : num [1:52] 693 656 648 672 763 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..- attr(*, "label")= chr "Summation of sector GDP"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..- attr(*, "format.stata")= chr "%10.0g"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The nested list can be reassembled using unlist2d()</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">GGDCspl</span>, idcols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The nested list can be reassembled using unlist2d()</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">GGDCspl</span>, idcols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variable Country      AGR      MIN      MAN       PU      CON      WRT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      EMP     ARG 1799.565 32.71936 1603.249 39.26323 314.1059 889.9666</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      EMP     ARG 1835.181 34.37387 1640.927 42.43318 353.4173 879.7295</span>
@@ -3525,11 +3525,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 455.3023 209.7324 870.0849 434.6854 6858.976</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 468.6230 213.7772 893.7040 444.8849 6967.347</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">GGDCspl</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Another example with mtcars (not as clean because of row.names)</span></span>
-<span class="r-in"><span class="va">nl</span> <span class="op">&lt;-</span> <span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">nl</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">GGDCspl</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Another example with mtcars (not as clean because of row.names)</span></span></span>
+<span class="r-in"><span><span class="va">nl</span> <span class="op">&lt;-</span> <span class="fu">rsplit</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">nl</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ 4:List of 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ 0:List of 1</span>
@@ -3560,7 +3560,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. ..$ 1:'data.frame':	2 obs. of  2 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ mpg: num [1:2] 15.8 15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .. .. ..$ hp : num [1:2] 264 335</span>
-<span class="r-in"><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">nl</span>, idcols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span>, row.names <span class="op">=</span> <span class="st">"car"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">nl</span>, idcols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span>, row.names <span class="op">=</span> <span class="st">"car"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    cyl vs am            car  mpg  hp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    4  0  1  Porsche 914-2 26.0  91</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    4  1  0      Merc 240D 24.4  62</span>
@@ -3574,7 +3574,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10   4  1  1   Lotus Europa 30.4 113</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11   4  1  1     Volvo 142E 21.4 109</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 21 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">nl</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">nl</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -3589,7 +3589,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

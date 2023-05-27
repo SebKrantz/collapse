@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -60,7 +60,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="1.9.5.9000" id="collapse-1959000">collapse 1.9.5.9000<a class="anchor" aria-label="anchor" href="#collapse-1959000"></a></h2>
+<h2 class="page-header" data-toc-text="1.9.6" id="collapse-196">collapse 1.9.6<a class="anchor" aria-label="anchor" href="#collapse-196"></a></h2>
 <ul><li><p><code><a href="../reference/descr.html">print.descr()</a></code> with groups and option <code>perc = TRUE</code> (the default) also shows percentages of the group frequencies for each variable.</p></li>
 <li><p><code>funique(mtcars[NULL, ], sort = TRUE)</code> gave an error (for data frame with zero rows). Thanks <a href="https://github.com/NicChr" class="external-link">@NicChr</a> (<a href="https://github.com/SebKrantz/collapse/issues/406" class="external-link">#406</a>).</p></li>
 <li><p>Added SIMD vectorization for <code><a href="../reference/fsubset.html">fsubset()</a></code>.</p></li>
@@ -127,15 +127,15 @@
 <ul><li>
 <p><code><a href="../reference/fnth_fmedian.html">fnth()</a></code> and <code><a href="../reference/fnth_fmedian.html">fmedian()</a></code> were rewritten in C, with significant gains in performance and versatility. Notably, <code><a href="../reference/fnth_fmedian.html">fnth()</a></code> now supports (grouped, weighted) continuous quantile estimation like <code><a href="../reference/fquantile.html">fquantile()</a></code> (<code><a href="../reference/fnth_fmedian.html">fmedian()</a></code>, which is a wrapper around <code><a href="../reference/fnth_fmedian.html">fnth()</a></code>, can also estimate various quantile based weighted medians). The new default for <code><a href="../reference/fnth_fmedian.html">fnth()</a></code> is <code>ties = "q7"</code>, which gives the same result as <code>(f)quantile(..., type = 7)</code> (R’s default). OpenMP multithreading across groups is also much more effective in both the weighted and unweighted case. Finally, <code>fnth.default</code> gained an additional argument <code>o</code> to pass an ordering vector, which can dramatically speed up repeated invocations of the function on the dame data:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># Estimating multiple weighted-grouped quantiles on mpg: pre-computing an ordering provides extra speed. </span>
-<span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="../reference/ftransform.html">fmutate</a></span><span class="op">(</span>o <span class="op">=</span> <span class="fu"><a href="../reference/radixorder.html">radixorder</a></span><span class="op">(</span><span class="fu"><a href="../reference/GRP.html">GRPid</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># On grouped data, need to account for GRPid()</span>
-    <span class="fu"><a href="../reference/fsummarise.html">fsummarise</a></span><span class="op">(</span>mpg_Q1 <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.25</span>, o <span class="op">=</span> <span class="va">o</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span>,
-               mpg_median <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">mpg</span>, o <span class="op">=</span> <span class="va">o</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span>,
-               mpg_Q3 <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, o <span class="op">=</span> <span class="va">o</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span><span class="op">)</span>
-<span class="co"># Note that without weights this is not always faster. Quickselect can be very efficient, so it depends </span>
-<span class="co"># on the data, the number of groups, whether they are sorted (which speeds up radixorder), etc...</span></code></pre></div>
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Estimating multiple weighted-grouped quantiles on mpg: pre-computing an ordering provides extra speed. </span></span>
+<span><span class="va">mtcars</span> <span class="op">%&gt;%</span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu"><a href="../reference/ftransform.html">fmutate</a></span><span class="op">(</span>o <span class="op">=</span> <span class="fu"><a href="../reference/radixorder.html">radixorder</a></span><span class="op">(</span><span class="fu"><a href="../reference/GRP.html">GRPid</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># On grouped data, need to account for GRPid()</span></span>
+<span>    <span class="fu"><a href="../reference/fsummarise.html">fsummarise</a></span><span class="op">(</span>mpg_Q1 <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.25</span>, o <span class="op">=</span> <span class="va">o</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span>,</span>
+<span>               mpg_median <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">mpg</span>, o <span class="op">=</span> <span class="va">o</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span>,</span>
+<span>               mpg_Q3 <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, o <span class="op">=</span> <span class="va">o</span>, w <span class="op">=</span> <span class="va">wt</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Note that without weights this is not always faster. Quickselect can be very efficient, so it depends </span></span>
+<span><span class="co"># on the data, the number of groups, whether they are sorted (which speeds up radixorder), etc...</span></span></code></pre></div>
 </li>
 <li><p><code>BY</code> now supports data-length arguments to be passed e.g. <code>BY(mtcars, mtcars$cyl, fquantile, w = mtcars$wt)</code>, making it effectively a generic grouped <code>mapply</code> function as well. Furthermore, the grouped_df method now also expands grouping columns for output length &gt; 1.</p></li>
 <li><p><code><a href="../reference/collap.html">collap()</a></code>, which internally uses <code>BY</code> with non-<em>Fast Statistical Functions</em>, now also supports arbitrary further arguments passed down to functions to be split by groups. Thus users can also apply custom weighted functions with <code><a href="../reference/collap.html">collap()</a></code>. Furthermore, the parsing of the <code>FUN</code>, <code>catFUN</code> and <code>wFUN</code> arguments was improved and brought in-line with the parsing of <code>.fns</code> in <code><a href="../reference/across.html">across()</a></code>. The main benefit of this is that <em>Fast Statistical Functions</em> are now also detected and optimizations carried out when passed in a list providing a new name e.g. <code>collap(data, ~ id, list(mean = fmean))</code> is now optimized! Thanks <a href="https://github.com/ttrodrigz" class="external-link">@ttrodrigz</a> (<a href="https://github.com/SebKrantz/collapse/issues/358" class="external-link">#358</a>) for requesting this.</p></li>
@@ -744,7 +744,7 @@ This may be useful in some cases, for examples it is now possible to write somet
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

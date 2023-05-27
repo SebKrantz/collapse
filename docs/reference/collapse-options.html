@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,8 +65,8 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">set_collapse</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
-<span class="fu">get_collapse</span><span class="op">(</span>opts <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_collapse</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">get_collapse</span><span class="op">(</span>opts <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -120,11 +120,11 @@ In General, this option is for your convenience, if you want to write visually m
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Setting new values</span></span>
-<span class="r-in"><span class="va">oldopts</span> <span class="op">=</span> <span class="fu">set_collapse</span><span class="op">(</span>nthreads <span class="op">=</span> <span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Getting the values</span></span>
-<span class="r-in"><span class="fu">get_collapse</span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Setting new values</span></span></span>
+<span class="r-in"><span><span class="va">oldopts</span> <span class="op">=</span> <span class="fu">set_collapse</span><span class="op">(</span>nthreads <span class="op">=</span> <span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Getting the values</span></span></span>
+<span class="r-in"><span><span class="fu">get_collapse</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $nthreads</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -134,13 +134,13 @@ In General, this option is for your convenience, if you want to write visually m
 <span class="r-out co"><span class="r-pr">#&gt;</span> $na.rm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">get_collapse</span><span class="op">(</span><span class="st">"nthreads"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">get_collapse</span><span class="op">(</span><span class="st">"nthreads"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Resetting</span></span>
-<span class="r-in"><span class="fu">set_collapse</span><span class="op">(</span><span class="va">oldopts</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">oldopts</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Resetting</span></span></span>
+<span class="r-in"><span><span class="fu">set_collapse</span><span class="op">(</span><span class="va">oldopts</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">oldopts</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -155,7 +155,7 @@ In General, this option is for your convenience, if you want to write visually m
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -40,7 +40,11 @@ There is an updated (2022) [cheatsheet](<https://raw.githubusercontent.com/SebKr
 
 ## Vignettes
 
-There are also 5 vignettes which are available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website). The vignettes are:
+I wrote a recent (2023) rather technical vignette providing some details on *collapse*'s handling of R objects:
+
+* [***collapse*'s Handling of R Objects**](<https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html>): A quick view behind the scenes of class-agnostic R programming
+
+There are 5 further vignettes which are available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website):
 
 * [**Introduction to *collapse* **](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces key features in a structured way
 
@@ -56,6 +60,8 @@ There are also 5 vignettes which are available [online](<https://sebkrantz.githu
 
 ## Blog
 
-I maintain a [blog](<https://sebkrantz.github.io/Rblog/>) linked to [Rbloggers.com](<https://www.r-bloggers.com/>) where I introduced *collapse* with some compact posts covering central functionality. Among these, the post about [programming with *collapse*](<https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/>) is useful for ambitious users and developers willing to build on *collapse*. <!-- , as it exposes to some degree how central parts of *collapse* work together and provides tips on how to write very efficient *collapse* code. Future blog posts will expose some specialized functionality in more detail. -->
+I maintain a [blog](<https://sebkrantz.github.io/Rblog/>) linked to [Rbloggers.com](<https://www.r-bloggers.com/>) where I introduced *collapse* with some compact posts covering central functionality. Among these, the post about [programming with *collapse*](<https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/>) is useful for developers. A recent post about [*collapse* and the *fastverse*](https://sebkrantz.github.io/Rblog/2023/04/12/collapse-and-the-fastverse-reflecting-the-past-present-and-future/) also provides a broader contextualization and reflective outlook for the *collapse* and [*fastverse*](https://fastverse.github.io/fastverse/) projects. 
+<!-- for ambitious users and developers willing to build on *collapse*. --> 
+<!-- , as it exposes to some degree how central parts of *collapse* work together and provides tips on how to write very efficient *collapse* code. Future blog posts will expose some specialized functionality in more detail. -->
 
 

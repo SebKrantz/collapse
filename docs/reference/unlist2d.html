@@ -18,7 +18,7 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -67,8 +67,8 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, idcols <span class="op">=</span> <span class="st">".id"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>,
-         id.factor <span class="op">=</span> <span class="cn">FALSE</span>, DT <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, idcols <span class="op">=</span> <span class="st">".id"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>         id.factor <span class="op">=</span> <span class="cn">FALSE</span>, DT <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -109,6 +109,7 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
     <div id="note">
     <h2>Note</h2>
     <p>For lists of data frames <code>unlist2d</code> works just like <code>data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")</code> however for lists of lists <code>unlist2d</code> does not produce the same output as <code><a href="https://Rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">data.table::rbindlist</a></code> because <code>unlist2d</code> is a recursive function.</p>
+<p>The function <code>rrapply::rrapply(l, how = "melt"|"bind")</code> is a fast alternative (written fully in C) for nested lists of atomic elements.</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -117,9 +118,9 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Basic Examples:</span></span>
-<span class="r-in"><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Basic Examples:</span></span></span>
+<span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    .id.1 .id.2  mpg cyl  disp  hp drat    wt qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 91     2     2 26.0   4 120.3  91 4.43 2.140 16.7  0  1    5    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 92     2     2 30.4   4  95.1 113 3.77 1.513 16.9  1  1    5    2</span>
@@ -127,18 +128,18 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span> 94     2     2 19.7   6 145.0 175 3.62 2.770 15.5  0  1    5    6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 95     2     2 15.0   8 301.0 335 3.54 3.570 14.6  0  1    5    8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id.1 .id.2      mpg    cyl     disp       hp     drat      wt     qsec</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1    NA 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     2     1 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     2     2 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375 0.40625 3.6875 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-in"><span class="va">l</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span>,</span>
-<span class="r-in">         b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>c <span class="op">=</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">11</span><span class="op">]</span>, d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>e <span class="op">=</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, f <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">l</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>a <span class="op">=</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>         b <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>c <span class="op">=</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">11</span><span class="op">]</span>, d <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>e <span class="op">=</span> <span class="va">mtcars</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, f <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     .id.1 .id.2 .id.3      row.names  mpg cyl  disp  hp drat    wt qsec vs am</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 123     b     d     f  Porsche 914-2 26.0   4 120.3  91 4.43 2.140 16.7  0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 124     b     d     f   Lotus Europa 30.4   4  95.1 113 3.77 1.513 16.9  1  1</span>
@@ -150,43 +151,43 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span> 125    5    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 126    5    6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
-<span class="r-in"><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id.1 .id.2 .id.3      mpg    cyl     disp       hp     drat      wt     qsec</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     a  &lt;NA&gt;  &lt;NA&gt; 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     b     c  &lt;NA&gt;       NA     NA       NA 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     b     d     e       NA 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     b     d     f 20.09062 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     a  &lt;NA&gt;  &lt;NA&gt; 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     b     c  &lt;NA&gt;       NA     NA       NA 146.6875 3.596563 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     b     d     e       NA 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     b     d     f 20.09062 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       vs      am   gear   carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4375      NA     NA     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.4375 0.40625 3.6875 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3 0.4375 0.40625 3.6875     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.4375 0.40625 3.6875 2.8125</span>
-<span class="r-in"><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">fmean</span><span class="op">)</span>, recursive <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $a</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         vs </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $b</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $b$c</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         hp       drat         wt       qsec         vs         am       gear </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 146.687500   3.596562   3.217250  17.848750   0.437500   0.406250   3.687500 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 146.687500   3.596563   3.217250  17.848750   0.437500   0.406250   3.687500 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2.812500 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $b$d</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id    cyl     disp       hp     drat      wt     qsec     vs      am   gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   e 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875 0.4375 0.40625 3.6875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   f 6.1875 230.7219 146.6875 3.596562 3.21725 17.84875 0.4375 0.40625 3.6875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   e 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625 3.6875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   f 6.1875 230.7219 146.6875 3.596563 3.21725 17.84875 0.4375 0.40625 3.6875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg   carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       NA     NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 20.09062 2.8125</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Groningen Growth and Development Center 10-Sector Database</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span> <span class="co"># See ?GGDC10S</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Groningen Growth and Development Center 10-Sector Database</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span> <span class="co"># See ?GGDC10S</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Country Regioncode             Region Variable Year AGR MIN MAN PU CON WRT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     BWA        SSA Sub-saharan Africa       VA 1960  NA  NA  NA NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     BWA        SSA Sub-saharan Africa       VA 1961  NA  NA  NA NA  NA  NA</span>
@@ -198,7 +199,7 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  NA   NA  NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  NA   NA  NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
-<span class="r-in"><span class="fu"><a href="small-helpers.html">namlab</a></span><span class="op">(</span><span class="va">GGDC10S</span>, class <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="small-helpers.html">namlab</a></span><span class="op">(</span><span class="va">GGDC10S</span>, class <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Variable     Class                                                 Label</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     Country character                                               Country</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  Regioncode character                                           Region code</span>
@@ -216,12 +217,12 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14        GOV   numeric                                   Government services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15        OTH   numeric               Community, social and personal services</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 16        SUM   numeric                               Summation of sector GDP</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Panel-Summarize this data by Variable (Emloyment and Value Added)</span></span>
-<span class="r-in"><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">GGDC10S</span>, by <span class="op">=</span> <span class="op">~</span> <span class="va">Variable</span>,             <span class="co"># Output as list (instead of 4D array)</span></span>
-<span class="r-in">         pid <span class="op">=</span> <span class="op">~</span> <span class="va">Variable</span> <span class="op">+</span> <span class="va">Country</span>,</span>
-<span class="r-in">         cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">l</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>                      <span class="co"># A list of 2-levels with matrices of statistics</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Panel-Summarize this data by Variable (Emloyment and Value Added)</span></span></span>
+<span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">GGDC10S</span>, by <span class="op">=</span> <span class="op">~</span> <span class="va">Variable</span>,             <span class="co"># Output as list (instead of 4D array)</span></span></span>
+<span class="r-in"><span>         pid <span class="op">=</span> <span class="op">~</span> <span class="va">Variable</span> <span class="op">+</span> <span class="va">Country</span>,</span></span>
+<span class="r-in"><span>         cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">l</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>                      <span class="co"># A list of 2-levels with matrices of statistics</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 11</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ AGR :List of 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Overall: 'qsu' num [1:2, 1:5] 2225 2139 16746 5137561 55645 ...</span>
@@ -267,7 +268,7 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Overall: 'qsu' num [1:2, 1:5] 2225 2139 36847 43961639 96319 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Between: 'qsu' num [1:2, 1:5] 42 43 36847 43961639 89206 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ..$ Within : 'qsu' num [1:2, 1:5] 5.30e+01 4.97e+01 2.16e+07 2.16e+07 3.63e+04 ...</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span><span class="op">)</span><span class="op">)</span>                              <span class="co"># Default output, missing the variables (row-names)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span><span class="op">)</span><span class="op">)</span>                              <span class="co"># Default output, missing the variables (row-names)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id.1   .id.2          N       Mean          SD           Min          Max</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AGR Overall 2225.00000   16746.43    55644.84  5.240734e+00     390980.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AGR Overall 2139.00000 5137560.88 52913681.79  5.887857e-07 1191877784.8</span>
@@ -275,7 +276,7 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AGR Between   43.00000 5137560.88 27760188.51  1.674095e+02  189627688.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AGR  Within   52.97619 2526696.50    12942.66  2.394221e+06    2629932.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AGR  Within   49.74419 2526696.50 45046971.64 -1.869215e+08 1004776792.6</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>            <span class="co"># Here we go, but this is still not very nice</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>            <span class="co"># Here we go, but this is still not very nice</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   .id.1   .id.2 row.names          N       Mean          SD           Min</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AGR Overall       EMP 2225.00000   16746.43    55644.84  5.240734e+00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AGR Overall        VA 2139.00000 5137560.88 52913681.79  5.887857e-07</span>
@@ -290,8 +291,8 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  189627688.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    2629932.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 1004776792.6</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, idcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sector"</span>,<span class="st">"Trans"</span><span class="op">)</span>, <span class="co"># Now this is looking pretty good</span></span>
-<span class="r-in">              row.names <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, idcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sector"</span>,<span class="st">"Trans"</span><span class="op">)</span>, <span class="co"># Now this is looking pretty good</span></span></span>
+<span class="r-in"><span>              row.names <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sector   Trans Variable          N       Mean          SD           Min</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    AGR Overall      EMP 2225.00000   16746.43    55644.84  5.240734e+00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    AGR Overall       VA 2139.00000 5137560.88 52913681.79  5.887857e-07</span>
@@ -306,10 +307,10 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  189627688.7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    2629932.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 1004776792.6</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sector"</span>,<span class="st">"Trans"</span><span class="op">)</span>,        <span class="co"># Id-columns can also be generated as factors</span></span>
-<span class="r-in">                <span class="st">"Variable"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Sector"</span>,<span class="st">"Trans"</span><span class="op">)</span>,        <span class="co"># Id-columns can also be generated as factors</span></span></span>
+<span class="r-in"><span>                <span class="st">"Variable"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	66 obs. of  8 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ Sector  : Factor w/ 11 levels "AGR","MIN","MAN",..: 1 1 1 1 1 1 2 2 2 2 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ Trans   : Factor w/ 3 levels "Overall","Between",..: 1 1 2 2 3 3 1 1 2 2 ...</span>
@@ -319,15 +320,15 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ SD      : num  55645 52913682 54119 27760189 12943 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ Min     : num  5.24 5.89e-07 1.36e+01 1.67e+02 2.39e+06 ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ Max     : num  3.91e+05 1.19e+09 2.88e+05 1.90e+08 2.63e+06 ...</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Split this sectoral data, first by Variable (Emloyment and Value Added), then by Country</span></span>
-<span class="r-in"><span class="va">sdat</span> <span class="op">&lt;-</span> <span class="fu"><a href="rsplit.html">rsplit</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">~</span> <span class="va">Variable</span> <span class="op">+</span> <span class="va">Country</span>, cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Compute pairwise correlations between sectors and recombine:</span></span>
-<span class="r-in"><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">sdat</span>, <span class="va">pwcor</span><span class="op">)</span>,</span>
-<span class="r-in">                idcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variable"</span>,<span class="st">"Country"</span><span class="op">)</span>,</span>
-<span class="r-in">                row.names <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Split this sectoral data, first by Variable (Emloyment and Value Added), then by Country</span></span></span>
+<span class="r-in"><span><span class="va">sdat</span> <span class="op">&lt;-</span> <span class="fu"><a href="rsplit.html">rsplit</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">~</span> <span class="va">Variable</span> <span class="op">+</span> <span class="va">Country</span>, cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Compute pairwise correlations between sectors and recombine:</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu">unlist2d</span><span class="op">(</span><span class="fu"><a href="rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="va">sdat</span>, <span class="va">pwcor</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                idcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variable"</span>,<span class="st">"Country"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                row.names <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dat</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variable Country Sector         AGR        MIN         MAN         PU</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      EMP     ARG    AGR  1.00000000 -0.5432238 -0.06195285 -0.6039527</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      EMP     ARG    MIN -0.54322382  1.0000000  0.27420132  0.5591395</span>
@@ -347,14 +348,14 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.56998662</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.86608973</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>    <span class="co"># Using corrs. as distance metric to cluster sectors</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="va">dat</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>    <span class="co"># Using corrs. as distance metric to cluster sectors</span></span></span>
 <span class="r-plt img"><img src="unlist2d-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># List of panel-series matrices</span></span>
-<span class="r-in"><span class="va">psml</span> <span class="op">&lt;-</span> <span class="fu"><a href="psmat.html">psmat</a></span><span class="op">(</span><span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span><span class="op">)</span>, <span class="op">~</span><span class="va">Country</span>, <span class="op">~</span><span class="va">Year</span>, cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Recombining with unlist2d() (effectively like reshapig the data)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">psml</span>, idcols <span class="op">=</span> <span class="st">"Sector"</span>, row.names <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># List of panel-series matrices</span></span></span>
+<span class="r-in"><span><span class="va">psml</span> <span class="op">&lt;-</span> <span class="fu"><a href="psmat.html">psmat</a></span><span class="op">(</span><span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span><span class="op">)</span>, <span class="op">~</span><span class="va">Country</span>, <span class="op">~</span><span class="va">Year</span>, cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Recombining with unlist2d() (effectively like reshapig the data)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">psml</span>, idcols <span class="op">=</span> <span class="st">"Sector"</span>, row.names <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sector Country 1947 1948 1949         1950         1951         1952</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    AGR     ARG   NA   NA   NA 5.887857e-07 9.165327e-07 9.964412e-07</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           1953         1954         1955         1956         1957         1958</span>
@@ -376,8 +377,8 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <span class="r-out co"><span class="r-pr">#&gt;</span>      2008     2009     2010     2011 2012 2013</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 93178.7 79362.85 132365.8 178745.3   NA   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 5 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">dat</span>, <span class="va">sdat</span>, <span class="va">psml</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">l</span>, <span class="va">dat</span>, <span class="va">sdat</span>, <span class="va">psml</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -392,7 +393,7 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

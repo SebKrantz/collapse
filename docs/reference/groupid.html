@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,7 +65,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">groupid</span><span class="op">(</span><span class="va">x</span>, o <span class="op">=</span> <span class="cn">NULL</span>, start <span class="op">=</span> <span class="fl">1L</span>, na.skip <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">groupid</span><span class="op">(</span><span class="va">x</span>, o <span class="op">=</span> <span class="cn">NULL</span>, start <span class="op">=</span> <span class="fl">1L</span>, na.skip <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -103,7 +103,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">groupid</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">groupid</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [39] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 3 3 3 3 3 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 83 entries ]</span>
@@ -111,34 +111,34 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "qG"          "na.included"</span>
-<span class="r-in"><span class="fu">groupid</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Month</span>, start <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">groupid</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Month</span>, start <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [39] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 83 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"N.groups")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
-<span class="r-in"><span class="fu">groupid</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="fu">groupid</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [39] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 30 entries ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Same thing since country is alphabetically ordered: (groupid is faster..)</span></span>
-<span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">groupid</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>, <span class="fu"><a href="qF.html">qG</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, na.exclude <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Same thing since country is alphabetically ordered: (groupid is faster..)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu">groupid</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>, <span class="fu"><a href="qF.html">qG</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, na.exclude <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## When data is unordered, group-id can be generated through an ordering..</span></span>
-<span class="r-in"><span class="va">uo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="efficient-programming.html">fnrow</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">monthuo</span> <span class="op">&lt;-</span> <span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">[</span><span class="va">uo</span><span class="op">]</span></span>
-<span class="r-in"><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">order</a></span><span class="op">(</span><span class="va">monthuo</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">groupid</span><span class="op">(</span><span class="va">monthuo</span>, <span class="va">o</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 5 4 5 5 2 2 1 4 3 5 3 3 1 5 2 5 2 3 3 5 4 1 4 3 2 1 1 2 4 3 3 3 5 1 2 2 4 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [39] 5 3 5 4 5 2 4 2 3 3 4 4 1 5 2 2 1 2 1 2 1 2 4 4 4 3 5 4 5 2 2 2</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## When data is unordered, group-id can be generated through an ordering..</span></span></span>
+<span class="r-in"><span><span class="va">uo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="efficient-programming.html">fnrow</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">monthuo</span> <span class="op">&lt;-</span> <span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">[</span><span class="va">uo</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">monthuo</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">groupid</span><span class="op">(</span><span class="va">monthuo</span>, <span class="va">o</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 5 2 4 5 5 3 3 1 4 5 5 1 4 3 5 4 5 5 3 3 3 1 4 4 1 4 1 2 2 5 2 5 3 3 3 2 3 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [39] 5 2 2 4 4 3 4 2 1 4 1 1 1 3 4 4 2 2 2 1 2 2 2 3 1 3 4 3 1 1 3 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 83 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"N.groups")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "qG"          "na.included"</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">groupid</span><span class="op">(</span><span class="va">monthuo</span>, <span class="va">o</span><span class="op">)</span><span class="op">[</span><span class="va">o</span><span class="op">]</span>, <span class="fu"><a href="small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu">groupid</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">groupid</span><span class="op">(</span><span class="va">monthuo</span>, <span class="va">o</span><span class="op">)</span><span class="op">[</span><span class="va">o</span><span class="op">]</span>, <span class="fu"><a href="small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu">groupid</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 </code></pre></div>
     </div>
@@ -154,7 +154,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

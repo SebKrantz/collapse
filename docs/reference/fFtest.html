@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,13 +65,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fFtest</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co"># Internal method dispatch: formula if is.call(..1) || is.call(..2)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fFtest</span><span class="op">(</span><span class="va">y</span>, <span class="va">exc</span>, X <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, full.df <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for formula</span>
-<span class="fu">fFtest</span><span class="op">(</span><span class="va">formula</span>, data <span class="op">=</span> <span class="cn">NULL</span>, weights <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co"># Internal method dispatch: formula if is.call(..1) || is.call(..2)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fFtest</span><span class="op">(</span><span class="va">y</span>, <span class="va">exc</span>, X <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, full.df <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for formula</span></span>
+<span><span class="fu">fFtest</span><span class="op">(</span><span class="va">formula</span>, data <span class="op">=</span> <span class="cn">NULL</span>, weights <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -148,85 +148,85 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## We could use fFtest as a simple seasonality test:</span></span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>         <span class="co"># Testing for level-seasonality</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## We could use fFtest as a simple seasonality test:</span></span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>         <span class="co"># Testing for level-seasonality</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   R-Sq.     DF1     DF2 F-Stat. P-value </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.106      11     132   1.424   0.169 </span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span>,         <span class="co"># Seasonality test around a cubic trend</span></span>
-<span class="r-in">        <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span>,         <span class="co"># Seasonality test around a cubic trend</span></span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    R-Sq. DF1 DF2 F-Stat. P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model         0.965  14 129 250.585   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model   0.862   3 140 291.593   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.    0.102  11 129  33.890   0.000</span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Seasonality in first-difference</span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Seasonality in first-difference</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   R-Sq.     DF1     DF2 F-Stat. P-value </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.749      11     131  35.487   0.000 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## A more classical example with only continuous variables</span></span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">|</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## A more classical example with only continuous variables</span></span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">|</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   R-Sq. DF1 DF2 F-Stat. P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model        0.750   4  27  20.261   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model  0.605   2  29  22.175   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.   0.145   2  27   7.858   0.002</span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>,<span class="st">"vs"</span><span class="op">)</span><span class="op">]</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hp"</span>,<span class="st">"carb"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>,<span class="st">"vs"</span><span class="op">)</span><span class="op">]</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hp"</span>,<span class="st">"carb"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   R-Sq. DF1 DF2 F-Stat. P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model        0.750   4  27  20.261   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model  0.605   2  29  22.175   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.   0.145   2  27   7.858   0.002</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## Now encoding cyl and vs as factors</span></span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span> <span class="op">|</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## Now encoding cyl and vs as factors</span></span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">vs</span><span class="op">)</span> <span class="op">|</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">carb</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   R-Sq. DF1 DF2 F-Stat. P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model        0.756   5  26  16.140   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model  0.605   2  29  22.175   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.   0.152   3  26   5.395   0.005</span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>,<span class="st">"vs"</span><span class="op">)</span><span class="op">]</span>, <span class="va">qF</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hp"</span>,<span class="st">"carb"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>,<span class="st">"vs"</span><span class="op">)</span><span class="op">]</span>, <span class="va">qF</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hp"</span>,<span class="st">"carb"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   R-Sq. DF1 DF2 F-Stat. P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model        0.756   5  26  16.140   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model  0.605   2  29  22.175   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.   0.152   3  26   5.395   0.005</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Using iris data: A factor and a continuous variable excluded</span></span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Petal.Width</span> <span class="op">+</span> <span class="va">Species</span> <span class="op">|</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Petal.Length</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Using iris data: A factor and a continuous variable excluded</span></span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Petal.Width</span> <span class="op">+</span> <span class="va">Species</span> <span class="op">|</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Petal.Length</span>, <span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    R-Sq. DF1 DF2 F-Stat. P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model         0.867   5 144 188.251   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model   0.840   2 147 386.386   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.    0.027   3 144   9.816   0.000</span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    R-Sq. DF1 DF2 F-Stat. P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model         0.867   5 144 188.251   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model   0.840   2 147 386.386   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.    0.027   3 144   9.816   0.000</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Testing the significance of country-FE in regression of GDP on life expectancy</span></span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">|</span> <span class="va">LIFEEX</span>, <span class="va">wlddev</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Testing the significance of country-FE in regression of GDP on life expectancy</span></span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">|</span> <span class="va">LIFEEX</span>, <span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      R-Sq.   DF1   DF2   F-Stat.   P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model           0.955   199  8822   943.424     0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model     0.602     1  9020 13653.865     0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.      0.353   198  8822   350.373     0.000</span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">LIFEEX</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">LIFEEX</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      R-Sq.   DF1   DF2   F-Stat.   P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model           0.955   199  8822   943.424     0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model     0.602     1  9020 13653.865     0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.      0.353   198  8822   350.373     0.000</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## Ok, country-FE are significant, what about adding time-FE</span></span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">|</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="va">LIFEEX</span>, <span class="va">wlddev</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## Ok, country-FE are significant, what about adding time-FE</span></span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">|</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="va">LIFEEX</span>, <span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     R-Sq.  DF1  DF2  F-Stat.  P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model          0.963  258 8763  876.312    0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model    0.955  199 8822  943.424    0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.     0.008   59 8763   30.126    0.000</span>
-<span class="r-in"><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">year</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3c"</span>,<span class="st">"LIFEEX"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fFtest</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">year</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3c"</span>,<span class="st">"LIFEEX"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     R-Sq.  DF1  DF2  F-Stat.  P-Value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Full Model          0.963  258 8763  876.312    0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Restricted Model    0.955  199 8822  943.424    0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Exclusion Rest.     0.008   59 8763   30.126    0.000</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Same test done using lm:</span></span>
-<span class="r-in"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3c"</span>,<span class="st">"year"</span>,<span class="st">"PCGDP"</span>,<span class="st">"LIFEEX"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="va">LIFEEX</span> <span class="op">+</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">rest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="va">LIFEEX</span> <span class="op">+</span> <span class="va">iso3c</span>, <span class="va">data</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">rest</span>, <span class="va">full</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Same test done using lm:</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"iso3c"</span>,<span class="st">"year"</span>,<span class="st">"PCGDP"</span>,<span class="st">"LIFEEX"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="va">LIFEEX</span> <span class="op">+</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">rest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="va">LIFEEX</span> <span class="op">+</span> <span class="va">iso3c</span>, <span class="va">data</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/anova.html" class="external-link">anova</a></span><span class="op">(</span><span class="va">rest</span>, <span class="va">full</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Analysis of Variance Table</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model 1: PCGDP ~ LIFEEX + iso3c</span>
@@ -236,7 +236,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   8763 2.5097e+11 59 4.9475e+10 29.28 &lt; 2.2e-16 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -251,7 +251,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

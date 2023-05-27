@@ -64,14 +64,14 @@ flag(x, n = 1, \dots)
 \arguments{
   \item{x}{a vector / time series, (time series) matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df'). Data must not be numeric.}
   \item{n}{integer. A vector indicating the lags / leads to compute (passing negative integers to \code{flag} or \code{L} computes leads, passing negative integers to \code{F} computes lags).}
-  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}.}
+  \item{g}{a factor, \code{\link{GRP}} object, or atomic vector / list of vectors (internally grouped with \code{\link{group}}) used to group \code{x}. \emph{Note} that without \code{t}, all values in a group need to be consecutive and in the right order. See Details.}
   \item{by}{\emph{data.frame method}: Same as \code{g}, but also allows one- or two-sided formulas i.e. \code{~ group1} or \code{var1 + var2 ~ group1 + group2}. See Examples.}
   \item{t}{a time vector or list of vectors. Data frame methods also allows one-sided formula i.e. \code{~time}. grouped_df method supports lazy-evaluation i.e. \code{time} (no quotes). Either support wrapping a transformation function e.g. \code{~timeid(time)}, \code{qG(time)} etc.. See also Details on how \code{t} is processed.}
   \item{cols}{\emph{data.frame method}: Select columns to lag using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{stubs}{logical. \code{TRUE} will rename all lagged / leaded columns by adding a stub or prefix "L\code{n}." / "F\code{n}.".}
   \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} performs a fully identified time-lag (if the index contains a time variable), whereas \code{"row"} performs a simple (group) lag, where observations are shifted based on the present order of rows (in each group). The latter is significantly faster, but requires time series / panels to be regularly spaced and sorted by time within each group.}
-  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t}). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
+  \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t} using formulas). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
     \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{

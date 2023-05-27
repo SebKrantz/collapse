@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,23 +65,23 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-           use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-           use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-           use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-           use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>           use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>           use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>           use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">x</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>           use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -146,30 +146,30 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## default vector method</span></span>
-<span class="r-in"><span class="fu">fndistinct</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Solar.R</span><span class="op">)</span>                   <span class="co"># Simple distinct value count</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## default vector method</span></span></span>
+<span class="r-in"><span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Solar.R</span><span class="op">)</span>                   <span class="co"># Simple distinct value count</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 117</span>
-<span class="r-in"><span class="fu">fndistinct</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Solar.R</span>, <span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span> <span class="co"># Grouped distinct value count</span></span>
+<span class="r-in"><span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">airquality</span><span class="op">$</span><span class="va">Solar.R</span>, <span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span> <span class="co"># Grouped distinct value count</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  5  6  7  8  9 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27 28 29 27 27 </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## data.frame method</span></span>
-<span class="r-in"><span class="fu">fndistinct</span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## data.frame method</span></span></span>
+<span class="r-in"><span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R    Wind    Temp   Month     Day </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      67     117      31      40       5      31 </span>
-<span class="r-in"><span class="fu">fndistinct</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    21      27   18   18     1  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     9      28   16   19     1  30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    24      29   17   14     1  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    24      27   18   19     1  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9    21      27   19   20     1  30</span>
-<span class="r-in"><span class="fu">fndistinct</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>                               <span class="co"># Works with data of all types!</span></span>
+<span class="r-in"><span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>                               <span class="co"># Works with data of all types!</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     216     216      61      61       7       7       4       2    9470   10548 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    GINI     ODA     POP </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     368    7832   12877 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     country iso3c date year decade region income OECD PCGDP LIFEEX GINI ODA POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW       1     1   61   61      7      1      1    1    32     60    0  20  60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AFG       1     1   61   61      7      1      1    1    18     60    0  60  60</span>
@@ -177,23 +177,23 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> ALB       1     1   61   61      7      1      1    1    40     59    9  32  60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AND       1     1   61   61      7      1      1    1    50      0    0   0  60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## matrix method</span></span>
-<span class="r-in"><span class="va">aqm</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">fndistinct</span><span class="op">(</span><span class="va">aqm</span><span class="op">)</span>                                  <span class="co"># Also works for character or logical matrices</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## matrix method</span></span></span>
+<span class="r-in"><span><span class="va">aqm</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">aqm</span><span class="op">)</span>                                  <span class="co"># Also works for character or logical matrices</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R    Wind    Temp   Month     Day </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      67     117      31      40       5      31 </span>
-<span class="r-in"><span class="fu">fndistinct</span><span class="op">(</span><span class="va">aqm</span>, <span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fndistinct</span><span class="op">(</span><span class="va">aqm</span>, <span class="va">airquality</span><span class="op">$</span><span class="va">Month</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    21      27   18   18     1  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     9      28   16   19     1  30</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7    24      29   17   14     1  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8    24      27   18   19     1  31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9    21      27   19   20     1  30</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fndistinct</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fndistinct</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 5 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Month Ozone Solar.R  Wind  Temp   Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
@@ -202,8 +202,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     7    24      29    17    14    31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     8    24      27    18    19    31</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     9    21      27    19    20    30</span>
-<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span>,<span class="va">GINI</span>,<span class="va">ODA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fndistinct</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>             <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span>,<span class="va">GINI</span>,<span class="va">ODA</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fndistinct</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Adding missing grouping variables: `country`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 216 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    country             PCGDP LIFEEX  GINI   ODA</span>
@@ -218,8 +218,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> Argentina              60     60    29    60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> Armenia                30     59    20    29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> Aruba                  32     60     0    20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 206 more rows</span></span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 206 more rows</span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -234,7 +234,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

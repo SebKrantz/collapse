@@ -9,8 +9,8 @@ m <- na_insert(as.matrix(mtcars))
 
 test_that("fsubset works like base::subset for vectors and matrices", {
   expect_equal(fsubset(v, 1:3), v[1:3])
+  expect_equal(fsubset(v, -(1:3)), v[-(1:3)])
   expect_equal(fsubset(v, 4:8), v[4:8])
-  expect_error(fsubset(v, -(1:3))) # This does not work !!
   expect_equal(fsubset(v, v > 16), v[v > 16 & !is.na(v)])
   expect_equal(fsubset(m, 1:3), m[1:3, ])
   expect_equal(fsubset(m, v > 16), m[v > 16, ])
@@ -67,6 +67,9 @@ test_that("ss works like an improved version of [", { # replaced setRownames wit
   cl[4L] <- NA
   expect_equal(unattrib(ss(airquality, vl, nam)), unattrib(airquality[vl & !is.na(vl), nam, drop = FALSE]))
   expect_equal(unattrib(ss(airquality, vl, cl)), unattrib(airquality[vl & !is.na(vl), cl & !is.na(cl), drop = FALSE]))
+  expect_equal(ss(mtcars, -(1:3)), mtcars[-(1:3), ])
+  expect_equal(ss(mtcars, -c(5, 14)), mtcars[-c(5, 14), ])
+
 })
 
 

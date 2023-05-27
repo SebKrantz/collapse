@@ -19,7 +19,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -69,44 +69,44 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-   <span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, by <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>,
-  fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for indexed data / compatibility with plm:</span>
-
-<span class="co"># S3 method for pseries</span>
-<span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>,
-  shift <span class="op">=</span> <span class="st">"time"</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for grouped data frame / compatibility with dplyr:</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>   <span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, by <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>,</span>
+<span>  fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
+<span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  shift <span class="op">=</span> <span class="st">"time"</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for grouped data frame / compatibility with dplyr:</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">flag</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">1L</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">L</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -118,7 +118,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <dd><p>integer. A vector indicating the lags / leads to compute (passing negative integers to <code>flag</code> or <code>L</code> computes leads, passing negative integers to <code>F</code> computes lags).</p></dd>
 
   <dt>g</dt>
-<dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, or atomic vector / list of vectors (internally grouped with <code><a href="group.html">group</a></code>) used to group <code>x</code>.</p></dd>
+<dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, or atomic vector / list of vectors (internally grouped with <code><a href="group.html">group</a></code>) used to group <code>x</code>. <em>Note</em> that without <code>t</code>, all values in a group need to be consecutive and in the right order. See Details.</p></dd>
 
   <dt>by</dt>
 <dd><p><em>data.frame method</em>: Same as <code>g</code>, but also allows one- or two-sided formulas i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>. See Examples.</p></dd>
@@ -139,7 +139,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <dd><p><em>pseries / pdata.frame methods</em>: character. <code>"time"</code> performs a fully identified time-lag (if the index contains a time variable), whereas <code>"row"</code> performs a simple (group) lag, where observations are shifted based on the present order of rows (in each group). The latter is significantly faster, but requires time series / panels to be regularly spaced and sorted by time within each group.</p></dd>
 
   <dt>keep.ids</dt>
-<dd><p><em>data.frame / pdata.frame / grouped_df methods</em>: Logical. Drop all identifiers from the output (which includes all variables passed to <code>by</code> or <code>t</code>). <em>Note</em>: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the <code>"groups"</code> / <code>"index"</code> attributes are kept.</p></dd>
+<dd><p><em>data.frame / pdata.frame / grouped_df methods</em>: Logical. Drop all identifiers from the output (which includes all variables passed to <code>by</code> or <code>t</code> using formulas). <em>Note</em>: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the <code>"groups"</code> / <code>"index"</code> attributes are kept.</p></dd>
 
     <dt>...</dt>
 <dd><p>arguments to be passed to or from other methods.</p></dd>
@@ -175,8 +175,8 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Simple Time Series: AirPassengers</span></span>
-<span class="r-in"><span class="fu">L</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                      <span class="co"># 1 lag</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Simple Time Series: AirPassengers</span></span></span>
+<span class="r-in"><span><span class="fu">L</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                      <span class="co"># 1 lag</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  NA 112 118 132 129 121 135 148 148 136 119 104</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950 118 115 126 141 135 125 149 170 170 158 133 114</span>
@@ -184,7 +184,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 166 171 180 193 181 183 218 230 242 209 191 172</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 194 196 196 236 235 229 243 264 272 237 211 180</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"><span class="fu">flag</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                   <span class="co"># Same</span></span>
+<span class="r-in"><span><span class="fu">flag</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                   <span class="co"># Same</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  NA 112 118 132 129 121 135 148 148 136 119 104</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950 118 115 126 141 135 125 149 170 170 158 133 114</span>
@@ -192,7 +192,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 166 171 180 193 181 183 218 230 242 209 191 172</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 194 196 196 236 235 229 243 264 272 237 211 180</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"><span class="fu">L</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>                  <span class="co"># 1 lead</span></span>
+<span class="r-in"><span><span class="fu">L</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>                  <span class="co"># 1 lead</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949 118 132 129 121 135 148 148 136 119 104 118 115</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950 126 141 135 125 149 170 170 158 133 114 140 145</span>
@@ -200,8 +200,8 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 180 193 181 183 218 230 242 209 191 172 194 196</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 196 236 235 229 243 264 272 237 211 180 201 204</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>          <span class="co"># 1 lead and 3 lags - output as matrix</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>          <span class="co"># 1 lead and 3 lags - output as matrix</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       F1  --  L1  L2  L3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 118 112  NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 132 118 112  NA  NA</span>
@@ -209,14 +209,14 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 121 129 132 118 112</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 135 121 129 132 118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 148 135 121 129 132</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Time Series Matrix of 4 EU Stock Market Indicators, 1991-1998</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/tsp.html" class="external-link">tsp</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span>                                     <span class="co"># Data is recorded on 260 days per year</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Time Series Matrix of 4 EU Stock Market Indicators, 1991-1998</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/tsp.html" class="external-link">tsp</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span>                                     <span class="co"># Data is recorded on 260 days per year</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1991.496 1998.646  260.000</span>
-<span class="r-in"><span class="va">freq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">frequency</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stl</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">[</span>,<span class="st">"DAX"</span><span class="op">]</span>, <span class="va">freq</span><span class="op">)</span><span class="op">)</span>                 <span class="co"># There is some obvious seasonality</span></span>
+<span class="r-in"><span><span class="va">freq</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">frequency</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stl</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">[</span>,<span class="st">"DAX"</span><span class="op">]</span>, <span class="va">freq</span><span class="op">)</span><span class="op">)</span>                 <span class="co"># There is some obvious seasonality</span></span></span>
 <span class="r-plt img"><img src="flag-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">EuStockMarkets</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">*</span> <span class="va">freq</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># 1 annual lead and 3 annual lags</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">EuStockMarkets</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">*</span> <span class="va">freq</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># 1 annual lead and 3 annual lags</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      F260.DAX     DAX L260.DAX L520.DAX L780.DAX F260.SMI    SMI L260.SMI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  1755.98 1628.75       NA       NA       NA   1846.6 1678.1       NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  1754.95 1613.63       NA       NA       NA   1854.8 1688.5       NA</span>
@@ -230,7 +230,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 2460.2        NA        NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 2448.2        NA        NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">DAX</span> <span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="fu">L</span><span class="op">(</span><span class="va">EuStockMarkets</span>,<span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">*</span><span class="va">freq</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># DAX regressed on its own annual lead,</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">DAX</span> <span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="fu">L</span><span class="op">(</span><span class="va">EuStockMarkets</span>,<span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">*</span><span class="va">freq</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># DAX regressed on its own annual lead,</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = DAX ~ ., data = L(EuStockMarkets, -1:3 * freq))</span>
@@ -264,9 +264,9 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.9926,	Adjusted R-squared:  0.9925 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic:  5668 on 19 and 800 DF,  p-value: &lt; 2.2e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in">                                                        <span class="co"># lags and the lead/lags of the other series</span></span>
-<span class="r-in"><span class="co">## World Development Panel Data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">flag</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>        <span class="co"># This lags all variables,</span></span>
+<span class="r-in"><span>                                                        <span class="co"># lags and the lead/lags of the other series</span></span></span>
+<span class="r-in"><span><span class="co">## World Development Panel Data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">flag</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>        <span class="co"># This lags all variables,</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        &lt;NA&gt;  &lt;NA&gt;       &lt;NA&gt;   NA     NA       &lt;NA&gt;       &lt;NA&gt;    NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
@@ -280,7 +280,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 33.471   NA 112839996 9351441</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 33.971   NA 237720001 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="op">~</span><span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>                       <span class="co"># This lags all numeric variables</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="op">~</span><span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>                       <span class="co"># This lags all numeric variables</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c year L1.decade L1.PCGDP L1.LIFEEX L1.GINI    L1.ODA  L1.POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG 1960        NA       NA        NA      NA        NA      NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG 1961      1960       NA    32.446      NA 116769997 8996973</span>
@@ -288,7 +288,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG 1963      1960       NA    33.471      NA 112839996 9351441</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG 1964      1960       NA    33.971      NA 237720001 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG 1965      1960       NA    34.463      NA 295920013 9744781</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="op">~</span><span class="va">iso3c</span><span class="op">)</span><span class="op">)</span>                              <span class="co"># Without t: Works because data is ordered</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="op">~</span><span class="va">iso3c</span><span class="op">)</span><span class="op">)</span>                              <span class="co"># Without t: Works because data is ordered</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c L1.year L1.decade L1.PCGDP L1.LIFEEX L1.GINI    L1.ODA  L1.POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG      NA        NA       NA        NA      NA        NA      NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG    1960      1960       NA    32.446      NA 116769997 8996973</span>
@@ -296,7 +296,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG    1962      1960       NA    33.471      NA 112839996 9351441</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG    1963      1960       NA    33.971      NA 237720001 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG    1964      1960       NA    34.463      NA 295920013 9744781</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>       <span class="co"># This lags GDP per Capita &amp; Life Expectancy</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>       <span class="co"># This lags GDP per Capita &amp; Life Expectancy</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c year L1.PCGDP L1.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG 1960       NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG 1961       NA    32.446</span>
@@ -304,7 +304,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG 1963       NA    33.471</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG 1964       NA    33.971</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG 1965       NA    34.463</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>       <span class="co"># Same, also retaining original series</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>       <span class="co"># Same, also retaining original series</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c year PCGDP L1.PCGDP L2.PCGDP LIFEEX L1.LIFEEX L2.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG 1960    NA       NA       NA 32.446        NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG 1961    NA       NA       NA 32.962    32.446        NA</span>
@@ -312,8 +312,8 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG 1963    NA       NA       NA 33.971    33.471    32.962</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG 1964    NA       NA       NA 34.463    33.971    33.471</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG 1965    NA       NA       NA 34.948    34.463    33.971</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span>,      <span class="co"># Two lags, dropping id columns</span></span>
-<span class="r-in">       keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span>,      <span class="co"># Two lags, dropping id columns</span></span></span>
+<span class="r-in"><span>       keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   L1.PCGDP L2.PCGDP L1.LIFEEX L2.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       NA       NA        NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       NA       NA    32.446        NA</span>
@@ -321,9 +321,9 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4       NA       NA    33.471    32.962</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       NA       NA    33.971    33.471</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6       NA       NA    34.463    33.971</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Regressing GDP on its's lags and life-Expectancy and its lags</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="va">.</span>, <span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, <span class="op">~</span><span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">10</span>, keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Regressing GDP on its's lags and life-Expectancy and its lags</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="va">.</span>, <span class="fu">L</span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, <span class="op">~</span><span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">10</span>, keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = PCGDP ~ ., data = L(wlddev, 0:2, ~iso3c, ~year, </span>
@@ -349,10 +349,10 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.9976,	Adjusted R-squared:  0.9976 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic: 7.26e+05 on 5 and 8609 DF,  p-value: &lt; 2.2e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Indexing the data: facilitates time-based computations</span></span>
-<span class="r-in"><span class="va">wldi</span> <span class="op">&lt;-</span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wldi</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>                              <span class="co"># Again 2 lags of GDP and LIFEEX</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Indexing the data: facilitates time-based computations</span></span></span>
+<span class="r-in"><span><span class="va">wldi</span> <span class="op">&lt;-</span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wldi</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>                              <span class="co"># Again 2 lags of GDP and LIFEEX</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c year PCGDP L1.PCGDP L2.PCGDP LIFEEX L1.LIFEEX L2.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   AFG 1960    NA       NA       NA 32.446        NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG 1961    NA       NA       NA 32.962    32.446        NA</span>
@@ -362,11 +362,11 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG 1965    NA       NA       NA 34.948    34.463    33.971</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [1] | year [6 (61)] </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wldi</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span>                                          <span class="co"># Lagging an indexed series</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">wldi</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span>                                          <span class="co"># Lagging an indexed series</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA NA NA NA NA NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [1] | year [6 (61)] </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">PCGDP</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu">L</span><span class="op">(</span><span class="va">LIFEEX</span>,<span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="va">wldi</span><span class="op">)</span><span class="op">)</span>      <span class="co"># Running the lm again</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="fu">L</span><span class="op">(</span><span class="va">PCGDP</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span> <span class="op">+</span> <span class="fu">L</span><span class="op">(</span><span class="va">LIFEEX</span>,<span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="va">wldi</span><span class="op">)</span><span class="op">)</span>      <span class="co"># Running the lm again</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = PCGDP ~ L(PCGDP, 1:2) + L(LIFEEX, 0:2), data = wldi)</span>
@@ -393,7 +393,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.9976,	Adjusted R-squared:  0.9976 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic: 7.26e+05 on 5 and 8609 DF,  p-value: &lt; 2.2e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="va">.</span>, <span class="fu">L</span><span class="op">(</span><span class="va">wldi</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">10</span>, keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same thing</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">PCGDP</span> <span class="op">~</span> <span class="va">.</span>, <span class="fu">L</span><span class="op">(</span><span class="va">wldi</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">10</span>, keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same thing</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = PCGDP ~ ., data = L(wldi, 0:2, 9:10, keep.ids = FALSE))</span>
@@ -420,10 +420,10 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> Multiple R-squared:  0.9976,	Adjusted R-squared:  0.9976 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> F-statistic: 7.26e+05 on 5 and 8609 DF,  p-value: &lt; 2.2e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## Using grouped data:</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">flag</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## Using grouped data:</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">flag</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    PCGDP L1.PCGDP L2.PCGDP LIFEEX L1.LIFEEX L2.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     NA       NA       NA 32.446        NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     NA       NA       NA 32.962    32.446        NA</span>
@@ -439,7 +439,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13165 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  iso3c  [216 | 61 (0)] </span>
-<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">year</span>,<span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">flag</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span>,<span class="va">year</span><span class="op">)</span> <span class="co"># Also using t (safer)</span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">year</span>,<span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">flag</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span>,<span class="va">year</span><span class="op">)</span> <span class="co"># Also using t (safer)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    year PCGDP L1.PCGDP L2.PCGDP LIFEEX L1.LIFEEX L2.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  1960    NA       NA       NA 32.446        NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  1961    NA       NA       NA 32.962    32.446        NA</span>
@@ -454,7 +454,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13166 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  iso3c  [216 | 61 (0)] </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -469,7 +469,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

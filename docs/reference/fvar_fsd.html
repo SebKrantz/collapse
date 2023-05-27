@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,38 +65,38 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-<span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-    use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-    use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-    use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-     use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>,
-     stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-    use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>,
-    stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fvar</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>     use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fsd</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    stable.algo <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -174,57 +174,57 @@ For further computational detail see <code><a href="fsum.html">fsum</a></code>.<
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## default vector method</span></span>
-<span class="r-in"><span class="fu">fvar</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>                            <span class="co"># Simple variance (all examples also hold for fvar!)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## default vector method</span></span></span>
+<span class="r-in"><span><span class="fu">fvar</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>                            <span class="co"># Simple variance (all examples also hold for fvar!)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 36.3241</span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>                             <span class="co"># Simple standard deviation</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>                             <span class="co"># Simple standard deviation</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.026948</span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>              <span class="co"># Weighted sd: Weighted by hp</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>              <span class="co"># Weighted sd: Weighted by hp</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5.150858</span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>                  <span class="co"># Simple transformation: scaling (See also ?fscale)</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>                  <span class="co"># Simple transformation: scaling (See also ?fscale)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 3.484351 3.484351 3.783009 3.550719 3.102731 3.003178 2.372677 4.048484</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] 3.783009 3.185692 2.953402 2.721112 2.870441 2.522006 1.725583 1.725583</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17] 2.439045 5.375855 5.044012 5.624737 3.567311 2.571783 2.522006 2.206755</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25] 3.185692 4.529656 4.313958 5.044012 2.621559 3.268653 2.488822 3.550719</span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>                 <span class="co"># Grouped sd</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>                 <span class="co"># Grouped sd</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        4        6        8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.509828 1.453567 2.560048 </span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>      <span class="co"># Grouped weighted sd</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>      <span class="co"># Grouped weighted sd</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        4        6        8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.250863 1.294689 2.390448 </span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>      <span class="co"># Scaling by group</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>      <span class="co"># Scaling by group</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 14.447218 14.447218  5.055626 14.722403  7.304550 12.452126  5.585833</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8]  5.410406  5.055626 13.208885 12.245737  6.406130  6.757686  5.937388</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15]  4.062424  4.062424  5.742080  7.184310  6.740834  7.516917  4.767366</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [22]  6.054574  5.937388  5.195215  7.499859  6.053446  5.765187  6.740834</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [29]  6.171759 13.552866  5.859265  4.745192</span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span>, <span class="st">"/"</span><span class="op">)</span> <span class="co"># Group-scaling using weighted group sds</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span>, <span class="st">"/"</span><span class="op">)</span> <span class="co"># Group-scaling using weighted group sds</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 16.220111 16.220111  5.363617 16.529066  7.822800 13.980191  5.982141</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8]  5.740011  5.363617 14.829816 13.748475  6.860638  7.237136  6.358640</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15]  4.350648  4.350648  6.149474  7.621982  7.151489  7.974852  5.057797</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [22]  6.484139  6.358640  5.563810  8.031966  6.422226  6.116405  7.151489</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [29]  6.609639 15.216009  6.274973  5.034272</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## data.frame method</span></span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>                           <span class="co"># This works, although 'Species' is a factor variable</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## data.frame method</span></span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>                           <span class="co"># This works, although 'Species' is a factor variable</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length  Sepal.Width Petal.Length  Petal.Width      Species </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    0.8280661    0.4358663    1.7652982    0.7622377    0.8192319 </span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>           <span class="co"># This works, all columns are numeric variables</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">mtcars</span>, drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>           <span class="co"># This works, all columns are numeric variables</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg      cyl     disp       hp      drat        wt     qsec        vs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 6.026948 1.785922 123.9387 68.56287 0.5346787 0.9784574 1.786943 0.5040161</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          am      gear   carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.4989909 0.7378041 1.6152</span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>              <span class="co"># By Species: iris[5] is still a list, and thus passed to GRP()</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>              <span class="co"># By Species: iris[5] is still a list, and thus passed to GRP()</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa        0.3524897   0.3790644    0.1736640   0.1053856</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor    0.5161711   0.3137983    0.4699110   0.1977527</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica     0.6358796   0.3224966    0.5518947   0.2746501</span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>            <span class="co"># Same thing much faster: fsd recognizes 'Species' is a factor</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>            <span class="co"># Same thing much faster: fsd recognizes 'Species' is a factor</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa        0.3524897   0.3790644    0.1736640   0.1053856</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor    0.5161711   0.3137983    0.4699110   0.1977527</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica     0.6358796   0.3224966    0.5518947   0.2746501</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fsd</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Data scaled by species (see also fscale)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fsd</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="op">-</span><span class="fl">5</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[[</span><span class="fl">5</span><span class="op">]</span><span class="op">]</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># Data scaled by species (see also fscale)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     14.46851    9.233260     8.061544    1.897793</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     13.90112    7.914223     8.061544    1.897793</span>
@@ -232,15 +232,15 @@ For further computational detail see <code><a href="fsum.html">fsum</a></code>.<
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     13.05003    8.178031     8.637369    1.897793</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5     14.18481    9.497068     8.061544    1.897793</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     15.31960   10.288490     9.789018    3.795585</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## matrix method</span></span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## matrix method</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         mpg         cyl        disp          hp        drat          wt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   6.0269481   1.7859216 123.9386938  68.5628685   0.5346787   0.9784574 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        qsec          vs          am        gear        carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1.7869432   0.5040161   0.4989909   0.7378041   1.6152000 </span>
-<span class="r-in"><span class="fu">fsd</span><span class="op">(</span><span class="va">m</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span> <span class="co"># etc..</span></span>
+<span class="r-in"><span><span class="fu">fsd</span><span class="op">(</span><span class="va">m</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span> <span class="co"># etc..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg cyl     disp       hp      drat        wt     qsec        vs</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 4.509828   0 26.87159 20.93453 0.3654711 0.5695637 1.682445 0.3015113</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 1.453567   0 41.56246 24.26049 0.4760552 0.3563455 1.706866 0.5345225</span>
@@ -249,10 +249,10 @@ For further computational detail see <code><a href="fsum.html">fsum</a></code>.<
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 0.4670994 0.5393599 0.522233</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 0.5345225 0.6900656 1.812654</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8 0.3631365 0.7262730 1.556624</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsd</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsd</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am    mpg  disp    hp   drat     wt    qsec   gear   carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -263,7 +263,7 @@ For further computational detail see <code><a href="fsum.html">fsum</a></code>.<
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0  1.63  44.7   9.18  0.592  0.116  0.816   0.577  1.73 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0  2.77  71.8  33.4   0.230  0.768  0.802   0      0.900</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1  0.566 35.4  50.2   0.481  0.283  0.070<span style="text-decoration: underline;">7</span>  0      2.83 </span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsd</span><span class="op">(</span>keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># Remove grouping columns</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsd</span><span class="op">(</span>keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># Remove grouping columns</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mpg  disp    hp   drat     wt    qsec   gear   carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -274,7 +274,7 @@ For further computational detail see <code><a href="fsum.html">fsum</a></code>.<
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>  1.63  44.7   9.18  0.592  0.116  0.816   0.577  1.73 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>  2.77  71.8  33.4   0.230  0.768  0.802   0      0.900</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>  0.566 35.4  50.2   0.481  0.283  0.070<span style="text-decoration: underline;">7</span>  0      2.83 </span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsd</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>      <span class="co"># Weighted by hp</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsd</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>      <span class="co"># Weighted by hp</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am sum.hp   mpg  disp  drat     wt   qsec  gear  carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -285,7 +285,7 @@ For further computational detail see <code><a href="fsum.html">fsum</a></code>.<
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0    461 1.40  38.8  0.509 0.098<span style="text-decoration: underline;">9</span> 0.701  0.499 1.50 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0   <span style="text-decoration: underline;">2</span>330 2.66  68.8  0.233 0.756  0.830  0     0.851</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1    599 0.398 24.8  0.338 0.199  0.049<span style="text-decoration: underline;">7</span> 0     1.99 </span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsd</span><span class="op">(</span><span class="va">hp</span>, <span class="st">"/"</span><span class="op">)</span> <span class="co"># Weighted scaling transformation</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsd</span><span class="op">(</span><span class="va">hp</span>, <span class="st">"/"</span><span class="op">)</span> <span class="co"># Weighted scaling transformation</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   cyl, vs, am [7]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      cyl    vs    am    hp   mpg  disp  drat    wt  qsec   gear  carb</span>
@@ -300,8 +300,8 @@ For further computational detail see <code><a href="fsum.html">fsum</a></code>.<
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     4     1     0    62 21.7  12.8  34.0   9.34  14.3   8.22 4.11 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     4     1     0    95 20.3  12.3  36.1   9.22  16.3   8.22 4.11 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     6     1     0   123 13.8   4.32  7.69 34.8   26.1   8.01 2.67 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22 more rows</span></span>
-<span class="r-in"></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22 more rows</span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -316,7 +316,7 @@ For further computational detail see <code><a href="fsum.html">fsum</a></code>.<
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

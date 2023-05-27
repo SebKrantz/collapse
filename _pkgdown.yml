@@ -36,6 +36,11 @@ articles:
   navbar: collapse Documentation and Resources
   contents:
   - collapse_documentation
+- title: collapse's Handling of R Objects
+  desc: Provides an overview of collapse's class-agnostic R programming framework
+  navbar: collapse's Handling of R Objects
+  contents:
+  - collapse_object_handling
 - title: Introduction to collapse
   desc: Introduces central features in a structured way
   navbar: Introduction to collapse

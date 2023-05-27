@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -188,10 +188,10 @@ print(x, topn = 5, ...)</code></pre></div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Indexing panel data ----------------------------------------------------------</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">wldi</span> <span class="op">&lt;-</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">wldi</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Indexing panel data ----------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">wldi</span> <span class="op">&lt;-</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">wldi</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
@@ -207,7 +207,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13171 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [216] | year [61] </span>
-<span class="r-in"><span class="va">wldi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">]</span>                 <span class="co"># Works like a data frame</span></span>
+<span class="r-in"><span><span class="va">wldi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span>,<span class="fl">1</span><span class="op">]</span>                 <span class="co"># Works like a data frame</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan"</span>
@@ -225,13 +225,13 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 30 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [2] | year [61] </span>
-<span class="r-in"><span class="va">POP</span> <span class="op">&lt;-</span> <span class="va">wldi</span><span class="op">$</span><span class="va">POP</span>               <span class="co"># indexed_series</span></span>
-<span class="r-in"><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span>                      <span class="co"># Summary statistics</span></span>
+<span class="r-in"><span><span class="va">POP</span> <span class="op">&lt;-</span> <span class="va">wldi</span><span class="op">$</span><span class="va">POP</span>               <span class="co"># indexed_series</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span>                      <span class="co"># Summary statistics</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              N/T         Mean           SD          Min             Max</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Overall    12919  24'245971.6   102'120674         2833  1.39771500e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Between      216    24'178573  98'616506.7    8343.3333  1.08786967e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Within   59.8102  24'245971.6  26'803077.4  -405'793067      510'077008</span>
-<span class="r-in"><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span>                        <span class="co"># Population growth</span></span>
+<span class="r-in"><span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span>                        <span class="co"># Population growth</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]         NA  1.9166113  1.9851986  2.0506358  2.1122464  2.1707928</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7]  2.1947467  2.2122224  2.2801797  2.4133823  2.5690449  2.7010262</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13]  2.7517016  2.6947859  2.5104297  2.2251761  2.0011805  1.7632030</span>
@@ -249,7 +249,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Population, total"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [216] | year [61] </span>
-<span class="r-in"><span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">POP</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>         <span class="co"># Within-standardized 1 and 10-year growth rates</span></span>
+<span class="r-in"><span><span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">POP</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>         <span class="co"># Within-standardized 1 and 10-year growth rates</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     G1         L10G1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     [1,]            NA            NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     [2,] -2.404379e-01            NA</span>
@@ -293,7 +293,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "numeric" "matrix" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [216] | year [61] </span>
-<span class="r-in"><span class="fu"><a href="psmat.html">psmat</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span>                    <span class="co"># Panel-Series Matrix</span></span>
+<span class="r-in"><span><span class="fu"><a href="psmat.html">psmat</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span>                    <span class="co"># Panel-Series Matrix</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         1960     1961     1962     1963     1964     1965     1966     1967</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW 5.42e+04 5.54e+04 5.62e+04 5.67e+04 5.70e+04 5.74e+04 5.77e+04 5.81e+04</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         1968     1969     1970     1971     1972     1973     1974     1975</span>
@@ -311,10 +311,10 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         2016     2017     2018     2019 2020</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW 1.05e+05 1.05e+05 1.06e+05 1.06e+05   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 215 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="psmat.html">psmat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="psmat.html">psmat</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="indexing-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">POP</span><span class="op">[</span><span class="fl">30</span><span class="op">:</span><span class="fl">5000</span><span class="op">]</span>                  <span class="co"># Subsetting indexed_series</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">POP</span><span class="op">[</span><span class="fl">30</span><span class="op">:</span><span class="fl">5000</span><span class="op">]</span>                  <span class="co"># Subsetting indexed_series</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 11868877 12412308 13299017 14485546 15816603 17075727 18110657 18853437</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [9] 19357126 19737765 20170844 20779953 21606988 22600770 23680871 24726684</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [17] 25654277 26433049 27100536 27722276 28394813 29185507 30117413 31161376</span>
@@ -327,7 +327,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4901 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [82] | year [61] </span>
-<span class="r-in"><span class="fu"><a href="fdiff.html">Dlog</a></span><span class="op">(</span><span class="va">POP</span><span class="op">[</span><span class="fl">30</span><span class="op">:</span><span class="fl">5000</span><span class="op">]</span><span class="op">)</span>            <span class="co"># Log-difference of subset</span></span>
+<span class="r-in"><span><span class="fu"><a href="fdiff.html">Dlog</a></span><span class="op">(</span><span class="va">POP</span><span class="op">[</span><span class="fl">30</span><span class="op">:</span><span class="fl">5000</span><span class="op">]</span><span class="op">)</span>            <span class="co"># Log-difference of subset</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]           NA  0.044768965  0.069001562  0.085461202  0.087908886</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  0.076597770  0.058842568  0.040194682  0.026365389  0.019473185</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.021704390  0.029750528  0.039028057  0.044967196  0.046683615</span>
@@ -345,9 +345,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 4901 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [82] | year [61] </span>
-<span class="r-in"><span class="fu"><a href="psacf.html">psacf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a></span><span class="op">(</span><span class="va">POP</span><span class="op">[</span><span class="fl">30</span><span class="op">:</span><span class="fl">5000</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="co"># ACF of subset</span></span>
+<span class="r-in"><span><span class="fu"><a href="psacf.html">psacf</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a></span><span class="op">(</span><span class="va">POP</span><span class="op">[</span><span class="fl">30</span><span class="op">:</span><span class="fl">5000</span><span class="op">]</span><span class="op">)</span><span class="op">)</span> <span class="co"># ACF of subset</span></span></span>
 <span class="r-plt img"><img src="indexing-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fdiff.html">Dlog</a></span><span class="op">(</span><span class="va">POP</span><span class="op">[</span><span class="fl">30</span><span class="op">:</span><span class="fl">5000</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Multiple computations on subset</span></span>
+<span class="r-in"><span><span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fdiff.html">Dlog</a></span><span class="op">(</span><span class="va">POP</span><span class="op">[</span><span class="fl">30</span><span class="op">:</span><span class="fl">5000</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Multiple computations on subset</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              F1.Dlog1         Dlog1      L1.Dlog1   F1.L10Dlog1      L10Dlog1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    [1,]  4.476897e-02            NA            NA            NA            NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    [2,]  6.900156e-02  4.476897e-02            NA            NA            NA</span>
@@ -377,16 +377,16 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "numeric" "matrix" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [82] | year [61] </span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Fast Statistical Functions don't have dedicated methods</span></span>
-<span class="r-in"><span class="co"># Thus for aggregation we need to unindex beforehand ...</span></span>
-<span class="r-in"><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu">unindex</span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Fast Statistical Functions don't have dedicated methods</span></span></span>
+<span class="r-in"><span><span class="co"># Thus for aggregation we need to unindex beforehand ...</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu">unindex</span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 24245972</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"label")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Population, total"</span>
-<span class="r-in"><span class="va">wldi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">unindex</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">wldi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">unindex</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c year   decade      PCGDP   LIFEEX     GINI        ODA         POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   ABW 1990 1985.574 25413.8370 72.40653       NA   33245000    76268.63</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG 1990 1985.574   483.8351 49.19717       NA 1487548499 18362258.22</span>
@@ -397,9 +397,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   ARG 1990 1985.574  7907.8326 71.12565 45.92258  106930833 32301197.52</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8   ARM 1990 1985.574  2520.1808 70.67953 32.24500  282426894  2912376.95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 208 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># ... or unindex after taking group identifiers from the index</span></span>
-<span class="r-in"><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu">unindex</span><span class="op">(</span><span class="fu"><a href="fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span>, <span class="fu">ix</span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># ... or unindex after taking group identifiers from the index</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu">unindex</span><span class="op">(</span><span class="fu"><a href="fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span>, <span class="fu">ix</span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ABW         AFG         AGO         ALB         AND         ARE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1.15986116  2.50218519  3.04019111  0.98728941  3.03828499  8.33912222 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         ARG         ARM         ASM         ATG         AUS         AUT </span>
@@ -427,9 +427,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 146 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"label")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Population, total"</span>
-<span class="r-in"><span class="va">wldi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span>iso3c <span class="op">=</span> <span class="fu">ix</span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">unindex</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">wldi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span>iso3c <span class="op">=</span> <span class="fu">ix</span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">unindex</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   iso3c year   decade      PCGDP   LIFEEX     GINI        ODA         POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   ABW 1990 1985.574 25413.8370 72.40653       NA   33245000    76268.63</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   AFG 1990 1985.574   483.8351 49.19717       NA 1487548499 18362258.22</span>
@@ -440,9 +440,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   ARG 1990 1985.574  7907.8326 71.12565 45.92258  106930833 32301197.52</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8   ARM 1990 1985.574  2520.1808 70.67953 32.24500  282426894  2912376.95</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 208 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># With matrix methods it is easier as most attributes are dropped upon aggregation.</span></span>
-<span class="r-in"><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">POP</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu">ix</span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># With matrix methods it is easier as most attributes are dropped upon aggregation.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">POP</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu">ix</span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              G1       L10G1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ABW  1.15986116  13.5405797</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AFG  2.50218519  29.7453631</span>
@@ -480,9 +480,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CHE  0.81130910   7.3670756</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CHI  0.77252949   7.6461689</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 181 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Example of index with multiple ids</span></span>
-<span class="r-in"><span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span>, <span class="va">Year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># default is interact.ids = TRUE</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Example of index with multiple ids</span></span></span>
+<span class="r-in"><span><span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span>, <span class="va">Year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># default is interact.ids = TRUE</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Country Regioncode             Region Variable Year AGR MIN MAN PU CON WRT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     BWA        SSA Sub-saharan Africa       VA 1960  NA  NA  NA NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     BWA        SSA Sub-saharan Africa       VA 1961  NA  NA  NA NA  NA  NA</span>
@@ -496,8 +496,8 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  Variable.Country [1] | Year [6 (67)] </span>
-<span class="r-in"><span class="va">GGDCi</span> <span class="op">&lt;-</span> <span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span>, <span class="va">Year</span>, interact.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">GGDCi</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">GGDCi</span> <span class="op">&lt;-</span> <span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span>, <span class="va">Year</span>, interact.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">GGDCi</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Country Regioncode             Region Variable Year AGR MIN MAN PU CON WRT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     BWA        SSA Sub-saharan Africa       VA 1960  NA  NA  NA NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     BWA        SSA Sub-saharan Africa       VA 1961  NA  NA  NA NA  NA  NA</span>
@@ -511,7 +511,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  Variable [1] Country [1] | Year [6 (67)] </span>
-<span class="r-in"><span class="fu">findex</span><span class="op">(</span><span class="va">GGDCi</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">findex</span><span class="op">(</span><span class="va">GGDCi</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variable Country Year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       VA     BWA 1960</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       VA     BWA 1961</span>
@@ -526,8 +526,8 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5027 EMP EGY 2012</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Variable [2] Country [43] | Year [67]</span>
-<span class="r-in"><span class="co"># The benefit is increased flexibility for summary statistics and data transformation</span></span>
-<span class="r-in"><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">GGDCi</span>, effect <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># The benefit is increased flexibility for summary statistics and data transformation</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">GGDCi</span>, effect <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Country</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              N/T  Mean  SD  Min  Max</span>
@@ -563,7 +563,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Between       43  1982.4236   5.0799  1978.7519     2011.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row(s) and 11 matrix slice(s) ]</span>
-<span class="r-in"><span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">GGDCi</span><span class="op">$</span><span class="va">SUM</span>, effect <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span>            <span class="co"># Standardizing by variable</span></span>
+<span class="r-in"><span><span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">GGDCi</span><span class="op">$</span><span class="va">SUM</span>, effect <span class="op">=</span> <span class="st">"Variable"</span><span class="op">)</span>            <span class="co"># Standardizing by variable</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]         NA         NA         NA         NA -0.1226776 -0.1226776</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -0.1226776 -0.1226776 -0.1226776 -0.1226776 -0.1226775 -0.1226775</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] -0.1226774 -0.1226773 -0.1226772 -0.1226771 -0.1226769 -0.1226767</span>
@@ -583,7 +583,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "%10.0g"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  Variable [2] Country [43] | Year [67] </span>
-<span class="r-in"><span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">GGDCi</span><span class="op">$</span><span class="va">SUM</span>, effect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variable"</span>, <span class="st">"Year"</span><span class="op">)</span><span class="op">)</span> <span class="co"># ... by variable and year</span></span>
+<span class="r-in"><span><span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">GGDCi</span><span class="op">$</span><span class="va">SUM</span>, effect <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Variable"</span>, <span class="st">"Year"</span><span class="op">)</span><span class="op">)</span> <span class="co"># ... by variable and year</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]         NA         NA         NA         NA -0.2041456 -0.2039970</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -0.2023122 -0.2041736 -0.2058182 -0.2068329 -0.1799561 -0.1784717</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] -0.1794400 -0.1809847 -0.1852166 -0.1881118 -0.1915147 -0.1952319</span>
@@ -603,8 +603,8 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "%10.0g"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  Variable [2] Country [43] | Year [67] </span>
-<span class="r-in"><span class="co"># But time-based operations are a bit more expensive because of the necessary interactions</span></span>
-<span class="r-in"><span class="fu"><a href="fdiff.html">D</a></span><span class="op">(</span><span class="va">GGDCi</span><span class="op">$</span><span class="va">SUM</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># But time-based operations are a bit more expensive because of the necessary interactions</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fdiff.html">D</a></span><span class="op">(</span><span class="va">GGDCi</span><span class="op">$</span><span class="va">SUM</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]            NA            NA            NA            NA            NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6]     1.8648058     3.7996670    -1.7515810    -0.2525958    10.0790095</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11]    15.2179271    12.1300779    31.7872318    37.4213552    35.1940244</span>
@@ -626,11 +626,11 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "%10.0g"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  Variable [2] Country [43] | Year [67] </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Panel-Data modelling ---------------------------------------------------------</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Linear model of 5-year annualized growth rates of GDP on Life Expactancy + 5y lag</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="va">wldi</span><span class="op">)</span> <span class="co"># p abbreviates "power"</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Panel-Data modelling ---------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Linear model of 5-year annualized growth rates of GDP on Life Expactancy + 5y lag</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="va">wldi</span><span class="op">)</span> <span class="co"># p abbreviates "power"</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), </span>
@@ -642,20 +642,20 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))L5  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                              0.1716  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Same, adding time fixed effects via plm package: need to utilize to_plm function</span></span>
-<span class="r-in"><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="fu">to_plm</span><span class="op">(</span><span class="va">wldi</span><span class="op">)</span>, effect <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Same, adding time fixed effects via plm package: need to utilize to_plm function</span></span></span>
+<span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="fu">to_plm</span><span class="op">(</span><span class="va">wldi</span><span class="op">)</span>, effect <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x1678b5270&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x154431dd8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))-- L(G(LIFEEX, 5, p = 1/5), c(0, 5))L5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             0.26902                             0.34879 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># With country and time fixed effects via fixest</span></span>
-<span class="r-in"><span class="fu">fixest</span><span class="fu">::</span><span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="va">wldi</span>, fixef <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># With country and time fixed effects via fixest</span></span></span>
+<span class="r-in"><span><span class="fu">fixest</span><span class="fu">::</span><span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="va">wldi</span>, fixef <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> NOTE: 5,596 observations removed because of NA values (LHS: 4,720, RHS: 3,522).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OLS estimation, Dep. Var.: G(PCGDP, 5, p = 1/5)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Observations: 7,580 </span>
@@ -668,29 +668,29 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> RMSE: 3.05102     Adj. R2: 0.279618</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 Within R2: 0.019289</span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># Running a robust MM regression without fixed effects</span></span>
-<span class="r-in"><span class="fu">robustbase</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/robustbase/man/lmrob.html" class="external-link">lmrob</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="va">wldi</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Running a robust MM regression with country and time fixed effects</span></span>
-<span class="r-in"><span class="va">wldi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>LIFEEX_L5 <span class="op">=</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="co"># drop abbreviates drop.index.levels (not strictly needed here but more consistent)</span></span>
-<span class="r-in">  <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span>drop <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># For TFE use fwithin(effect = "year")</span></span>
-<span class="r-in">  <span class="fu">unindex</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">robustbase</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/robustbase/man/lmrob.html" class="external-link">lmrob</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">PCGDP</span> <span class="op">~</span><span class="va">.</span><span class="op">)</span>    <span class="co"># using lm() gives same result as fixest</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Using a random forest model without fixed effects</span></span>
-<span class="r-in"><span class="co"># ranger does not support these kinds of formulas, thus we need some preprocessing...</span></span>
-<span class="r-in"><span class="va">wldi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>LIFEEX_L5 <span class="op">=</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">unindex</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">ranger</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ranger/man/ranger.html" class="external-link">ranger</a></span><span class="op">(</span>formula <span class="op">=</span> <span class="va">PCGDP</span> <span class="op">~</span><span class="va">.</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Indexing other data frame based classes --------------------------------------</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">wlditbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qTBL</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">wlditbl</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span> <span class="co"># Works like a tibble...</span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># Running a robust MM regression without fixed effects</span></span></span>
+<span class="r-in"><span><span class="fu">robustbase</span><span class="fu">::</span><span class="fu">lmrob</span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="va">wldi</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Running a robust MM regression with country and time fixed effects</span></span></span>
+<span class="r-in"><span><span class="va">wldi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>LIFEEX_L5 <span class="op">=</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="co"># drop abbreviates drop.index.levels (not strictly needed here but more consistent)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span>drop <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># For TFE use fwithin(effect = "year")</span></span></span>
+<span class="r-in"><span>  <span class="fu">unindex</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">robustbase</span><span class="fu">::</span><span class="fu">lmrob</span><span class="op">(</span>formula <span class="op">=</span> <span class="va">PCGDP</span> <span class="op">~</span><span class="va">.</span><span class="op">)</span>    <span class="co"># using lm() gives same result as fixest</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using a random forest model without fixed effects</span></span></span>
+<span class="r-in"><span><span class="co"># ranger does not support these kinds of formulas, thus we need some preprocessing...</span></span></span>
+<span class="r-in"><span><span class="va">wldi</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span>LIFEEX_L5 <span class="op">=</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">unindex</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">ranger</span><span class="fu">::</span><span class="fu">ranger</span><span class="op">(</span>formula <span class="op">=</span> <span class="va">PCGDP</span> <span class="op">~</span><span class="va">.</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Indexing other data frame based classes --------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">wlditbl</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qTBL</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">wlditbl</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span> <span class="co"># Works like a tibble...</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 13,176 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    iso3c</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span></span>
@@ -704,10 +704,10 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> AFG  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> AFG  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> AFG  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 13,166 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 13,166 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [216] | year [61] </span>
-<span class="r-in"><span class="va">wlditbl</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">wlditbl</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [20] AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [39] AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG AFG</span>
@@ -718,7 +718,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 216 Levels: ABW AFG AGO ALB AND ARE ARG ARM ASM ATG AUS AUT AZE BDI BEL ... ZWE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [216] | year [61] </span>
-<span class="r-in"><span class="va">wlditbl</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="fl">10</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">wlditbl</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>, <span class="fl">10</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1,000 × 1</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -732,10 +732,10 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>   35.9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>   36.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>   36.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 990 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 990 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [17] | year [61] </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlditbl</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlditbl</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 13</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   country   iso3c date        year decade region income OECD  PCGDP LIFEEX  GINI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -745,47 +745,46 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> Afghanis… AFG   1964-01-01  <span style="text-decoration: underline;">1</span>963   <span style="text-decoration: underline;">1</span>960 South… Low i… FALSE    <span style="color: #BB0000;">NA</span>   34.0    <span style="color: #BB0000;">NA</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> Afghanis… AFG   1965-01-01  <span style="text-decoration: underline;">1</span>964   <span style="text-decoration: underline;">1</span>960 South… Low i… FALSE    <span style="color: #BB0000;">NA</span>   34.5    <span style="color: #BB0000;">NA</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> Afghanis… AFG   1966-01-01  <span style="text-decoration: underline;">1</span>965   <span style="text-decoration: underline;">1</span>960 South… Low i… FALSE    <span style="color: #BB0000;">NA</span>   34.9    <span style="color: #BB0000;">NA</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 2 more variables: ODA &lt;dbl&gt;, POP &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 2 more variables: ODA &lt;dbl&gt;, POP &lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [1] | year [6 (61)] </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">wldidt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span>      <span class="co"># Works like a data.table...</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           country  iso3c       date  year decade                    region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;char&gt; &lt;fctr&gt;     &lt;Date&gt; &lt;int&gt;  &lt;int&gt;                    &lt;fctr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1: Afghanistan    AFG 1961-01-01  1960   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2: Afghanistan    AFG 1962-01-01  1961   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3: Afghanistan    AFG 1963-01-01  1962   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4: Afghanistan    AFG 1964-01-01  1963   1960                South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            income   OECD    PCGDP LIFEEX  GINI       ODA     POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;fctr&gt; &lt;lgcl&gt;    &lt;num&gt;  &lt;num&gt; &lt;num&gt;     &lt;num&gt;   &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:  Low income  FALSE       NA 32.446    NA 116769997 8996973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:  Low income  FALSE       NA 32.962    NA 232080002 9169410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:  Low income  FALSE       NA 33.471    NA 112839996 9351441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:  Low income  FALSE       NA 33.971    NA 237720001 9543205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">wldidt</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">wldidt</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span>      <span class="co"># Works like a data.table...</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           country iso3c       date year decade                    region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1: Afghanistan   AFG 1961-01-01 1960   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2: Afghanistan   AFG 1962-01-01 1961   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3: Afghanistan   AFG 1963-01-01 1962   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4: Afghanistan   AFG 1964-01-01 1963   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5: Afghanistan   AFG 1965-01-01 1964   1960                South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            income  OECD    PCGDP LIFEEX GINI       ODA     POP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:  Low income FALSE       NA 32.446   NA 116769997 8996973</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:  Low income FALSE       NA 32.962   NA 232080002 9169410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:  Low income FALSE       NA 33.471   NA 112839996 9351441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:  Low income FALSE       NA 33.971   NA 237720001 9543205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:  Low income FALSE       NA 34.463   NA 295920013 9744781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 6 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [17] | year [61] </span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2000</span><span class="op">]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           country  iso3c       date  year decade             region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            &lt;char&gt; &lt;fctr&gt;     &lt;Date&gt; &lt;int&gt;  &lt;int&gt;             &lt;fctr&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1: Afghanistan    AFG 2002-01-01  2001   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2: Afghanistan    AFG 2003-01-01  2002   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3: Afghanistan    AFG 2004-01-01  2003   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4: Afghanistan    AFG 2005-01-01  2004   2000         South Asia</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    income   OECD     PCGDP LIFEEX  GINI        ODA      POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                    &lt;fctr&gt; &lt;lgcl&gt;     &lt;num&gt;  &lt;num&gt; &lt;num&gt;      &lt;num&gt;    &lt;num&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1:          Low income  FALSE        NA 56.308    NA  682969971 21606988</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2:          Low income  FALSE  330.3036 56.784    NA 1790479980 22600770</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3:          Low income  FALSE  343.0809 57.271    NA 1972890015 23680871</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    4:          Low income  FALSE  333.2167 57.772    NA 2681449951 24726684</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-in"><span><span class="va">wldidt</span><span class="op">[</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2000</span><span class="op">]</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           country iso3c       date year decade             region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1: Afghanistan   AFG 2002-01-01 2001   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2: Afghanistan   AFG 2003-01-01 2002   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3: Afghanistan   AFG 2004-01-01 2003   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4: Afghanistan   AFG 2005-01-01 2004   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5: Afghanistan   AFG 2006-01-01 2005   2000         South Asia</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    income  OECD     PCGDP LIFEEX GINI        ODA      POP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    1:          Low income FALSE        NA 56.308   NA  682969971 21606988</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2:          Low income FALSE  330.3036 56.784   NA 1790479980 22600770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3:          Low income FALSE  343.0809 57.271   NA 1972890015 23680871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    4:          Low income FALSE  333.2167 57.772   NA 2681449951 24726684</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    5:          Low income FALSE  357.2347 58.290   NA 3306389893 25654277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 6 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  iso3c [216] | year [20 (61)] </span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">.</a></span><span class="op">(</span>sum_PCGDP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span> <span class="co"># Aggregation unindexes the result</span></span>
+<span class="r-in"><span><span class="va">wldidt</span><span class="op">[</span>, <span class="fu">.</span><span class="op">(</span>sum_PCGDP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span> <span class="co"># Aggregation unindexes the result</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    country   sum_PCGDP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;char&gt;       &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:           Afghanistan    8709.031</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2:               Albania  112769.600</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3:               Algeria  211936.285</span>
@@ -797,9 +796,8 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 214:           Yemen, Rep.   32089.789</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 215:                Zambia   79131.760</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 216:              Zimbabwe   73166.158</span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    country       PCGDP   LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;char&gt;       &lt;num&gt;    &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:           Afghanistan    8709.031 2951.830</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2:               Albania  112769.600 4300.816</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3:               Algeria  211936.285 3813.774</span>
@@ -811,11 +809,10 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 214:           Yemen, Rep.   32089.789 3152.224</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 215:                Zambia   79131.760 3065.558</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 216:              Zimbabwe   73166.158 3272.016</span>
-<span class="r-in"><span class="co"># This also works but is a bit inefficient since the index is subset and then dropped</span></span>
-<span class="r-in"><span class="co"># -&gt; better unindex beforehand</span></span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2000</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/data.table.html" class="external-link">.</a></span><span class="op">(</span>sum_PCGDP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="co"># This also works but is a bit inefficient since the index is subset and then dropped</span></span></span>
+<span class="r-in"><span><span class="co"># -&gt; better unindex beforehand</span></span></span>
+<span class="r-in"><span><span class="va">wldidt</span><span class="op">[</span><span class="va">year</span> <span class="op">&gt;</span> <span class="fl">2000</span>, <span class="fu">.</span><span class="op">(</span>sum_PCGDP <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    country  sum_PCGDP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;char&gt;      &lt;num&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1:           Afghanistan   8709.031</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2:               Albania  73832.383</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   3:               Algeria  84017.769</span>
@@ -827,46 +824,46 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 214:           Yemen, Rep.  20313.628</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 215:                Zambia  26490.196</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 216:              Zimbabwe  21161.694</span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span>, <span class="va">PCGDP_gr_5Y</span> <span class="op">:=</span> <span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span>  <span class="co"># Can add Variables by reference</span></span>
-<span class="r-in"><span class="co"># Note that .SD is a data.table of indexed_series, not an indexed_frame, so this is WRONG!</span></span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">PCGDP_gr_5Y</span>, <span class="va">LIFEEX_gr_5Y</span><span class="op">)</span> <span class="op">:=</span> <span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">slt</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span>, <span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span></span>
+<span class="r-in"><span><span class="va">wldidt</span><span class="op">[</span>, <span class="va">PCGDP_gr_5Y</span> <span class="op">:=</span> <span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span>  <span class="co"># Can add Variables by reference</span></span></span>
+<span class="r-in"><span><span class="co"># Note that .SD is a data.table of indexed_series, not an indexed_frame, so this is WRONG!</span></span></span>
+<span class="r-in"><span><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">PCGDP_gr_5Y</span>, <span class="va">LIFEEX_gr_5Y</span><span class="op">)</span> <span class="op">:=</span> <span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">slt</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span>, <span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Found '.SD' in the call but no 'apply' function. Please note that .SD is not an indexed_frame but a plain data.table containing indexed_series. Thus indexed_frame / pdata.frame methods don't work on .SD! Consider using (m/l)apply(.SD, FUN) or reindex(.SD, ix(data)). If you are not performing indexed operations on .SD please ignore or suppress this warning.</span>
-<span class="r-in"><span class="co"># This gives the correct outcome</span></span>
-<span class="r-in"><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">PCGDP_gr_5Y</span>, <span class="va">LIFEEX_gr_5Y</span><span class="op">)</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">slt</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span>, <span class="va">G</span>, <span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_read.html" class="external-link">st_read</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">nci</span> <span class="op">&lt;-</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">nc</span>, <span class="va">SID74</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">nci</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="st">"AREA"</span><span class="op">]</span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_centroid</a></span><span class="op">(</span><span class="va">nci</span><span class="op">)</span> <span class="co"># The geometry column is never indexed, thus sf computations work normally</span></span>
-<span class="r-in"><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">nci</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_area</a></span><span class="op">(</span><span class="va">nci</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tsibble.tidyverts.org" class="external-link">tsibble</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedi</span> <span class="op">&lt;-</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">pedestrian</span>, <span class="va">Sensor</span>, <span class="va">Date_Time</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">pedi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span>
-<span class="r-in"><span class="fu">findex</span><span class="op">(</span><span class="va">pedi</span><span class="op">)</span> <span class="co"># Time factor with 17k levels from POSIXct</span></span>
-<span class="r-in"><span class="co"># Now here is a case where integer levels in the index can really speed things up</span></span>
-<span class="r-in"><span class="fu">ix</span><span class="op">(</span><span class="fu">iby</span><span class="op">(</span><span class="va">pedestrian</span>, <span class="va">Sensor</span>, <span class="fu"><a href="timeid.html">timeid</a></span><span class="op">(</span><span class="va">Date_Time</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>descriptive_levels <span class="op">=</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">pedestrian</span>, <span class="va">Sensor</span>, <span class="va">Date_Time</span><span class="op">)</span>,</span>
-<span class="r-in">               integer_levels <span class="op">=</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">pedestrian</span>, <span class="va">Sensor</span>, <span class="fu"><a href="timeid.html">timeid</a></span><span class="op">(</span><span class="va">Date_Time</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="co"># Data has irregularity</span></span>
-<span class="r-in"><span class="fu">is_irregular</span><span class="op">(</span><span class="va">pedi</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">is_irregular</span><span class="op">(</span><span class="va">pedi</span>, any_id <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># irregularity in all sequences</span></span>
-<span class="r-in"><span class="co"># Manipulation such as lagging with tsibble/dplyr requires expanding rows and grouping</span></span>
-<span class="r-in"><span class="co"># Collapse can just compute correct lag on indexed series or frames</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
-<span class="r-in">  dplyr <span class="op">=</span> <span class="fu"><a href="https://tsibble.tidyverts.org/reference/fill_gaps.html" class="external-link">fill_gaps</a></span><span class="op">(</span><span class="va">pedestrian</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://tsibble.tidyverts.org/reference/group_by_key.html" class="external-link">group_by_key</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Lag_Count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">Count</span><span class="op">)</span><span class="op">)</span>,</span>
-<span class="r-in">  collapse <span class="op">=</span> <span class="fu"><a href="ftransform.html">fmutate</a></span><span class="op">(</span><span class="va">pedi</span>, Lag_Count <span class="op">=</span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="va">Count</span><span class="op">)</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Indexing Atomic objects ---------------------------------------------------------</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## ts</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># This gives the correct outcome</span></span></span>
+<span class="r-in"><span><span class="va">wldidt</span><span class="op">[</span>, <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">PCGDP_gr_5Y</span>, <span class="va">LIFEEX_gr_5Y</span><span class="op">)</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">slt</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span>, <span class="va">G</span>, <span class="fl">5</span>, power <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span><span class="op">]</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nc</span> <span class="op">&lt;-</span> <span class="fu">st_read</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"shape/nc.shp"</span>, package <span class="op">=</span> <span class="st">"sf"</span><span class="op">)</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nci</span> <span class="op">&lt;-</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">nc</span>, <span class="va">SID74</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">nci</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="st">"AREA"</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="fu">st_centroid</span><span class="op">(</span><span class="va">nci</span><span class="op">)</span> <span class="co"># The geometry column is never indexed, thus sf computations work normally</span></span></span>
+<span class="r-in"><span><span class="fu">st_coordinates</span><span class="op">(</span><span class="va">nci</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu">st_area</span><span class="op">(</span><span class="va">nci</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tsibble.tidyverts.org" class="external-link">tsibble</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedi</span> <span class="op">&lt;-</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">pedestrian</span>, <span class="va">Sensor</span>, <span class="va">Date_Time</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pedi</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span></span></span>
+<span class="r-in"><span><span class="fu">findex</span><span class="op">(</span><span class="va">pedi</span><span class="op">)</span> <span class="co"># Time factor with 17k levels from POSIXct</span></span></span>
+<span class="r-in"><span><span class="co"># Now here is a case where integer levels in the index can really speed things up</span></span></span>
+<span class="r-in"><span><span class="fu">ix</span><span class="op">(</span><span class="fu">iby</span><span class="op">(</span><span class="va">pedestrian</span>, <span class="va">Sensor</span>, <span class="fu"><a href="timeid.html">timeid</a></span><span class="op">(</span><span class="va">Date_Time</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>descriptive_levels <span class="op">=</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">pedestrian</span>, <span class="va">Sensor</span>, <span class="va">Date_Time</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>               integer_levels <span class="op">=</span> <span class="fu">findex_by</span><span class="op">(</span><span class="va">pedestrian</span>, <span class="va">Sensor</span>, <span class="fu"><a href="timeid.html">timeid</a></span><span class="op">(</span><span class="va">Date_Time</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Data has irregularity</span></span></span>
+<span class="r-in"><span><span class="fu">is_irregular</span><span class="op">(</span><span class="va">pedi</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">is_irregular</span><span class="op">(</span><span class="va">pedi</span>, any_id <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># irregularity in all sequences</span></span></span>
+<span class="r-in"><span><span class="co"># Manipulation such as lagging with tsibble/dplyr requires expanding rows and grouping</span></span></span>
+<span class="r-in"><span><span class="co"># Collapse can just compute correct lag on indexed series or frames</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  dplyr <span class="op">=</span> <span class="fu">fill_gaps</span><span class="op">(</span><span class="va">pedestrian</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">group_by_key</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>Lag_Count <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">Count</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  collapse <span class="op">=</span> <span class="fu"><a href="ftransform.html">fmutate</a></span><span class="op">(</span><span class="va">pedi</span>, Lag_Count <span class="op">=</span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="va">Count</span><span class="op">)</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Indexing Atomic objects ---------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ts</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949 112 118 132 129 121 135 148 148 136 119 104 118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950 115 126 141 135 125 149 170 170 158 133 114 140</span>
@@ -874,13 +871,13 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 171 180 193 181 183 218 230 242 209 191 172 194</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 196 196 236 235 229 243 264 272 237 211 180 201</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"><span class="va">AirPassengers</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>        <span class="co"># Ts class does not support irregularity, subsetting drops class</span></span>
+<span class="r-in"><span><span class="va">AirPassengers</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>        <span class="co"># Ts class does not support irregularity, subsetting drops class</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 112 118 132 129 121 135 148 148 136 119 104 118 115 126 141 135 125 149 170</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [20] 199 199 184 162 146 166 171 180 193 181 183 218 230 242 209 191 172 194 196</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [39] 196 236 235 229 243 264 272 237 211 180 201 204 188 235 227 234 264 302 293</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [58] 259 229 203 229 242 233 267 269 270 315 364 347 312</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 63 entries ]</span>
-<span class="r-in"><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>, <span class="fl">12</span><span class="op">)</span> <span class="co"># Annual Growth Rate: Wrong!</span></span>
+<span class="r-in"><span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>, <span class="fl">12</span><span class="op">)</span> <span class="co"># Annual Growth Rate: Wrong!</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]         NA         NA         NA         NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7]         NA         NA         NA         NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13]  2.6785714  6.7796610  6.8181818  4.6511628  3.3057851 10.3703704</span>
@@ -894,9 +891,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [61] 13.9303483 18.6274510 23.9361702 13.6170213 18.5022026 15.3846154</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [67] 19.3181818 20.5298013 18.4300341 20.4633205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 63 entries ]</span>
-<span class="r-in"><span class="co"># Now indexing AirPassengers (identity() is a trick so that the index is named time(AirPassengers))</span></span>
-<span class="r-in"><span class="va">iAP</span> <span class="op">&lt;-</span> <span class="fu">reindex</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">time</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">iAP</span></span>
+<span class="r-in"><span><span class="co"># Now indexing AirPassengers (identity() is a trick so that the index is named time(AirPassengers))</span></span></span>
+<span class="r-in"><span><span class="va">iAP</span> <span class="op">&lt;-</span> <span class="fu">reindex</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">time</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">iAP</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949 112 118 132 129 121 135 148 148 136 119 104 118</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950 115 126 141 135 125 149 170 170 158 133 114 140</span>
@@ -906,7 +903,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  time(AirPassengers) [144] </span>
-<span class="r-in"><span class="fu">findex</span><span class="op">(</span><span class="va">iAP</span><span class="op">)</span>    <span class="co"># See the index</span></span>
+<span class="r-in"><span><span class="fu">findex</span><span class="op">(</span><span class="va">iAP</span><span class="op">)</span>    <span class="co"># See the index</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   time(AirPassengers)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1                1949</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2         1949.083333</span>
@@ -921,7 +918,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 144 1960.916619</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> time(AirPassengers) [144]</span>
-<span class="r-in"><span class="va">iAP</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>  <span class="co"># Subsetting</span></span>
+<span class="r-in"><span><span class="va">iAP</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>  <span class="co"># Subsetting</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 112 118 132 129 121 135 148 148 136 119 104 118 115 126 141 135 125 149 170</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [20] 199 199 184 162 146 166 171 180 193 181 183 218 230 242 209 191 172 194 196</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [39] 196 236 235 229 243 264 272 237 211 180 201 204 188 235 227 234 264 302 293</span>
@@ -929,7 +926,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 63 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  time(AirPassengers) [133 (144)] </span>
-<span class="r-in"><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">iAP</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>, <span class="fl">12</span><span class="op">)</span>                <span class="co"># Annual Growth Rate: Correct!</span></span>
+<span class="r-in"><span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">iAP</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>, <span class="fl">12</span><span class="op">)</span>                <span class="co"># Annual Growth Rate: Correct!</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]         NA         NA         NA         NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7]         NA         NA         NA         NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13]  2.6785714  6.7796610  6.8181818  4.6511628  3.3057851 10.3703704</span>
@@ -945,7 +942,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 63 entries ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  time(AirPassengers) [133 (144)] </span>
-<span class="r-in"><span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">iAP</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">12</span><span class="op">)</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Lagged level, period and annual growth rates...</span></span>
+<span class="r-in"><span><span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">iAP</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">20</span><span class="op">:</span><span class="fl">30</span><span class="op">)</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,<span class="fl">12</span><span class="op">)</span><span class="op">)</span>, <span class="fl">0</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Lagged level, period and annual growth rates...</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         -- L1.--          G1       L1.G1      L12G1   L1.L12G1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1,] 112    NA          NA          NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [2,] 118   112   5.3571429          NA         NA         NA</span>
@@ -963,18 +960,30 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "numeric" "matrix" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  time(AirPassengers) [133 (144)] </span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## xts</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/xts" class="external-link">xts</a></span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## xts</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/xts" class="external-link">xts</a></span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: zoo</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘zoo’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:data.table’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     yearmon, yearqtr</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     as.Date, as.Date.numeric</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ######################### Warning from 'xts' package ##########################</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> #                                                                             #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> # The dplyr lag() function breaks how base R's lag() function is supposed to  #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> # work, which breaks lag(my_xts). Calls to lag(my_xts) that you type or       #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> # source() into this session won't work correctly.                            #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> #                                                                             #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> # Use stats::lag() to make sure you're not using dplyr::lag(), or you can add #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> # conflictRules('dplyr', exclude = 'lag') to your .Rprofile to stop           #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> # dplyr from breaking base R's lag() function.                                #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> #                                                                             #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> # Code in packages is not affected. It's protected by R's namespace mechanism #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> # Set `options(xts.warn_dplyr_breaks_lag = FALSE)` to suppress this warning.  #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> #                                                                             #</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> ###############################################################################</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘xts’</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:dplyr’:</span>
@@ -983,12 +992,12 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:data.table’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     first, last</span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://zoo.R-Forge.R-project.org/" class="external-link">zoo</a></span><span class="op">)</span> <span class="co"># Needed for as.yearmon() and index() functions</span></span>
-<span class="r-in"><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">iso3c</span> <span class="op">==</span> <span class="st">"DEU"</span>, <span class="va">date</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">POP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="op">{</span></span>
-<span class="r-in">  <span class="fu"><a href="https://rdrr.io/pkg/xts/man/xts.html" class="external-link">xts</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, order.by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/yearmon.html" class="external-link">as.yearmon</a></span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in">  <span class="op">}</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="fl">30</span><span class="op">:</span><span class="fl">40</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">reindex</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/zoo/man/index.html" class="external-link">index</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Introducing a gap</span></span>
-<span class="r-in"><span class="co"># plot(G(unindex(X)))</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="fu">unindex</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span>    <span class="co"># diff.xts gixes wrong result</span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://zoo.R-Forge.R-project.org/" class="external-link">zoo</a></span><span class="op">)</span> <span class="co"># Needed for as.yearmon() and index() functions</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">iso3c</span> <span class="op">==</span> <span class="st">"DEU"</span>, <span class="va">date</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">POP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/xts/man/xts.html" class="external-link">xts</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, order.by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/yearmon.html" class="external-link">as.yearmon</a></span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">}</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="op">-</span><span class="op">(</span><span class="fl">30</span><span class="op">:</span><span class="fl">40</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">reindex</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identity.html" class="external-link">identity</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/zoo/man/index.html" class="external-link">index</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Introducing a gap</span></span></span>
+<span class="r-in"><span><span class="co"># plot(G(unindex(X)))</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="fu">unindex</span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span>    <span class="co"># diff.xts gixes wrong result</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                PCGDP       LIFEEX GINI ODA      POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1961          NA           NA   NA  NA       NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1962          NA  0.197975610   NA  NA   562732</span>
@@ -1005,7 +1014,7 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1973   770.40722  0.124121951   NA  NA   375610</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1974   935.46605  0.149682927   NA  NA   248214</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 36 rows ]</span>
-<span class="r-in"><span class="fu"><a href="fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>            <span class="co"># fdiff gives right result</span></span>
+<span class="r-in"><span><span class="fu"><a href="fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span>            <span class="co"># fdiff gives right result</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                PCGDP       LIFEEX GINI ODA      POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1961          NA           NA   NA  NA       NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1962          NA  0.197975610   NA  NA   562732</span>
@@ -1024,14 +1033,14 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 36 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  index(.) [50 (61)] </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># But xts range-based subsets do not work...</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">X</span><span class="op">[</span><span class="st">"1980/"</span><span class="op">]</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"><span class="co"># Thus a better way is not to index and perform ad-hoc omputations on the xts index</span></span>
-<span class="r-in"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">unindex</span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">X</span><span class="op">[</span><span class="st">"1980/"</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fdiff.html">fdiff</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/index.html" class="external-link">index</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span> <span class="co"># xts index is internally processed by timeid()</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># But xts range-based subsets do not work...</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">X</span><span class="op">[</span><span class="st">"1980/"</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="co"># Thus a better way is not to index and perform ad-hoc omputations on the xts index</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu">unindex</span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">X</span><span class="op">[</span><span class="st">"1980/"</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fdiff.html">fdiff</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/index.html" class="external-link">index</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span> <span class="co"># xts index is internally processed by timeid()</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                PCGDP       LIFEEX GINI ODA      POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1980          NA           NA   NA  NA       NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1981   309.62150  0.269365854   NA  NA   162226</span>
@@ -1048,9 +1057,9 @@ print(x, topn = 5, ...)</code></pre></div>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 2003  -140.79423 -0.100000000 -0.4  NA   138570</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Jan 2004  -289.69804  0.151219512  0.1  NA    45681</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 17 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Of course you can also index plain vectors / matrices...</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Of course you can also index plain vectors / matrices...</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -1065,7 +1074,7 @@ print(x, topn = 5, ...)</code></pre></div>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -79,9 +79,13 @@ devtools::install_github("SebKrantz/collapse")
 ## Documentation
 *collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` from the R console brings up the the top-level documentation page, which provides an overview of the entire functionality of the package and links to all other documentation pages. 
 
-In addition, *collapse* provides 5 vignettes (available online):
+In addition, *collapse* provides 7 vignettes:
 
-* [**Introduction to *collapse***](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces all main features of the package in a structured way.
+* [***collapse* Documentation and Resources**](<file:///Users/sebastiankrantz/Documents/R/collapse/docs/articles/collapse_documentation.html>): Provides an overview of all available package documentation
+
+* [***collapse*'s Handling of R Objects**](<https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html>): Provides an overview of collapse’s class-agnostic R programming framework
+
+* [**Introduction to *collapse***](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces main features of the package in a structured way.
 
 * [***collapse* and *dplyr***](<https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html>): Demonstrates the integration of *collapse* with *dplyr* / *tidyverse* workflows and associated performance improvements.
 
@@ -91,7 +95,7 @@ In addition, *collapse* provides 5 vignettes (available online):
 
 * [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames.
 
-*Note* that these vignettes currently do not cover major features introduced in versions 1.7 through 1.9. They have been updated if you see a 2022/23 in the date of the vignette.
+*Note* that the latter 5 vignettes are only available on the website and currently do not cover major features introduced in versions 1.7 through 1.9. <!-- They have been updated if you see a 2022/23 in the date of the vignette. -->
 
 ### Cheatsheet (v1.8.8)
 
