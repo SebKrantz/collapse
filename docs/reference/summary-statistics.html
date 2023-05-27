@@ -25,7 +25,7 @@ varying very efficiently checks for the presence of any variation in data (optio
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -71,7 +71,7 @@ varying very efficiently checks for the presence of any variation in data (optio
     <div class="ref-description">
     <p><em>collapse</em> provides the following functions to efficiently summarize and examine data:</p><ul><li><p><code><a href="qsu.html">qsu</a></code>, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software. It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method. Statistics can be computed weighted, by groups, and also within-and between entities (for multilevel / panel data).</p></li>
 <li><p><code><a href="qtab.html">qtab</a></code>, shorthand for quick-table, is a faster and more versatile alternative to <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></code>. Notably, it also supports tabulations with frequency weights, as well as computing a statistic over combinations of variables. 'qtab's inherit the 'table' class, allowing for seamless application of 'table' methods.</p></li>
-<li><p><code><a href="descr.html">descr</a></code> computes a concise and detailed description of a data frame, including (sorted) frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by <code><a href="https://rdrr.io/pkg/Hmisc/man/describe.html" class="external-link">Hmisc::describe</a></code>, but about 10x faster.</p></li>
+<li><p><code><a href="descr.html">descr</a></code> computes a concise and detailed description of a data frame, including (sorted) frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by <code>Hmisc::describe</code>, but about 10x faster.</p></li>
 <li><p><code><a href="pwcor_pwcov_pwnobs.html">pwcor</a></code>, <code><a href="pwcor_pwcov_pwnobs.html">pwcov</a></code> and <code><a href="pwcor_pwcov_pwnobs.html">pwnobs</a></code> compute (weighted) pairwise correlations, covariances and observation counts on matrices and data frames. Pairwise correlations and covariances can be computed together with observation counts and p-values. The elaborate print method displays all of these statistics in a single correlation table.</p></li>
 <li><p><code><a href="varying.html">varying</a></code> very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers). A variable is variant if it has at least 2 distinct non-missing data points.</p>
 <p><!-- % \item \code{\link{fFtest}} is a fast implementation of the R-Squared based F-test, to test \bold{exclusion restrictions} in linear models potentially involving multiple large factors (fixed effects). It internally utilizes \code{\link{fhdwithin}} to project out factors while counting the degrees of freedom. --></p></li>
@@ -98,7 +98,7 @@ varying very efficiently checks for the presence of any variation in data (optio
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

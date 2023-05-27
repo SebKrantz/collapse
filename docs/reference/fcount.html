@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,11 +65,11 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fcount</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, w <span class="op">=</span> <span class="cn">NULL</span>, name <span class="op">=</span> <span class="st">"N"</span>, add <span class="op">=</span> <span class="cn">FALSE</span>,
-      sort <span class="op">=</span> <span class="cn">FALSE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-
-<span class="fu">fcountv</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, name <span class="op">=</span> <span class="st">"N"</span>, add <span class="op">=</span> <span class="cn">FALSE</span>,
-        sort <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fcount</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, w <span class="op">=</span> <span class="cn">NULL</span>, name <span class="op">=</span> <span class="st">"N"</span>, add <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>      sort <span class="op">=</span> <span class="cn">FALSE</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">fcountv</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, name <span class="op">=</span> <span class="st">"N"</span>, add <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>        sort <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -109,7 +109,7 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">fcount</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">fcount</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   6  0  1  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  1  7</span>
@@ -118,7 +118,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   4  1  0  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   4  0  1  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1  2</span>
-<span class="r-in"><span class="fu">fcountv</span><span class="op">(</span><span class="va">mtcars</span>, cols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fcountv</span><span class="op">(</span><span class="va">mtcars</span>, cols <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   6  0  1  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  1  7</span>
@@ -127,7 +127,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   4  1  0  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   4  0  1  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1  2</span>
-<span class="r-in"><span class="fu">fcount</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fcount</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0  3</span>
@@ -136,7 +136,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0  4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1  2</span>
-<span class="r-in"><span class="fu">fcount</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fcount</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp drat    wt  qsec vs am gear carb  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4  3</span>
@@ -144,7 +144,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1  4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2 12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 27 rows ]</span>
-<span class="r-in"><span class="fu">fcount</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, add <span class="op">=</span> <span class="st">"group_vars"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fcount</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, add <span class="op">=</span> <span class="st">"group_vars"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     cyl vs am  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4             6  0  1  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag         6  0  1  3</span>
@@ -164,10 +164,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental   8  0  0 12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial     8  0  0 12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 15 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## With grouped data</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># As |&gt; not available in older R versions</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## With grouped data</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># As |&gt; not available in older R versions</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0  3</span>
@@ -176,7 +176,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0  4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1  2</span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span>add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span>add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp drat    wt  qsec vs am gear carb  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4  3</span>
@@ -186,7 +186,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 27 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span>add <span class="op">=</span> <span class="st">"group_vars"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span>add <span class="op">=</span> <span class="st">"group_vars"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     cyl vs am  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4             6  0  1  3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag         6  0  1  3</span>
@@ -208,9 +208,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 15 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## With indexed data: by default counting on the first index variable</span></span>
-<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## With indexed data: by default counting on the first index variable</span></span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   country  N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1             Afghanistan 61</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2                 Albania 61</span>
@@ -248,7 +248,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 34               Cambodia 61</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 35               Cameroon 61</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 181 rows ]</span>
-<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span>add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcount</span><span class="op">(</span>add <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
@@ -264,9 +264,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13171 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  country [216] | year [61] </span>
-<span class="r-in"><span class="co"># Use fcountv to pass additional arguments to GRP.pdata.frame,</span></span>
-<span class="r-in"><span class="co"># here using the effect argument to choose a different index variable</span></span>
-<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcountv</span><span class="op">(</span>effect <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># Use fcountv to pass additional arguments to GRP.pdata.frame,</span></span></span>
+<span class="r-in"><span><span class="co"># here using the effect argument to choose a different index variable</span></span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcountv</span><span class="op">(</span>effect <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    year   N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  1960 216</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  1961 216</span>
@@ -304,7 +304,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 34 1993 216</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 35 1994 216</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcountv</span><span class="op">(</span>add <span class="op">=</span> <span class="st">"group_vars"</span>, effect <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fcountv</span><span class="op">(</span>add <span class="op">=</span> <span class="st">"group_vars"</span>, effect <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    year   N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  1960 216</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  1961 216</span>
@@ -344,7 +344,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13141 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Indexed by:  country [216] | year [61] </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -359,7 +359,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

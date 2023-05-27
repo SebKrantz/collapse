@@ -18,7 +18,7 @@ The TRA argument can further be used to transform x using its (grouped, weighted
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -67,24 +67,24 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-      use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>,
-      keep.w <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      keep.w <span class="op">=</span> <span class="cn">TRUE</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -158,53 +158,53 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## default vector method</span></span>
-<span class="r-in"><span class="va">mpg</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span></span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Simple mean</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## default vector method</span></span></span>
+<span class="r-in"><span><span class="va">mpg</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span></span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Simple mean</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20.09062</span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>          <span class="co"># Weighted mean: Weighted by hp</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>          <span class="co"># Weighted mean: Weighted by hp</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 17.97245</span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>              <span class="co"># Simple transformation: demeaning (See also ?W)</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>              <span class="co"># Simple transformation: demeaning (See also ?W)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.909375  0.909375  2.709375  1.309375 -1.390625 -1.990625 -5.790625</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8]  4.309375  2.709375 -0.890625 -2.290625 -3.690625 -2.790625 -4.890625</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [15] -9.690625 -9.690625 -5.390625 12.309375 10.309375 13.809375  1.409375</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [22] -4.590625 -4.890625 -6.790625 -0.890625  7.209375  5.909375 10.309375</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [29] -4.290625 -0.390625 -5.090625  1.309375</span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>             <span class="co"># Grouped mean</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>             <span class="co"># Grouped mean</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        4        6        8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26.66364 19.74286 15.10000 </span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>            <span class="co"># another grouped mean.</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span>            <span class="co"># another grouped mean.</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      0.0      0.1      1.0      1.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 15.05000 19.75000 20.74286 28.37143 </span>
-<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span>                      <span class="co"># Pre-computing groups speeds up the computation</span></span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span>                      <span class="co"># Pre-computing groups speeds up the computation</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4.0.1    4.1.0    4.1.1    6.0.1    6.1.0    8.0.0    8.0.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26.00000 22.90000 28.37143 20.56667 19.12500 15.05000 15.40000 </span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>           <span class="co"># Grouped weighted mean</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>           <span class="co"># Grouped weighted mean</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4.0.1    4.1.0    4.1.1    6.0.1    6.1.0    8.0.0    8.0.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26.00000 22.69409 27.68209 20.42405 19.10087 14.82854 15.35259 </span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>           <span class="co"># Demeaning by group</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>           <span class="co"># Demeaning by group</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.4333333  0.4333333 -5.5714286  2.2750000  3.6500000 -1.0250000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -0.7500000  1.5000000 -0.1000000  0.0750000 -1.3250000  1.3500000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13]  2.2500000  0.1500000 -4.6500000 -4.6500000 -0.3500000  4.0285714</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [19]  2.0285714  5.5285714 -1.4000000  0.4500000  0.1500000 -1.7500000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25]  4.1500000 -1.0714286  0.0000000  2.0285714  0.4000000 -0.8666667</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31] -0.4000000 -6.9714286</span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span>      <span class="co"># Group-demeaning using weighted group means</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span>      <span class="co"># Group-demeaning using weighted group means</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.57594937  0.57594937 -4.88209220  2.29913232  3.87145923 -1.00086768</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -0.52854077  1.70590551  0.10590551  0.09913232 -1.30086768  1.57145923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13]  2.47145923  0.37145923 -4.42854077 -4.42854077 -0.12854077  4.71790780</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [19]  2.71790780  6.21790780 -1.19409449  0.67145923  0.37145923 -1.52854077</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25]  4.37145923 -0.38209220  0.00000000  2.71790780  0.44741235 -0.72405063</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31] -0.35258765 -6.28209220</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## data.frame method</span></span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## data.frame method</span></span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         vs         am       gear       carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500   0.406250   3.687500   2.812500 </span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            mpg cyl     disp        hp     drat       wt     qsec vs am     gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 26.00000   4 120.3000  91.00000 4.430000 2.140000 16.70000  0  1 5.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 22.90000   4 135.8667  84.66667 3.770000 2.935000 20.97000  1  0 3.666667</span>
@@ -220,7 +220,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 2.500000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 3.083333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Another way of doing it..</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Another way of doing it..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am      mpg     disp        hp     drat       wt     qsec     gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 26.00000 120.3000  91.00000 4.430000 2.140000 16.70000 5.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 22.90000 135.8667  84.66667 3.770000 2.935000 20.97000 3.666667</span>
@@ -236,7 +236,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 2.500000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 3.083333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fmean</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span>      <span class="co"># etc..</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fmean</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span>      <span class="co"># etc..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          mpg cyl      disp        hp        drat         wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          0.4333333   0  5.000000 -21.66667  0.09333333 -0.1350000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      0.4333333   0  5.000000 -21.66667  0.09333333  0.1200000</span>
@@ -251,15 +251,15 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     0.2250000  0  0 -0.5000000 -1.5000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.1225000  0  0  0.0000000 -1.0833333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            1.0050000  0  0 -0.5000000 -1.5000000</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## matrix method</span></span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## matrix method</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg        cyl       disp         hp       drat         wt       qsec </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596562   3.217250  17.848750 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         vs         am       gear       carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0.437500   0.406250   3.687500   2.812500 </span>
-<span class="r-in"><span class="fu">fmean</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fmean</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            mpg cyl     disp        hp     drat       wt     qsec vs am     gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 26.00000   4 120.3000  91.00000 4.430000 2.140000 16.70000  0  1 5.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 22.90000   4 135.8667  84.66667 3.770000 2.935000 20.97000  1  0 3.666667</span>
@@ -275,7 +275,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 2.500000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 3.083333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fmean</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span> <span class="co"># etc..</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fmean</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span><span class="op">)</span> <span class="co"># etc..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                          mpg cyl      disp        hp        drat         wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          0.4333333   0  5.000000 -21.66667  0.09333333 -0.1350000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      0.4333333   0  5.000000 -21.66667  0.09333333  0.1200000</span>
@@ -290,10 +290,10 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     0.2250000  0  0 -0.5000000 -1.5000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout -0.1225000  0  0  0.0000000 -1.0833333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            1.0050000  0  0 -0.5000000 -1.5000000</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="op">)</span>         <span class="co"># Ordinary</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="op">)</span>         <span class="co"># Ordinary</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am   mpg  disp    hp  drat    wt  qsec  gear  carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -304,7 +304,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0  19.1 205.  115.   3.42  3.39  19.2  3.5   2.5 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0  15.1 358.  194.   3.12  4.10  17.1  3     3.08</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1  15.4 326   300.   3.88  3.37  14.6  5     6   </span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>       <span class="co"># Weighted</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>       <span class="co"># Weighted</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am sum.hp   mpg  disp  drat    wt  qsec  gear  carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -315,7 +315,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0    461  19.1 202.   3.46  3.39  19.2  3.53  2.60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0   <span style="text-decoration: underline;">2</span>330  14.8 363.   3.14  4.16  17.1  3     3.21</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1    599  15.4 323.   3.84  3.39  14.6  5     6.24</span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span>  <span class="co"># Weighted Transform</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span>  <span class="co"># Weighted Transform</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   cyl, vs, am [7]</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      cyl    vs    am    hp     mpg   disp     drat      wt    qsec   gear   carb</span>
@@ -330,9 +330,9 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     4     1     0    62  1.71    12.4  -<span style="color: #BB0000;">0.089</span><span style="color: #BB0000; text-decoration: underline;">8</span>   0.292  -<span style="color: #BB0000;">1.09</span>    0.382  0.382</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     4     1     0    95  0.106    6.46  0.140    0.252   1.81    0.382  0.382</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     6     1     0   123  0.099<span style="text-decoration: underline;">1</span> -<span style="color: #BB0000;">34.6</span>   0.465    0.049<span style="text-decoration: underline;">1</span> -<span style="color: #BB0000;">0.869</span>   0.466  1.40 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22 more rows</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">mpg</span>,<span class="va">hp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span>      <span class="co"># Only mpg</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22 more rows</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">mpg</span>,<span class="va">hp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span>      <span class="co"># Only mpg</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Adding missing grouping variables: `cyl`, `vs`, `am`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   cyl, vs, am [7]</span></span>
@@ -348,10 +348,10 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     4     1     0    62  1.71  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     4     1     0    95  0.106 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     6     1     0   123  0.099<span style="text-decoration: underline;">1</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22 more rows</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>                <span class="co"># Equivalent and faster !</span></span>
-<span class="r-in">           <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span>,<span class="va">hp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 22 more rows</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>                <span class="co"># Equivalent and faster !</span></span></span>
+<span class="r-in"><span>           <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span>,<span class="va">hp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fmean</span><span class="op">(</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      hp         mpg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           110  0.57594937</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       110  0.57594937</span>
@@ -387,7 +387,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E          109 -6.28209220</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -402,7 +402,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -18,7 +18,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -67,29 +67,29 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co"># Modify and return data frame</span>
-<span class="fu">ftransform</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>
-<span class="fu">ftransformv</span><span class="op">(</span><span class="va">.data</span>, <span class="va">vars</span>, <span class="va">FUN</span>, <span class="va">...</span>, apply <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">tfm</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>               <span class="co"># Shorthand for ftransform</span>
-<span class="fu">tfmv</span><span class="op">(</span><span class="va">.data</span>, <span class="va">vars</span>, <span class="va">FUN</span>, <span class="va">...</span>, apply <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-
-<span class="co"># Modify data frame by reference</span>
-<span class="fu">settransform</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>
-<span class="fu">settransformv</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>     <span class="co"># Same arguments as ftransformv</span>
-<span class="fu">settfm</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>            <span class="co"># Shorthand for settransform</span>
-<span class="fu">settfmv</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Replace/add modified columns in/to a data frame</span>
-<span class="fu">ftransform</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>
-<span class="fu">tfm</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>           <span class="co"># Shorthand for ftransform&lt;-</span>
-
-<span class="co"># Compute columns, returned as a new data frame</span>
-<span class="fu">fcompute</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, keep <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="fu">fcomputev</span><span class="op">(</span><span class="va">.data</span>, <span class="va">vars</span>, <span class="va">FUN</span>, <span class="va">...</span>, apply <span class="op">=</span> <span class="cn">TRUE</span>, keep <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-
-<span class="co"># New: dplyr-style mutate (sequential evaluation + across() feature)</span>
-<span class="fu">fmutate</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .keep <span class="op">=</span> <span class="st">"all"</span>, .cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="fu">mtt</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .keep <span class="op">=</span> <span class="st">"all"</span>, .cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="co"># Shorthand for fmutate</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># Modify and return data frame</span></span>
+<span><span class="fu">ftransform</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">.data</span>, <span class="va">vars</span>, <span class="va">FUN</span>, <span class="va">...</span>, apply <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">tfm</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>               <span class="co"># Shorthand for ftransform</span></span>
+<span><span class="fu">tfmv</span><span class="op">(</span><span class="va">.data</span>, <span class="va">vars</span>, <span class="va">FUN</span>, <span class="va">...</span>, apply <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Modify data frame by reference</span></span>
+<span><span class="fu">settransform</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">settransformv</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>     <span class="co"># Same arguments as ftransformv</span></span>
+<span><span class="fu">settfm</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span>            <span class="co"># Shorthand for settransform</span></span>
+<span><span class="fu">settfmv</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Replace/add modified columns in/to a data frame</span></span>
+<span><span class="fu">ftransform</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">tfm</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>           <span class="co"># Shorthand for ftransform&lt;-</span></span>
+<span></span>
+<span><span class="co"># Compute columns, returned as a new data frame</span></span>
+<span><span class="fu">fcompute</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, keep <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">.data</span>, <span class="va">vars</span>, <span class="va">FUN</span>, <span class="va">...</span>, apply <span class="op">=</span> <span class="cn">TRUE</span>, keep <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># New: dplyr-style mutate (sequential evaluation + across() feature)</span></span>
+<span><span class="fu">fmutate</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .keep <span class="op">=</span> <span class="st">"all"</span>, .cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">mtt</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, .keep <span class="op">=</span> <span class="st">"all"</span>, .cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="co"># Shorthand for fmutate</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -157,18 +157,18 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## fmutate() examples ---------------------------------------------------------------</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Please note that expressions are vectorized whenever they contain 'ANY' fast function</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">fmutate</span><span class="op">(</span>mean_mpg <span class="op">=</span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>,                     <span class="co"># Vectorized</span></span>
-<span class="r-in">          mean_mpg_base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>,                 <span class="co"># Non-vectorized</span></span>
-<span class="r-in">          mpg_cumpr <span class="op">=</span> <span class="fu"><a href="fcumsum.html">fcumsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>,      <span class="co"># Vectorized</span></span>
-<span class="r-in">          mpg_cumpr_base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>,   <span class="co"># Non-vectorized</span></span>
-<span class="r-in">          mpg_cumpr_mixed <span class="op">=</span> <span class="fu"><a href="fcumsum.html">fcumsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="co"># Vectorized: division by overall sum</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## fmutate() examples ---------------------------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Please note that expressions are vectorized whenever they contain 'ANY' fast function</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">fmutate</span><span class="op">(</span>mean_mpg <span class="op">=</span> <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>,                     <span class="co"># Vectorized</span></span></span>
+<span class="r-in"><span>          mean_mpg_base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>,                 <span class="co"># Non-vectorized</span></span></span>
+<span class="r-in"><span>          mpg_cumpr <span class="op">=</span> <span class="fu"><a href="fcumsum.html">fcumsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>,      <span class="co"># Vectorized</span></span></span>
+<span class="r-in"><span>          mpg_cumpr_base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>,   <span class="co"># Non-vectorized</span></span></span>
+<span class="r-in"><span>          mpg_cumpr_mixed <span class="op">=</span> <span class="fu"><a href="fcumsum.html">fcumsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="co"># Vectorized: division by overall sum</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 mpg cyl disp  hp drat    wt  qsec vs am gear carb mean_mpg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4      21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 20.56667</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag  21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 20.56667</span>
@@ -182,11 +182,11 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 28 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Using across: here fmean() gets vectorized across both groups and columns (requiring a single</span></span>
-<span class="r-in"><span class="co"># call to fmean.data.frame which goes to C), whereas weighted.mean needs to be called many times.</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">fmutate</span><span class="op">(</span><span class="fu"><a href="across.html">across</a></span><span class="op">(</span><span class="va">disp</span><span class="op">:</span><span class="va">qsec</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">fmean</span>, mu2 <span class="op">=</span> <span class="va">weighted.mean</span><span class="op">)</span>, w <span class="op">=</span> <span class="va">wt</span>, .names <span class="op">=</span> <span class="st">"flip"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using across: here fmean() gets vectorized across both groups and columns (requiring a single</span></span></span>
+<span class="r-in"><span><span class="co"># call to fmean.data.frame which goes to C), whereas weighted.mean needs to be called many times.</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">fmutate</span><span class="op">(</span><span class="fu"><a href="across.html">across</a></span><span class="op">(</span><span class="va">disp</span><span class="op">:</span><span class="va">qsec</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mu <span class="op">=</span> <span class="va">fmean</span>, mu2 <span class="op">=</span> <span class="va">weighted.mean</span><span class="op">)</span>, w <span class="op">=</span> <span class="va">wt</span>, .names <span class="op">=</span> <span class="st">"flip"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                mpg cyl disp  hp drat    wt  qsec vs am gear carb  mu_disp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4     21.0   6  160 110 3.90 2.620 16.46  0  1    4    4 154.9728</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4 154.9728</span>
@@ -202,10 +202,10 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 29 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Can do more complex things...</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">fmutate</span><span class="op">(</span>res <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="va">hp</span>, weights <span class="op">=</span> <span class="va">wt</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Can do more complex things...</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">fmutate</span><span class="op">(</span>res <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="va">hp</span>, weights <span class="op">=</span> <span class="va">wt</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp drat    wt  qsec vs am gear carb       res</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4  1.125008</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4  1.125008</span>
@@ -215,23 +215,23 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 27 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl  [3 | 11 (3.5) 7-14] </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Since v1.9.0: supports arbitrary expressions returning suitable lists</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">fmutate</span><span class="op">(</span><span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">augment</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="va">hp</span>, weights <span class="op">=</span> <span class="va">wt</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Same thing using across() (supported before 1.9.0)</span></span>
-<span class="r-in"><span class="va">modelfun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://generics.r-lib.org/reference/augment.html" class="external-link">augment</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="va">hp</span>, <span class="va">data</span>, weights <span class="op">=</span> <span class="va">wt</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">fmutate</span><span class="op">(</span><span class="fu"><a href="across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">carb</span>, <span class="va">hp</span>, <span class="va">wt</span><span class="op">)</span>, <span class="va">modelfun</span>, .apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## ftransform() / fcompute() examples: ----------------------------------------------</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## ftransform modifies and returns a data.frame</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, Ozone <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Since v1.9.0: supports arbitrary expressions returning suitable lists</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">fmutate</span><span class="op">(</span><span class="fu">broom</span><span class="fu">::</span><span class="fu">augment</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="va">hp</span>, weights <span class="op">=</span> <span class="va">wt</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Same thing using across() (supported before 1.9.0)</span></span></span>
+<span class="r-in"><span><span class="va">modelfun</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="fu">broom</span><span class="fu">::</span><span class="fu">augment</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span> <span class="op">+</span> <span class="va">hp</span>, <span class="va">data</span>, weights <span class="op">=</span> <span class="va">wt</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">fmutate</span><span class="op">(</span><span class="fu"><a href="across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">carb</span>, <span class="va">hp</span>, <span class="va">wt</span><span class="op">)</span>, <span class="va">modelfun</span>, .apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ftransform() / fcompute() examples: ----------------------------------------------</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ftransform modifies and returns a data.frame</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, Ozone <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   -41     190  7.4   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   -36     118  8.0   72     5   2</span>
@@ -239,7 +239,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   -18     313 11.5   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   -28      NA 14.9   66     5   6</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, Temp <span class="op">=</span> <span class="op">(</span><span class="va">Temp</span><span class="op">-</span><span class="fl">32</span><span class="op">)</span><span class="op">/</span><span class="fl">1.8</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, Temp <span class="op">=</span> <span class="op">(</span><span class="va">Temp</span><span class="op">-</span><span class="fl">32</span><span class="op">)</span><span class="op">/</span><span class="fl">1.8</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind     Temp Month Day new</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4 19.44444     5   1 -41</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0 22.22222     5   2 -36</span>
@@ -247,7 +247,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    18     313 11.5 16.66667     5   4 -18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3 13.33333     5   5  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    28      NA 14.9 18.88889     5   6 -28</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, new2 <span class="op">=</span> <span class="fl">1</span>, Temp <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Deleting Temp</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, new2 <span class="op">=</span> <span class="fl">1</span>, Temp <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Deleting Temp</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Month Day new new2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4     5   1 -41    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0     5   2 -36    1</span>
@@ -255,7 +255,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    18     313 11.5     5   4 -18    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3     5   5  NA    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    28      NA 14.9     5   6 -28    1</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, Ozone <span class="op">=</span> <span class="cn">NULL</span>, Temp <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>            <span class="co"># Deleting columns</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, Ozone <span class="op">=</span> <span class="cn">NULL</span>, Temp <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span>            <span class="co"># Deleting columns</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Solar.R Wind Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     190  7.4     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     118  8.0     5   2</span>
@@ -263,12 +263,12 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     313 11.5     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5      NA 14.3     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6      NA 14.9     5   6</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># With collapse's grouped and weighted functions, complex operations are done on the fly</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, <span class="co"># Grouped operations by month:</span></span>
-<span class="r-in">                Ozone_Month_median <span class="op">=</span> <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="va">Month</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>,</span>
-<span class="r-in">                Ozone_Month_sd <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="va">Month</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,</span>
-<span class="r-in">                Ozone_Month_centered <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="va">Month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># With collapse's grouped and weighted functions, complex operations are done on the fly</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, <span class="co"># Grouped operations by month:</span></span></span>
+<span class="r-in"><span>                Ozone_Month_median <span class="op">=</span> <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="va">Month</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                Ozone_Month_sd <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="va">Month</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                Ozone_Month_centered <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="va">Month</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day Ozone_Month_median Ozone_Month_sd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4   67     5   1                 18       22.22445</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0   72     5   2                 18       22.22445</span>
@@ -283,10 +283,10 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4            -5.615385</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5                   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6             4.384615</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Grouping by month and above/below average temperature in each month</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, Ozone_Month_high_median <span class="op">=</span></span>
-<span class="r-in">                  <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Month</span>, <span class="va">Temp</span> <span class="op">&gt;</span> <span class="fu"><a href="fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">Temp</span>, <span class="va">Month</span><span class="op">)</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Grouping by month and above/below average temperature in each month</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, Ozone_Month_high_median <span class="op">=</span></span></span>
+<span class="r-in"><span>                  <span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">Month</span>, <span class="va">Temp</span> <span class="op">&gt;</span> <span class="fu"><a href="fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">Temp</span>, <span class="va">Month</span><span class="op">)</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day Ozone_Month_high_median</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4   67     5   1                      28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0   72     5   2                      28</span>
@@ -294,9 +294,9 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    18     313 11.5   62     5   4                      14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3   56     5   5                      14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    28      NA 14.9   66     5   6                      28</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## ftransformv can be used to modify multiple columns using a function</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">log</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## ftransformv can be used to modify multiple columns using a function</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">log</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Ozone  Solar.R     Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 3.713572 5.247024 2.001480   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 3.583519 4.770685 2.079442   72     5   2</span>
@@ -304,7 +304,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 2.890372 5.746203 2.442347   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       NA       NA 2.660260   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 3.332205       NA 2.701361   66     5   6</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">`[&lt;-`</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="va">log</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same thing in base R</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">`[&lt;-`</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, <span class="va">log</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same thing in base R</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Ozone  Solar.R     Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 3.713572 5.247024 2.001480   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 3.583519 4.770685 2.079442   72     5   2</span>
@@ -312,8 +312,8 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 2.890372 5.746203 2.442347   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       NA       NA 2.660260   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 3.332205       NA 2.701361   66     5   6</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">log</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">log</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Ozone  Solar.R     Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 3.713572 5.247024 2.001480   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 3.583519 4.770685 2.079442   72     5   2</span>
@@ -321,7 +321,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 2.890372 5.746203 2.442347   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       NA       NA 2.660260   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 3.332205       NA 2.701361   66     5   6</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">`[&lt;-`</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>         <span class="co"># Same thing in base R</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">`[&lt;-`</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>         <span class="co"># Same thing in base R</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Ozone  Solar.R     Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 3.713572 5.247024 2.001480   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 3.583519 4.770685 2.079442   72     5   2</span>
@@ -329,10 +329,10 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 2.890372 5.746203 2.442347   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       NA       NA 2.660260   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 3.332205       NA 2.701361   66     5   6</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Using apply = FALSE yields meaningful performance gains with collapse functions</span></span>
-<span class="r-in"><span class="co"># This calls fwithin.default, and repeates the grouping by month 3 times:</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span>, <span class="va">Month</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using apply = FALSE yields meaningful performance gains with collapse functions</span></span></span>
+<span class="r-in"><span><span class="co"># This calls fwithin.default, and repeates the grouping by month 3 times:</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span>, <span class="va">Month</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Ozone    Solar.R       Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  17.384615   8.703704 -4.2225806   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  12.384615 -63.296296 -3.6225806   72     5   2</span>
@@ -340,9 +340,9 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  -5.615385 131.703704 -0.1225806   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5         NA         NA  2.6774194   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   4.384615         NA  3.2774194   66     5   6</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># This calls fwithin.data.frame, and only groups one time -&gt; 5x faster!</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span>, <span class="va">Month</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># This calls fwithin.data.frame, and only groups one time -&gt; 5x faster!</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">ftransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span>, <span class="va">Month</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Ozone    Solar.R       Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  17.384615   8.703704 -4.2225806   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  12.384615 -63.296296 -3.6225806   72     5   2</span>
@@ -350,10 +350,10 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  -5.615385 131.703704 -0.1225806   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5         NA         NA  2.6774194   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   4.384615         NA  3.2774194   66     5   6</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co"># This also works for grouped and panel data frames (calling fwithin.grouped_df)</span></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">ftransformv</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co"># This also works for grouped and panel data frames (calling fwithin.grouped_df)</span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">ftransformv</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Ozone    Solar.R       Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  17.384615   8.703704 -4.2225806   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  12.384615 -63.296296 -3.6225806   72     5   2</span>
@@ -361,10 +361,10 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  -5.615385 131.703704 -0.1225806   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5         NA         NA  2.6774194   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   4.384615         NA  3.2774194   66     5   6</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># But this gives the WRONG result (calling fwithin.default). Need option apply = FALSE!!</span></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">ftransformv</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># But this gives the WRONG result (calling fwithin.default). Need option apply = FALSE!!</span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">ftransformv</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Ozone    Solar.R      Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  -1.12931   4.068493 -2.557516   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  -6.12931 -67.931507 -1.957516   72     5   2</span>
@@ -372,14 +372,14 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 -24.12931 127.068493  1.542484   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5        NA         NA  4.342484   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 -14.12931         NA  4.942484   66     5   6</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># For grouped modification of single columns in a grouped dataset, we can use GRP():</span></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">ftransform</span><span class="op">(</span>W_Ozone <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span>,                 <span class="co"># Grouped centering</span></span>
-<span class="r-in">             sd_Ozone_m <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>, <span class="co"># In-Month standard deviation</span></span>
-<span class="r-in">             sd_Ozone <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,           <span class="co"># Overall standard deviation</span></span>
-<span class="r-in">             sd_Ozone2 <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>,     <span class="co"># Same, overwriting NA's</span></span>
-<span class="r-in">             sd_Ozone3 <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span>                  <span class="co"># Same thing (calling alloc())</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># For grouped modification of single columns in a grouped dataset, we can use GRP():</span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">ftransform</span><span class="op">(</span>W_Ozone <span class="op">=</span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span>,                 <span class="co"># Grouped centering</span></span></span>
+<span class="r-in"><span>             sd_Ozone_m <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span>, <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>, <span class="co"># In-Month standard deviation</span></span></span>
+<span class="r-in"><span>             sd_Ozone <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,           <span class="co"># Overall standard deviation</span></span></span>
+<span class="r-in"><span>             sd_Ozone2 <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>,     <span class="co"># Same, overwriting NA's</span></span></span>
+<span class="r-in"><span>             sd_Ozone3 <span class="op">=</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span>                  <span class="co"># Same thing (calling alloc())</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day    W_Ozone sd_Ozone_m sd_Ozone sd_Ozone2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4   67     5   1  17.384615   22.22445 32.98788  32.98788</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0   72     5   2  12.384615   22.22445 32.98788  32.98788</span>
@@ -394,13 +394,13 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  32.98788</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  32.98788</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  32.98788</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>object 'airquality' not found</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## For more complex mutations we can use ftransform with compound pipes</span></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fwithin</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## For more complex mutations we can use ftransform with compound pipes</span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fwithin</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Ozone    Solar.R       Wind Temp Month Day   L1.Ozone  L2.Ozone</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  17.384615   8.703704 -4.2225806   67     5   1         NA        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  12.384615 -63.296296 -3.6225806   72     5   2  17.384615        NA</span>
@@ -414,8 +414,8 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 -32.296296 -63.296296  0.9774194 -3.6225806</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 131.703704 -32.296296 -0.1225806  0.9774194</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">.</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="recode-replace.html">replace_NA</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="fscale.html">STD</a></span><span class="op">(</span><span class="va">.</span>, cols <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="recode-replace.html">replace_NA</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day   STD.Ozone STD.Solar.R   STD.Wind</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4   67     5   1 -0.03423409  0.04517615 -0.7259482</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0   72     5   2 -0.18580489 -0.75430487 -0.5556388</span>
@@ -423,10 +423,10 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    18     313 11.5   62     5   4 -0.73145977  1.41095624  0.4378323</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3   56     5   5  0.00000000  0.00000000  1.2326091</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    28      NA 14.9   66     5   6 -0.42831817  0.00000000  1.4029185</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># The list argument feature also allows flexible operations creating multiple new columns</span></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># The variance of Wind and Ozone, by month, weighted by temperature:</span></span>
-<span class="r-in">  <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Wind_var <span class="op">=</span> <span class="va">Wind</span>, Ozone_var <span class="op">=</span> <span class="va">Ozone</span><span class="op">)</span>, <span class="va">Month</span>, <span class="va">Temp</span>, <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># The list argument feature also allows flexible operations creating multiple new columns</span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># The variance of Wind and Ozone, by month, weighted by temperature:</span></span></span>
+<span class="r-in"><span>  <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Wind_var <span class="op">=</span> <span class="va">Wind</span>, Ozone_var <span class="op">=</span> <span class="va">Ozone</span><span class="op">)</span>, <span class="va">Month</span>, <span class="va">Temp</span>, <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day Wind_var Ozone_var</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4   67     5   1 12.08975  533.2819</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0   72     5   2 12.08975  533.2819</span>
@@ -434,11 +434,11 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    18     313 11.5   62     5   4 12.08975  533.2819</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3   56     5   5 12.08975        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    28      NA 14.9   66     5   6 12.08975  533.2819</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Same as above using a grouped data frame (a bit more complex)</span></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">.</span>, <span class="va">Wind</span>, <span class="va">Ozone</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="va">Temp</span>, <span class="st">"replace"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"_var"</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">  <span class="va">fungroup</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Same as above using a grouped data frame (a bit more complex)</span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Month</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">.</span>, <span class="va">Wind</span>, <span class="va">Ozone</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fvar_fsd.html">fvar</a></span><span class="op">(</span><span class="va">Temp</span>, <span class="st">"replace"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"_var"</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>  <span class="va">fungroup</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day Wind_var Ozone_var</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4   67     5   1 12.08975  533.2819</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0   72     5   2 12.08975  533.2819</span>
@@ -446,12 +446,12 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    18     313 11.5   62     5   4 12.08975  533.2819</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3   56     5   5 12.08975        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    28      NA 14.9   66     5   6 12.08975  533.2819</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># This performs 2 different multi-column grouped operations (need c() to make it one list)</span></span>
-<span class="r-in"><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Wind_Day_median <span class="op">=</span> <span class="va">Wind</span>,</span>
-<span class="r-in">                                      Ozone_Day_median <span class="op">=</span> <span class="va">Ozone</span><span class="op">)</span>, <span class="va">Day</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,</span>
-<span class="r-in">                         <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Wind_Month_sd <span class="op">=</span> <span class="va">Wind</span>,</span>
-<span class="r-in">                                  Ozone_Month_sd <span class="op">=</span> <span class="va">Ozone</span><span class="op">)</span>, <span class="va">Month</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># This performs 2 different multi-column grouped operations (need c() to make it one list)</span></span></span>
+<span class="r-in"><span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Wind_Day_median <span class="op">=</span> <span class="va">Wind</span>,</span></span>
+<span class="r-in"><span>                                      Ozone_Day_median <span class="op">=</span> <span class="va">Ozone</span><span class="op">)</span>, <span class="va">Day</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>                         <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Wind_Month_sd <span class="op">=</span> <span class="va">Wind</span>,</span></span>
+<span class="r-in"><span>                                  Ozone_Month_sd <span class="op">=</span> <span class="va">Ozone</span><span class="op">)</span>, <span class="va">Month</span>, TRA <span class="op">=</span> <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day Wind_Day_median Ozone_Day_median</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4   67     5   1             6.9             68.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0   72     5   2             9.2             42.5</span>
@@ -466,10 +466,10 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4       3.53145       22.22445</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       3.53145             NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6       3.53145       22.22445</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## settransform(v) works like ftransform(v) but modifies a data frame in the global environment..</span></span>
-<span class="r-in"><span class="fu">settransform</span><span class="op">(</span><span class="va">airquality</span>, Ratio <span class="op">=</span> <span class="va">Ozone</span> <span class="op">/</span> <span class="va">Temp</span>, Ozone <span class="op">=</span> <span class="cn">NULL</span>, Temp <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## settransform(v) works like ftransform(v) but modifies a data frame in the global environment..</span></span></span>
+<span class="r-in"><span><span class="fu">settransform</span><span class="op">(</span><span class="va">airquality</span>, Ratio <span class="op">=</span> <span class="va">Ozone</span> <span class="op">/</span> <span class="va">Temp</span>, Ozone <span class="op">=</span> <span class="cn">NULL</span>, Temp <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Solar.R Wind Month Day     Ratio</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     190  7.4     5   1 0.6119403</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     118  8.0     5   2 0.5000000</span>
@@ -477,11 +477,11 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     313 11.5     5   4 0.2903226</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5      NA 14.3     5   5        NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6      NA 14.9     5   6 0.4242424</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Grouped and weighted centering</span></span>
-<span class="r-in"><span class="fu">settransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span>, <span class="va">Month</span>, <span class="va">Temp</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Grouped and weighted centering</span></span></span>
+<span class="r-in"><span><span class="fu">settransformv</span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="va">fwithin</span>, <span class="va">Month</span>, <span class="va">Temp</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Ozone    Solar.R        Wind Temp Month Day</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  16.22536   3.571669 -4.08917323   67     5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  11.22536 -68.428331 -3.48917323   72     5   2</span>
@@ -489,11 +489,11 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  -6.77464 126.571669  0.01082677   62     5   4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5        NA         NA  2.81082677   56     5   5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   3.22536         NA  3.41082677   66     5   6</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Suitably lagged first-differences</span></span>
-<span class="r-in"><span class="fu">settransform</span><span class="op">(</span><span class="va">airquality</span>, <span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fdiff</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Suitably lagged first-differences</span></span></span>
+<span class="r-in"><span><span class="fu">settransform</span><span class="op">(</span><span class="va">airquality</span>, <span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fdiff</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day L1.Ozone L2.Ozone L1.Solar.R L2.Solar.R</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA      NA   NA   67     5   1       NA       NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    -5     -72  0.6   72     5   2       NA       NA         NA         NA</span>
@@ -507,11 +507,11 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.6     0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    -1.1     4.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Same as above using magrittr::`%&lt;&gt;%`</span></span>
-<span class="r-in"><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/compound.html" class="external-link">%&lt;&gt;%</a></span> <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fdiff</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Same as above using magrittr::`%&lt;&gt;%`</span></span></span>
+<span class="r-in"><span><span class="va">airquality</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/compound.html" class="external-link">%&lt;&gt;%</a></span> <span class="fu">ftransform</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fdiff</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day L1.Ozone L2.Ozone L1.Solar.R L2.Solar.R</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA      NA   NA   67     5   1       NA       NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    -5     -72  0.6   72     5   2       NA       NA         NA         NA</span>
@@ -525,11 +525,11 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.6     0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    -1.1     4.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># It is also possible to achieve the same thing via a replacement method (if needed)</span></span>
-<span class="r-in"><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fdiff</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># It is also possible to achieve the same thing via a replacement method (if needed)</span></span></span>
+<span class="r-in"><span><span class="fu">ftransform</span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">airquality</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fdiff</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="flag.html">flag</a></span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind Temp Month Day L1.Ozone L2.Ozone L1.Solar.R L2.Solar.R</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    NA      NA   NA   67     5   1       NA       NA         NA         NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    -5     -72  0.6   72     5   2       NA       NA         NA         NA</span>
@@ -543,10 +543,10 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     4.6     0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    -1.1     4.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## fcompute only returns the modified / computed columns</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, Ozone <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">airquality</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## fcompute only returns the modified / computed columns</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, Ozone <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   -41</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   -36</span>
@@ -554,7 +554,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   -18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   -28</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, Temp <span class="op">=</span> <span class="op">(</span><span class="va">Temp</span><span class="op">-</span><span class="fl">32</span><span class="op">)</span><span class="op">/</span><span class="fl">1.8</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, Temp <span class="op">=</span> <span class="op">(</span><span class="va">Temp</span><span class="op">-</span><span class="fl">32</span><span class="op">)</span><span class="op">/</span><span class="fl">1.8</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   new     Temp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 -41 19.44444</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 -36 22.22222</span>
@@ -562,7 +562,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 -18 16.66667</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  NA 13.33333</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 -28 18.88889</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, new2 <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, new2 <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   new new2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 -41    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 -36    1</span>
@@ -570,9 +570,9 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 -18    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  NA    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 -28    1</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Can preserve existing columns, computed ones are added to the right if names are different</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, new2 <span class="op">=</span> <span class="fl">1</span>, keep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Can preserve existing columns, computed ones are added to the right if names are different</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, new <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, new2 <span class="op">=</span> <span class="fl">1</span>, keep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind new new2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1    41     190  7.4 -41    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    36     118  8.0 -36    1</span>
@@ -580,9 +580,9 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4    18     313 11.5 -18    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3  NA    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6    28      NA 14.9 -28    1</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># If given same name as preserved columns, preserved columns are replaced in order...</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, Ozone <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, new <span class="op">=</span> <span class="fl">1</span>, keep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># If given same name as preserved columns, preserved columns are replaced in order...</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcompute</span><span class="op">(</span><span class="va">airquality</span>, Ozone <span class="op">=</span> <span class="op">-</span><span class="va">Ozone</span>, new <span class="op">=</span> <span class="fl">1</span>, keep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Ozone Solar.R Wind new</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   -41     190  7.4   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   -36     118  8.0   1</span>
@@ -590,9 +590,9 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   -18     313 11.5   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5    NA      NA 14.3   1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   -28      NA 14.9   1</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co"># Same holds for fcomputev</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">iris</span>, <span class="va">is.numeric</span>, <span class="va">log</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same as:</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co"># Same holds for fcomputev</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">iris</span>, <span class="va">is.numeric</span>, <span class="va">log</span><span class="op">)</span><span class="op">)</span> <span class="co"># Same as:</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1.629241    1.252763    0.3364722  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.589235    1.098612    0.3364722  -1.6094379</span>
@@ -600,7 +600,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     1.526056    1.131402    0.4054651  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5     1.609438    1.280934    0.3364722  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     1.686399    1.360977    0.5306283  -0.9162907</span>
-<span class="r-in"><span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="dapply.html">dapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="dapply.html">dapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1.629241    1.252763    0.3364722  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.589235    1.098612    0.3364722  -1.6094379</span>
@@ -608,8 +608,8 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     1.526056    1.131402    0.4054651  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5     1.609438    1.280934    0.3364722  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     1.686399    1.360977    0.5306283  -0.9162907</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">iris</span>, <span class="va">is.numeric</span>, <span class="va">log</span>, keep <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Adds in front</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">iris</span>, <span class="va">is.numeric</span>, <span class="va">log</span>, keep <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Adds in front</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Species Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  setosa     1.629241    1.252763    0.3364722  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  setosa     1.589235    1.098612    0.3364722  -1.6094379</span>
@@ -617,7 +617,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  setosa     1.526056    1.131402    0.4054651  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  setosa     1.609438    1.280934    0.3364722  -1.6094379</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  setosa     1.686399    1.360977    0.5306283  -0.9162907</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">iris</span>, <span class="va">is.numeric</span>, <span class="va">log</span>, keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Preserve order</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">iris</span>, <span class="va">is.numeric</span>, <span class="va">log</span>, keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Preserve order</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1.629241    1.252763    0.3364722  -1.6094379  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     1.589235    1.098612    0.3364722  -1.6094379  setosa</span>
@@ -625,9 +625,9 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4     1.526056    1.131402    0.4054651  -1.6094379  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5     1.609438    1.280934    0.3364722  -1.6094379  setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6     1.686399    1.360977    0.5306283  -0.9162907  setosa</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Keep a subset of the data, add standardized columns</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, <span class="va">STD</span>, apply <span class="op">=</span> <span class="cn">FALSE</span>, keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Keep a subset of the data, add standardized columns</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">4</span>, <span class="va">STD</span>, apply <span class="op">=</span> <span class="cn">FALSE</span>, keep <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Petal.Length Petal.Width Species STD.Petal.Length STD.Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1          1.4         0.2  setosa        -1.335752       -1.311052</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2          1.4         0.2  setosa        -1.335752       -1.311052</span>
@@ -649,7 +649,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,43 +65,43 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">.c</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>                       <span class="co"># Non-standard concatenation i.e. .c(a, b) == c("a", "b")</span>
-<span class="va">nam</span> <span class="op">%=%</span> <span class="va">values</span>                <span class="co"># Multiple-assignment e.g. .c(x, y) %=% c(1, 2),</span>
-<span class="fu">massign</span><span class="op">(</span><span class="va">nam</span>, <span class="va">values</span>,          <span class="co"># can also assign to different environment.</span>
-        envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">vlabels</span><span class="op">(</span><span class="va">X</span>, attrn <span class="op">=</span> <span class="st">"label"</span>,   <span class="co"># Get labels of variables in X, in attr(X[[i]], attrn)</span>
-        use.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu">vlabels</span><span class="op">(</span><span class="va">X</span>, attrn <span class="op">=</span> <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>    <span class="co"># Set labels of variables in X (by reference)</span>
-<span class="fu">setLabels</span><span class="op">(</span><span class="va">X</span>, <span class="va">value</span>, attrn <span class="op">=</span> <span class="st">"label"</span>,    <span class="co"># Set labels of variables in X (by reference)</span>
-          cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>                  <span class="co"># and return X</span>
-<span class="fu">vclasses</span><span class="op">(</span><span class="va">X</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Get classes of variables in X</span>
-<span class="fu">namlab</span><span class="op">(</span><span class="va">X</span>, class <span class="op">=</span> <span class="cn">FALSE</span>,      <span class="co"># Return data frame of names and labels,</span>
-  attrn <span class="op">=</span> <span class="st">"label"</span>, N <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># and (optionally) classes, number of observations</span>
-  Ndistinct <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># and number of non-missing distinct values</span>
-<span class="fu">add_stub</span><span class="op">(</span><span class="va">X</span>, <span class="va">stub</span>, pre <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Add a stub (i.e. prefix or postfix) to column names</span>
-         cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="fu">rm_stub</span><span class="op">(</span><span class="va">X</span>, <span class="va">stub</span>, pre <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co"># Remove stub from column names, also supports general</span>
-        regex <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># regex matching and removing of characters</span>
-        cols <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span>
-<span class="va">x</span> <span class="op">%!in%</span> <span class="va">table</span>                 <span class="co"># The opposite of %in%</span>
-<span class="fu">ckmatch</span><span class="op">(</span><span class="va">x</span>, <span class="va">table</span>,             <span class="co"># Check-match: throws an informative error if non-matched</span>
-     e <span class="op">=</span> <span class="st">"Unknown columns:"</span><span class="op">)</span>
-<span class="fu">all_identical</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>            <span class="co"># Check exact equality of multiple objects or list-elements</span>
-<span class="fu">all_obj_equal</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>            <span class="co"># Check near equality of multiple objects or list-elements</span>
-<span class="fu">all_funs</span><span class="op">(</span><span class="va">expr</span><span class="op">)</span>                <span class="co"># Find all functions called in an R language expression</span>
-<span class="fu">setRownames</span><span class="op">(</span><span class="va">object</span>,
- nm <span class="op">=</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.recursive.html" class="external-link">is.atomic</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Set rownames of object and return object</span>
- <span class="fu"><a href="efficient-programming.html">seq_row</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span> <span class="kw">else</span> <span class="cn">NULL</span><span class="op">)</span>
-<span class="fu">setColnames</span><span class="op">(</span><span class="va">object</span>, <span class="va">nm</span><span class="op">)</span>       <span class="co"># Set colnames of object and return object</span>
-<span class="fu">setDimnames</span><span class="op">(</span><span class="va">object</span>, <span class="va">dn</span>,
-            which <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>     <span class="co"># Set dimension names of object and return object</span>
-<span class="fu">unattrib</span><span class="op">(</span><span class="va">object</span><span class="op">)</span>              <span class="co"># Remove all attributes from object</span>
-<span class="fu">setAttrib</span><span class="op">(</span><span class="va">object</span>, <span class="va">a</span><span class="op">)</span>          <span class="co"># Replace all attributes with list of attributes 'a'</span>
-<span class="fu">setattrib</span><span class="op">(</span><span class="va">object</span>, <span class="va">a</span><span class="op">)</span>          <span class="co"># Same thing by reference, returning object invisibly</span>
-<span class="fu">copyAttrib</span><span class="op">(</span><span class="va">to</span>, <span class="va">from</span><span class="op">)</span>          <span class="co"># Copy all attributes from object 'from' to object 'to'</span>
-<span class="fu">copyMostAttrib</span><span class="op">(</span><span class="va">to</span>, <span class="va">from</span><span class="op">)</span>      <span class="co"># Copy most attributes from object 'from' to object 'to'</span>
-<span class="fu">is_categorical</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>             <span class="co"># The opposite of is.numeric</span>
-<span class="fu">is_date</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                    <span class="co"># Check if object is of class "Date", "POSIXlt" or "POSIXct"</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">.c</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>                       <span class="co"># Non-standard concatenation i.e. .c(a, b) == c("a", "b")</span></span>
+<span><span class="va">nam</span> <span class="op">%=%</span> <span class="va">values</span>                <span class="co"># Multiple-assignment e.g. .c(x, y) %=% c(1, 2),</span></span>
+<span><span class="fu">massign</span><span class="op">(</span><span class="va">nam</span>, <span class="va">values</span>,          <span class="co"># can also assign to different environment.</span></span>
+<span>        envir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">vlabels</span><span class="op">(</span><span class="va">X</span>, attrn <span class="op">=</span> <span class="st">"label"</span>,   <span class="co"># Get labels of variables in X, in attr(X[[i]], attrn)</span></span>
+<span>        use.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">vlabels</span><span class="op">(</span><span class="va">X</span>, attrn <span class="op">=</span> <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span>    <span class="co"># Set labels of variables in X (by reference)</span></span>
+<span><span class="fu">setLabels</span><span class="op">(</span><span class="va">X</span>, <span class="va">value</span>, attrn <span class="op">=</span> <span class="st">"label"</span>,    <span class="co"># Set labels of variables in X (by reference)</span></span>
+<span>          cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>                  <span class="co"># and return X</span></span>
+<span><span class="fu">vclasses</span><span class="op">(</span><span class="va">X</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Get classes of variables in X</span></span>
+<span><span class="fu">namlab</span><span class="op">(</span><span class="va">X</span>, class <span class="op">=</span> <span class="cn">FALSE</span>,      <span class="co"># Return data frame of names and labels,</span></span>
+<span>  attrn <span class="op">=</span> <span class="st">"label"</span>, N <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># and (optionally) classes, number of observations</span></span>
+<span>  Ndistinct <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># and number of non-missing distinct values</span></span>
+<span><span class="fu">add_stub</span><span class="op">(</span><span class="va">X</span>, <span class="va">stub</span>, pre <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Add a stub (i.e. prefix or postfix) to column names</span></span>
+<span>         cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">rm_stub</span><span class="op">(</span><span class="va">X</span>, <span class="va">stub</span>, pre <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co"># Remove stub from column names, also supports general</span></span>
+<span>        regex <span class="op">=</span> <span class="cn">FALSE</span>,        <span class="co"># regex matching and removing of characters</span></span>
+<span>        cols <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="va">x</span> <span class="op">%!in%</span> <span class="va">table</span>                 <span class="co"># The opposite of %in%</span></span>
+<span><span class="fu">ckmatch</span><span class="op">(</span><span class="va">x</span>, <span class="va">table</span>,             <span class="co"># Check-match: throws an informative error if non-matched</span></span>
+<span>     e <span class="op">=</span> <span class="st">"Unknown columns:"</span><span class="op">)</span></span>
+<span><span class="fu">all_identical</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>            <span class="co"># Check exact equality of multiple objects or list-elements</span></span>
+<span><span class="fu">all_obj_equal</span><span class="op">(</span><span class="va">...</span><span class="op">)</span>            <span class="co"># Check near equality of multiple objects or list-elements</span></span>
+<span><span class="fu">all_funs</span><span class="op">(</span><span class="va">expr</span><span class="op">)</span>                <span class="co"># Find all functions called in an R language expression</span></span>
+<span><span class="fu">setRownames</span><span class="op">(</span><span class="va">object</span>,</span>
+<span> nm <span class="op">=</span> <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.recursive.html" class="external-link">is.atomic</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Set rownames of object and return object</span></span>
+<span> <span class="fu"><a href="efficient-programming.html">seq_row</a></span><span class="op">(</span><span class="va">object</span><span class="op">)</span> <span class="kw">else</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu">setColnames</span><span class="op">(</span><span class="va">object</span>, <span class="va">nm</span><span class="op">)</span>       <span class="co"># Set colnames of object and return object</span></span>
+<span><span class="fu">setDimnames</span><span class="op">(</span><span class="va">object</span>, <span class="va">dn</span>,</span>
+<span>            which <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>     <span class="co"># Set dimension names of object and return object</span></span>
+<span><span class="fu">unattrib</span><span class="op">(</span><span class="va">object</span><span class="op">)</span>              <span class="co"># Remove all attributes from object</span></span>
+<span><span class="fu">setAttrib</span><span class="op">(</span><span class="va">object</span>, <span class="va">a</span><span class="op">)</span>          <span class="co"># Replace all attributes with list of attributes 'a'</span></span>
+<span><span class="fu">setattrib</span><span class="op">(</span><span class="va">object</span>, <span class="va">a</span><span class="op">)</span>          <span class="co"># Same thing by reference, returning object invisibly</span></span>
+<span><span class="fu">copyAttrib</span><span class="op">(</span><span class="va">to</span>, <span class="va">from</span><span class="op">)</span>          <span class="co"># Copy all attributes from object 'from' to object 'to'</span></span>
+<span><span class="fu">copyMostAttrib</span><span class="op">(</span><span class="va">to</span>, <span class="va">from</span><span class="op">)</span>      <span class="co"># Copy most attributes from object 'from' to object 'to'</span></span>
+<span><span class="fu">is_categorical</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>             <span class="co"># The opposite of is.numeric</span></span>
+<span><span class="fu">is_date</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                    <span class="co"># Check if object is of class "Date", "POSIXlt" or "POSIXct"</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -186,20 +186,20 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Non-standard concatenation</span></span>
-<span class="r-in"><span class="fu">.c</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, <span class="st">"c d"</span>, <span class="va">e</span> <span class="op">==</span> <span class="va">f</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Non-standard concatenation</span></span></span>
+<span class="r-in"><span><span class="fu">.c</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span>, <span class="st">"c d"</span>, <span class="va">e</span> <span class="op">==</span> <span class="va">f</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "a"      "b"      "c d"    "e == f"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Multiple assignment</span></span>
-<span class="r-in"><span class="fu">.c</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span> <span class="op">%=%</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">.c</span><span class="op">(</span><span class="cn">T</span>, <span class="va">N</span><span class="op">)</span> <span class="op">%=%</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="op">%=%</span> <span class="va">iris</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>          <span class="co"># Same thing</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x121d2cce0&gt;</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"T"</span>, <span class="st">"N"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Variable labels</span></span>
-<span class="r-in"><span class="fu">namlab</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Multiple assignment</span></span></span>
+<span class="r-in"><span><span class="fu">.c</span><span class="op">(</span><span class="va">a</span>, <span class="va">b</span><span class="op">)</span> <span class="op">%=%</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">.c</span><span class="op">(</span><span class="cn">T</span>, <span class="va">N</span><span class="op">)</span> <span class="op">%=%</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="op">%=%</span> <span class="va">iris</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/list2env.html" class="external-link">list2env</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>          <span class="co"># Same thing</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x10f463900&gt;</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span>list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"T"</span>, <span class="st">"N"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Variable labels</span></span></span>
+<span class="r-in"><span><span class="fu">namlab</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Variable</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   country</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     iso3c</span>
@@ -228,7 +228,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11                                                  Gini index (World Bank estimate)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 12 Net official development assistance and official aid received (constant 2018 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13                                                                 Population, total</span>
-<span class="r-in"><span class="fu">namlab</span><span class="op">(</span><span class="va">wlddev</span>, class <span class="op">=</span> <span class="cn">TRUE</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, Ndistinct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">namlab</span><span class="op">(</span><span class="va">wlddev</span>, class <span class="op">=</span> <span class="cn">TRUE</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, Ndistinct <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Variable     Class     N Ndist</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   country character 13176   216</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     iso3c    factor 13176   216</span>
@@ -257,7 +257,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 11                                                  Gini index (World Bank estimate)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 12 Net official development assistance and official aid received (constant 2018 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13                                                                 Population, total</span>
-<span class="r-in"><span class="fu">vlabels</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">vlabels</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                             country </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                      "Country Name" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                               iso3c </span>
@@ -284,11 +284,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> "Net official development assistance and official aid received (constant 2018 US$)" </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                 POP </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                 "Population, total" </span>
-<span class="r-in"><span class="fu">vlabels</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">vlabels</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Stub-renaming</span></span>
-<span class="r-in"><span class="va">log_mtc</span> <span class="op">&lt;-</span> <span class="fu">add_stub</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="st">"log."</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">log_mtc</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">vlabels</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu">vlabels</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Stub-renaming</span></span></span>
+<span class="r-in"><span><span class="va">log_mtc</span> <span class="op">&lt;-</span> <span class="fu">add_stub</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="st">"log."</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">log_mtc</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    log.mpg  log.cyl log.disp   log.hp log.drat    log.wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         3.044522 1.791759 5.075174 4.700480 1.360977 0.9631743</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     3.044522 1.791759 5.075174 4.700480 1.360977 1.0560527</span>
@@ -303,7 +303,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    2.967333      0   -Inf 1.098612 0.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.834389   -Inf   -Inf 1.098612 0.6931472</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           3.006672      0   -Inf 1.098612 0.0000000</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">rm_stub</span><span class="op">(</span><span class="va">log_mtc</span>, <span class="st">"log."</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">rm_stub</span><span class="op">(</span><span class="va">log_mtc</span>, <span class="st">"log."</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg      cyl     disp       hp     drat        wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         3.044522 1.791759 5.075174 4.700480 1.360977 0.9631743</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     3.044522 1.791759 5.075174 4.700480 1.360977 1.0560527</span>
@@ -318,10 +318,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    2.967333    0 -Inf 1.098612 0.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.834389 -Inf -Inf 1.098612 0.6931472</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           3.006672    0 -Inf 1.098612 0.0000000</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">log_mtc</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Setting dimension names of an object</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">setRownames</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">log_mtc</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Setting dimension names of an object</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">setRownames</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
@@ -329,8 +329,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span>
-<span class="r-in"><span class="va">ar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">setRownames</span><span class="op">(</span><span class="va">ar</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">ar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">setRownames</span><span class="op">(</span><span class="va">ar</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [,1] [,2] [,3]</span>
@@ -352,7 +352,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    2    5    8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3    3    6    9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">setColnames</span><span class="op">(</span><span class="va">ar</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">setColnames</span><span class="op">(</span><span class="va">ar</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      a b c</span>
@@ -374,7 +374,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 2 5 8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 3 6 9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">setDimnames</span><span class="op">(</span><span class="va">ar</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span>, which <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">setDimnames</span><span class="op">(</span><span class="va">ar</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span>, which <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , a</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3]</span>
@@ -396,7 +396,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]    2    5    8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,]    3    6    9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">setDimnames</span><span class="op">(</span><span class="va">ar</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>,<span class="st">"e"</span>,<span class="st">"f"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span><span class="op">)</span>, which <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">setDimnames</span><span class="op">(</span><span class="va">ar</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>,<span class="st">"e"</span>,<span class="st">"f"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span><span class="op">)</span>, which <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , a</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      d e f</span>
@@ -418,7 +418,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 2 5 8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 3 6 9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu">setDimnames</span><span class="op">(</span><span class="va">ar</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g"</span>,<span class="st">"h"</span>,<span class="st">"i"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>,<span class="st">"e"</span>,<span class="st">"f"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">setDimnames</span><span class="op">(</span><span class="va">ar</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"g"</span>,<span class="st">"h"</span>,<span class="st">"i"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"d"</span>,<span class="st">"e"</span>,<span class="st">"f"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , a</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   d e f</span>
@@ -440,24 +440,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> h 2 5 8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> i 3 6 9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Checking exact equality of multiple objects</span></span>
-<span class="r-in"><span class="fu">all_identical</span><span class="op">(</span><span class="va">iris</span>, <span class="va">iris</span>, <span class="va">iris</span>, <span class="va">iris</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Checking exact equality of multiple objects</span></span></span>
+<span class="r-in"><span><span class="fu">all_identical</span><span class="op">(</span><span class="va">iris</span>, <span class="va">iris</span>, <span class="va">iris</span>, <span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">all_identical</span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">all_identical</span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Function names from expressions</span></span>
-<span class="r-in"><span class="va">ex</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">/</span> <span class="va">z</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.names</a></span><span class="op">(</span><span class="va">ex</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">l</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Function names from expressions</span></span></span>
+<span class="r-in"><span><span class="va">ex</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="op">/</span> <span class="va">z</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.names</a></span><span class="op">(</span><span class="va">ex</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "+"    "sum"  "x"    "/"    "mean" "y"    "z"   </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars</a></span><span class="op">(</span><span class="va">ex</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/allnames.html" class="external-link">all.vars</a></span><span class="op">(</span><span class="va">ex</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "x" "y" "z"</span>
-<span class="r-in"><span class="fu">all_funs</span><span class="op">(</span><span class="va">ex</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">all_funs</span><span class="op">(</span><span class="va">ex</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "+"    "sum"  "/"    "mean"</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">ex</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">ex</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -472,7 +472,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

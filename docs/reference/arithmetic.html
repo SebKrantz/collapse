@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,21 +65,21 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="co">## Perform the operation with v and each row of X</span>
-
-<span class="va">X</span> <span class="op">%rr%</span> <span class="va">v</span>    <span class="co"># Replace rows of X with v</span>
-<span class="va">X</span> <span class="op">%r+%</span> <span class="va">v</span>    <span class="co"># Add v to each row of X</span>
-<span class="va">X</span> <span class="op">%r-%</span> <span class="va">v</span>    <span class="co"># Subtract v from each row of X</span>
-<span class="va">X</span> <span class="op">%r*%</span> <span class="va">v</span>    <span class="co"># Multiply each row of X with v</span>
-<span class="va">X</span> <span class="op">%r/%</span> <span class="va">v</span>    <span class="co"># Divide each row of X by v</span>
-
-<span class="co">## Perform a column-wise operation between V and X</span>
-
-<span class="va">X</span> <span class="op">%cr%</span> <span class="va">V</span>    <span class="co"># Replace columns of X with V</span>
-<span class="va">X</span> <span class="op">%c+%</span> <span class="va">V</span>    <span class="co"># Add V to columns of X</span>
-<span class="va">X</span> <span class="op">%c-%</span> <span class="va">V</span>    <span class="co"># Subtract V from columns of X</span>
-<span class="va">X</span> <span class="op">%c*%</span> <span class="va">V</span>    <span class="co"># Multiply columns of X with V</span>
-<span class="va">X</span> <span class="op">%c/%</span> <span class="va">V</span>    <span class="co"># Divide columns of X by V</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co">## Perform the operation with v and each row of X</span></span>
+<span></span>
+<span><span class="va">X</span> <span class="op">%rr%</span> <span class="va">v</span>    <span class="co"># Replace rows of X with v</span></span>
+<span><span class="va">X</span> <span class="op">%r+%</span> <span class="va">v</span>    <span class="co"># Add v to each row of X</span></span>
+<span><span class="va">X</span> <span class="op">%r-%</span> <span class="va">v</span>    <span class="co"># Subtract v from each row of X</span></span>
+<span><span class="va">X</span> <span class="op">%r*%</span> <span class="va">v</span>    <span class="co"># Multiply each row of X with v</span></span>
+<span><span class="va">X</span> <span class="op">%r/%</span> <span class="va">v</span>    <span class="co"># Divide each row of X by v</span></span>
+<span></span>
+<span><span class="co">## Perform a column-wise operation between V and X</span></span>
+<span></span>
+<span><span class="va">X</span> <span class="op">%cr%</span> <span class="va">V</span>    <span class="co"># Replace columns of X with V</span></span>
+<span><span class="va">X</span> <span class="op">%c+%</span> <span class="va">V</span>    <span class="co"># Add V to columns of X</span></span>
+<span><span class="va">X</span> <span class="op">%c-%</span> <span class="va">V</span>    <span class="co"># Subtract V from columns of X</span></span>
+<span><span class="va">X</span> <span class="op">%c*%</span> <span class="va">V</span>    <span class="co"># Multiply columns of X with V</span></span>
+<span><span class="va">X</span> <span class="op">%c/%</span> <span class="va">V</span>    <span class="co"># Divide columns of X by V</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -122,9 +122,9 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Using data frame's / lists</span></span>
-<span class="r-in"><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op">%cr%</span> <span class="va">v</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Using data frame's / lists</span></span></span>
+<span class="r-in"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">%cr%</span> <span class="va">v</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   mpg cyl disp hp drat wt qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           6   6    6  6    6  6    6  6  6    6    6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       6   6    6  6    6  6    6  6  6    6    6</span>
@@ -133,7 +133,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   8   8    8  8    8  8    8  8  8    8    8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             6   6    6  6    6  6    6  6  6    6    6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op">%c-%</span> <span class="va">v</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">%c-%</span> <span class="va">v</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp  drat     wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         15.0   0  154 104 -2.10 -3.380 10.46 -6 -5   -2   -2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     15.0   0  154 104 -2.10 -3.125 11.02 -6 -5   -2   -2</span>
@@ -142,7 +142,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 10.7   0  352 167 -4.85 -4.560  9.02 -8 -8   -5   -6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           12.1   0  219  99 -3.24 -2.540 14.22 -5 -6   -3   -5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op">%r-%</span> <span class="fu"><a href="efficient-programming.html">seq_col</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">%r-%</span> <span class="fu"><a href="efficient-programming.html">seq_col</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl disp  hp  drat     wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         20.0   4  157 106 -1.10 -3.380  9.46 -8 -8   -6   -7</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     20.0   4  157 106 -1.10 -3.125 10.02 -8 -8   -6   -7</span>
@@ -151,7 +151,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 17.7   6  357 171 -1.85 -2.560 10.02 -8 -9   -7   -9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           17.1   4  222 101 -2.24 -2.540 13.22 -7 -9   -7  -10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op">%r-%</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">quantile</span>, <span class="fl">0.28</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">%r-%</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">quantile</span>, <span class="fl">0.28</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl    disp    hp    drat     wt    qsec vs am gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         5.296   2  25.536  7.56  0.7724 -0.102 -0.5216  0  1    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     5.296   2  25.536  7.56  0.7724  0.153  0.0384  0  1    1</span>
@@ -167,8 +167,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             -1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op">%c*%</span> <span class="fl">5</span>       <span class="co"># Significantly faster than mtcars * 5</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">%c*%</span> <span class="fl">5</span>       <span class="co"># Significantly faster than mtcars * 5</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl disp  hp  drat     wt   qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         105.0  30  800 550 19.50 13.100  82.30  0  5   20   20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     105.0  30  800 550 19.50 14.375  85.10  0  5   20   20</span>
@@ -177,7 +177,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  93.5  40 1800 875 15.75 17.200  85.10  0  0   15   10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            90.5  30 1125 525 13.80 17.300 101.10  5  0   15    5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op">%c*%</span> <span class="va">mtcars</span>  <span class="co"># Significantly faster than mtcars * mtcars</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">%c*%</span> <span class="va">mtcars</span>  <span class="co"># Significantly faster than mtcars * mtcars</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl   disp    hp    drat        wt     qsec vs am gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         441.00  36  25600 12100 15.2100  6.864400 270.9316  0  1   16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     441.00  36  25600 12100 15.2100  8.265625 289.6804  0  1   16</span>
@@ -193,10 +193,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Using matrices</span></span>
-<span class="r-in"><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">X</span> <span class="op">%cr%</span> <span class="va">v</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Using matrices</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">%cr%</span> <span class="va">v</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl disp hp drat wt qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4             6   6    6  6    6  6    6  6  6    6    6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag         6   6    6  6    6  6    6  6  6    6    6</span>
@@ -205,7 +205,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     8   8    8  8    8  8    8  8  8    8    8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               6   6    6  6    6  6    6  6  6    6    6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span class="va">X</span> <span class="op">%c-%</span> <span class="va">v</span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">%c-%</span> <span class="va">v</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp  drat     wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           15.0   0 154.0 104 -2.10 -3.380 10.46 -6 -5   -2   -2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       15.0   0 154.0 104 -2.10 -3.125 11.02 -6 -5   -2   -2</span>
@@ -214,7 +214,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   10.7   0 352.0 167 -4.85 -4.560  9.02 -8 -8   -5   -6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             12.1   0 219.0  99 -3.24 -2.540 14.22 -5 -6   -3   -5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span class="va">X</span> <span class="op">%r-%</span> <span class="fu"><a href="dapply.html">dapply</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">quantile</span>, <span class="fl">0.28</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">X</span> <span class="op">%r-%</span> <span class="fu"><a href="dapply.html">dapply</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">quantile</span>, <span class="fl">0.28</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg cyl    disp     hp    drat     wt    qsec vs am gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            5.296   2  25.536   7.56  0.7724 -0.102 -0.5216  0  1    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        5.296   2  25.536   7.56  0.7724  0.153  0.0384  0  1    1</span>
@@ -230,24 +230,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout      0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               -1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span class="co"># \donttest{</span></span>
-<span class="r-in"><span class="co">## Chained Operations</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%r-%</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span> <span class="op">%c*%</span> <span class="fl">5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span class="r-in">    <span class="fu"><a href="ftransform.html">tfm</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        N      Mean        SD        Min        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   32  164.3269         0   164.3269   164.3269</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   32    1.8965    8.9296     -9.041     10.959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  32    6.0623  619.6935  -792.0471  1212.4529</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    32    3.3312  342.8143  -470.1063   944.8937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  32    1.3577    2.6734    -2.8251     8.0249</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    32    0.3323    4.8923    -8.1889    11.3661</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> qsec  32   -1.2283    8.9347    -17.972     24.028</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> vs    32     0.627    2.5201    -1.5605     3.4395</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> am    32   -1.8855     2.495    -3.9168     1.0832</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gear  32     3.225     3.689    -0.2125     9.7875</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> carb  32   -6.3836     8.076   -15.4461    19.5539</span>
-<span class="r-in"><span class="co"># }</span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="co">## Chained Operations</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%r-%</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span> <span class="op">%c*%</span> <span class="fl">5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="ftransform.html">tfm</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        N     Mean        SD        Min        Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   32   35.048         0     35.048     35.048</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   32   1.3905    8.9296     -9.547     10.453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  32   1.5114  619.6935  -796.5979  1207.9021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    32  -7.3873  342.8143  -480.8248   934.1752</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  32   0.5667    2.6734    -3.6161     7.2339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    32   0.1821    4.8923    -8.3391    11.2159</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> qsec  32  -2.6837    8.9347   -19.4275    22.5725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vs    32  -1.6783    2.5201    -3.8658     1.1342</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> am    32  -6.0053     2.495    -8.0366    -3.0366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gear  32   1.1343     3.689    -2.3032     7.6968</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> carb  32      4.4     8.076    -4.6625    30.3375</span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -262,7 +262,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

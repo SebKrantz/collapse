@@ -18,7 +18,7 @@ Apart from the indicators the data contains a number of identifiers (character c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -67,7 +67,7 @@ Apart from the indicators the data contains a number of identifiers (character c
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"wlddev"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"wlddev"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -124,10 +124,10 @@ Apart from the indicators the data contains a number of identifiers (character c
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Panel-summarizing the 5 series</span></span>
-<span class="r-in"><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, pid <span class="op">=</span> <span class="op">~</span><span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Panel-summarizing the 5 series</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, pid <span class="op">=</span> <span class="op">~</span><span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP: GDP per capita (constant 2010 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              N/T        Mean          SD          Min         Max</span>
@@ -162,9 +162,9 @@ Apart from the indicators the data contains a number of identifiers (character c
 <span class="r-out co"><span class="r-pr">#&gt;</span> Overall    12919  24'245971.6   102'120674         2833  1.39771500e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Between      216    24'178573  98'616506.7    8343.3333  1.08786967e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># By Region</span></span>
-<span class="r-in"><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">region</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># By Region</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">region</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP: GDP per capita (constant 2010 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                N        Mean          SD         Min</span>
@@ -196,9 +196,9 @@ Apart from the indicators the data contains a number of identifiers (character c
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2860   51.581   8.6876   26.172  74.5146</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3 matrix slice(s) ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Panel-summary by region</span></span>
-<span class="r-in"><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">region</span>, pid <span class="op">=</span> <span class="op">~</span><span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Panel-summary by region</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">region</span>, pid <span class="op">=</span> <span class="op">~</span><span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall, PCGDP: GDP per capita (constant 2010 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                              N/T        Mean          SD         Min</span>
@@ -230,34 +230,34 @@ Apart from the indicators the data contains a number of identifiers (character c
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           47   1840.0259   2234.3254    253.1886   9922.0052</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 13 matrix slice(s) ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Pairwise correlations: Ovarall</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, show <span class="op">=</span> <span class="st">"lower.tri"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Pairwise correlations: Ovarall</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, show <span class="op">=</span> <span class="st">"lower.tri"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               PCGDP        LIFEEX         GINI          ODA           POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP    1   (9470)                                                      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  .57* (9022)   1   (11670)                                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GINI   -.44* (1735)  -.35* (1742)   1   (1744)                           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ODA    -.16* (7128)  -.02  (8142) -.20* (1109)   1   (8608)              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> POP    -.06* (9470)  .03* (11659)  .04  (1744)  .31* (8597)   1   (12919)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Pairwise correlations: Between Countries</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, show <span class="op">=</span> <span class="st">"lower.tri"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Pairwise correlations: Between Countries</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, show <span class="op">=</span> <span class="st">"lower.tri"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              PCGDP      LIFEEX        GINI         ODA         POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP    1   (206)                                                </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  .60* (199)   1   (207)                                    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GINI   -.42* (165) -.40* (165)   1   (167)                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ODA    -.25* (172) -.21* (172) -.19* (145)   1   (178)            </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> POP    -.07  (206) -.02  (207) -.04  (167)  .50* (178)   1   (216)</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Pairwise correlations: Within Countries</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, show <span class="op">=</span> <span class="st">"lower.tri"</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Pairwise correlations: Within Countries</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, show <span class="op">=</span> <span class="st">"lower.tri"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               PCGDP        LIFEEX         GINI          ODA           POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP    1   (9470)                                                      </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  .31* (9022)   1   (11670)                                        </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GINI   -.01  (1735)  -.16* (1742)   1   (1744)                           </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ODA    -.01  (7128)   .17* (8142) -.08* (1109)   1   (8608)              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> POP     .06* (9470)  .29* (11659)  .01  (1744) -.11* (8597)   1   (12919)</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -272,7 +272,7 @@ Apart from the indicators the data contains a number of identifiers (character c
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

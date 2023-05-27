@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,26 +65,26 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">descr</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">descr</span><span class="op">(</span><span class="va">X</span>, by <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>,
-      Ndistinct <span class="op">=</span> <span class="cn">TRUE</span>, higher <span class="op">=</span> <span class="cn">TRUE</span>, table <span class="op">=</span> <span class="cn">TRUE</span>, sort.table <span class="op">=</span> <span class="st">"freq"</span>,
-      Qprobs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span><span class="op">)</span>, Qtype <span class="op">=</span> <span class="fl">7L</span>,
-      label.attr <span class="op">=</span> <span class="st">"label"</span>, stepwise <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">descr</span><span class="op">(</span><span class="va">X</span>, w <span class="op">=</span> <span class="cn">NULL</span>,
-      Ndistinct <span class="op">=</span> <span class="cn">TRUE</span>, higher <span class="op">=</span> <span class="cn">TRUE</span>, table <span class="op">=</span> <span class="cn">TRUE</span>, sort.table <span class="op">=</span> <span class="st">"freq"</span>,
-      Qprobs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span><span class="op">)</span>, Qtype <span class="op">=</span> <span class="fl">7L</span>,
-      label.attr <span class="op">=</span> <span class="st">"label"</span>, stepwise <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for descr</span>
-<span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, gid <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span>
-
-<span class="co"># S3 method for descr</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">14</span>, perc <span class="op">=</span> <span class="cn">TRUE</span>, digits <span class="op">=</span> <span class="fl">2</span>, t.table <span class="op">=</span> <span class="cn">TRUE</span>, total <span class="op">=</span> <span class="cn">TRUE</span>,
-      compact <span class="op">=</span> <span class="cn">FALSE</span>, summary <span class="op">=</span> <span class="op">!</span><span class="va">compact</span>, reverse <span class="op">=</span> <span class="cn">FALSE</span>, stepwise <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">descr</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">descr</span><span class="op">(</span><span class="va">X</span>, by <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>      Ndistinct <span class="op">=</span> <span class="cn">TRUE</span>, higher <span class="op">=</span> <span class="cn">TRUE</span>, table <span class="op">=</span> <span class="cn">TRUE</span>, sort.table <span class="op">=</span> <span class="st">"freq"</span>,</span>
+<span>      Qprobs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span><span class="op">)</span>, Qtype <span class="op">=</span> <span class="fl">7L</span>,</span>
+<span>      label.attr <span class="op">=</span> <span class="st">"label"</span>, stepwise <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">descr</span><span class="op">(</span><span class="va">X</span>, w <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>      Ndistinct <span class="op">=</span> <span class="cn">TRUE</span>, higher <span class="op">=</span> <span class="cn">TRUE</span>, table <span class="op">=</span> <span class="cn">TRUE</span>, sort.table <span class="op">=</span> <span class="st">"freq"</span>,</span>
+<span>      Qprobs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">0.9</span>, <span class="fl">0.95</span>, <span class="fl">0.99</span><span class="op">)</span>, Qtype <span class="op">=</span> <span class="fl">7L</span>,</span>
+<span>      label.attr <span class="op">=</span> <span class="st">"label"</span>, stepwise <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for descr</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, gid <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for descr</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">14</span>, perc <span class="op">=</span> <span class="cn">TRUE</span>, digits <span class="op">=</span> <span class="fl">2</span>, t.table <span class="op">=</span> <span class="cn">TRUE</span>, total <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      compact <span class="op">=</span> <span class="cn">FALSE</span>, summary <span class="op">=</span> <span class="op">!</span><span class="va">compact</span>, reverse <span class="op">=</span> <span class="cn">FALSE</span>, stepwise <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -135,7 +135,7 @@
 <dd><p>integer. The maximum number of table elements to print for categorical variables. If the number of distinct elements is <code>&lt;= n</code>, the whole table is printed. Otherwise the remaining items are summed into an '... %s Others' category.</p></dd>
 
 <dt>perc</dt>
-<dd><p>logical. <code>TRUE</code> (default) adds percentages to the frequencies in the table for categorical variables.</p></dd>
+<dd><p>logical. <code>TRUE</code> (default) adds percentages to the frequencies in the table for categorical variables, and, if <code>!is.null(by)</code>, the percentage of observations in each group.</p></dd>
 
 <dt>digits</dt>
 <dd><p>integer. The number of decimals to print in statistics, quantiles and percentage tables.</p></dd>
@@ -170,7 +170,7 @@
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p><code>descr</code> was heavily inspired by <code><a href="https://rdrr.io/pkg/Hmisc/man/describe.html" class="external-link">Hmisc::describe</a></code>, but is much faster and has more advanced statistical capabilities. It is principally a wrapper around <code><a href="qsu.html">qsu</a></code>, <code><a href="fquantile.html">fquantile</a></code> (<code>.quantile</code>), and <code><a href="fndistinct.html">fndistinct</a></code> for numeric variables, and computes frequency tables for categorical variables using <code><a href="qtab.html">qtab</a></code>. Date variables are summarized with <code><a href="fnobs.html">fnobs</a></code>, <code><a href="fndistinct.html">fndistinct</a></code> and <code><a href="fquantile.html">frange</a></code>.</p>
+    <p><code>descr</code> was heavily inspired by <code>Hmisc::describe</code>, but is much faster and has more advanced statistical capabilities. It is principally a wrapper around <code><a href="qsu.html">qsu</a></code>, <code><a href="fquantile.html">fquantile</a></code> (<code>.quantile</code>), and <code><a href="fndistinct.html">fndistinct</a></code> for numeric variables, and computes frequency tables for categorical variables using <code><a href="qtab.html">qtab</a></code>. Date variables are summarized with <code><a href="fnobs.html">fnobs</a></code>, <code><a href="fndistinct.html">fndistinct</a></code> and <code><a href="fquantile.html">frange</a></code>.</p>
 <p>Since v1.9.0 grouped and weighted computations are fully supported. The use of sampling weights will produce a weighted mean, sd, skewness and kurtosis, and weighted quantiles for numeric data. For categorical data, tables will display the sum of weights instead of the frequencies, and percentage tables as well as the percentage of missing values indicated next to 'Statistics' in print, be relative to the total sum of weights. All this can be done by groups. Grouped (weighted) quantiles are computed using <code><a href="BY.html">BY</a></code>.</p>
 <p>For larger datasets, calling the <code>stepwise</code> option directly from <code>descr()</code> is recommended, as precomputing the statistics for all variables before digesting the results can be time consuming.
 <!-- %\code{\link{qsu}} itself is yet about 10x faster than \code{descr}, and is optimized for grouped, panel data and weighted statistics. It is possible to also compute grouped, panel data and/or weighted statistics with \code{descr} by passing group-ids to \code{g}, panel-ids to \code{pid} or a weight vector to \code{w}. These arguments are handed down to \code{\link{qsu.default}} and only affect the statistics natively computed by \code{qsu}, i.e. passing a weight vector produces a weighted mean, sd, skewness and kurtosis but not weighted quantiles. --></p>
@@ -192,8 +192,8 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Simple Use</span></span>
-<span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Simple Use</span></span></span>
+<span class="r-in"><span><span class="fu">descr</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: iris, 5 Variables, N = 150</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length (numeric): </span>
@@ -238,7 +238,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor    50  33.33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica     50  33.33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: wlddev, 13 Variables, N = 13176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country (character): Country Name</span>
@@ -396,7 +396,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>           95%         99%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   81'177252.5  308'862641</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">descr</span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: GGDC10S, 16 Variables, N = 5027</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Country (character): Country</span>
@@ -572,9 +572,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>          99%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   435'513356</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Some useful print options (also try stepwise argument)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">descr</span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span>, t.table <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Some useful print options (also try stepwise argument)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">descr</span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span>, reverse <span class="op">=</span> <span class="cn">TRUE</span>, t.table <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SUM (numeric): Summation of sector GDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (13.19% NAs)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      N  Ndist         Mean          SD  Min             Max   Skew    Kurt</span>
@@ -734,10 +734,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>       4     105     124     117     126     129 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: GGDC10S, 16 Variables, N = 5027</span>
-<span class="r-in"><span class="co"># For bigger data consider: descr(big_data, stepwise = TRUE)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Generating a data frame</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, table <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># For bigger data consider: descr(big_data, stepwise = TRUE)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Generating a data frame</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, table <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Variable     Class                      Label     N Ndist   Min   Max Mean SD</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  country character               Country Name 13176   216    NA    NA   NA NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2    iso3c    factor               Country Code 13176   216    NA    NA   NA NA</span>
@@ -747,9 +747,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   NA   NA NA NA  NA  NA  NA  NA  NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   NA   NA NA NA  NA  NA  NA  NA  NA  NA  NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 10 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Weighted Desciptions</span></span>
-<span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, w <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="recode-replace.html">replace_NA</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span> <span class="co"># replacing NA's with 0's for fquantile()</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Weighted Desciptions</span></span></span>
+<span class="r-in"><span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, w <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="recode-replace.html">replace_NA</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span> <span class="co"># replacing NA's with 0's for fquantile()</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: wlddev, 12 Variables, N = 13176, WeightSum = 313233706778</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country (character): Country Name</span>
@@ -897,24 +897,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>              75%             90%             95%             99%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   2.51422299e+09  3.52610543e+09  4.47772251e+09  8.18240824e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Grouped Desciptions</span></span>
-<span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">income</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Grouped Desciptions</span></span></span>
+<span class="r-in"><span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">income</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: wlddev, 12 Variables, N = 13176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by: income [4]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        N</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income         4819</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income          1830</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income 2867</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income 3660</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country (character): Country Name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78     60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (Freq Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      High income  Low income  Lower middle income</span>
@@ -967,11 +967,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> iso3c (factor): Country Code</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78     60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (Freq Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 High income  Low income  Lower middle income</span>
@@ -1024,19 +1024,19 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> date (Date): Date Recorded (Fictitious)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist         Min         Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist         Min         Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78     61  1961-01-01  2021-01-01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> year (integer): Year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist  Mean     SD   Min   Max  Skew  Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     61  1990  17.61  1960  2020     0   1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     61  1990  17.61  1960  2020    -0   1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     61  1990  17.61  1960  2020    -0   1.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     61  1990  17.61  1960  2020     0   1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist  Mean     SD   Min   Max  Skew  Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     61  1990  17.61  1960  2020     0   1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     61  1990  17.61  1960  2020    -0   1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     61  1990  17.61  1960  2020    -0   1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78     61  1990  17.61  1960  2020     0   1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
@@ -1047,11 +1047,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> decade (integer): Decade</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist     Mean     SD   Min   Max  Skew  Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819      7  1985.57  17.51  1960  2020  0.03  1.79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830      7  1985.57  17.52  1960  2020  0.03  1.79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867      7  1985.57  17.51  1960  2020  0.03  1.79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660      7  1985.57  17.51  1960  2020  0.03  1.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist     Mean     SD   Min   Max  Skew  Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57      7  1985.57  17.51  1960  2020  0.03  1.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89      7  1985.57  17.52  1960  2020  0.03  1.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76      7  1985.57  17.51  1960  2020  0.03  1.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78      7  1985.57  17.51  1960  2020  0.03  1.79</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
@@ -1062,11 +1062,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region (factor): Region</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819      6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830      5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867      6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89      5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78      6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (Freq Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             High income  Low income  Lower middle income</span>
@@ -1088,11 +1088,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OECD (logical): Is OECD Member Country?</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78      2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (Freq Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        High income  Low income  Lower middle income  Upper middle income</span>
@@ -1104,16 +1104,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP (numeric): GDP per capita (constant 2010 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 9470, 28.13% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist      Mean        SD     Min        Max  Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3179   3179  30280.73  23847.05  932.04  196061.42  2.17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1311   1311    597.41    288.44  164.34    1864.79  1.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2246   2246   1574.25    858.72  144.99    4818.19  0.91</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2734   2734   4945.33   2979.56  132.08   20532.95  1.23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          10.34</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income            4.71</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income   3.72</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income   4.94</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist      Mean        SD     Min        Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3179  33.57   3179  30280.73  23847.05  932.04  196061.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1311  13.84   1311    597.41    288.44  164.34    1864.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2246  23.72   2246   1574.25    858.72  144.99    4818.19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2734  28.87   2734   4945.33   2979.56  132.08   20532.95</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      Skew   Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          2.17  10.34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1.24   4.71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  0.91   3.72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.23   4.94</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                           1%       5%      10%       25%       50%       75%</span>
@@ -1129,11 +1129,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX (numeric): Life expectancy at birth, total (years)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 11670, 11.43% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist   Mean    SD    Min    Max   Skew  Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3831   3566  73.62  5.67  42.67  85.42  -1.01  5.56</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1800   1751  49.73  9.09  26.17  74.43   0.27  2.67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   2694  58.15  9.31  18.91   76.7  -0.34  2.68</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3249   3083  66.65  7.54  36.53  80.28   -1.1  4.23</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist   Mean    SD    Min    Max   Skew  Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3831  32.83   3566  73.62  5.67  42.67  85.42  -1.01  5.56</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1800  15.42   1751  49.73  9.09  26.17  74.43   0.27  2.67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790  23.91   2694  58.15  9.31  18.91   76.7  -0.34  2.68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3249  27.84   3083  66.65  7.54  36.53  80.28   -1.1  4.23</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         1%     5%    10%    25%    50%    75%    90%    95%</span>
@@ -1149,11 +1149,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GINI (numeric): Gini index (World Bank estimate)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 1744, 86.76% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        N  Ndist   Mean    SD   Min   Max  Skew  Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          680    213   33.3  6.79  20.7  58.9  1.49  5.68</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           107     88  41.13  6.58  29.5  65.8  0.75  4.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  369    219  40.05   9.3    24  63.2  0.44  2.22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  588    280  43.16  8.95  25.2  64.8  0.08  2.35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        N   Perc  Ndist   Mean    SD   Min   Max  Skew  Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          680  38.99    213   33.3  6.79  20.7  58.9  1.49  5.68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           107   6.14     88  41.13  6.58  29.5  65.8  0.75  4.24</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  369  21.16    219  40.05   9.3    24  63.2  0.44  2.22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  588  33.72    280  43.16  8.95  25.2  64.8  0.08  2.35</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         1%     5%    10%    25%    50%   75%    90%    95%</span>
@@ -1169,16 +1169,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ODA (numeric): Net official development assistance and official aid received (constant 2018 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 8608, 34.67% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist        Mean              SD          Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1575   1407  153'663194      425'918409  -464'709991</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1692   1678  631'660165      941'498380      -500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2544   2503  692'072692  1.02452490e+09  -605'969971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2797   2700  301'326218      765'116131  -997'679993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 Max   Skew    Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4.34612988e+09   5.25   36.27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1.04032100e+10   4.46   32.13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.18790801e+10   3.79   25.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2.56715605e+10  16.31  464.86</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist        Mean              SD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1575   18.3   1407  153'663194      425'918409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1692  19.66   1678  631'660165      941'498380</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2544  29.55   2503  692'072692  1.02452490e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2797  32.49   2700  301'326218      765'116131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              Min             Max   Skew    Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          -464'709991  4.34612988e+09   5.25   36.27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income               -500000  1.04032100e+10   4.46   32.13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  -605'969971  1.18790801e+10   3.79   25.24</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  -997'679993  2.56715605e+10  16.31  464.86</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                1%           5%          10%         25%</span>
@@ -1199,11 +1199,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> POP (numeric): Population, total</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 12919, 1.95% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist         Mean           SD     Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4737   4712  12'421540.4  34'160829.5    2833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792   1791  11'690380.2  13'942313.8  365047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   2790  40'802037.5   137'302296   41202</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3600   3596  33'223895.5   143'647992    4375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist         Mean           SD     Min</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4737  36.67   4712  12'421540.4  34'160829.5    2833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792  13.87   1791  11'690380.2  13'942313.8  365047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   21.6   2790  40'802037.5   137'302296   41202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3600  27.87   3596  33'223895.5   143'647992    4375</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                 Max  Skew   Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> High income              328'239523   5.5  39.75</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Low income               112'078730  3.22  16.57</span>
@@ -1227,22 +1227,22 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income      893'256928</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.02344515e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">income</span><span class="op">)</span>, compact <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">income</span><span class="op">)</span>, compact <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: wlddev, 12 Variables, N = 13176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by: income [4]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        N</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income         4819</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income          1830</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income 2867</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income 3660</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country (character): Country Name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78     60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (Freq Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      High income  Low income  Lower middle income</span>
@@ -1279,11 +1279,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> iso3c (factor): Country Code</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78     60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (Freq Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 High income  Low income  Lower middle income</span>
@@ -1320,45 +1320,43 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> date (Date): Date Recorded (Fictitious)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist         Min         Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist         Min         Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78     61  1961-01-01  2021-01-01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> year (integer): Year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist  Mean     SD   Min   Max  Skew  Kurt    1%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     61  1990  17.61  1960  2020     0   1.8  1960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     61  1990  17.61  1960  2020    -0   1.8  1960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     61  1990  17.61  1960  2020    -0   1.8  1960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     61  1990  17.61  1960  2020     0   1.8  1960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        5%   10%   25%   50%   75%   90%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1963  1966  1975  1990  2005  2014  2017  2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1963  1966  1975  1990  2005  2014  2017  2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1963  1966  1975  1990  2005  2014  2017  2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1963  1966  1975  1990  2005  2014  2017  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist  Mean     SD   Min   Max  Skew  Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     61  1990  17.61  1960  2020     0   1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     61  1990  17.61  1960  2020    -0   1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     61  1990  17.61  1960  2020    -0   1.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1960  1963  1966  1975  1990  2005  2014  2017  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1960  1963  1966  1975  1990  2005  2014  2017  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1960  1963  1966  1975  1990  2005  2014  2017  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> decade (integer): Decade</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist     Mean     SD   Min   Max  Skew  Kurt    1%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819      7  1985.57  17.51  1960  2020  0.03  1.79  1960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830      7  1985.57  17.52  1960  2020  0.03  1.79  1960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867      7  1985.57  17.51  1960  2020  0.03  1.79  1960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660      7  1985.57  17.51  1960  2020  0.03  1.79  1960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        5%   10%   25%   50%   75%   90%   95%   99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1960  1960  1970  1990  2000  2010  2010  2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1960  1960  1970  1990  2000  2010  2010  2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1960  1960  1970  1990  2000  2010  2010  2020</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1960  1960  1970  1990  2000  2010  2010  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist     Mean     SD   Min   Max  Skew  Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57      7  1985.57  17.51  1960  2020  0.03  1.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89      7  1985.57  17.52  1960  2020  0.03  1.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76      7  1985.57  17.51  1960  2020  0.03  1.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1960  1960  1960  1970  1990  2000  2010  2010  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1960  1960  1960  1970  1990  2000  2010  2010  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1960  1960  1960  1970  1990  2000  2010  2010  2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region (factor): Region</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819      6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830      5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867      6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89      5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78      6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (Freq Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             High income  Low income  Lower middle income</span>
@@ -1380,11 +1378,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OECD (logical): Is OECD Member Country?</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78      2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (Freq Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        High income  Low income  Lower middle income  Upper middle income</span>
@@ -1396,112 +1394,110 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP (numeric): GDP per capita (constant 2010 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 9470, 28.13% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist      Mean        SD     Min        Max  Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3179   3179  30280.73  23847.05  932.04  196061.42  2.17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1311   1311    597.41    288.44  164.34    1864.79  1.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2246   2246   1574.25    858.72  144.99    4818.19  0.91</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2734   2734   4945.33   2979.56  132.08   20532.95  1.23</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       Kurt       1%       5%      10%       25%       50%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          10.34  3053.83  5395.18  7768.74  14369.61  24745.65</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income            4.71   191.73   234.77   289.48    396.52    535.96</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income   3.72   194.43   398.88   585.24    961.12   1437.78</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income   4.94   466.58  1248.19  1835.98   2864.47   4219.97</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist      Mean        SD     Min        Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3179  33.57   3179  30280.73  23847.05  932.04  196061.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1311  13.84   1311    597.41    288.44  164.34    1864.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2246  23.72   2246   1574.25    858.72  144.99    4818.19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                      Skew   Kurt       1%       5%      10%       25%       50%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          2.17  10.34  3053.83  5395.18  7768.74  14369.61  24745.65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1.24   4.71   191.73   234.77   289.48    396.52    535.96</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  0.91   3.72   194.43   398.88   585.24    961.12   1437.78</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                           75%      90%       95%        99%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> High income          38936.22    57259   75529.1  116493.28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Low income             745.29   985.45   1180.37    1513.83</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income   1987.89  2829.09   3192.75     4191.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income   6452.07  8966.02  10867.95   14416.71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX (numeric): Life expectancy at birth, total (years)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 11670, 11.43% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist   Mean    SD    Min    Max   Skew  Kurt     1%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3831   3566  73.62  5.67  42.67  85.42  -1.01  5.56  55.62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1800   1751  49.73  9.09  26.17  74.43   0.27  2.67   31.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   2694  58.15  9.31  18.91   76.7  -0.34  2.68  36.62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3249   3083  66.65  7.54  36.53  80.28   -1.1  4.23  42.66</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         5%    10%    25%    50%    75%    90%    95%    99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          63.95  67.12   70.5  73.93  77.61  80.67  81.79  83.22</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           35.78   38.2  43.52  49.04  56.06  61.98  65.87  71.71</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  42.66  45.73   51.5  58.53  65.79     70  71.72  74.91</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  51.22  55.93   62.8  68.36  71.95  74.66  75.94  78.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist   Mean    SD    Min    Max   Skew  Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3831  32.83   3566  73.62  5.67  42.67  85.42  -1.01  5.56</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1800  15.42   1751  49.73  9.09  26.17  74.43   0.27  2.67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790  23.91   2694  58.15  9.31  18.91   76.7  -0.34  2.68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         1%     5%    10%    25%    50%    75%    90%    95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          55.62  63.95  67.12   70.5  73.93  77.61  80.67  81.79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income            31.5  35.78   38.2  43.52  49.04  56.06  61.98  65.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  36.62  42.66  45.73   51.5  58.53  65.79     70  71.72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          83.22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           71.71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  74.91</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GINI (numeric): Gini index (World Bank estimate)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 1744, 86.76% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        N  Ndist   Mean    SD   Min   Max  Skew  Kurt     1%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          680    213   33.3  6.79  20.7  58.9  1.49  5.68  23.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           107     88  41.13  6.58  29.5  65.8  0.75  4.24  29.81</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  369    219  40.05   9.3    24  63.2  0.44  2.22  24.77</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  588    280  43.16  8.95  25.2  64.8  0.08  2.35  26.21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         5%    10%    25%    50%   75%    90%    95%    99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income           25.2  26.39  28.48  32.35  35.5  41.01  48.72  56.62</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           32.35  33.26  35.65   41.1  44.9  48.26  51.61  60.99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  26.84  28.88   32.7   38.7  46.6  54.52  56.94  59.82</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  27.87   30.6  36.77  42.45  49.5  54.83  58.56     63</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        N   Perc  Ndist   Mean    SD   Min   Max  Skew  Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          680  38.99    213   33.3  6.79  20.7  58.9  1.49  5.68</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           107   6.14     88  41.13  6.58  29.5  65.8  0.75  4.24</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  369  21.16    219  40.05   9.3    24  63.2  0.44  2.22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         1%     5%    10%    25%    50%   75%    90%    95%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          23.42   25.2  26.39  28.48  32.35  35.5  41.01  48.72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           29.81  32.35  33.26  35.65   41.1  44.9  48.26  51.61</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  24.77  26.84  28.88   32.7   38.7  46.6  54.52  56.94</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          56.62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           60.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  59.82</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ODA (numeric): Net official development assistance and official aid received (constant 2018 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 8608, 34.67% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist        Mean              SD          Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1575   1407  153'663194      425'918409  -464'709991</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1692   1678  631'660165      941'498380      -500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2544   2503  692'072692  1.02452490e+09  -605'969971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2797   2700  301'326218      765'116131  -997'679993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 Max   Skew    Kurt            1%           5%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4.34612988e+09   5.25   36.27  -54'802401.1   -755999.99</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1.04032100e+10   4.46   32.13   1'100000.02  33'997999.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.18790801e+10   3.79   25.24     209999.99  14'721500.3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2.56715605e+10  16.31  464.86  -73'793201.9  4'558000.18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                              10%         25%          50%         75%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income               264000  4'400000.1  21'209999.1  104'934998</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           71'296000.7  151'814999   332'904999  692'777496</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  41'358000.2  100'485003   336'494995  810'707520</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income    12'666000   38'000000   105'139999  311'519989</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 90%             95%             99%</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income              375'347992      661'426996  2.31632209e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1.47914895e+09  2.14049348e+09  4.82899863e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.84614302e+09  2.59226945e+09  4.69573516e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income      714'823975  1.18504797e+09  2.98750435e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist        Mean              SD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1575   18.3   1407  153'663194      425'918409</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1692  19.66   1678  631'660165      941'498380</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2544  29.55   2503  692'072692  1.02452490e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              Min             Max   Skew    Kurt            1%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          -464'709991  4.34612988e+09   5.25   36.27  -54'802401.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income               -500000  1.04032100e+10   4.46   32.13   1'100000.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  -605'969971  1.18790801e+10   3.79   25.24     209999.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               5%          10%         25%          50%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income           -755999.99       264000  4'400000.1  21'209999.1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           33'997999.8  71'296000.7  151'814999   332'904999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  14'721500.3  41'358000.2  100'485003   336'494995</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             75%             90%             95%             99%</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          104'934998      375'347992      661'426996  2.31632209e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           692'777496  1.47914895e+09  2.14049348e+09  4.82899863e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  810'707520  1.84614302e+09  2.59226945e+09  4.69573516e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> POP (numeric): Population, total</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 12919, 1.95% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist         Mean           SD     Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4737   4712  12'421540.4  34'160829.5    2833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792   1791  11'690380.2  13'942313.8  365047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   2790  40'802037.5   137'302296   41202</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3600   3596  33'223895.5   143'647992    4375</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist         Mean           SD     Min</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4737  36.67   4712  12'421540.4  34'160829.5    2833</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792  13.87   1791  11'690380.2  13'942313.8  365047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   21.6   2790  40'802037.5   137'302296   41202</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                 Max  Skew   Kurt         1%           5%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> High income              328'239523   5.5  39.75    7467.08      18432.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Low income               112'078730  3.22  16.57  594755.89  1'206251.55</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.36641775e+09   6.7   52.4   58452.97    105620.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.39771500e+09  7.53  61.78    7357.28     47202.15</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             10%          25%         50%          75%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> High income               30517        84449    1'632114     8'336605</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1'919035.6  3'842838.75    7'181772  13'579920.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income    224651.9     1'188469  5'914923.5  25'966431.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income     93885.2    609166.25    3'763490  16'347212.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                              90%          95%             99%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> High income          37'508393.4  58'933084.2      209'091400</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Low income           25'964845.3  36'596246.7     76'539171.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income    81'157844   146'949299      893'256928</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  47'556659.8   104'771148  1.02344515e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Grouped &amp; Weighted Desciptions</span></span>
-<span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">income</span>, w <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="recode-replace.html">replace_NA</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Grouped &amp; Weighted Desciptions</span></span></span>
+<span class="r-in"><span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">income</span>, w <span class="op">=</span> <span class="op">~</span> <span class="fu"><a href="recode-replace.html">replace_NA</a></span><span class="op">(</span><span class="va">POP</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: wlddev, 11 Variables, N = 13176, WeightSum = 313233706778</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by: income [4]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                N    WeightSum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income                 4819  58840837058</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income                  1830  20949161394</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income         2867 113837684528</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income         3660 119606023798</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc       WeightSum   Perc</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57  5.88408371e+10  18.78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89  2.09491614e+10   6.69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76  1.13837685e+11  36.34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78  1.19606024e+11  38.18</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country (character): Country Name</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (WeightSum = 313233706778)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                           WeightSum  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          5.88408371e+10     79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           2.09491614e+10     30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.13837685e+11     47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.19606024e+11     60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           WeightSum   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          5.88408371e+10  18.78     79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           2.09491614e+10   6.69     30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.13837685e+11  36.34     47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.19606024e+11  38.18     60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (WeightSum Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                           High income         Low income  Lower middle income</span>
@@ -1554,11 +1550,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> iso3c (factor): Country Code</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (WeightSum = 313233706778)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                           WeightSum  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          5.88408371e+10     79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           2.09491614e+10     30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.13837685e+11     47</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.19606024e+11     60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           WeightSum   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          5.88408371e+10  18.78     79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           2.09491614e+10   6.69     30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.13837685e+11  36.34     47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.19606024e+11  38.18     60</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (WeightSum Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       High income         Low income  Lower middle income</span>
@@ -1611,24 +1607,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> date (Date): Date Recorded (Fictitious)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 13176)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist         Min         Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867     61  1961-01-01  2021-01-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist         Min         Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4819  36.57     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1830  13.89     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2867  21.76     61  1961-01-01  2021-01-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3660  27.78     61  1961-01-01  2021-01-01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> year (integer): Year</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 12919, 1.95% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist     Mean         SD   Min   Max       Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4737     61  1991.75  166301.18  1960  2019  -16325.13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792     61  1997.27   78395.39  1960  2019    8191.05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790     61  1995.41  335963.28  1960  2019   10925.07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3600     61  1993.44  397459.08  1960  2019    -4274.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income              634'846395</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income               232'488037</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  3.15129968e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3.10022335e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist     Mean         SD   Min   Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4737  36.67     61  1991.75  166301.18  1960  2019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792  13.87     61  1997.27   78395.39  1960  2019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   21.6     61  1995.41  335963.28  1960  2019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3600  27.87     61  1993.44  397459.08  1960  2019</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           Skew            Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          -16325.13      634'846395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income             8191.05      232'488037</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income   10925.07  3.15129968e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income    -4274.8  3.10022335e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
@@ -1639,16 +1635,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> decade (integer): Decade</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 12919, 1.95% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist     Mean         SD   Min   Max       Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4737      7  1987.19  164278.72  1960  2010  -17271.45</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792      7  1992.55   76436.79  1960  2010    7010.38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790      7  1990.76  331059.97  1960  2010    7127.04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3600      7  1988.84  393125.08  1960  2010   -7285.96</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income              634'974205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income               190'925692</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2.75926384e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2.87721719e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist     Mean         SD   Min   Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4737  36.67      7  1987.19  164278.72  1960  2010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792  13.87      7  1992.55   76436.79  1960  2010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   21.6      7  1990.76  331059.97  1960  2010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3600  27.87      7  1988.84  393125.08  1960  2010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           Skew            Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          -17271.45      634'974205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income             7010.38      190'925692</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income    7127.04  2.75926384e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income   -7285.96  2.87721719e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        1%    5%   10%   25%   50%   75%   90%   95%   99%</span>
@@ -1659,11 +1655,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region (factor): Region</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (WeightSum = 313233706778)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                           WeightSum  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          5.88408371e+10      6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           2.09491614e+10      5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.13837685e+11      6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.19606024e+11      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           WeightSum   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          5.88408371e+10  18.78      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           2.09491614e+10   6.69      5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.13837685e+11  36.34      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.19606024e+11  38.18      6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (WeightSum Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                     High income           Low income</span>
@@ -1693,11 +1689,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OECD (logical): Is OECD Member Country?</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (WeightSum = 313233706778)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                           WeightSum  Ndist</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          5.88408371e+10      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           2.09491614e+10      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.13837685e+11      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.19606024e+11      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           WeightSum   Perc  Ndist</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          5.88408371e+10  18.78      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           2.09491614e+10   6.69      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.13837685e+11  36.34      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  1.19606024e+11  38.18      2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Table (WeightSum Perc)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              High income         Low income  Lower middle income</span>
@@ -1709,16 +1705,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP (numeric): GDP per capita (constant 2010 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 9470, 28.13% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist      Mean           SD     Min        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3179   3179  31284.74   121'817314  932.04  196061.42</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1311   1311    557.14  1'425180.31  164.34    1864.79</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2246   2246   1238.83  16'016050.6  144.99    4818.19</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2734   2734   4145.68  88'766735.7  132.08   20532.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                           Skew            Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income            1733.12  2.10067153e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income            -8828.84      156'366288</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  -23724.98  1.63059448e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  -42752.44  2.18669143e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist      Mean           SD     Min</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3179  33.57   3179  31284.74   121'817314  932.04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1311  13.84   1311    557.14  1'425180.31  164.34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2246  23.72   2246   1238.83  16'016050.6  144.99</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2734  28.87   2734   4145.68  88'766735.7  132.08</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            Max       Skew            Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          196061.42    1733.12  2.10067153e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income             1864.79   -8828.84      156'366288</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income    4818.19  -23724.98  1.63059448e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income   20532.95  -42752.44  2.18669143e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            1%       5%       10%       25%       50%       75%</span>
@@ -1734,16 +1730,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX (numeric): Life expectancy at birth, total (years)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 11659, 11.51% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist   Mean         SD    Min    Max       Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3828   3566  75.69   37481.75  42.67  85.42    -385.83</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792   1751  53.51   41652.63  26.17  74.43    8500.35</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790   2694  60.59  151991.94  18.91   76.7  -13033.11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3249   3083  68.27  170387.07  36.53  80.28  -37108.33</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income              450'824814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income               261'739013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2.22374550e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  5.22842825e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist   Mean         SD    Min    Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          3828  32.83   3566  75.69   37481.75  42.67  85.42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1792  15.37   1751  53.51   41652.63  26.17  74.43</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2790  23.93   2694  60.59  151991.94  18.91   76.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3249  27.87   3083  68.27  170387.07  36.53  80.28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           Skew            Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income            -385.83      450'824814</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income             8500.35      261'739013</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  -13033.11  2.22374550e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  -37108.33  5.22842825e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         1%     5%    10%    25%    50%    75%    90%    95%</span>
@@ -1759,11 +1755,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> GINI (numeric): Gini index (World Bank estimate)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 1744, 86.76% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        N  Ndist   Mean         SD   Min   Max       Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          680    213  36.03   32920.93  20.7  58.9  -15285.12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           107     88  39.76    36200.8  29.5  65.8  -10616.65</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  369    219  35.16   56653.22    24  63.2  -14247.72</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  588    280  43.88  122076.53  25.2  64.8  -31885.19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        N   Perc  Ndist   Mean         SD   Min   Max       Skew</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          680  38.99    213  36.03   32920.93  20.7  58.9  -15285.12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           107   6.14     88  39.76    36200.8  29.5  65.8  -10616.65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  369  21.16    219  35.16   56653.22    24  63.2  -14247.72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  588  33.72    280  43.88  122076.53  25.2  64.8  -31885.19</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                Kurt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> High income              350'397576</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Low income               239'178632</span>
@@ -1784,16 +1780,16 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ODA (numeric): Net official development assistance and official aid received (constant 2018 US$)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Statistics (N = 8597, 34.75% NAs)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         N  Ndist            Mean              SD          Min</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1572   1407      469'519277  4.55636685e+12  -464'709991</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1684   1678  1.27976069e+09  9.36922518e+12      -500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2544   2503  2.23495473e+09  3.81816979e+13  -605'969971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2797   2700  1.02122309e+09  3.90305188e+13  -997'679993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                 Max      Skew            Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> High income          4.34612988e+09  16070.86      429'406454</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1.04032100e+10  24436.27      835'382836</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  1.18790801e+10  54842.83  3.55642977e+09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2.56715605e+10  48920.39  4.21936101e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         N   Perc  Ndist            Mean              SD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          1572  18.29   1407      469'519277  4.55636685e+12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income           1684  19.59   1678  1.27976069e+09  9.36922518e+12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  2544  29.59   2503  2.23495473e+09  3.81816979e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  2797  32.53   2700  1.02122309e+09  3.90305188e+13</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                              Min             Max      Skew            Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> High income          -464'709991  4.34612988e+09  16070.86      429'406454</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Low income               -500000  1.04032100e+10  24436.27      835'382836</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  -605'969971  1.18790801e+10  54842.83  3.55642977e+09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  -997'679993  2.56715605e+10  48920.39  4.21936101e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Quantiles</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                1%           5%           10%          25%</span>
@@ -1812,9 +1808,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lower middle income  5.33746843e+09  8.44354790e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Upper middle income  3.52855425e+09  3.27336463e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Passing Arguments down to qsu.default: for Panel Data Statistics</span></span>
-<span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">iris</span>, pid <span class="op">=</span> <span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Passing Arguments down to qsu.default: for Panel Data Statistics</span></span></span>
+<span class="r-in"><span><span class="fu">descr</span><span class="op">(</span><span class="va">iris</span>, pid <span class="op">=</span> <span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: iris, 5 Variables, N = 150</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length (numeric): </span>
@@ -1872,7 +1868,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor    50  33.33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica     50  33.33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, pid <span class="op">=</span> <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">descr</span><span class="op">(</span><span class="va">wlddev</span>, pid <span class="op">=</span> <span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Dataset: wlddev, 13 Variables, N = 13176</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country (character): Country Name</span>
@@ -2062,7 +2058,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>           95%         99%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   81'177252.5  308'862641</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> --------------------------------------------------------------------------------</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -2077,7 +2073,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

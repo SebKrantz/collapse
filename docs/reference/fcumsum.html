@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,30 +65,30 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, o <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, o <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, o <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for indexed data / compatibility with plm:</span>
-
-<span class="co"># S3 method for pseries</span>
-<span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for grouped data frame / compatibility with dplyr:</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, o <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span>,
-        keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, o <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, o <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, o <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
+<span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for grouped data frame / compatibility with dplyr:</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">x</span>, o <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -115,7 +115,7 @@
 <dd><p><em>pseries / pdata.frame methods</em>: character. <code>"time"</code> or <code>"row"</code>. See <code><a href="flag.html">flag</a></code> for details. The argument here does not control 'shifting' of data but rather the order in which elements are summed.</p></dd>
 
   <dt>keep.ids</dt>
-<dd><p><em>pdata.frame / grouped_df methods</em>: Logical. Drop all identifiers from the output (which includes all grouping variables and variables passed to<code>o</code>). <em>Note</em>: For grouped / panel data frames identifiers are dropped, but the <code>"groups"</code> / <code>"index"</code> attributes are kept.</p></dd>
+<dd><p><em>pdata.frame / grouped_df methods</em>: Logical. Drop all identifiers from the output (which includes all grouping variables and variables passed to <code>o</code>). <em>Note</em>: For grouped / panel data frames identifiers are dropped, but the <code>"groups"</code> / <code>"index"</code> attributes are kept.</p></dd>
 
 <dt>...</dt>
 <dd><p>arguments to be passed to or from other methods.</p></dd>
@@ -141,8 +141,8 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Non-grouped</span></span>
-<span class="r-in"><span class="fu">fcumsum</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Non-grouped</span></span></span>
+<span class="r-in"><span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Jan   Feb   Mar   Apr   May   Jun   Jul   Aug   Sep   Oct   Nov   Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949   112   230   362   491   612   747   895  1043  1179  1298  1402  1520</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1950  1635  1761  1902  2037  2162  2311  2481  2651  2809  2942  3056  3196</span>
@@ -150,7 +150,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952  5409  5589  5782  5963  6146  6364  6594  6836  7045  7236  7408  7602</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953  7798  7994  8230  8465  8694  8937  9201  9473  9710  9921 10101 10302</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          DAX     SMI     CAC    FTSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 1628.75  1678.1  1772.8  2443.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 3242.38  3366.6  3523.3  4903.8</span>
@@ -158,7 +158,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 6469.93  6729.3  6949.4  9822.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 8088.09  8415.9  8672.5 12307.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 9698.70 10087.5 10386.8 14773.9</span>
-<span class="r-in"><span class="fu">fcumsum</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     mpg cyl disp  hp  drat     wt   qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4          21.0   6  160 110  3.90  2.620  16.46  0  1    4    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag      42.0  12  320 220  7.80  5.495  33.48  0  2    8    8</span>
@@ -167,21 +167,21 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 104.9  30 1046 598 17.88 14.470  88.55  2  3   18   12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           123.0  36 1271 703 20.64 17.930 108.77  3  3   21   13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Non-grouped but ordered</span></span>
-<span class="r-in"><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/all.equal.data.table.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="small-helpers.html">copyAttrib</a></span><span class="op">(</span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">[</span><span class="va">o</span>, <span class="op">]</span>, o <span class="op">=</span> <span class="va">o</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">order</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span>, <span class="op">]</span>, <span class="va">EuStockMarkets</span><span class="op">)</span>,</span>
-<span class="r-in">          <span class="fu">fcumsum</span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Non-grouped but ordered</span></span></span>
+<span class="r-in"><span><span class="va">o</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.equal.html" class="external-link">all.equal</a></span><span class="op">(</span><span class="fu"><a href="small-helpers.html">copyAttrib</a></span><span class="op">(</span><span class="fu">fcumsum</span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">[</span><span class="va">o</span>, <span class="op">]</span>, o <span class="op">=</span> <span class="va">o</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">o</span><span class="op">)</span>, <span class="op">]</span>, <span class="va">EuStockMarkets</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>          <span class="fu">fcumsum</span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Grouped</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu">fcumsum</span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">iso3c</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Grouped</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu">fcumsum</span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">iso3c</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA NA NA NA NA NA</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Grouped and ordered</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu">fcumsum</span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Grouped and ordered</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu">fcumsum</span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA NA NA NA NA NA</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu">fcumsum</span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">iso3c</span>, <span class="va">year</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fu">fcumsum</span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">iso3c</span>, <span class="va">year</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0 0 0 0 0 0</span>
 </code></pre></div>
     </div>
@@ -197,7 +197,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

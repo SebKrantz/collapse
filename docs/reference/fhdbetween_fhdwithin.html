@@ -18,7 +18,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -67,67 +67,67 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
- <span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-       <span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-       <span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>,
-    lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for matrix</span>
-<span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>,
-    lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,
-           variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,
-          variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,
-    variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,
-    variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for indexed data / compatibility with plm:</span>
-
-<span class="co"># S3 method for pseries</span>
-<span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>,
-           variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>,
-          variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span> <span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>       <span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>       <span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>,</span>
+<span>    lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>,</span>
+<span>    lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>           variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>          variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>    variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
+<span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>           variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>          variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -205,14 +205,14 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">carb</span><span class="op">)</span>                   <span class="co"># Simple regression problems</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">carb</span><span class="op">)</span>                   <span class="co"># Simple regression problems</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  3.3505410  3.3505410 -1.0166151 -2.4166151 -3.0608964 -5.7166151</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -3.3494590  2.6391036  1.0391036  1.5505410  0.1505410 -3.3051777</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] -2.4051777 -4.5051777 -7.2494590 -7.2494590 -2.9494590  8.5833849</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [19]  8.6391036 10.0833849 -2.3166151 -6.2608964 -6.5608964 -4.3494590</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25] -2.5608964  3.4833849  4.2391036  8.6391036 -1.8494590  6.1619784</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31]  5.5734158 -0.3608964</span>
-<span class="r-in"><span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -1.599505761 -1.111886079 -3.450644085  0.162595453  1.006565971</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] -2.283039036 -0.086256253  1.903988115 -1.619089898  0.500970058</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] -1.391654392  2.227837890  1.700426404 -0.542224699 -1.634013415</span>
@@ -220,7 +220,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [21] -2.143103442 -1.443053221 -2.532181498 -0.006021976  2.508321011</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [26] -0.993468693 -0.152953961  2.763727417 -3.070040803  0.006171846</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31]  1.058881618 -2.968267683</span>
-<span class="r-in"><span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -1.599505761 -1.111886079 -3.450644085  0.162595453  1.006565971</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] -2.283039036 -0.086256253  1.903988115 -1.619089898  0.500970058</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] -1.391654392  2.227837890  1.700426404 -0.542224699 -1.634013415</span>
@@ -228,7 +228,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> [21] -2.143103442 -1.443053221 -2.532181498 -0.006021976  2.508321011</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [26] -0.993468693 -0.152953961  2.763727417 -3.070040803  0.006171846</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31]  1.058881618 -2.968267683</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     HDW.disp     HDW.hp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         -56.791929 -29.668202</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     -56.791929 -29.668202</span>
@@ -236,7 +236,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive     43.577448 -28.558294</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  38.455459 -19.007424</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant            -8.969914 -42.715033</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>                <span class="co"># Partialling columns 3 and 4 out of colums 1 and 2</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>                <span class="co"># Partialling columns 3 and 4 out of colums 1 and 2</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   HDW.Sepal.Length HDW.Sepal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       0.21483967       0.2001352</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       0.01483967      -0.2998648</span>
@@ -244,7 +244,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4      -0.33933805      -0.1741510</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       0.11483967       0.3001352</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6       0.41621663       0.6044681</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>                <span class="co"># Adding the Species factor -&gt; fixed effect</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>                <span class="co"># Adding the Species factor -&gt; fixed effect</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   HDW.Sepal.Length HDW.Sepal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       0.14989286       0.1102684</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      -0.05010714      -0.3897316</span>
@@ -252,8 +252,8 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4      -0.44070173      -0.3051992</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5       0.04989286       0.2102684</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6       0.17930818       0.3391766</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Partialling out 2 fixed effects</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Partialling out 2 fixed effects</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   HDW.PCGDP HDW.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1578.6211 -1.3980224</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 1412.8849 -1.1838196</span>
@@ -261,7 +261,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  627.8605 -0.8296048</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  168.0458 -0.6683027</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 -234.9535 -0.4708428</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="co"># Variable-wise</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="co"># Variable-wise</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   HDW.PCGDP HDW.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1        NA  -6.706423</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2        NA  -6.688440</span>
@@ -269,7 +269,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4        NA  -6.472079</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5        NA  -6.445378</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6        NA  -6.367659</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="co"># Adding ODA as a continuous regressor</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="co"># Adding ODA as a continuous regressor</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   HDW.PCGDP HDW.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 -324.3991 -1.1765307</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 -439.5404 -0.9751559</span>
@@ -277,7 +277,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  100.2175 -0.6186010</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  -70.7664 -0.4966332</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  330.3561 -0.2257800</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">:</span><span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">decade</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="co"># Country-decade and year FE's</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">:</span><span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">decade</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="va">ODA</span><span class="op">)</span><span class="op">)</span> <span class="co"># Country-decade and year FE's</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP  HDW.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  411.79228 -0.55122290</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  231.95880 -0.36367639</span>
@@ -285,8 +285,8 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   43.93176 -0.05394933</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 -136.49858  0.06637048</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 -151.30884  0.24440305</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">*</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>          <span class="co"># Country specific time trends</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">*</span><span class="va">year</span><span class="op">)</span><span class="op">)</span>          <span class="co"># Country specific time trends</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP    HDW.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  -3.035801 -0.1540994153</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  -7.963841 -0.1544275887</span>
@@ -294,17 +294,17 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 -29.220766 -0.1100839354</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 -38.876368 -0.0614121088</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 -16.317261  0.0002597179</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">year</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Country specific cubic trends</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP  HDW.LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -258.40688  0.23602846</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 -119.55996  0.11364318</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  -10.27730 -0.01083611</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   60.86412 -0.07646294</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  -21.08698 -0.02429083</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   58.90309 -0.07073351</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># More complex examples</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">:</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">year</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Country specific cubic trends</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP   HDW.LIFEEX</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   9.963947  0.023669531</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  14.044984  0.006742957</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -10.732684 -0.011412252</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  -6.683973 -0.023949346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -22.587967 -0.026026200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  -9.100395 -0.018796066</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># More complex examples</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">:</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~factor(cyl) * </span>
@@ -312,9 +312,9 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)       HDW.hp  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -1.297e-16   -2.366e-02  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -2.240e-16   -2.366e-02  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">:</span><span class="va">carb</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">:</span><span class="va">carb</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ hp + factor(cyl) * carb + vs + wt:gear + wt:gear:carb, </span>
@@ -328,8 +328,8 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span>           wt:gear       carb:wt:gear  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          -1.52766            0.26438  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~factor(cyl) * </span>
@@ -337,9 +337,9 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)       HDW.hp  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   4.521e-16   -2.740e-02  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   5.337e-16   -2.740e-02  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ hp + factor(cyl) * carb + vs + wt:gear, data = mtcars)</span>
@@ -352,8 +352,8 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span>           wt:gear  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           -0.8238  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, ~cyl * carb + </span>
@@ -361,9 +361,9 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)       HDW.hp  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3.464e-17   -2.151e-02  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -3.898e-17   -2.151e-02  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ hp + cyl * carb + vs + wt:gear, data = mtcars)</span>
@@ -374,8 +374,8 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span>     wt:gear  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    -0.81296  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">~</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">drat</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">~</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">drat</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = HDW.mpg ~ HDW.hp, data = HDW(mtcars, mpg + hp ~ </span>
@@ -383,9 +383,9 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)       HDW.hp  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0.002404    -0.062263  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -1.297e-15   -6.227e-02  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">drat</span>,<span class="fl">2</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">drat</span>,<span class="fl">2</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> lm(formula = mpg ~ hp + cyl * carb + factor(cyl) * poly(drat, </span>
@@ -407,8 +407,8 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> factor(cyl)8:poly(drat, 2)2  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                    -0.56842  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -423,7 +423,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

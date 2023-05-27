@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,42 +65,42 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-<span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-<span class="fu">psccf</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, t <span class="op">=</span> <span class="cn">NULL</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span>,<span class="st">"partial"</span><span class="op">)</span>,
-      plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, t <span class="op">=</span> <span class="cn">NULL</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for default</span>
-<span class="fu">psccf</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">g</span>, t <span class="op">=</span> <span class="cn">NULL</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span><span class="op">)</span>,
-      plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">by</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>,
-      type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span>,<span class="st">"partial"</span><span class="op">)</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">by</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>,
-       plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for indexed data / compatibility with plm:</span>
-
-<span class="co"># S3 method for pseries</span>
-<span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span>,<span class="st">"partial"</span><span class="op">)</span>,
-      plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pseries</span>
-<span class="fu">psccf</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span><span class="op">)</span>,
-      plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
- <span class="co"># S3 method for pdata.frame</span>
-<span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>,
-      type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span>,<span class="st">"partial"</span><span class="op">)</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">psccf</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, t <span class="op">=</span> <span class="cn">NULL</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span>,<span class="st">"partial"</span><span class="op">)</span>,</span>
+<span>      plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, t <span class="op">=</span> <span class="cn">NULL</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">psccf</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">g</span>, t <span class="op">=</span> <span class="cn">NULL</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span><span class="op">)</span>,</span>
+<span>      plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">by</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>      type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span>,<span class="st">"partial"</span><span class="op">)</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, <span class="va">by</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>       plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
+<span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span>,<span class="st">"partial"</span><span class="op">)</span>,</span>
+<span>      plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">psccf</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span><span class="op">)</span>,</span>
+<span>      plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span> <span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">psacf</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>      type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"correlation"</span>, <span class="st">"covariance"</span>,<span class="st">"partial"</span><span class="op">)</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">pspacf</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, lag.max <span class="op">=</span> <span class="cn">NULL</span>, plot <span class="op">=</span> <span class="cn">TRUE</span>, gscale <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -154,8 +154,8 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## World Development Panel Data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>                                                    <span class="co"># See also help(wlddev)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## World Development Panel Data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>                                                    <span class="co"># See also help(wlddev)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country iso3c       date year decade     region     income  OECD PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan   AFG 1962-01-01 1961   1960 South Asia Low income FALSE    NA</span>
@@ -169,38 +169,38 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 33.971   NA 237720001 9543205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 34.463   NA 295920013 9744781</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">year</span><span class="op">)</span>                <span class="co"># ACF of GDP per Capita</span></span>
+<span class="r-in"><span><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">year</span><span class="op">)</span>                <span class="co"># ACF of GDP per Capita</span></span></span>
 <span class="r-plt img"><img src="psacf-1.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span>                           <span class="co"># Same using data.frame method</span></span>
+<span class="r-in"><span><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span>                           <span class="co"># Same using data.frame method</span></span></span>
 <span class="r-plt img"><img src="psacf-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>                             <span class="co"># The Data is sorted, can omit t</span></span>
+<span class="r-in"><span><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>                             <span class="co"># The Data is sorted, can omit t</span></span></span>
 <span class="r-plt img"><img src="psacf-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">pspacf</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>                            <span class="co"># Partial ACF</span></span>
+<span class="r-in"><span><span class="fu">pspacf</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>                            <span class="co"># Partial ACF</span></span></span>
 <span class="r-plt img"><img src="psacf-4.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">psccf</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">LIFEEX</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>              <span class="co"># CCF with Life-Expectancy at Birth</span></span>
+<span class="r-in"><span><span class="fu">psccf</span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">LIFEEX</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>              <span class="co"># CCF with Life-Expectancy at Birth</span></span></span>
 <span class="r-plt img"><img src="psacf-5.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">+</span> <span class="va">ODA</span> <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span>            <span class="co"># ACF and CCF of GDP, LIFEEX and ODA</span></span>
-<span class="r-in"><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">12</span><span class="op">)</span><span class="op">)</span>                     <span class="co"># Same, using cols argument</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">+</span> <span class="va">ODA</span> <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span>            <span class="co"># ACF and CCF of GDP, LIFEEX and ODA</span></span></span>
+<span class="r-in"><span><span class="fu">psacf</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">12</span><span class="op">)</span><span class="op">)</span>                     <span class="co"># Same, using cols argument</span></span></span>
 <span class="r-plt img"><img src="psacf-6.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">pspacf</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">12</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># Partial ACF</span></span>
+<span class="r-in"><span><span class="fu">pspacf</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">country</span>, <span class="op">~</span><span class="va">year</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">12</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># Partial ACF</span></span></span>
 <span class="r-plt img"><img src="psacf-7.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Using indexed data:</span></span>
-<span class="r-in"><span class="va">wldi</span> <span class="op">&lt;-</span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span>  <span class="co"># Creating a indexed frame</span></span>
-<span class="r-in"><span class="va">PCGDP</span> <span class="op">&lt;-</span> <span class="va">wldi</span><span class="op">$</span><span class="va">PCGDP</span>                     <span class="co"># Indexed Series of GDP per Capita</span></span>
-<span class="r-in"><span class="va">LIFEEX</span> <span class="op">&lt;-</span> <span class="va">wldi</span><span class="op">$</span><span class="va">LIFEEX</span>                   <span class="co"># Indexed Series of Life Expectancy</span></span>
-<span class="r-in"><span class="fu">psacf</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>                            <span class="co"># Same as above, more parsimonious</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Using indexed data:</span></span></span>
+<span class="r-in"><span><span class="va">wldi</span> <span class="op">&lt;-</span> <span class="fu"><a href="indexing.html">findex_by</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span>  <span class="co"># Creating a indexed frame</span></span></span>
+<span class="r-in"><span><span class="va">PCGDP</span> <span class="op">&lt;-</span> <span class="va">wldi</span><span class="op">$</span><span class="va">PCGDP</span>                     <span class="co"># Indexed Series of GDP per Capita</span></span></span>
+<span class="r-in"><span><span class="va">LIFEEX</span> <span class="op">&lt;-</span> <span class="va">wldi</span><span class="op">$</span><span class="va">LIFEEX</span>                   <span class="co"># Indexed Series of Life Expectancy</span></span></span>
+<span class="r-in"><span><span class="fu">psacf</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>                            <span class="co"># Same as above, more parsimonious</span></span></span>
 <span class="r-plt img"><img src="psacf-8.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">pspacf</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">pspacf</span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="psacf-9.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">psccf</span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">psccf</span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="psacf-10.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">psacf</span><span class="op">(</span><span class="va">wldi</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">12</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">psacf</span><span class="op">(</span><span class="va">wldi</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">12</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="psacf-11.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span class="fu">pspacf</span><span class="op">(</span><span class="va">wldi</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">12</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">pspacf</span><span class="op">(</span><span class="va">wldi</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">10</span>,<span class="fl">12</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="psacf-12.png" alt="" width="700" height="433"></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -215,7 +215,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

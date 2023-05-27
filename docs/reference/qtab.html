@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,11 +65,11 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">qtab</span><span class="op">(</span><span class="va">...</span>, w <span class="op">=</span> <span class="cn">NULL</span>, wFUN <span class="op">=</span> <span class="cn">NULL</span>, wFUN.args <span class="op">=</span> <span class="cn">NULL</span>,
-     dnn <span class="op">=</span> <span class="st">"auto"</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>,
-     drop <span class="op">=</span> <span class="cn">FALSE</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span>
-
-<span class="fu">qtable</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co"># Long-form: to facilitate replacement of table()</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qtab</span><span class="op">(</span><span class="va">...</span>, w <span class="op">=</span> <span class="cn">NULL</span>, wFUN <span class="op">=</span> <span class="cn">NULL</span>, wFUN.args <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>     dnn <span class="op">=</span> <span class="st">"auto"</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>     drop <span class="op">=</span> <span class="cn">FALSE</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">qtable</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co"># Long-form: to facilitate replacement of table()</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -113,39 +113,39 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Basic use</span></span>
-<span class="r-in"><span class="fu">qtab</span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Basic use</span></span></span>
+<span class="r-in"><span><span class="fu">qtab</span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> iris$Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setosa versicolor  virginica </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         50         50         50 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu">qtab</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu">qtab</span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    am</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> vs   0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0 12  6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1  7  7</span>
-<span class="r-in"><span class="fu">qtab</span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">qtab</span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    am</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> vs   0  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   0 12  6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1  7  7</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span>, <span class="va">Species</span><span class="op">)</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">Sepal.Length</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span>, <span class="va">Species</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                  Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sepal.Length &gt; mean(Sepal.Length) setosa versicolor virginica</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             FALSE     50         24         6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             TRUE       0         26        44</span>
-<span class="r-in"><span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span>AMSL <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span>, <span class="va">Species</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span>AMSL <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">Sepal.Length</span><span class="op">)</span>, <span class="va">Species</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> AMSL    setosa versicolor virginica</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   FALSE     50         24         6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   TRUE       0         26        44</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## World after 2015</span></span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op">&lt;-</span> <span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="collap.html">collap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">iso3c</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Regions and income levels (country frequency)</span></span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## World after 2015</span></span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op">&lt;-</span> <span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="collap.html">collap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">iso3c</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Regions and income levels (country frequency)</span></span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                       High income Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific                 13          0                  13</span>
@@ -164,7 +164,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                                0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                                   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                           6</span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, dnn <span class="op">=</span> <span class="va">vlabels</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, dnn <span class="op">=</span> <span class="va">vlabels</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             Income Level</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Region                       High income Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific                 13          0                  13</span>
@@ -183,7 +183,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                                0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                                   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                           6</span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, dnn <span class="op">=</span> <span class="st">"namlab"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, dnn <span class="op">=</span> <span class="st">"namlab"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income: Income Level</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region: Region               High income Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific                 13          0                  13</span>
@@ -202,9 +202,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                                0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                                   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                           6</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Population (millions)</span></span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">POP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">divide_by</a></span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Population (millions)</span></span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">POP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">divide_by</a></span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                        High income   Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific         222.3763078    0.0000000         554.5787740</span>
@@ -223,9 +223,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                        0.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                          21.9126958</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                  66.1922298</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Life expectancy (years)</span></span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">LIFEEX</span>, wFUN <span class="op">=</span> <span class="va">fmean</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Life expectancy (years)</span></span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">LIFEEX</span>, wFUN <span class="op">=</span> <span class="va">fmean</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                       High income Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific           81.12986                       69.32372</span>
@@ -244,10 +244,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                                 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                            77.48130</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                    65.54593</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Life expectancy (years), weighted by population</span></span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">LIFEEX</span>, wFUN <span class="op">=</span> <span class="va">fmean</span>,</span>
-<span class="r-in">                  wFUN.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>w <span class="op">=</span> <span class="va">POP</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Life expectancy (years), weighted by population</span></span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">LIFEEX</span>, wFUN <span class="op">=</span> <span class="va">fmean</span>,</span></span>
+<span class="r-in"><span>                  wFUN.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>w <span class="op">=</span> <span class="va">POP</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                       High income Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific           83.47390                       71.19076</span>
@@ -266,10 +266,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                                 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                            76.68486</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                    63.79719</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># GDP per capita (constant 2010 US$): median</span></span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">PCGDP</span>, wFUN <span class="op">=</span> <span class="va">fmedian</span>,</span>
-<span class="r-in">                  wFUN.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># GDP per capita (constant 2010 US$): median</span></span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">PCGDP</span>, wFUN <span class="op">=</span> <span class="va">fmedian</span>,</span></span>
+<span class="r-in"><span>                  wFUN.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                       High income Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific         37527.1689                      1863.8773</span>
@@ -288,10 +288,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                                 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                           5883.8904</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                   8578.7116</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># GDP per capita (constant 2010 US$): median, weighted by population</span></span>
-<span class="r-in"><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">PCGDP</span>, wFUN <span class="op">=</span> <span class="va">fmedian</span>,</span>
-<span class="r-in">                  wFUN.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>w <span class="op">=</span> <span class="va">POP</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># GDP per capita (constant 2010 US$): median, weighted by population</span></span></span>
+<span class="r-in"><span><span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, w <span class="op">=</span> <span class="va">PCGDP</span>, wFUN <span class="op">=</span> <span class="va">fmedian</span>,</span></span>
+<span class="r-in"><span>                  wFUN.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>w <span class="op">=</span> <span class="va">POP</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                       High income Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific         48194.0408                      3038.6464</span>
@@ -310,10 +310,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                                 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                           3846.9157</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                   7457.1928</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Including OECD membership</span></span>
-<span class="r-in"><span class="va">tab</span> <span class="op">&lt;-</span> <span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, <span class="va">OECD</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">tab</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Including OECD membership</span></span></span>
+<span class="r-in"><span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="va">wlda15</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu">qtab</span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span>, <span class="va">OECD</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tab</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , OECD = FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
@@ -356,9 +356,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                                   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Various 'table' methods</span></span>
-<span class="r-in"><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/addmargins.html" class="external-link">addmargins</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Various 'table' methods</span></span></span>
+<span class="r-in"><span><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/addmargins.html" class="external-link">addmargins</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , OECD = FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
@@ -402,7 +402,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                                   0   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 row(s) and 1 matrix slice(s) ]</span>
-<span class="r-in"><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/marginSums.html" class="external-link">marginSums</a></span><span class="op">(</span>margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"region"</span>, <span class="st">"income"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/marginSums.html" class="external-link">marginSums</a></span><span class="op">(</span>margin <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"region"</span>, <span class="st">"income"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                       High income Low income Lower middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   East Asia &amp; Pacific                 13          0                  13</span>
@@ -421,7 +421,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   North America                                0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                                   2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                           6</span>
-<span class="r-in"><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">proportions</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">proportions</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , OECD = FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
@@ -464,7 +464,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                         0.000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                 0.000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">proportions</a></span><span class="op">(</span>margin <span class="op">=</span> <span class="st">"income"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/proportions.html" class="external-link">proportions</a></span><span class="op">(</span>margin <span class="op">=</span> <span class="st">"income"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , OECD = FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
@@ -507,7 +507,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                          0.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                  0.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">tab</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">tab</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                        region      income  OECD Freq</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1         East Asia &amp; Pacific High income FALSE    9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2       Europe &amp; Central Asia High income FALSE   11</span>
@@ -519,7 +519,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8         East Asia &amp; Pacific  Low income FALSE    0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9       Europe &amp; Central Asia  Low income FALSE    1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10  Latin America &amp; Caribbean  Low income FALSE    1</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/stats/ftable.html" class="external-link">ftable</a></span><span class="op">(</span><span class="va">tab</span>, row.vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"region"</span>, <span class="st">"OECD"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/ftable.html" class="external-link">ftable</a></span><span class="op">(</span><span class="va">tab</span>, row.vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"region"</span>, <span class="st">"OECD"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                  income High income Low income Lower middle income Upper middle income</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                     OECD                                                                       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific        FALSE                  9          0                  13                  10</span>
@@ -536,9 +536,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            TRUE                   0          0                   0                   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa         FALSE                  1         24                  17                   6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            TRUE                   0          0                   0                   0</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Other options</span></span>
-<span class="r-in"><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>    <span class="co"># Percentage table (on a matrix use fsum.default)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Other options</span></span></span>
+<span class="r-in"><span><span class="va">tab</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>    <span class="co"># Percentage table (on a matrix use fsum.default)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , OECD = FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
@@ -581,8 +581,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                           0.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                   0.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="va">tab</span> <span class="op"><a href="efficient-programming.html">%/=%</a></span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">tab</span><span class="op">)</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span>    <span class="co"># Another way (division by reference, preserves integers)</span></span>
-<span class="r-in"><span class="va">tab</span></span>
+<span class="r-in"><span><span class="va">tab</span> <span class="op"><a href="efficient-programming.html">%/=%</a></span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">tab</span><span class="op">)</span><span class="op">/</span><span class="fl">100</span><span class="op">)</span>    <span class="co"># Another way (division by reference, preserves integers)</span></span></span>
+<span class="r-in"><span><span class="va">tab</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , OECD = FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                             income</span>
@@ -625,9 +625,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>   South Asia                                   0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sub-Saharan Africa                           0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">tab</span>, <span class="va">wlda15</span><span class="op">)</span></span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">tab</span>, <span class="va">wlda15</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -642,7 +642,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

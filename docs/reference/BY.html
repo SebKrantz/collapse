@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,25 +65,25 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, <span class="va">FUN</span>, <span class="va">...</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, reorder <span class="op">=</span> <span class="cn">TRUE</span>,
-   expand.wide <span class="op">=</span> <span class="cn">FALSE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">1L</span>,
-   return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"same"</span>, <span class="st">"vector"</span>, <span class="st">"list"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, <span class="va">FUN</span>, <span class="va">...</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, reorder <span class="op">=</span> <span class="cn">TRUE</span>,
-   expand.wide <span class="op">=</span> <span class="cn">FALSE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">1L</span>,
-   return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"same"</span>, <span class="st">"matrix"</span>, <span class="st">"data.frame"</span>, <span class="st">"list"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, <span class="va">FUN</span>, <span class="va">...</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, reorder <span class="op">=</span> <span class="cn">TRUE</span>,
-   expand.wide <span class="op">=</span> <span class="cn">FALSE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">1L</span>,
-   return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"same"</span>, <span class="st">"matrix"</span>, <span class="st">"data.frame"</span>, <span class="st">"list"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">FUN</span>, <span class="va">...</span>, reorder <span class="op">=</span> <span class="cn">TRUE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, <span class="va">FUN</span>, <span class="va">...</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>   expand.wide <span class="op">=</span> <span class="cn">FALSE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>   return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"same"</span>, <span class="st">"vector"</span>, <span class="st">"list"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, <span class="va">FUN</span>, <span class="va">...</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>   expand.wide <span class="op">=</span> <span class="cn">FALSE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>   return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"same"</span>, <span class="st">"matrix"</span>, <span class="st">"data.frame"</span>, <span class="st">"list"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, <span class="va">FUN</span>, <span class="va">...</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, reorder <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>   expand.wide <span class="op">=</span> <span class="cn">FALSE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">1L</span>,</span>
+<span>   return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"same"</span>, <span class="st">"matrix"</span>, <span class="st">"data.frame"</span>, <span class="st">"list"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">BY</span><span class="op">(</span><span class="va">x</span>, <span class="va">FUN</span>, <span class="va">...</span>, reorder <span class="op">=</span> <span class="cn">TRUE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -148,41 +148,41 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>   <span class="co"># A numeric vector</span></span>
-<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>   <span class="co"># A grouping</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## default vector method</span></span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="va">v</span>, <span class="va">g</span>, <span class="va">sum</span><span class="op">)</span>                                <span class="co"># Sum by species</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>   <span class="co"># A numeric vector</span></span></span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">iris</span><span class="op">$</span><span class="va">Species</span><span class="op">)</span>   <span class="co"># A grouping</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## default vector method</span></span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="va">v</span>, <span class="va">g</span>, <span class="va">sum</span><span class="op">)</span>                                <span class="co"># Sum by species</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     setosa versicolor  virginica </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      250.3      296.8      329.4 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">BY</span><span class="op">(</span><span class="va">v</span>, <span class="va">g</span>, <span class="va">scale</span><span class="op">)</span><span class="op">)</span>                        <span class="co"># Scale by species (please use fscale instead)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">BY</span><span class="op">(</span><span class="va">v</span>, <span class="va">g</span>, <span class="va">scale</span><span class="op">)</span><span class="op">)</span>                        <span class="co"># Scale by species (please use fscale instead)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1]  0.26667447 -0.30071802 -0.86811050 -1.15180675 -0.01702177  1.11776320</span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="va">v</span>, <span class="va">g</span>, <span class="va">fquantile</span><span class="op">)</span>                          <span class="co"># Species quantiles: by default stacked</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="va">v</span>, <span class="va">g</span>, <span class="va">fquantile</span><span class="op">)</span>                          <span class="co"># Species quantiles: by default stacked</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       setosa.0%      setosa.25%      setosa.50%      setosa.75%     setosa.100% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           4.300           4.800           5.000           5.200           5.800 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   versicolor.0%  versicolor.25%  versicolor.50%  versicolor.75% versicolor.100% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           4.900           5.600           5.900           6.300           7.000 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    virginica.0%   virginica.25%   virginica.50%   virginica.75%  virginica.100% </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           4.900           6.225           6.500           6.900           7.900 </span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="va">v</span>, <span class="va">g</span>, <span class="va">fquantile</span>, expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># Wide format</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="va">v</span>, <span class="va">g</span>, <span class="va">fquantile</span>, expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># Wide format</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             0%   25% 50% 75% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa     4.3 4.800 5.0 5.2  5.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor 4.9 5.600 5.9 6.3  7.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica  4.9 6.225 6.5 6.9  7.9</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## matrix method</span></span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">sum</span><span class="op">)</span>                          <span class="co"># Also return as matrix</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## matrix method</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">sum</span><span class="op">)</span>                          <span class="co"># Also return as matrix</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa            250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica         329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">sum</span>, return <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span>   <span class="co"># Return as data.frame.. also works for computations below</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">sum</span>, return <span class="op">=</span> <span class="st">"data.frame"</span><span class="op">)</span>   <span class="co"># Return as data.frame.. also works for computations below</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa            250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica         329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">scale</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">scale</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   0.26667447   0.1899414   -0.3570112  -0.4364923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  -0.30071802  -1.1290958   -0.3570112  -0.4364923</span>
@@ -190,7 +190,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  -1.15180675  -0.8652884    0.2188133  -0.4364923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  -0.01702177   0.4537488   -0.3570112  -0.4364923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [6,]   1.11776320   1.2451711    1.3704625   1.4613004</span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">fquantile</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">fquantile</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa.0%              4.300       2.300        1.000         0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa.25%             4.800       3.200        1.400         0.2</span>
@@ -207,7 +207,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica.50%          6.500       3.000        5.550         2.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica.75%          6.900       3.175        5.875         2.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica.100%         7.900       3.800        6.900         2.5</span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">fquantile</span>, expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">fquantile</span>, expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length.0% Sepal.Length.25% Sepal.Length.50% Sepal.Length.75%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa                 4.3            4.800              5.0              5.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor             4.9            5.600              5.9              6.3</span>
@@ -228,9 +228,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa                 0.2             0.2             0.3              0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor             1.2             1.3             1.5              1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica              1.8             2.0             2.3              2.5</span>
-<span class="r-in"><span class="va">ml</span> <span class="op">&lt;-</span> <span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">fquantile</span>, expand.wide <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Return as list of matrices</span></span>
-<span class="r-in">         return <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">ml</span></span>
+<span class="r-in"><span><span class="va">ml</span> <span class="op">&lt;-</span> <span class="fu">BY</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, <span class="va">fquantile</span>, expand.wide <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># Return as list of matrices</span></span></span>
+<span class="r-in"><span>         return <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">ml</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Sepal.Length</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             0%   25% 50% 75% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa     4.3 4.800 5.0 5.2  5.8</span>
@@ -255,8 +255,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor 1.0 1.2 1.3 1.5  1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica  1.4 1.8 2.0 2.3  2.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="co"># Unlisting to Data Frame</span></span>
-<span class="r-in"><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">ml</span>, idcols <span class="op">=</span> <span class="st">"Variable"</span>, row.names <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="co"># Unlisting to Data Frame</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">ml</span>, idcols <span class="op">=</span> <span class="st">"Variable"</span>, row.names <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Variable    Species  0%   25%  50%   75% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  Sepal.Length     setosa 4.3 4.800 5.00 5.200  5.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  Sepal.Length versicolor 4.9 5.600 5.90 6.300  7.0</span>
@@ -269,19 +269,19 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9  Petal.Length  virginica 4.5 5.100 5.55 5.875  6.9</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10  Petal.Width     setosa 0.1 0.200 0.20 0.300  0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 2 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## data.frame method</span></span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">sum</span><span class="op">)</span>             <span class="co"># Also returns a data.fram</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## data.frame method</span></span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">sum</span><span class="op">)</span>             <span class="co"># Also returns a data.fram</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa            250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica         329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">sum</span>, return <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="co"># Return as matrix.. also works for computations below</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">sum</span>, return <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="co"># Return as matrix.. also works for computations below</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa            250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica         329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">scale</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">scale</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   0.26667447   0.1899414   -0.3570112  -0.4364923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  -0.30071802  -1.1290958   -0.3570112  -0.4364923</span>
@@ -289,7 +289,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  -1.15180675  -0.8652884    0.2188133  -0.4364923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  -0.01702177   0.4537488   -0.3570112  -0.4364923</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   1.11776320   1.2451711    1.3704625   1.4613004</span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">fquantile</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">fquantile</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa.0%              4.300       2.300        1.000         0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa.25%             4.800       3.200        1.400         0.2</span>
@@ -306,7 +306,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica.50%          6.500       3.000        5.550         2.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica.75%          6.900       3.175        5.875         2.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica.100%         7.900       3.800        6.900         2.5</span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">fquantile</span>, expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">fquantile</span>, expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length.0% Sepal.Length.25% Sepal.Length.50% Sepal.Length.75%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa                 4.3            4.800              5.0              5.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor             4.9            5.600              5.9              6.3</span>
@@ -327,8 +327,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa                 0.2             0.2             0.3              0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor             1.2             1.3             1.5              1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica              1.8             2.0             2.3              2.5</span>
-<span class="r-in"><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">fquantile</span>,       <span class="co"># Return as list of matrices</span></span>
-<span class="r-in">   expand.wide <span class="op">=</span> <span class="cn">TRUE</span>, return <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">BY</span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">fquantile</span>,       <span class="co"># Return as list of matrices</span></span></span>
+<span class="r-in"><span>   expand.wide <span class="op">=</span> <span class="cn">TRUE</span>, return <span class="op">=</span> <span class="st">"list"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Sepal.Length</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             0%   25% 50% 75% 100%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa     4.3 4.800 5.0 5.2  5.8</span>
@@ -353,38 +353,38 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor 1.0 1.2 1.3 1.5  1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica  1.4 1.8 2.0 2.3  2.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## grouped data frame method</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## grouped data frame method</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘magrittr’</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:testthat’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     equals, is_less_than, not</span>
-<span class="r-in"><span class="va">giris</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">Species</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span><span class="op">)</span>                      <span class="co"># Compute sum</span></span>
+<span class="r-in"><span><span class="va">giris</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iris</span>, <span class="va">Species</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span><span class="op">)</span>                      <span class="co"># Compute sum</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa        250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica        329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co"># Use row.names and</span></span>
-<span class="r-in">             keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># remove 'Species' and groups attribute</span></span>
+<span class="r-in"><span><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co"># Use row.names and</span></span></span>
+<span class="r-in"><span>             keep.group_vars <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># remove 'Species' and groups attribute</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa            250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica         329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, return <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span>   <span class="co"># Return matrix</span></span>
+<span class="r-in"><span><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, return <span class="op">=</span> <span class="st">"matrix"</span><span class="op">)</span>   <span class="co"># Return matrix</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1,]        250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [3,]        329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, return <span class="op">=</span> <span class="st">"matrix"</span>,   <span class="co"># Matrix with row.names</span></span>
-<span class="r-in">             use.g.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">sum</span>, return <span class="op">=</span> <span class="st">"matrix"</span>,   <span class="co"># Matrix with row.names</span></span></span>
+<span class="r-in"><span>             use.g.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa            250.3       171.4         73.1        12.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> versicolor        296.8       138.5        213.0        66.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> virginica         329.4       148.7        277.6       101.3</span>
-<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">.quantile</span><span class="op">)</span>                <span class="co"># Compute quantiles (output is stacked)</span></span>
+<span class="r-in"><span><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">.quantile</span><span class="op">)</span>                <span class="co"># Compute quantiles (output is stacked)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Species Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      setosa        4.300       2.300        1.000         0.1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      setosa        4.800       3.200        1.400         0.2</span>
@@ -401,8 +401,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 13  virginica        6.500       3.000        5.550         2.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 14  virginica        6.900       3.175        5.875         2.3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">.quantile</span>, names <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co"># Wide output</span></span>
-<span class="r-in">               expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">giris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">BY</span><span class="op">(</span><span class="va">.quantile</span>, names <span class="op">=</span> <span class="cn">TRUE</span>,  <span class="co"># Wide output</span></span></span>
+<span class="r-in"><span>               expand.wide <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species Sepal.Length.0% Sepal.Length.25% Sepal.Length.50% Sepal.Length.75%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa             4.3            4.800              5.0              5.2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor             4.9            5.600              5.9              6.3</span>
@@ -423,7 +423,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1             0.2             0.2             0.3              0.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2             1.2             1.3             1.5              1.8</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3             1.8             2.0             2.3              2.5</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -438,7 +438,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

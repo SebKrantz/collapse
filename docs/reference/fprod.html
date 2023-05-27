@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,23 +65,23 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,
-      use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">fprod</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, TRA <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>      use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -150,13 +150,13 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## default vector method</span></span>
-<span class="r-in"><span class="va">mpg</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span></span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Simple product</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## default vector method</span></span></span>
+<span class="r-in"><span><span class="va">mpg</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span></span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Simple product</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.264241e+41</span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>          <span class="co"># Weighted product</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>          <span class="co"># Weighted product</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 8.870404e+108</span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>              <span class="co"># Simple transformation: Divide by product</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>              <span class="co"># Simple transformation: Divide by product</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1.661076e-40 1.661076e-40 1.803454e-40 1.692716e-40 1.479149e-40</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] 1.431690e-40 1.131114e-40 1.930012e-40 1.803454e-40 1.518698e-40</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] 1.407960e-40 1.297221e-40 1.368410e-40 1.202303e-40 8.226283e-41</span>
@@ -164,24 +164,24 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [21] 1.700626e-40 1.226032e-40 1.202303e-40 1.052015e-40 1.518698e-40</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [26] 2.159399e-40 2.056571e-40 2.404606e-40 1.249762e-40 1.558248e-40</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31] 1.186483e-40 1.692716e-40</span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>             <span class="co"># Grouped product</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>             <span class="co"># Grouped product</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            4            6            8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.204745e+15 1.150054e+09 2.614398e+16 </span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped product</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped product</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            4            6            8 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3.686893e+36 4.255338e+23 5.653910e+48 </span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>       <span class="co"># More groups..</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>       <span class="co"># More groups..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        4.0.1        4.1.0        4.1.1        6.0.1        6.1.0        8.0.0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.600000e+01 1.196088e+04 1.352082e+10 8.687700e+03 1.323773e+05 1.103122e+14 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        8.0.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.370000e+02 </span>
-<span class="r-in"><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span>  <span class="co"># Precomputing groups gives more speed !</span></span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span>  <span class="co"># Precomputing groups gives more speed !</span></span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        4.0.1        4.1.0        4.1.1        6.0.1        6.1.0        8.0.0 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.600000e+01 1.196088e+04 1.352082e+10 8.687700e+03 1.323773e+05 1.103122e+14 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        8.0.1 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2.370000e+02 </span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>           <span class="co"># Groupwise divide by product</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>           <span class="co"># Groupwise divide by product</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 2.417211e-03 2.417211e-03 1.686288e-09 1.616591e-04 1.695190e-13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6] 1.367304e-04 1.296321e-13 2.039984e-03 1.906214e-03 1.450400e-04</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] 1.344641e-04 1.486690e-13 1.568277e-13 1.377908e-13 9.427792e-14</span>
@@ -189,14 +189,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [21] 1.797527e-03 1.405104e-13 1.377908e-13 1.205670e-13 1.740515e-13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [26] 2.019108e-09 1.000000e+00 2.248384e-09 6.666667e-02 2.267574e-03</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [31] 6.329114e-02 1.582744e-09</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## data.frame method</span></span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## data.frame method</span></span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          mpg          cyl         disp           hp         drat           wt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1.264241e+41 5.163908e+24 2.789968e+73 7.016390e+67 4.366447e+17 3.884021e+15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         qsec           vs           am         gear         carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9.651882e+39 0.000000e+00 0.000000e+00 7.522960e+17 1.391569e+12 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fprod</span><span class="op">(</span><span class="va">mtcars</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fprod</span><span class="op">(</span><span class="va">mtcars</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            mpg          cyl         disp           hp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         1.661076e-40 1.161911e-24 5.734833e-72 1.567758e-66</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     1.661076e-40 1.161911e-24 5.734833e-72 1.567758e-66</span>
@@ -218,7 +218,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    7.186131e-13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 1.437226e-12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           7.186131e-13</span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                mpg         cyl         disp           hp         drat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 2.600000e+01           4 1.203000e+02 9.100000e+01      4.43000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 1.196088e+04          64 2.480709e+06 5.713300e+05     53.51976</span>
@@ -234,7 +234,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 1.316358e+02 1.359535e+05  1  0    144     16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 1.914897e+07 6.360378e+14  0  0 531441 442368</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># No row-names generated</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="co"># No row-names generated</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            mpg         cyl         disp           hp         drat           wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 2.600000e+01           4 1.203000e+02 9.100000e+01      4.43000 2.140000e+00</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 1.196088e+04          64 2.480709e+06 5.713300e+05     53.51976 2.476955e+01</span>
@@ -250,15 +250,15 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 1.359535e+05  1  0    144     16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 6.360378e+14  0  0 531441 442368</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## matrix method</span></span>
-<span class="r-in"><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## matrix method</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          mpg          cyl         disp           hp         drat           wt </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1.264241e+41 5.163908e+24 2.789968e+73 7.016390e+67 4.366447e+17 3.884021e+15 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         qsec           vs           am         gear         carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9.651882e+39 0.000000e+00 0.000000e+00 7.522960e+17 1.391569e+12 </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fprod</span><span class="op">(</span><span class="va">m</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">fprod</span><span class="op">(</span><span class="va">m</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            mpg          cyl         disp           hp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         1.661076e-40 1.161911e-24 5.734833e-72 1.567758e-66</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     1.661076e-40 1.161911e-24 5.734833e-72 1.567758e-66</span>
@@ -280,7 +280,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    7.186131e-13</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 1.437226e-12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           7.186131e-13</span>
-<span class="r-in"><span class="fu">fprod</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span> <span class="co"># etc..</span></span>
+<span class="r-in"><span><span class="fu">fprod</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span> <span class="co"># etc..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                mpg         cyl         disp           hp         drat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 2.600000e+01           4 1.203000e+02 9.100000e+01      4.43000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0 1.196088e+04          64 2.480709e+06 5.713300e+05     53.51976</span>
@@ -296,10 +296,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 1.316358e+02 1.359535e+05  1  0    144     16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 1.914897e+07 6.360378e+14  0  0 531441 442368</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
-<span class="r-in"> </span>
-<span class="r-in"><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>   <span class="co"># Weighted grouped product</span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>   <span class="co"># Weighted grouped product</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am prod.hp     mpg    disp    drat      wt    qsec    gear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -310,8 +310,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0 1.75<span style="color: #949494;">e</span> 8 2.31<span style="color: #949494;">e</span>13 2.85<span style="color: #949494;">e</span>17 2.28<span style="color: #949494;">e</span>10 2.30<span style="color: #949494;">e</span>10 2.38<span style="color: #949494;">e</span>13 2.52<span style="color: #949494;">e</span>10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0 2.45<span style="color: #949494;">e</span>27 2.70<span style="color: #949494;">e</span>41 8.60<span style="color: #949494;">e</span>57 2.03<span style="color: #949494;">e</span>33 4.68<span style="color: #949494;">e</span>34 1.56<span style="color: #949494;">e</span>42 1.30<span style="color: #949494;">e</span>33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1 8.84<span style="color: #949494;">e</span> 4 2.10<span style="color: #949494;">e</span> 7 9.34<span style="color: #949494;">e</span> 9 1.32<span style="color: #949494;">e</span> 6 1.00<span style="color: #949494;">e</span> 6 1.87<span style="color: #949494;">e</span> 7 2.21<span style="color: #949494;">e</span> 6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: carb &lt;dbl&gt;</span></span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Equivalent and faster</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: carb &lt;dbl&gt;</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Equivalent and faster</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am      prod.hp          mpg         disp         drat           wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 9.100000e+01 2.366000e+03 1.094730e+04 4.031300e+02 1.947400e+02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 5.713300e+05 6.833610e+09 1.417303e+12 3.057744e+07 1.415159e+07</span>
@@ -327,7 +327,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 2.375650e+13 2.516255e+10 2.795839e+09</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 1.555290e+42 1.299522e+33 1.081713e+33</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   cyl vs am          mpg         disp           hp         drat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           6  0  1 2.417211e-03 4.310345e-05 5.194805e-05 7.083156e-02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       6  0  1 2.417211e-03 4.310345e-05 5.194805e-05 7.083156e-02</span>
@@ -345,7 +345,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fprod</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am          mpg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 2.600000e+01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0 1.196088e+04</span>
@@ -354,7 +354,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0 1.323773e+05</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 1.103122e+14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1 2.370000e+02</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -369,7 +369,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

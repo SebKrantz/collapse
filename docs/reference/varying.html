@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">collapse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.9.6</span>
       </span>
     </div>
 
@@ -65,36 +65,36 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for default</span>
-<span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for matrix</span>
-<span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for indexed data / compatibility with plm:</span>
-
-<span class="co"># S3 method for pseries</span>
-<span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for pdata.frame</span>
-<span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>,
-        drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for grouped data frame / compatibility with dplyr:</span>
-
-<span class="co"># S3 method for grouped_df</span>
-<span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>,
-        keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># Methods for grouped data frame / compatibility with sf:</span>
-
-<span class="co"># S3 method for sf</span>
-<span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for default</span></span>
+<span><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for matrix</span></span>
+<span><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, g <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
+<span></span>
+<span><span class="co"># S3 method for pseries</span></span>
+<span><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for pdata.frame</span></span>
+<span><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="fl">1L</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for grouped data frame / compatibility with dplyr:</span></span>
+<span></span>
+<span><span class="co"># S3 method for grouped_df</span></span>
+<span><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Methods for grouped data frame / compatibility with sf:</span></span>
+<span></span>
+<span><span class="co"># S3 method for sf</span></span>
+<span><span class="fu">varying</span><span class="op">(</span><span class="va">x</span>, by <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, any_group <span class="op">=</span> <span class="cn">TRUE</span>, use.g.names <span class="op">=</span> <span class="cn">TRUE</span>, drop <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -161,22 +161,22 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co">## Checks overall variation in all columns</span></span>
-<span class="r-in"><span class="fu">varying</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Checks overall variation in all columns</span></span></span>
+<span class="r-in"><span><span class="fu">varying</span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> country   iso3c    date    year  decade  region  income    OECD   PCGDP  LIFEEX </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    GINI     ODA     POP </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    TRUE    TRUE    TRUE </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Checks whether data are time-variant i.e. vary within country</span></span>
-<span class="r-in"><span class="fu">varying</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">country</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Checks whether data are time-variant i.e. vary within country</span></span></span>
+<span class="r-in"><span><span class="fu">varying</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">country</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  iso3c   date   year decade region income   OECD  PCGDP LIFEEX   GINI    ODA </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  FALSE   TRUE   TRUE   TRUE  FALSE  FALSE  FALSE   TRUE   TRUE   TRUE   TRUE </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    POP </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   TRUE </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co">## Same as above but done for each country individually, countries without data are coded NA</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">varying</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">country</span>, any_group <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## Same as above but done for each country individually, countries without data are coded NA</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">varying</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">country</span>, any_group <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                iso3c date year decade region income  OECD PCGDP LIFEEX GINI</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Afghanistan    FALSE TRUE TRUE   TRUE  FALSE  FALSE FALSE  TRUE   TRUE   NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Albania        FALSE TRUE TRUE   TRUE  FALSE  FALSE FALSE  TRUE   TRUE TRUE</span>
@@ -204,7 +204,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
