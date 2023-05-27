@@ -43,7 +43,7 @@ fcumsum(x, \dots)
 \item{fill}{if \code{na.rm = TRUE}, setting \code{fill = TRUE} will overwrite missing values with the previous value of the cumulative sum, starting from 0.}
 \item{check.o}{logical. Programmers option: \code{FALSE} prevents passing \code{o} to \code{\link{radixorderv}}, requiring \code{o} to be a valid ordering vector that is integer typed with each element in the range \code{[1, length(x)]}. This gives some extra speed, but will terminate R if any element of \code{o} is too large or too small. }
     \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} or \code{"row"}. See \code{\link{flag}} for details. The argument here does not control 'shifting' of data but rather the order in which elements are summed.}
-  \item{keep.ids}{\emph{pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all grouping variables and variables passed to\code{o}). \emph{Note}: For grouped / panel data frames identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
+  \item{keep.ids}{\emph{pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all grouping variables and variables passed to \code{o}). \emph{Note}: For grouped / panel data frames identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
 \item{\dots}{arguments to be passed to or from other methods.}
 }
 \details{
