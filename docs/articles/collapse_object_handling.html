@@ -92,7 +92,7 @@ Scenes of Class-Agnostic R Programming</h3>
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2023-05-27</h4>
+            <h4 data-toc-skip class="date">2023-05-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
       <div class="hidden name"><code>collapse_object_handling.Rmd</code></div>
@@ -145,7 +145,7 @@ objects: atomic vectors, matrices, and lists - which are often assumed
 to be data frames. Most data manipulation functions in <em>collapse</em>
 like <code><a href="../reference/ftransform.html">fmutate()</a></code> only support lists, whereas statistical
 functions - notably the S3 generic <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html" class="external-link"><em>Fast
-Statistical Functions</em></a> like <code><a href="../reference/fmean.html">fmean()</a></code>- generally
+Statistical Functions</em></a> like <code><a href="../reference/fmean.html">fmean()</a></code> - generally
 support all 3 types of objects.</p>
 <p>S3 generic functions initially dispatch to <code>.default</code>,
 <code>.matrix</code>, <code>.data.frame</code>, and (hidden)
@@ -256,7 +256,7 @@ conversions, where all attributes non-essential to the class are dropped
 from the input object. This is to ensure that, following conversion,
 objects behave exactly the way users expect. This is different from the
 behavior of functions like <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code>,
-<code><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table()</a></code>, <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble()</a></code> or
+<code>as.data.table()</code>, <code>as_tibble()</code> or
 <code><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix()</a></code> e.g. <code>as.matrix(EuStockMarkets)</code>
 just returns <code>EuStockMarkets</code> whereas
 <code>qM(EuStockMarkets)</code> returns a plain matrix without time
@@ -420,8 +420,8 @@ the <em>dplyr</em> grouping object to a ‘GRP’ object so that all
 <code>.grouped_df</code> methods in <em>collapse</em> apply to data
 frames created with either <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by()</a></code> or
 <code><a href="../reference/GRP.html">fgroup_by()</a></code>.</p>
-<p>The <em>indexed_frame</em> works more or less in the same way. They
-inherit from <em>pdata.frame</em> so that <code>.pdata.frame</code>
+<p>The <em>indexed_frame</em> works more or less in the same way. It
+inherits from <em>pdata.frame</em> so that <code>.pdata.frame</code>
 methods in <em>collapse</em> deal with both <em>indexed_frame</em>’s of
 arbitrary classes and <em>pdata.frame</em>’s created with
 <em>plm</em>.</p>
@@ -439,10 +439,10 @@ masking environments (<code>with</code>, <code>%$%</code>,
 <code>feols</code>, <code>lmrob</code> etc..) without duplication of the
 index in memory. As you may have guessed, <em>indexed_series</em> are
 also class-agnostic and inherit from <em>pseries</em>. Any vector or
-matrix of any class can become an <em>indexed_series</em>. Further
-levels of generality are that indexed series and frames allow one, two
-or more variables in the index to support both time series and complex
-panels, natively deal with irregularity in time<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>, and provide a rich
+matrix of any class can become an <em>indexed_series</em>.</p>
+<p>Further levels of generality are that indexed series and frames allow
+one, two or more variables in the index to support both time series and
+complex panels, natively deal with irregularity in time<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a>, and provide a rich
 set of methods for subsetting and manipulation which also subset the
 <em>index_df</em> attribute, including internal methods for
 <code><a href="../reference/fsubset.html">fsubset()</a></code>, <code><a href="../reference/funique.html">funique()</a></code>, <code>roworder(v)</code>
@@ -470,8 +470,8 @@ with your simple new class.</p>
 exemptions are hard-coded in C and thus may not work with specific
 classes. A prominent example where <em>collapse</em> simply fails is
 <em>lubridate</em>’s <em>interval</em> class (<a href="https://github.com/SebKrantz/collapse/issues/186" class="external-link">#186</a>, <a href="https://github.com/SebKrantz/collapse/issues/418" class="external-link">#418</a>), which
-has <code>"starts"</code> attribute of the same length as the data that
-is preserved but not subset in <em>collapse</em> operations.</p>
+has a <code>"starts"</code> attribute of the same length as the data
+that is preserved but not subset in <em>collapse</em> operations.</p>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr>
