@@ -44,7 +44,7 @@ I wrote a recent (2023) rather technical vignette providing some details on *col
 
 * [***collapse*'s Handling of R Objects**](<https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html>): A quick view behind the scenes of class-agnostic R programming
 
-There are 5 further vignettes which are available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website). These vignettes are:
+There are 5 further vignettes which are available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website):
 
 * [**Introduction to *collapse* **](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces key features in a structured way
 
