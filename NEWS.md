@@ -1,5 +1,7 @@
 # collapse 1.9.6
 
+* New vignette on [*collapse*'s Handling of R Objects](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html): provides an overview of collapse’s (internal) class-agnostic R programming framework.
+
 * `print.descr()` with groups and option `perc = TRUE` (the default) also shows percentages of the group frequencies for each variable. 
 
 * `funique(mtcars[NULL, ], sort = TRUE)` gave an error (for data frame with zero rows). Thanks @NicChr (#406).
