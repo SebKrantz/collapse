@@ -81,7 +81,7 @@ devtools::install_github("SebKrantz/collapse")
 
 In addition, *collapse* provides 7 vignettes:
 
-* [***collapse* Documentation and Resources**](<file:///Users/sebastiankrantz/Documents/R/collapse/docs/articles/collapse_documentation.html>): Provides an overview of all available package documentation
+* [***collapse* Documentation and Resources**](<https://sebkrantz.github.io/collapse/articles/collapse_documentation.html>): Provides an overview of all available package documentation
 
 * [***collapse*'s Handling of R Objects**](<https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html>): Provides an overview of collapse’s class-agnostic R programming framework
 
