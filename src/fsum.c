@@ -171,7 +171,7 @@ double fsum_int_impl(const int *restrict px, const int narm, const int l) {
     int j = l-1;
     while(px[j] == NA_INTEGER && j!=0) --j;
     sum = (long long)px[j];
-    if(j == 0 && (l > 1 || px[j] == NA_INTEGER)) return narm == 1 ? NA_REAL : 0;
+    if(j == 0 && px[j] == NA_INTEGER) return narm == 1 ? NA_REAL : 0;
     for(int i = j; i--; ) if(px[i] != NA_INTEGER) sum += (long long)px[i];
   } else {
     sum = 0;
@@ -232,15 +232,15 @@ double fsum_int_omp_impl(const int *restrict px, const int narm, const int l, co
   if(narm) {
     int j = 0;
     while(px[j] == NA_INTEGER && j!=l) ++j;
-    if(j == l && (l > 1 || px[j-1] == NA_INTEGER)) return narm == 1 ? NA_REAL : 0;
+    if(j == l && px[j-1] == NA_INTEGER) return narm == 1 ? NA_REAL : 0;
     sum = (long long)px[j];
     #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
     for(int i = j+1; i < l; ++i) sum += px[i] != NA_INTEGER ? (long long)px[i] : 0;
   } else {
+    if(px[0] == NA_INTEGER || px[l-1] == NA_INTEGER) return NA_REAL;
     sum = 0;
     #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
-    for(int i = 0; i < l; ++i) sum += px[i] != NA_INTEGER ? (long long)px[i] : 0; // Need this, else wrong result
-    if(sum == 0 && px[0] == NA_INTEGER) return NA_REAL; // Problem here, could be NA_INTEGER mixed with 0's, but very rare...
+    for(int i = 0; i < l; ++i) sum += (long long)px[i]; // Need this, else wrong result
   }
   return (double)sum;
 }
