@@ -152,7 +152,7 @@ double fmean_int_impl(const int *restrict px, const int narm, const int l) {
     int j = l-1, k = 1;
     while(px[j] == NA_INTEGER && j!=0) --j;
     mean = px[j];
-    if(j == 0 && (l > 1 || px[j] == NA_INTEGER)) return NA_REAL;
+    if(j == 0 && px[j] == NA_INTEGER) return NA_REAL;
     for(int i = j; i--; ) {
       if(px[i] == NA_INTEGER) continue;
       mean += px[i];
@@ -183,6 +183,7 @@ double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, c
     }
     dmean = n == 0 ? NA_REAL : (double)mean / n;
   } else {
+    if(px[0] == NA_INTEGER || px[l-1] == NA_INTEGER) return NA_REAL;
     #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean)
     for(int i = 0; i < l; ++i) mean += px[i];
     dmean = (double)mean / l;

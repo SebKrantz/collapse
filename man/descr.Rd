@@ -118,6 +118,7 @@ as.data.frame(descr(wlddev, table = FALSE))
 descr(wlddev, w = ~ replace_NA(POP)) # replacing NA's with 0's for fquantile()
 
 ## Grouped Desciptions
+descr(GGDC10S, ~ Variable)
 descr(wlddev, ~ income)
 print(descr(wlddev, ~ income), compact = TRUE)
 

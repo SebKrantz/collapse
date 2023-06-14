@@ -88,7 +88,7 @@ double fprod_int_impl(int *px, int narm, int l) {
     int j = l-1;
     while(px[j] == NA_INTEGER && j!=0) --j;
     prod = px[j];
-    if(j == 0 && (l > 1 || px[j] == NA_INTEGER)) return NA_REAL;
+    if(j == 0 && px[j] == NA_INTEGER) return NA_REAL;
     for(int i = j; i--; ) if(px[i] != NA_INTEGER) prod *= px[i];
   } else {
     prod = 1;
