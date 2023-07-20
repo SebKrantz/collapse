@@ -115,7 +115,7 @@ Thus they can freely be applied to data.table's, grouped tibbles, panel data fra
 In many cases functions here only check the length of the first column, which is one of the reasons why they are so fast. When lists of unequal-length columns are offered as replacements this yields a malformed data frame (which will also print a warning in the console i.e. you will notice that).
 }
 \seealso{
-\code{\link{fsubset}}, \code{\link{ftransform}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fsubset}}, \code{\link{ftransform}}, \code{\link{rowbind}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Wold Development Data
