@@ -373,6 +373,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(fnlevels)
  export(roworder)
  export(roworderv)
+ export(rowbind)
  export(frename)
  export(rnm)
  export(setrename)

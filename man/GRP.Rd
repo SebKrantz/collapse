@@ -199,7 +199,7 @@ Creating a factor from a 'GRP' object using \code{as_factor_GRP} does not involv
                  }
 }
 \seealso{
-\code{\link{radixorder}}, \code{\link{qF}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{radixorder}}, \code{\link{group}}, \code{\link{qF}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## default method

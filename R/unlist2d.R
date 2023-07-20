@@ -1,4 +1,42 @@
 
+# rbind_list ??
+rowbind <- function(..., idcol = NULL, use.names = TRUE, fill = FALSE, id.factor = TRUE,
+                    return = c("as.first", "data.frame", "data.table", "tibble", "list")) {
+
+  l <- if(...length() == 1L && is.list(..1)) unclass(..1) else list(...)
+  id_fact <- length(idcol) && !isFALSE(id.factor) && length(nam <- names(l))
+  if(id_fact) names(l) <- NULL
+  res <- .Call(C_rbindlist, l, use.names || fill, fill, idcol)
+  if(id_fact) {
+    attr(res[[1L]], "levels") <- nam
+    oldClass(res[[1L]]) <- switch(id.factor, `TRUE` = "factor", ordered = c("ordered", "factor"),
+                                  stop('id.factor needs to be FALSE, TRUE or "ordered"'))
+  }
+  switch(return[1L],
+         as.first = {
+           a1 <- attributes(.subset2(l, 1L))
+           if(is.null(a1)) return(res)
+           n <- .Call(C_fnrow, res)
+           if(any(a1$class == "data.frame")) {
+             rn <- a1$row.names
+             if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) { # data.frame's
+               all_rn <- do.call(c, lapply(unattrib(l), attr, "row.names"))
+               a1$row.names <- if(length(all_rn) == n) all_rn else .set_row_names(n)
+             } else a1$row.names <- .set_row_names(n)
+           }
+           a1$names <- names(res)
+           .Call(C_setattributes, res, a1)
+           if(any(a1$class == "data.table")) return(alc(res))
+           res
+         },
+         data.frame = qDF(res),
+         data.table = qDT(res),
+         tibble = qTBL(res),
+         list = res,
+         stop("Unknown return option: ", return[1L])
+  )
+}
+
 unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.factor = FALSE, DT = FALSE) {
 
   if (!is.list(l)) return(l) # stop("l is not a list")

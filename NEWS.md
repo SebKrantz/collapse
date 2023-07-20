@@ -1,5 +1,7 @@
 # collapse 1.9.6.9000
 
+* Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
+
 * Fixed a bug in the integer methods of `fsum()`, `fmean()` and `fprod()` that returned `NA` if and only if there was a single integer followed by `NA`'s e.g `fsum(c(1L, NA, NA))` erroneously gave `NA`. This was caused by a C-level shortcut that returned `NA` when the first element of the vector had been reached (moving from back to front) without encountering any non-NA-values. The bug consisted in the content of the first element not being evaluated in this case. Note that this bug did not occur with real numbers, and also not in grouped execution. Thanks @blset for reporting (#432).   
 
 # collapse 1.9.6
