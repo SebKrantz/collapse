@@ -14,7 +14,7 @@ rowbind <- function(..., idcol = NULL, use.names = TRUE, fill = FALSE, id.factor
   }
   switch(return[1L],
          as.first = {
-           a1 <- attributes(.subset2(l, 1L))
+           a1 <- attributes(l[[1L]])
            if(is.null(a1)) return(res)
            n <- .Call(C_fnrow, res)
            if(any(a1$class == "data.frame")) {
