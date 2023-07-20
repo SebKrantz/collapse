@@ -10,7 +10,6 @@ Row-Binding Lists / Data Frame-Like Objects
 \usage{
 rowbind(\dots, idcol = NULL, use.names = TRUE, fill = FALSE, id.factor = TRUE,
         return = c("as.first", "data.frame", "data.table", "tibble", "list"))
-%- maybe also 'usage' for other objects documented here.
 }
 \arguments{
   \item{\dots}{a single list of list-like objects (data.frames) or comma separated objects (internally assembled using \code{list(\dots)}). Names can be supplied if \code{!is.null(idcol)}.}
