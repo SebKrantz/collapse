@@ -6,7 +6,7 @@ Recursive Row-Binding / Unlisting in 2D - to Data Frame
 \description{
 \code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list through recursive flattening and intelligent row-binding operations. It is a full 2-dimensional generalization of \code{\link{unlist}}, and best understood as a recursive generalization of \code{do.call(rbind, ...)}.
 
-It is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. % (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples).
+It is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. For simple row-wise combining lists/data.frame's use the non-recursive \code{\link{rowbind}} function.   % (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples).
 }
 \usage{
 unlist2d(l, idcols = ".id", row.names = FALSE, recursive = TRUE,
@@ -41,7 +41,7 @@ A data frame or (if \code{DT = TRUE}) a \emph{data.table}.
 %%  ~~who you are~~
 % }
 \note{
-For lists of data frames \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist} because \code{unlist2d} is a recursive function.
+For lists of data frames \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist} because \code{unlist2d} is a recursive function. You can use \code{\link{rowbind}} as a failthful alternative to \code{data.table::rbindlist}.
 
 The function \code{rrapply::rrapply(l, how = "melt"|"bind")} is a fast alternative (written fully in C) for nested lists of atomic elements.
 }
@@ -49,7 +49,7 @@ The function \code{rrapply::rrapply(l, how = "melt"|"bind")} is a fast alternati
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{rsplit}}, \code{\link{rapply2d}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{rowbind}}, \code{\link{rsplit}}, \code{\link{rapply2d}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Basic Examples:
