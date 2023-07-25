@@ -43,9 +43,9 @@ void DFcopyAttr(SEXP out, SEXP x, int ng) {
 }
 
 // Faster than rep_len(value, n) and slightly faster than matrix(value, n) (which in turn is faster than rep_len)...
-SEXP falloc(SEXP value, SEXP n) {
+SEXP falloc(SEXP value, SEXP n, SEXP simplify)  {
   int l = asInteger(n), tval = TYPEOF(value), isat = isVectorAtomic(value);
-  if(length(value) > 1 && isat) {
+  if((length(value) > 1 && isat) || asLogical(simplify) == 0) {
     isat = 0;
     tval = VECSXP;
   }

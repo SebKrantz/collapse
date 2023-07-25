@@ -344,7 +344,7 @@ whichNA <- function(x, invert = FALSE) .Call(C_whichv, x, NA, invert)
 
 frange <- function(x, na.rm = .op[["na.rm"]]) .Call(C_frange, x, na.rm)
 .range <- function(x, na.rm = TRUE) .Call(C_frange, x, na.rm)
-alloc <- function(value, n) .Call(C_alloc, value, n)
+alloc <- function(value, n, simplify = TRUE) .Call(C_alloc, value, n, simplify)
 vgcd <- function(x) .Call(C_vecgcd, x)
 fdist <- function(x, v = NULL, ..., method = "euclidean", nthreads = .op[["nthreads"]]) .Call(C_fdist, if(is.atomic(x)) x else qM(x), v, method, nthreads)
 

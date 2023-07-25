@@ -313,7 +313,7 @@ pad_atomic <- function(x, i, n, value) {
   if(typeof(value) != tx) value <- as.vector(value, tx)
   if(is.matrix(x)) {
     k <- dim(x)[2L]
-    m <- .Call(C_alloc, value, n * k)  # matrix(value, n, k)
+    m <- .Call(C_alloc, value, n * k, TRUE)  # matrix(value, n, k)
     dim(m) <- c(n, k)
     m[i, ] <- x
     if(length(ax) == 1L) return(m)
@@ -323,7 +323,7 @@ pad_atomic <- function(x, i, n, value) {
     if(is.object(x)) ax[["class"]] <- NULL
     return(`attributes<-`(m, ax)) # fastest ??
   }
-  r <- .Call(C_alloc, value, n) # matrix(value, n) # matrix is faster than rep_len !!!!
+  r <- .Call(C_alloc, value, n, TRUE) # matrix(value, n) # matrix is faster than rep_len !!!!
   r[i] <- x
   if(is.null(ax)) return(r)
   if(length(names(x))) {
