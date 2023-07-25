@@ -29,7 +29,7 @@ is_qG(x)
 as_factor_qG(x, ordered = FALSE, na.exclude = TRUE)
 
 finteraction(\dots, factor = TRUE, ordered = FALSE, sort = factor && .op[["sort"]],
-             method = "auto")
+             method = "auto", sep = ".")
 itn(\dots) # Shorthand for finteraction
 }
 \arguments{
@@ -50,6 +50,7 @@ itn(\dots) # Shorthand for finteraction
 }
 \item{return.groups}{logical. \code{TRUE} returns the unique elements / groups / levels of \code{x} in an attribute called \code{"groups"}. Unlike \code{qF}, they are not converted to character.}
 \item{factor}{logical. \code{TRUE} returns an factor, \code{FALSE} returns a 'qG' object. }
+  \item{sep}{character. The separator passed to \code{\link{paste}} when creating factor levels from multiple grouping variables.}
 \item{\dots}{multiple atomic vectors or factors, or a single list of equal-length vectors or factors. See Details. }
 }
 \details{
