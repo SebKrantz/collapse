@@ -99,7 +99,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
 
   if(distinct_types == 0) {
     copyMostAttrib(pd[0], res);
-    setAttrib(res, install("label"), R_NilValue);
+    // setAttrib(res, install("label"), R_NilValue); // better to keep, this is also used for id-columns if na.rm = TRUE
   }
 
   // Add ID column
