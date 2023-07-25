@@ -88,16 +88,17 @@ melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
 pivot <- function(data,
                   ids = NULL,
                   values = NULL,
-                  names = NULL, # list is better
-                  labels = NULL, # todo: should also be list, e.g. for recast problem!!
-                  how = c("longer", "wider", "recast"), # Better to only have one?, because the other arguments use multiple??
+                  names = NULL,   # list is better
+                  labels = NULL,  # todo: should also be list, e.g. for recast problem!!
+                  how = "longer", # Better to only have one?, because the other arguments use multiple??
                   na.rm = FALSE,
                   factor = c("names", "labels"),
                   check.dups = FALSE,
                   fill = NULL, # Fill is for pivot_wider
                   drop = TRUE, # Same as with dcast()
-                  sort = c(ids = FALSE, names = FALSE),
-                  transpose = c(cols = FALSE, names = FALSE)) {
+                  sort = "", # c("ids", "names")
+                  transpose = "") # c(cols = FALSE, names = FALSE))
+{
 
     if(!is.list(data)) stop("pivot only supports data.frame-like objects")
     ad <- attributes(data)
@@ -105,10 +106,13 @@ pivot <- function(data,
     nam <- names(data)
     if(length(ids)) ids <- cols2int(ids, data, nam)
     if(length(values)) values <- cols2int(values, data, nam)
-    factor <- c("names", "labels") %in% factor # TODO: needed here, or in switch??
+    # TODO: needed here, or in switch??
+    factor <- c("names", "labels") %in% factor
+    sort <- c("ids", "names") %in% sort
+    transpose <- c("cols", "names") %in% transpose
 
 
-    res <- switch(how[1L],
+    res <- switch(how,
 
       l = , longer = { # TODO: multiple output columns
         names <- proc_names_longer(names)
@@ -138,7 +142,7 @@ pivot <- function(data,
             # variable_col <- rep(if(factor[1L]) seq_along(values) else nam[values], each = fnrow(data))
           }
           names(value_cols) <- names # TODO: multiple pivots this does not work...
-          if(length(labels)) { # TODO: what is list etc?? Need to accommodate this case??
+          if(length(labels)) {
             labs <- vlabels(vd, use.names = FALSE)
             if(factor[2L]) {
               label_col <- value_cols[[1L]]
@@ -146,8 +150,27 @@ pivot <- function(data,
               oldClass(label_col) <- c("factor", "na.included")
             } else label_col <- Csv(labs, value_cols[[1L]])
             label_col <- list(label_col)
-            names(label_col) <- if(is.character(labels)) labels else "label"
-            value_cols <- c(value_cols[1L], label_col, value_cols[2L])
+            if(is.list(labels)) { # Setting new labels...
+              if(is.null(names(labels))) {
+                new_labels <- labels[[2L]]
+                label <- labels[[1L]]
+              } else {
+                new_labels <- labels[["new"]]
+                label <- labels[["name"]]
+                if(is.null(label)) label <- "label"
+              }
+              if(!is.character(label)) stop("label column name supplied in a list needs to be character typed, you passed an object of type: ", typeof(labels))
+              if(!is.character(new_labels)) stop("new labels need to be specified as a character vector, you passed an object of type: ", typeof(new_labels))
+              names(label_col) <- label
+              value_cols <- c(value_cols[1L], label_col, value_cols[2L])
+              if(is.null(names(new_labels))) {
+                if(length(new_labels) != length(value_cols)) stop("Number of new labels supplied must match number of new columns in long format frame. There are ", length(value_cols), " new columns in the molten frame, and you supplied ", length(new_labels), " new labels")
+                vlabels(value_cols) <- new_labels
+              } else vlabels(value_cols)[names(new_labels)] <- new_labels
+            } else {
+              names(label_col) <- if(is.character(labels)) labels else "label"
+              value_cols <- c(value_cols[1L], label_col, value_cols[2L])
+            }
           }
           if(factor[1L]) {
             attr(value_cols[[1L]], "levels") <- nam[values]
@@ -182,7 +205,7 @@ pivot <- function(data,
           if(length(labels)) labels <- seq_along(labels) + length(ids) + length(names) + length(values)
         }
         # (3) Compute ID Columns
-        if(sort["ids"]) {
+        if(sort[1L]) {
           g <- GRP.default(data[ids], sort = TRUE, return.order = FALSE, call = FALSE)
           id_cols <- g[[4L]]
           g <- g[[2L]]
@@ -192,7 +215,7 @@ pivot <- function(data,
         }
         # (4) Compute Names and Labels Columns
         names_g <- GRP(if(length(names) == 1L && is.null(labels)) data[[names]] else data[names],
-                       sort = sort["names"], group.sizes = check.dups, drop = drop, call = FALSE)
+                       sort = sort[2L], group.sizes = check.dups, drop = drop, call = FALSE)
         names <- GRPnames(names_g, sep = "_")
         if(length(labels)) {
           if(check.dups && any(vary <- varying(data[labels], names_g)))  # See if there are duplicate labels
@@ -222,9 +245,9 @@ pivot <- function(data,
           attributes(data) <- NULL
           value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x))
           if(length(labels)) value_cols <- lapply(value_cols, `vlabels<-`, value = labels)
-          value_cols <- unlist(if(transpose["cols"]) t_list2(value_cols) else value_cols, FALSE, FALSE)
-          namv_res <- if(transpose["names"]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
-          names(value_cols) <- if(transpose["cols"]) namv_res else t(namv_res)
+          value_cols <- unlist(if(transpose[1L]) t_list2(value_cols) else value_cols, FALSE, FALSE)
+          namv_res <- if(transpose[2L]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
+          names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)
         } else {
           value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]])
           names(value_cols) <- names
@@ -269,7 +292,7 @@ pivot <- function(data,
         c(id_cols, value_cols)
       },
 
-      stop("Unknown pivoting method: ", how[1L])
+      stop("Unknown pivoting method: ", how)
     ) # end of switch
 
     if(is.null(ad)) return(res) # Redundant ??
