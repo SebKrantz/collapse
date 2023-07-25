@@ -45,7 +45,7 @@ Linear Models \tab\tab Fast (weighted) linear model fitting with 6 different sol
 
 Other Statistical \tab\tab Fast euclidean distance computations, (weighted) sample quantiles, and range of vector. \tab\tab \code{\link{fdist}}, \code{\link{fquantile}}, \code{\link{frange}} \cr \cr \cr
 
-\link[=list-processing]{List Processing} \tab\tab (Recursive) list search and checks, extraction of list-elements / list-subsetting, fast (recursive) splitting, list-transpose, apply functions to lists of data frames / data objects, and generalized recursive row-binding / unlisting in 2-dimensions / to data frame.  \tab\tab \code{\link{is_unlistable}}, \code{\link{ldepth}}, \code{\link{has_elem}}, \code{\link{get_elem}}, \code{\link[=atomic_elem]{atomic_elem(<-)}}, \code{\link[=list_elem]{list_elem(<-)}}, \code{\link{reg_elem}}, \code{\link{irreg_elem}}, \code{\link{rsplit}}, \code{\link{t_list}}, \code{\link{rapply2d}}, \code{\link{unlist2d}} \cr
+\link[=list-processing]{List Processing} \tab\tab (Recursive) list search and checks, extraction of list-elements / list-subsetting, fast (recursive) splitting, list-transpose, apply functions to lists of data frames / data objects, and generalized recursive row-binding / unlisting in 2-dimensions / to data frame.  \tab\tab \code{\link{is_unlistable}}, \code{\link{ldepth}}, \code{\link{has_elem}}, \code{\link{get_elem}}, \code{\link[=atomic_elem]{atomic_elem(<-)}}, \code{\link[=list_elem]{list_elem(<-)}}, \code{\link{reg_elem}}, \code{\link{irreg_elem}}, \code{\link{rsplit}}, \code{\link{t_list}}, \code{\link{rapply2d}}, \code{\link{unlist2d}}, \code{\link{rowbind}} \cr
 
 %  (within- and between-groups) ww
 

@@ -1,9 +1,10 @@
 
 # rbind_list ??
-rowbind <- function(..., idcol = NULL, use.names = TRUE, fill = FALSE, id.factor = TRUE,
+rowbind <- function(..., idcol = NULL, row.names = FALSE, use.names = TRUE, fill = FALSE, id.factor = TRUE,
                     return = c("as.first", "data.frame", "data.table", "tibble", "list")) {
 
   l <- if(...length() == 1L && is.list(..1)) unclass(..1) else list(...)
+  if(is.logical(idcol)) idcol <- if(isTRUE(idcol)) ".id" else NULL
   id_fact <- length(idcol) && !isFALSE(id.factor) && length(nam <- names(l))
   if(id_fact) names(l) <- NULL
   res <- .Call(C_rbindlist, l, use.names || fill, fill, idcol)
@@ -12,18 +13,18 @@ rowbind <- function(..., idcol = NULL, use.names = TRUE, fill = FALSE, id.factor
     oldClass(res[[1L]]) <- switch(id.factor, `TRUE` = "factor", ordered = c("ordered", "factor"),
                                   stop('id.factor needs to be FALSE, TRUE or "ordered"'))
   }
+  if(!isFALSE(row.names)) {
+    attributes(l) <- NULL
+    rn <- list(.Call(C_pivot_long, lapply(l, attr, "row.names"), NULL, FALSE))
+    if(length(rn[[1L]]) != length(res[[1L]])) stop("length mismatch: not all objects in the list have 'row.names' attribute")
+    names(rn) <- switch(row.names, `TRUE` = "row.names", row.names)
+    res <- if(is.null(idcol)) c(rn, res) else c(res[1L], rn, res[-1L])
+  }
   switch(return[1L],
          as.first = {
            a1 <- attributes(l[[1L]])
            if(is.null(a1)) return(res)
-           n <- .Call(C_fnrow, res)
-           if(any(a1$class == "data.frame")) {
-             rn <- a1$row.names
-             if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) { # data.frame's
-               all_rn <- do.call(c, lapply(unattrib(l), attr, "row.names"))
-               a1$row.names <- if(length(all_rn) == n) all_rn else .set_row_names(n)
-             } else a1$row.names <- .set_row_names(n)
-           }
+           if(any(a1$class == "data.frame")) a1$row.names <- .set_row_names(length(res[[1L]]))
            a1$names <- names(res)
            .Call(C_setattributes, res, a1)
            if(any(a1$class == "data.table")) return(alc(res))
@@ -40,7 +41,7 @@ rowbind <- function(..., idcol = NULL, use.names = TRUE, fill = FALSE, id.factor
 unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.factor = FALSE, DT = FALSE) {
 
   if (!is.list(l)) return(l) # stop("l is not a list")
-  makeids <- !isFALSE(idcols)
+  makeids <- length(idcols) && !isFALSE(idcols)
   if(makeids) id.names <- if(isTRUE(idcols)) ".id" else idcols[1L]
   keeprn <- !isFALSE(row.names)
   if(keeprn) row.names <- switch(row.names, `TRUE` = "row.names", row.names)

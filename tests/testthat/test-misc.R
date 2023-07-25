@@ -358,10 +358,12 @@ test_that("fdist works properly", {
 })
 
 test_that("rowbind", {
-  expect_equal(rowbind(mtcars, mtcars), setRownames(rbind(mtcars, mtcars), rep(attr(mtcars, "row.names"), 2)))
-  expect_equal(setRownames(rowbind(list(mtcars, mtcars))), setRownames(rbind(mtcars, mtcars)))
-  expect_equal(setRownames(rowbind(mtcars, mtcars)), unlist2d(list(mtcars, mtcars), idcols = FALSE))
-  expect_equal(setRownames(rowbind(mtcars, mtcars, idcol = "id")), unlist2d(list(mtcars, mtcars), idcols = "id"))
-  expect_equal(setRownames(rowbind(a = mtcars, b = mtcars, idcol = "id")), unlist2d(list(a = mtcars, b = mtcars), idcols = "id", id.factor = TRUE))
-  expect_equal(setRownames(rowbind(a = mtcars, b = mtcars, idcol = "id", id.factor = FALSE)), unlist2d(list(a = mtcars, b = mtcars), idcols = "id"))
+  expect_equal(rowbind(mtcars, mtcars), setRownames(rbind(mtcars, mtcars)))
+  expect_equal(rowbind(list(mtcars, mtcars)), setRownames(rbind(mtcars, mtcars)))
+  expect_equal(rowbind(mtcars, mtcars), unlist2d(list(mtcars, mtcars), idcols = FALSE))
+  expect_equal(rowbind(mtcars, mtcars, idcol = "id"), unlist2d(list(mtcars, mtcars), idcols = "id"))
+  expect_equal(rowbind(mtcars, mtcars, row.names = "car"), unlist2d(list(mtcars, mtcars), idcols = FALSE, row.names = "car"))
+  expect_equal(rowbind(mtcars, mtcars, idcol = "id", row.names = "car"), unlist2d(list(mtcars, mtcars), idcols = "id", row.names = "car"))
+  expect_equal(rowbind(a = mtcars, b = mtcars, idcol = "id"), unlist2d(list(a = mtcars, b = mtcars), idcols = "id", id.factor = TRUE))
+  expect_equal(rowbind(a = mtcars, b = mtcars, idcol = "id", id.factor = FALSE), unlist2d(list(a = mtcars, b = mtcars), idcols = "id"))
 })
