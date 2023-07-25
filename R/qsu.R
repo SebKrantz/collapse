@@ -247,7 +247,7 @@ as.data.frame.qsu <- function(x, ..., gid = "Group", stringsAsFactors = TRUE) {
     # res <- list(Statistic = names(x), Value = unattrib(x))
     # attr(res, "row.names") <- .set_row_names(length(x))
   } else if(length(d) == 2L) {
-    varl <- if(stringsAsFactors) list(`attributes<-`(seq_len(d[1L]), list(levels = dn[[1L]], class = "factor"))) else dn[1L]
+    varl <- if(stringsAsFactors) list(`attributes<-`(seq_len(d[1L]), list(levels = dn[[1L]], class = c("factor", "na.included")))) else dn[1L]
     res <- c(varl,  mctl(x))
     names(res) <- c(if(stnam[1L] == "N") "Variable" else "Trans", stnam)
     attr(res, "row.names") <- .set_row_names(d[1L])
@@ -265,8 +265,8 @@ as.data.frame.qsu <- function(x, ..., gid = "Group", stringsAsFactors = TRUE) {
     }
     attributes(res) <- NULL
     dim(res) <- c(d[1L]*d[3L], d[2L])
-    varsl <- if(stringsAsFactors) list(`attributes<-`(rep(seq_len(d[3L]), each = d[1L]), list(levels =  dn[[3L]], class = "factor")),
-                                `attributes<-`(rep(seq_len(d[1L]), d[3L]), list(levels = dn[[1L]], class = "factor"))) else
+    varsl <- if(stringsAsFactors) list(`attributes<-`(rep(seq_len(d[3L]), each = d[1L]), list(levels =  dn[[3L]], class = c("factor", "na.included"))),
+                                `attributes<-`(rep(seq_len(d[1L]), d[3L]), list(levels = dn[[1L]], class = c("factor", "na.included")))) else
                            list(rep(dn[[3L]], each = d[1L]), rep(dn[[1L]], d[3L]))
     res <- c(varsl, mctl(res))
     names(res) <- c(vn, if(stnam[1L] == "N") gid else "Trans", stnam)
@@ -278,9 +278,9 @@ as.data.frame.qsu <- function(x, ..., gid = "Group", stringsAsFactors = TRUE) {
     nr <- d[1L]*3L*d[4L]
     dim(res) <- c(nr, d[2L])
     varsl <- if(stringsAsFactors)
-              list(`attributes<-`(rep(seq_len(d[4L]), each = 3L*d[1L]), list(levels = dn[[4L]], class = "factor")),
-                   `attributes<-`(rep(seq_len(d[1L]), d[4L], each = 3L), list(levels = dn[[1L]], class = "factor")),
-                   `attributes<-`(rep(seq_len(d[3L]), d[1L]*d[4L]), list(levels = dn[[3L]], class = "factor"))) else
+              list(`attributes<-`(rep(seq_len(d[4L]), each = 3L*d[1L]), list(levels = dn[[4L]], class = c("factor", "na.included"))),
+                   `attributes<-`(rep(seq_len(d[1L]), d[4L], each = 3L), list(levels = dn[[1L]], class = c("factor", "na.included"))),
+                   `attributes<-`(rep(seq_len(d[3L]), d[1L]*d[4L]), list(levels = dn[[3L]], class = c("factor", "na.included")))) else
               list(rep(dn[[4L]], each = 3L*d[1L]), rep(dn[[1L]], d[4L], each = 3L), rep(dn[[3L]], d[1L]*d[4L]))
     res <- c(varsl,  mctl(res))
     names(res) <- c("Variable", gid, "Trans", stnam)

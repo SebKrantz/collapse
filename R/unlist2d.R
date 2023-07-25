@@ -10,7 +10,7 @@ rowbind <- function(..., idcol = NULL, row.names = FALSE, use.names = TRUE, fill
   res <- .Call(C_rbindlist, l, use.names || fill, fill, idcol)
   if(id_fact) {
     attr(res[[1L]], "levels") <- nam
-    oldClass(res[[1L]]) <- switch(id.factor, `TRUE` = "factor", ordered = c("ordered", "factor"),
+    oldClass(res[[1L]]) <- switch(id.factor, `TRUE` = c("factor", "na.included"), ordered = c("ordered", "factor", "na.included"),
                                   stop('id.factor needs to be FALSE, TRUE or "ordered"'))
   }
   if(!isFALSE(row.names)) {
@@ -46,7 +46,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
   keeprn <- !isFALSE(row.names)
   if(keeprn) row.names <- switch(row.names, `TRUE` = "row.names", row.names)
   idfac <- !isFALSE(id.factor)
-  if(idfac) fcclass <- switch(id.factor, `TRUE` = "factor", ordered = c("ordered", "factor"),
+  if(idfac) fcclass <- switch(id.factor, `TRUE` = c("factor", "na.included"), ordered = c("ordered", "factor", "na.included"),
                               stop('id.factor needs to be FALSE, TRUE or "ordered"'))
   DATAclass <- if(DT) c("data.table", "data.frame") else "data.frame"
 
