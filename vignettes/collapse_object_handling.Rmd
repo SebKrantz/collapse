@@ -56,7 +56,7 @@ So to summarize the general principles: *collapse* just tries to preserve attrib
 The following section provides some further details for some *collapse* functions and supported classes. 
 
 
-## Specificic Functions and Classes
+## Specific Functions and Classes
 
 #### Object Conversions
 
