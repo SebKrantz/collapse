@@ -1,17 +1,23 @@
 
 # rbind_list ??
-rowbind <- function(..., idcol = NULL, row.names = FALSE, use.names = TRUE, fill = FALSE, id.factor = TRUE,
+rowbind <- function(..., idcol = NULL, row.names = FALSE, use.names = TRUE, fill = FALSE, id.factor = "auto",
                     return = c("as.first", "data.frame", "data.table", "tibble", "list")) {
 
   l <- if(...length() == 1L && is.list(..1)) unclass(..1) else list(...)
   if(is.logical(idcol)) idcol <- if(isTRUE(idcol)) ".id" else NULL
-  id_fact <- length(idcol) && !isFALSE(id.factor) && length(nam <- names(l))
-  if(id_fact) names(l) <- NULL
+  id_fact <- length(idcol) && switch(as.character(id.factor), `TRUE` = TRUE, `FALSE` = FALSE,
+                                     auto = !is.null(names(l)), ordered = TRUE,
+                                     stop("id.factor needs to be 'TRUE', 'FALSE', 'auto' or 'ordered'"))
+  if(id_fact) {
+    nam <- names(l)
+    names(l) <- NULL
+  }
   res <- .Call(C_rbindlist, l, use.names || fill, fill, idcol)
   if(id_fact) {
-    attr(res[[1L]], "levels") <- nam
-    oldClass(res[[1L]]) <- switch(id.factor, `TRUE` = c("factor", "na.included"), ordered = c("ordered", "factor", "na.included"),
-                                  stop('id.factor needs to be FALSE, TRUE or "ordered"'))
+    attr(res[[1L]], "levels") <- if(length(nam)) nam else as.character(seq_along(l))
+    oldClass(res[[1L]]) <- switch(id.factor, `TRUE` = c("factor", "na.included"), # Cannot have empty alternative in numeric switch
+                                  auto = c("factor", "na.included"),
+                                  ordered = c("ordered", "factor", "na.included"))
   }
   if(!isFALSE(row.names)) {
     attributes(l) <- NULL

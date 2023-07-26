@@ -9,7 +9,7 @@ Row-Bind Lists / Data Frame-Like Objects
 }
 \usage{
 rowbind(\dots, idcol = NULL, row.names = FALSE,
-        use.names = TRUE, fill = FALSE, id.factor = TRUE,
+        use.names = TRUE, fill = FALSE, id.factor = "auto",
         return = c("as.first", "data.frame", "data.table", "tibble", "list"))
 }
 \arguments{
@@ -23,7 +23,7 @@ rowbind(\dots, idcol = NULL, row.names = FALSE,
 
   \item{fill}{logical. \code{TRUE} fills missing columns with NAs. When \code{TRUE}, \code{use.names} is set to \code{TRUE}.}
 
-  \item{id.factor}{logical. if \code{TRUE}, \code{!isFALSE(idcols)}, and the input list is names, create id column as factor instead of character vector. It is also possible to specify \code{id.factor = "ordered"} to generate an ordered factor id. This is much more memory efficient than a character id, and thus enabled by default. }
+  \item{id.factor}{if \code{TRUE} and \code{!isFALSE(idcols)}, create id column as factor instead of character or integer vector. It is also possible to specify \code{"ordered"} to generate an ordered factor id. \code{"auto"} uses \code{TRUE} if \code{!is.null(names(l))} where \code{l} is the input list (because factors are much more memory efficient than character vectors). }
 
 \item{return}{an integer or string specifying what to return. \code{1 - "as.first"} preserves the attributes of the first element of the list, \code{2/3/4 - "data.frame"/"data.table"/"tibble"} coerces to specific objects, and \code{5 - "list"} returns a (named) list. }
 
@@ -44,7 +44,7 @@ rowbind(list(mtcars, mtcars))
 
 # With id column
 rowbind(mtcars, mtcars, idcol = "id")
-rowbind(a = mtcars, b = mtcars, idcol = "id") # by default factor to save memory
+rowbind(a = mtcars, b = mtcars, idcol = "id")
 
 # With saving row-names
 rowbind(mtcars, mtcars, row.names = "cars")
