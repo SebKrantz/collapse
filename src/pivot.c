@@ -142,6 +142,7 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column) { // , SEXP fill
     nc = asInteger(getAttrib(id, sym_ng)), tx = TYPEOF(column);
   if(l != length(id)) error("Internal error: length(index) must match length(id)");
   if(l != length(column)) error("Internal error: length(index) must match length(column)");
+  if(nr < 1 || nc < 1) error("Resulting data frame after pivoting needs to have at least one row and column");
 
   SEXP out = PROTECT(allocVector(VECSXP, nc)), *restrict pout = SEXPPTR(out)-1;
   SEXP fill_val = tx == REALSXP ? ScalarReal(NA_REAL) : tx == INTSXP ? ScalarInteger(NA_INTEGER) :
