@@ -2,7 +2,7 @@
 \alias{pivot}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Fast and Easy Data Frame Reshaping
+Fast and Easy Data Reshaping
 }
 \description{
 \code{pivot()} will become \emph{collapse}'s data reshaping command, to be formally released with v2.0.0. It combines longer-, wider-, and recast-pivoting functionality in a single parsimonious API. Notably, it can also accommodate variable labels. Please give me feedback on the API.
@@ -18,11 +18,11 @@ pivot(data,               # Summary of Documentation:
       factor = c("names", "labels"), # create new id col(s) as factor variable(s)?
       check.dups = FALSE, # detect duplicate 'ids'+'names' combinations
       # Options below only apply if how = "wider" or "recast"
-      fill = NULL,        # value to insert (default NA/NULL)
+      fill = NULL,        # value to insert for unbalanced data (default NA/NULL)
       drop = TRUE,        # drop unused levels (=columns) if 'names' is factor
-      sort = "",          # "ids": sort 'ids' and/or "names": alphabetic casting
+      sort = FALSE,       # "ids": sort 'ids' and/or "names": alphabetic casting
       # This only applies when casting multiple long columns ('values')
-      transpose = ""      # "cols": applies t_list() before flattening, and/or
+      transpose = FALSE   # "cols": applies t_list() before flattening, and/or
 )                         # "names": sets names nami_colj. default: colj_nami
 }
 %- maybe also 'usage' for other objects documented here.
@@ -31,11 +31,11 @@ pivot(data,               # Summary of Documentation:
   \item{ids}{identifier columns to keep. Specified using column names, indices, a logical vector or an identifier function e.g. \code{\link{is_categorical}}.}
   \item{values}{columns containing the data to be reshaped. Specified like \code{ids}.
 }
-  \item{names}{names of columns to generate, or retrieve column-names from:
+  \item{names}{names of columns to generate, or retrieve variable names from:
         \tabular{lll}{\code{ how }   \tab\tab \emph{ Description }  \cr\cr
-                 \code{"longer"}  \tab\tab list of names for the variable and value column in the long format, respectively. If \code{NULL}, the default \code{list("variable", "value")} will be chosen. Alternatively, a named list length 1 or 2 can be provided using "variable"/"value" as keys e.g. \code{list(value = "data_col")}.   \cr\cr
+                 \code{"longer"}  \tab\tab list of names for the variable and value column in the long format, respectively. If \code{NULL}, \code{list("variable", "value")} will be chosen. Alternatively, a named list length 1 or 2 can be provided using "variable"/"value" as keys e.g. \code{list(value = "data_col")}.   \cr\cr
                  \code{ "wider"} \tab\tab column(s) containing names of the new variables. Specified using a vector of column names, indices, a logical vector or selector function e.g. \code{is.character}. Multiple columns will be combined using \code{\link{finteraction}} with \code{"_"} as separator.  \cr\cr
-                 \code{ "recast"}   \tab\tab (named) list with the following elements: [[1]]/[["from"]] - column(s) containing names of the new variables, specified as in \code{"wider"}; [[2]]/[["to"]] - name of the variable to generate containing old column names. If \code{NULL}, the default \code{list("variable", "variable")} will be chosen.   \cr
+                 \code{ "recast"}   \tab\tab (named) list with the following elements: [[1]]/[["from"]] - column(s) containing names of the new variables, specified as in \code{"wider"}; [[2]]/[["to"]] - name of the variable to generate containing old column names. If \code{NULL}, \code{list("variable", "variable")} will be chosen.   \cr
                  }
 
 }
@@ -43,8 +43,8 @@ pivot(data,               # Summary of Documentation:
 names of columns to generate, or retrieve variable labels from:
         \tabular{lll}{\code{ how }   \tab\tab \emph{ Description }  \cr\cr
                  \code{"longer"}  \tab\tab A string specifying the name of the column to store labels - retrieved from the data using \code{vlabels(values)}. \code{TRUE} will create a column named \code{"label"}. Alternatively, a (named) list with two elements: [[1]]/[["name"]] - the name of the labels column; [[2]]/[["new"]] - a (named) character vector of new labels for the 'variable', 'label' and 'value' columns in the long-format frame. See Examples.   \cr\cr
-                 \code{ "wider"} \tab\tab column(s) containing names of the new variables. Specified using a vector of column names, indices, a logical vector or selector function e.g. \code{is.character}. Multiple columns will be combined using \code{\link{finteraction}} with \code{"_"} as separator.  \cr\cr
-                 \code{ "recast"}   \tab\tab (named) list with the following elements: [[1]]/[["from"]] - column(s) containing names of the new variables, specified as in \code{"wider"}; [[2]]/[["to"]] - name of the variable to generate containing old column names. If \code{NULL}, the default \code{list("variable", "variable")} will be chosen.   \cr
+                 \code{ "wider"} \tab\tab column(s) containing labels of the new variables. Specified using a vector of column names, indices, a logical vector or selector function e.g. \code{is.character}. Multiple columns will be combined using \code{\link{finteraction}} with \code{" - "} as separator.  \cr\cr
+                 \code{ "recast"}   \tab\tab (named) list with the following elements: [[1]]/[["from"]] - column(s) containing labels for the new variables, specified as in \code{"wider"}; [[2]]/[["to"]] - name of the variable to generate containing old labels; [[3]]/[["new"]] - a (named) character vector of new labels for the generated 'variable' and 'label' columns. If [[1]]/[["from"]] is not supplied, this can also include labels for new variables. Omitting one of the elements via a named list or setting it to \code{NULL} in a list of 3 will omit the corresponding operation i.e. either not saving existing labels or not assigning new ones.  \cr
                  }
 }
   \item{how}{
@@ -56,25 +56,27 @@ logical. \code{TRUE} will remove missing values such that in the reshaped data t
   \item{factor}{
 character. Whether to generate new 'names' and/or 'labels' columns as factor variables. This is generally recommended as factors are more memory efficient than character vectors and also faster in subsequent filtering and grouping. Internally, this argument is evaluated as \code{factor <- c("names", "labels") \%in\% factor}, so passing anything other than \code{"names"} and/or \code{"labels"} will disable it.
 }
-  \item{fill}{
-%%     ~~Describe \code{fill} here~~
+  \item{check.dups}{
+logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading efectively to the last value being chosen i.e. the data is aggregated using the last value. See Details.
+}
+  \item{fill}{if \code{how = "wider"|"recast"}: value to insert for 'ids'-'names' combinations not present in the long format. \code{NULL} uses \code{NA} for atomic vectors and \code{NULL} for lists.
 }
   \item{drop}{
-%%     ~~Describe \code{drop} here~~
+logical. if \code{how = "wider"|"recast"} and 'names' is a single factor variable: \code{TRUE} will check for and drop unused levels in that factor, avoiding the generation of empty columns.
 }
-  \item{check.dups}{
-%%     ~~Describe \code{check.dups} here~~
+\item{sort}{
+  if \code{how = "wider"|"recast"}: specifying \code{"ids"} applies ordered grouping on the id-columns, returning data sorted by ids. Specifying \code{"names"} sorts the names before casting (unless 'names' is a factor), yielding columns cast in alphabetic order. Both options can be passed as a character vector, or, alternatively, \code{TRUE} can be used to enable both.
 }
+\item{transpose}{
+  if \code{how = "wider"|"recast"} and multiple columns are selected through 'values': specifying \code{"cols"} applies \code{\link{t_list}} to the result before flattening, resulting in a different column order. Specifying \code{"names"} generates names of the form nami_colj, instead of colj_nami. Both options can be passed as a character vector, or, alternatively, \code{TRUE} can be used to enable both.
+}
+
 }
 \details{
-%%  ~~ If necessary, more details than the description above ~~
+Pivot wider essentially works as follows: compute \code{g_rows = group(ids)} and also \code{g_cols = group(names)} (using \code{\link{group}} if \code{sort = FALSE}). \code{g_rows} gives the row-numbers of the wider data frame and \code{g_cols} the column numbers. Then, a C function generates a wide data frame and runs through each long column ('values'), assigning each value to the corresponding row and column in the wide frame. If there are duplicates, some observations will be assigned to the same slot the new data frame, overwriting the value already set. Since the algorithm runs through the data from first to last row, this amounts to removing duplicates by taking the last value for each set of 'ids' - in first-appearance order. If \code{check.dups = TRUE}, a check of the form  \code{fnunique(list(g_rows, g_cols)) < fnrow(data)} is run, and an informative warning is issued if duplicates are found. Recast pivoting works similarly, and in long pivoting the check simply amounts to \code{fnunique(ids) < fnrow(data)}. Making this check optional ensures greater performance, but also requires the user to exercise discretion i.e. know your data or invoke the check.
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A reshaped data frame with the same class and attributes (except for 'names'/'row-names') as the input frame.
 }
 \references{
 %% ~put references to the literature/web site here ~
@@ -83,7 +85,7 @@ character. Whether to generate new 'names' and/or 'labels' columns as factor var
 %%  ~~who you are~~
 }
 \note{
-%%  ~~further notes~~
+Leaving either 'ids' or 'values' empty will assign all other columns (except for "variable" if how = "wider"|"recast") to the non-specified argument. It is also possible to leave both empty, e.g. for complete melting/casting or data transposition if how = "recast" (similar to \code{data.table::transpose} but supporting multiple names columns and variable labels).
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
@@ -98,7 +100,9 @@ pivot(mtcars) |> head()
 pivot(iris, "Species") |> head()
 pivot(wlddev, 1:8, na.rm = TRUE) |> head()
 pivot(wlddev, c("iso3c", "year"), c("PCGDP", "LIFEEX"), na.rm = TRUE) |> head()
-pivot(GGDC10S, 1:5, na.rm = TRUE) |> head()
+pivot(GGDC10S, 1:5, names = list("sector", "value"), na.rm = TRUE) |> head()
+# Or:
+pivot(GGDC10S, 1:5, names = list(variable = "sector"), na.rm = TRUE) |> head()
 
 # Melting including saving labels
 pivot(GGDC10S, 1:5, na.rm = TRUE, labels = TRUE) |> head()
@@ -123,6 +127,17 @@ pivot(GGDC10S, 1:5, na.rm = TRUE,
 # -------------------------------- PIVOT WIDER ---------------------------------
 
 # -------------------------------- PIVOT RECAST ---------------------------------
+
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sector"), how = "r")
+# Same Thing
+pivot(GGDC10S, .c(Country, Regioncode, Region, Year), names = list("Variable", "Sector"), how = "r")
+
+# Removing missing values
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sector"), how = "r", na.rm = TRUE)
+
+# Labels
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sector"), labels = list(to = "sector_desc"), how = "r", na.rm = TRUE)
+
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

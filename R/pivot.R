@@ -18,9 +18,9 @@ proc_names_longer <- function(x) {
 
 proc_names_recast <- function(x, data) {
   if(is.null(x)) {
-    nam_col <- data[["variable"]]
-    if(is.null(nam_col)) stop("Need to provide 'names'. The default name 'variable' was not found in the data.")
-    return(list(nam_col, "variable"))
+    ind <- whichv(names(data), "variable")
+    if(!length(ind)) stop("Need to provide 'names'. The default name 'variable' was not found in the data.")
+    return(list(ind, "variable"))
   }
   if(is.list(x)) {
     if(is.null(names(x))) {
@@ -33,10 +33,27 @@ proc_names_recast <- function(x, data) {
       x <- res
     }
     ind <- cols2int(x[[1L]], data, names(data))
-    nam_col <- if(length(ind) == 1L) data[[ind]] else finteraction(data[ind], sort = FALSE, sep = "_")
-    return(list(nam_col, x[[2L]]))
+    # nam_col <- if(length(ind) == 1L) data[[ind]] else finteraction(data[ind], sort = sort, sep = "_")
+    return(list(ind, x[[2L]]))
   }
   stop("If how = 'recast', 'names' needs to be a (named) list. You supplied a vector of type: ", typeof(x))
+}
+
+proc_labels_recast <- function(x, data) {
+  if(is.list(x)) {
+    if(is.null(names(x))) {
+      if(length(x) != 2L) stop("If how = 'recast', 'labels' needs to be a length-2 list or a named list. You specified a list length: ", length(x))
+    } else {
+      if(length(x) > 2L) stop("If how = 'recast', 'labels' needs to be a length-2 list or a named list length-1 or -2. You specified a list length: ", length(x))
+      res <- list(from = NULL, to = NULL)
+      ind <- ckmatch(names(x), names(res), e = "Unknown keywords (must be 'from' and/or 'to'):")
+      res[ind] <- x
+      x <- res
+    }
+    ind <- if(length(x[[1L]])) cols2int(x[[1L]], data, names(data)) else NULL
+    return(list(ind, x[[2L]]))
+  }
+  stop("If how = 'recast', 'labels' needs to be a (named) list. You supplied a vector of type: ", typeof(x))
 }
 
 
@@ -84,6 +101,24 @@ melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
 # TODO: Option transpose = c(names = FALSE, columns = FALSE)
 # TODO: leave args empty...
 
+# TODO: wider and recast pivoting needs to be possible without 1d's!! (full transposition)
+
+# TODO: labels argument for recast pivoting should also have "new" slot: for relabelling new long columns, and possibly casted columns.
+
+# data = wlddev
+# ids = "iso3c"
+# names = "PCGDP"
+# labels = NULL
+# values = "year"
+# how = "w"
+# na.rm = TRUE
+# factor = c("names", "labels")
+# check.dups = FALSE
+# fill = NULL
+# drop = TRUE
+# sort = c("ids", "names")
+# transpose = ""
+
 # Check labels and attributes..
 pivot <- function(data,
                   ids = NULL,
@@ -96,8 +131,8 @@ pivot <- function(data,
                   check.dups = FALSE,
                   fill = NULL, # Fill is for pivot_wider
                   drop = TRUE, # Same as with dcast()
-                  sort = "", # c("ids", "names")
-                  transpose = "") # c(cols = FALSE, names = FALSE))
+                  sort = FALSE, # c("ids", "names")
+                  transpose = FALSE) # c(cols = FALSE, names = FALSE))
 {
 
     if(!is.list(data)) stop("pivot only supports data.frame-like objects")
@@ -108,18 +143,20 @@ pivot <- function(data,
     if(length(values)) values <- cols2int(values, data, nam)
     # TODO: needed here, or in switch??
     factor <- c("names", "labels") %in% factor
-    sort <- c("ids", "names") %in% sort
-    transpose <- c("cols", "names") %in% transpose
+    sort <- if(is.logical(sort)) rep(sort, length.out = 2L) else c("ids", "names") %in% sort
+    transpose <- if(is.logical(transpose)) rep(transpose, length.out = 2L) else c("cols", "names") %in% transpose
 
+    how <- switch(how, l = , longer = 1L, w = , wider = 2L, r = , recast = 3L,
+                         stop("Unknown pivoting method: ", how))
 
-    res <- switch(how,
-
-      l = , longer = { # TODO: multiple output columns
+    # TODO: multiple output columns
+    if(how == 1L) {
         names <- proc_names_longer(names)
-        if(is.null(ids)) melt_all(if(is.null(values)) data else data[values],
+        if(is.null(ids) && is.null(values)) res <- melt_all(if(is.null(values)) data else data[values],
                                   names, factor, na.rm, labels, check.dups)
         else {
           if(is.null(values)) values <- seq_along(data)[-ids]
+          else if(is.null(ids)) ids <- seq_along(data)[-values]
           vd <- data[values]
           if(length(labels) || factor[1L]) attributes(vd) <- NULL
           if(check.dups && force(ng <- fnunique(data[ids])) < fnrow(data))
@@ -176,13 +213,12 @@ pivot <- function(data,
             attr(value_cols[[1L]], "levels") <- nam[values]
             oldClass(value_cols[[1L]]) <- c("factor", "na.included")
           } else if(length(labels)) value_cols[[1L]] <- Csv(nam[values], value_cols[[1L]])
-          c(id_cols, value_cols)
+          res <- c(id_cols, value_cols)
         }
-      },
+      } else if (how == 2L) {
 
       # In general: names specifies where variable names are coming from. If multiple then interact them using "_"
       # Same for labels. drop specifies that factor levels should be dropped if a single factor column is passed to names
-      w = , wider = {
         # (1) Preprocessing Arguments
         if(is.null(names)) {
           names <- whichv(nam, "variable")
@@ -198,17 +234,20 @@ pivot <- function(data,
         if(is.null(ids)) ids <- seq_along(data)[-c(names, labels, values)]
         # (2) Missing Value Removal
         if(na.rm) { # TODO: better way?
-          data <- na_omit(data[c(ids, names, values, labels)], cols = values)
+          data <- data[c(ids, names, values, labels)]
           ids <- seq_along(ids)
           names <- seq_along(names) + length(ids)
           values <- seq_along(values) + length(ids) + length(names)
           if(length(labels)) labels <- seq_along(labels) + length(ids) + length(names) + length(values)
+          data <- na_omit(data, cols = values)
         }
         # (3) Compute ID Columns
         if(sort[1L]) {
           g <- GRP.default(data[ids], sort = TRUE, return.order = FALSE, call = FALSE)
           id_cols <- g[[4L]]
+          ng <- g[[1L]]
           g <- g[[2L]]
+          attr(g, "N.groups") <- ng
         } else { # Could also use GRP(), but this avoids computing a potentially large and redundant group sizes vector
           g <- group(data[ids], starts = TRUE)
           id_cols <- .Call(C_subsetDT, data, attr(g, "starts"), ids, FALSE)
@@ -231,10 +270,10 @@ pivot <- function(data,
           # if(force(ng <- fnunique(list(g, g_v))) < fnrow(data))
           #   warning("duplicates detected: there are ", ng, " unique combinations of id- and name-columns, but the data has ", fnrow(data),
           #           " rows. This means you have on average ", round(fnrow(data)/ng, 1), " duplicates per id-name-combination. If how = 'wider', pivot() will take the last of those duplicates in first-appearance-order. Consider aggregating your data e.g. using collap() before applying pivot().")
-          # This should be faster... but check !!
-          ndg <- fndistinct.default(g, names_g, use.g.names = FALSE, na.rm = FALSE)
-          if(!identical(ngd, names_g[[3L]])) {
-            ng <- bsum(ndg)
+          # TODO: This should be faster... but check !!
+          ndg <- fndistinct.default(unattrib(g), names_g, use.g.names = FALSE, na.rm = FALSE)
+          if(!identical(ndg, names_g[[3L]])) {
+            ng <- fsumC(ndg, narm = FALSE)
             warning("duplicates detected: there are ", ng, " unique combinations of id- and name-columns, but the data has ", fnrow(data),
                     " rows. This means you have on average ", round(fnrow(data)/ng, 1), " duplicates per id-name-combination. If how = 'wider', pivot() will take the last of those duplicates in first-appearance-order. Consider aggregating your data e.g. using collap() before applying pivot().")
           }
@@ -243,57 +282,115 @@ pivot <- function(data,
         if(length(values) > 1L) { # Multiple columns, as in dcast... TODO: check pivot_wider
           namv <- names(data)[values]
           attributes(data) <- NULL
-          value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x))
+          value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill))
           if(length(labels)) value_cols <- lapply(value_cols, `vlabels<-`, value = labels)
           value_cols <- unlist(if(transpose[1L]) t_list2(value_cols) else value_cols, FALSE, FALSE)
           namv_res <- if(transpose[2L]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
           names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)
         } else {
-          value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]])
+          value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill)
           names(value_cols) <- names
           if(length(labels)) vlabels(value_cols) <- labels
         }
-        c(id_cols, value_cols)
-      },
+        res <- c(id_cols, value_cols)
 
-      # TODO: na.rm option implementation!!
-      r = , recast = {
+      } else {
+
+      # TODO: multi-pivots??
         # The optimization applied here is to avoid materialization of the "long" id-columns
         # There are two ways to do it, first the long value cast and then wide cast, or many wide casts and row-biding.
         # The complication is that the long cast requires construction of an id-column, which probably can only be efficiently
         # done by creating yet another C-function. Thus I try the wide option first.
         # -> initial benchmarks show that this is also definitely faster than recast from long frame...
         # but presumably because grouping is much faster. If an id is constructed we don't need to group a long frame though...
-        g <- group(data[ids], starts = TRUE)
-        id_cols <- .Call(C_subsetDT, data, attr(g, "starts"), ids, FALSE)
-        if(!(is.list(names) && length(names) == 2L)) stop("'names' must be a list of length 2. See Documentation.")
-        names1 <- names[[1L]] # TODO: could be integer etc??
-        names_col <- if(length(names1) == 1L) data[[names1]] else finteraction(data[names1], sort = FALSE, sep = "_")
-        if(is.factor(names_col)) {
-          g_v <- names_col
-          if(!inherits(g_v, "na.included")) g_v <- addNA2(g_v)
-          if(drop && length(names1) == 1L) g_v <- fdroplevels.factor(g_v)
-          lev <- attr(g_v, "levels")
-          attr(g_v, "N.groups") <- length(lev)
-        } else g_v <- group(names_col, starts = TRUE)
+
+        # (1) Preprocessing Arguments
+        names <- proc_names_recast(names, data) # List of 2 elements...
+        names1 <- names[[1L]]
+        if(length(labels)) {
+          labels <- proc_labels_recast(labels, data)
+          labels1 <- labels[[1L]]
+        } else labels1 <- NULL
+
+        if(is.null(values)) {
+          if(length(ids)) values <- seq_along(data)[-c(ids, names1, labels1)]
+        } else if(is.null(ids)) ids <- seq_along(data)[-c(names1, labels1, values)]
+        # (2) Compute ID Columns
+        if(length(ids)) {
+          if(sort[1L]) {
+            g <- GRP.default(data[ids], sort = TRUE, return.order = FALSE, call = FALSE)
+            id_cols <- g[[4L]]
+            ng <- g[[1L]]
+            g <- g[[2L]]
+            attr(g, "N.groups") <- ng
+          } else { # Could also use GRP(), but this avoids computing a potentially large and redundant group sizes vector
+            g <- group(data[ids], starts = TRUE)
+            id_cols <- .Call(C_subsetDT, data, attr(g, "starts"), ids, FALSE)
+          }
+        } else {
+          g <- alloc(1L, fnrow(data)) # TODO: Better create a C-level exemption?? but this is inefficient anyway (row-binding single rows...)
+          attr(g, "N.groups") <- 1L
+        }
+        # (3) Compute Names and Labels Columns
+        names_g <- GRP(if(length(names1) == 1L && is.null(labels1)) data[[names1]] else data[names1],
+                       sort = sort[2L], group.sizes = check.dups, drop = drop, call = FALSE)
+        if(length(labels1)) {
+          if(check.dups && any(vary <- varying(data[labels1], names_g)))  # See if there are duplicate labels
+            stop("The following 'labels' columns vary by 'names': ", paste(names(vary)[vary], collapse = ", "))
+          labels1 <- if(length(labels1) == 1L) Csv(data[[labels1]], names_g$group.starts) else
+            do.call(paste, c(.Call(C_subsetDT, data, names_g$group.starts, labels1, FALSE), list(sep = " - ")))
+        }
+        g_v <- names_g[[2L]]
+        attr(g_v, "N.groups") <- names_g[[1L]]
+        names1 <- GRPnames(names_g, sep = "_")
+
+        # (4) Optional duplicates check...
         if(check.dups && force(ng <- fnunique(list(g, g_v))) < fnrow(data))
           warning("duplicates detected: there are ", ng, " unique combinations of id- and name-columns, but the data has ", fnrow(data),
                   " rows. This means you have on average ", round(fnrow(data)/ng, 1), " duplicates per id-name-combination. If how = 'recast', pivot() will take the last of those duplicates in first-appearance-order. Consider aggregating your data e.g. using collap() before applying pivot().")
-        if(factor[1L]) attributes(data) <- NULL
-        value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x))
-        names(value_cols[[1L]]) <- if(is.factor(names_col)) lev else names_col[attr(g_v, "starts")]
-        if(length(value_cols) > 1L) vlabels(value_cols[[1L]]) <- NULL
+
+        # (5) Compute Reshaped Values
+        save_labels <- !is.null(labels[[2L]])
+        vd <- data[values]
+        if(save_labels || factor[1L]) {
+          namv <- names(vd)
+          attributes(vd) <- NULL
+        }
+        value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill))
+        names(value_cols[[1L]]) <- names1
+        if(length(labels1)) vlabels(value_cols[[1L]]) <- labels1
+        else if(length(value_cols) > 1L) vlabels(value_cols[[1L]]) <- NULL
         id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols)), FALSE, FALSE, NULL)
         value_cols <- .Call(C_rbindlist, value_cols, FALSE, FALSE, names[[2L]]) # Final column is "variable" name
-        if(factor[1L]) {
-          attr(value_cols[[1L]], "levels") <- nam[values]
-          oldClass(value_cols[[1L]]) <- c("factor", "na.included")
-        }
-        c(id_cols, value_cols)
-      },
 
-      stop("Unknown pivoting method: ", how)
-    ) # end of switch
+        # (6) Missing Value Removal
+        if(na.rm) { # TODO: better way???
+          cc <- whichv(missing_cases(value_cols), FALSE)
+          value_cols <- .Call(C_subsetDT, value_cols, cc, seq_along(value_cols), FALSE)
+          id_cols <- .Call(C_subsetDT, id_cols, cc, seq_along(id_cols), FALSE)
+        }
+
+        # (7) Properly deal with variable names and labels
+        if(save_labels) {
+          if(!is.character(labels[[2L]])) stop("label column name supplied in a list needs to be character typed, you passed an object of type: ", typeof(labels[[2L]]))
+          labs <- vlabels(vd, use.names = FALSE)
+          if(factor[2L]) {
+            label_col <- value_cols[[1L]]
+            attr(label_col, "levels") <- labs
+            oldClass(label_col) <- c("factor", "na.included")
+          } else label_col <- Csv(labs, value_cols[[1L]])
+          label_col <- list(label_col)
+          names(label_col) <- labels[[2L]]
+          value_cols <- c(value_cols[1L], label_col, value_cols[-1L])
+        }
+
+        if(factor[1L]) {
+          attr(value_cols[[1L]], "levels") <- namv
+          oldClass(value_cols[[1L]]) <- c("factor", "na.included")
+        } else if(save_labels) value_cols[[1L]] <- Csv(namv, value_cols[[1L]])
+
+        res <- c(id_cols, value_cols)
+      }
 
     if(is.null(ad)) return(res) # Redundant ??
     if(any(ad$class == "data.frame")) ad$row.names <- .set_row_names(fnrow(res))
