@@ -134,7 +134,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
 }
 
 // TODO: How to check for duplicate rows?
-SEXP pivot_wide(SEXP index, SEXP id, SEXP column) { // , SEXP fill
+SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill) {
 
   SEXP sym_ng = install("N.groups");
   const int *restrict pix = INTEGER_RO(index), *restrict pid = INTEGER_RO(id), l = length(index),
@@ -145,9 +145,15 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column) { // , SEXP fill
   if(nr < 1 || nc < 1) error("Resulting data frame after pivoting needs to have at least one row and column");
 
   SEXP out = PROTECT(allocVector(VECSXP, nc)), *restrict pout = SEXPPTR(out)-1;
-  SEXP fill_val = tx == REALSXP ? ScalarReal(NA_REAL) : tx == INTSXP ? ScalarInteger(NA_INTEGER) :
+
+  SEXP fill_val;
+  if(fill == R_NilValue) {
+    fill_val = tx == REALSXP ? ScalarReal(NA_REAL) : tx == INTSXP ? ScalarInteger(NA_INTEGER) :
     tx == LGLSXP ? ScalarLogical(NA_LOGICAL) : tx == STRSXP ? ScalarString(NA_STRING) :
     tx == CPLXSXP ? ScalarComplex(asComplex(ScalarReal(NA_REAL))) : tx == RAWSXP ? ScalarRaw(0) : R_NilValue;
+  } else if(TYPEOF(fill) == tx) {
+    fill_val = fill;
+  } else fill_val = coerceVector(fill, tx);
   PROTECT(fill_val);
   SEXP out1;
   SET_VECTOR_ELT(out, 0, out1 = falloc(fill_val, ScalarInteger(nr), ScalarLogical(1)));
