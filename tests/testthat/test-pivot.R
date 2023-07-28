@@ -38,3 +38,17 @@ test_that("long pivots work properly", {
   expect_identical(names(pivot(wldDT, c("iso3c", "year"), values = 9:10, names = list(variable = "var"), labels = "lab")), c("iso3c", "year", "var", "lab", "value"))
 
 })
+
+
+test_that("wide pivots work properly", {
+
+  pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider")
+  pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+
+  pivot(wlddev, "iso3c", "PCGDP", "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+  pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+
+  pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"), transpose = c("cols", "names"))
+
+
+})
