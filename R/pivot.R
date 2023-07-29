@@ -94,29 +94,28 @@ melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
 }
 
 # TODO: multiple pivots
-# TODO: set new labels!!
 # TODO: Think about: values could be list input, names only atomic. that would make more sense...
-# Or: allow for both options... needs to be consisntent with "labels" though...
-# TODO: Multithreading, SIMD
-# TODO: leave args empty...
+# Or: allow for both options... needs to be consistent with "labels" though...
 
-# TODO: wider and recast pivoting needs to be possible without 1d's!! (full transposition)
+# Transposition Example:
+# pivot(BWA, names = list(from = c("Variable", "Year"), to = "Sectorcode"), how = "r")
 
-# TODO: labels argument for recast pivoting should also have "new" slot: for relabelling new long columns, and possibly casted columns.
-
-# data = wlddev
-# ids = "iso3c"
-# names = "PCGDP"
+# data = BWA
+# ids = NULL
+# names = list(from = c("Variable", "Year"), to = "Sectorcode")
 # labels = NULL
-# values = "year"
-# how = "w"
-# na.rm = TRUE
+# values = NULL
+# how = "r"
+# na.rm = FALSE
 # factor = c("names", "labels")
 # check.dups = FALSE
 # fill = NULL
 # drop = TRUE
-# sort = c("ids", "names")
-# transpose = ""
+# sort = FALSE
+# nthreads = 1L
+# transpose = FALSE
+
+
 
 # Check labels and attributes..
 pivot <- function(data,
@@ -141,16 +140,12 @@ pivot <- function(data,
     nam <- names(data)
     if(length(ids)) ids <- cols2int(ids, data, nam)
     if(length(values)) values <- cols2int(values, data, nam)
-    # TODO: needed here, or in switch??
     factor <- c("names", "labels") %in% factor
-    sort <- if(is.logical(sort)) rep(sort, length.out = 2L) else c("ids", "names") %in% sort
-    transpose <- if(is.logical(transpose)) rep(transpose, length.out = 2L) else c("columns", "names") %in% transpose
-
     how <- switch(how, l = , longer = 1L, w = , wider = 2L, r = , recast = 3L,
-                         stop("Unknown pivoting method: ", how))
+                  stop("Unknown pivoting method: ", how))
 
     # TODO: multiple output columns
-    if(how == 1L) {
+  if(how == 1L) {
         names <- proc_names_longer(names)
         if(is.null(ids) && is.null(values)) res <- melt_all(if(is.null(values)) data else data[values],
                                   names, factor, na.rm, labels, check.dups)
@@ -217,7 +212,14 @@ pivot <- function(data,
           res <- c(id_cols, value_cols)
         }
 
-      } else if (how == 2L) { # Wide Pivot
+    } else {
+
+     sort <- if(is.logical(sort)) rep(sort, length.out = 2L) else c("ids", "names") %in% sort
+     transpose <- if(is.logical(transpose)) rep(transpose, length.out = 2L) else c("columns", "names") %in% transpose
+
+     if (how == 2L) { # Wide Pivot
+
+      # Note: No Complete Pivoting (no ids and values) supported! This does not make a lot of sense!
 
       # In general: names specifies where variable names are coming from. If multiple then interact them using "_"
       # Same for labels. drop specifies that factor levels should be dropped if a single factor column is passed to names
@@ -298,9 +300,8 @@ pivot <- function(data,
         }
         res <- c(id_cols, value_cols)
 
-      } else {
+      } else { # Recast Pivot
 
-      # TODO: multi-pivots??
         # The optimization applied here is to avoid materialization of the "long" id-columns
         # There are two ways to do it, first the long value cast and then wide cast, or many wide casts and row-biding.
         # The complication is that the long cast requires construction of an id-column, which probably can only be efficiently
@@ -316,9 +317,8 @@ pivot <- function(data,
           labels1 <- labels[[1L]]
         } else labels1 <- NULL
 
-        if(is.null(values)) {
-          if(length(ids)) values <- seq_along(data)[-c(ids, names1, labels1)] # TODO: Possibly need values below...
-        } else if(is.null(ids)) ids <- seq_along(data)[-c(names1, labels1, values)]
+        if(is.null(values)) values <- seq_along(data)[-c(ids, names1, labels1)]
+        else if(is.null(ids)) ids <- seq_along(data)[-c(names1, labels1, values)]
         # (2) Compute ID Columns
         if(length(ids)) {
           if(sort[1L]) {
@@ -334,6 +334,7 @@ pivot <- function(data,
         } else {
           g <- alloc(1L, fnrow(data)) # TODO: Better create a C-level exemption?? but this is inefficient anyway (row-binding single rows...)
           attr(g, "N.groups") <- 1L
+          id_cols <- NULL
         }
         # (3) Compute Names and Labels Columns
         names_g <- GRP(if(length(names1) == 1L && is.null(labels1)) data[[names1]] else data[names1],
@@ -367,11 +368,11 @@ pivot <- function(data,
           attributes(vd) <- NULL
         }
         value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads))
-        id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols)), FALSE, FALSE, NULL)
+        if(length(id_cols)) id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols)), FALSE, FALSE, NULL)
         value_cols <- .Call(C_rbindlist, value_cols, FALSE, FALSE, names[[2L]]) # Final column is "variable" name
 
-        names(value_cols) <- names1
-        if(length(labels1)) vlabels(value_cols) <- labels1
+        names(value_cols) <- c(names[[2L]], names1)
+        if(length(labels1)) vlabels(value_cols)[-1L] <- labels1
         else if(length(vd) > 1L) vlabels(value_cols) <- NULL
 
         # (6) Missing Value Removal
@@ -402,14 +403,16 @@ pivot <- function(data,
 
         if(length(new_labels <- labels[[3L]])) {
           if(is.null(names(new_labels))) {
-            if(length(new_labels) != length(value_cols)) stop("Number of new labels supplied must match number of new columns in recasted frame. There are ", length(value_cols), " new columns in the frame, and you supplied ", length(new_labels), " new labels. Alternatively, please provide a named vector matching labels to columns.")
-            vlabels(value_cols) <- new_labels
+            if(length(new_labels) == length(value_cols)) vlabels(value_cols) <- new_labels
+            else if(length(new_labels) == 1L+save_labels) vlabels(value_cols)[seq_len(1L+save_labels)] <- new_labels
+            else stop("Number of new labels supplied must match either number of new ids (names/label-columns) or total number of new columns in recasted frame. There are ", length(value_cols), " new columns in the frame, of which ", 1L+save_labels, " are ids, and you supplied ", length(new_labels), " new labels. Alternatively, please provide a named vector matching labels to columns.")
           } else vlabels(value_cols)[names(new_labels)] <- new_labels
         }
 
-        res <- c(id_cols, value_cols)
+        res <- if(length(id_cols)) c(id_cols, value_cols) else value_cols
 
       }
+    }
 
     if(is.null(ad)) return(res) # Redundant ??
     if(any(ad$class == "data.frame")) ad$row.names <- .set_row_names(fnrow(res))
