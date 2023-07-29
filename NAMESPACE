@@ -9,6 +9,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
            "setNames", "terms.formula", "ts", "ts.plot", "model.matrix.default",
            "quantile", ".lm.fit", "cov2cor")
 
+ export(pivot)
  export(add_stub)
  export(rm_stub)
  export(all_identical)
