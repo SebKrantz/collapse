@@ -90,6 +90,7 @@ SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna);
 SEXP fwtabulate(SEXP x, SEXP w, SEXP ngp, SEXP ckna);
 SEXP vecgcd(SEXP x);
 SEXP all_funs(SEXP x);
+SEXP unlock_collapse_namespace(SEXP env);
 void writeValueByIndex(SEXP target, SEXP source, const int from, SEXP index);
 SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol);
 SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill);

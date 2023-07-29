@@ -4,7 +4,7 @@ set_collapse <- function(...) {
   opts <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
   op_old <- as.list(.op)
   nam <- names(opts)
-  if(any(nam %!in% c("nthreads", "na.rm", "sort"))) stop("Currently only supports options 'nthreads', 'na.rm' and 'sort'")
+  ckmatch(nam, c("nthreads", "na.rm", "sort", "mask", "remove"), e = "Unknown option:")
   if(length(opts$nthreads)) {
     nthreads <- as.integer(opts$nthreads)
     if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
@@ -20,8 +20,28 @@ set_collapse <- function(...) {
     if(is.na(sort)) stop("sort needs to be TRUE or FALSE")
     .op$sort <- sort
   }
+  if(any(nam == "mask") || length(opts$remove)) { # mask can be NULL, remove cannot be changed
+    clpns <- getNamespace("collapse")
+    .Call(C_unlock_collapse_namespace, clpns)
+    if(any(nam == "mask") && (length(op_old$mask) || is.null(opts$mask))) do_collapse_unmask(clpns)
+    if(length(opts$mask)) {
+      do_collapse_mask(clpns, opts$mask)
+      .op$mask <- opts$mask
+    }
+    if(length(opts$remove)) {
+      do_collapse_remove(clpns, opts$remove, fully = FALSE)
+      .op$remove <- opts$remove
+    }
+    lockEnvironment(clpns, bindings = TRUE)
+    if(anyv(search(), "package:collapse")) {
+      detach("package:collapse")
+      attachNamespace(clpns)
+    }
+  }
   invisible(op_old)
 }
+
+
 
 get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(length(opts) == 1L) .op[[opts]] else `names<-`(lapply(opts, function(x) .op[[x]]), opts)
 
