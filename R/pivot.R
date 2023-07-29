@@ -128,6 +128,7 @@ pivot <- function(data,
                   na.rm = FALSE,
                   factor = c("names", "labels"),
                   check.dups = FALSE,
+                  nthreads = .op[["nthreads"]],
                   fill = NULL, # Fill is for pivot_wider
                   drop = TRUE, # Same as with dcast()
                   sort = FALSE, # c("ids", "names")
@@ -273,7 +274,7 @@ pivot <- function(data,
           #           " rows. This means you have on average ", round(fnrow(data)/ng, 1), " duplicates per id-name-combination. If how = 'wider', pivot() will take the last of those duplicates in first-appearance-order. Consider aggregating your data e.g. using collap() before applying pivot().")
 
           # With 10 million obs, 1 million id groups (g), and 100 names groups, this is 2x faster than the fnunique() option + could multithread
-          ndg <- fndistinct.default(g, names_g, use.g.names = FALSE, na.rm = FALSE)
+          ndg <- fndistinct.default(g, names_g, use.g.names = FALSE, na.rm = FALSE, nthreads = nthreads)
           attributes(ndg) <- NULL
           if(!identical(ndg, names_g[[3L]])) {
             ng <- fsumC(ndg, narm = FALSE)
@@ -285,13 +286,13 @@ pivot <- function(data,
         if(length(values) > 1L) { # Multiple columns, as in dcast... TODO: check pivot_wider
           namv <- names(data)[values]
           attributes(data) <- NULL
-          value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill))
+          value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads))
           if(length(labels)) value_cols <- lapply(value_cols, `vlabels<-`, value = labels)
           value_cols <- unlist(if(transpose[1L]) t_list2(value_cols) else value_cols, FALSE, FALSE)
           namv_res <- if(transpose[2L]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
           names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)
         } else {
-          value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill)
+          value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill, nthreads)
           names(value_cols) <- names
           if(length(labels)) vlabels(value_cols) <- labels
         }
@@ -349,7 +350,7 @@ pivot <- function(data,
 
         # (4) Optional duplicates check...
         if(check.dups) {
-          ndg <- fndistinct.default(g, names_g, use.g.names = FALSE, na.rm = FALSE)
+          ndg <- fndistinct.default(g, names_g, use.g.names = FALSE, na.rm = FALSE, nthreads = nthreads)
           attributes(ndg) <- NULL
           if(!identical(ndg, names_g[[3L]])) {
             ng <- fsumC(ndg, narm = FALSE)
@@ -365,7 +366,7 @@ pivot <- function(data,
           namv <- names(vd)
           attributes(vd) <- NULL
         }
-        value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill))
+        value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads))
         id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols)), FALSE, FALSE, NULL)
         value_cols <- .Call(C_rbindlist, value_cols, FALSE, FALSE, names[[2L]]) # Final column is "variable" name
 

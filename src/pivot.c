@@ -134,7 +134,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
 }
 
 // TODO: How to check for duplicate rows?
-SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill) {
+SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads) {
 
   SEXP sym_ng = install("N.groups");
   const int *restrict pix = INTEGER_RO(index), *restrict pid = INTEGER_RO(id), l = length(index),
@@ -143,6 +143,10 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill) {
   if(l != length(id)) error("Internal error: length(index) must match length(id)");
   if(l != length(column)) error("Internal error: length(index) must match length(column)");
   if(nr < 1 || nc < 1) error("Resulting data frame after pivoting needs to have at least one row and column");
+
+  int nthreads = asInteger(Rnthreads);
+  if(l < 100000) nthreads = 1; // No improvements from multithreading on small data.
+  if(nthreads > max_threads) nthreads = max_threads;
 
   SEXP out = PROTECT(allocVector(VECSXP, nc)), *restrict pout = SEXPPTR(out)-1;
 
@@ -158,36 +162,69 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill) {
   SEXP out1;
   SET_VECTOR_ELT(out, 0, out1 = falloc(fill_val, ScalarInteger(nr), ScalarLogical(1)));
   copyMostAttrib(column, out1); // TODO: Check that this works!!
+  // TODO: can multithread?? -> NOPE!, as expected
   for (int j = 1; j < nc; ++j) SET_VECTOR_ELT(out, j, duplicate(out1));
+
 
   // TODO: SIMD: doesn't vectorize on clang 16. Also multithreading gives no performance improvements..
   switch(tx) {
     case INTSXP:
     case LGLSXP: {
       const int *restrict pc = INTEGER_RO(column);
-      for(int i = 0; i != l; ++i) INTEGER(pout[pid[i]])[pix[i]-1] = pc[i];
+      if(nthreads <= 1) {
+        for(int i = 0; i != l; ++i) INTEGER(pout[pid[i]])[pix[i]-1] = pc[i];
+      } else {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < l; ++i) INTEGER(pout[pid[i]])[pix[i]-1] = pc[i];
+      }
       break;
     }
     case REALSXP: {
       const double *restrict pc = REAL_RO(column);
-      for(int i = 0; i != l; ++i) REAL(pout[pid[i]])[pix[i]-1] = pc[i];
+      if(nthreads <= 1) {
+        for(int i = 0; i < l; ++i) REAL(pout[pid[i]])[pix[i]-1] = pc[i];
+        // // cool idea but not really faster...
+        // double *restrict pout_i = REAL(pout[pid[0]])-1;
+        // for(int i = 0, prev = pid[0]; i != l; ++i) {
+        //   if(pid[i] != prev) pout_i = REAL(pout[pid[i]])-1;
+        //   pout_i[pix[i]] = pc[i];
+        // }
+      } else {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < l; ++i) REAL(pout[pid[i]])[pix[i]-1] = pc[i];
+      }
       break;
     }
     case CPLXSXP: {
       const Rcomplex *restrict pc = COMPLEX_RO(column);
-      for(int i = 0; i != l; ++i) COMPLEX(pout[pid[i]])[pix[i]-1] = pc[i];
+      if(nthreads <= 1) {
+        for(int i = 0; i != l; ++i) COMPLEX(pout[pid[i]])[pix[i]-1] = pc[i];
+      } else {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < l; ++i) COMPLEX(pout[pid[i]])[pix[i]-1] = pc[i];
+      }
       break;
     }
     case RAWSXP: {
       const Rbyte *restrict pc = RAW_RO(column);
-      for(int i = 0; i != l; ++i) RAW(pout[pid[i]])[pix[i]-1] = pc[i];
+      if(nthreads <= 1) {
+        for(int i = 0; i != l; ++i) RAW(pout[pid[i]])[pix[i]-1] = pc[i];
+      } else {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < l; ++i) RAW(pout[pid[i]])[pix[i]-1] = pc[i];
+      }
       break;
     }
     case STRSXP:
     case VECSXP:
     case EXPRSXP: {
       const SEXP *restrict pc = SEXPPTR_RO(column);
-      for(int i = 0; i != l; ++i) SEXPPTR(pout[pid[i]])[pix[i]-1] = pc[i];
+      if(nthreads <= 1 || tx != STRSXP) {
+        for(int i = 0; i != l; ++i) SEXPPTR(pout[pid[i]])[pix[i]-1] = pc[i];
+      } else {
+        #pragma omp parallel for num_threads(nthreads)
+        for(int i = 0; i < l; ++i) SEXPPTR(pout[pid[i]])[pix[i]-1] = pc[i];
+      }
       break;
     }
     default: error("Unsupported SEXP type: '%s'", type2char(tx));
