@@ -192,8 +192,8 @@ GRPN <- function(x, expand = TRUE, ...) {
   if(expand) .Call(C_subsetVector, g$group.sizes, g$group.id, FALSE) else g$group.sizes
 }
 
-# Only for masking if collapse_mask = "all"
-n <- function(x, g, TRA, ...) {
+# dplyr-style n(): only for masking if collapse_mask = "all"
+n_internal <- function(x, g, TRA, ...) {
   if(missing(g)) {
     if(missing(x)) stop("if data is not grouped need to call n() on a column")
     return(if(is.list(x)) fnrow(x) else length(x))
