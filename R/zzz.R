@@ -2,7 +2,7 @@
 do_collapse_mask <- function(clpns, mask) {
   if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
   # This ensures that you can pass functions with or without f- prefix to the option
-  mask_ffunl <- mask %!in% c("all", "helper", "manip", "fast-fun", "fast-stat-fun", "fast-trfm-fun", "n", "qtab", "qtable")
+  mask_ffunl <- mask %!in% c("all", "helper", "manip", "fast-fun", "fast-stat-fun", "fast-trfm-fun", "n", "qtab", "qtable", "table")
   if(any(mask_ffunl)) {
     mask_ffun <- mask[mask_ffunl]
     has_f_prefix <- startsWith(mask_ffun, "f")
@@ -39,7 +39,6 @@ do_collapse_mask <- function(clpns, mask) {
       assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, substr(fsetdiff(ftf, c("fhdbetween", "fhdwithin")), 2L, 100L)), envir = clpns)
     }
   }
-  if(!all(m <- mask %in% names(clpns))) stop("Unsupported functions supplied to option 'collapse_mask': ", paste(mask[!m], collapse = ", "))
   unmask_special <- NULL
   # Special Cases / Functions
   if(mask_all || any(mask == "n")) {
@@ -50,12 +49,13 @@ do_collapse_mask <- function(clpns, mask) {
     assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, "n"), envir = clpns)
     assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, "n"), envir = clpns)
   }
-  if(mask_all || any(mask %in% c("qtab", "qtable"))) {
+  if(mask_all || any(mask %in% c("qtab", "qtable", "table"))) {
     assign("table", clpns[["qtab"]], envir = clpns)
     unmask_special <- c(unmask_special, "table")
-    mask <- mask[!mask %in% c("qtab", "qtable")]
+    mask <- mask[!mask %in% c("qtab", "qtable", "table")]
   }
-  if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f', except for 'n' and 'qtab'. You supplied: ", paste(mask[!m], collapse = ", "))
+  if(!all(m <- mask %in% names(clpns))) stop("Unsupported functions supplied to option 'collapse_mask': ", paste(mask[!m], collapse = ", "))
+  if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f', except for 'n' and 'qtab'/'table'. You supplied: ", paste(mask[!m], collapse = ", "))
   # This now creates the additional functions (does the masking)
   unmask <- substr(mask, 2L, 100L)
   for(i in seq_along(mask)) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
