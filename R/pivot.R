@@ -93,7 +93,6 @@ melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
   res
 }
 
-# TODO: multiple pivots
 # TODO: Think about: values could be list input, names only atomic. that would make more sense...
 # Or: allow for both options... needs to be consistent with "labels" though...
 
@@ -134,18 +133,17 @@ pivot <- function(data,
                   transpose = FALSE) # c(columns = FALSE, names = FALSE))
 {
 
-    if(!is.list(data)) stop("pivot only supports data.frame-like objects")
-    ad <- attributes(data)
-    oldClass(data) <- NULL
-    nam <- names(data)
-    if(length(ids)) ids <- cols2int(ids, data, nam)
-    if(length(values)) values <- cols2int(values, data, nam)
-    factor <- c("names", "labels") %in% factor
-    how <- switch(how, l = , longer = 1L, w = , wider = 2L, r = , recast = 3L,
-                  stop("Unknown pivoting method: ", how))
+  if(!is.list(data)) stop("pivot only supports data.frame-like objects")
+  ad <- attributes(data)
+  oldClass(data) <- NULL
+  nam <- names(data)
+  if(length(ids)) ids <- cols2int(ids, data, nam)
+  if(length(values)) values <- cols2int(values, data, nam)
+  factor <- c("names", "labels") %in% factor
+  how <- switch(how, l = , longer = 1L, w = , wider = 2L, r = , recast = 3L,
+                stop("Unknown pivoting method: ", how))
 
-    # TODO: multiple output columns
-  if(how == 1L) {
+  if(how == 1L) { # TODO: multiple output columns
         names <- proc_names_longer(names)
         if(is.null(ids) && is.null(values)) res <- melt_all(if(is.null(values)) data else data[values],
                                   names, factor, na.rm, labels, check.dups)
@@ -309,6 +307,9 @@ pivot <- function(data,
         # -> initial benchmarks show that this is also definitely faster than recast from long frame...
         # but presumably because grouping is much faster. If an id is constructed we don't need to group a long frame though...
 
+        # TODO: multiple recast?? -> I think in such cases it would be justifyable to call pivot() 2 times,
+        # the syntax with recast could become very complicated
+
         # (1) Preprocessing Arguments
         names <- proc_names_recast(names, data) # List of 2 elements...
         names1 <- names[[1L]]
@@ -410,14 +411,13 @@ pivot <- function(data,
         }
 
         res <- if(length(id_cols)) c(id_cols, value_cols) else value_cols
-
       }
     }
 
-    if(is.null(ad)) return(res) # Redundant ??
-    if(any(ad$class == "data.frame")) ad$row.names <- .set_row_names(fnrow(res))
-    ad$names <- names(res)
-    .Call(C_setattributes, res, ad)
-    if(any(ad$class == "data.table")) return(alc(res))
-    return(res)
+  if(is.null(ad)) return(res) # Redundant ??
+  if(any(ad$class == "data.frame")) ad$row.names <- .set_row_names(fnrow(res))
+  ad$names <- names(res)
+  .Call(C_setattributes, res, ad)
+  if(any(ad$class == "data.table")) return(alc(res))
+  return(res)
 }
