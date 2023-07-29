@@ -18,6 +18,7 @@ pivot(data,               # Summary of Documentation:
       factor = c("names", "labels"), # create new id col(s) as factor variable(s)?
       check.dups = FALSE, # detect duplicate 'ids'+'names' combinations
       # Options below only apply if how = "wider" or "recast":
+      nthreads = .op[["nthreads"]], # minor gains as grouping remains serial
       fill = NULL,        # value to insert for unbalanced data (default NA/NULL)
       drop = TRUE,        # drop unused levels (=columns) if 'names' is factor
       sort = FALSE,       # "ids": sort 'ids' and/or "names": alphabetic casting
@@ -59,6 +60,9 @@ character. Whether to generate new 'names' and/or 'labels' columns as factor var
   \item{check.dups}{
 logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading efectively to the last value being chosen i.e. the data is aggregated using the last value. See Details.
 }
+\item{nthreads}{
+  integer. if \code{how = "wider"|"recast"}: number of threads to use with OpenMP (default \code{get_collapse("nthreads")}, initialized to 1). Only the distribution of values to columns with \code{how = "wider"|"recast"} is multithreaded here. Since grouping id columns on a long data frame is expensive and serial, the gains are minor. With \code{how = "long"}, multithreading does not make much sense as the most expensive operation is allocating the long results vectors. The rest is a couple of \code{memset()}'s in C to copy the values, which are super efficient.
+}
   \item{fill}{if \code{how = "wider"|"recast"}: value to insert for 'ids'-'names' combinations not present in the long format. \code{NULL} uses \code{NA} for atomic vectors and \code{NULL} for lists.
 }
   \item{drop}{
@@ -78,20 +82,15 @@ Pivot wider essentially works as follows: compute \code{g_rows = group(ids)} and
 \value{
 A reshaped data frame with the same class and attributes (except for 'names'/'row-names') as the input frame.
 }
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
+
 \note{
-Leaving either 'ids' or 'values' empty will assign all other columns (except for "variable" if how = "wider"|"recast") to the non-specified argument. It is also possible to leave both empty, e.g. for complete melting/casting or data transposition if how = "recast" (similar to \code{data.table::transpose} but supporting multiple names columns and variable labels).
+Leaving either 'ids' or 'values' empty will assign all other columns (except for \code{"variable"} if \code{how = "wider"|"recast"}) to the non-specified argument. It is also possible to leave both empty, e.g. for complete melting if \code{how = "wider"} or data transposition if \code{how = "recast"} (similar to \code{data.table::transpose} but supporting multiple names columns and variable labels). See Examples.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{collap}}, \code{\link{rowbind}}, \code{\link{unlist2d}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 # -------------------------------- PIVOT LONGER ---------------------------------
