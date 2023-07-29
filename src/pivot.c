@@ -166,7 +166,7 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads) {
   for (int j = 1; j < nc; ++j) SET_VECTOR_ELT(out, j, duplicate(out1));
 
 
-  // TODO: SIMD: doesn't vectorize on clang 16. Also multithreading gives no performance improvements..
+  // TODO: SIMD: doesn't vectorize on clang 16. Also multithreading gives only minor performance improvements..
   switch(tx) {
     case INTSXP:
     case LGLSXP: {
