@@ -22,7 +22,7 @@ pivot(data,               # Summary of Documentation:
       drop = TRUE,        # drop unused levels (=columns) if 'names' is factor
       sort = FALSE,       # "ids": sort 'ids' and/or "names": alphabetic casting
       # This only applies when casting multiple long columns ('values')
-      transpose = FALSE   # "cols": applies t_list() before flattening, and/or
+      transpose = FALSE   # "columns": applies t_list() before flattening, and/or
 )                         # "names": sets names nami_colj. default: colj_nami
 }
 %- maybe also 'usage' for other objects documented here.
@@ -68,7 +68,7 @@ logical. if \code{how = "wider"|"recast"} and 'names' is a single factor variabl
   if \code{how = "wider"|"recast"}: specifying \code{"ids"} applies ordered grouping on the id-columns, returning data sorted by ids. Specifying \code{"names"} sorts the names before casting (unless 'names' is a factor), yielding columns cast in alphabetic order. Both options can be passed as a character vector, or, alternatively, \code{TRUE} can be used to enable both.
 }
 \item{transpose}{
-  if \code{how = "wider"|"recast"} and multiple columns are selected through 'values': specifying \code{"cols"} applies \code{\link{t_list}} to the result before flattening, resulting in a different column order. Specifying \code{"names"} generates names of the form nami_colj, instead of colj_nami. Both options can be passed as a character vector, or, alternatively, \code{TRUE} can be used to enable both.
+  if \code{how = "wider"|"recast"} and multiple columns are selected through 'values': specifying \code{"columns"} applies \code{\link{t_list}} to the result before flattening, resulting in a different column order. Specifying \code{"names"} generates names of the form nami_colj, instead of colj_nami. Both options can be passed as a character vector, or, alternatively, \code{TRUE} can be used to enable both.
 }
 
 }
@@ -98,10 +98,14 @@ Leaving either 'ids' or 'values' empty will assign all other columns (except for
 # Simple Melting (Reshaping Long)
 pivot(mtcars) |> head()
 pivot(iris, "Species") |> head()
+pivot(iris, values = 1:4) |> head() # Same thing
+
+# Using collapse's datasets
+head(wlddev)
 pivot(wlddev, 1:8, na.rm = TRUE) |> head()
 pivot(wlddev, c("iso3c", "year"), c("PCGDP", "LIFEEX"), na.rm = TRUE) |> head()
-pivot(GGDC10S, 1:5, names = list("sector", "value"), na.rm = TRUE) |> head()
-# Or:
+head(GGDC10S)
+pivot(GGDC10S, 1:5, names = list("sector", "value"), na.rm = TRUE) |> head() # Or:
 pivot(GGDC10S, 1:5, names = list(variable = "sector"), na.rm = TRUE) |> head()
 
 # Melting including saving labels
@@ -110,7 +114,7 @@ pivot(GGDC10S, 1:5, na.rm = TRUE, labels = "description") |> head()
 
 # Also assigning new labels
 pivot(GGDC10S, 1:5, na.rm = TRUE, labels = list("description",
-      c("Sector Code", "Sector Description", "Value")) |> namlab()
+      c("Sector Code", "Sector Description", "Value"))) |> namlab()
 
 # Can leave out value column by providing names
 pivot(GGDC10S, 1:5, na.rm = TRUE, labels = list("description",
@@ -125,6 +129,51 @@ pivot(GGDC10S, 1:5, na.rm = TRUE,
                             value = "Employment or Value Added"))) |> namlab()
 
 # -------------------------------- PIVOT WIDER ---------------------------------
+iris_long <- pivot(iris, "Species") # Getting a long frame
+head(iris_long)
+# If 'names'/'values' not supplied, searches for 'variable' and 'value' columns
+pivot(iris_long, how = "wider")
+# But here the records are not identified by 'Species': thus aggregation with last value:
+pivot(iris_long, how = "wider", check = TRUE) # issues a warning
+rm(iris_long)
+
+# This works better, these two are inverse operations
+wlddev |> pivot(1:8) |> pivot(how = "w") |> head()
+# ...but not perfect, we loose labels
+namlab(wlddev)
+wlddev |> pivot(1:8) |> pivot(how = "w") |> namlab()
+# But pivot() supports labels: these are perfect inverse operations
+wlddev |> pivot(1:8, labels = "label") |> print(max = 50) |> # Notice the "label" column
+    pivot(how = "w", labels = "label") |> namlab()
+
+# If the data does not have 'variable'/'value' cols: need to specify 'names'/'values'
+# Using a single column:
+pivot(GGDC10S, c("Country", "Year"), "SUM", "Variable", how = "w") |> head()
+SUM_wide <- pivot(GGDC10S, c("Country", "Year"), "SUM", "Variable", how = "w", na.rm = TRUE)
+head(SUM_wide) # na.rm = TRUE here removes all new rows completely missing data
+tail(SUM_wide) # But there may still be NA's, notice the NA in the final row
+# We could use fill to set another value
+pivot(GGDC10S, c("Country", "Year"), "SUM", "Variable", how = "w",
+      na.rm = TRUE, fill = -9999) |> tail()
+# This will keep the label of "SUM", unless we supply a column with new labels
+namlab(SUM_wide)
+# Such a column is not available here, but we could use "Variable" twice
+pivot(GGDC10S, c("Country", "Year"), "SUM", "Variable", "Variable", how = "w", na.rm = TRUE) |> namlab()
+# Alternatively, can of course relabel ex-post
+SUM_wide |> relabel(VA = "Value Added", EMP = "Employment") |> namlab()
+rm(SUM_wide)
+
+# Multiple-column pivots
+pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "w", na.rm = TRUE) |> head()
+# Here we may prefer a transposed column order
+pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "w",
+      na.rm = TRUE, transpose = "columns") |> head()
+# Can also flip the order of names (independently of columns)
+pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "w",
+      na.rm = TRUE, transpose = "names") |> head()
+# Can also enable both (complete transposition)
+pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "w",
+      na.rm = TRUE, transpose = TRUE) |> head() # or tranpose = c("columns", "names")
 
 # -------------------------------- PIVOT RECAST ---------------------------------
 
