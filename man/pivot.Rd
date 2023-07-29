@@ -17,11 +17,11 @@ pivot(data,               # Summary of Documentation:
       na.rm = FALSE,      # remove rows missing 'values' in reshaped data
       factor = c("names", "labels"), # create new id col(s) as factor variable(s)?
       check.dups = FALSE, # detect duplicate 'ids'+'names' combinations
-      # Options below only apply if how = "wider" or "recast"
+      # Options below only apply if how = "wider" or "recast":
       fill = NULL,        # value to insert for unbalanced data (default NA/NULL)
       drop = TRUE,        # drop unused levels (=columns) if 'names' is factor
       sort = FALSE,       # "ids": sort 'ids' and/or "names": alphabetic casting
-      # This only applies when casting multiple long columns ('values')
+      # Only applies if how = "wider" with multiple long columns ('values'):
       transpose = FALSE   # "columns": applies t_list() before flattening, and/or
 )                         # "names": sets names nami_colj. default: colj_nami
 }
@@ -105,8 +105,9 @@ head(wlddev)
 pivot(wlddev, 1:8, na.rm = TRUE) |> head()
 pivot(wlddev, c("iso3c", "year"), c("PCGDP", "LIFEEX"), na.rm = TRUE) |> head()
 head(GGDC10S)
-pivot(GGDC10S, 1:5, names = list("sector", "value"), na.rm = TRUE) |> head() # Or:
-pivot(GGDC10S, 1:5, names = list(variable = "sector"), na.rm = TRUE) |> head()
+pivot(GGDC10S, 1:5, names = list("Sectorcode", "Value"), na.rm = TRUE) |> head()
+# Can also set by name: variable and/or value. Note that 'value' here remains lowercase
+pivot(GGDC10S, 1:5, names = list(variable = "Sectorcode"), na.rm = TRUE) |> head()
 
 # Melting including saving labels
 pivot(GGDC10S, 1:5, na.rm = TRUE, labels = TRUE) |> head()
@@ -114,19 +115,21 @@ pivot(GGDC10S, 1:5, na.rm = TRUE, labels = "description") |> head()
 
 # Also assigning new labels
 pivot(GGDC10S, 1:5, na.rm = TRUE, labels = list("description",
-      c("Sector Code", "Sector Description", "Value"))) |> namlab()
+            c("Sector Code", "Sector Description", "Value"))) |> namlab()
 
-# Can leave out value column by providing names
+# Can leave out value column by providing named vector of labels
 pivot(GGDC10S, 1:5, na.rm = TRUE, labels = list("description",
-      c(variable = "Sector Code", description = "Sector Description"))) |> namlab()
+          c(variable = "Sector Code", description = "Sector Description"))) |> namlab()
 
-# This is how I would do it (full code example)
-pivot(GGDC10S, 1:5, na.rm = TRUE,
-      names = list(variable = "sector_code"),
-      labels = list(name = "sector_description",
-                    new = c(sector_code = "GGDC10S Sector Code",
-                            sector_description = "Long Sector Description",
-                            value = "Employment or Value Added"))) |> namlab()
+# Now here is a nice final example that is explicit and respects the dataset naming convention
+pivot(GGDC10S, ids = 1:5, na.rm = TRUE,
+      names = list(variable = "Sectorcode",
+                   value = "Value"),
+      labels = list(name = "Sector",
+                    new = c(Sectorcode = "GGDC10S Sector Code",
+                            Sector = "Long Sector Description",
+                            Value = "Employment or Value Added"))) |>
+  namlab(N = TRUE, Nd = TRUE, class = TRUE)
 
 # -------------------------------- PIVOT WIDER ---------------------------------
 iris_long <- pivot(iris, "Species") # Getting a long frame
@@ -144,7 +147,7 @@ namlab(wlddev)
 wlddev |> pivot(1:8) |> pivot(how = "w") |> namlab()
 # But pivot() supports labels: these are perfect inverse operations
 wlddev |> pivot(1:8, labels = "label") |> print(max = 50) |> # Notice the "label" column
-    pivot(how = "w", labels = "label") |> namlab()
+  pivot(how = "w", labels = "label") |> namlab()
 
 # If the data does not have 'variable'/'value' cols: need to specify 'names'/'values'
 # Using a single column:
@@ -175,18 +178,44 @@ pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "
 pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "w",
       na.rm = TRUE, transpose = TRUE) |> head() # or tranpose = c("columns", "names")
 
+# Finally, here is a nice, simple way to reshape the entire dataset.
+pivot(GGDC10S, values = 6:16, names = "Variable", na.rm = TRUE, how = "w") |>
+  namlab(N = TRUE, Nd = TRUE, class = TRUE)
+
 # -------------------------------- PIVOT RECAST ---------------------------------
-
-pivot(GGDC10S, values = 6:16, names = list("Variable", "Sector"), how = "r")
-# Same Thing
-pivot(GGDC10S, .c(Country, Regioncode, Region, Year), names = list("Variable", "Sector"), how = "r")
-
+# Look at the data again
+head(GGDC10S)
+# Let's stack the sectors and instead create variable columns
+pivot(GGDC10S, .c(Country, Regioncode, Region, Year),
+      names = list("Variable", "Sectorcode"), how = "r") |> head()
+# Same thing (a bit easier)
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"), how = "r") |> head()
 # Removing missing values
-pivot(GGDC10S, values = 6:16, names = list("Variable", "Sector"), how = "r", na.rm = TRUE)
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"), how = "r", na.rm = TRUE) |> head()
+# Saving Labels
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"),
+      labels = list(to = "Sector"), how = "r", na.rm = TRUE) |> head()
 
-# Labels
-pivot(GGDC10S, values = 6:16, names = list("Variable", "Sector"), labels = list(to = "sector_desc"), how = "r", na.rm = TRUE)
+# Supplying new labels for generated columns: as complete as it gets
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"),
+      labels = list(to = "Sector",
+                    new = c(Sectorcode = "GGDC10S Sector Code",
+                            Sector = "Long Sector Description",
+                            VA = "Value Added",
+                            EMP = "Employment")), how = "r", na.rm = TRUE) |>
+  namlab(N = TRUE, Nd = TRUE, class = TRUE)
 
+# Now another (slightly unconventional) use case here is data transposition
+# Let's get the data for Botswana
+BWA <- GGDC10S |> fsubset(Country == "BWA", Variable, Year, AGR:SUM)
+head(BWA)
+# By supplying no ids or values, we are simply requesting a transpose operation
+pivot(BWA, names = list(from = c("Variable", "Year"), to = "Sectorcode"), how = "r")
+# Same with labels
+pivot(BWA, names = list(from = c("Variable", "Year"), to = "Sectorcode"), labels = list(to = "Sector"), how = "r")
+# For simple cases, data.table::transpose() will be more efficient, but with multiple columns to generate names
+# and/or variable labels to be saved/assigned, pivot() is handy
+rm(BWA)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
