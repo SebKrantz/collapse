@@ -1,8 +1,27 @@
 # collapse 1.9.6.9000
 
-* Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
+### Potentially breaking changes
+
+* In a grouped setting, if `.data` is used inside `fsummarise()` and `fmutate()`, and `.cols = NULL`, `.data` will contain all columns except for grouping columns (in-line with the `.SD` syntax of *data.table*). Before, `.data` contained all columns. The selection in `.cols` still refers to all columns, thus it is still possible to select all columns using e.g. `grouped_data %>% fsummarise(some_expression_involving(.data), .cols = seq_col(.))`. 
+
+### Bug Fixes
 
 * Fixed a bug in the integer methods of `fsum()`, `fmean()` and `fprod()` that returned `NA` if and only if there was a single integer followed by `NA`'s e.g `fsum(c(1L, NA, NA))` erroneously gave `NA`. This was caused by a C-level shortcut that returned `NA` when the first element of the vector had been reached (moving from back to front) without encountering any non-NA-values. The bug consisted in the content of the first element not being evaluated in this case. Note that this bug did not occur with real numbers, and also not in grouped execution. Thanks @blset for reporting (#432).   
+
+### Additions
+
+* Added `pivot()`: fast and easy data reshaping! It supports longer, wider and recast pivoting, including multi-column pivots and handling of variable labels, through a uniform and parsimonious API. It does not perform data aggregation, and by default does not check if the data is uniquely identified by the supplied ids. Underidentification for 'wide' and 'recast' pivots results in the last value being taken within each group. Users can toggle a duplicates check by setting `check.dups = TRUE`. 
+
+* Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
+
+### Improvements
+
+* `set_collapse()` now also supports option 'mask' (and functions can also be supplied without the f-prefix). This means that base R or *dplyr* functions can be masked into the faster *collapse* versions even after *collapse* is attached. E.g. `library(collapse); set_collapse(mask = "unique")` (or, equivalently, `set_collapse(mask = "funique")`) will create `unique <- funique` in the *collapse* namespace, export `unique()` from the namespace, and detach and attach the namespace again so R can find it. The re-attaching also ensures that *collapse* comes right after the global environment, implying that all it's functions will take priority over any other libraries. Users can use `fastverse::fastverse_conflicts()` to check which functions are masked after using `set_collapse(mask = ...)`. The option can be changed at any time. Using `set_collapse(mask = NULL)` removes all masked functions from the namespace, and can also be called to ensure *collapse* is at the top of the search path i.e. takes precedence over other packages.  
+
+* `set_collapse()` now also supports removing arbitrary exported functions/objects from the *collapse* namespace. E.g. `set_collapse(remove = "D")` will remove the difference operator `D()`, which also exists in *stats* to calculate symbolic and algorithmic derivatives (this is a convenient example but not necessary since `collapse::D` is S3 generic and will call `stats::D()` on R calls, expressions or names). This can also be done before loading the package through `options(collapse_remove = ...)` e.g. via an `.Rprofile` or `.fastverse` configuration file, but this possibility is *dangerous* because you can also remove essential *collapse* functions such as `GRP()` which will cause *collapse* to stop working. Using `set_collapse(remove = ...)` is safe as it only modifies which objects are exported from the namespace once the package is already loaded. **Note** that this option (set using either `set_collapse()` or `options()`) is **non-reversible**, you need to unload *collapse* using `detach("package:collapse", unload = TRUE)` and load it again. 
+
+* `as_factor_GRP()` and `finteraction()` now have an argument `sep = "."` denoting the separator used for compound factor labels.
+
 
 # collapse 1.9.6
 
