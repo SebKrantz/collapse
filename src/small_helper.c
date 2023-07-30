@@ -564,11 +564,12 @@ SEXP fnrowC(SEXP x) {
 #define CLP_UNLOCK_FRAME(e) SET_ENVFLAGS(e, ENVFLAGS(e) & (~CLP_FRAME_LOCK_MASK))
 
 SEXP unlock_collapse_namespace(SEXP env) {
-  if(TYPEOF(env) != ENVSXP) error("Unsupported object passed to C_unlock_environemt: %s", type2char(TYPEOF(env)));
+  if(TYPEOF(env) != ENVSXP) error("Unsupported object passed to C_unlock_collapse_namespace: %s", type2char(TYPEOF(env)));
   CLP_UNLOCK_FRAME(env);
   R_unLockBinding(install(".FAST_STAT_FUN_EXT"), env);
   R_unLockBinding(install(".FAST_STAT_FUN_POLD"), env);
   R_unLockBinding(install(".FAST_FUN_MOPS"), env);
+  R_unLockBinding(install(".COLLAPSE_ALL_EXPORTS"), env);
   return CLP_FRAME_IS_LOCKED(env) == 0 ? ScalarLogical(1) : ScalarLogical(0);
 }
 

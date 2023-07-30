@@ -59,26 +59,50 @@ do_collapse_mask <- function(clpns, mask) {
   # This now creates the additional functions (does the masking)
   unmask <- substr(mask, 2L, 100L)
   for(i in seq_along(mask)) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
-  namespaceExport(clpns, c(unmask, unmask_special))
+  # Internals of namespaceExport(clpns, c(unmask, unmask_special)):
+  export_names <- c(unmask, unmask_special)
+  names(export_names) <- export_names
+  list2env(as.list(export_names), .getNamespaceInfo(clpns, "exports"))
 }
 
-do_collapse_remove <- function(clpns, rmfuns, check = TRUE, fully = TRUE) { # check = FALSE in .onLoad, because exports not defined yet
-  exports <- .getNamespaceInfo(clpns, "exports")
-  if(check) ckmatch(rmfuns, names(exports), e = "Unknown functions to be removed:")
-  if(any(tmp <- .FAST_STAT_FUN_EXT %in% rmfuns)) assign(".FAST_STAT_FUN_EXT", .FAST_STAT_FUN_EXT[!tmp], envir = clpns)
-  if(any(tmp <- .FAST_STAT_FUN_POLD %in% rmfuns)) assign(".FAST_STAT_FUN_POLD", .FAST_STAT_FUN_POLD[!tmp], envir = clpns)
-  if(any(tmp <- .FAST_FUN_MOPS %in% rmfuns)) assign(".FAST_FUN_MOPS", .FAST_FUN_MOPS[!tmp], envir = clpns)
-  if(check) remove(list = rmfuns, envir = exports)
-  if(fully) remove(list = rmfuns, envir = clpns)
+do_collapse_remove_core <- function(clpns, rmfun, exports = TRUE, namespace = TRUE) { # exports = FALSE in .onLoad, because exports not defined yet
+  if(exports) {
+    clpns_exports <- .getNamespaceInfo(clpns, "exports")
+    ckmatch(rmfun, names(clpns_exports), e = "Unknown functions to be removed:")
+  }
+  if(any(tmp <- .FAST_STAT_FUN_EXT %in% rmfun)) assign(".FAST_STAT_FUN_EXT", .FAST_STAT_FUN_EXT[!tmp], envir = clpns)
+  if(any(tmp <- .FAST_STAT_FUN_POLD %in% rmfun)) assign(".FAST_STAT_FUN_POLD", .FAST_STAT_FUN_POLD[!tmp], envir = clpns)
+  if(any(tmp <- .FAST_FUN_MOPS %in% rmfun)) assign(".FAST_FUN_MOPS", .FAST_FUN_MOPS[!tmp], envir = clpns)
+  if(exports) remove(list = rmfun, envir = clpns_exports)
+  if(namespace) {
+    assign(".COLLAPSE_ALL_EXPORTS", .COLLAPSE_ALL_EXPORTS[match(.COLLAPSE_ALL_EXPORTS, rmfun, 0L) == 0L], envir = clpns)
+    remove(list = rmfun, envir = clpns)
+  }
+}
+
+do_collapse_remove <- function(clpns, rmfun, ...) {
+  kwd <- c("shorthand", "opertor-fun", "infix-fun", "legacy") %in% rmfun
+  if(kwd[1L]) rmfun <- c(rmfun[rmfun != "shorthand"], .SHORTHANDS)
+  if(kwd[2L]) rmfun <- c(rmfun[rmfun != "opertor-fun"], .OPERATOR_FUN)
+  if(kwd[3L]) rmfun <- c(rmfun[rmfun != "infix-fun"], .COLLAPSE_ALL[startsWith(.COLLAPSE_ALL, "%")])
+  if(kwd[4L]) rmfun <- c(rmfun[rmfun != "legacy"], .LEGACY)
+  do_collapse_remove_core(clpns, unique.default(rmfun), ...)
 }
 
 # Used in set_collapse(), defined in global_macros.R
 do_collapse_unmask <- function(clpns) {
   nam <- getNamespaceExports(clpns)
   ffuns <- nam[startsWith(nam, "f")]
-  rmfuns <- nam[nam %in% substr(ffuns, 2L, 100L)]
-  if(any(ntab <- c("n", "table") %in% nam)) rmfuns <- c(rmfuns, c("n", "table")[ntab])
-  do_collapse_remove(clpns, rmfuns)
+  rmfun <- nam[nam %in% substr(ffuns, 2L, 100L)]
+  if(any(ntab <- c("n", "table") %in% nam)) rmfun <- c(rmfun, c("n", "table")[ntab])
+  do_collapse_remove_core(clpns, rmfun)
+}
+
+do_collapse_restore_exports <- function(clpns) {
+  clpns_exports <- .getNamespaceInfo(clpns, "exports")
+  missing <- fsetdiff(.COLLAPSE_ALL_EXPORTS, names(clpns_exports))
+  names(missing) <- missing
+  list2env(as.list(missing), clpns_exports) # = namespaceExport(clpns, missing)
 }
 
 
@@ -120,7 +144,7 @@ do_collapse_unmask <- function(clpns) {
   }
 
   if(length(mask) && is.character(mask)) do_collapse_mask(clpns, mask)
-  if(length(.op$remove) && is.character(.op$remove)) do_collapse_remove(clpns, .op$remove, check = FALSE)
+  if(length(.op$remove) && is.character(.op$remove)) do_collapse_remove(clpns, .op$remove, exports = FALSE)
 
   if(isTRUE(getOption("collapse_export_F"))) namespaceExport(clpns, "F")
   if(is.null(getOption("collapse_unused_arg_action"))) options(collapse_unused_arg_action = "warning") # error, warning, message or none
