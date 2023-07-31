@@ -25,7 +25,7 @@ get_collapse(opts = NULL)
     \code{sort} \tab\tab logical, default \code{TRUE}. Sets the default for grouping operations to be sorted. This also applies to factor generation using \code{\link{qF}} and tabulation with \code{\link{qtab}}, but excludes other uses of \code{sort} arguments where grouping is not the objective (such as in \code{\link{funique}} or \code{\link{pivot}}). In general, sorted grouping (internally using \code{\link{radixorder}}) is slower than hash-based direct grouping (internally using \code{\link{group}}). However, if data is pre-sorted, sorted grouping is slightly faster. In general, if records don't need to be sorted or you want to maintain their first-appearance order, changing this to \code{FALSE} is recommended and often brings substantial performance gains. \emph{Note} that this also affects internal grouping applied when atomic vectors (except for factors) or lists are passd to \code{g} arguments in \link[=fast-statistical-functions]{Fast Statistical Functions}. \cr\cr\cr\cr
     \code{nthreads} \tab\tab integer, default 1. Sets the default for OpenMP multithreading, available in certain statistical and data manipualtion functions. Setting values greater than 1 is strongly recommended with larger datasets. \cr\cr\cr\cr
 
-    \code{mask} \tab\tab charater, default \code{NULL}. Allows masking existing base R/dplyr functions with faster \emph{collapse} versions, by creating additional functions in the namespace and exporting them - instantly: \cr\cr\tab\tab
+    \code{mask} \tab\tab charater, default \code{NULL}. Allows masking existing base R/dplyr functions with faster \emph{collapse} versions, by creating additional functions in the namespace and instantly exporting them: \cr\cr\tab\tab
 
     For example \code{set_collapse(mask = "unique")} (or, equivalently, \code{set_collapse(mask = "funique")}) will create \code{unique <- funique} in the \emph{collapse} namespace, export \code{unique()}, and silently detach and attach the namespace again so R can find it - all in millisecond. Thus calling \code{unique()} afterwards uses the \emph{collapse} version - which is many times faster. \code{funique} remains available and you can still call \code{base::unique} explicitly. \cr\cr\tab\tab
 
@@ -35,21 +35,21 @@ get_collapse(opts = NULL)
   \itemize{
 \item \code{"manip"} adds data manipulation functions: \code{fsubset, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}.
 \item \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. % fdim not because of infinite recursion
-\item \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See Note.
-\item \code{"fast-stat-fun"} adds the functions contained in the macro: \code{.FAST_STAT_FUN}. See Note.
-\item \code{"fast-trfm-fun"} adds the functions contained in: \code{setdiff(.FAST_FUN, .FAST_STAT_FUN)}. See Note.
+\item \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See also Note.
+\item \code{"fast-stat-fun"} adds the functions contained in the macro: \code{.FAST_STAT_FUN}. See also Note.
+\item \code{"fast-trfm-fun"} adds the functions contained in: \code{setdiff(.FAST_FUN, .FAST_STAT_FUN)}. See also Note.
 \item \code{"all"} turns on all of the above, and also exports \code{n()} and \code{table()}.
 }
 
-The re-attaching of the namespace places \emph{collapse} at the opt of the search path (after the global environment), implying that all it's exported functions will take priority over other libraries. Users can use \code{fastverse::fastverse_conflicts()} to check which functions are masked following \code{set_collapse(mask = ...)}. The option can be changed at any time with immediate effect. Using \code{set_collapse(mask = NULL)} removes all masked functions from the namespace, and can also be called simply to place \emph{collapse} at the top of the search path. \cr\cr\cr\cr\cr\cr
+The re-attaching of the namespace places \emph{collapse} at the opt of the search path (after the global environment), implying that all its exported functions will take priority over other libraries. Users can use \code{fastverse::fastverse_conflicts()} to check which functions are masked following \code{set_collapse(mask = ...)}. The option can be changed at any time with immediate effect. Using \code{set_collapse(mask = NULL)} removes all masked functions from the namespace, and can also be called simply to place \emph{collapse} at the top of the search path. \cr\cr\cr\cr\cr\cr
 
- \code{remove} \tab\tab character, default \code{NULL}. Similar to 'mask': allows removing functions from the exported namespace (they are still in the namespace just no longer exported). All \emph{collapse} functions can be passed here. This argument is always evaluated after 'mask', thus you can also remove masked functions again i.e. after setting a keyword which masks a bunch of functions. There are also a couple of convenience keywords you can specify to bulk-remove certain functions:
+ \code{remove} \tab\tab character, default \code{NULL}. Similar to 'mask': allows removing functions from the exported namespace (they are still in the namespace, just no longer exported). All \emph{collapse} functions can be passed here. This argument is always evaluated after 'mask', thus you can also remove masked functions again i.e. after setting a keyword which masks a bunch of functions. There are also a couple of convenience keywords you can specify to bulk-remove certain functions:
 
   \itemize{
 \item \code{"shorthand"} removes function shorthands: \code{gv, gv<-, av, av<-, nv, nv<-, gvr, gvr<-, itn, ix, slt, slt<-, sbt, gby, iby, mtt, smr, tfm, tfmv, tfm<-, settfm, settfmv, rnm}.
 \item \code{"infix-fun"} removes infix functions: \code{\%!=\%, \%!in\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.
 \item \code{"opertor-fun"} removes functions contained in the macro: \code{.OPERATOR_FUN}.
-\item \code{"old"} removes functions contained in the macro: \code{.COLLAPSE_OLD}.
+\item \code{"old"} removes depreciated functions contained in the macro: \code{.COLLAPSE_OLD}.
 }
 
 Like 'mask', the option is alterable and reversable. Specifying \code{set_collapse(remove = NULL)} restores the exported namespace. Also like 'mask', this option silently detaches and attaches \emph{collapse} again, ensuring that it is at the top of the search path.
@@ -76,7 +76,7 @@ A safe way to set options affecting startup behavior is by using a \code{\link{.
 
 \section{Options Set Using \code{options()}}{
 \itemize{
-\item \code{options("collapse_unused_arg_action")} regulates how generic functions (such as the \link[=fast-statistical-functions]{Fast Statistical Functions}) in the package react when an unknown argument is passed to a method. The default action is \code{"warning"} which issues a warning. Other options are \code{"error"}, \code{"message"} or \code{"none"}, whereby the latter enables silent swallowing of such arguments.
+\item \code{"collapse_unused_arg_action"} regulates how generic functions (such as the \link[=fast-statistical-functions]{Fast Statistical Functions}) in the package react when an unknown argument is passed to a method. The default action is \code{"warning"} which issues a warning. Other options are \code{"error"}, \code{"message"} or \code{"none"}, whereby the latter enables silent swallowing of such arguments.
 
 % \item \code{option("collapse_mask")}
 
@@ -89,12 +89,12 @@ A safe way to set options affecting startup behavior is by using a \code{\link{.
 %Thus for production code I generally recommend not using it, unless you can ensure that the option is always set before any code is run, and that \emph{collapse} is always attached after \emph{dplyr}.
 
 
-\item \code{options("collapse_export_F")}, if set to \code{TRUE}, exports the lead operator \code{F} in the package namespace when loading the package. The operator was exported by default until v1.9.0, but is now hidden inside the package due to too many problems with \code{base::F}. Alternatively, the operator can be accessed using \code{collapse:::F}.
+\item \code{"collapse_export_F"}, if set to \code{TRUE}, exports the lead operator \code{F} in the package namespace when loading the package. The operator was exported by default until v1.9.0, but is now hidden inside the package due to too many problems with \code{base::F}. Alternatively, the operator can be accessed using \code{collapse:::F}.
 
 
 % \item \code{option("collapse_DT_alloccol")} sets how many empty columns \emph{collapse} data manipulation functions like \code{ftransform} allocate when taking a shallow copy of \emph{data.table}'s. The default is \code{100L}. Note that the \emph{data.table} default is \code{getOption("datatable.alloccol") = 1024L}. I chose a lower default because shallow copies are taken by each data manipulation function if you manipulate \emph{data.table}'s with collapse, and the cost increases with the number of overallocated columns. With 100 columns, the cost is 2-5 microseconds per copy.
 
-\item \code{options("collapse_nthreads")}, \code{options("collapse_na.rm")}, \code{options("collapse_sort")}, \code{options("collapse_mask")} and \code{options("collapse_remove")} can be set before loading the package to initialize \emph{collapse} with different defaults in \code{.op} (e.g. using an \code{\link{.Rprofile}} file). Once loaded, these options have no effect, and users need to use \code{set_collapse()} to change them. See also the Note.
+\item \code{"collapse_nthreads"}, \code{"collapse_na.rm"}, \code{"collapse_sort"}, \code{"collapse_mask"} and \code{"collapse_remove"} can be set before loading the package to initialize \code{.op} with different defaults (e.g. using an \code{\link{.Rprofile}} file). Once loaded, these options have no effect, and users need to use \code{set_collapse()} to change them. See also the Note.
 }
 }
 
@@ -138,6 +138,18 @@ set_collapse(
   remove = c("old", "between") # I use data.table::between > fbetween
 )
 }
+
+## Changing what happens with unused arguments
+oldopts <- options(collapse_unused_arg_action = "message") # default is "warning"
+fmean(mtcars$mpg, bla = 1)
+
+# Now nothing happens, same as most base R
+options(collapse_unused_arg_action = "none")
+fmean(mtcars$mpg, bla = 1)
+mean(mtcars$mpg, bla = 1)
+
+options(oldopts)
+rm(oldopts)
 }
 
 \keyword{documentation}
