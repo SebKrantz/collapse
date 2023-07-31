@@ -36,7 +36,7 @@ set_collapse <- function(...) {
     lockEnvironment(clpns, bindings = TRUE)
     if(anyv(search(), "package:collapse")) {
       detach("package:collapse")
-      attachNamespace(clpns)
+      suppressPackageStartupMessages(attachNamespace(clpns))
     }
   }
   invisible(op_old)
