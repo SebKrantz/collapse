@@ -81,11 +81,11 @@ do_collapse_remove_core <- function(clpns, rmfun, exports = TRUE, namespace = TR
 }
 
 do_collapse_remove <- function(clpns, rmfun, ...) {
-  kwd <- c("shorthand", "opertor-fun", "infix-fun", "legacy") %in% rmfun
+  kwd <- c("shorthand", "opertor-fun", "infix-fun", "old") %in% rmfun
   if(kwd[1L]) rmfun <- c(rmfun[rmfun != "shorthand"], .SHORTHANDS)
   if(kwd[2L]) rmfun <- c(rmfun[rmfun != "opertor-fun"], .OPERATOR_FUN)
   if(kwd[3L]) rmfun <- c(rmfun[rmfun != "infix-fun"], .COLLAPSE_ALL[startsWith(.COLLAPSE_ALL, "%")])
-  if(kwd[4L]) rmfun <- c(rmfun[rmfun != "legacy"], .LEGACY)
+  if(kwd[4L]) rmfun <- c(rmfun[rmfun != "old"], .COLLAPSE_OLD)
   do_collapse_remove_core(clpns, unique.default(rmfun), ...)
 }
 

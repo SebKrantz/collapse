@@ -197,9 +197,9 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                  "slt", "slt<-", "sbt", "gby", "iby", "mtt", "smr",
                  "tfm", "tfmv", "tfm<-", "settfm", "settfmv", "rnm")
 
-.LEGACY <- c("fNobs", "fNdistinct", "pwNobs", "fHDwithin", "fHDbetween", "as.factor_GRP", "as.factor_qG",
+.COLLAPSE_OLD <- c("fNobs", "fNdistinct", "pwNobs", "fHDwithin", "fHDbetween", "as.factor_GRP", "as.factor_qG",
              "is.GRP", "is.qG", "is.unlistable", "is.categorical", "is.Date", "as.numeric_factor",
-              "as.character_factor", "Date_vars", "`Date_vars<-`")
+              "as.character_factor", "Date_vars", "Date_vars<-")
 
 .FAST_STAT_FUN_POLD <- c(.FAST_STAT_FUN, "fNobs","fNdistinct", "GRPN", "GRPid") # "n"
 

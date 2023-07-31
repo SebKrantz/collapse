@@ -1,5 +1,6 @@
 \name{collapse-renamed}
 \alias{collapse-renamed}
+\alias{.COLLAPSE_OLD}
 \alias{fNobs}
 \alias{fNobs.default}
 \alias{fNobs.matrix}
