@@ -181,6 +181,18 @@ rsplit(nc, AREA ~ SID74) %>% head(1)
 rsplit(qDF(nc), AREA ~ SID74) %>% head(1)
 ```
 
+To unlist with `unlist2d`, `recusive` must be set to FALSE:
+
+```{r}
+nc_collapse <- nc |> 
+  # split into rowwise list
+  rsplit(seq_len(nrow(nc))) |> 
+  # setting idcols to FALSE for strict equality 
+  unlist2d(idcols = FALSE, recursive = FALSE) |> 
+  copyMostAttrib(nc)
+
+all.equal(nc, nc_collapse)
+```
 
 ## Transformations
 
