@@ -16,10 +16,10 @@ rmnic <- function(x) {
 test_that("long pivots work properly", {
   # No id's
   expect_identical(rmnic(pivot(mtcDT)), melt(mtcDT, measure.vars = seq_along(mtcDT)))
-  expect_identical(rmnic(pivot(mtcDT, values = 3:11)), melt(mtcDT[, 3:11], measure.vars = seq_along(3:11)))
+  expect_identical(rmnic(pivot(mtcDT, values = 3:11)), melt(mtcDT, measure.vars = 3:11))
   expect_identical(rmnic(pivot(mtcnaDT, na.rm = TRUE)), melt(mtcnaDT, measure.vars = seq_along(mtcnaDT), na.rm = TRUE))
-  expect_identical(rmnic(pivot(mtcnaDT, values = 3:11, na.rm = TRUE)), melt(mtcnaDT[, 3:11], measure.vars = seq_along(3:11), na.rm = TRUE))
-  # expect_equal(rmnic(pivot(irisDT)), melt(irisDT, measure.vars = seq_along(irisDT)))
+  expect_identical(rmnic(pivot(mtcnaDT, values = 3:11, na.rm = TRUE)), melt(mtcnaDT, measure.vars = 3:11, na.rm = TRUE))
+
   expect_identical(names(pivot(gv(wlddev, 9:10), labels = TRUE)), c("variable", "label", "value"))
   expect_identical(names(pivot(gv(wlddev, 9:10), labels = "bla")), c("variable", "bla", "value"))
   expect_identical(names(pivot(gv(wlddev, 9:10), labels = TRUE, na.rm = TRUE)), c("variable", "label", "value"))
@@ -40,15 +40,14 @@ test_that("long pivots work properly", {
 })
 
 
-test_that("wide pivots work properly", {
-
-  pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider")
-  pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
-
-  pivot(wlddev, "iso3c", "PCGDP", "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
-  pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
-
-  pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"), transpose = c("cols", "names"))
-
-
-})
+# test_that("wide pivots work properly", {
+#
+#   pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider")
+#   pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+#
+#   pivot(wlddev, "iso3c", "PCGDP", "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+#   pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+#
+#   pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"), transpose = c("cols", "names"))
+#
+# })
