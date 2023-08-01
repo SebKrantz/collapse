@@ -47,8 +47,8 @@ The re-attaching of the namespace places \emph{collapse} at the opt of the searc
 
   \itemize{
 \item \code{"shorthand"} removes function shorthands: \code{gv, gv<-, av, av<-, nv, nv<-, gvr, gvr<-, itn, ix, slt, slt<-, sbt, gby, iby, mtt, smr, tfm, tfmv, tfm<-, settfm, settfmv, rnm}.
-\item \code{"infix-fun"} removes infix functions: \code{\%!=\%, \%!in\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.
-\item \code{"opertor-fun"} removes functions contained in the macro: \code{.OPERATOR_FUN}.
+\item \code{"infix"} removes infix functions: \code{\%!=\%, \%!in\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.
+\item \code{"operator"} removes functions contained in the macro: \code{.OPERATOR_FUN}.
 \item \code{"old"} removes depreciated functions contained in the macro: \code{.COLLAPSE_OLD}.
 }
 
@@ -65,7 +65,7 @@ Like 'mask', the option is alterable and reversable. Specifying \code{set_collap
 \code{set_collapse()} returns the old content of \code{.op} invisibly as a list. \code{get_collapse()}, if called with only one option, returns the value of the option, and otherwise a list.
 }
 \note{
-Setting keywords "fast-fun", "fast-stat-fun" and "fast-trfm-fun" with \code{set_collapse(mask = ...)} will also adjust internal optimization flags, e.g. in \code{\link[=fsummarise]{(f)summarise}} and \code{\link[=fmutate]{(f)mutate}}, so that these functions - and all expressions containing them - receive vectorized execution (see examples of \code{\link[=fsummarise]{(f)summarise}} and \code{\link[=fmutate]{(f)mutate}}). Users should be aware of expressions like \code{fmutate(mu = sum(var) / lenth(var))}: this usually get's executed by groups, but with \code{set_collapse(mask = "sum") (or "all" etc.)}, this will be vectorized (like \code{fmutate(mu = fsum(var) / lenth(var))}) implying grouped sum divided by overall length. In this case \code{fmutate(mu = base::sum(var) / lenth(var))} needs to be specified to retain the original result. Passing individual functions like \code{set_collapse(mask = "(f)mean")} will \bold{not} change internal optimization flags for these functions. This is to ensure consistency. So you still need to specify \code{fmean()} to get vectorized execution.
+Setting keywords "fast-fun", "fast-stat-fun" and "fast-trfm-fun" with \code{set_collapse(mask = ...)} will also adjust internal optimization flags, e.g. in \code{\link[=fsummarise]{(f)summarise}} and \code{\link[=fmutate]{(f)mutate}}, so that these functions - and all expressions containing them - receive vectorized execution (see examples of \code{\link[=fsummarise]{(f)summarise}} and \code{\link[=fmutate]{(f)mutate}}). Users should be aware of expressions like \code{fmutate(mu = sum(var) / lenth(var))}: this usually get's executed by groups, but with \code{set_collapse(mask = "sum") (or "all" etc.)}, this will be vectorized (like \code{fmutate(mu = fsum(var) / lenth(var))}) implying grouped sum divided by overall length. In this case \code{fmutate(mu = base::sum(var) / lenth(var))} needs to be specified to retain the original result. Passing individual functions like \code{set_collapse(mask = "(f)mean")} will \bold{not} change internal optimization flags for these functions, so you still need to specify \code{fmean()} to get vectorized execution. This is to ensure consistency i.e. you can be either all in or all out when it comes to vectorized stats with basic R names.
 
 \emph{Note} also that masking does not change documentation links, so you need to look up the f- version of a function to get the right documentation.
 
@@ -104,7 +104,7 @@ A safe way to set options affecting startup behavior is by using a \code{\link{.
 
 \examples{
 # Setting new values
-oldopts = set_collapse(nthreads = 2, na.rm = FALSE)
+oldopts <- set_collapse(nthreads = 2, na.rm = FALSE)
 
 # Getting the values
 get_collapse()
@@ -140,10 +140,10 @@ set_collapse(
 }
 
 ## Changing what happens with unused arguments
-oldopts <- options(collapse_unused_arg_action = "message") # default is "warning"
+oldopts <- options(collapse_unused_arg_action = "message") # default: "warning"
 fmean(mtcars$mpg, bla = 1)
 
-# Now nothing happens, same as most base R
+# Now nothing happens, same as base R
 options(collapse_unused_arg_action = "none")
 fmean(mtcars$mpg, bla = 1)
 mean(mtcars$mpg, bla = 1)
