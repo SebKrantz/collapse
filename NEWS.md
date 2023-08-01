@@ -29,7 +29,10 @@
 **Note** that this option set using `options()` is **non-reversible**, you need to unload *collapse* using `detach("package:collapse", unload = TRUE)` and load it again. 
 -->
 
+* `qM()` now also has a `row.names.col` argument in the second position allowing generation of rownames when converting data frame-like objects to matrix e.g. `qM(iris, "Species")` or `qM(GGDC10S, 1:5)` (interaction of id's). 
+
 * `as_factor_GRP()` and `finteraction()` now have an argument `sep = "."` denoting the separator used for compound factor labels.
+
 
 
 # collapse 1.9.6

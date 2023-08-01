@@ -146,8 +146,7 @@ qTBL <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = c("tbl_df"
                if(is.atomic(X) && !is.matrix(X)) l1orlst(as.character(substitute(X))) else NULL)
 }
 
-
-qM <- function(X, keep.attr = FALSE, class = NULL) {
+qM <- function(X, row.names.col = NULL, keep.attr = FALSE, class = NULL, sep = ".") {
   if(keep.attr) {
     if(is.atomic(X)) {
       if(length(class)) oldClass(X) <- class
@@ -171,10 +170,17 @@ qM <- function(X, keep.attr = FALSE, class = NULL) {
       return(X)
     }
     ax <- attributes(X)
-    res <- do.call(cbind, X)
-    rn <- ax[["row.names"]]
-    if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1"))
-       dimnames(res) <- list(rn, ax[["names"]])
+    if(length(row.names.col)) {
+      rnc <- cols2int(row.names.col, X, ax[["names"]])
+      res <- do.call(cbind, .subset(X, -rnc))
+      dimnames(res)[[1L]] <- if(length(rnc) == 1L) .subset2(X, rnc) else
+        do.call(paste, c(.subset(X, rnc), list(sep = sep)))
+    } else {
+      res <- do.call(cbind, X)
+      rn <- ax[["row.names"]]
+      if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1"))
+         dimnames(res) <- list(rn, ax[["names"]])
+    }
     if(length(class)) oldClass(res) <- class
     axoth <- names(ax) %!in% c("names", "row.names", "class")
     if(any(axoth)) return(addAttributes(res, ax[axoth]))
@@ -203,11 +209,19 @@ qM <- function(X, keep.attr = FALSE, class = NULL) {
     if(length(class)) oldClass(X) <- class
     return(X)
   }
-  rn <- attr(X, "row.names")
-  res <- do.call(cbind, X)
-  if(is.object(res)) attributes(res) <- attributes(res)[c("dim", "dimnames")] # if X is list of time-series, do.call(cbind, X) creates ts-matrix.
-  if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1"))
-    dimnames(res) <- list(rn, attr(X, "names"))
+  if(length(row.names.col)) {
+    rnc <- cols2int(row.names.col, X, attr(X, "names"))
+    res <- do.call(cbind, .subset(X, -rnc))
+    if(is.object(res)) attributes(res) <- attributes(res)[c("dim", "dimnames")]
+    dimnames(res)[[1L]] <- if(length(rnc) == 1L) .subset2(X, rnc) else
+      do.call(paste, c(.subset(X, rnc), list(sep = sep)))
+  } else {
+    rn <- attr(X, "row.names")
+    res <- do.call(cbind, X)
+    if(is.object(res)) attributes(res) <- attributes(res)[c("dim", "dimnames")] # if X is list of time-series, do.call(cbind, X) creates ts-matrix.
+    if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1"))
+      dimnames(res) <- list(rn, attr(X, "names"))
+  }
   if(length(class)) oldClass(res) <- class
   res
 }
