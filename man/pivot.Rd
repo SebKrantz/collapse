@@ -61,7 +61,7 @@ character. Whether to generate new 'names' and/or 'labels' columns as factor var
 logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading efectively to the last value being chosen i.e. the data is aggregated using the last value. See Details.
 }
 \item{nthreads}{
-  integer. if \code{how = "wider"|"recast"}: number of threads to use with OpenMP (default \code{get_collapse("nthreads")}, initialized to 1). Only the distribution of values to columns with \code{how = "wider"|"recast"} is multithreaded here. Since grouping id columns on a long data frame is expensive and serial, the gains are minor. With \code{how = "long"}, multithreading does not make much sense as the most expensive operation is allocating the long results vectors. The rest is a couple of \code{memset()}'s in C to copy the values, which are super efficient.
+  integer. if \code{how = "wider"|"recast"}: number of threads to use with OpenMP (default \code{get_collapse("nthreads")}, initialized to 1). Only the distribution of values to columns with \code{how = "wider"|"recast"} is multithreaded here. Since grouping id columns on a long data frame is expensive and serial, the gains are minor. With \code{how = "long"}, multithreading does not make much sense as the most expensive operation is allocating the long results vectors. The rest is a couple of \code{memset()}'s in C to copy the values.
 }
   \item{fill}{if \code{how = "wider"|"recast"}: value to insert for 'ids'-'names' combinations not present in the long format. \code{NULL} uses \code{NA} for atomic vectors and \code{NULL} for lists.
 }
@@ -160,13 +160,15 @@ pivot(GGDC10S, c("Country", "Year"), "SUM", "Variable", how = "w",
 # This will keep the label of "SUM", unless we supply a column with new labels
 namlab(SUM_wide)
 # Such a column is not available here, but we could use "Variable" twice
-pivot(GGDC10S, c("Country", "Year"), "SUM", "Variable", "Variable", how = "w", na.rm = TRUE) |> namlab()
+pivot(GGDC10S, c("Country", "Year"), "SUM", "Variable", "Variable", how = "w",
+      na.rm = TRUE) |> namlab()
 # Alternatively, can of course relabel ex-post
 SUM_wide |> relabel(VA = "Value Added", EMP = "Employment") |> namlab()
 rm(SUM_wide)
 
 # Multiple-column pivots
-pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "w", na.rm = TRUE) |> head()
+pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "w",
+      na.rm = TRUE) |> head()
 # Here we may prefer a transposed column order
 pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable", how = "w",
       na.rm = TRUE, transpose = "columns") |> head()
@@ -190,7 +192,8 @@ pivot(GGDC10S, .c(Country, Regioncode, Region, Year),
 # Same thing (a bit easier)
 pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"), how = "r") |> head()
 # Removing missing values
-pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"), how = "r", na.rm = TRUE) |> head()
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"), how = "r",
+      na.rm = TRUE) |> head()
 # Saving Labels
 pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"),
       labels = list(to = "Sector"), how = "r", na.rm = TRUE) |> head()
@@ -211,9 +214,10 @@ head(BWA)
 # By supplying no ids or values, we are simply requesting a transpose operation
 pivot(BWA, names = list(from = c("Variable", "Year"), to = "Sectorcode"), how = "r")
 # Same with labels
-pivot(BWA, names = list(from = c("Variable", "Year"), to = "Sectorcode"), labels = list(to = "Sector"), how = "r")
-# For simple cases, data.table::transpose() will be more efficient, but with multiple columns to generate names
-# and/or variable labels to be saved/assigned, pivot() is handy
+pivot(BWA, names = list(from = c("Variable", "Year"), to = "Sectorcode"),
+      labels = list(to = "Sector"), how = "r")
+# For simple cases, data.table::transpose() will be more efficient, but with multiple
+# columns to generate names and/or variable labels to be saved/assigned, pivot() is handy
 rm(BWA)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

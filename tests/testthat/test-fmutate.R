@@ -429,7 +429,8 @@ test_that("fsummarise and fmutate with arbitrary expressions", {
       fmutate(gmtc, fscale(slt(.data, mpg, wt, hp)), bla = 1, mu = fmean(mpg), su = sum(hp)))
   )
 
-  expect_equal(fmutate(gmtc, acr(mpg:carb, fscale)), fmutate(gmtc, fscale(.data)))
+  expect_equal(fmutate(gmtc, acr(NULL, fscale)), fmutate(gmtc, fscale(.data)))
+  expect_equal(fmutate(gmtc, acr(mpg:carb, fscale)), fmutate(gmtc, fscale(.data), .cols = seq_col(gmtc)))
 
 })
 

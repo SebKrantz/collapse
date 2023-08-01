@@ -29,7 +29,8 @@ get_collapse(opts = NULL)
 
     For example \code{set_collapse(mask = "unique")} (or, equivalently, \code{set_collapse(mask = "funique")}) will create \code{unique <- funique} in the \emph{collapse} namespace, export \code{unique()}, and silently detach and attach the namespace again so R can find it - all in millisecond. Thus calling \code{unique()} afterwards uses the \emph{collapse} version - which is many times faster. \code{funique} remains available and you can still call \code{base::unique} explicitly. \cr\cr\tab\tab
 
-    All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels")) creates \code{subset <- fsubset}, \code{transform <- ftransform} etc.}. Special functions are \code{"n"} and \code{"table"/"qtab"}. The former will create \code{n <- GRPN}, for use in \code{(f)summarise}/\code{(f)mutate}, but without the additional arguments of \code{\link{GRPN}}. The latter masks \code{table <- qtab}. \cr\cr\tab\tab
+    All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels"))} creates \code{subset <- fsubset}, \code{transform <- ftransform} etc.. Special functions are \code{"n"} and \code{"table"/"qtab"}. The former will create \code{n <- GRPN}, for use in \code{(f)summarise}/\code{(f)mutate}, but without the additional arguments of \code{\link{GRPN}}. The latter masks \code{table <- qtab}.
+    \cr\cr\tab\tab
   There are also a couple of convenience keywords that you can use to mask groups of functions:
 
   \itemize{
