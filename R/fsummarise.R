@@ -7,7 +7,8 @@
 
 fFUN_smr_add_groups <- function(z) {
   if(!is.call(z)) return(z)
-  cz <- l1orlst(as.character(z[[1L]])) # needed if collapse::fmean etc..
+  cz <- as.character(z[[1L]])
+  if(length(cz) > 1L) cz <- if(any(cz == "collapse")) cz[length(cz)] else "" # needed if collapse::fmean etc..
   if(any(cz == .FAST_FUN_MOPS)) {
     z$g <- quote(.g_)
     if(any(cz == .FAST_STAT_FUN_POLD)) z$use.g.names <- FALSE
