@@ -1,6 +1,6 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.9.6.9000
+Version: 1.9.6.9500
 Date: 2023-07-20
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
