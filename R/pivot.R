@@ -121,7 +121,7 @@ pivot <- function(data,
                   ids = NULL,
                   values = NULL,
                   names = NULL,   # list is better
-                  labels = NULL,  # todo: should also be list, e.g. for recast problem!!
+                  labels = NULL,
                   how = "longer", # Better to only have one?, because the other arguments use multiple??
                   na.rm = FALSE,
                   factor = c("names", "labels"),
