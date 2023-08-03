@@ -58,7 +58,7 @@ logical. \code{TRUE} will remove missing values such that in the reshaped data t
 character. Whether to generate new 'names' and/or 'labels' columns as factor variables. This is generally recommended as factors are more memory efficient than character vectors and also faster in subsequent filtering and grouping. Internally, this argument is evaluated as \code{factor <- c("names", "labels") \%in\% factor}, so passing anything other than \code{"names"} and/or \code{"labels"} will disable it.
 }
   \item{check.dups}{
-logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading efectively to the last value being chosen i.e. the data is aggregated using the last value. See Details.
+logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading effectively to the last value being chosen i.e. the data is aggregated using the last value. See Details.
 }
 \item{nthreads}{
   integer. if \code{how = "wider"|"recast"}: number of threads to use with OpenMP (default \code{get_collapse("nthreads")}, initialized to 1). Only the distribution of values to columns with \code{how = "wider"|"recast"} is multithreaded here. Since grouping id columns on a long data frame is expensive and serial, the gains are minor. With \code{how = "long"}, multithreading does not make much sense as the most expensive operation is allocating the long results vectors. The rest is a couple of \code{memset()}'s in C to copy the values.

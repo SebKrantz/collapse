@@ -41,7 +41,7 @@ A data frame or (if \code{DT = TRUE}) a \emph{data.table}.
 %%  ~~who you are~~
 % }
 \note{
-For lists of data frames \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist} because \code{unlist2d} is a recursive function. You can use \code{\link{rowbind}} as a failthful alternative to \code{data.table::rbindlist}.
+For lists of data frames \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist} because \code{unlist2d} is a recursive function. You can use \code{\link{rowbind}} as a faithful alternative to \code{data.table::rbindlist}.
 
 The function \code{rrapply::rrapply(l, how = "melt"|"bind")} is a fast alternative (written fully in C) for nested lists of atomic elements.
 }
