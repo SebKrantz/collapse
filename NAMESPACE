@@ -9,6 +9,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
            "setNames", "terms.formula", "ts", "ts.plot", "model.matrix.default",
            "quantile", ".lm.fit", "cov2cor")
 
+ export(pivot)
  export(add_stub)
  export(rm_stub)
  export(all_identical)
@@ -205,6 +206,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(flm)
  export(flm.default)
  export(cinv)
+ export(vec)
  export(HDB)
  export(fhdbetween)
  export(fhdbetween.default)
@@ -406,6 +408,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(.COLLAPSE_ALL)
  export(.COLLAPSE_GENERIC)
  export(.COLLAPSE_DATA)
+ export(.COLLAPSE_OLD)
  export(set_collapse)
  export(get_collapse)
 

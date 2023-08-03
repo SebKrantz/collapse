@@ -27,7 +27,7 @@ Fast, flexible and precise conversion of common data objects, without method dis
  qDF(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame")
  qDT(X, row.names.col = FALSE, keep.attr = FALSE, class = c("data.table", "data.frame"))
 qTBL(X, row.names.col = FALSE, keep.attr = FALSE, class = c("tbl_df","tbl","data.frame"))
-  qM(X,                        keep.attr = FALSE, class = NULL)
+  qM(X, row.names.col = NULL , keep.attr = FALSE, class = NULL, sep = ".")
 
 # Programmer functions: matrix rows or columns to list / DF / DT - fully in C++
 
@@ -43,9 +43,10 @@ as_character_factor(X, keep.attr = TRUE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a vector, factor, matrix, higher-dimensional array, data frame or list. \code{mctl} and \code{mrtl} only accept matrices, \code{as_numeric_factor} and \code{as_character_factor} only accept factors, data frames or lists.}
-  \item{row.names.col}{should a column capturing names or row.names be added? e.g. when converting atomic objects to data frame or data frame to \emph{data.table}. Can be logical \code{TRUE}, which will add a column \code{"row.names"} in front, or can supply a name for the column e.g. \code{"variable"}.}
+  \item{row.names.col}{can be used to add an column saving names or row.names when converting objects to data frame using \code{qDF/qDT/qTBL}. \code{TRUE} will add a column \code{"row.names"}, or you can supply a name e.g. \code{row.names.col = "variable"}. With \code{qM}, the argument has the opposite meaning, and can be used to select one or more columns in a data frame/list which will be used to create the rownames of the matrix e.g. \code{qM(iris, row.names.col = "Species")}. In this case the column(s) can be specified using names, indices, a logical vector or a selector function. See Examples.}
   \item{keep.attr}{logical. \code{FALSE} (default) yields a \emph{hard} / \emph{thorough} object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / \emph{data.table}. \code{FALSE} yields a \emph{soft} / \emph{minimal} object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also \code{class}.}
   \item{class}{if a vector of classes is passed here, the converted object will be assigned these classes. If \code{NULL} is passed, the default classes are assigned: \code{qM} assigns no class, \code{qDF} a class \code{"data.frame"}, and \code{qDT} a class \code{c("data.table", "data.frame")}. If \code{keep.attr = TRUE} and \code{class = NULL} and the object already inherits the default classes, further inherited classes are preserved. See Details and the Example. }
+  \item{sep}{character. Separator used for interacting multiple variables selected through \code{row.names.col}.}
 
 
   \item{names}{logical. Should the list be named using row/column names from the matrix?}
@@ -60,7 +61,7 @@ as_character_factor(X, keep.attr = TRUE)
 \details{
 Object conversions using these functions are maximally efficient and involve 3 consecutive steps: (1) Converting the storage mode / dimensions / data of the object, (2) converting / modifying the attributes and (3) modifying the class of the object:
 
-(1) is determined by the choice of function and the optional \code{row.names.col} argument to \code{qDF} and \code{qDT}. Higher-dimensional arrays are converted by expanding the second dimension (adding columns, same as \code{as.matrix, as.data.frame, as.data.table}).
+(1) is determined by the choice of function and the optional \code{row.names.col} argument. Higher-dimensional arrays are converted by expanding the second dimension (adding columns, same as \code{as.matrix, as.data.frame, as.data.table}).
 
 (2) is determined by the \code{keep.attr} argument: \code{keep.attr = TRUE} seeks to preserve the attributes of the object. Its effect is like copying \code{attributes(converted) <- attributes(original)}, and then modifying the \code{"dim", "dimnames", "names", "row.names"} and \code{"levels"} attributes as necessitated by the conversion task. \code{keep.attr = FALSE} only converts / assigns / removes these attributes and drops all others.
 
@@ -93,13 +94,26 @@ mtcarsTBL <- qTBL(mtcarsM)              # tibble from matrix columns
 head(mrtl(mtcarsM, TRUE, "data.frame")) # data.frame from matrix rows, etc..
 head(qDF(mtcarsM, "cars"))              # Adding a row.names column when converting from matrix
 head(qDT(mtcars, "cars"))               # Saving row.names when converting data frame to data.table
+head(qM(iris, "Species"))               # Examples converting data to matrix, saving information
+head(qM(GGDC10S, is.character))         # as rownames
+head(qM(gv(GGDC10S, -(2:3)), 1:3, sep = "-")) # plm-style rownames
 
+# mrtl() and mctl() are very useful for iteration over matrices
+# Think of a coordninates matrix e.g. from sf::st_coordinates()
+coord <- matrix(rnorm(10), ncol = 2, dimnames = list(NULL, c("X", "Y")))
+# Then we can
+for (d in mrtl(coord)) {
+  cat("lon =", d[1], ", lat =", d[2], fill = TRUE)
+  # do something complicated ...
+}
+rm(coord)
+
+## Factors
 cylF <- qF(mtcars$cyl)                  # Factor from atomic vector
 cylF
 
 # Factor to numeric conversions
 identical(mtcars,  as_numeric_factor(dapply(mtcars, qF)))
-
 % ## Explaining the interaction of keep.attr and class. Consider the time series   EuStockMarkets
 % plot()
 }

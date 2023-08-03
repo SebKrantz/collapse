@@ -43,9 +43,9 @@ void DFcopyAttr(SEXP out, SEXP x, int ng) {
 }
 
 // Faster than rep_len(value, n) and slightly faster than matrix(value, n) (which in turn is faster than rep_len)...
-SEXP falloc(SEXP value, SEXP n) {
+SEXP falloc(SEXP value, SEXP n, SEXP simplify)  {
   int l = asInteger(n), tval = TYPEOF(value), isat = isVectorAtomic(value);
-  if(length(value) > 1 && isat) {
+  if((length(value) > 1 && isat) || asLogical(simplify) == 0) {
     isat = 0;
     tval = VECSXP;
   }
@@ -238,7 +238,7 @@ SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam) {
   const SEXP *px = SEXPPTR_RO(x);
   for(int i = 0; i < l; ++i) {
     SEXP labxi = getAttrib(px[i], sym_attrn);
-    pres[i] = labxi == R_NilValue ? NA_STRING : STRING_ELT(labxi, 0);
+    pres[i] = TYPEOF(labxi) == STRSXP ? STRING_ELT(labxi, 0) : labxi == R_NilValue ? NA_STRING : asChar(labxi);
   }
   if(asLogical(usenam)) {
     SEXP nam = getAttrib(x, R_NamesSymbol);
@@ -556,5 +556,20 @@ SEXP fnrowC(SEXP x) {
   SEXP dim = getAttrib(x, R_DimSymbol);
   if(TYPEOF(dim) != INTSXP) return R_NilValue;
   return ScalarInteger(INTEGER(dim)[0]);
+}
+
+// Taken from: https://github.com/r-lib/rlang/blob/main/src/internal/env.c
+#define CLP_FRAME_LOCK_MASK (1 << 14)
+#define CLP_FRAME_IS_LOCKED(e) (ENVFLAGS(e) & CLP_FRAME_LOCK_MASK)
+#define CLP_UNLOCK_FRAME(e) SET_ENVFLAGS(e, ENVFLAGS(e) & (~CLP_FRAME_LOCK_MASK))
+
+SEXP unlock_collapse_namespace(SEXP env) {
+  if(TYPEOF(env) != ENVSXP) error("Unsupported object passed to C_unlock_collapse_namespace: %s", type2char(TYPEOF(env)));
+  CLP_UNLOCK_FRAME(env);
+  R_unLockBinding(install(".FAST_STAT_FUN_EXT"), env);
+  R_unLockBinding(install(".FAST_STAT_FUN_POLD"), env);
+  R_unLockBinding(install(".FAST_FUN_MOPS"), env);
+  R_unLockBinding(install(".COLLAPSE_ALL_EXPORTS"), env);
+  return CLP_FRAME_IS_LOCKED(env) == 0 ? ScalarLogical(1) : ScalarLogical(0);
 }
 

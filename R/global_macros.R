@@ -4,7 +4,7 @@ set_collapse <- function(...) {
   opts <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
   op_old <- as.list(.op)
   nam <- names(opts)
-  if(any(nam %!in% c("nthreads", "na.rm", "sort"))) stop("Currently only supports options 'nthreads', 'na.rm' and 'sort'")
+  ckmatch(nam, c("nthreads", "na.rm", "sort", "mask", "remove"), e = "Unknown option:")
   if(length(opts$nthreads)) {
     nthreads <- as.integer(opts$nthreads)
     if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
@@ -20,8 +20,29 @@ set_collapse <- function(...) {
     if(is.na(sort)) stop("sort needs to be TRUE or FALSE")
     .op$sort <- sort
   }
+  if(any(mrl <- c("mask", "remove") %in% nam)) { # either can be NULL
+    clpns <- getNamespace("collapse")
+    .Call(C_unlock_collapse_namespace, clpns)
+    if(mrl[1L] && !identical(op_old$mask, opts$mask)) {
+      if(length(op_old$mask)) do_collapse_unmask(clpns)
+      if(length(opts$mask)) do_collapse_mask(clpns, opts$mask)
+      .op$mask <- opts$mask
+    }
+    if(mrl[2L] && !identical(op_old$remove, opts$remove)) {
+      if(length(op_old$remove)) do_collapse_restore_exports(clpns)
+      if(length(opts$remove)) do_collapse_remove(clpns, opts$remove, namespace = FALSE)
+      .op$remove <- opts$remove
+    }
+    lockEnvironment(clpns, bindings = TRUE)
+    if(anyv(search(), "package:collapse")) {
+      detach("package:collapse")
+      suppressPackageStartupMessages(attachNamespace(clpns))
+    }
+  }
   invisible(op_old)
 }
+
+
 
 get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(length(opts) == 1L) .op[[opts]] else `names<-`(lapply(opts, function(x) .op[[x]]), opts)
 
@@ -53,6 +74,79 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
 # all package objects..
 # allobj <- ls(getNamespace("collapse"), all.names=TRUE)
 
+# dput(setdiff(objects("package:collapse"), .COLLAPSE_DATA))
+.COLLAPSE_ALL_EXPORTS <-  c("%-=%", "%!=%", "%!in%", "%*=%", "%/=%", "%+=%", "%=%", "%==%",
+                            "%c-%", "%c*%", "%c/%", "%c+%", "%cr%", "%r-%", "%r*%", "%r/%",
+                            "%r+%", "%rr%", "add_stub", "add_vars", "add_vars<-", "all_funs",
+                            "all_identical", "all_obj_equal", "allNA", "alloc", "allv", "any_duplicated",
+                            "anyv", "as_character_factor", "as_factor_GRP", "as_factor_qG",
+                            "as_numeric_factor", "as.character_factor", "as.factor_GRP",
+                            "as.factor_qG", "as.numeric_factor", "atomic_elem", "atomic_elem<-",
+                            "av", "av<-", "B", "BY", "BY.data.frame", "BY.default", "BY.matrix",
+                            "cat_vars", "cat_vars<-", "char_vars", "char_vars<-", "cinv",
+                            "ckmatch", "collap", "collapg", "collapv", "colorder", "colorderv",
+                            "copyAttrib", "copyMostAttrib", "copyv", "D", "dapply", "date_vars",
+                            "Date_vars", "date_vars<-", "Date_vars<-", "descr", "descr.default",
+                            "Dlog", "fact_vars", "fact_vars<-", "fbetween", "fbetween.data.frame",
+                            "fbetween.default", "fbetween.matrix", "fcompute", "fcomputev",
+                            "fcount", "fcountv", "fcumsum", "fcumsum.data.frame", "fcumsum.default",
+                            "fcumsum.matrix", "fdiff", "fdiff.data.frame", "fdiff.default",
+                            "fdiff.matrix", "fdim", "fdist", "fdroplevels", "fdroplevels.data.frame",
+                            "fdroplevels.factor", "fduplicated", "ffirst", "ffirst.data.frame",
+                            "ffirst.default", "ffirst.matrix", "fFtest", "fFtest.default",
+                            "fgroup_by", "fgroup_vars", "fgrowth", "fgrowth.data.frame",
+                            "fgrowth.default", "fgrowth.matrix", "fhdbetween", "fHDbetween",
+                            "fhdbetween.data.frame", "fhdbetween.default", "fhdbetween.matrix",
+                            "fhdwithin", "fHDwithin", "fhdwithin.data.frame", "fhdwithin.default",
+                            "fhdwithin.matrix", "findex", "findex_by", "finteraction", "flag",
+                            "flag.data.frame", "flag.default", "flag.matrix", "flast", "flast.data.frame",
+                            "flast.default", "flast.matrix", "flm", "flm.default", "fmax",
+                            "fmax.data.frame", "fmax.default", "fmax.matrix", "fmean", "fmean.data.frame",
+                            "fmean.default", "fmean.matrix", "fmedian", "fmedian.data.frame",
+                            "fmedian.default", "fmedian.matrix", "fmin", "fmin.data.frame",
+                            "fmin.default", "fmin.matrix", "fmode", "fmode.data.frame", "fmode.default",
+                            "fmode.matrix", "fmutate", "fncol", "fndistinct", "fNdistinct",
+                            "fndistinct.data.frame", "fndistinct.default", "fndistinct.matrix",
+                            "fnlevels", "fnobs", "fNobs", "fnobs.data.frame", "fnobs.default",
+                            "fnobs.matrix", "fnrow", "fnth", "fnth.data.frame", "fnth.default",
+                            "fnth.matrix", "fnunique", "fprod", "fprod.data.frame", "fprod.default",
+                            "fprod.matrix", "fquantile", "frange", "frename", "fscale", "fscale.data.frame",
+                            "fscale.default", "fscale.matrix", "fsd", "fsd.data.frame", "fsd.default",
+                            "fsd.matrix", "fselect", "fselect<-", "fsubset", "fsubset.data.frame",
+                            "fsubset.default", "fsubset.matrix", "fsum", "fsum.data.frame",
+                            "fsum.default", "fsum.matrix", "fsummarise", "fsummarize", "ftransform",
+                            "ftransform<-", "ftransformv", "fungroup", "funique", "funique.data.frame",
+                            "funique.default", "fvar", "fvar.data.frame", "fvar.default",
+                            "fvar.matrix", "fwithin", "fwithin.data.frame", "fwithin.default",
+                            "fwithin.matrix", "G", "gby", "get_collapse", "get_elem", "get_vars",
+                            "get_vars<-", "greorder", "group", "groupid", "GRP",
+                            "GRP.default", "GRPid", "GRPN", "GRPnames", "gsplit", "gv", "gv<-",
+                            "gvr", "gvr<-", "has_elem", "HDB", "HDW", "iby", "irreg_elem",
+                            "is_categorical", "is_date", "is_GRP", "is_irregular", "is_qG",
+                            "is_unlistable", "is.categorical", "is.Date", "is.GRP", "is.qG",
+                            "is.unlistable", "itn", "ix", "L", "ldepth", "list_elem", "list_elem<-",
+                            "logi_vars", "logi_vars<-", "massign", "mctl", "missing_cases",
+                            "mrtl", "mtt", "na_insert", "na_omit", "na_rm", "namlab", "num_vars",
+                            "num_vars<-", "nv", "nv<-", "pad", "pivot", "plot.psmat", "print.pwcor",
+                            "print.pwcov", "print.qsu", "psacf", "psacf.data.frame", "psacf.default",
+                            "psccf", "psccf.default", "psmat", "psmat.data.frame", "psmat.default",
+                            "pspacf", "pspacf.data.frame", "pspacf.default", "pwcor", "pwcov",
+                            "pwnobs", "pwNobs", "qDF", "qDT", "qF", "qG", "qM", "qsu", "qsu.data.frame",
+                            "qsu.default", "qsu.matrix", "qtab", "qtable", "qTBL", "radixorder",
+                            "radixorderv", "rapply2d", "recode_char", "recode_num", "reg_elem",
+                            "reindex", "relabel", "replace_Inf", "replace_NA", "replace_outliers",
+                            "rm_stub", "rnm", "rowbind", "roworder", "roworderv", "rsplit",
+                            "rsplit.data.frame", "rsplit.default", "rsplit.matrix", "sbt",
+                            "seq_col", "seq_row", "seqid", "set_collapse", "setattrib", "setAttrib",
+                            "setColnames", "setDimnames", "setLabels", "setop", "setrelabel",
+                            "setrename", "setRownames", "settfm", "settfmv", "setTRA", "settransform",
+                            "settransformv", "setv", "slt", "slt<-", "smr", "ss", "STD",
+                            "t_list", "tfm", "tfm<-", "tfmv", "timeid", "to_plm", "TRA",
+                            "TRA.data.frame", "TRA.default", "TRA.matrix", "unattrib", "unindex",
+                            "unlist2d", "varying", "varying.data.frame", "varying.default",
+                            "varying.matrix", "vclasses", "vgcd", "vlabels", "vlabels<-",
+                            "vlengths", "vtypes", "W", "whichNA", "whichv", "vec")
+
 .COLLAPSE_ALL <- sort(unique(c("%-=%", "%!=%", "%!in%", "%*=%", "%/=%", "%+=%", "%=%", "%==%", "%c-%", "%c*%",
                                "%c/%", "%c+%", "%cr%", "%r-%", "%r*%", "%r/%", "%r+%", "%rr%", "add_stub",
                                "add_vars", "add_vars<-", "all_funs", "all_identical", "all_obj_equal", "alloc",
@@ -79,7 +173,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                                "setRownames", "settfm", "settfmv", "setTRA", "settransform", "settransformv", "setv", "slt", "slt<-", "smr", "ss",
                                "STD", "t_list", "tfm", "tfm<-", "tfmv", "timeid", "to_plm", "TRA", "unattrib", "unindex", "unlist2d", "varying",
                                "vclasses", "vgcd", "vlabels", "vlabels<-", "vlengths", "vtypes", "W", "whichv", "wlddev", "GRPN", "GRPid", "HDB",
-                               "HDW", "allNA", "whichNA", "replace_NA")))
+                               "HDW", "allNA", "whichNA", "replace_NA", "pivot", "rowbind")))
 
 .COLLAPSE_GENERIC   <-   sort(unique(c("B","BY","D","Dlog","F","fsubset","fbetween","fdiff","ffirst","fgrowth","fhdbetween",
                            "fhdwithin","flag","flast","fmax","fmean","fmedian","fnth","fmin","fmode","varying",
@@ -98,6 +192,14 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                     "fmin","fmax","fnth","ffirst","flast","fnobs","fndistinct")
 
 .OPERATOR_FUN <- c("STD","B","W","HDB","HDW","L","F","D","Dlog","G")
+
+.SHORTHANDS <- c("gv", "gv<-", "av", "av<-", "nv", "nv<-", "gvr", "gvr<-", "itn", "ix",
+                 "slt", "slt<-", "sbt", "gby", "iby", "mtt", "smr",
+                 "tfm", "tfmv", "tfm<-", "settfm", "settfmv", "rnm")
+
+.COLLAPSE_OLD <- c("fNobs", "fNdistinct", "pwNobs", "fHDwithin", "fHDbetween", "as.factor_GRP", "as.factor_qG",
+             "is.GRP", "is.qG", "is.unlistable", "is.categorical", "is.Date", "as.numeric_factor",
+              "as.character_factor", "Date_vars", "Date_vars<-")
 
 .FAST_STAT_FUN_POLD <- c(.FAST_STAT_FUN, "fNobs","fNdistinct", "GRPN", "GRPid") # "n"
 

@@ -54,7 +54,7 @@ fsum(x, \dots)
 \details{
 % Non-grouped sum computations internally utilize long-doubles in C++, for additional numeric precision.
 
-Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{sum}} which just runs through without any checks).
+% Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{sum}} which just runs through without any checks).
 
 The weighted sum (e.g. survey total) is computed as \code{sum(x * w)}, but in one pass and about twice as efficient. If \code{na.rm = TRUE}, missing values will be removed from both \code{x} and \code{w} i.e. utilizing only \code{x[complete.cases(x,w)]} and \code{w[complete.cases(x,w)]}.
 
@@ -62,7 +62,7 @@ This all seamlessly generalizes to grouped computations, which are performed in 
 
 When applied to data frames with groups or \code{drop = FALSE}, \code{fsum} preserves all column attributes. The attributes of the data frame itself are also preserved.
 
-Since v1.6.0 \code{fsum} explicitly supports integers. Integers are summed using the long long type in C which is bounded at +-9,223,372,036,854,775,807 (so ~4.3 billion times greater than the minimum/maximum R integer bounded at +-2,147,483,647). If the value of the sum is outside +-2,147,483,647, a double containing the result is returned, otherwise an integer is returned. With groups, an integer overflow error is provided if the sum in any group is outside +-2,147,483,647. Data should be coerced to double beforehand in such cases.
+Since v1.6.0 \code{fsum} explicitly supports integers. Integers are summed using the long long type in C which is bounded at +-9,223,372,036,854,775,807 (so ~4.3 billion times greater than the minimum/maximum R integer bounded at +-2,147,483,647). If the value of the sum is outside +-2,147,483,647, a double containing the result is returned, otherwise an integer is returned. With groups, an integer results vector is initialized, and an integer overflow error is provided if the sum in any group is outside +-2,147,483,647. Data needs to be coerced to double beforehand in such cases.
 
 Multithreading, added in v1.8.0, applies at the column-level unless \code{g = NULL} and \code{nthreads > NCOL(x)}. Parallelism over groups is not available because sums are computed simultaneously within each group. \code{nthreads = 1L} uses a serial version of the code, not parallel code running on one thread. This serial code is always used with less than 100,000 obs (\code{length(x) < 100000} for vectors and matrices), because parallel execution itself has some overhead.
 

@@ -17,6 +17,7 @@
 \alias{\%*=\%}
 \alias{\%/=\%}
 \alias{cinv}
+\alias{vec}
 \alias{vlengths}
 \alias{vtypes}
 \alias{vgcd}
@@ -46,7 +47,8 @@ whichv(x, value,            # Faster than which(x == value)
 whichNA(x, invert = FALSE)  # Faster than which((!)is.na(x))
 x \%==\% value                # Infix for whichv(v, value, FALSE), use e.g. in fsubset()
 x \%!=\% value                # Infix for whichv(v, value, TRUE). See also Note (3)
-alloc(value, n)             # Fast rep_len(value, n) or replicate(n, value). See Details
+alloc(value, n,             # Fast rep_len(value, n) or replicate(n, value).
+      simplify = TRUE)      # simplify only works if length(value) == 1. See Details.
 copyv(X, v, R, \dots, invert  # Fast replace(X, v, R), replace(X, X (!/=)= v, R) or
     = FALSE, vind1 = FALSE, # replace(X, (!)v, R[(!)v]). See Details and Note (4).
     xlist = FALSE)          # For multi-replacement see also kit::vswitch()
@@ -77,6 +79,7 @@ fncol(X)                    # Faster ncol for data frames (not faster for matric
 fdim(X)                     # Faster dim for data frames (not faster for matrices)
 seq_row(X)                  # Fast integer sequences along rows of X
 seq_col(X)                  # Fast integer sequences along columns of X
+vec(X)                      # Vectorization (stacking) of matrix or data frame/list
 cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.g. X'X
 }
 %- maybe also 'usage' for other objects documented here.
@@ -85,6 +88,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{x, v}{a (atomic) vector or matrix (\code{na_rm} also supports lists).}
   \item{value}{a single value of any (atomic) vector type. For \code{whichv} it can also be a \code{length(x)} vector.}
   \item{invert}{logical. \code{TRUE} considers elements \code{x != value}.}
+  \item{simplify}{logical. If \code{value} is a length-1 atomic vector, \code{alloc()} with \code{simplify = TRUE} returns a length-n atomic vector. If \code{simplify = FALSE}, the result is always a list.}
   \item{vind1}{logical. If \code{length(v) == 1L}, setting \code{vind1 = TRUE} will interpret \code{v} as an index, rather than a value to search and replace.}
   \item{xlist}{logical. If \code{X} is a list, the default is to treat it like a data frame and replace rows. Setting \code{xlist = TRUE} will treat \code{X} and its replacement \code{R} like 1-dimensional list vectors.}
   \item{op}{an integer or character string indicating the operation to perform.
@@ -105,7 +109,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv} and \code{setop}, the argument is unused, and serves as a placeholder for possible future arguments.}
 }
 \details{
-\code{alloc} is a fusion of \code{\link{rep_len}} and \code{\link{replicate}} that is faster in both cases. If \code{value} is a length one atomic vector (logical, integer, double, string, complex or raw), the functionality is as \code{rep_len(value, n)} i.e. the output is a length \code{n} atomic vector with the same attributes as \code{value} (apart from \code{"names"}, \code{"dim"} and \code{"dimnames"}). For all other cases the functionality is as \code{replicate(n, value, simplify = FALSE)} i.e. the output is a length-\code{n} list of the objects. If \code{value} is a list itself, the list is not deep-copied on each replication.
+\code{alloc} is a fusion of \code{\link{rep_len}} and \code{\link{replicate}} that is faster in both cases. If \code{value} is a length one atomic vector (logical, integer, double, string, complex or raw) and \code{simplify = TRUE}, the functionality is as \code{rep_len(value, n)} i.e. the output is a length \code{n} atomic vector with the same attributes as \code{value} (apart from \code{"names"}, \code{"dim"} and \code{"dimnames"}). For all other cases the functionality is as \code{replicate(n, value, simplify = FALSE)} i.e. the output is a length-\code{n} list of the objects. For efficiency reasons the object is not copied i.e. only the pointer to the object is replicated.
 
 \code{copyv} and \code{setv} are designed to optimize operations that require replacing data in objects in the broadest sense. The only difference between them is that \code{copyv} first deep-copies \code{X} before doing replacements whereas \code{setv} modifies \code{X} in place and returns the result invisibly. There are 3 ways these functions can be used:
 
@@ -213,6 +217,10 @@ na_omit(qM(mtc_na))                  # Also works for matrices
 na_omit(mtc_na$vs, na.attr = TRUE)   # Also works with vectors
 na_rm(mtc_na$vs)                     # For vectors na_rm is faster ...
 rm(mtc_na)
+
+## Efficient vectorization
+head(vec(EuStockMarkets)) # Atomic objects: no copy at all
+head(vec(mtcars))         # Lists: directly in C
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

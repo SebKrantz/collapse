@@ -6,7 +6,7 @@ Recursive Row-Binding / Unlisting in 2D - to Data Frame
 \description{
 \code{unlist2d} efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list through recursive flattening and intelligent row-binding operations. It is a full 2-dimensional generalization of \code{\link{unlist}}, and best understood as a recursive generalization of \code{do.call(rbind, ...)}.
 
-It is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. % (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples).
+It is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. For simple row-wise combining lists/data.frame's use the non-recursive \code{\link{rowbind}} function.   % (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples).
 }
 \usage{
 unlist2d(l, idcols = ".id", row.names = FALSE, recursive = TRUE,
@@ -18,7 +18,7 @@ unlist2d(l, idcols = ".id", row.names = FALSE, recursive = TRUE,
   \item{idcols}{a character stub or a vector of names for id-columns automatically added - one for each level of nesting in \code{l}. By default the stub is \code{".id"}, so columns will be of the form \code{".id.1", ".id.2",} etc... . if \code{idcols = TRUE}, the stub is also set to \code{".id"}. If \code{idcols = FALSE}, id-columns are omitted. The content of the id columns are the list names, or (if missing) integers for the list elements. Missing elements in asymmetric nested structures are filled up with \code{NA}. See Examples. }
   \item{row.names}{\code{TRUE} extracts row names from all the objects in \code{l} (where available) and adds them to the output in a column named \code{"row.names"}. Alternatively, a column name i.e. \code{row.names = "variable"} can be supplied. For plain matrices in \code{l}, integer row names are generated. }
   \item{recursive}{logical. if \code{FALSE}, only process the lowest (deepest) level of \code{l}. See Details.}
-  \item{id.factor}{if \code{TRUE} and \code{!isFALSE(idcols)}, create id columns as factors instead of character or integer vectors. Alternatively it is possible to specify \code{id.factor = "ordered"} to generate ordered factor id's. This is useful if id's are used for further analysis e.g. as inputs to \code{ggplot2}. }
+  \item{id.factor}{if \code{TRUE} and \code{!isFALSE(idcols)}, create id columns as factors instead of character or integer vectors. Alternatively it is possible to specify \code{id.factor = "ordered"} to generate ordered factor id's. This is \bold{strongly recommended} when binding lists of larger data frames, as factors are much more memory efficient than character vectors and also speed up subsequent grouping operations on these columns. }
   \item{DT}{logical. \code{TRUE} returns a \emph{data.table}, not a data.frame.}
 }
 \details{
@@ -41,7 +41,7 @@ A data frame or (if \code{DT = TRUE}) a \emph{data.table}.
 %%  ~~who you are~~
 % }
 \note{
-For lists of data frames \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist} because \code{unlist2d} is a recursive function.
+For lists of data frames \code{unlist2d} works just like \code{data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")} however for lists of lists \code{unlist2d} does not produce the same output as \code{data.table::rbindlist} because \code{unlist2d} is a recursive function. You can use \code{\link{rowbind}} as a faithful alternative to \code{data.table::rbindlist}.
 
 The function \code{rrapply::rrapply(l, how = "melt"|"bind")} is a fast alternative (written fully in C) for nested lists of atomic elements.
 }
@@ -49,7 +49,7 @@ The function \code{rrapply::rrapply(l, how = "melt"|"bind")} is a fast alternati
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{rsplit}}, \code{\link{rapply2d}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{rowbind}}, \code{\link{rsplit}}, \code{\link{rapply2d}}, \link[=list-processing]{List Processing}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 ## Basic Examples:

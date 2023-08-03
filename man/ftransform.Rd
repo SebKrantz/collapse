@@ -21,6 +21,10 @@ Catering to the \emph{tidyverse} user, v1.7.0 introduced \code{fmutate}, providi
 }
 
 \usage{
+# dplyr-style mutate (sequential evaluation + across() feature)
+fmutate(.data, ..., .keep = "all", .cols = NULL)
+mtt(.data, ..., .keep = "all", .cols = NULL) # Shorthand for fmutate
+
 # Modify and return data frame
 ftransform(.data, \dots)
 ftransformv(.data, vars, FUN, \dots, apply = TRUE)
@@ -40,10 +44,6 @@ tfm(.data) <- value           # Shorthand for ftransform<-
 # Compute columns, returned as a new data frame
 fcompute(.data, \dots, keep = NULL)
 fcomputev(.data, vars, FUN, \dots, apply = TRUE, keep = NULL)
-
-# New: dplyr-style mutate (sequential evaluation + across() feature)
-fmutate(.data, ..., .keep = "all", .cols = NULL)
-mtt(.data, ..., .keep = "all", .cols = NULL) # Shorthand for fmutate
 }
 \arguments{
     \item{.data}{a data frame or named list of columns.}

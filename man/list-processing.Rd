@@ -29,7 +29,7 @@
 }
 
 \item \bold{Unlisting / Row-Binding} \itemize{
-\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or \emph{data.table}) representation of the list. This is done by recursively flattening and row-binding R objects in the list while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data frames, arrays or heterogeneous objects.
+\item \code{\link{unlist2d}} efficiently unlists unlistable lists in 2-dimensions and creates a data frame (or \emph{data.table}) representation of the list. This is done by recursively flattening and row-binding R objects in the list while creating identifier columns for each level of the list-tree and (optionally) saving the row-names of the objects in a separate column. \code{\link{unlist2d}} can thus also be understood as a recursive generalization of \code{do.call(rbind, l)}, for lists of vectors, data frames, arrays or heterogeneous objects. A simpler version for non-recursive row-binding lists of lists / data.frames, is also available by \code{\link{rowbind}}.
 }
 
 }
@@ -49,6 +49,7 @@
   \code{\link{t_list}} \tab\tab Transpose lists of lists \cr
   \code{\link{rapply2d}} \tab\tab Recursively apply functions to lists of data objects \cr
   \code{\link{unlist2d}} \tab\tab Recursively unlist/row-bind lists of data objects in 2D, to data frame or \emph{data.table} \cr
+  \code{\link{rowbind}} \tab\tab Non-recursive binding of lists or lists / data.frames. \cr
 }
 }
 \seealso{

@@ -44,6 +44,12 @@ test_that("conversions to matrix run smoothly", {
   expect_identical(`dimnames<-`(as.matrix(x), list(NULL, "x")), qM(x))
   expect_identical(qM(m), m)
   expect_identical(qM(m2), m2)
+  expect_identical(mtcars, qDF(qM(qDF(mtcars, "car"), "car")))
+  expect_identical(qM(mtcars), qM(qDF(mtcars, "car"), 1))
+  expect_identical(mtcars, qDF(qM(qDF(mtcars, "car"), "car", keep.attr = TRUE)))
+  expect_identical(qM(mtcars), qM(qDF(mtcars, "car"), 1, keep.attr = TRUE))
+  expect_identical(setRownames(qM(GGDC10S, is.character), NULL), as.matrix(num_vars(GGDC10S)))
+  expect_identical(setRownames(qM(GGDC10S, is.character, keep.attr = TRUE), NULL), as.matrix(num_vars(GGDC10S)))
 })
 
 test_that("conversions to data.frame / data.table run smoothly", {

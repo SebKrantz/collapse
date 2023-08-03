@@ -1881,7 +1881,7 @@ head(data, 3)
     geom_area(position = "fill", alpha = 0.8) +
     labs(y = NULL, title = "Forecast Error Variance Decompositions") +
     scale_fill_manual(values = rainbow(6)) +
-    facet_wrap(~ variable) +
+    facet_wrap(~ set_class(variable, "factor")) +
     theme_linedraw(base_size = 14) +
     scale_x_continuous(breaks = scales::pretty_breaks(n=7), expand = c(0, 0))+
     scale_y_continuous(breaks = scales::pretty_breaks(n=7), expand = c(0, 0))+

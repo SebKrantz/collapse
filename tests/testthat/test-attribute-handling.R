@@ -8,7 +8,7 @@ fac <- wlddev$region
 g1 <- GRP(wlddev$country)
 m <- qM(mtcars)
 gmtc <- fgroup_by(mtcars, cyl, vs, am)
-gm <- qM(gmtc, TRUE)
+gm <- qM(gmtc, keep.attr = TRUE)
 g2 <- GRP(mtcars, ~ cyl + vs + am)
 
 # gDTmtc <- fgroup_by(qDT(mtcars), cyl, vs, am)

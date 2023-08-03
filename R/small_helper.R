@@ -94,7 +94,7 @@ vlabels <- function(X, attrn = "label", use.names = TRUE) .Call(C_vlabels, X, at
 # }
 
 # Note: Shallow copy does not work as it only copies the list, but the attribute is a feature of the atomic elements inside...
-setLabels <- function(X, value, attrn = "label", cols = NULL) { # , sc = TRUE
+setLabels <- function(X, value = NULL, attrn = "label", cols = NULL) { # , sc = TRUE
   if(is.atomic(X)) return(`attr<-`(X, attrn, value))
   .Call(C_setvlabels, X, attrn, value, as.integer(cols))
 }
@@ -276,6 +276,11 @@ all_funs <- function(expr) .Call(C_all_funs, expr)
 
 cinv <- function(x) chol2inv(chol(x))
 
+vec <- function(X) {
+  if(is.atomic(X)) return(`attributes<-`(X, NULL))
+  .Call(C_pivot_long, X, NULL, FALSE)
+}
+
 interact_names <- function(l) {
   oldClass(l) <- NULL
   if(length(l) == 2L) return(`dim<-`(outer(l[[1L]], l[[2L]], paste, sep = "."), NULL))
@@ -344,7 +349,7 @@ whichNA <- function(x, invert = FALSE) .Call(C_whichv, x, NA, invert)
 
 frange <- function(x, na.rm = .op[["na.rm"]]) .Call(C_frange, x, na.rm)
 .range <- function(x, na.rm = TRUE) .Call(C_frange, x, na.rm)
-alloc <- function(value, n) .Call(C_alloc, value, n)
+alloc <- function(value, n, simplify = TRUE) .Call(C_alloc, value, n, simplify)
 vgcd <- function(x) .Call(C_vecgcd, x)
 fdist <- function(x, v = NULL, ..., method = "euclidean", nthreads = .op[["nthreads"]]) .Call(C_fdist, if(is.atomic(x)) x else qM(x), v, method, nthreads)
 

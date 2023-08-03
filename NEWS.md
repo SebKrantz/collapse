@@ -1,8 +1,41 @@
-# collapse 1.9.6.9000
+# collapse 1.9.6.9500
+
+### Potentially breaking changes
+
+* In a grouped setting, if `.data` is used inside `fsummarise()` and `fmutate()`, and `.cols = NULL`, `.data` will contain all columns except for grouping columns (in-line with the `.SD` syntax of *data.table*). Before, `.data` contained all columns. The selection in `.cols` still refers to all columns, thus it is still possible to select all columns using e.g. `grouped_data %>% fsummarise(some_expression_involving(.data), .cols = seq_col(.))`. 
+
+### Bug Fixes
+
+* Fixed a bug in the integer methods of `fsum()`, `fmean()` and `fprod()` that returned `NA` if and only if there was a single integer followed by `NA`'s e.g `fsum(c(1L, NA, NA))` erroneously gave `NA`. This was caused by a C-level shortcut that returned `NA` when the first element of the vector had been reached (moving from back to front) without encountering any non-NA-values. The bug consisted in the content of the first element not being evaluated in this case. Note that this bug did not occur with real numbers, and also not in grouped execution. Thanks @blset for reporting (#432).   
+
+### Additions
+
+* Added `pivot()`: fast and easy data reshaping! It supports longer, wider and recast pivoting, including handling of variable labels, through a uniform and parsimonious API. It does not perform data aggregation, and by default does not check if the data is uniquely identified by the supplied ids. Underidentification for 'wide' and 'recast' pivots results in the last value being taken within each group. Users can toggle a duplicates check by setting `check.dups = TRUE`. Feedback on the API is welcome!
 
 * Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
 
-* Fixed a bug in the integer methods of `fsum()`, `fmean()` and `fprod()` that returned `NA` if and only if there was a single integer followed by `NA`'s e.g `fsum(c(1L, NA, NA))` erroneously gave `NA`. This was caused by a C-level shortcut that returned `NA` when the first element of the vector had been reached (moving from back to front) without encountering any non-NA-values. The bug consisted in the content of the first element not being evaluated in this case. Note that this bug did not occur with real numbers, and also not in grouped execution. Thanks @blset for reporting (#432).   
+* Added `vec()`: efficiently turn matrices or data frames / lists into a single atomic vector. I am aware of multiple implementations in other packages, which are mostly inefficient. With atomic objects, `vec()` simply removes the attributes without copying the object, and with lists it directly calls `C_pivot_longer`. 
+
+### Improvements
+
+* `set_collapse()` now supports options 'mask' and 'remove', giving *collapse* a flexible namespace in the broadest sense that can be changed at any point within the active session:
+
+  - 'mask' supports base R or *dplyr* functions that can be masked into the faster *collapse* versions. E.g. `library(collapse); set_collapse(mask = "unique")` (or, equivalently, `set_collapse(mask = "funique")`) will create `unique <- funique` in the *collapse* namespace, export `unique()` from the namespace, and detach and attach the namespace again so R can find it. The re-attaching also ensures that *collapse* comes right after the global environment, implying that all it's functions will take priority over other libraries. Users can use `fastverse::fastverse_conflicts()` to check which functions are masked after using `set_collapse(mask = ...)`. The option can be changed at any time. Using `set_collapse(mask = NULL)` removes all masked functions from the namespace, and can also be called simply to ensure *collapse* is at the top of the search path.  
+  
+  - 'remove' allows removing arbitrary functions from the *collapse* namespace. E.g. `set_collapse(remove = "D")` will remove the difference operator `D()`, which also exists in *stats* to calculate symbolic and algorithmic derivatives (this is a convenient example but not necessary since `collapse::D` is S3 generic and will call `stats::D()` on R calls, expressions or names). This is safe to do as it only modifies which objects are exported from the namespace (it does not truly remove objects from the namespace). This option can also be changed at any time. `set_collapse(remove = NULL)` will restore the exported namespace. 
+
+  For both options there exist a number of convenient keywords to bulk-mask / remove functions. For example `set_collapse(mask = "manip", remove = "shorthand")` will mask all data manipulation functions such as `mutate <- fmutate` and remove all function shorthands such as `mtt` (i.e. abbreviations for frequently used functions that *collapse* supplies for faster coding / prototyping).
+
+<!-- This can also be done before loading the package through `options(collapse_remove = ...)` e.g. via an `.Rprofile` or `.fastverse` configuration file, but this possibility is *dangerous* because you can also remove essential *collapse* functions such as `GRP()` which will cause *collapse* to stop working.
+
+**Note** that this option set using `options()` is **non-reversible**, you need to unload *collapse* using `detach("package:collapse", unload = TRUE)` and load it again. 
+-->
+
+* `qM()` now also has a `row.names.col` argument in the second position allowing generation of rownames when converting data frame-like objects to matrix e.g. `qM(iris, "Species")` or `qM(GGDC10S, 1:5)` (interaction of id's). 
+
+* `as_factor_GRP()` and `finteraction()` now have an argument `sep = "."` denoting the separator used for compound factor labels.
+
+* `alloc()` now has an additional argument `simplify = TRUE`. `FALSE` always returns list output. 
 
 # collapse 1.9.6
 

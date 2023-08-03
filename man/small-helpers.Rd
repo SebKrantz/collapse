@@ -42,8 +42,8 @@ massign(nam, values,          # can also assign to different environment.
 vlabels(X, attrn = "label",   # Get labels of variables in X, in attr(X[[i]], attrn)
         use.names = TRUE)
 vlabels(X, attrn = "label") <- value    # Set labels of variables in X (by reference)
-setLabels(X, value, attrn = "label",    # Set labels of variables in X (by reference)
-          cols = NULL)                  # and return X
+setLabels(X, value = NULL,    # Set labels of variables in X (by reference) and return X
+          attrn = "label", cols = NULL)
 vclasses(X, use.names = TRUE) # Get classes of variables in X
 namlab(X, class = FALSE,      # Return data frame of names and labels,
   attrn = "label", N = FALSE, # and (optionally) classes, number of observations
@@ -59,12 +59,11 @@ ckmatch(x, table,             # Check-match: throws an informative error if non-
 all_identical(\dots)            # Check exact equality of multiple objects or list-elements
 all_obj_equal(\dots)            # Check near equality of multiple objects or list-elements
 all_funs(expr)                # Find all functions called in an R language expression
-setRownames(object,
- nm = if(is.atomic(object))   # Set rownames of object and return object
- seq_row(object) else NULL)
+setRownames(object,           # Set rownames of object and return object
+    nm = if(is.atomic(object)) seq_row(object) else NULL)
 setColnames(object, nm)       # Set colnames of object and return object
-setDimnames(object, dn,
-            which = NULL)     # Set dimension names of object and return object
+setDimnames(object, dn,       # Set dimension names of object and return object
+            which = NULL)
 unattrib(object)              # Remove all attributes from object
 setAttrib(object, a)          # Replace all attributes with list of attributes 'a'
 setattrib(object, a)          # Same thing by reference, returning object invisibly

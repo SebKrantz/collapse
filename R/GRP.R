@@ -192,8 +192,8 @@ GRPN <- function(x, expand = TRUE, ...) {
   if(expand) .Call(C_subsetVector, g$group.sizes, g$group.id, FALSE) else g$group.sizes
 }
 
-# Only for masking if collapse_mask = "all"
-n <- function(x, g, TRA, ...) {
+# dplyr-style n(): only for masking if collapse_mask = "all"
+n_internal <- function(x, g, TRA, ...) {
   if(missing(g)) {
     if(missing(x)) stop("if data is not grouped need to call n() on a column")
     return(if(is.list(x)) fnrow(x) else length(x))
@@ -253,7 +253,7 @@ plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
   hist(x[[3L]], breaks, xlab = "Group Size", main = "Histogram of Group Sizes", ...)
 }
 
-as_factor_GRP <- function(x, ordered = FALSE) { # , ...
+as_factor_GRP <- function(x, ordered = FALSE, sep = ".") { # , ...
   # if(is.factor(x)) return(x)
   # if(!is_GRP(x)) stop("x must be a 'GRP' object")
   f <- x[[2L]]
@@ -264,7 +264,7 @@ as_factor_GRP <- function(x, ordered = FALSE) { # , ...
     if(length(gr) == 1L) {
       attr(f, "levels") <- tochar(gr[[1L]]) # or formatC ?
     } else {
-      attr(f, "levels") <- do.call(paste, c(gr, list(sep = ".")))
+      attr(f, "levels") <- do.call(paste, c(gr, list(sep = sep)))
     }
   }
   oldClass(f) <- if(ordered) c("ordered","factor","na.included") else c("factor","na.included") # previously if any(x[[6L]])
@@ -276,9 +276,9 @@ as.factor_GRP <- function(x, ordered = FALSE) {
   as_factor_GRP(x, ordered)
 }
 
-finteraction <- function(..., factor = TRUE, ordered = FALSE, sort = factor && .op[["sort"]], method = "auto") { # does it drop levels ? -> Yes !
+finteraction <- function(..., factor = TRUE, ordered = FALSE, sort = factor && .op[["sort"]], method = "auto", sep = ".") { # does it drop levels ? -> Yes !
   X <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
-  if(factor) return(as_factor_GRP(GRP.default(X, sort = sort, return.order = FALSE, method = method, call = FALSE), ordered))
+  if(factor) return(as_factor_GRP(GRP.default(X, sort = sort, return.order = FALSE, method = method, call = FALSE), ordered, sep))
   if(sort || method == "radix") {
     g <- GRP.default(X, sort = sort, return.groups = FALSE, return.order = FALSE, method = method, call = FALSE)
     res <- g[[2L]]
@@ -843,6 +843,7 @@ funique.pdata.frame <- function(x, cols = NULL, sort = FALSE, method = "auto", d
 }
 
 fnunique <- function(x) {
+  if(is.list(x) && length(unclass(x)) == 1L) x <- .subset2(x, 1L)
   if(is.atomic(x) && !is.complex(x)) .Call(C_fndistinct, x, NULL, FALSE, 1L) else
     attr(.Call(C_group, x, FALSE, FALSE), "N.groups")
 }
@@ -853,14 +854,14 @@ fduplicated <- function(x, all = FALSE) {
   if(all) {
     g <- .Call(C_group, x, FALSE, FALSE)
     ng <- attr(g, "N.groups")
-    if(ng == length(g)) return(.Call(C_alloc, FALSE, length(g)))
+    if(ng == length(g)) return(.Call(C_alloc, FALSE, length(g), TRUE))
     gs <- .Call(C_fwtabulate, g, NULL, ng, FALSE)
     return(.Call(C_subsetVector, gs != 1L, g, FALSE))
   }
   g <- .Call(C_group, x, TRUE, FALSE)
   starts <- attr(g, "starts")
-  if(length(starts) == length(g)) return(.Call(C_alloc, FALSE, length(g)))
-  .Call(C_setcopyv, .Call(C_alloc, TRUE, length(g)), starts, FALSE, FALSE, TRUE, TRUE)
+  if(length(starts) == length(g)) return(.Call(C_alloc, FALSE, length(g), TRUE))
+  .Call(C_setcopyv, .Call(C_alloc, TRUE, length(g), TRUE), starts, FALSE, FALSE, TRUE, TRUE)
 }
 
 fdroplevels <- function(x, ...) UseMethod("fdroplevels")
