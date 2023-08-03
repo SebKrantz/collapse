@@ -72,11 +72,12 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
   }
 
   int max_type = 0, distinct_types = 0, len = 0;
-  for (int j = 0, tj = 0, tj_first = TYPEOF(pd[0]); j != l; ++j) {
+  for (int j = 0, tj, tj_first = TYPEOF(pd[0]), oj, oj_first = OBJECT(pd[0]); j != l; ++j) {
     tj = TYPEOF(pd[j]);
+    oj = OBJECT(pd[j]);
     len += length(pind[j]);
     if(tj > max_type) max_type = tj;
-    if(tj != tj_first) distinct_types = 1;
+    if(tj != tj_first || oj != oj_first) distinct_types = 1;
   }
 
   SEXP res;
