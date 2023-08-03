@@ -10,7 +10,7 @@
 
 ### Additions
 
-* Added `pivot()`: fast and easy data reshaping! It supports longer, wider and recast pivoting, including multi-column pivots and handling of variable labels, through a uniform and parsimonious API. It does not perform data aggregation, and by default does not check if the data is uniquely identified by the supplied ids. Underidentification for 'wide' and 'recast' pivots results in the last value being taken within each group. Users can toggle a duplicates check by setting `check.dups = TRUE`. 
+* Added `pivot()`: fast and easy data reshaping! It supports longer, wider and recast pivoting, including handling of variable labels, through a uniform and parsimonious API. It does not perform data aggregation, and by default does not check if the data is uniquely identified by the supplied ids. Underidentification for 'wide' and 'recast' pivots results in the last value being taken within each group. Users can toggle a duplicates check by setting `check.dups = TRUE`. Feedback on the API is welcome!
 
 * Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
 
