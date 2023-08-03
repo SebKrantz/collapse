@@ -14,6 +14,8 @@
 
 * Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
 
+* Added `vec()`: efficiently turn matrices or data frames / lists into a single atomic vector. I am aware of multiple implementations in other packages, which are mostly inefficient. With atomic objects, `vec()` simply removes the attributes without copying the object, and with lists it directly calls `C_pivot_longer`. 
+
 ### Improvements
 
 * `set_collapse()` now supports options 'mask' and 'remove', giving *collapse* a flexible namespace in the broadest sense that can be changed at any point within the active session:

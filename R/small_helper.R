@@ -94,7 +94,7 @@ vlabels <- function(X, attrn = "label", use.names = TRUE) .Call(C_vlabels, X, at
 # }
 
 # Note: Shallow copy does not work as it only copies the list, but the attribute is a feature of the atomic elements inside...
-setLabels <- function(X, value, attrn = "label", cols = NULL) { # , sc = TRUE
+setLabels <- function(X, value = NULL, attrn = "label", cols = NULL) { # , sc = TRUE
   if(is.atomic(X)) return(`attr<-`(X, attrn, value))
   .Call(C_setvlabels, X, attrn, value, as.integer(cols))
 }
@@ -275,6 +275,11 @@ all_obj_equal <- function(...) {
 all_funs <- function(expr) .Call(C_all_funs, expr)
 
 cinv <- function(x) chol2inv(chol(x))
+
+vec <- function(X) {
+  if(is.atomic(X)) return(`attributes<-`(X, NULL))
+  .Call(C_pivot_long, X, NULL, FALSE)
+}
 
 interact_names <- function(l) {
   oldClass(l) <- NULL

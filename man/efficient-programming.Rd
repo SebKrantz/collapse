@@ -17,6 +17,7 @@
 \alias{\%*=\%}
 \alias{\%/=\%}
 \alias{cinv}
+\alias{vec}
 \alias{vlengths}
 \alias{vtypes}
 \alias{vgcd}
@@ -78,6 +79,7 @@ fncol(X)                    # Faster ncol for data frames (not faster for matric
 fdim(X)                     # Faster dim for data frames (not faster for matrices)
 seq_row(X)                  # Fast integer sequences along rows of X
 seq_col(X)                  # Fast integer sequences along columns of X
+vec(X)                      # Vectorization (stacking) of matrix or data frame/list
 cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.g. X'X
 }
 %- maybe also 'usage' for other objects documented here.
@@ -215,6 +217,10 @@ na_omit(qM(mtc_na))                  # Also works for matrices
 na_omit(mtc_na$vs, na.attr = TRUE)   # Also works with vectors
 na_rm(mtc_na$vs)                     # For vectors na_rm is faster ...
 rm(mtc_na)
+
+## Efficient vectorization
+head(vec(EuStockMarkets)) # Atomic objects: no copy at all
+head(vec(mtcars))         # Lists: directly in C
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

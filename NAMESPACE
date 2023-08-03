@@ -206,6 +206,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(flm)
  export(flm.default)
  export(cinv)
+ export(vec)
  export(HDB)
  export(fhdbetween)
  export(fhdbetween.default)
