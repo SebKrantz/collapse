@@ -64,7 +64,6 @@ proc_labels_recast <- function(x, data) {
 # c_to_vec2 <- function(l) .Call(C_pivot_long, l, NULL, FALSE)
 
 # Special case: no ids supplied
-# TODO: Can set 'new' labels ??
 melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
   if(check.dups && fnrow(vd) > 1L) warning("duplicates detected: you have supplied no ids and the data has ", fnrow(vd), " rows. Consider supplying ids so that that records in the long format data frame are identified.")
   if(length(labels)) labs <- vlabels(vd, use.names = FALSE)
@@ -77,6 +76,7 @@ melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
   res <- .Call(C_pivot_long, vd, NULL, TRUE) # rbindlist gives factor value: .Call(C_rbindlist, lapply(unattrib(vd), list), FALSE, FALSE, "id")
   names(res) <- names
   if(length(labels)) {
+    if(is.list(labels)) stop("Since no ids are specified, please just use setLabels() or relabel() following pivot to assign new variable labels")
     if(factor[2L]) {
       label_col <- res[[1L]]
       attr(label_col, "levels") <- labs
