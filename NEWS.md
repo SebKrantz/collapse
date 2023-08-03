@@ -1,4 +1,4 @@
-# collapse 1.9.6.9000
+# collapse 1.9.6.9500
 
 ### Potentially breaking changes
 
