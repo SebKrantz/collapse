@@ -145,7 +145,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                             "TRA.data.frame", "TRA.default", "TRA.matrix", "unattrib", "unindex",
                             "unlist2d", "varying", "varying.data.frame", "varying.default",
                             "varying.matrix", "vclasses", "vgcd", "vlabels", "vlabels<-",
-                            "vlengths", "vtypes", "W", "whichNA", "whichv")
+                            "vlengths", "vtypes", "W", "whichNA", "whichv", "vec")
 
 .COLLAPSE_ALL <- sort(unique(c("%-=%", "%!=%", "%!in%", "%*=%", "%/=%", "%+=%", "%=%", "%==%", "%c-%", "%c*%",
                                "%c/%", "%c+%", "%cr%", "%r-%", "%r*%", "%r/%", "%r+%", "%rr%", "add_stub",
