@@ -85,12 +85,14 @@ A reshaped data frame with the same class and attributes (except for 'names'/'ro
 
 \note{
 Leaving either 'ids' or 'values' empty will assign all other columns (except for \code{"variable"} if \code{how = "wider"|"recast"}) to the non-specified argument. It is also possible to leave both empty, e.g. for complete melting if \code{how = "wider"} or data transposition if \code{how = "recast"} (similar to \code{data.table::transpose} but supporting multiple names columns and variable labels). See Examples.
+
+\code{pivot} currently does not support concurrently melting/pivoting longer to multiple columns. See \code{data.table::melt} or \code{pivot_longer} from \code{tidyr} or \code{tidytable} for an efficient alternative with this feature. It is also possible to achieve this with just a little bit of programming. An example of this is provided below. Currently I don't see a 'complete' (like \code{pivot_longer}) way of including this feature in the API, and in general I don't see this as a very well-defined operation. But I am open to suggestions.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{collap}}, \code{\link{rowbind}}, \code{\link{unlist2d}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{collap}}, \code{\link{vec}}, \code{\link{rowbind}}, \code{\link{unlist2d}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 # -------------------------------- PIVOT LONGER ---------------------------------
@@ -120,7 +122,7 @@ pivot(GGDC10S, 1:5, na.rm = TRUE, labels = list("description",
 pivot(GGDC10S, 1:5, na.rm = TRUE, labels = list("description",
           c(variable = "Sector Code", description = "Sector Description"))) |> namlab()
 
-# Now here is a nice final example that is explicit and respects the dataset naming convention
+# Now here is a nice example that is explicit and respects the dataset naming conventions
 pivot(GGDC10S, ids = 1:5, na.rm = TRUE,
       names = list(variable = "Sectorcode",
                    value = "Value"),
@@ -129,6 +131,18 @@ pivot(GGDC10S, ids = 1:5, na.rm = TRUE,
                             Sector = "Long Sector Description",
                             Value = "Employment or Value Added"))) |>
   namlab(N = TRUE, Nd = TRUE, class = TRUE)
+
+# Note that pivot() currently does not support melting to multiple columns
+# But you can tackle the issue with a bit of programming:
+wide <- pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable",
+              how = "wider", na.rm = TRUE)
+head(wide)
+library(magrittr)
+wide \%>\% {av(pivot(., 1:2, grep("_VA", names(.))), pivot(gvr(., "_EMP")))} \%>\% head()
+wide \%>\% {av(av(gv(., 1:2), rm_stub(gvr(., "_VA"), "_VA", pre = FALSE)) \%>\%
+                  pivot(1:2, names = list("Sectorcode", "VA"), labels = "Sector"),
+             EMP = vec(gvr(., "_EMP")))} \%>\% head()
+rm(wide)
 
 # -------------------------------- PIVOT WIDER ---------------------------------
 iris_long <- pivot(iris, "Species") # Getting a long frame
