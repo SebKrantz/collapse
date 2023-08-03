@@ -35,7 +35,7 @@
 
 * `as_factor_GRP()` and `finteraction()` now have an argument `sep = "."` denoting the separator used for compound factor labels.
 
-
+* `alloc()` now has an additional argument `simplify = TRUE`. `FALSE` always returns list output. 
 
 # collapse 1.9.6
 
