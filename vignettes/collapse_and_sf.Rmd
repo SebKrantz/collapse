@@ -162,7 +162,7 @@ plot(slt(pnc_ag, AREA_Ag))
 ```
 
 
-## Unique Values, Ordering, Splitting
+## Unique Values, Ordering, Splitting, Binding
 
 Functions `funique` and `roworder(v)` work on sf data frames and ignore the geometry column for determining the unique values / order of rows. `rsplit` can be used to (recursively) split an *sf* data frame into multiple chunks. 
 
@@ -181,6 +181,13 @@ rsplit(nc, AREA ~ SID74) %>% head(1)
 rsplit(qDF(nc), AREA ~ SID74) %>% head(1)
 ```
 
+*sf* data frames can be combined using `rowbind()`, which will preserve the attributes of the first object. 
+
+```{r, eval=NMAC}
+# Splitting by each row and recombining
+nc_combined <- nc %>% rsplit(seq_row(.)) %>% rowbind() 
+identical(nc, nc_combined)
+```
 
 ## Transformations
 
