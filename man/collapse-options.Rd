@@ -32,28 +32,28 @@ get_collapse(opts = NULL)
     All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels"))} creates \code{subset <- fsubset}, \code{transform <- ftransform} etc.. Special functions are \code{"n"} and \code{"table"/"qtab"}. The former will create \code{n <- GRPN}, for use in \code{(f)summarise}/\code{(f)mutate}, but without the additional arguments of \code{\link{GRPN}}. The latter masks \code{table <- qtab}.
     \cr\cr\tab\tab
   There are also a couple of convenience keywords that you can use to mask groups of functions:
+  \cr\cr
 
-  \itemize{
-\item \code{"manip"} adds data manipulation functions: \code{fsubset, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}.
-\item \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. % fdim not because of infinite recursion
-\item \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See also Note.
-\item \code{"fast-stat-fun"} adds the functions contained in the macro: \code{.FAST_STAT_FUN}. See also Note.
-\item \code{"fast-trfm-fun"} adds the functions contained in: \code{setdiff(.FAST_FUN, .FAST_STAT_FUN)}. See also Note.
-\item \code{"all"} turns on all of the above, and also exports \code{n()} and \code{table()}.
-}
+\tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr\cr
+\tab\tab - \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. \cr\cr % fdim not because of infinite recursion
+\tab\tab - \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See also Note. \cr\cr
+\tab\tab - \code{"fast-stat-fun"} adds the functions contained in the macro: \code{.FAST_STAT_FUN}. See also Note. \cr\cr
+\tab\tab - \code{"fast-trfm-fun"} adds the functions contained in: \code{setdiff(.FAST_FUN, .FAST_STAT_FUN)}. See also Note. \cr\cr
+\tab\tab - \code{"all"} turns on all of the above, and also exports \code{n()} and \code{table()}.\cr\cr
 
-The re-attaching of the namespace places \emph{collapse} at the top of the search path (after the global environment), implying that all its exported functions will take priority over other libraries. Users can use \code{fastverse::fastverse_conflicts()} to check which functions are masked following \code{set_collapse(mask = ...)}. The option can be changed at any time with immediate effect. Using \code{set_collapse(mask = NULL)} removes all masked functions from the namespace, and can also be called simply to place \emph{collapse} at the top of the search path. \cr\cr\cr\cr\cr\cr
+
+\tab\tab The re-attaching of the namespace places \emph{collapse} at the top of the search path (after the global environment), implying that all its exported functions will take priority over other libraries. Users can use \code{fastverse::fastverse_conflicts()} to check which functions are masked following \code{set_collapse(mask = ...)}. The option can be changed at any time with immediate effect. Using \code{set_collapse(mask = NULL)} removes all masked functions from the namespace, and can also be called simply to place \emph{collapse} at the top of the search path. \cr\cr\cr\cr\cr\cr
 
  \code{remove} \tab\tab character, default \code{NULL}. Similar to 'mask': allows removing functions from the exported namespace (they are still in the namespace, just no longer exported). All \emph{collapse} functions can be passed here. This argument is always evaluated after 'mask', thus you can also remove masked functions again i.e. after setting a keyword which masks a bunch of functions. There are also a couple of convenience keywords you can specify to bulk-remove certain functions:
+\cr\cr
 
-  \itemize{
-\item \code{"shorthand"} removes function shorthands: \code{gv, gv<-, av, av<-, nv, nv<-, gvr, gvr<-, itn, ix, slt, slt<-, sbt, gby, iby, mtt, smr, tfm, tfmv, tfm<-, settfm, settfmv, rnm}.
-\item \code{"infix"} removes infix functions: \code{\%!=\%, \%!in\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.
-\item \code{"operator"} removes functions contained in the macro: \code{.OPERATOR_FUN}.
-\item \code{"old"} removes depreciated functions contained in the macro: \code{.COLLAPSE_OLD}.
-}
+\tab\tab - \code{"shorthand"} removes function shorthands: \code{gv, gv<-, av, av<-, nv, nv<-, gvr, gvr<-, itn, ix, slt, slt<-, sbt, gby, iby, mtt, smr, tfm, tfmv, tfm<-, settfm, settfmv, rnm}. \cr\cr
+\tab\tab - \code{"infix"} removes infix functions: \code{\%!=\%, \%!in\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.\cr\cr
+\tab\tab - \code{"operator"} removes functions contained in the macro: \code{.OPERATOR_FUN}.\cr\cr
+\tab\tab - \code{"old"} removes depreciated functions contained in the macro: \code{.COLLAPSE_OLD}.\cr\cr
 
-Like 'mask', the option is alterable and reversible. Specifying \code{set_collapse(remove = NULL)} restores the exported namespace. Also like 'mask', this option silently detaches and attaches \emph{collapse} again, ensuring that it is at the top of the search path.
+
+\tab\tab Like 'mask', the option is alterable and reversible. Specifying \code{set_collapse(remove = NULL)} restores the exported namespace. Also like 'mask', this option silently detaches and attaches \emph{collapse} again, ensuring that it is at the top of the search path.
 
  \cr\cr\cr\cr\cr\cr
   }
@@ -138,6 +138,12 @@ set_collapse(
   mask = "all",
   remove = c("old", "between") # I use data.table::between > fbetween
 )
+
+# This is now collapse code
+mtcars |>
+  subset(mpg > 12) |>
+  group_by(cyl) |>
+  sum()
 }
 
 ## Changing what happens with unused arguments
