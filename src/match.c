@@ -9,8 +9,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     table = PROTECT(coerceVector(table, TYPEOF(x))); ++nprotect;
   }
   if(isFactor(x)) {
-    SEXP levels = getAttrib(x, R_LevelsSymbol);
-    if(!R_compute_identical(levels, getAttrib(table, R_LevelsSymbol), 0)) {
+    if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
       x = PROTECT(coerceVector(x, STRSXP)); ++nprotect;
       table = PROTECT(coerceVector(table, STRSXP)); ++nprotect;
     }
@@ -46,8 +45,8 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   } else error("Type %s is not supported.", type2char(tx));
 
   int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
-  SEXP ans_i = PROTECT(allocVector(INTSXP, n));
-  int *restrict pans_i = INTEGER(ans_i);
+  SEXP ans = PROTECT(allocVector(INTSXP, n));
+  int *restrict pans = INTEGER(ans);
   size_t id = 0;
 
   switch (tx) {
@@ -65,7 +64,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       // look up values of x in hash table
       for (int i = 0, j; i != n; ++i) {
         j = px[i];
-        pans_i[i] = h[j] ? h[j] : nmv;
+        pans[i] = h[j] ? h[j] : nmv;
       }
     } else {
       // fill hash table with indices of 'table'
@@ -77,7 +76,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       // look up values of x in hash table
       for (int i = 0, j, k = (int)M-1; i != n; ++i) {
         j = (px[i] == NA_INTEGER) ? k : px[i];
-        pans_i[i] = h[j] ? h[j] : nmv;
+        pans[i] = h[j] ? h[j] : nmv;
       }
     }
   } break;
@@ -98,12 +97,12 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       id = HASH(px[i], K);
       while(h[id]) {
         if(pt[h[id]-1] == px[i]) {
-          pans_i[i] = h[id];
+          pans[i] = h[id];
           goto ibl2;
         }
         if(++id >= M) id %= M;
       }
-      pans_i[i] = nmv;
+      pans[i] = nmv;
       ibl2:;
     }
   } break;
@@ -127,12 +126,12 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         if(REQUAL(pt[h[id]-1], px[i])) {
-          pans_i[i] = h[id];
+          pans[i] = h[id];
           goto rbl2;
         }
         if(++id >= M) id %= M;
       }
-      pans_i[i] = nmv;
+      pans[i] = nmv;
       rbl2:;
     }
   } break;
@@ -176,12 +175,12 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       id = HASH(u, K);
       while(h[id]) {
         if(CEQUAL(pt[h[id]-1], px[i])) {
-          pans_i[i] = h[id];
+          pans[i] = h[id];
           goto cbl2;
         }
         if(++id >= M) id %= M;
       }
-      pans_i[i] = nmv;
+      pans[i] = nmv;
       cbl2:;
     }
   } break;
@@ -202,17 +201,20 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       id = HASH(((intptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
         if(pt[h[id]-1] == px[i]) {
-          pans_i[i] = h[id];
+          pans[i] = h[id];
           goto sbl2;
         }
         if(++id >= M) id %= M;
       }
-      pans_i[i] = nmv;
+      pans[i] = nmv;
       sbl2:;
     }
   } break;
   }
   Free(h);
   UNPROTECT(nprotect);
-  return ans_i;
+  return ans;
 }
+
+
+
