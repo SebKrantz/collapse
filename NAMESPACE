@@ -372,6 +372,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(print.qsu)
  export(print.pwcor)
  export(print.pwcov)
+ export(fmatch)
  export(fnlevels)
  export(roworder)
  export(roworderv)

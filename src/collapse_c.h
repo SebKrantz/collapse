@@ -84,6 +84,7 @@ SEXP Cissorted(SEXP x, SEXP strictly);
 SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
 SEXP funiqueC(SEXP x);
+SEXP match_single(SEXP x, SEXP table, SEXP nomatch);
 SEXP createeptr(SEXP x);
 SEXP geteptr(SEXP x);
 SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna);

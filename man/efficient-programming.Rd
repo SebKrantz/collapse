@@ -21,6 +21,7 @@
 \alias{vlengths}
 \alias{vtypes}
 \alias{vgcd}
+\alias{fmatch}
 \alias{fnlevels}
 \alias{fnrow}
 \alias{fncol}
@@ -73,6 +74,8 @@ missing_cases(X, cols=NULL, # The oposite of complete.cases(), faster for DF's.
 vlengths(X, use.names=TRUE) # Faster lengths() and nchar() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
+fmatch(x, table,            # Faster match()
+       nomatch = NA_integer_)
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
 fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
 fncol(X)                    # Faster ncol for data frames (not faster for matrices)
@@ -85,8 +88,8 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X, V, R}{a vector, matrix or data frame.}
-  \item{x, v}{a (atomic) vector or matrix (\code{na_rm} also supports lists).}
-  \item{value}{a single value of any (atomic) vector type. For \code{whichv} it can also be a \code{length(x)} vector.}
+  \item{x, v, table}{a (atomic) vector or matrix (\code{na_rm} also supports lists).}
+  \item{value, nomatch}{a single value of any (atomic) vector type. For \code{whichv} it can also be a \code{length(x)} vector.}
   \item{invert}{logical. \code{TRUE} considers elements \code{x != value}.}
   \item{simplify}{logical. If \code{value} is a length-1 atomic vector, \code{alloc()} with \code{simplify = TRUE} returns a length-n atomic vector. If \code{simplify = FALSE}, the result is always a list.}
   \item{vind1}{logical. If \code{length(v) == 1L}, setting \code{vind1 = TRUE} will interpret \code{v} as an index, rather than a value to search and replace.}

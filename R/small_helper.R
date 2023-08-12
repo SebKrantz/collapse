@@ -549,6 +549,7 @@ setnck <- function(x, value) {
 #   x
 # }
 
+fmatch <- function(x, table, nomatch = NA_integer_) .Call(C_match_single, x, table, nomatch)
 ckmatch <- function(x, table, e = "Unknown columns:") if(anyNA(m <- match(x, table))) stop(paste(e, paste(x[is.na(m)], collapse = ", "))) else m
 
 # anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
