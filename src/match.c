@@ -3,18 +3,32 @@
 
 
 SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
-
+  // Todo: optimizations for length 1 x or table???
   const int n = length(x), nt = length(table), nmv = asInteger(nomatch);
   if(n == 0) return allocVector(INTSXP, 0);
   if(nt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(n), ScalarInteger(1));
   int nprotect = 1;
+  // https://github.com/wch/r-source/blob/433b0c829018c7ad8cd6a585bf9c388f8aaae303/src/main/unique.c#L1356C4-L1356C4
+  if(TYPEOF(x) > STRSXP || TYPEOF(table) > STRSXP) {
+    if(TYPEOF(x) > STRSXP) {
+      PROTECT(x = coerceVector(x, STRSXP)); ++nprotect;
+    }
+    if(TYPEOF(table) > STRSXP) {
+      PROTECT(table = coerceVector(table, STRSXP)); ++nprotect;
+    }
+  }
   if(TYPEOF(x) != TYPEOF(table)) {
-    table = PROTECT(coerceVector(table, TYPEOF(x))); ++nprotect;
+    if(TYPEOF(x) < TYPEOF(table)) {
+      PROTECT(x	= coerceVector(x,	TYPEOF(table))); nprotect++;
+    } else {
+      PROTECT(table	= coerceVector(table,	TYPEOF(x))); nprotect++;
+    }
   }
   if(isFactor(x)) {
     if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
-      x = PROTECT(coerceVector(x, STRSXP)); ++nprotect;
-      table = PROTECT(coerceVector(table, STRSXP)); ++nprotect;
+      // TODO: does take care of levels ???
+      PROTECT(x = coerceVector(x, STRSXP)); ++nprotect;
+      PROTECT(table = coerceVector(table, STRSXP)); ++nprotect;
     }
   }
 
@@ -90,7 +104,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       id = HASH(pt[i], K);
       while(h[id]) {
         if(pt[h[id]-1] == pt[i]) goto ibl;
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       h[id] = i + 1;
       ibl:;
@@ -103,7 +117,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
           pans[i] = h[id];
           goto ibl2;
         }
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       pans[i] = nmv;
       ibl2:;
@@ -118,7 +132,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         if(REQUAL(pt[h[id]-1], pt[i])) goto rbl;
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       h[id] = i + 1;
       rbl:;
@@ -132,7 +146,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
           pans[i] = h[id];
           goto rbl2;
         }
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       pans[i] = nmv;
       rbl2:;
@@ -158,7 +172,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       id = HASH(u, K);
       while(h[id]) {
         if(CEQUAL(pt[h[id]-1], pt[i])) goto cbl;
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       h[id] = i + 1;
       cbl:;
@@ -181,7 +195,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
           pans[i] = h[id];
           goto cbl2;
         }
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       pans[i] = nmv;
       cbl2:;
@@ -194,7 +208,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       id = HASH(((intptr_t) pt[i] & 0xffffffff), K);
       while(h[id]) {
         if(pt[h[id]-1] == pt[i]) goto sbl;
-        if(++id >= M) id %= M; // # nocov
+        if(++id >= M) id = 0;
       }
       h[id] = i + 1;
       sbl:;
@@ -207,7 +221,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
           pans[i] = h[id];
           goto sbl2;
         }
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       pans[i] = nmv;
       sbl2:;
@@ -218,6 +232,5 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   UNPROTECT(nprotect);
   return ans;
 }
-
 
 
