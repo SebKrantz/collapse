@@ -6,7 +6,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
 
   const int n = length(x), nt = length(table), nmv = asInteger(nomatch);
   if(n == 0) return allocVector(INTSXP, 0);
-  if(nt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(n), ScalarInteger(0));
+  if(nt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(n), ScalarInteger(1));
   int nprotect = 1;
   if(TYPEOF(x) != TYPEOF(table)) {
     table = PROTECT(coerceVector(table, TYPEOF(x))); ++nprotect;
