@@ -89,7 +89,7 @@ SEXP dupVecIndex(SEXP x) {
             pans_i[i] = pans_i[h[iid]-1];
             goto ibl;
           }
-          if(++iid >= nu) iid %= nu;
+          if(++iid >= nu) iid = 0;
         }
         h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
         pans_i[i] = ++g;
@@ -118,7 +118,7 @@ SEXP dupVecIndex(SEXP x) {
             pans_i[i] = pans_i[h[id]-1]; // h[id];
             goto ibbl;
           }
-          if(++id >= M) id %= M;
+          if(++id >= M) id = 0;
         }
         h[id] = i + 1;
         pans_i[i] = ++g; // h[id];
@@ -137,7 +137,7 @@ SEXP dupVecIndex(SEXP x) {
           pans_i[i] = pans_i[h[id]-1]; // h[id];
           goto rbl;
         }
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -166,7 +166,7 @@ SEXP dupVecIndex(SEXP x) {
           pans_i[i] = pans_i[h[id]-1]; // h[id];
           goto cbl;
         }
-        if(++id >= M) id %= M; // # nocov
+        if(++id >= M) id = 0; // # nocov
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -182,7 +182,7 @@ SEXP dupVecIndex(SEXP x) {
           pans_i[i] = pans_i[h[id]-1]; // h[id];
           goto sbl;
         }
-        if(++id >= M) id %= M; // # nocov
+        if(++id >= M) id = 0; // # nocov
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -260,7 +260,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
             goto ibl;
           } // else, we move forward to the next slot, until we find an empty one... We need to keep checking against the values,
           // because if we found the same value before, we would also have put it in another slot after the initial one with the same hash value.
-          if(++id >= nu) id %= nu; // ++iid; iid %= nu; // # nocov
+          if(++id >= nu) id = 0; // ++iid; iid %= nu; // # nocov
         } // We put the index into the empty slot.
         h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
         pans_i[i] = ++g; // h[id];
@@ -278,7 +278,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
             pans_i[i] = pans_i[h[id]-1]; // h[id];
             goto ibbl;
           }
-          if(++id >= M) id %= M; // ++id; id %= M;
+          if(++id >= M) id = 0; // ++id; id %= M;
         }
         h[id] = i + 1;
         pans_i[i] = ++g; // h[id];
@@ -301,7 +301,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
           pans_i[i] = pans_i[h[id]-1]; // h[id];
           goto rbl;
         }
-        if(++id >= M) id %= M; // ++id; id %= M;
+        if(++id >= M) id = 0; // ++id; id %= M;
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -329,7 +329,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
           pans_i[i] = pans_i[h[id]-1]; // h[id];
           goto cbl;
         }
-        if(++id >= M) id %= M; //++id; id %= M; // # nocov
+        if(++id >= M) id = 0; //++id; id %= M; // # nocov
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -349,7 +349,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
           pans_i[i] = pans_i[h[id]-1]; // h[id];
           goto sbl;
         }
-        if(++id >= M) id %= M; //++id; id %= M;
+        if(++id >= M) id = 0; //++id; id %= M;
       }
       h[id] = i + 1;
       pans_i[i] = ++g;
@@ -440,7 +440,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
           pans_i[i] = pans_i[hid];
           goto ibl;
         }
-        if(++id >= M) id %= M; // ++id; id %= M; // # nocov
+        if(++id >= M) id = 0; // ++id; id %= M; // # nocov
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -459,7 +459,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
           pans_i[i] = pans_i[hid];
           goto rbl;
         }
-        if(++id >= M) id %= M; //++id; id %= M;
+        if(++id >= M) id = 0; //++id; id %= M;
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -489,7 +489,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
           pans_i[i] = pans_i[hid];
           goto cbl;
         }
-        if(++id >= M) id %= M; //++id; id %= M; // # nocov
+        if(++id >= M) id = 0; //++id; id %= M; // # nocov
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -506,7 +506,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
           pans_i[i] = pans_i[hid];
           goto sbl;
         }
-        if(++id >= M) id %= M; //++id; id %= M; // # nocov
+        if(++id >= M) id = 0; //++id; id %= M; // # nocov
       }
       h[id] = i + 1;
       pans_i[i] = ++g; // h[id];
@@ -688,7 +688,7 @@ SEXP funiqueC(SEXP x) {
         if(iid >= nu) iid %= nu;
         while(h[iid]) {
           if(px[h[iid]-1] == px[i]) goto ibl;
-          if(++iid >= nu) iid %= nu;
+          if(++iid >= nu) iid = 0;
         }
         h[iid] = i + 1;
         st[g++] = i;
@@ -699,7 +699,7 @@ SEXP funiqueC(SEXP x) {
         id = HASH(px[i], K);
         while(h[id]) {
           if(px[h[id]-1] == px[i]) goto ibbl;
-          if(++id >= M) id %= M;
+          if(++id >= M) id = 0;
         }
         h[id] = i + 1;
         st[g++] = i;
@@ -723,7 +723,7 @@ SEXP funiqueC(SEXP x) {
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         if(REQUAL(px[h[id]-1], px[i])) goto rbl;
-        if(++id >= M) id %= M;
+        if(++id >= M) id = 0;
       }
       h[id] = i + 1;
       st[g++] = i;
@@ -757,7 +757,7 @@ SEXP funiqueC(SEXP x) {
       id = HASH(u, K);
       while(h[id]) {
         if(CEQUAL(px[h[id]-1], px[i])) goto cbl;
-        if(++id >= M) id %= M; // # nocov
+        if(++id >= M) id = 0; // # nocov
       }
       h[id] = i + 1;
       st[g++] = i;
@@ -778,7 +778,7 @@ SEXP funiqueC(SEXP x) {
       id = HASH(((intptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
         if(px[h[id]-1] == px[i]) goto sbl;
-        if(++id >= M) id %= M; // # nocov
+        if(++id >= M) id = 0; // # nocov
       }
       h[id] = i + 1;
       st[g++] = i;
