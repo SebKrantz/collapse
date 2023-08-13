@@ -8,6 +8,10 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   if(n == 0) return allocVector(INTSXP, 0);
   if(nt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(n), ScalarInteger(1));
   int nprotect = 1;
+
+  // Allocating here. For factors there is a shorthand
+  SEXP ans = PROTECT(allocVector(INTSXP, n));
+
   // https://github.com/wch/r-source/blob/433b0c829018c7ad8cd6a585bf9c388f8aaae303/src/main/unique.c#L1356C4-L1356C4
   if(TYPEOF(x) > STRSXP || TYPEOF(table) > STRSXP) {
     if(TYPEOF(x) > STRSXP) {
@@ -18,17 +22,43 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     }
   }
   if(TYPEOF(x) != TYPEOF(table)) {
-    if(TYPEOF(x) < TYPEOF(table)) {
-      PROTECT(x	= coerceVector(x,	TYPEOF(table))); nprotect++;
-    } else {
-      PROTECT(table	= coerceVector(table,	TYPEOF(x))); nprotect++;
+    if(TYPEOF(x) < TYPEOF(table)) { // table could be double, complex, character....
+      // TODO: What if x is logical and table is factor??
+      if(isFactor(x)) { // For factors there is a shorthand: just match the levels against table...
+        PROTECT(table = match_single(getAttrib(x, R_LevelsSymbol), table, ScalarInteger(nmv))); ++nprotect;
+        int *pans = INTEGER(ans), *pt = INTEGER(table)-1, *px = INTEGER(x);
+        if(inherits(x, "na.included")) {
+          #pragma omp simd
+          for(int i = 0; i < n; ++i) pans[i] = pt[px[i]];
+        } else {
+          #pragma omp simd
+          for(int i = 0; i < n; ++i) pans[i] = px[i] == NA_INTEGER ? nmv : pt[px[i]];
+        }
+        UNPROTECT(nprotect);
+        return ans;
+      }
+      PROTECT(x	= coerceVector(x,	TYPEOF(table))); ++nprotect; // Coercing to largest common type
+    } else { // x has a larger type than table...
+      if(isFactor(table)) { // There could be a complicated shorthand involving matching x against the levels and then replacing this by the first occurence index
+        PROTECT(table = asCharacterFactor(table)); ++nprotect;
+        if(TYPEOF(x) != STRSXP) { // Worst case: need to coerce x as well to make the match
+          PROTECT(x = coerceVector(x, STRSXP)); ++nprotect;
+        }
+      } else {
+        PROTECT(table = coerceVector(table,	TYPEOF(x))); ++nprotect;
+      }
     }
-  }
-  if(isFactor(x)) {
+  } else if(isFactor(x) && isFactor(table)) {
     if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
-      // TODO: does take care of levels ???
-      PROTECT(x = coerceVector(x, STRSXP)); ++nprotect;
-      PROTECT(table = coerceVector(table, STRSXP)); ++nprotect;
+      // This is the inefficient way: coercing both to character
+      // PROTECT(x = asCharacterFactor(x)); ++nprotect;
+      // PROTECT(table = asCharacterFactor(table)); ++nprotect;
+
+      // The efficient solution: matching the levels and regenerating table, taking zero as nomatch value here so that NA does not get matched against NA in x
+      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
+      SEXP table_new = PROTECT(duplicate(table)); ++nprotect;
+      subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included"));
+      table = table_new;
     }
   }
 
@@ -62,7 +92,6 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   } else error("Type %s is not supported.", type2char(tx));
 
   int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
-  SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *restrict pans = INTEGER(ans);
   size_t id = 0;
 
@@ -232,5 +261,9 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   UNPROTECT(nprotect);
   return ans;
 }
+
+
+
+
 
 

@@ -11,6 +11,7 @@
 
 #include <R.h>
 #include <Rinternals.h>
+#include <stdbool.h>
 
 #define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
 #define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
@@ -42,6 +43,7 @@ SEXP setcolorder(SEXP, SEXP);
 SEXP subsetDT(SEXP, SEXP, SEXP, SEXP);
 SEXP subsetCols(SEXP, SEXP, SEXP);
 SEXP subsetVector(SEXP, SEXP, SEXP);
+void subsetVectorRaw(SEXP, SEXP, SEXP, const bool);
 SEXP Calloccol(SEXP);
 void writeValue(SEXP, SEXP, const int, const int);
 void writeNA(SEXP, const int, const int);
