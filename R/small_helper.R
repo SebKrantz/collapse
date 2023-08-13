@@ -329,9 +329,6 @@ is.Date <- function(x) {
   inherits(x, c("Date","POSIXlt","POSIXct"))
 }
 
-
-"%!in%" <- function(x, table) match(x, table, nomatch = 0L) == 0L
-
 # more consistent with base than na_rm
 # na.rm <- function(x) { # cpp version available, but not faster !
 #   if(length(attr(x, "names"))) { # gives corruped time-series !
@@ -550,8 +547,10 @@ setnck <- function(x, value) {
 # }
 
 fmatch <- function(x, table, nomatch = NA_integer_) .Call(C_match_single, x, table, nomatch)
-ckmatch <- function(x, table, e = "Unknown columns:") if(anyNA(m <- match(x, table))) stop(paste(e, paste(x[is.na(m)], collapse = ", "))) else m
-
+ckmatch <- function(x, table, e = "Unknown columns:") if(anyNA(m <- fmatch(x, table))) stop(paste(e, paste(x[is.na(m)], collapse = ", "))) else m
+"%!in%" <- function(x, table) fmatch(x, table, 0L) == 0L
+"%!iin%" <- function(x, table) whichv(fmatch(x, table, 0L), 0L)
+"%iin%" <- function(x, table) whichv(fmatch(x, table, 0L), 0L, invert = TRUE)
 # anyNAerror <- function(x, e) if(anyNA(x)) stop(e) else x
 
 cols2int <- function(cols, x, nam, topos = TRUE) {

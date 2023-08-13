@@ -16,7 +16,9 @@
 
 * Added `vec()`: efficiently turn matrices or data frames / lists into a single atomic vector. I am aware of multiple implementations in other packages, which are mostly inefficient. With atomic objects, `vec()` simply removes the attributes without copying the object, and with lists it directly calls `C_pivot_longer`. 
 
-* Added `fmatch()`: a striking fast `match()` function. 
+* Added `fmatch()`: a striking fast `match()` function. This also benefits `ckmatch()` and `%!in%`.
+
+* Added operators `%iin%` and `%!iin%`: these directly return indices, i.e. `%[!]iin%` is equivalent to `which(x %[!]in% table)`. This is useful especially for subsetting where directly supplying indices is more efficient e.g. `x[x %[!]iin% table]` is faster than `x[x %[!]in% table]`. Similarly `fsubset(wlddev, iso3c %iin% c("DEU", "ITA", "FRA"))` is very fast. 
 
 ### Improvements
 
