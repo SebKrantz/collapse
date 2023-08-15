@@ -546,7 +546,7 @@ setnck <- function(x, value) {
 #   x
 # }
 
-fmatch <- function(x, table, nomatch = NA_integer_) .Call(C_match_single, x, table, nomatch)
+fmatch <- function(x, table, nomatch = NA_integer_) .Call(C_fmatch, x, table, nomatch)
 ckmatch <- function(x, table, e = "Unknown columns:") if(anyNA(m <- fmatch(x, table))) stop(paste(e, paste(x[is.na(m)], collapse = ", "))) else m
 "%!in%" <- function(x, table) fmatch(x, table, 0L) == 0L
 "%!iin%" <- function(x, table) whichv(fmatch(x, table, 0L), 0L)
