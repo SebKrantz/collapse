@@ -265,6 +265,65 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
 
 
 
+// Outsourcing the conversions to a central function
+
+SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
+
+  int nprotect = 1;
+  SEXP out = PROTECT(allocVector(VECSXP, 2));
+  SET_VECTOR_ELT(out, 0, x);
+  SET_VECTOR_ELT(out, 1, table);
+
+  // https://github.com/wch/r-source/blob/433b0c829018c7ad8cd6a585bf9c388f8aaae303/src/main/unique.c#L1356C4-L1356C4
+  if(TYPEOF(x) == CPLXSXP || TYPEOF(x) > STRSXP) SET_VECTOR_ELT(out, 0, coerceVector(x, STRSXP));
+  if(TYPEOF(table) == CPLXSXP || TYPEOF(table) > STRSXP) SET_VECTOR_ELT(out, 1, coerceVector(table, STRSXP));
+  x = VECTOR_ELT(out, 0);
+  table = VECTOR_ELT(out, 1);
+  if(TYPEOF(x) != TYPEOF(table)) {
+    if(TYPEOF(x) > TYPEOF(table)) {
+      SEXP tmp = table; table = x; x = tmp;
+    }
+    if(isFactor(x)) { // TODO: could implement as in single case.. What if x is logical and table is factor??
+      SET_VECTOR_ELT(out, 0, asCharacterFactor(x));
+      if(TYPEOF(table) != STRSXP) SET_VECTOR_ELT(out, 1, coerceVector(table, STRSXP));
+    } else SET_VECTOR_ELT(out, 0, coerceVector(x, TYPEOF(table)));
+  } else if(isFactor(x) && isFactor(table)) {
+    if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
+      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
+      SEXP table_new;
+      SET_VECTOR_ELT(out, 1, table_new = duplicate(table));
+      subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included")); // TODO: check this !!
+    }
+  }
+
+  UNPROTECT(nprotect);
+  return out;
+}
+
+
+SEXP coerce_to_equal_types(SEXP x, SEXP table) {
+
+  if(TYPEOF(x) == VECSXP || TYPEOF(table) == VECSXP) {
+    if(TYPEOF(x) != TYPEOF(table)) error("x and table must both be lists when one is a list");
+    int l = length(x);
+    if(length(table) != l) error("lengths of x and table must be equal of both are lists");
+    SEXP out = PROTECT(allocVector(VECSXP, l));
+    for(int i = 0; i < l; i++) {
+      SEXP xi = VECTOR_ELT(x, i);
+      SEXP ti = VECTOR_ELT(table, i);
+      SET_VECTOR_ELT(out, i, coerce_single_to_equal_types(xi, ti));
+    }
+    UNPROTECT(1);
+    return out;
+  }
+
+  return coerce_single_to_equal_types(x, table);
+}
+
+
+
+// Still See: https://www.cockroachlabs.com/blog/vectorized-hash-joiner/
+
 SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
 
   if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("both x and table need to be atomic vectors or lists");
@@ -275,39 +334,13 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
   if(l != lt) error("length(n) must match length(nt)");
   if(l != 2) error("Internal function match_two_vectors() only supports lists of length 2");
 
-  // Shallow copy in case we need to coerce
+  // Shallow copy and coercing as necessary
   int nprotect = 1;
-  SEXP clist = PROTECT(allocVector(VECSXP, 4)), *pc = SEXPPTR(clist);
-  for(int j = 0; j < 2; ++j) {
-    pc[j] = VECTOR_ELT(x, j);
-    pc[j+2] = VECTOR_ELT(table, j);
-  }
-  const int n = length(pc[0]), nt = length(pc[2]);
-  if(n != length(pc[1])) error("both vectors in x must have the same length");
-  if(nt != length(pc[3])) error("both vectors in table must have the same length");
-
-  // Now coercing as necessary
-  for(int j = 0; j < 2; ++j) {
-    if(TYPEOF(pc[j]) == CPLXSXP || TYPEOF(pc[j]) > STRSXP) SET_VECTOR_ELT(clist, j, coerceVector(pc[j], STRSXP));
-    if(TYPEOF(pc[j+2]) == CPLXSXP || TYPEOF(pc[j+2]) > STRSXP) SET_VECTOR_ELT(clist, j+2, coerceVector(pc[j+2], STRSXP));
-    x = pc[j]; table = pc[j+2];
-    if(TYPEOF(x) != TYPEOF(table)) {
-      if(TYPEOF(x) > TYPEOF(table)) {
-        SEXP tmp = table; table = x; x = tmp;
-      }
-      if(isFactor(x)) { // TODO: could implement as in single case.. What if x is logical and table is factor??
-        SET_VECTOR_ELT(clist, j, asCharacterFactor(x));
-        if(TYPEOF(table) != STRSXP) SET_VECTOR_ELT(clist, j+2, coerceVector(table, STRSXP));
-      } else SET_VECTOR_ELT(clist, j, coerceVector(x, TYPEOF(table)));
-    } else if(isFactor(x) && isFactor(table)) {
-      if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
-        SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
-        SEXP table_new;
-        SET_VECTOR_ELT(clist, j+2, table_new = duplicate(table));
-        subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included")); // TODO: check this !!
-      }
-    }
-  }
+  SEXP clist = PROTECT(coerce_to_equal_types(x, table));
+  const SEXP *pc = SEXPPTR_RO(clist), *pc1 = SEXPPTR_RO(pc[0]), *pc2 = SEXPPTR_RO(pc[1]);
+  const int n = length(pc1[0]), nt = length(pc1[1]);
+  if(n != length(pc2[0])) error("both vectors in x must have the same length");
+  if(nt != length(pc2[1])) error("both vectors in table must have the same length");
 
   int K = 0;
   size_t M;
@@ -331,8 +364,8 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     switch(t1) {
       case INTSXP:
       case LGLSXP: {
-        const int *restrict px1 = INTEGER(pc[0]), *restrict px2 = INTEGER(pc[1]),
-                  *restrict pt1 = INTEGER(pc[2]), *restrict pt2 = INTEGER(pc[3]);
+        const int *restrict px1 = INTEGER(pc1[0]), *restrict px2 = INTEGER(pc2[0]),
+                  *restrict pt1 = INTEGER(pc1[1]), *restrict pt2 = INTEGER(pc2[1]);
         // fill hash table with indices of 'table'
         for (int i = 0; i != nt; ++i) {
           id = HASH((unsigned)pt1[i] * (unsigned)pt2[i], K); // TODO: bitwise? combine hash values?
@@ -358,8 +391,8 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
         }
       } break;
       case STRSXP: {
-        const SEXP *restrict px1 = STRING_PTR(pc[0]), *restrict px2 = STRING_PTR(pc[1]),
-                   *restrict pt1 = STRING_PTR(pc[2]), *restrict pt2 = STRING_PTR(pc[3]);
+        const SEXP *restrict px1 = STRING_PTR(pc1[0]), *restrict px2 = STRING_PTR(pc2[0]),
+                   *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
         // fill hash table with indices of 'table'
         for (int i = 0; i != nt; ++i) {
           id = HASH(((intptr_t) pt1[i] ^ (intptr_t) pt2[i]) & 0xffffffff, K);
@@ -385,8 +418,8 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
         }
       } break;
       case REALSXP: {
-        const double *restrict px1 = REAL(pc[0]), *restrict px2 = REAL(pc[1]),
-                     *restrict pt1 = REAL(pc[2]), *restrict pt2 = REAL(pc[3]);
+        const double *restrict px1 = REAL(pc1[0]), *restrict px2 = REAL(pc2[0]),
+                     *restrict pt1 = REAL(pc1[1]), *restrict pt2 = REAL(pc2[1]);
         union uno tpv1, tpv2;
         // fill hash table with indices of 'table'
         for (int i = 0; i != nt; ++i) {
@@ -420,8 +453,8 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     // First case: integer and real
     if(((t1 == INTSXP || t1 == LGLSXP) && t2 == REALSXP) || (t1 == REALSXP && (t2 == INTSXP || t2 == LGLSXP))) {
       const int rev = t1 == REALSXP;
-      const int *restrict pxi = INTEGER(pc[0+rev]), *restrict pti = INTEGER(pc[2+rev]);
-      const double *restrict pxr = REAL(pc[1-rev]), *restrict ptr = REAL(pc[3-rev]);
+      const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
+      const double *restrict pxr = REAL(VECTOR_ELT(pc[1-rev], 0)), *restrict ptr = REAL(VECTOR_ELT(pc[1-rev], 1));
       union uno tpv;
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -452,8 +485,8 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     // Second case: real and string
     } else if ((t1 == REALSXP && t2 == STRSXP) || (t1 == STRSXP && t2 == REALSXP)) {
       const int rev = t1 == STRSXP;
-      const double *restrict pxr = REAL(pc[0+rev]), *restrict ptr = REAL(pc[2+rev]);
-      const SEXP *restrict pxs = STRING_PTR(pc[1-rev]), *restrict pts = STRING_PTR(pc[3-rev]);
+      const double *restrict pxr = REAL(VECTOR_ELT(pc[rev], 0)), *restrict ptr = REAL(VECTOR_ELT(pc[rev], 1));
+      const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
       union uno tpv;
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -483,8 +516,8 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     // Third case: integer and string
     } else if(((t1 == INTSXP || t1 == LGLSXP) && t2 == STRSXP) || (t1 == STRSXP && (t2 == INTSXP || t2 == LGLSXP))) {
       const int rev = t1 == STRSXP;
-      const int *restrict pxi = INTEGER(pc[0+rev]), *restrict pti = INTEGER(pc[2+rev]);
-      const SEXP *restrict pxs = STRING_PTR(pc[1-rev]), *restrict pts = STRING_PTR(pc[3-rev]);
+      const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
+      const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
