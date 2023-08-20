@@ -87,6 +87,7 @@ SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
 SEXP funiqueC(SEXP x);
 SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch);
+SEXP coerce_to_equal_types(SEXP x, SEXP table);
 SEXP createeptr(SEXP x);
 SEXP geteptr(SEXP x);
 SEXP fcrosscolon(SEXP x, SEXP ngp, SEXP y, SEXP ckna);
@@ -97,6 +98,7 @@ SEXP unlock_collapse_namespace(SEXP env);
 void writeValueByIndex(SEXP target, SEXP source, const int from, SEXP index);
 SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol);
 SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads);
+SEXP sort_merge_join(SEXP x, SEXP table, SEXP ox, SEXP ot);
 // fnobs rewritten in C:
 SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);

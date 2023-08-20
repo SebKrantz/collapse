@@ -128,6 +128,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_unlock_collapse_namespace", (DL_FUNC) &unlock_collapse_namespace, 1},
   {"C_pivot_long", (DL_FUNC) &pivot_long, 3},
   {"C_pivot_wide", (DL_FUNC) &pivot_wide, 5},
+  {"C_sort_merge_join", (DL_FUNC) &sort_merge_join, 4},
   // {"C_aschar", (DL_FUNC) &CasChar, 1},
   {"C_subsetDT", (DL_FUNC) &subsetDT, 4},
   {"C_subsetVector", (DL_FUNC) &subsetVector, 3},
