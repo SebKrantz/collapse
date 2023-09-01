@@ -367,6 +367,11 @@ SEXP dupVecIndexKeepNA(SEXP x) {
 // TODO: Only one M calculation ?
 // Think: If in the second grouping variable all entries are the same, you loop through the whole table for each value..
 
+// TODO: Faster possibility indexing by grouping vector?? -> would need multiple hash tables through which complicates things,
+// but could still end up being faster...
+
+// Idea: instead of hasing index again, just distribute it fairly through multiplying with (M/ng)
+
 // **************************************************
 // This function adds a second vector to the grouping
 // **************************************************
@@ -385,14 +390,14 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
       } else K = 0;
     }
     if(K == 0) {
-      const size_t n2 = 2U * (size_t)n;
+      const size_t n2 = 2U * (size_t)n; // + ng
       M = 256;
       K = 8;
       while (M < n2) {
         M *= 2;
         K++;
       }
-      M += ng; // Here we add the number of previous groups...
+      // M += ng; // Here we add the number of previous groups...
     }
   } else if (tx == LGLSXP) {
     M = (size_t)ng * 3 + 1;
@@ -432,11 +437,12 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   // Note: In general, combining bitwise i.e. px[i] ^ pidx[i] seems slightly faster than multiplying (px[i] * pidx[i])...
   case INTSXP: {
     const int *restrict px = INTEGER(x);
+    const unsigned int mult = M / ng;
     for (int i = 0; i != n; ++i) {
-      id = HASH((unsigned)px[i] * (unsigned)pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
+      id = ((unsigned)pidx[i]*mult) ^ HASH(px[i], K); // HASH((unsigned)px[i] * (unsigned)pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
       while(h[id]) {  // However multiplication causes signed integer overflow... UBSAN error.
         hid = h[id]-1;
-        if(px[hid] == px[i] && pidx[hid] == pidx[i]) {
+        if(pidx[hid] == pidx[i] && px[hid] == px[i]) { // Usually pidx has more distinct values...
           pans_i[i] = pans_i[hid];
           goto ibl;
         }
@@ -449,13 +455,14 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   } break;
   case REALSXP: {
     const double *restrict px = REAL(x);
+    const unsigned int mult = M / ng;
     union uno tpv;
     for (int i = 0; i != n; ++i) {
       tpv.d = px[i]; // R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN :px[i]);
-      id = HASH((tpv.u[0] + tpv.u[1]) ^ pidx[i], K) + pidx[i]; // Note: This is much faster than just adding pidx[i] to the hash value...
+      id = ((unsigned)pidx[i]*mult) ^ HASH(tpv.u[0] + tpv.u[1], K); // HASH((tpv.u[0] + tpv.u[1]) ^ pidx[i], K) + pidx[i]; // Note: This is much faster than just adding pidx[i] to the hash value...
       while(h[id]) { // Problem: This value might be seen before, but not in combination with that pidx value...
         hid = h[id]-1; // The issue here is that REQUAL(px[hid], px[i]) could be true but pidx[hid] == pidx[i] fails, although the same combination of px and pidx could be seen earlier before...
-        if(REQUAL(px[hid], px[i]) && pidx[hid] == pidx[i]) {
+        if(pidx[hid] == pidx[i] && REQUAL(px[hid], px[i])) {
           pans_i[i] = pans_i[hid];
           goto rbl;
         }
@@ -468,6 +475,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   } break;
   case CPLXSXP: {
     const Rcomplex *restrict px = COMPLEX(x);
+    const unsigned int mult = M / ng;
     unsigned int u;
     union uno tpv;
     Rcomplex tmp;
@@ -482,10 +490,10 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
       u = tpv.u[0] ^ tpv.u[1];
       tpv.d = tmp.i;
       u ^= tpv.u[0] ^ tpv.u[1];
-      id = HASH(u ^ pidx[i], K) + pidx[i];
+      id = ((unsigned)pidx[i]*mult) ^ HASH(u, K);
       while(h[id]) {
         hid = h[id]-1;
-        if(CEQUAL(px[hid], px[i]) && pidx[hid] == pidx[i]) {
+        if(pidx[hid] == pidx[i] && CEQUAL(px[hid], px[i])) {
           pans_i[i] = pans_i[hid];
           goto cbl;
         }
@@ -498,11 +506,12 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   } break;
   case STRSXP: {
     const SEXP *restrict px = STRING_PTR(x);
+    const unsigned int mult = M / ng;
     for (int i = 0; i != n; ++i) {
-      id = HASH(((intptr_t) px[i] & 0xffffffff) ^ pidx[i], K) + pidx[i];
+      id = ((unsigned)pidx[i]*mult) ^ HASH(((intptr_t) px[i] & 0xffffffff), K); // HASH(((intptr_t) px[i] & 0xffffffff) ^ pidx[i], K) + pidx[i];
       while(h[id]) {
         hid = h[id]-1;
-        if(px[hid] == px[i] && pidx[hid] == pidx[i]) {
+        if(pidx[hid] == pidx[i] && px[hid] == px[i]) {
           pans_i[i] = pans_i[hid];
           goto sbl;
         }
@@ -798,7 +807,6 @@ SEXP funiqueC(SEXP x) {
   UNPROTECT(nprotect);
   return res;
 }
-
 
 // From the kit package...
 
