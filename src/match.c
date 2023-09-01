@@ -357,7 +357,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
   int *restrict pans = INTEGER(ans);
   size_t id = 0;
 
-  const int t1 = TYPEOF(pc[0]), t2 = TYPEOF(pc[1]);
+  const int t1 = TYPEOF(pc1[0]), t2 = TYPEOF(pc1[1]);
 
   // 6 cases: 3 same type and 3 different types
   if(t1 == t2) { // same type
@@ -555,6 +555,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
 
 // Function for export
 SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch) {
-  if(TYPEOF(x) == VECSXP) return match_two_vectors(x, table, nomatch);
+  if(TYPEOF(x) == VECSXP && length(x) > 1) return match_two_vectors(x, table, nomatch);
+  if(TYPEOF(x) == VECSXP) return match_single(VECTOR_ELT(x, 0), VECTOR_ELT(table, 0), nomatch);
   return match_single(x, table, nomatch);
 }
