@@ -264,7 +264,6 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
 }
 
 
-
 // Outsourcing the conversions to a central function
 
 SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
@@ -321,7 +320,6 @@ SEXP coerce_to_equal_types(SEXP x, SEXP table) {
 }
 
 
-
 // Still See: https://www.cockroachlabs.com/blog/vectorized-hash-joiner/
 
 SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
@@ -357,7 +355,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
   int *restrict pans = INTEGER(ans);
   size_t id = 0;
 
-  const int t1 = TYPEOF(pc1[0]), t2 = TYPEOF(pc1[1]);
+  const int t1 = TYPEOF(pc1[0]), t2 = TYPEOF(pc2[0]);
 
   // 6 cases: 3 same type and 3 different types
   if(t1 == t2) { // same type
@@ -395,7 +393,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
                    *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
         // fill hash table with indices of 'table'
         for (int i = 0; i != nt; ++i) {
-          id = HASH(((intptr_t) pt1[i] ^ (intptr_t) pt2[i]) & 0xffffffff, K);
+          id = HASH((((intptr_t) pt1[i] ^ (intptr_t) pt2[i]) & 0xffffffff), K);
           while(h[id]) {
             if(pt1[h[id]-1] == pt1[i] && pt2[h[id]-1] == pt2[i]) goto sbl;
             if(++id >= M) id = 0;
@@ -405,7 +403,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
         }
         // look up values of x in hash table
         for (int i = 0; i != n; ++i) {
-          id = HASH(((intptr_t) px1[i] ^ (intptr_t) px2[i]) & 0xffffffff, K);
+          id = HASH((((intptr_t) px1[i] ^ (intptr_t) px2[i]) & 0xffffffff), K);
           while(h[id]) {
             if(pt1[h[id]-1] == px1[i] && pt2[h[id]-1] == px2[i]) {
               pans[i] = h[id];
@@ -553,9 +551,409 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
 // This will have to involve bucketing and subgroup matching
 // Also idea: combine matches using the maximum before the next largest value?
 
+
+// This is a workhorse function for matching more than 2 vectors: it matches the first two vectors and also
+// saves the unique value count and a group-id for the table which is used to match further columns using the same logic
+void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const int nt, const size_t M, const int K,
+                              int *ng, int *pans, int *ptab)  {
+
+  const SEXP *pc1 = SEXPPTR_RO(pc[0]), *pc2 = SEXPPTR_RO(pc[1]);
+  if(n != length(pc2[0])) error("both vectors in x must have the same length");
+  if(nt != length(pc2[1])) error("both vectors in table must have the same length");
+
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  size_t id = 0;
+  int ngt = 0;
+
+  const int t1 = TYPEOF(pc1[0]), t2 = TYPEOF(pc2[0]);
+
+  // 6 cases: 3 same type and 3 different types
+  if(t1 == t2) { // same type
+    switch(t1) {
+    case INTSXP:
+    case LGLSXP: {
+      const int *restrict px1 = INTEGER(pc1[0]), *restrict px2 = INTEGER(pc2[0]),
+                *restrict pt1 = INTEGER(pc1[1]), *restrict pt2 = INTEGER(pc2[1]);
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        id = HASH((unsigned)pt1[i] * (unsigned)pt2[i], K); // TODO: bitwise? combine hash values?
+        while(h[id]) {
+          if(pt1[h[id]-1] == pt1[i] && pt2[h[id]-1] == pt2[i]) {
+            ptab[i] = ptab[h[id]-1];
+            goto ibl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        ibl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        id = HASH((unsigned)px1[i] * (unsigned)px2[i], K); // TODO: bitwise? combine hash values?
+        while(h[id]) {
+          if(pt1[h[id]-1] == px1[i] && pt2[h[id]-1] == px2[i]) {
+            pans[i] = h[id];
+            goto ibl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        ibl2:;
+      }
+    } break;
+    case STRSXP: {
+      const SEXP *restrict px1 = STRING_PTR(pc1[0]), *restrict px2 = STRING_PTR(pc2[0]),
+                 *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        id = HASH((((intptr_t) pt1[i] ^ (intptr_t) pt2[i]) & 0xffffffff), K);
+        while(h[id]) {
+          if(pt1[h[id]-1] == pt1[i] && pt2[h[id]-1] == pt2[i]) {
+            ptab[i] = ptab[h[id]-1];
+            goto sbl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        sbl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        id = HASH((((intptr_t) px1[i] ^ (intptr_t) px2[i]) & 0xffffffff), K);
+        while(h[id]) {
+          if(pt1[h[id]-1] == px1[i] && pt2[h[id]-1] == px2[i]) {
+            pans[i] = h[id];
+            goto sbl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        sbl2:;
+      }
+    } break;
+    case REALSXP: {
+      const double *restrict px1 = REAL(pc1[0]), *restrict px2 = REAL(pc2[0]),
+                   *restrict pt1 = REAL(pc1[1]), *restrict pt2 = REAL(pc2[1]);
+      union uno tpv1, tpv2;
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        tpv1.d = pt1[i]; tpv2.d = pt2[i];
+        id = HASH(tpv1.u[0] + tpv1.u[1] + tpv2.u[0] + tpv2.u[1], K); // adding all a good idea??
+        while(h[id]) {
+          if(REQUAL(pt1[h[id]-1], pt1[i]) && REQUAL(pt2[h[id]-1], pt2[i])) {
+            ptab[i] = ptab[h[id]-1];
+            goto rbl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        rbl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        tpv1.d = px1[i]; tpv2.d = px2[i];
+        id = HASH(tpv1.u[0] + tpv1.u[1] + tpv2.u[0] + tpv2.u[1], K); // adding all a good idea??
+        while(h[id]) {
+          if(REQUAL(pt1[h[id]-1], px1[i]) && REQUAL(pt2[h[id]-1], px2[i])) {
+            pans[i] = h[id];
+            goto rbl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        rbl2:;
+      }
+    } break;
+    default: error("Type %s is not supported.", type2char(t1)); // Should never be reached
+    }
+  } else { // different types
+    // First case: integer and real
+    if(((t1 == INTSXP || t1 == LGLSXP) && t2 == REALSXP) || (t1 == REALSXP && (t2 == INTSXP || t2 == LGLSXP))) {
+      const int rev = t1 == REALSXP;
+      const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
+      const double *restrict pxr = REAL(VECTOR_ELT(pc[1-rev], 0)), *restrict ptr = REAL(VECTOR_ELT(pc[1-rev], 1));
+      union uno tpv;
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        tpv.d = ptr[i];
+        id = HASH(pti[i] + tpv.u[0] + tpv.u[1], K); // TODO: bitwise? combine hash values?
+        while(h[id]) {
+          if(pti[h[id]-1] == pti[i] && REQUAL(ptr[h[id]-1], ptr[i])) {
+            ptab[i] = ptab[h[id]-1];
+            goto irbl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        irbl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        tpv.d = pxr[i];
+        id = HASH(pxi[i] + tpv.u[0] + tpv.u[1], K); // TODO: bitwise? combine hash values?
+        while(h[id]) {
+          if(pti[h[id]-1] == pxi[i] && REQUAL(ptr[h[id]-1], pxr[i])) {
+            pans[i] = h[id];
+            goto irbl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        irbl2:;
+      }
+
+      // Second case: real and string
+    } else if ((t1 == REALSXP && t2 == STRSXP) || (t1 == STRSXP && t2 == REALSXP)) {
+      const int rev = t1 == STRSXP;
+      const double *restrict pxr = REAL(VECTOR_ELT(pc[rev], 0)), *restrict ptr = REAL(VECTOR_ELT(pc[rev], 1));
+      const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
+      union uno tpv;
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        tpv.d = ptr[i];
+        id = HASH((intptr_t)pts[i] ^ tpv.u[0] ^ tpv.u[1], K); // TODO: bitwise best??
+        while(h[id]) {
+          if(pts[h[id]-1] == pts[i] && REQUAL(ptr[h[id]-1], ptr[i])) { // TODO: which comparison is more expensive?
+            ptab[i] = ptab[h[id]-1];
+            goto rsbl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        rsbl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        tpv.d = pxr[i];
+        id = HASH((intptr_t)pxs[i] ^ tpv.u[0] ^ tpv.u[1], K); // TODO: bitwise best??
+        while(h[id]) {
+          if(pts[h[id]-1] == pxs[i] && REQUAL(ptr[h[id]-1], pxr[i])) { // TODO: which comparison is more expensive?
+            pans[i] = h[id];
+            goto rsbl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        rsbl2:;
+      }
+      // Third case: integer and string
+    } else if(((t1 == INTSXP || t1 == LGLSXP) && t2 == STRSXP) || (t1 == STRSXP && (t2 == INTSXP || t2 == LGLSXP))) {
+      const int rev = t1 == STRSXP;
+      const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
+      const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
+
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        id = HASH((intptr_t)pts[i] ^ pti[i], K); // TODO: bitwise best??
+        while(h[id]) {
+          if(pti[h[id]-1] == pti[i] && pts[h[id]-1] == pts[i]) {
+            ptab[i] = ptab[h[id]-1];
+            goto isbl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        isbl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        id = HASH((intptr_t)pxs[i] ^ pxi[i], K); // TODO: bitwise best??
+        while(h[id]) {
+          if(pti[h[id]-1] == pxi[i] && pts[h[id]-1] == pxs[i]) {
+            pans[i] = h[id];
+            goto isbl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        isbl2:;
+      }
+    } else error("Unsupported types: %s and %s", type2char(t1), type2char(t2));
+  }
+
+  *ng = ngt;
+  Free(h); // Free hash table
+}
+
+// Helper functinon to match an additional vector
+void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt, const size_t M, const int K,
+                      int *ng, int *pans_copy, int *pans, int *ptab_copy, int *ptab) {
+
+  if(length(pcj[0]) != n) error("all vectors in x must have the same length");
+  if(length(pcj[1]) != nt) error("all vectors in table must have the same length");
+
+  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  size_t id = 0;
+
+  const unsigned int mult = M / nt; // TODO: This faster?? or better hash ans ?? -> Seems faster !! but possible failures ??
+  int ngt = 0;
+
+  // Copies really needed??
+  memcpy(pans_copy, pans, n * sizeof(int));
+  memcpy(ptab_copy, ptab, nt * sizeof(int));
+
+  // TODO: Special case for factors !!
+  // TODO: Adjust ng when skipping missing values??
+  switch(TYPEOF(pcj[0])) {
+    case INTSXP:
+    case LGLSXP: {
+      const int *restrict px = INTEGER(pcj[0]), *restrict pt = INTEGER(pcj[1]);
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        if(ptab_copy[i] == nmv) continue;
+        id = ((unsigned)ptab_copy[i]*mult) ^ HASH(pt[i], K); // HASH(ptab_copy[i], K)
+        while(h[id]) {
+          if(ptab_copy[h[id]-1] == ptab_copy[i] && pt[h[id]-1] == pt[i]) {
+            ptab[i] = ptab[h[id]-1];
+            goto itbl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        itbl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        if(pans_copy[i] == nmv) continue;
+        id = ((unsigned)pans_copy[i]*mult) ^ HASH(px[i], K); // HASH(pans_copy[i], K)
+        while(h[id]) {
+          if(ptab_copy[h[id]-1] == pans_copy[i] && pt[h[id]-1] == px[i]) {
+            pans[i] = h[id];
+            goto itbl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        itbl2:;
+      }
+    } break;
+    case STRSXP: {
+      const SEXP *restrict px = STRING_PTR(pcj[0]), *restrict pt = STRING_PTR(pcj[1]);
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        if(ptab_copy[i] == nmv) continue;
+        id = ((unsigned)ptab_copy[i]*mult) ^ HASH(((intptr_t) pt[i] & 0xffffffff), K); // HASH(ptab_copy[i], K)
+        while(h[id]) {
+          if(ptab_copy[h[id]-1] == ptab_copy[i] && pt[h[id]-1] == pt[i]) {
+            ptab[i] = ptab[h[id]-1];
+            goto stbl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        stbl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        if(pans_copy[i] == nmv) continue;
+        id = ((unsigned)pans_copy[i]*mult) ^ HASH(((intptr_t) px[i] & 0xffffffff), K); // HASH(pans_copy[i], K)
+        while(h[id]) {
+          if(ptab_copy[h[id]-1] == pans_copy[i] && pt[h[id]-1] == px[i]) {
+            pans[i] = h[id];
+            goto stbl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        stbl2:;
+      }
+    } break;
+    case REALSXP: {
+      const double *restrict px = REAL(pcj[0]), *restrict pt = REAL(pcj[1]);
+      union uno tpv;
+      // fill hash table with indices of 'table'
+      for (int i = 0; i != nt; ++i) {
+        if(ptab_copy[i] == nmv) continue;
+        tpv.d = pt[i];
+        id = ((unsigned)ptab_copy[i]*mult) ^ HASH(tpv.u[0] + tpv.u[1], K); // HASH(ptab_copy[i], K)
+        while(h[id]) {
+          if(ptab_copy[h[id]-1] == ptab_copy[i] && REQUAL(pt[h[id]-1], pt[i])) {
+            ptab[i] = ptab[h[id]-1];
+            goto rtbl;
+          }
+          if(++id >= M) id = 0;
+        }
+        ptab[i] = h[id] = i + 1; ++ngt;
+        rtbl:;
+      }
+      // look up values of x in hash table
+      for (int i = 0; i != n; ++i) {
+        if(pans_copy[i] == nmv) continue;
+        tpv.d = px[i];
+        id = ((unsigned)pans_copy[i]*mult) ^ HASH(tpv.u[0] + tpv.u[1], K); // HASH(pans_copy[i], K)
+        while(h[id]) {
+          if(ptab_copy[h[id]-1] == pans_copy[i] && REQUAL(pt[h[id]-1], px[i])) {
+            pans[i] = h[id];
+            goto rtbl2;
+          }
+          if(++id >= M) id = 0;
+        }
+        pans[i] = nmv;
+        rtbl2:;
+      }
+    } break;
+    default: error("Type %s is not supported.", type2char(TYPEOF(pcj[0]))); // Should never be reached
+  }
+
+  *ng = ngt;
+  Free(h); // Free hash table
+}
+
+
+SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch)  {
+
+  if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("both x and table need to be atomic vectors or lists");
+  const int l = length(x), lt = length(table), nmv = asInteger(nomatch);
+  if(l == 0) return allocVector(INTSXP, 0);
+  if(lt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(length(VECTOR_ELT(x, 0))), ScalarInteger(1));
+  if(l != lt) error("length(n) must match length(nt)");
+
+  // Shallow copy and coercing as necessary
+  SEXP clist = PROTECT(coerce_to_equal_types(x, table));
+  const SEXP *pc = SEXPPTR_RO(clist);
+  const int n = length(VECTOR_ELT(pc[0], 0)), nt = length(VECTOR_ELT(pc[0], 1));
+
+  // Determining size of hash table
+  const size_t n2 = 2U * (size_t) nt;
+  size_t M = 256;
+  int K = 8;
+  while (M < n2) {
+    M *= 2;
+    K++;
+  }
+
+  int *restrict ptab = (int*)R_alloc(nt, sizeof(int)); // Table to contain the group-id of table
+  int ng = 0; // Number of groups
+  SEXP ans = PROTECT(allocVector(INTSXP, n));
+  int *restrict pans = INTEGER(ans);
+
+  // Initial matching two vectors
+  match_two_vectors_extend(pc, nmv, n, nt, M, K, &ng, pans, ptab);
+
+  // Early termination if table is already unique or we only have 2 vectors (should use match_two_vectors() directly)
+  if(ng != nt && l > 2) {
+    // Need to copy table and ans: enters as first vector
+    int *restrict ptab_copy = (int*)R_alloc(nt, sizeof(int));
+    int *restrict pans_copy = (int*)R_alloc(n, sizeof(int));
+    for (int j = 2; j < l; ++j) {
+      match_additional(SEXPPTR_RO(pc[j]), nmv, n, nt, M, K, &ng, pans_copy, pans, ptab_copy, ptab);
+      if(ng == nt) break;
+    }
+  }
+
+  SEXP sym_ng = install("N.groups");
+  setAttrib(ans, sym_ng, ScalarInteger(ng));
+  UNPROTECT(2);
+  return ans;
+}
+
+
 // Function for export
 SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch) {
-  if(TYPEOF(x) == VECSXP && length(x) > 1) return match_two_vectors(x, table, nomatch);
-  if(TYPEOF(x) == VECSXP) return match_single(VECTOR_ELT(x, 0), VECTOR_ELT(table, 0), nomatch);
+  if(TYPEOF(x) == VECSXP) {
+    if(length(x) == 2) return match_two_vectors(x, table, nomatch);
+    if(length(x) == 1) return match_single(VECTOR_ELT(x, 0), VECTOR_ELT(table, 0), nomatch);
+    return match_multiple(x, table, nomatch);
+  }
   return match_single(x, table, nomatch);
 }
