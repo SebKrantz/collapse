@@ -910,7 +910,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
 }
 
 
-SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch)  {
+SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch, SEXP overid)  {
 
   if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("both x and table need to be atomic vectors or lists");
   const int l = length(x), lt = length(table), nmv = asInteger(nomatch);
@@ -941,13 +941,17 @@ SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch)  {
   match_two_vectors_extend(pc, nmv, n, nt, M, K, &ng, pans, ptab);
 
   // Early termination if table is already unique or we only have 2 vectors (should use match_two_vectors() directly)
-  if(ng != nt && l > 2) {
-    // Need to copy table and ans: enters as first vector
-    int *restrict ptab_copy = (int*)R_alloc(nt, sizeof(int));
-    int *restrict pans_copy = (int*)R_alloc(n, sizeof(int));
-    for (int j = 2; j < l; ++j) {
-      match_additional(SEXPPTR_RO(pc[j]), nmv, n, nt, M, K, &ng, pans_copy, pans, ptab_copy, ptab);
-      if(ng == nt) break;
+  if(l > 2) {
+    int oid = asInteger(overid); // 0 = early termination, 1 = proceed with warning, 2 = proceed without warning
+    if(oid > 0 || ng != nt) {
+      // Need to copy table and ans: enters as first vector
+      int *restrict ptab_copy = (int*)R_alloc(nt, sizeof(int));
+      int *restrict pans_copy = (int*)R_alloc(n, sizeof(int));
+      for (int j = 2; j < l; ++j) {
+        if(oid == 1 && ng == nt) warning("Overidentified match/join condition: the first %d columns identify the data. With overid > 0, fmatch() will continue to match columns, but this is inefficient. Consider reducing the number of table/join columns.", j/oid++);
+        match_additional(SEXPPTR_RO(pc[j]), nmv, n, nt, M, K, &ng, pans_copy, pans, ptab_copy, ptab);
+        if(oid <= 0 && ng == nt) break;
+      }
     }
   }
 
@@ -956,20 +960,20 @@ SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch)  {
 }
 
 
-SEXP fmatch_internal(SEXP x, SEXP table, SEXP nomatch) {
+SEXP fmatch_internal(SEXP x, SEXP table, SEXP nomatch, SEXP overid) {
   if(TYPEOF(x) == VECSXP) {
     if(length(x) == 2) return match_two_vectors(x, table, nomatch);
     if(length(x) == 1) return match_single(VECTOR_ELT(x, 0), VECTOR_ELT(table, 0), nomatch);
-    return match_multiple(x, table, nomatch);
+    return match_multiple(x, table, nomatch, overid);
   }
   return match_single(x, table, nomatch);
 }
 
 
 // This is for export
-SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count) {
-  if(asLogical(count) <= 0) return fmatch_internal(x, table, nomatch);
-  SEXP res = PROTECT(fmatch_internal(x, table, nomatch));
+SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count, SEXP overid) {
+  if(asLogical(count) <= 0) return fmatch_internal(x, table, nomatch, overid);
+  SEXP res = PROTECT(fmatch_internal(x, table, nomatch, overid));
   const int *restrict pres = INTEGER(res);
   int nt = isNewList(table) ? length(VECTOR_ELT(table, 0)) : length(table);
   int n = length(res), nd = 0, nnm = 0, nmv = asInteger(nomatch);

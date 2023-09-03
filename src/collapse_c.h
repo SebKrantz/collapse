@@ -86,7 +86,7 @@ SEXP Cissorted(SEXP x, SEXP strictly);
 SEXP groupVec(SEXP X, SEXP starts, SEXP sizes);
 SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl);
 SEXP funiqueC(SEXP x);
-SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count);
+SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count, SEXP overid);
 SEXP coerce_to_equal_types(SEXP x, SEXP table);
 SEXP createeptr(SEXP x);
 SEXP geteptr(SEXP x);
