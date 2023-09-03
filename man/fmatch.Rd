@@ -64,7 +64,7 @@ ckmatch(x, table, e = "Unknown columns:", \dots)
 }
 
 \seealso{
-\code{\link{ckmatch}}, \code{\link{funique}}, \code{\link{group}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{funique}}, \code{\link{group}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 
 \examples{
