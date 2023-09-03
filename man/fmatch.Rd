@@ -1,5 +1,9 @@
 \name{fmatch}
 \alias{fmatch}
+\alias{ckmatch}
+\alias{\%!in\%}
+\alias{\%!iin\%}
+\alias{\%iin\%}
 
 \title{Fast Matching}
 
@@ -13,6 +17,10 @@
 \usage{
 fmatch(x, table, nomatch = NA_integer_,
        count = FALSE, overid = 1L)
+
+# Check match: throws an informative error for non-matched elements
+# Default message reflects frequent internal use to check data frame columns
+ckmatch(x, table, e = "Unknown columns:", \dots)
 
 # Infix operators based on fmatch():
 \%!in\%   # Opposite of \%in\%
@@ -40,8 +48,9 @@ fmatch(x, table, nomatch = NA_integer_,
    \item \code{1}: Continue matching columns and issue a warning that the data is overidentified.
    \item \code{2}: Continue matching columns without warning.
    }
-
   }
+\item{e}{the error message thrown by \code{ckmatch} for non-matched elements. The message is followed by the comma-separated non-matched elements.}
+\item{\dots}{further arguments to \code{fmatch}.}
 }
 
 \value{
