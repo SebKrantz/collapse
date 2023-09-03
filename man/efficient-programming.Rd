@@ -21,9 +21,6 @@
 \alias{vlengths}
 \alias{vtypes}
 \alias{vgcd}
-\alias{fmatch}
-\alias{\%iin\%}
-\alias{\%!iin\%}
 \alias{fnlevels}
 \alias{fnrow}
 \alias{fncol}
@@ -76,10 +73,6 @@ missing_cases(X, cols=NULL, # The oposite of complete.cases(), faster for DF's.
 vlengths(X, use.names=TRUE) # Faster lengths() and nchar() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
 vgcd(x)                     # Greatest common divisor of positive integers or doubles
-fmatch(x, table,            # Faster match() function, including two operators that
-    nomatch = NA_integer_)  # return indices and thus faster than %in% for subsetting
-x \%iin\% table               # whichv(fmatch(x, table, 0L), 0L, invert = TRUE)
-x \%!iin\% table              # whichv(fmatch(x, table, 0L), 0L)
 fnlevels(x)                 # Faster version of nlevels(x) (for factors)
 fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
 fncol(X)                    # Faster ncol for data frames (not faster for matrices)
@@ -92,7 +85,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X, V, R}{a vector, matrix or data frame.}
-  \item{x, v, table}{a (atomic) vector or matrix (\code{na_rm} also supports lists).}
+  \item{x, v}{a (atomic) vector or matrix (\code{na_rm} also supports lists).}
   \item{value}{a single value of any (atomic) vector type. For \code{whichv} it can also be a \code{length(x)} vector.}
   \item{invert}{logical. \code{TRUE} considers elements \code{x != value}.}
   \item{simplify}{logical. If \code{value} is a length-1 atomic vector, \code{alloc()} with \code{simplify = TRUE} returns a length-n atomic vector. If \code{simplify = FALSE}, the result is always a list.}
@@ -113,7 +106,6 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{prop}{double. For \code{na_insert}: the proportion of observations to be randomly replaced with \code{NA}. For \code{missing_cases} and \code{na_omit}: the proportion of values missing for the case to be considered missing (within \code{cols} if specified). For matrices this is implemented in R as \code{rowSums(is.na(X)) >= max(as.integer(prop * ncol(X)), 1L)}. The C code for data frames works equivalently, and skips list- and raw-columns (\code{ncol(X)} is adjusted downwards).}
   \item{count}{logical. \code{TRUE} returns the row-wise missing value count (within \code{cols}). This ignores \code{prop}.}
   \item{use.names}{logical. Preserve names if \code{X} is a list. }
-  \item{nomatch}{integer. the value to be returned in the case when no match is found. Note that it is coerced to integer.}
   \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv} and \code{setop}, the argument is unused, and serves as a placeholder for possible future arguments.}
 }
 \details{
