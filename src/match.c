@@ -909,6 +909,39 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
   Free(h); // Free hash table
 }
 
+// This is after unique table rows have already been found, we simply need to check if the remaining columns are equal...
+void match_rest(const SEXP *pcj, const int nmv, const int n, const int nt, int *pans) {
+
+  if(length(pcj[0]) != n) error("all vectors in x must have the same length");
+  if(length(pcj[1]) != nt) error("all vectors in table must have the same length");
+
+  switch(TYPEOF(pcj[0])) {
+    case INTSXP:
+    case LGLSXP: {
+      const int *restrict px = INTEGER(pcj[0]), *restrict pt = INTEGER(pcj[1])-1;
+      for (int i = 0; i != n; ++i) {
+        if(pans[i] == nmv) continue;
+        if(px[i] != pt[pans[i]]) pans[i] = nmv;
+      }
+    } break;
+    case STRSXP: {
+      const SEXP *restrict px = STRING_PTR(pcj[0]), *restrict pt = STRING_PTR(pcj[1])-1;
+      for (int i = 0; i != n; ++i) {
+        if(pans[i] == nmv) continue;
+        if(px[i] != pt[pans[i]]) pans[i] = nmv;
+      }
+    } break;
+    case REALSXP: {
+      const double *restrict px = REAL(pcj[0]), *restrict pt = REAL(pcj[1])-1;
+      for (int i = 0; i != n; ++i) {
+        if(pans[i] == nmv) continue;
+        if(!REQUAL(px[i], pt[pans[i]])) pans[i] = nmv;
+      }
+    } break;
+    default: error("Type %s is not supported.", type2char(TYPEOF(pcj[0]))); // Should never be reached
+  }
+}
+
 
 SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch, SEXP overid)  {
 
@@ -948,9 +981,12 @@ SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch, SEXP overid)  {
       int *restrict ptab_copy = (int*)R_alloc(nt, sizeof(int));
       int *restrict pans_copy = (int*)R_alloc(n, sizeof(int));
       for (int j = 2; j < l; ++j) {
-        if(oid == 1 && ng == nt) warning("Overidentified match/join condition: the first %d columns identify the data. With overid > 0, fmatch() will continue to match columns, but this is inefficient. Consider reducing the number of table/join columns.", j/oid++);
-        match_additional(SEXPPTR_RO(pc[j]), nmv, n, nt, M, K, &ng, pans_copy, pans, ptab_copy, ptab);
-        if(oid <= 0 && ng == nt) break;
+        if(ng != nt) match_additional(SEXPPTR_RO(pc[j]), nmv, n, nt, M, K, &ng, pans_copy, pans, ptab_copy, ptab);
+        else {
+          if(oid == 1) warning("Overidentified match/join: the first %d columns uniquely identify the records. With overid > 0, fmatch() will continue to match columns. Consider reducing the number of table/join columns or use overid = 0 for early termination of the matching algorithm. Set overid = 2 to silence this warning.", j/oid++);
+          if(oid <= 0) break;
+          match_rest(SEXPPTR_RO(pc[j]), nmv, n, nt, pans);
+        }
       }
     }
   }
@@ -986,9 +1022,9 @@ SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count, SEXP overid) {
     }
   }
   Free(cnt);
-  SEXP sym_nomatch = install("N.nomatch");
-  SEXP sym_tsize = install("table.size");
-  SEXP sym_distinct = install("N.distinct");
+  SEXP sym_nomatch = install("n_nomatch");
+  SEXP sym_tsize = install("table_size");
+  SEXP sym_distinct = install("n_distinct");
   setAttrib(res, sym_nomatch, ScalarInteger(nnm));
   setAttrib(res, sym_tsize, ScalarInteger(nt));
   setAttrib(res, sym_distinct, ScalarInteger(nd));
