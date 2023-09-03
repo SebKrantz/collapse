@@ -4,7 +4,7 @@ test_that("fmatch works well", {
   expect_identical(wlddev$iso3c %iin% "DEU", which(wlddev$iso3c %in% "DEU"))
   expect_identical(fsubset(wlddev, iso3c %in% c("DEU", "ITA")), fsubset(wlddev, iso3c %iin% c("DEU", "ITA")))
   expect_identical(qF(1:10+0.1) %iin% 1.1, 1L) # qF(1:10+0.1) %in% 1.1 works
-  # what about integers? 
+  # what about integers?
 })
 
 ###########################
@@ -19,9 +19,9 @@ fmatch_base <- function(x, table, nomatch = NA_integer_, count = FALSE) {
   }
   res <- match(x, table, nomatch)
   if(count) {
-    attr(res, "N.nomatch") <- count(res, nomatch)
-    attr(res, "table.size") <- length(table)
-    attr(res, "N.distinct") <- if(is.na(nomatch)) 
+    attr(res, "n_nomatch") <- count(res, nomatch)
+    attr(res, "table_size") <- length(table)
+    attr(res, "n_distinct") <- if(is.na(nomatch))
         fndistinct.default(res) else fndistinct.default(res) - anyv(res, nomatch)
   }
   res
@@ -39,7 +39,7 @@ match_identcal <- function(df, replace = FALSE, max.cols = 1, nomatch = NA_integ
   data <- random_vector_pair(df, replace, max.cols)
   x <- data[[1]]
   table <- data[[2]]
-  id <- identical(fmatch(x, table, nomatch, count, overid = 2L), 
+  id <- identical(fmatch(x, table, nomatch, count, overid = 2L),
                   fmatch_base(x, table, nomatch, count))
   if(id) TRUE else data
 }
@@ -83,16 +83,16 @@ test_that("fmatch returns expected results", {
   x <- c("a", "b", "c")
   table <- c("a", "b", "d")
   expect_equal(fmatch(x, table), fmatch_base(x, table))
-  
-  # Test with list input  
-  table <- wlddev[sample.int(10000, 1000), ]
-  expect_equal(fmatch(wlddev, table), fmatch_base(wlddev, table))
+
+  # Test with list input
+  tab <- wlddev[sample.int(10000, 1000), ]
+  expect_equal(fmatch(wlddev, tab, overid = 2L), fmatch_base(wlddev, tab))
 
   # Test with nomatch argument
   expect_equal(fmatch(x, table, nomatch = 0), fmatch_base(x, table, nomatch = 0))
 
   # Test with count argument
-  expect_equal(fmatch(x, table, count = TRUE), 
+  expect_equal(fmatch(x, table, count = TRUE),
                fmatch_base(x, table, count = TRUE))
 
 })
@@ -101,9 +101,9 @@ test_that("fmatch handles NA matching correctly", {
 
   x <- c("a", NA, "c")
   table <- c("a", "b")
-  
+
   expect_equal(fmatch(x, table), fmatch_base(x, table))
-  expect_equal(fmatch(x, table, nomatch = 0), 
+  expect_equal(fmatch(x, table, nomatch = 0),
               fmatch_base(x, table, nomatch = 0))
 
 })
@@ -111,7 +111,7 @@ test_that("fmatch handles NA matching correctly", {
 test_that("fmatch returns correct index positions", {
   x <- c("a", "b", "c", "d")
   expect_equal(fmatch("a", x), 1L)
-  expect_equal(fmatch("d", x), 4L)  
+  expect_equal(fmatch("d", x), 4L)
   expect_equal(fmatch(c("a", "c"), x), c(1L, 3L))
   expect_equal(fmatch("e", x), NA_integer_)
 })
@@ -120,7 +120,7 @@ test_that("fmatch works with nomatch argument", {
   x <- c("a", "b", "c", "d")
   expect_equal(fmatch("a", x, nomatch = 0L), 1L)
   expect_equal(fmatch("e", x, nomatch = 0L), 0L)
-  
+
 })
 
 test_that("fmatch works with incomparables", {
@@ -128,7 +128,7 @@ test_that("fmatch works with incomparables", {
   expect_equal(fmatch("a", x), 1L)
   expect_equal(fmatch(NA, x), 2L)
   expect_equal(fmatch("c", x), 3L)
-  
+
 })
 
 test_that("fmatch works with duplicates", {
@@ -142,11 +142,11 @@ test_that("fmatch works with integer data", {
   expect_equal(fmatch(4L, x), 4L)
   expect_equal(fmatch(c(1L, 3L), x), c(1L, 3L))
   expect_equal(fmatch(5L, x), NA_integer_)
-  
+
 })
 
 test_that("fmatch works with double data", {
-  x <- c(1.1, 2.2, 3.3, 4.4) 
+  x <- c(1.1, 2.2, 3.3, 4.4)
   expect_equal(fmatch(1.1, x), 1L)
   expect_equal(fmatch(4.4, x), 4L)
   expect_equal(fmatch(c(1.1, 3.3), x), c(1L, 3L))
@@ -159,7 +159,7 @@ test_that("fmatch works with factor data", {
   expect_equal(fmatch("d", x), 4L)
   expect_equal(fmatch(c("a", "c"), x), c(1L, 3L))
   expect_equal(fmatch("e", x), NA_integer_)
-  
+
 })
 
 test_that("fmatch works with logical data", {
