@@ -355,13 +355,14 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
   int *restrict pans = INTEGER(ans);
   size_t id = 0;
 
-  const int t1 = TYPEOF(pc1[0]), t2 = TYPEOF(pc2[0]);
+  int t1 = TYPEOF(pc1[0]), t2 = TYPEOF(pc2[0]);
+  if(t1 == LGLSXP) t1 = INTSXP;
+  if(t2 == LGLSXP) t2 = INTSXP;
 
   // 6 cases: 3 same type and 3 different types
   if(t1 == t2) { // same type
     switch(t1) {
-      case INTSXP:
-      case LGLSXP: {
+      case INTSXP: {
         const int *restrict px1 = INTEGER(pc1[0]), *restrict px2 = INTEGER(pc2[0]),
                   *restrict pt1 = INTEGER(pc1[1]), *restrict pt2 = INTEGER(pc2[1]);
         // fill hash table with indices of 'table'
@@ -449,7 +450,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     }
   } else { // different types
     // First case: integer and real
-    if(((t1 == INTSXP || t1 == LGLSXP) && t2 == REALSXP) || (t1 == REALSXP && (t2 == INTSXP || t2 == LGLSXP))) {
+    if((t1 == INTSXP && t2 == REALSXP) || (t1 == REALSXP && t2 == INTSXP)) {
       const int rev = t1 == REALSXP;
       const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
       const double *restrict pxr = REAL(VECTOR_ELT(pc[1-rev], 0)), *restrict ptr = REAL(VECTOR_ELT(pc[1-rev], 1));
@@ -512,7 +513,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
         rsbl2:;
       }
     // Third case: integer and string
-    } else if(((t1 == INTSXP || t1 == LGLSXP) && t2 == STRSXP) || (t1 == STRSXP && (t2 == INTSXP || t2 == LGLSXP))) {
+    } else if((t1 == INTSXP && t2 == STRSXP) || (t1 == STRSXP && t2 == INTSXP)) {
       const int rev = t1 == STRSXP;
       const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
       const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
@@ -565,13 +566,14 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
   size_t id = 0;
   int ngt = 0;
 
-  const int t1 = TYPEOF(pc1[0]), t2 = TYPEOF(pc2[0]);
+  int t1 = TYPEOF(pc1[0]), t2 = TYPEOF(pc2[0]);
+  if(t1 == LGLSXP) t1 = INTSXP;
+  if(t2 == LGLSXP) t2 = INTSXP;
 
   // 6 cases: 3 same type and 3 different types
   if(t1 == t2) { // same type
     switch(t1) {
-    case INTSXP:
-    case LGLSXP: {
+    case INTSXP: {
       const int *restrict px1 = INTEGER(pc1[0]), *restrict px2 = INTEGER(pc2[0]),
                 *restrict pt1 = INTEGER(pc1[1]), *restrict pt2 = INTEGER(pc2[1]);
       // fill hash table with indices of 'table'
@@ -668,7 +670,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
     }
   } else { // different types
     // First case: integer and real
-    if(((t1 == INTSXP || t1 == LGLSXP) && t2 == REALSXP) || (t1 == REALSXP && (t2 == INTSXP || t2 == LGLSXP))) {
+    if((t1 == INTSXP && t2 == REALSXP) || (t1 == REALSXP && t2 == INTSXP)) {
       const int rev = t1 == REALSXP;
       const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
       const double *restrict pxr = REAL(VECTOR_ELT(pc[1-rev], 0)), *restrict ptr = REAL(VECTOR_ELT(pc[1-rev], 1));
@@ -737,7 +739,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
         rsbl2:;
       }
       // Third case: integer and string
-    } else if(((t1 == INTSXP || t1 == LGLSXP) && t2 == STRSXP) || (t1 == STRSXP && (t2 == INTSXP || t2 == LGLSXP))) {
+    } else if((t1 == INTSXP && t2 == STRSXP) || (t1 == STRSXP && t2 == INTSXP)) {
       const int rev = t1 == STRSXP;
       const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
       const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
@@ -971,21 +973,22 @@ SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count) {
   SEXP res = PROTECT(fmatch_internal(x, table, nomatch));
   const int *restrict pres = INTEGER(res);
   int nt = isNewList(table) ? length(VECTOR_ELT(table, 0)) : length(table);
-  int *restrict cnt = (int*)Calloc(nt+1, int), nd = 0, nnm = 0, nmv = asInteger(nomatch);
-  for (int i = 0; i != nt; ++i) {
+  int n = length(res), nd = 0, nnm = 0, nmv = asInteger(nomatch);
+  int *restrict cnt = (int*)Calloc(nt+1, int);
+  for (int i = 0; i != n; ++i) {
     if(pres[i] == nmv) ++nnm;
     else if(cnt[pres[i]] == 0) {
       cnt[pres[i]] = 1;
       ++nd;
     }
   }
+  Free(cnt);
   SEXP sym_nomatch = install("N.nomatch");
-  SEXP sym_size = install("table.size");
+  SEXP sym_tsize = install("table.size");
   SEXP sym_distinct = install("N.distinct");
   setAttrib(res, sym_nomatch, ScalarInteger(nnm));
-  setAttrib(res, sym_size, ScalarInteger(nt));
+  setAttrib(res, sym_tsize, ScalarInteger(nt));
   setAttrib(res, sym_distinct, ScalarInteger(nd));
-  Free(cnt);
   UNPROTECT(1);
   return res;
 }
