@@ -800,7 +800,10 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
       const int *restrict px = INTEGER(pcj[0]), *restrict pt = INTEGER(pcj[1]);
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        if(ptab_copy[i] == nmv) continue;
+        if(ptab_copy[i] == nmv) {
+          ++ngt;
+          continue;
+        }
         id = ((unsigned)ptab_copy[i]*mult) ^ HASH(pt[i], K); // HASH(ptab_copy[i], K)
         while(h[id]) {
           if(ptab_copy[h[id]-1] == ptab_copy[i] && pt[h[id]-1] == pt[i]) {
@@ -831,7 +834,10 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
       const SEXP *restrict px = STRING_PTR(pcj[0]), *restrict pt = STRING_PTR(pcj[1]);
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        if(ptab_copy[i] == nmv) continue;
+        if(ptab_copy[i] == nmv) {
+          ++ngt;
+          continue;
+        }
         id = ((unsigned)ptab_copy[i]*mult) ^ HASH(((intptr_t) pt[i] & 0xffffffff), K); // HASH(ptab_copy[i], K)
         while(h[id]) {
           if(ptab_copy[h[id]-1] == ptab_copy[i] && pt[h[id]-1] == pt[i]) {
@@ -863,7 +869,10 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
       union uno tpv;
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        if(ptab_copy[i] == nmv) continue;
+        if(ptab_copy[i] == nmv) {
+          ++ngt;
+          continue;
+        }
         tpv.d = pt[i];
         id = ((unsigned)ptab_copy[i]*mult) ^ HASH(tpv.u[0] + tpv.u[1], K); // HASH(ptab_copy[i], K)
         while(h[id]) {
@@ -941,19 +950,42 @@ SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch)  {
     }
   }
 
-  SEXP sym_ng = install("N.groups");
-  setAttrib(ans, sym_ng, ScalarInteger(ng));
   UNPROTECT(2);
   return ans;
 }
 
 
-// Function for export
-SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch) {
+SEXP fmatch_internal(SEXP x, SEXP table, SEXP nomatch) {
   if(TYPEOF(x) == VECSXP) {
     if(length(x) == 2) return match_two_vectors(x, table, nomatch);
     if(length(x) == 1) return match_single(VECTOR_ELT(x, 0), VECTOR_ELT(table, 0), nomatch);
     return match_multiple(x, table, nomatch);
   }
   return match_single(x, table, nomatch);
+}
+
+
+// This is for export
+SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count) {
+  if(asLogical(count) <= 0) return fmatch_internal(x, table, nomatch);
+  SEXP res = PROTECT(fmatch_internal(x, table, nomatch));
+  const int *restrict pres = INTEGER(res);
+  int nt = isNewList(table) ? length(VECTOR_ELT(table, 0)) : length(table);
+  int *restrict cnt = (int*)Calloc(nt+1, int), nd = 0, nnm = 0, nmv = asInteger(nomatch);
+  for (int i = 0; i != nt; ++i) {
+    if(pres[i] == nmv) ++nnm;
+    else if(cnt[pres[i]] == 0) {
+      cnt[pres[i]] = 1;
+      ++nd;
+    }
+  }
+  SEXP sym_nomatch = install("N.nomatch");
+  SEXP sym_size = install("table.size");
+  SEXP sym_distinct = install("N.distinct");
+  setAttrib(res, sym_nomatch, ScalarInteger(nnm));
+  setAttrib(res, sym_size, ScalarInteger(nt));
+  setAttrib(res, sym_distinct, ScalarInteger(nd));
+  Free(cnt);
+  UNPROTECT(1);
+  return res;
 }
