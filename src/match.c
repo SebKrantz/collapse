@@ -777,7 +777,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
   Free(h); // Free hash table
 }
 
-// Helper functinon to match an additional vector
+// Helper function to match an additional vector
 void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt, const size_t M, const int K,
                       int *ng, int *pans_copy, int *pans, int *ptab_copy, int *ptab) {
 
@@ -794,8 +794,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
   memcpy(pans_copy, pans, n * sizeof(int));
   memcpy(ptab_copy, ptab, nt * sizeof(int));
 
-  // TODO: Special case for factors !!
-  // TODO: Adjust ng when skipping missing values??
+  // TODO: Special case for factors !!!!
   switch(TYPEOF(pcj[0])) {
     case INTSXP:
     case LGLSXP: {
