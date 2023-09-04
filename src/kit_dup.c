@@ -437,7 +437,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   // Note: In general, combining bitwise i.e. px[i] ^ pidx[i] seems slightly faster than multiplying (px[i] * pidx[i])...
   case INTSXP: {
     const int *restrict px = INTEGER(x);
-    const unsigned int mult = M / ng;
+    const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
     for (int i = 0; i != n; ++i) {
       id = ((unsigned)pidx[i]*mult) ^ HASH(px[i], K); // HASH((unsigned)px[i] * (unsigned)pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
       while(h[id]) {  // However multiplication causes signed integer overflow... UBSAN error.
@@ -455,7 +455,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   } break;
   case REALSXP: {
     const double *restrict px = REAL(x);
-    const unsigned int mult = M / ng;
+    const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
     union uno tpv;
     for (int i = 0; i != n; ++i) {
       tpv.d = px[i]; // R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN :px[i]);
@@ -475,7 +475,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   } break;
   case CPLXSXP: {
     const Rcomplex *restrict px = COMPLEX(x);
-    const unsigned int mult = M / ng;
+    const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
     unsigned int u;
     union uno tpv;
     Rcomplex tmp;
@@ -506,7 +506,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   } break;
   case STRSXP: {
     const SEXP *restrict px = STRING_PTR(x);
-    const unsigned int mult = M / ng;
+    const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
     for (int i = 0; i != n; ++i) {
       id = ((unsigned)pidx[i]*mult) ^ HASH(((intptr_t) px[i] & 0xffffffff), K); // HASH(((intptr_t) px[i] & 0xffffffff) ^ pidx[i], K) + pidx[i];
       while(h[id]) {
@@ -526,6 +526,10 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   Free(h);
   return g;
 }
+
+
+// TODO: Special 2-vector case
+
 
 // ************************************************************************
 // This function brings everything together for vectors or lists of vectors
@@ -807,6 +811,8 @@ SEXP funiqueC(SEXP x) {
   UNPROTECT(nprotect);
   return res;
 }
+
+// TODO: fduplicated and any_duplicated: smart default methods...
 
 // From the kit package...
 

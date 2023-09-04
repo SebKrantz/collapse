@@ -787,7 +787,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
   int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
   size_t id = 0;
 
-  const unsigned int mult = M / nt; // TODO: This faster?? or better hash ans ?? -> Seems faster !! but possible failures ??
+  const unsigned int mult = (M-1) / nt; // TODO: This faster? or better hash ans ? -> Seems faster ! but possible failures ?
   int ngt = 0;
 
   // Copies really needed??
