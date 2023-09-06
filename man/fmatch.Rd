@@ -87,14 +87,15 @@ df2 <- data.frame(
 )
 head(df2)
 
-# This gives an overidentification warning: first two columns identify the data
+# This gives an overidentification warning: columns 1:2 identify the data
 if(FALSE) fmatch(df1, df2)
 # This just runs through without warning
 fmatch(df1, df2, overid = 2)
 # This terminates computation after first 2 columns
 fmatch(df1, df2, overid = 0)
+fmatch(df1[1:2], df2[1:2])  # Same thing!
 # -> note that here we get an additional match based on the unique ids,
-# which we didn't get before because "Jane" != "Janne"""
+# which we didn't get before because "Jane" != "Janne"
 }
 
 
