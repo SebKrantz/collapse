@@ -7,3 +7,204 @@ sort_merge_join <- function(x, table) {
   ot <- radixorderv(table)
   .Call(C_sort_merge_join, x, table, ox, ot)
 }
+
+
+
+# Modeled after Pandas/Polars:
+# https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.join.html
+# https://pola-rs.github.io/polars/py-polars/html/reference/dataframe/api/polars.DataFrame.join.html
+join <- function(x, y,
+                 on = "auto", # union(names(x), names(y)),
+                 how = "left",
+                 suffix = "auto", # c("_x", "_y")
+                 validate = "m:m",  # NULL,
+                 # sort = FALSE, # TODO: implement sort_merge_join !!!
+                 keep.col.order = TRUE,
+                 verbose = 1L, # getOption("collapse_verbose"),
+                 overid = 1L) { # method = c("hash", "radix")
+
+  # Initial checks
+  if(!is.list(x)) stop("x must be a list")
+  if(!is.list(y)) stop("y must be a list")
+  if(!is.character(on)) stop("need to provide character 'on'")
+
+  # Get names and attributes
+  ax <- attributes(x)
+  x_name <- as.character(substitute(x))
+  y_name <- as.character(substitute(y))
+  oldClass(x) <- NULL
+  oldClass(y) <- NULL
+  xnam <- names(x)
+  ynam <- names(y)
+  how <- switch(how, l = "left", r = "right", i = "inner", f = "full", s = "semi", a = "anti", how)
+
+  # Get join columns
+  if(length(on) == 1L && on == "auto") {
+    xon <- on <- xnam[xnam %in% ynam]
+    if(length(on) == 0L) stop("No matching column names between x and y, please specify columns to join 'on'.")
+    ixon <- match(on, xnam)
+    iyon <- match(on, ynam)
+  } else {
+    xon <- names(on)
+    if(is.null(xon)) xon <- on
+    else if(any(miss <- !nzchar(xon))) xon[miss] <- on[miss]
+    ixon <- ckmatch(xon, xnam, "Unknown x columns:")
+    iyon <- ckmatch(on, ynam, "Unknown y columns:")
+  }
+
+  # Matching step
+  rjoin <- switch(how, right = TRUE, FALSE)
+  count <- verbose || validate != "m:m"
+  # TODO: sort argument: sort = TRUE means roworderv(x, xon), and then sort_merge_join
+  m <- if(rjoin) fmatch(y[iyon], x[ixon], overid = overid, count = count) else
+                 fmatch(x[ixon], y[iyon], overid = overid, count = count)
+
+  # TODO: validate full join...
+  switch(validate,
+    "m:m" = TRUE,
+    "1:1" = {
+      c1 <- attr(m, "N.distinct") != length(m) - attr(m, "N.nomatch")
+      c2 <- attr(m, "N.groups") != attr(m, "N.distinct") && any_duplicated(if(rjoin) x[ixon] else y[iyon])
+      if(rjoin) {
+        tmp <- c2
+        c2 <- c1
+        c1 <- tmp
+      }
+      if(c1 || c2) stop("Join is not 1:1: x is ", if(c1) "not" else "", "unique on the join columns, y is", if(c2) "not" else "", "unique on the join columns")
+    },
+    "1:m" = {
+      cond <- if(rjoin) attr(m, "N.groups") != attr(m, "N.distinct") && any_duplicated(x[ixon]) else
+              attr(m, "N.distinct") != length(m) - attr(m, "N.nomatch")
+      if(cond) stop("Join is not 1:m: x is not unique on the join columns")
+    },
+    "m:1" = {
+      cond <- if(rjoin) attr(m, "N.distinct") != length(m) - attr(m, "N.nomatch") else
+              attr(m, "N.groups") != attr(m, "N.distinct") && any_duplicated(y[iyon])
+      if(cond) stop("Join is not m:1: y is not unique on the join columns")
+    },
+    stop("validate must be one of '1:1', '1:m', 'm:1' or 'm:m'")
+  )
+
+  if(verbose) {
+    nx <- length(m) - attr(m, "N.nomatch")
+    ny <- attr(m, "N.distinct")
+    Ny <- attr(m, "N.groups")
+    if(verbose == 2L) {
+      cin_x <- paste0(xon, ":", substr(vclasses(x[ixon], FALSE), 1, 3))
+      cin_y <- paste0(on, ":", substr(vclasses(y[iyon], FALSE), 1, 3))
+    } else {
+      cin_x <- xon
+      cin_y <- on
+    }
+    xstat <- paste0(nx, "/", length(m), " (", signif(nx/length(m)*100, 3), "%)")
+    ystat <- paste0(ny, "/", Ny, " (", signif(ny/Ny*100, 3), "%)")
+    if(rjoin) {
+      tmp <- ystat
+      ystat <- xstat
+      xstat <- tmp
+    }
+    cat(how, " join: ",
+        x_name, "[", paste(cin_x, collapse = ", "), "] ",
+        xstat, " <", validate ,"> ",
+        y_name, "[", paste(cin_y, collapse = ", "), "] ",
+        ystat, "\n", sep = "")
+  }
+
+  # Check for duplicate columns and suffix as needed
+  if(any(nm <- match(ynam[-iyon], xnam, nomatch = 0L))) {
+    nnm <- nm != 0L
+    nam <- xnam[nm[nnm]]
+    if(length(suffix) == 1L) { # Only appends y with name
+      if(suffix == "auto") suffix <- paste0("_", y_name)
+      names(y)[-iyon][nnm] <- paste0(nam, suffix)
+    } else {
+      names(x)[nm[nnm]] <- paste0(nam, suffix[[1L]]) # if(suffix[[1L]] != "") ??
+      names(y)[-iyon][nnm] <- paste0(nam, suffix[[2L]])
+    }
+    if(verbose) cat("Found duplicate names: ", paste(nam, collapse = ", "), ". These will be renamed using suffix.\n", sep = "")
+  }
+
+  # Core: do the joins
+  res <- switch(how,
+    left = {
+      y_res <- .Call(C_subsetDT, y, m, seq_along(y)[-iyon], if(count) attr(m, "N.nomatch") else TRUE)
+      c(x, y_res)
+    },
+    inner = {
+      anyna <- if(count) attr(m, "N.nomatch") > 0L else anyNA(m)
+      if(anyna) {
+        x_ind <- whichNA(m, invert = TRUE)
+        x <- .Call(C_subsetDT, x, x_ind, seq_along(x), FALSE)
+        m <- na_rm(m)
+        # rn <- ax[["row.names"]] # TODO: Works inside switch??
+        # if(length(rn)) ax[["row.names"]] <- if(is.numeric(rn) || is.null(rn) || rn[1L] == "1")
+        #             .set_row_names(length(x_ind)) else Csv(rn, x_ind)
+      }
+      y_res <- .Call(C_subsetDT, y, m, seq_along(y)[-iyon], FALSE)
+      c(x, y_res)
+    },
+    full = {
+      cond <- !count || attr(m, "N.distinct") != attr(m, "N.groups")
+      if(cond) {
+        um <- if(!count || length(m)-attr(m, "N.distinct")-attr(m, "N.nomatch") != 0L)
+          .Call(C_funique, m) else m # This gets the rows of table matched
+        if(!count || attr(m, "N.nomatch")) um <- na_rm(m)
+        if(count) tsize <- attr(m, "N.groups")
+        else {
+          tsize <- fnrow(y)
+          cond <- length(um) != tsize
+        }
+      }
+      if(cond) { # TODO: special case ? 1 distinct value etc.??
+        tind <- seq_len(tsize)[-um] # TODO: Table may not be unique.
+        res_nrow <- length(m) + length(tind)
+        x_res <- .Call(C_subsetDT, x, seq_len(res_nrow), seq_along(x)[-ixon], TRUE)  # Need check here because oversize indices !!
+        y_res <- .Call(C_subsetDT, y, vec(list(m, tind)), seq_along(y)[-iyon], TRUE) # Need check here because oversize indices !!
+        on_res <- .Call(C_rbindlist, list(x[ixon], .Call(C_subsetDT, y, tind, iyon, FALSE)), FALSE, FALSE, NULL)
+        # if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(res_nrow)
+        if(keep.col.order) {
+          add_vars(x_res, pos = ixon) <- on_res
+          c(x_res, y_res)
+        } else {
+          keep.col.order <- TRUE # has global effects !!
+          c(on_res, x_res, y_res)
+        }
+      } else { # If all elements of table are matched, this is simply a left join
+        y_res <- .Call(C_subsetDT, y, m, iyon, if(count) attr(m, "N.nomatch") else TRUE) # anyNA(um) ??
+        c(x, y_res)
+      }
+    },
+    right = {
+      x_res <- .Call(C_subsetDT, x, m, seq_along(x)[-ixon], if(count) attr(m, "N.nomatch") else TRUE)
+      # if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(length(m))
+      if(keep.col.order) {
+        add_vars(x_res, pos = ixon) <- y[iyon]
+        c(x_res, y[-iyon])
+      } else {
+        keep.col.order <- TRUE # has global effects !!
+        c(y[iyon], x_res, y[-iyon])
+      }
+    },
+    semi = { # = return rows in x that have matching values in y
+      anyna <- if(count) attr(m, "N.nomatch") > 0L else anyNA(m)
+      if(anyna) {
+        x_ind <- whichNA(m, invert = TRUE)
+        # rn <- ax[["row.names"]] # TODO: Works inside switch??
+        # if(length(rn)) ax[["row.names"]] <- if(is.numeric(rn) || is.null(rn) || rn[1L] == "1")
+        #            .set_row_names(x_ind) else Csv(rn, x_ind)
+        .Call(C_subsetDT, x, x_ind, seq_along(x), FALSE)
+      } else x
+    },
+    # = return rows in x that have no matching values in y
+    anti = .Call(C_subsetDT, x, whichNA(m), seq_along(x), FALSE),
+    stop("Unknown join method: ", how)
+  )
+
+  # Final steps
+  if(!keep.col.order) res <- c(res[ixon], res[-ixon])
+  if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(fnrow(res))
+  ax$names <- names(res)
+  .Call(C_setattributes, res, ax)
+  if(any(ax$class == "data.table")) return(alc(res))
+  return(res)
+}
