@@ -169,7 +169,7 @@ join <- function(x, y,
           add_vars(x_res, pos = ixon) <- on_res
           c(x_res, y_res)
         } else {
-          keep.col.order <- TRUE # has global effects !!
+          keep.col.order <- 2L # has global effects !!
           c(on_res, x_res, y_res)
         }
       } else { # If all elements of table are matched, this is simply a left join
@@ -184,7 +184,7 @@ join <- function(x, y,
         add_vars(x_res, pos = ixon) <- y[iyon]
         c(x_res, y[-iyon])
       } else {
-        keep.col.order <- TRUE # has global effects !!
+        keep.col.order <- 2L # has global effects !!
         c(y[iyon], x_res, y[-iyon])
       }
     },
@@ -218,7 +218,7 @@ join <- function(x, y,
                  inner =, semi = structure(alloc(1L, fnrow(res)), levels = "matched", class = c("factor", "na.included")),
                  anti = structure(alloc(1L, fnrow(res)), levels = x_name, class = c("factor", "na.included")))
     mc_name <- if(is.character(column)) column else ".join"
-    if(keep.col.order) res[[mc_name]] <- mc
+    if(keep.col.order == 1L) res[[mc_name]] <- mc
     else res <- c(res[ixon], `names<-`(list(mc), mc_name), res[-ixon])
   } else if(!keep.col.order) res <- c(res[ixon], res[-ixon])
 
