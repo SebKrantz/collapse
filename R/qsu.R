@@ -1,7 +1,7 @@
 
 qsu <- function(x, ...) UseMethod("qsu") # , x
 
-qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, stable.algo = TRUE, ...) {
+qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, stable.algo = .op[["stable.algo"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(qsu.matrix(x, g, pid, w, higher, array, stable.algo, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) {
@@ -22,7 +22,7 @@ qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array
   fbstatsCpp(x,higher,g[[1L]],g[[2L]],pid[[1L]],pid[[2L]],w,stable.algo,array,TRUE,GRPnames(g))
 }
 
-qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, stable.algo = TRUE, ...) {
+qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, array = TRUE, stable.algo = .op[["stable.algo"]], ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   pid <- group_effect(x, effect)
   if(is.null(g)) return(fbstatsCpp(x,higher,0L,0L,fnlevels(pid),pid,w,stable.algo))
@@ -35,7 +35,7 @@ qsu.pseries <- function(x, g = NULL, w = NULL, effect = 1L, higher = FALSE, arra
   fbstatsCpp(x,higher,g[[1L]],g[[2L]],fnlevels(pid),pid,w,stable.algo,array,TRUE,GRPnames(g))
 }
 
-qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, stable.algo = TRUE, ...) {
+qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, stable.algo = .op[["stable.algo"]], ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) {
     if(is.null(pid)) return(fbstatsmCpp(x,higher, w = w, stable.algo = stable.algo))
@@ -55,7 +55,7 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
   fbstatsmCpp(x,higher,g[[1L]],g[[2L]],pid[[1L]],pid[[2L]],w,stable.algo,array,GRPnames(g))
 }
 
-qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = TRUE, ...) {
+qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   formby <- is.call(by)
   formpid <- is.call(pid)
@@ -115,13 +115,13 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
 
 qsu.list <- function(x, ...) qsu.data.frame(x, ...)
 
-qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = TRUE, ...) {
+qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
   oldClass(x) <- NULL
   x[[attr(x, "sf_column")]] <- NULL
   qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, stable.algo, ...)
 }
 
-qsu.grouped_df <- function(x, pid = NULL, w = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = TRUE, ...) {
+qsu.grouped_df <- function(x, pid = NULL, w = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   wsym <- substitute(w)
   pidsym <- substitute(pid)
@@ -163,7 +163,7 @@ qsu.grouped_df <- function(x, pid = NULL, w = NULL, higher = FALSE, array = TRUE
 }
 
 
-qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = TRUE, ...) {
+qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   pid <- group_effect(x, effect)
   x <- unindex(x)

@@ -10,11 +10,18 @@
 
 ### Additions
 
+* Added `join()`: class-agnostic, vectorized, and (default) verbose hash-joins for R, modeled after the *polars* API. Feedback on the API is welcome!
+
 * Added `pivot()`: fast and easy data reshaping! It supports longer, wider and recast pivoting, including handling of variable labels, through a uniform and parsimonious API. It does not perform data aggregation, and by default does not check if the data is uniquely identified by the supplied ids. Underidentification for 'wide' and 'recast' pivots results in the last value being taken within each group. Users can toggle a duplicates check by setting `check.dups = TRUE`. Feedback on the API is welcome!
 
 * Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
 
+* Added `fmatch()`: a striking fast `match()` function for vectors and data frames/lists implementing a vectorized, 2-columns at a time, hash-join algorithm. It is the workhorse function of `join()`, and also benefits `ckmatch()`, `%!in%`, and new operators `%iin%` and `%!iin%`. 
+
+* Added operators `%iin%` and `%!iin%`: these directly return indices, i.e. `%[!]iin%` is equivalent to `which(x %[!]in% table)`. This is useful especially for subsetting where directly supplying indices is more efficient e.g. `x[x %[!]iin% table]` is faster than `x[x %[!]in% table]`. Similarly `fsubset(wlddev, iso3c %iin% c("DEU", "ITA", "FRA"))` is very fast. 
+
 * Added `vec()`: efficiently turn matrices or data frames / lists into a single atomic vector. I am aware of multiple implementations in other packages, which are mostly inefficient. With atomic objects, `vec()` simply removes the attributes without copying the object, and with lists it directly calls `C_pivot_longer`. 
+
 
 ### Improvements
 
@@ -36,6 +43,8 @@
 * `as_factor_GRP()` and `finteraction()` now have an argument `sep = "."` denoting the separator used for compound factor labels.
 
 * `alloc()` now has an additional argument `simplify = TRUE`. `FALSE` always returns list output. 
+
+* `frename()` supports both `new = old` (*pandas*, used to far) and `old = new` (*dplyr*) style renaming conventions. 
 
 # collapse 1.9.6
 

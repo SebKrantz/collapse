@@ -165,6 +165,9 @@ rm(lvec)
 fsubset(wlddev, iso3c \%==\% "DEU") # 3x faster than:
 fsubset(wlddev, iso3c == "DEU")
 
+# With multiple categories we can use \%iin\%
+fsubset(wlddev, iso3c \%iin\% c("DEU", "ITA", "FRA"))
+
 ## Math by reference: permissible types of operations
 x <- alloc(1.0, 1e5) # Vector
 x \%+=\% 1

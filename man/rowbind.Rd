@@ -5,7 +5,7 @@
 Row-Bind Lists / Data Frame-Like Objects
 }
 \description{
-\emph{collapse}'s version of \code{data.table::rbindlist} and \code{rbind.data.frame}. The core code is copied from \emph{data.table}, which deserves all credit for the implementation. \code{rowbind} only binds (non-nested) lists /data.frame's. For a more flexible recursive version see \code{\link{unlist2d}}. To combine lists column-wise see \code{\link{add_vars}} or \code{\link{ftransform}} (with replacement).
+\emph{collapse}'s version of \code{data.table::rbindlist} and \code{rbind.data.frame}. The core code is copied from \emph{data.table}, which deserves all credit for the implementation. \code{rowbind} only binds lists/data.frame's. For a more flexible recursive version see \code{\link{unlist2d}}. To combine lists column-wise see \code{\link{add_vars}} or \code{\link{ftransform}} (with replacement).
 }
 \usage{
 rowbind(\dots, idcol = NULL, row.names = FALSE,

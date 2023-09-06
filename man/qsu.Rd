@@ -22,29 +22,29 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 qsu(x, \dots)
 
 \method{qsu}{default}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE,
-    array = TRUE, stable.algo = TRUE, \dots)
+    array = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{qsu}{matrix}(x, g = NULL, pid = NULL, w = NULL, higher = FALSE,
-    array = TRUE, stable.algo = TRUE, \dots)
+    array = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{qsu}{data.frame}(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE,
-    array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
+    array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{qsu}{grouped_df}(x, pid = NULL, w = NULL, higher = FALSE,
-    array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
+    array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
 
 # Methods for indexed data / compatibility with plm:
 
 \method{qsu}{pseries}(x, g = NULL, w = NULL, effect = 1L, higher = FALSE,
-    array = TRUE, stable.algo = TRUE, \dots)
+    array = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{qsu}{pdata.frame}(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE,
-    array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
+    array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
 
 # Methods for compatibility with sf:
 
 \method{qsu}{sf}(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE,
-    array = TRUE, vlabels = FALSE, stable.algo = TRUE, \dots)
+    array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
 
 
 \method{as.data.frame}{qsu}(x, ..., gid = "Group", stringsAsFactors = TRUE)

@@ -9,10 +9,8 @@
 \alias{namlab}
 \alias{add_stub}
 \alias{rm_stub}
-\alias{\%!in\%}
 \alias{massign}
 \alias{\%=\%}
-\alias{ckmatch}
 \alias{all_identical}
 \alias{all_obj_equal}
 \alias{all_funs}
@@ -32,7 +30,7 @@
 Small (Helper) Functions % \emph{collapse}
 }
 \description{
-Convenience functions in the \emph{collapse} package that help to deal with object attributes such as variable names and labels, matching and object checking, metaprogramming, and that improve the workflow. % Some functions are performance improved replacements for base R functions. % For recoding and replacing values see \code{\link{Recode}}. % for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}.
+Convenience functions in the \emph{collapse} package that help to deal with object attributes such as variable names and labels, object checking, metaprogramming, and that improve the workflow. % Some functions are performance improved replacements for base R functions. % For recoding and replacing values see \code{\link{Recode}}. % for pairwise correlations and covariances see \code{\link{pwcor}}, for summary statistics see \code{\link{qsu}}.
 }
 \usage{
 .c(\dots)                       # Non-standard concatenation i.e. .c(a, b) == c("a", "b")
@@ -53,9 +51,6 @@ add_stub(X, stub, pre = TRUE, # Add a stub (i.e. prefix or postfix) to column na
 rm_stub(X, stub, pre = TRUE,  # Remove stub from column names, also supports general
         regex = FALSE,        # regex matching and removing of characters
         cols = NULL, ...)
-x \%!in\% table                 # The opposite of \%in\%
-ckmatch(x, table,             # Check-match: throws an informative error if non-matched
-     e = "Unknown columns:")
 all_identical(\dots)            # Check exact equality of multiple objects or list-elements
 all_obj_equal(\dots)            # Check near equality of multiple objects or list-elements
 all_funs(expr)                # Find all functions called in an R language expression
@@ -76,7 +71,7 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a matrix or data frame (some functions also support vectors and arrays although that is less common).}
-  \item{x, table}{a (atomic) vector.}
+  \item{x}{a (atomic) vector.}
   \item{expr}{an expression of type "language" e.g. \code{quote(x / sum(x))}.}
   \item{object, to, from}{a suitable R object.}
   \item{a}{a suitable list of attributes.}
@@ -92,7 +87,6 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
   \item{nm}{a suitable vector of row- or column-names.}
   \item{dn}{a suitable vector or list of names for dimension(s).}
   \item{which}{integer. If \code{NULL}, \code{dn} has to be a list fully specifying the dimension names of the object. Alternatively, a vector or list of names for dimensions \code{which} can be supplied. See Examples. }
-  \item{e}{the error message thrown by \code{ckmatch} for non-matched elements. The message is followed by the comma-separated non-matched elements.}
   \item{nam}{character. A vector of object names.}
   \item{values}{a matching atomic vector or list of objects.}
   \item{envir}{the environment to assign into.}

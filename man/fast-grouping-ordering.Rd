@@ -15,6 +15,8 @@
 
 \item \code{\link{fgroup_by}} provides a fast replacement for \code{dplyr::group_by}, creating a grouped data frame (or data.table / tibble etc.) with a 'GRP' object attached. This grouped frame can be used for grouped operations using \emph{collapse}'s fast functions. % \emph{dplyr} functions will treat this tibble like an ordinary (non-grouped) one.
 
+\item \code{\link{fmatch}} is a fast alternative to \code{\link[base]{match}}, which also supports matching of data frame rows.
+
 \item \code{\link{funique}} is a faster version of \code{\link{unique}}. The data frame method also allows selecting unique rows according to a subset of the columns. \code{\link{fnunique}} efficiently calculates the number of unique values/rows. \code{\link{fduplicated}} is a fast alternative to \code{\link{duplicated}}. \code{\link{any_duplicated}} is a simpler and faster alternative to \code{\link{anyDuplicated}}.
 
 \item \code{\link{fcount}} computes group counts based on a subset of columns in the data, and is a fast replacement for \code{dplyr::count}. \code{\link{fcountv}} is a programmers version of the function.
@@ -42,6 +44,7 @@
                  \code{\link{group}}  \tab\tab No methods, for data frames and vectors  \tab\tab Hash-based grouping + grouping information \cr
                  \code{\link{GRP}} \tab\tab \code{default, GRP, factor, qG, grouped_df, pseries, pdata.frame}  \tab\tab Fast grouping and a flexible grouping object \cr
                  \code{\link{fgroup_by}} \tab\tab No methods, for data frames  \tab\tab Fast grouped data frame \cr
+                 \code{\link{fmatch}} \tab\tab No methods, for vectors and data frames  \tab\tab Fast matching \cr
                  \code{\link{funique}}, \code{\link{fnunique}}, \code{\link{fduplicated}}, \code{\link{any_duplicated}} \tab\tab \code{default, data.frame, sf, pseries, pdata.frame, list}  \tab\tab Fast (number of) unique values/rows \cr
                 \code{\link[=fcount]{fcount(v)}} \tab\tab Internal generic, supports vectors, matrices, data.frames, lists, grouped_df and pdata.frame \tab\tab Fast group counts \cr
                  \code{\link{qF}} \tab\tab No methods, for vectors \tab\tab Quick factor generation \cr

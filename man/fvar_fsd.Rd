@@ -18,26 +18,26 @@ fvar(x, \dots)
 fsd(x, \dots)
 
 \method{fvar}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-     use.g.names = TRUE, stable.algo = TRUE, \dots)
+     use.g.names = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 \method{fsd}{default}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-    use.g.names = TRUE, stable.algo = TRUE, \dots)
+    use.g.names = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{fvar}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
+     use.g.names = TRUE, drop = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 \method{fsd}{matrix}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
+    use.g.names = TRUE, drop = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{fvar}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-     use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
+     use.g.names = TRUE, drop = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 \method{fsd}{data.frame}(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-    use.g.names = TRUE, drop = TRUE, stable.algo = TRUE, \dots)
+    use.g.names = TRUE, drop = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{fvar}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-     stable.algo = TRUE, \dots)
+     stable.algo = .op[["stable.algo"]], \dots)
 \method{fsd}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
-    stable.algo = TRUE, \dots)
+    stable.algo = .op[["stable.algo"]], \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
