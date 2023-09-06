@@ -63,7 +63,7 @@ x \%!iin\% table  # = which(x \%!in\% table), but more efficient
 }
 
 \seealso{
-\code{\link{funique}}, \code{\link{group}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{join}}, \code{\link{funique}}, \code{\link{group}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 
 \examples{
