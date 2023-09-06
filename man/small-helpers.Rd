@@ -9,7 +9,6 @@
 \alias{namlab}
 \alias{add_stub}
 \alias{rm_stub}
-\alias{\%!in\%}
 \alias{massign}
 \alias{\%=\%}
 \alias{all_identical}
@@ -72,7 +71,7 @@ is_date(x)                    # Check if object is of class "Date", "POSIXlt" or
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a matrix or data frame (some functions also support vectors and arrays although that is less common).}
-  \item{x, table}{a (atomic) vector.}
+  \item{x}{a (atomic) vector.}
   \item{expr}{an expression of type "language" e.g. \code{quote(x / sum(x))}.}
   \item{object, to, from}{a suitable R object.}
   \item{a}{a suitable list of attributes.}
