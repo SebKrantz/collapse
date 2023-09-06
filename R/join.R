@@ -8,30 +8,31 @@ sort_merge_join <- function(x, table) {
   .Call(C_sort_merge_join, x, table, ox, ot)
 }
 
-
-
 # Modeled after Pandas/Polars:
 # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.join.html
 # https://pola-rs.github.io/polars/py-polars/html/reference/dataframe/api/polars.DataFrame.join.html
 join <- function(x, y,
-                 on = "auto", # union(names(x), names(y)),
+                 on = NULL, # union(names(x), names(y)),
                  how = "left",
-                 suffix = "auto", # c("_x", "_y")
+                 suffix = NULL, # c("_x", "_y")
                  validate = "m:m",  # NULL,
-                 # sort = FALSE, # TODO: implement sort_merge_join !!!
+                 # TODO: implement sort_merge_join !!!
+                 # sort = FALSE,
                  keep.col.order = TRUE,
                  verbose = 1L, # getOption("collapse_verbose"),
-                 overid = 1L) { # method = c("hash", "radix")
+                 overid = 1L,
+                 column = NULL,
+                 match.attr = NULL) { # method = c("hash", "radix") -> implicit to sort...
 
   # Initial checks
   if(!is.list(x)) stop("x must be a list")
   if(!is.list(y)) stop("y must be a list")
-  if(!is.character(on)) stop("need to provide character 'on'")
 
   # Get names and attributes
   ax <- attributes(x)
   x_name <- as.character(substitute(x))
-  y_name <- as.character(substitute(y))
+  if(length(x_name) != 1L || x_name == ".") x_name <- "x" # Piped use
+  y_name <- as.character(substitute(y))[1L]
   oldClass(x) <- NULL
   oldClass(y) <- NULL
   xnam <- names(x)
@@ -39,12 +40,13 @@ join <- function(x, y,
   how <- switch(how, l = "left", r = "right", i = "inner", f = "full", s = "semi", a = "anti", how)
 
   # Get join columns
-  if(length(on) == 1L && on == "auto") {
+  if(is.null(on)) {
     xon <- on <- xnam[xnam %in% ynam]
     if(length(on) == 0L) stop("No matching column names between x and y, please specify columns to join 'on'.")
     ixon <- match(on, xnam)
     iyon <- match(on, ynam)
   } else {
+    if(!is.character(on)) stop("need to provide character 'on'")
     xon <- names(on)
     if(is.null(xon)) xon <- on
     else if(any(miss <- !nzchar(xon))) xon[miss] <- on[miss]
@@ -114,14 +116,15 @@ join <- function(x, y,
   if(any(nm <- match(ynam[-iyon], xnam, nomatch = 0L))) {
     nnm <- nm != 0L
     nam <- xnam[nm[nnm]]
-    if(length(suffix) == 1L) { # Only appends y with name
-      if(suffix == "auto") suffix <- paste0("_", y_name)
+    if(length(suffix) <= 1L) { # Only appends y with name
+      if(is.null(suffix)) suffix <- paste0("_", y_name)
       names(y)[-iyon][nnm] <- paste0(nam, suffix)
     } else {
       names(x)[nm[nnm]] <- paste0(nam, suffix[[1L]]) # if(suffix[[1L]] != "") ??
       names(y)[-iyon][nnm] <- paste0(nam, suffix[[2L]])
     }
-    if(verbose) cat("Found duplicate names: ", paste(nam, collapse = ", "), ". These will be renamed using suffix.\n", sep = "")
+    if(verbose) cat("duplicate columns: ", paste(nam, collapse = ", "), " => renamed using suffix ",
+        if(length(suffix) == 1L) paste0("'", suffix, "' for y") else paste0("'", suffix[[1L]], "' for x and '", suffix[[2L]], "' for y"), "\n", sep = "")
   }
 
   # Core: do the joins
@@ -200,8 +203,25 @@ join <- function(x, y,
     stop("Unknown join method: ", how)
   )
 
+  # Join column and reordering
+  if(length(column)) {
+    if(length(suffix) > 1L) {
+      x_name <- suffix[[1L]]
+      y_name <- suffix[[2L]]
+    }
+    mc <- switch(how,
+                 left = structure(is.na(m) + 1L, levels = c("matched", x_name), class = c("factor", "na.included")),
+                 right = structure(is.na(m) + 1L, levels = c("matched", y_name), class = c("factor", "na.included")),
+                 full = structure(vec(list(is.na(m) + 1L, alloc(2L, fnrow(res)-length(m)))), levels = c("matched", x_name, y_name), class = c("factor", "na.included")),
+                 inner =, semi = structure(alloc(1L, fnrow(res)), levels = "matched", class = c("factor", "na.included")),
+                 anti = structure(alloc(1L, fnrow(res)), levels = x_name, class = c("factor", "na.included")))
+    mc_name <- if(is.character(column)) column else ".join"
+    if(keep.col.order) res[[mc_name]] <- mc
+    else res <- c(res[ixon], `names<-`(list(mc), mc_name), res[-ixon])
+  } else if(!keep.col.order) res <- c(res[ixon], res[-ixon])
+
   # Final steps
-  if(!keep.col.order) res <- c(res[ixon], res[-ixon])
+  if(length(match.attr)) ax[[if(is.character(match.attr)) match.attr else "join.match"]] <- m # TODO: sort merge join probably needs to be o[m]
   if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(fnrow(res))
   ax$names <- names(res)
   .Call(C_setattributes, res, ax)
