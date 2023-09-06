@@ -1022,12 +1022,13 @@ SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count, SEXP overid) {
     }
   }
   Free(cnt);
-  SEXP sym_nomatch = install("n_nomatch");
-  SEXP sym_tsize = install("table_size");
-  SEXP sym_distinct = install("n_distinct");
+  SEXP sym_nomatch = install("N.nomatch");
+  SEXP sym_ng = install("N.groups");
+  SEXP sym_distinct = install("N.distinct");
   setAttrib(res, sym_nomatch, ScalarInteger(nnm));
-  setAttrib(res, sym_tsize, ScalarInteger(nt));
+  setAttrib(res, sym_ng, ScalarInteger(nt));
   setAttrib(res, sym_distinct, ScalarInteger(nd));
+  classgets(res, mkString("qG"));
   UNPROTECT(1);
   return res;
 }

@@ -19,10 +19,11 @@ fmatch_base <- function(x, table, nomatch = NA_integer_, count = FALSE) {
   }
   res <- match(x, table, nomatch)
   if(count) {
-    attr(res, "n_nomatch") <- count(res, nomatch)
-    attr(res, "table_size") <- length(table)
-    attr(res, "n_distinct") <- if(is.na(nomatch))
+    attr(res, "N.nomatch") <- count(res, nomatch)
+    attr(res, "N.groups") <- length(table)
+    attr(res, "N.distinct") <- if(is.na(nomatch))
         fndistinct.default(res) else fndistinct.default(res) - anyv(res, nomatch)
+    oldClass(res) <- "qG"
   }
   res
 }

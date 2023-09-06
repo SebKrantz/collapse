@@ -34,11 +34,12 @@ ckmatch(x, table, e = "Unknown columns:", \dots)
   \item{x}{a vector, list or data frame whose elements are matched against \code{table}. If a list/data frame, matches are found by comparing rows, unlike \code{\link{match}} which compares columns. }
   \item{table}{a vector, list or data frame to match against.}
   \item{nomatch}{integer. Value to be returned in the case when no match is found. Default is \code{NA_integer_}.}
-  \item{count}{logical. Counts number of (unique) matches and attaches 3 attributes:
+  \item{count}{logical. Counts number of (unique) matches and attaches 4 attributes:
    \itemize{
-   \item \code{"n_nomatch"}: The number of elements in \code{x} not matched \code{= sum(result == nomatch)}.
-   \item \code{"table_size"}: The size of the table \code{ = NROW(table)}.
-   \item \code{"n_distinct"}: The number of unique matches \code{ = fndistinct(result[result != nomatch])}.
+   \item \code{"N.nomatch"}: The number of elements in \code{x} not matched \code{= sum(result == nomatch)}.
+   \item \code{"N.groups"}: The size of the table \code{ = NROW(table)}.
+   \item \code{"N.distinct"}: The number of unique matches \code{ = fndistinct(result[result != nomatch])}.
+   \item \code{"class"}: The \code{\link[=qG]{"qG"}} class: needed for optimized computations on the results object (e.g. \code{funique(result)}, which is needed for a full join).
    }
    \emph{Note} that computing these attributes requires an extra pass through the matching vector. Also note that these attributes contain no direct information about whether either \code{x} or \code{table} are unique. This can be checked with \code{\link{any_duplicated}}.
   }
