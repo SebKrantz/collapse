@@ -209,10 +209,12 @@ join <- function(x, y,
       x_name <- suffix[[1L]]
       y_name <- suffix[[2L]]
     }
+    # TODO: better?
+    # matched <- paste0(y_name, "_", y_name)
     mc <- switch(how,
                  left = structure(is.na(m) + 1L, levels = c("matched", x_name), class = c("factor", "na.included")),
                  right = structure(is.na(m) + 1L, levels = c("matched", y_name), class = c("factor", "na.included")),
-                 full = structure(vec(list(is.na(m) + 1L, alloc(2L, fnrow(res)-length(m)))), levels = c("matched", x_name, y_name), class = c("factor", "na.included")),
+                 full = structure(vec(list(is.na(m) + 1L, alloc(3L, fnrow(res)-length(m)))), levels = c("matched", x_name, y_name), class = c("factor", "na.included")),
                  inner =, semi = structure(alloc(1L, fnrow(res)), levels = "matched", class = c("factor", "na.included")),
                  anti = structure(alloc(1L, fnrow(res)), levels = x_name, class = c("factor", "na.included")))
     mc_name <- if(is.character(column)) column else ".join"
