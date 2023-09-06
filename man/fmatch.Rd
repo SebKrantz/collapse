@@ -55,9 +55,7 @@ ckmatch(x, table, e = "Unknown columns:", \dots)
 }
 
 \value{
-  Integer vector containing the positions of first matches of \code{x} in \code{table}. \code{nomatch} is returned for elements of \code{x} that have no match in \code{table}.
-
-  If \code{count = TRUE}, the result has additional attributes \code{"n_nomatch"} counting the number of nomatches, \code{"table_size"} containing the number of elements in \code{table}, and \code{"n_distinct"} counting the number of distinct matches.
+  Integer vector containing the positions of first matches of \code{x} in \code{table}. \code{nomatch} is returned for elements of \code{x} that have no match in \code{table}. If \code{count = TRUE}, the result has additional attributes and a class \code{\link[=qG]{"qG"}}.
 }
 
 \details{
@@ -69,27 +67,35 @@ ckmatch(x, table, e = "Unknown columns:", \dots)
 }
 
 \examples{
+x <- c("b", "c", "a", "e", "f", "ff")
+fmatch(x, letters)
+fmatch(x, letters, nomatch = 0)
+fmatch(x, letters, count = TRUE)
 
-x <- c("b", "c", "a")
-table <- c("a", "b", "c")
+# Table 1
+df1 <- data.frame(
+  id1 = c(1, 1, 2, 3),
+  id2 = c("a", "b", "b", "c"),
+  name = c("John", "Bob", "Jane", "Carl")
+)
+head(df1)
+# Table 2
+df2 <- data.frame(
+  id1 = c(1, 2, 3, 3),
+  id2 = c("a", "b", "c", "e"),
+  name = c("John", "Janne", "Carl", "Lynne")
+)
+head(df2)
 
-fmatch(x, table)
-#> [1] 3 1 2
-
-fmatch(x, table, nomatch = 0)
-#> [1] 2 1 3
-
-fmatch(x, table, count = TRUE)
-#> [1] 3 1 2
-#> attr(,"n_nomatch")
-#> [1] 0
-#> attr(,"table_size")
-#> [1] 3
-#> attr(,"n_distinct")
-#> [1] 3
-
+# This gives an overidentification warning: first two columns identify the data
+if(FALSE) fmatch(df1, df2)
+# This just runs through without warning
+fmatch(df1, df2, overid = 2)
+# This terminates computation after first 2 columns
+fmatch(df1, df2, overid = 0)
+# -> note that here we get an additional match based on the unique ids,
+# which we didn't get before because "Jane" != "Janne"""
 }
-
 
 
 \keyword{manip}

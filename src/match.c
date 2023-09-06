@@ -983,7 +983,7 @@ SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch, SEXP overid)  {
       for (int j = 2; j < l; ++j) {
         if(ng != nt) match_additional(SEXPPTR_RO(pc[j]), nmv, n, nt, M, K, &ng, pans_copy, pans, ptab_copy, ptab);
         else {
-          if(oid == 1) warning("Overidentified match/join: the first %d columns uniquely identify the records. With overid > 0, fmatch() will continue to match columns. Consider reducing the number of table/join columns or use overid = 0 for early termination of the matching algorithm. Set overid = 2 to silence this warning.", j/oid++);
+          if(oid == 1) warning("Overidentified match/join: the first %d of %d columns uniquely match the records. With overid > 0, fmatch() continues to match columns. Consider removing columns or setting overid = 0 to terminate the algorithm after %d columns (the results may differ, see ?fmatch). Alternatively set overid = 2 to silence this warning.", j, l/oid++, j);
           if(oid <= 0) break;
           match_rest(SEXPPTR_RO(pc[j]), nmv, n, nt, pans);
         }
