@@ -91,28 +91,39 @@ colorderv <- function(X, neworder = radixorder(names(X)), pos = "front", regex =
                    any(ax[["class"]] == "data.table")))
 }
 
+# Internal helper for frename: allows both pandas and dplyr style rename
+repl_nam_arg <- function(namarg, args, nam) {
+  m <- match(namarg, nam)
+  if(anyNA(m)) {
+    if(allNA(m)) {
+      m <- ckmatch(as.character(args), nam)
+      nam[m] <- namarg
+    } else stop(paste("Unknown columns:", paste(namarg[is.na(m)], collapse = ", ")))
+  } else nam[m] <- as.character(args)
+  nam
+}
 
 frename_core <- function(.x, cols, .nse, ...) {
   args <- if(.nse) substitute(c(...))[-1L] else c(...)
   nam <- attr(.x, "names")
   namarg <- names(args)
-  if(is.null(namarg) || !all(nzchar(namarg))) { # The second condition is needed for a function with additional arguments to be passed.
-    arg1 <- ..1
-    if(length(cols)) ind <- cols2int(cols, .x, nam)
-    if(is.function(arg1)) {
-      FUN <- if(...length() == 1L) arg1 else # could do special case if ...length() == 2L
-        function(x) do.call(arg1, c(list(x), list(...)[-1L]))
-      if(is.null(cols)) return(FUN(nam))
-      nam[ind] <- FUN(nam[ind])
-    } else if(is.character(arg1)) {
-      if(is.null(cols)) {
-        if(length(arg1) != length(nam)) stop(sprintf("If cols = NULL, the vector or names length = %i must match the object names length = %i.", length(arg1), length(nam)))
-        return(arg1)
-      }
-      if(length(arg1) != length(ind)) stop(sprintf("The vector of names length = %s does not match the number of columns selected = %s.", length(arg1), length(ind)))
-      nam[ind] <- arg1
-    } else stop("... needs to be expressions colname = newname, a function to apply to the names of columns in cols, or a suitable character vector of names.")
-  } else nam[ckmatch(namarg, nam)] <- as.character(args)
+  if(length(namarg) && all(nzchar(namarg))) return(repl_nam_arg(namarg, args, nam)) # The second condition is needed for a function with additional arguments to be passed.
+  arg1 <- ..1
+  if(length(cols)) ind <- cols2int(cols, .x, nam)
+  if(is.function(arg1)) {
+    FUN <- if(...length() == 1L) arg1 else # could do special case if ...length() == 2L
+      function(x) do.call(arg1, c(list(x), list(...)[-1L]))
+    if(is.null(cols)) return(FUN(nam))
+    nam[ind] <- FUN(nam[ind])
+  } else if(is.character(arg1)) {
+    if(is.null(cols)) {
+      if(length(namarg <- names(arg1))) return(repl_nam_arg(namarg, arg1, nam))
+      if(length(arg1) != length(nam)) stop(sprintf("If cols = NULL, the vector or names length = %i must match the object names length = %i.", length(arg1), length(nam)))
+      return(arg1)
+    }
+    if(length(arg1) != length(ind)) stop(sprintf("The vector of names length = %s does not match the number of columns selected = %s.", length(arg1), length(ind)))
+    nam[ind] <- arg1
+  } else stop("... needs to be expressions colname = newname, a function to apply to the names of columns in cols, or a suitable character vector of names.")
   return(nam)
 }
 

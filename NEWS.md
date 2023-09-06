@@ -41,6 +41,8 @@
 
 * `alloc()` now has an additional argument `simplify = TRUE`. `FALSE` always returns list output. 
 
+* `frename()` supports both `new = old` (*pandas*, used to far) and `old = new` (*dplyr*) style renaming conventions. 
+
 # collapse 1.9.6
 
 * New vignette on [*collapse*'s Handling of R Objects](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html): provides an overview of collapse’s (internal) class-agnostic R programming framework.

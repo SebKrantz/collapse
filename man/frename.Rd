@@ -9,7 +9,7 @@
 Fast Renaming and Relabelling Objects
 }
 \description{
-A fast substitute for \code{dplyr::rename}. \code{setrename} renames objects by reference. These functions also work with objects other than data frames that have a 'names' attribute. \code{relabel} and \code{setrelabel} do that same for labels attached to list elements / data frame columns.
+\code{frename} returnes a renamed shallow-copy, \code{setrename} renames objects by reference. These functions also work with objects other than data frames that have a 'names' attribute. \code{relabel} and \code{setrelabel} do that same for labels attached to data frame columns.
 }
 \usage{
 frename(.x, \dots, cols = NULL, .nse = TRUE)
@@ -26,7 +26,7 @@ setrelabel(.x, \dots, cols = NULL, attrn = "label")
 \arguments{
   \item{.x}{for \code{(f/set)rename}: an R object with a \code{"names"} attribute. For \code{(set)relabel}: a named list.
 }
-  \item{\dots}{either tagged vector expressions of the form \code{name = newname} / \code{name = newlabel}, a (named) vector of names/labels, or a single function (+ optional arguments to the function) applied to all names/labels (of columns/elements selected in \code{cols}).
+  \item{\dots}{either tagged vector expressions of the form \code{name = newname} / \code{name = newlabel} (\code{frename} also supports \code{newname = name}), a (named) vector of names/labels, or a single function (+ optional arguments to the function) applied to all names/labels (of columns/elements selected in \code{cols}).
 }
   \item{cols}{If \code{\dots} is a function, select a subset of columns/elements to rename/relabel using names, indices, a logical vector or a function applied to the columns if \code{.x} is a list (e.g. \code{is.numeric}).}
 
@@ -50,6 +50,10 @@ head(frename(iris, Sepal.Length = SL, Sepal.Width = SW,
 head(frename(iris, Sepal.Length = "S L", Sepal.Width = "S W",
                    Petal.Length = "P L", Petal.Width = "P W"))
 
+## Since v2.0.0 this is also supported
+head(frename(iris, SL = Sepal.Length, SW = Sepal.Width,
+                   PL = Petal.Length, PW = Petal.Width))
+
 ## Using a function
 head(frename(iris, tolower))
 head(frename(iris, tolower, cols = 1:2))
@@ -62,6 +66,9 @@ head(frename(iris, Sepal.Length = newname, .nse = FALSE))
 newnames = c("sepal_length", "sepal_width")
 head(frename(iris, newnames, cols = 1:2))
 newnames = c(Sepal.Length = "sepal_length", Sepal.Width = "sepal_width")
+head(frename(iris, newnames, .nse = FALSE))
+# Since v2.0.0, this works as well
+newnames = c(sepal_length = "Sepal.Length", sepal_width = "Sepal.Width")
 head(frename(iris, newnames, .nse = FALSE))
 
 ## Renaming by reference
