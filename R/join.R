@@ -22,7 +22,7 @@ join <- function(x, y,
                  verbose = 1L, # getOption("collapse_verbose"),
                  overid = 1L,
                  column = NULL,
-                 attrn = NULL) { # method = c("hash", "radix") -> implicit to sort...
+                 attr = NULL) { # method = c("hash", "radix") -> implicit to sort...
 
   # Initial checks
   if(!is.list(x)) stop("x must be a list")
@@ -226,7 +226,7 @@ join <- function(x, y,
   } else if(!keep.col.order) res <- c(res[ixon], res[-ixon])
 
   # Final steps
-  if(length(attrn)) ax[[if(is.character(attrn)) attrn else "join.match"]] <- m # TODO: sort merge join probably needs to be o[m]
+  if(length(attr)) ax[[if(is.character(attr)) attr else "join.match"]] <- m # TODO: sort merge join probably needs to be o[m]
   if(how != "left" && length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(fnrow(res))
   ax[["names"]] <- names(res)
   .Call(C_setattributes, res, ax)
