@@ -33,17 +33,18 @@ get_collapse(opts = NULL)
 
     For example \code{set_collapse(mask = "unique")} (or, equivalently, \code{set_collapse(mask = "funique")}) will create \code{unique <- funique} in the \emph{collapse} namespace, export \code{unique()}, and silently detach and attach the namespace again so R can find it - all in millisecond. Thus calling \code{unique()} afterwards uses the \emph{collapse} version - which is many times faster. \code{funique} remains available and you can still call \code{base::unique} explicitly. \cr\cr\tab\tab
 
-    All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels"))} creates \code{subset <- fsubset}, \code{transform <- ftransform} etc.. Special functions are \code{"n"} and \code{"table"/"qtab"}. The former will create \code{n <- GRPN}, for use in \code{(f)summarise}/\code{(f)mutate}, but without the additional arguments of \code{\link{GRPN}}. The latter masks \code{table <- qtab}.
+    All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels"))} creates \code{subset <- fsubset}, \code{transform <- ftransform} etc. Special functions are \code{"n"} and \code{"table"/"qtab"}, and \code{"\%in\%"}, which create \code{n <- GRPN} (for use in \code{(f)summarise}/\code{(f)mutate}), \code{table <- qtab}, and replace \code{\%in\%} with a fast version using \code{\link{fmatch}}, respectively.
     \cr\cr\tab\tab
   There are also a couple of convenience keywords that you can use to mask groups of functions:
   \cr\cr
 
 \tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr\cr
-\tab\tab - \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. \cr\cr % fdim not because of infinite recursion
+\tab\tab - \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{fmatch}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. \cr\cr % fdim not because of infinite recursion
+\tab\tab - \code{"special"} exports \code{n()}, \code{table()} and \code{\%in\%}. See above. \cr\cr
 \tab\tab - \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See also Note. \cr\cr
 \tab\tab - \code{"fast-stat-fun"} adds the functions contained in the macro: \code{.FAST_STAT_FUN}. See also Note. \cr\cr
 \tab\tab - \code{"fast-trfm-fun"} adds the functions contained in: \code{setdiff(.FAST_FUN, .FAST_STAT_FUN)}. See also Note. \cr\cr
-\tab\tab - \code{"all"} turns on all of the above, and also exports \code{n()} and \code{table()}.\cr\cr
+\tab\tab - \code{"all"} turns on all of the above.\cr\cr
 
 
 \tab\tab The re-attaching of the namespace places \emph{collapse} at the top of the search path (after the global environment), implying that all its exported functions will take priority over other libraries. Users can use \code{fastverse::fastverse_conflicts()} to check which functions are masked following \code{set_collapse(mask = ...)}. The option can be changed at any time with immediate effect. Using \code{set_collapse(mask = NULL)} removes all masked functions from the namespace, and can also be called simply to place \emph{collapse} at the top of the search path. \cr\cr\cr\cr\cr\cr

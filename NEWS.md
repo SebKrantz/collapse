@@ -16,7 +16,7 @@
 
 * Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
 
-* Added `fmatch()`: a striking fast `match()` function for vectors and data frames/lists implementing a vectorized, 2-columns at a time, hash-join algorithm. It is the workhorse function of `join()`, and also benefits `ckmatch()`, `%!in%`, and new operators `%iin%` and `%!iin%`. 
+* Added `fmatch()`: a striking fast `match()` function for vectors and data frames/lists implementing a vectorized, 2-columns at a time, hash-join algorithm. It is the workhorse function of `join()`, and also benefits `ckmatch()`, `%!in%`, and new operators `%iin%` and `%!iin%`. It is also possible to `set_collapse(mask = "%in%")` to replace `base::"%in%"` using `fmatch()`. 
 
 * Added operators `%iin%` and `%!iin%`: these directly return indices, i.e. `%[!]iin%` is equivalent to `which(x %[!]in% table)`. This is useful especially for subsetting where directly supplying indices is more efficient e.g. `x[x %[!]iin% table]` is faster than `x[x %[!]in% table]`. Similarly `fsubset(wlddev, iso3c %iin% c("DEU", "ITA", "FRA"))` is very fast. 
 

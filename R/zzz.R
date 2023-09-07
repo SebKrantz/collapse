@@ -2,7 +2,7 @@
 do_collapse_mask <- function(clpns, mask) {
   if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
   # This ensures that you can pass functions with or without f- prefix to the option
-  mask_ffunl <- mask %!in% c("all", "helper", "manip", "fast-fun", "fast-stat-fun", "fast-trfm-fun", "n", "qtab", "qtable", "table")
+  mask_ffunl <- mask %!in% c("all", "helper", "manip", "special", "fast-fun", "fast-stat-fun", "fast-trfm-fun", "n", "qtab", "qtable", "table", "%in%")
   if(any(mask_ffunl)) {
     mask_ffun <- mask[mask_ffunl]
     has_f_prefix <- startsWith(mask_ffun, "f")
@@ -12,12 +12,13 @@ do_collapse_mask <- function(clpns, mask) {
     }
   }
   # This now does the preprocessing (interpreting keywords and changing internal optimization flags as required)
-  mask_all <- any(mask == "all")
-  if(mask_all) mask <- c("helper", "manip", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
+  if(any(mask == "all")) mask <- c("helper", "manip", "special", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
   manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fsummarize", "fmutate", "frename", "findex_by", "findex")
-  helperfun <- c("fdroplevels", "finteraction", "fnlevels", "funique", "fnunique", "fduplicated", "fcount", "fcountv", "fquantile", "frange", "fdist", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
+  helperfun <- c("fdroplevels", "finteraction", "fnlevels", "fmatch", "funique", "fnunique", "fduplicated", "fcount", "fcountv", "fquantile", "frange", "fdist", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
+  specialfun <- c("n", "table", "%in%")
   if(any(mask == "helper")) mask <- unique.default(c(helperfun, mask[mask != "helper"]))
   if(any(mask == "manip")) mask <- unique.default(c(manipfun, mask[mask != "manip"]))
+  if(any(mask == "special")) mask <- unique.default(c(specialfun, mask[mask != "special"]))
   if(any(mask == "fast-fun")) {
     mask <- unique.default(c(.FAST_FUN, mask[mask != "fast-fun"]))
     FSF_mask <- substr(.FAST_STAT_FUN, 2L, 100L)
@@ -41,7 +42,7 @@ do_collapse_mask <- function(clpns, mask) {
   }
   unmask_special <- NULL
   # Special Cases / Functions
-  if(mask_all || any(mask == "n")) {
+  if(any(mask == "n")) {
     unmask_special <- "n"
     mask <- mask[mask != "n"]
     assign("n", clpns[["n_internal"]], envir = clpns)
@@ -49,10 +50,15 @@ do_collapse_mask <- function(clpns, mask) {
     assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, "n"), envir = clpns)
     assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, "n"), envir = clpns)
   }
-  if(mask_all || any(mask %in% c("qtab", "qtable", "table"))) {
+  if(any(mask %in% c("qtab", "qtable", "table"))) {
     assign("table", clpns[["qtab"]], envir = clpns)
     unmask_special <- c(unmask_special, "table")
     mask <- mask[!mask %in% c("qtab", "qtable", "table")]
+  }
+  if(any(mask == "%in%")) {
+    assign("%in%", clpns[["%fin%"]], envir = clpns)
+    unmask_special <- c(unmask_special, "%in%")
+    mask <- mask[mask != "%in%"]
   }
   if(!all(m <- mask %in% names(clpns))) stop("Unsupported functions supplied to option 'collapse_mask': ", paste(mask[!m], collapse = ", "))
   if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f', except for 'n' and 'qtab'/'table'. You supplied: ", paste(mask[!m], collapse = ", "))
@@ -94,7 +100,7 @@ do_collapse_unmask <- function(clpns) {
   nam <- getNamespaceExports(clpns)
   ffuns <- nam[startsWith(nam, "f")]
   rmfun <- nam[nam %in% substr(ffuns, 2L, 100L)]
-  if(any(ntab <- c("n", "table") %in% nam)) rmfun <- c(rmfun, c("n", "table")[ntab])
+  if(any(ntab <- c("n", "table", "%in%") %in% nam)) rmfun <- c(rmfun, c("n", "table", "%in%")[ntab])
   do_collapse_remove_core(clpns, rmfun)
 }
 
