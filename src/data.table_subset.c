@@ -492,7 +492,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
       if (pcols[i] < 1 || pcols[i] > l) error("Item %d of 'cols' is %d which is outside 1-based range [1,ncol(x)=%d]", i+1, pcols[i], l);
     }
 
-    const int nrow = length(VECTOR_ELT(x, pcols[0]-1)); // Allows checking just subsetted columns for right length
+    const int nrow = ncol ? length(VECTOR_ELT(x, pcols[0]-1)) : 0; // Allows checking just subsetted columns for right length
     // if fast return, return data.table if all rows selected through positive indices...
     // if(asLogical(fastret) && nrow == LENGTH(rows) && INTEGER(rows)[0] > 0) {
     //  if(LENGTH(cols) == length(x)) return x;
