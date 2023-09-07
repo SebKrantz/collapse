@@ -17,7 +17,7 @@ join(x, y,
      verbose = 1L,
      overid = 1L,
      column = NULL,
-     match.attr = NULL
+     attrn = NULL
 )
 }
 
@@ -28,7 +28,7 @@ join(x, y,
 
   \item{on}{character. vector of columns to join on. \code{NULL} uses \code{union(names(x), names(y))}. Use a named vector to match columns named differently in \code{x} and \code{y}, e.g. \code{c("x_id" = "y_id")}.}
 
-  \item{how}{charcater. Join type: \code{"left"}, \code{"right"}, \code{"inner"}, \code{"full"}, \code{"semi"} or \code{"anti"}.}
+  \item{how}{charcater. Join type: \code{"left"}, \code{"right"}, \code{"inner"}, \code{"full"}, \code{"semi"} or \code{"anti"}. The first letter suffices. }
 
   \item{suffix}{character(1 or 2). Suffix to add to duplicate column names. \code{NULL} renames duplicate \code{y} columns as \code{paste(col, y_name, sep = "_")}, where \code{y_name = as.character(substitute(y))} i.e. the name of the data frame as passed into the function. In general, passing \code{suffix} length 1 will only rename \code{y}, whereas a length 2 suffix will rename both \code{x} and \code{y}, respectively. If \code{verbose > 0} a message will be printed. }
 
@@ -40,9 +40,14 @@ join(x, y,
 
   \item{overid}{integer. One of 0, 1 or 2: passed to \code{\link{fmatch}} and allows checking of (1), and (optional) early termination on (0), overidentified join conditions. Default (1) warns about this but proceeds.}
 
-    \item{column}{(optional) name for an extra column to generate in the output indicating which dataset a record came from. \code{TRUE} calls this column \code{".join"} (inspired by STATA's '_merge' column). By default this column is generated as the last column, but, if \code{keep.col.order = FALSE}, it is placed after the 'on' columns. The column is a factor variable with levels corresponding to the dataset names (inferred from the input) or \code{"matched"} for matched records. The \code{suffix} argument (of length 2) can be used to set specific level-names for \code{x} and \code{y}, respectively.}
+    \item{column}{(optional) name for an extra column to generate in the output indicating which dataset a record came from. \code{TRUE} calls this column \code{".join"} (inspired by STATA's '_merge' column). By default this column is generated as the last column, but, if \code{keep.col.order = FALSE}, it is placed after the 'on' columns. The column is a factor variable with levels corresponding to the dataset names (inferred from the input) or \code{"matched"} for matched records. Alternatively, it is possible to specify a list of 2, where the first element is the column name, and the second a length 3 (!) vector of levels e.g. \code{column = list("joined", c("x", "y", "x_y"))}, where \code{"x_y"} replaces \code{"matched"}. See Examples. }
 
-  \item{match.attr}{(optional) name for attribute to attach the output of \code{\link{fmatch}} to the result. \code{TRUE} calls this attribute \code{"join.match"}.}
+  \item{attrn}{(optional) name for attribute to attach the output of \code{\link{fmatch}} to the result. \code{TRUE} calls this attribute \code{"join.match"}.}
+}
+
+
+\value{
+A data frame-like object of the same type and attributes as \code{x}. \code{"row.names"} of \code{x} are only preserved in left-join operations.
 }
 
 
@@ -66,6 +71,12 @@ for(i in c("l","i","r","f","s","a"))
 
 # Adding join column: useful esp. for full join
 join(df1, df2, how = "f", column = TRUE)
+# Custom column + rearranging
+join(df1, df2, how = "f", column = list("join", c("x", "y", "x_y")), keep = FALSE)
+
+# Attaching match attribute
+str(join(df1, df2, attr = TRUE))
+
 }
 
 \seealso{
