@@ -22,7 +22,7 @@ join <- function(x, y,
                  verbose = 1L, # getOption("collapse_verbose"),
                  overid = 1L,
                  column = NULL,
-                 match.attr = NULL) { # method = c("hash", "radix") -> implicit to sort...
+                 attrn = NULL) { # method = c("hash", "radix") -> implicit to sort...
 
   # Initial checks
   if(!is.list(x)) stop("x must be a list")
@@ -205,17 +205,20 @@ join <- function(x, y,
 
   # Join column and reordering
   if(length(column)) {
-    if(length(suffix) > 1L) {
-      x_name <- suffix[[1L]]
-      y_name <- suffix[[2L]]
-    }
+    if(is.list(column)) {
+      lev <- column[[2L]]
+      column <- column[[1L]]
+      x_name <- lev[[1L]]
+      y_name <- lev[[2L]]
+      matched <- lev[[3L]]
+    } else matched <- "matched"
     # TODO: better?
     # matched <- paste0(y_name, "_", y_name)
     mc <- switch(how,
-                 left = structure(is.na(m) + 1L, levels = c("matched", x_name), class = c("factor", "na.included")),
-                 right = structure(is.na(m) + 1L, levels = c("matched", y_name), class = c("factor", "na.included")),
-                 full = structure(vec(list(is.na(m) + 1L, alloc(3L, fnrow(res)-length(m)))), levels = c("matched", x_name, y_name), class = c("factor", "na.included")),
-                 inner =, semi = structure(alloc(1L, fnrow(res)), levels = "matched", class = c("factor", "na.included")),
+                 left = structure(is.na(m) + 1L, levels = c(matched, x_name), class = c("factor", "na.included")),
+                 right = structure(is.na(m) + 1L, levels = c(matched, y_name), class = c("factor", "na.included")),
+                 full = structure(vec(list(is.na(m) + 1L, alloc(3L, fnrow(res)-length(m)))), levels = c(matched, x_name, y_name), class = c("factor", "na.included")),
+                 inner =, semi = structure(alloc(1L, fnrow(res)), levels = matched, class = c("factor", "na.included")),
                  anti = structure(alloc(1L, fnrow(res)), levels = x_name, class = c("factor", "na.included")))
     mc_name <- if(is.character(column)) column else ".join"
     if(keep.col.order == 1L) res[[mc_name]] <- mc
@@ -223,7 +226,7 @@ join <- function(x, y,
   } else if(!keep.col.order) res <- c(res[ixon], res[-ixon])
 
   # Final steps
-  if(length(match.attr)) ax[[if(is.character(match.attr)) match.attr else "join.match"]] <- m # TODO: sort merge join probably needs to be o[m]
+  if(length(attrn)) ax[[if(is.character(attrn)) attrn else "join.match"]] <- m # TODO: sort merge join probably needs to be o[m]
   if(how != "left" && length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(fnrow(res))
   ax[["names"]] <- names(res)
   .Call(C_setattributes, res, ax)
