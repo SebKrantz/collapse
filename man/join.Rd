@@ -17,7 +17,7 @@ join(x, y,
      verbose = 1L,
      overid = 1L,
      column = NULL,
-     attrn = NULL
+     attr = NULL
 )
 }
 
@@ -42,7 +42,7 @@ join(x, y,
 
     \item{column}{(optional) name for an extra column to generate in the output indicating which dataset a record came from. \code{TRUE} calls this column \code{".join"} (inspired by STATA's '_merge' column). By default this column is generated as the last column, but, if \code{keep.col.order = FALSE}, it is placed after the 'on' columns. The column is a factor variable with levels corresponding to the dataset names (inferred from the input) or \code{"matched"} for matched records. Alternatively, it is possible to specify a list of 2, where the first element is the column name, and the second a length 3 (!) vector of levels e.g. \code{column = list("joined", c("x", "y", "x_y"))}, where \code{"x_y"} replaces \code{"matched"}. See Examples. }
 
-  \item{attrn}{(optional) name for attribute to attach the output of \code{\link{fmatch}} to the result. \code{TRUE} calls this attribute \code{"join.match"}.}
+  \item{attr}{(optional) name for attribute to attach the output of \code{\link{fmatch}} to the result. \code{TRUE} calls this attribute \code{"join.match"}.}
 }
 
 
