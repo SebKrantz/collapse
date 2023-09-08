@@ -28,10 +28,10 @@ qsu(x, \dots)
     array = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{qsu}{data.frame}(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE,
-    array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
+    array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{qsu}{grouped_df}(x, pid = NULL, w = NULL, higher = FALSE,
-    array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
+    array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
 
 # Methods for indexed data / compatibility with plm:
 
@@ -39,12 +39,12 @@ qsu(x, \dots)
     array = TRUE, stable.algo = .op[["stable.algo"]], \dots)
 
 \method{qsu}{pdata.frame}(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE,
-    array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
+    array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
 
 # Methods for compatibility with sf:
 
 \method{qsu}{sf}(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE,
-    array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
+    array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], \dots)
 
 
 \method{as.data.frame}{qsu}(x, ..., gid = "Group", stringsAsFactors = TRUE)
@@ -64,7 +64,7 @@ qsu(x, \dots)
   \item{higher}{logical. Add higher moments (skewness and kurtosis).}
   \item{array}{logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) \code{TRUE} returns an array, while \code{FALSE} returns a (nested) list of matrices.}
   \item{stable.algo}{logical. \code{FALSE} uses a faster but less stable method to calculate the standard deviation (see Details of \code{\link{fsd}}). Only available if \code{w = NULL} and \code{higher = FALSE}.}
-  \item{vlabels}{logical \code{TRUE} or a function: to display variable labels in the summary. See Details.}
+  \item{labels}{logical \code{TRUE} or a function: to display variable labels in the summary. See Details.}
   \item{effect}{\emph{plm} methods: Select which panel identifier should be used for between and within transformations of the data. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
   \item{\dots}{arguments to be passed to or from other methods.}
   \item{gid}{character. Name assigned to the group-id column, when summarising variables by groups.}
@@ -88,7 +88,7 @@ More formally, let \bold{\code{x}} (bold) be a panel vector of data for \code{N}
 
 Apart from 'N/T' and the extrema, the standard-deviations ('SD') computed on between- and within- transformed data are extremely valuable because they indicate how much of the variation in a panel-variable is between-individuals and how much of the variation is within-individuals (over time). At the extremes, variables that have common values across individuals (such as the time-variable(s) 't' in a balanced panel), can readily be identified as individual-invariant because the 'Between-SD' on this variable is 0 and the 'Within-SD' is equal to the 'Overall-SD'. Analogous, time-invariant individual characteristics (such as the individual-id 'i') have a 0 'Within-SD' and a 'Between-SD' equal to the 'Overall-SD'. See Examples.
 
-For data frame methods, if \code{vlabels = TRUE}, \code{qsu} uses \code{function(x) paste(names(x), setv(vlabels(x), NA, ""), sep = ": ")} to combine variable names and labels for display. Alternatively, the user can pass a custom function which will be applied to the data frame, e.g. using \code{vlabels = vlabels} just displays the labels. See also \code{\link{vlabels}}.
+For data frame methods, if \code{labels = TRUE}, \code{qsu} uses \code{function(x) paste(names(x), setv(vlabels(x), NA, ""), sep = ": ")} to combine variable names and labels for display. Alternatively, the user can pass a custom function which will be applied to the data frame, e.g. using \code{labels = vlabels} just displays the labels. See also \code{\link{vlabels}}.
 
 \code{qsu} comes with its own print method which by default writes out up to 9 digits at 4 decimal places. Larger numbers are printed in scientific format. for numbers between 7 and 9 digits, an apostrophe (') is placed after the 6th digit to designate the millions. Missing values are printed using '-'.
 
@@ -120,11 +120,11 @@ If weights \code{w} are used together with \code{pid}, transformed data is compu
 ## World Development Panel Data
 # Simple Summaries -------------------------
 qsu(wlddev)                                 # Simple summary
-qsu(wlddev, vlabels = TRUE)                 # Display variable labels
+qsu(wlddev, labels = TRUE)                  # Display variable labels
 qsu(wlddev, higher = TRUE)                  # Add skewness and kurtosis
 
 # Grouped Summaries ------------------------
-qsu(wlddev, ~ region, vlabels = TRUE)       # Statistics by World Bank Region
+qsu(wlddev, ~ region, labels = TRUE)        # Statistics by World Bank Region
 qsu(wlddev, PCGDP + LIFEEX ~ income)        # Summarize GDP per Capita and Life Expectancy by
 stats <- qsu(wlddev, ~ region + income,     # World Bank Income Level
              cols = 9:10, higher = TRUE)    # Same variables, by both region and income
@@ -134,7 +134,7 @@ library(magrittr) # Grouped summary
 wlddev \%>\% fgroup_by(region) \%>\% fselect(PCGDP, LIFEEX) \%>\% qsu()
 
 # Panel Data Summaries ---------------------
-qsu(wlddev, pid = ~ iso3c, vlabels = TRUE)   # Adding between and within countries statistics
+qsu(wlddev, pid = ~ iso3c, labels = TRUE)   # Adding between and within countries statistics
 # -> They show amongst other things that year and decade are individual-invariant,
 # that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,
 # and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within

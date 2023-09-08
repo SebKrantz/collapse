@@ -55,8 +55,13 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
   fbstatsmCpp(x,higher,g[[1L]],g[[2L]],pid[[1L]],pid[[2L]],w,stable.algo,array,GRPnames(g))
 }
 
-qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
+qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
+  if(!missing(...)) {
+    dots <- list(...)
+    if(length(dots$vlabels)) labels <- dots$vlabels
+    if(length(dots) > 1L || !length(dots$vlabels)) unused_arg_action(match.call(), ...)
+  }
+
   formby <- is.call(by)
   formpid <- is.call(pid)
   formw <- is.call(w)
@@ -89,9 +94,9 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
     } else x <- x[v]
   } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names"), FALSE))
 
-  # Get vlabels
-  if(is.function(vlabels) || vlabels)
-    attr(x, "names") <- if(is.function(vlabels)) vlabels(x) else
+  # Get labels
+  if(is.function(labels) || labels)
+    attr(x, "names") <- if(is.function(labels)) labels(x) else
       paste(attr(x, "names"), setv(vlabels(x, use.names = FALSE), NA, ""), sep = ": ")
 
   # original code:
@@ -115,14 +120,19 @@ qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, high
 
 qsu.list <- function(x, ...) qsu.data.frame(x, ...)
 
-qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
+qsu.sf <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
   oldClass(x) <- NULL
   x[[attr(x, "sf_column")]] <- NULL
-  qsu.data.frame(x, by, pid, w, cols, higher, array, vlabels, stable.algo, ...)
+  qsu.data.frame(x, by, pid, w, cols, higher, array, labels, stable.algo, ...)
 }
 
-qsu.grouped_df <- function(x, pid = NULL, w = NULL, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
+qsu.grouped_df <- function(x, pid = NULL, w = NULL, higher = FALSE, array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
+  if(!missing(...)) {
+    dots <- list(...)
+    if(length(dots$vlabels)) labels <- dots$vlabels
+    if(length(dots) > 1L || !length(dots$vlabels)) unused_arg_action(match.call(), ...)
+  }
+
   wsym <- substitute(w)
   pidsym <- substitute(pid)
   by <- GRP.grouped_df(x, call = FALSE)
@@ -152,9 +162,9 @@ qsu.grouped_df <- function(x, pid = NULL, w = NULL, higher = FALSE, array = TRUE
 
   if(length(byn)) x <- x[-byn] # Subsetting x
 
-  # Get vlabels
-  if(is.function(vlabels) || vlabels)
-    names(x) <- if(is.function(vlabels)) vlabels(x) else
+  # Get labels
+  if(is.function(labels) || labels)
+    names(x) <- if(is.function(labels)) labels(x) else
       paste(names(x), setv(vlabels(x, use.names = FALSE), NA, ""), sep = ": ")
 
   if(is.null(pid)) return(drop(fbstatslCpp(x,higher,by[[1L]],by[[2L]],0L,0L,w,stable.algo,array,GRPnames(by))))
@@ -163,8 +173,12 @@ qsu.grouped_df <- function(x, pid = NULL, w = NULL, higher = FALSE, array = TRUE
 }
 
 
-qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, vlabels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
-  if(!missing(...)) unused_arg_action(match.call(), ...)
+qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, higher = FALSE, array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
+  if(!missing(...)) {
+    dots <- list(...)
+    if(length(dots$vlabels)) labels <- dots$vlabels
+    if(length(dots) > 1L || !length(dots$vlabels)) unused_arg_action(match.call(), ...)
+  }
   pid <- group_effect(x, effect)
   x <- unindex(x)
 
@@ -192,8 +206,8 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
     } else x <- x[v]
   } else if(length(cols)) x <- .subset(x, cols2int(cols, x, attr(x, "names"), FALSE))
 
-  if(is.function(vlabels) || vlabels)
-    attr(x, "names") <- if(is.function(vlabels)) vlabels(x) else
+  if(is.function(labels) || labels)
+    attr(x, "names") <- if(is.function(labels)) labels(x) else
        paste(attr(x, "names"), setv(vlabels(x, use.names = FALSE), NA, ""), sep = ": ")
 
   if(is.null(by)) return(drop(fbstatslCpp(x,higher,0L,0L,fnlevels(pid),pid,w,stable.algo,array)))

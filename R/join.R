@@ -220,13 +220,16 @@ join <- function(x, y,
                  full = structure(vec(list(is.na(m) + 1L, alloc(3L, fnrow(res)-length(m)))), levels = c(matched, x_name, y_name), class = c("factor", "na.included")),
                  inner =, semi = structure(alloc(1L, fnrow(res)), levels = matched, class = c("factor", "na.included")),
                  anti = structure(alloc(1L, fnrow(res)), levels = x_name, class = c("factor", "na.included")))
+    attr(mc, "on.cols") <- `names<-`(list(xon, `names<-`(on, NULL)), c(x_name, y_name))
     mc_name <- if(is.character(column)) column else ".join"
     if(keep.col.order == 1L) res[[mc_name]] <- mc
     else res <- c(res[ixon], `names<-`(list(mc), mc_name), res[-ixon])
   } else if(!keep.col.order) res <- c(res[ixon], res[-ixon])
 
   # Final steps
-  if(length(attr)) ax[[if(is.character(attr)) attr else "join.match"]] <- m # TODO: sort merge join probably needs to be o[m]
+  if(length(attr)) ax[[if(is.character(attr)) attr else "join.match"]] <- list(call = match.call(),
+                                                                               on.cols = list(x = xon, y = `names<-`(on, NULL)),
+                                                                               match = m) # TODO: sort merge join probably needs to be o[m]
   if(how != "left" && length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(fnrow(res))
   ax[["names"]] <- names(res)
   .Call(C_setattributes, res, ax)
