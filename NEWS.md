@@ -4,6 +4,10 @@
 
 * In a grouped setting, if `.data` is used inside `fsummarise()` and `fmutate()`, and `.cols = NULL`, `.data` will contain all columns except for grouping columns (in-line with the `.SD` syntax of *data.table*). Before, `.data` contained all columns. The selection in `.cols` still refers to all columns, thus it is still possible to select all columns using e.g. `grouped_data %>% fsummarise(some_expression_involving(.data), .cols = seq_col(.))`. 
 
+### Other changes
+
+* In `qsu()`, argument `vlabels` was renamed to `labels`. But `vlabels` will continue to work. 
+
 ### Bug Fixes
 
 * Fixed a bug in the integer methods of `fsum()`, `fmean()` and `fprod()` that returned `NA` if and only if there was a single integer followed by `NA`'s e.g `fsum(c(1L, NA, NA))` erroneously gave `NA`. This was caused by a C-level shortcut that returned `NA` when the first element of the vector had been reached (moving from back to front) without encountering any non-NA-values. The bug consisted in the content of the first element not being evaluated in this case. Note that this bug did not occur with real numbers, and also not in grouped execution. Thanks @blset for reporting (#432).   
@@ -16,7 +20,7 @@
 
 * Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
 
-* Added `fmatch()`: a striking fast `match()` function for vectors and data frames/lists implementing a vectorized, 2-columns at a time, hash-join algorithm. It is the workhorse function of `join()`, and also benefits `ckmatch()`, `%!in%`, and new operators `%iin%` and `%!iin%`. It is also possible to `set_collapse(mask = "%in%")` to replace `base::"%in%"` using `fmatch()`. 
+* Added `fmatch()`: a striking fast `match()` function for vectors and data frames/lists implementing a vectorized, 2-columns at a time, hash-join algorithm. It is the workhorse function of `join()`, and also benefits `ckmatch()`, `%!in%`, and new operators `%iin%` and `%!iin%` (see below). It is also possible to `set_collapse(mask = "%in%")` to replace `base::"%in%"` using `fmatch()`. Thanks to `fmatch()`, these operators also all support data frames/lists of vectors, which are compared row-wise. 
 
 * Added operators `%iin%` and `%!iin%`: these directly return indices, i.e. `%[!]iin%` is equivalent to `which(x %[!]in% table)`. This is useful especially for subsetting where directly supplying indices is more efficient e.g. `x[x %[!]iin% table]` is faster than `x[x %[!]in% table]`. Similarly `fsubset(wlddev, iso3c %iin% c("DEU", "ITA", "FRA"))` is very fast. 
 
