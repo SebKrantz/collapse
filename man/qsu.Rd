@@ -120,11 +120,11 @@ If weights \code{w} are used together with \code{pid}, transformed data is compu
 ## World Development Panel Data
 # Simple Summaries -------------------------
 qsu(wlddev)                                 # Simple summary
-qsu(wlddev, labels = TRUE)                 # Display variable labels
+qsu(wlddev, labels = TRUE)                  # Display variable labels
 qsu(wlddev, higher = TRUE)                  # Add skewness and kurtosis
 
 # Grouped Summaries ------------------------
-qsu(wlddev, ~ region, labels = TRUE)       # Statistics by World Bank Region
+qsu(wlddev, ~ region, labels = TRUE)        # Statistics by World Bank Region
 qsu(wlddev, PCGDP + LIFEEX ~ income)        # Summarize GDP per Capita and Life Expectancy by
 stats <- qsu(wlddev, ~ region + income,     # World Bank Income Level
              cols = 9:10, higher = TRUE)    # Same variables, by both region and income
