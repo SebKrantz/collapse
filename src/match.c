@@ -278,14 +278,21 @@ SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
   if(TYPEOF(table) == CPLXSXP || TYPEOF(table) > STRSXP) SET_VECTOR_ELT(out, 1, coerceVector(table, STRSXP));
   x = VECTOR_ELT(out, 0);
   table = VECTOR_ELT(out, 1);
-  if(TYPEOF(x) != TYPEOF(table)) {
-    if(TYPEOF(x) > TYPEOF(table)) {
-      SEXP tmp = table; table = x; x = tmp;
+  int tx = TYPEOF(x), tt = TYPEOF(table);
+  if(tx == LGLSXP) tx = INTSXP;
+  if(tt == LGLSXP) tt = INTSXP;
+  if(tx != tt) {
+    if(tx > tt) {
+      if(isFactor(table)) { // TODO: could implement as in single case..
+        SET_VECTOR_ELT(out, 1, asCharacterFactor(table));
+        if(tx != STRSXP) SET_VECTOR_ELT(out, 0, coerceVector(x, STRSXP));
+      } else SET_VECTOR_ELT(out, 1, coerceVector(table, tx));
+    } else {
+      if(isFactor(x)) { // TODO: could implement as in single case..
+        SET_VECTOR_ELT(out, 0, asCharacterFactor(x));
+        if(tt != STRSXP) SET_VECTOR_ELT(out, 1, coerceVector(table, STRSXP));
+      } else SET_VECTOR_ELT(out, 0, coerceVector(x, tt));
     }
-    if(isFactor(x)) { // TODO: could implement as in single case.. What if x is logical and table is factor??
-      SET_VECTOR_ELT(out, 0, asCharacterFactor(x));
-      if(TYPEOF(table) != STRSXP) SET_VECTOR_ELT(out, 1, coerceVector(table, STRSXP));
-    } else SET_VECTOR_ELT(out, 0, coerceVector(x, TYPEOF(table)));
   } else if(isFactor(x) && isFactor(table)) {
     if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
       SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
