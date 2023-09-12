@@ -66,7 +66,8 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     }
   }
 
-  int K = 0, tx = TYPEOF(x), anyNA = 0;
+  tx = TYPEOF(x);
+  int K = 0, anyNA = 0;
   size_t M;
   // if(n >= INT_MAX) error("Length of 'x' is too large. (Long vector not supported yet)"); // 1073741824
   if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP || (tx == INTSXP && OBJECT(x) == 0)) {
