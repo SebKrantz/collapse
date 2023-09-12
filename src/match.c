@@ -22,9 +22,12 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       PROTECT(table = coerceVector(table, STRSXP)); ++nprotect;
     }
   }
-  if(TYPEOF(x) != TYPEOF(table)) {
-    if(TYPEOF(x) < TYPEOF(table)) { // table could be double, complex, character....
-      // TODO: What if x is logical and table is factor??
+  int tx = TYPEOF(x), tt = TYPEOF(table);
+  if(tx == LGLSXP) tx = INTSXP;
+  if(tt == LGLSXP) tt = INTSXP;
+
+  if(tx != tt) {
+    if(tx < tt) { // table could be double, complex, character....
       if(isFactor(x)) { // For factors there is a shorthand: just match the levels against table...
         PROTECT(table = match_single(getAttrib(x, R_LevelsSymbol), table, ScalarInteger(nmv))); ++nprotect;
         int *pans = INTEGER(ans), *pt = INTEGER(table)-1, *px = INTEGER(x);
@@ -38,15 +41,15 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
         UNPROTECT(nprotect);
         return ans;
       }
-      PROTECT(x	= coerceVector(x,	TYPEOF(table))); ++nprotect; // Coercing to largest common type
+      PROTECT(x	= coerceVector(x,	tt)); ++nprotect; // Coercing to largest common type
     } else { // x has a larger type than table...
       if(isFactor(table)) { // There could be a complicated shorthand involving matching x against the levels and then replacing this by the first occurence index
         PROTECT(table = asCharacterFactor(table)); ++nprotect;
-        if(TYPEOF(x) != STRSXP) { // Worst case: need to coerce x as well to make the match
+        if(tx!= STRSXP) { // Worst case: need to coerce x as well to make the match
           PROTECT(x = coerceVector(x, STRSXP)); ++nprotect;
         }
       } else {
-        PROTECT(table = coerceVector(table,	TYPEOF(x))); ++nprotect;
+        PROTECT(table = coerceVector(table,	tx)); ++nprotect;
       }
     }
   } else if(isFactor(x) && isFactor(table)) {
