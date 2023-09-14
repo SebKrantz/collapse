@@ -14,6 +14,7 @@ join(x, y,
      suffix = NULL,
      validate = "m:m",
      keep.col.order = TRUE,
+     drop.dup.cols = FALSE,
      verbose = 1L,
      overid = 1L,
      column = NULL,
@@ -35,6 +36,8 @@ join(x, y,
   \item{validate}{character. (Optional) check if join is of specified type. One of \code{"1:1"}, \code{"1:m"}, \code{"m:1"} or \code{"m:m"}. The default \code{"m:m"} does not perform any checks, first matches in \code{x} and \code{y} are taken. Checks are done before the actual join step and failure results in an error.}
 
   \item{keep.col.order}{logical. Keep order of columns in \code{x}? \code{FALSE} places the \code{on} columns in front.}
+
+  \item{drop.dup.cols}{instead of renaming duplicate columns in \code{x} and \code{y} using \code{suffix}, this option simply drops them. \code{TRUE} or \code{"y"} drops them from \code{y}, \code{"x"} from \code{x}.}
 
   \item{verbose}{integer. Prints information about the join. One of 0 (off), 1 (default) or 2 (additionally prints the classes of the \code{on} columns). \emph{Note:} \code{verbose > 0} or \code{validate != "m:m"} invoke the \code{count} argument to \code{\link{fmatch}}, so \code{verbose = 0} is slightly more efficient.}
 

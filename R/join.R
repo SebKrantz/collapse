@@ -19,6 +19,7 @@ join <- function(x, y,
                  # TODO: implement sort_merge_join !!!
                  # sort = FALSE,
                  keep.col.order = TRUE,
+                 drop.dup.cols = FALSE,
                  verbose = 1L, # getOption("collapse_verbose"),
                  overid = 1L,
                  column = NULL,
@@ -116,15 +117,39 @@ join <- function(x, y,
   if(any(nm <- match(ynam[-iyon], xnam, nomatch = 0L))) {
     nnm <- nm != 0L
     nam <- xnam[nm[nnm]]
-    if(length(suffix) <= 1L) { # Only appends y with name
-      if(is.null(suffix)) suffix <- paste0("_", y_name)
-      names(y)[-iyon][nnm] <- paste0(nam, suffix)
+    if(is.character(drop.dup.cols) || drop.dup.cols) {
+      switch(drop.dup.cols,
+        y = {
+          rmyi <- logical(length(ynam))
+          rmyi[-iyon][nnm] <- TRUE
+          y[rmyi] <- NULL
+          ynam <- names(y)
+          tmp <- rmyi
+          tmp[iyon] <- TRUE
+          iyon <- which(tmp[!rmyi])
+          if(verbose) cat("duplicate columns: ", paste(nam, collapse = ", "), " => dropped from y\n", sep = "")
+        },
+        x = {
+          x[nm[nnm]] <- NULL
+          tmp <- logical(length(xnam))
+          xnam <- names(x)
+          tmp[ixon] <- TRUE
+          ixon <- which(tmp[-nm[nnm]])
+          if(verbose) cat("duplicate columns: ", paste(nam, collapse = ", "), " => dropped from x\n", sep = "")
+        },
+        stop("drop.dup.cols needs to be 'y', 'x', or TRUE")
+      )
     } else {
-      names(x)[nm[nnm]] <- paste0(nam, suffix[[1L]]) # if(suffix[[1L]] != "") ??
-      names(y)[-iyon][nnm] <- paste0(nam, suffix[[2L]])
+      if(length(suffix) <= 1L) { # Only appends y with name
+        if(is.null(suffix)) suffix <- paste0("_", y_name)
+        names(y)[-iyon][nnm] <- paste0(nam, suffix)
+      } else {
+        names(x)[nm[nnm]] <- paste0(nam, suffix[[1L]]) # if(suffix[[1L]] != "") ??
+        names(y)[-iyon][nnm] <- paste0(nam, suffix[[2L]])
+      }
+      if(verbose) cat("duplicate columns: ", paste(nam, collapse = ", "), " => renamed using suffix ",
+          if(length(suffix) == 1L) paste0("'", suffix, "' for y") else paste0("'", suffix[[1L]], "' for x and '", suffix[[2L]], "' for y"), "\n", sep = "")
     }
-    if(verbose) cat("duplicate columns: ", paste(nam, collapse = ", "), " => renamed using suffix ",
-        if(length(suffix) == 1L) paste0("'", suffix, "' for y") else paste0("'", suffix[[1L]], "' for x and '", suffix[[2L]], "' for y"), "\n", sep = "")
   }
 
   # Core: do the joins
