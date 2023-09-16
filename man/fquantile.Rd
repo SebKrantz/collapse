@@ -32,7 +32,7 @@ frange(x, na.rm = .op[["na.rm"]])
   \item{o}{integer. An vector giving the ordering of the elements in \code{x}, such that \code{identical(x[o], sort(x))}. If available this considerably speeds up the estimation.}
   \item{na.rm}{logical. Remove missing values, default \code{TRUE}. }
   \item{type}{integer. Quantile types 5-9. See \code{\link{quantile}}. Further details are provided in Hyndman and Fan (1996) who recommended type 8. The default method is type 7.}
-  \item{names}{logical. Generates names of the form \code{paste0(as.integer(probs * 100), "\%")} (in C). Set to \code{FALSE} for speedup. }
+  \item{names}{logical. Generates names of the form \code{paste0(round(probs * 100, 1), "\%")} (in C). Set to \code{FALSE} for speedup. }
   \item{check.o}{logical. If \code{o} is supplied, \code{TRUE} runs through \code{o} once and checks that it is valid, i.e. that each element is in \code{[1, length(x)]}. Set to \code{FALSE} for significant speedup if \code{o} is known to be valid. }
 }
 \details{
@@ -44,7 +44,7 @@ Weighted quantile estimation, in a nutshell, is done by internally calling \code
 
 }
 \value{
-A vector of quantiles. If \code{names = TRUE}, \code{fquantile} generates names as \code{paste0(as.integer(probs * 100), "\%")} (in C).
+A vector of quantiles. If \code{names = TRUE}, \code{fquantile} generates names as \code{paste0(round(probs * 100, 1), "\%")} (in C).
 }
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 

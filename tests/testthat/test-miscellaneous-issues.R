@@ -455,4 +455,14 @@ test_that("issue with integer followed by NA #432", {
   }
 })
 
+test_that("fmedian ties handled properly with weights", {
+  x <- c(1, 2, 3, 4)
+  w <- c(2.5, 2.4, 3.8, 1.1)
+  expect_equal(c(fmedian(x, w = w, ties = "mean"), fmedian(x, w = w, ties = "min"), fmedian(x, w = w, ties = "max")),
+               c(2.5, 2, 3))
+  w <- c(2.5, 2.4, 3.7, 1.2)
+  expect_equal(c(fmedian(x, w = w, ties = "mean"), fmedian(x, w = w, ties = "min"), fmedian(x, w = w, ties = "max")),
+               c(2.5, 2, 3))
+})
+
 options(warn = 1)

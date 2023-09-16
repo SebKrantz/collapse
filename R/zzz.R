@@ -90,7 +90,7 @@ do_collapse_remove <- function(clpns, rmfun, ...) {
   kwd <- c("shorthand", "operator", "infix", "old") %in% rmfun
   if(kwd[1L]) rmfun <- c(rmfun[rmfun != "shorthand"], .SHORTHANDS)
   if(kwd[2L]) rmfun <- c(rmfun[rmfun != "operator"], .OPERATOR_FUN)
-  if(kwd[3L]) rmfun <- c(rmfun[rmfun != "infix"], .COLLAPSE_ALL[startsWith(.COLLAPSE_ALL, "%")])
+  if(kwd[3L]) rmfun <- c(rmfun[rmfun != "infix"], c(.COLLAPSE_ALL[startsWith(.COLLAPSE_ALL, "%")], if(any(c("%in%", "special") %in% .op[["mask"]])) "%in%"))
   if(kwd[4L]) rmfun <- c(rmfun[rmfun != "old"], .COLLAPSE_OLD)
   do_collapse_remove_core(clpns, unique.default(rmfun), ...)
 }
@@ -129,6 +129,8 @@ do_collapse_restore_exports <- function(clpns) {
   .op$stable.algo <- if(is.null(getOption("collapse_stable_algo"))) TRUE else as.logical(getOption("collapse_stable_algo"))
   .op$mask <- if(is.null(getOption("collapse_mask"))) NULL else getOption("collapse_mask")
   .op$remove <- if(is.null(getOption("collapse_remove"))) NULL else getOption("collapse_remove")
+  .op$verbose <- if(is.null(getOption("collapse_verbose"))) 1L else as.integer(getOption("collapse_verbose"))
+  .op$digits <- if(is.null(getOption("collapse_digits"))) 2L else as.integer(getOption("collapse_digits"))
   assign(".op", .op, envir = clpns)
 
   # TODO: option to save .collapse config file in install directory?? -> Nah, .RProfile is better...

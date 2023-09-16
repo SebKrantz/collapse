@@ -20,7 +20,7 @@ join <- function(x, y,
                  # sort = FALSE,
                  keep.col.order = TRUE,
                  drop.dup.cols = FALSE,
-                 verbose = 1L, # getOption("collapse_verbose"),
+                 verbose = .op[["verbose"]],
                  overid = 1L,
                  column = NULL,
                  attr = NULL) { # method = c("hash", "radix") -> implicit to sort...

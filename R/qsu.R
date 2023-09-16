@@ -222,7 +222,7 @@ qsu.pdata.frame <- function(x, by = NULL, w = NULL, cols = NULL, effect = 1L, hi
 
 
 # Try to speed up ! Printing Takes 100 milliseconds on WDI !
-print.qsu <- function(x, digits = 4, nonsci.digits = 9, na.print = "-", return = FALSE, print.gap = 2, ...) {
+print.qsu <- function(x, digits = .op[["digits"]] + 2L, nonsci.digits = 9, na.print = "-", return = FALSE, print.gap = 2, ...) {
   vec2mat <- function(x) if(is.array(x)) x else  # outer(1, x) # for variable spacing in vector printing...
     `attributes<-`(x, list(dim = c(1L, length(x)), dimnames = list("", names(x)))) # faster and better !!
   formatfun <- function(x) { # , drop0trailing = FALSE redundat ??

@@ -49,7 +49,7 @@ qsu(x, \dots)
 
 \method{as.data.frame}{qsu}(x, ..., gid = "Group", stringsAsFactors = TRUE)
 
-\method{print}{qsu}(x, digits = 4, nonsci.digits = 9, na.print = "-",
+\method{print}{qsu}(x, digits = .op[["digits"]] + 2L, nonsci.digits = 9, na.print = "-",
       return = FALSE, print.gap = 2, \dots)
 }
 %- maybe also 'usage' for other objects documented here.

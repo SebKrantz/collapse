@@ -15,7 +15,7 @@ join(x, y,
      validate = "m:m",
      keep.col.order = TRUE,
      drop.dup.cols = FALSE,
-     verbose = 1L,
+     verbose = .op[["verbose"]],
      overid = 1L,
      column = NULL,
      attr = NULL
@@ -37,7 +37,7 @@ join(x, y,
 
   \item{keep.col.order}{logical. Keep order of columns in \code{x}? \code{FALSE} places the \code{on} columns in front.}
 
-  \item{drop.dup.cols}{instead of renaming duplicate columns in \code{x} and \code{y} using \code{suffix}, this option simply drops them. \code{TRUE} or \code{"y"} drops them from \code{y}, \code{"x"} from \code{x}.}
+  \item{drop.dup.cols}{instead of renaming duplicate columns in \code{x} and \code{y} using \code{suffix}, this option simply drops them: \code{TRUE} or \code{"y"} drops them from \code{y}, \code{"x"} from \code{x}.}
 
   \item{verbose}{integer. Prints information about the join. One of 0 (off), 1 (default) or 2 (additionally prints the classes of the \code{on} columns). \emph{Note:} \code{verbose > 0} or \code{validate != "m:m"} invoke the \code{count} argument to \code{\link{fmatch}}, so \code{verbose = 0} is slightly more efficient.}
 

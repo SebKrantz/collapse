@@ -29,6 +29,10 @@ get_collapse(opts = NULL)
 
     \code{stable.algo} \tab\tab logical, default \code{TRUE}. Option passed to \code{\link[=fvar]{fvar()/fsd()}} and \code{\link[=qsu]{qsu()}}. \code{FALSE} enables one-pass standard deviation calculation, which is very fast, but might incur catastrophic cancellation if numbers are large and the variance is small. see \code{\link{fvar}} for details. \cr\cr\cr\cr
 
+    \code{verbose} \tab\tab integer, default \code{1}. Print additional (diagnostic) information when executing code. Currently only available for \code{\link{join}}. \cr\cr\cr\cr
+
+    \code{digits} \tab\tab integer, default \code{2}. Number of digits to print, e.g. in \code{\link{descr}} or \code{\link{pwcor}}. \cr\cr\cr\cr
+
     \code{mask} \tab\tab character, default \code{NULL}. Allows masking existing base R/dplyr functions with faster \emph{collapse} versions, by creating additional functions in the namespace and instantly exporting them: \cr\cr\tab\tab
 
     For example \code{set_collapse(mask = "unique")} (or, equivalently, \code{set_collapse(mask = "funique")}) will create \code{unique <- funique} in the \emph{collapse} namespace, export \code{unique()}, and silently detach and attach the namespace again so R can find it - all in millisecond. Thus calling \code{unique()} afterwards uses the \emph{collapse} version - which is many times faster. \code{funique} remains available and you can still call \code{base::unique} explicitly. \cr\cr\tab\tab
@@ -53,7 +57,7 @@ get_collapse(opts = NULL)
 \cr\cr
 
 \tab\tab - \code{"shorthand"} removes function shorthands: \code{gv, gv<-, av, av<-, nv, nv<-, gvr, gvr<-, itn, ix, slt, slt<-, sbt, gby, iby, mtt, smr, tfm, tfmv, tfm<-, settfm, settfmv, rnm}. \cr\cr
-\tab\tab - \code{"infix"} removes infix functions: \code{\%!=\%, \%!in\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.\cr\cr
+\tab\tab - \code{"infix"} removes infix functions: \code{\%!=\%, \%[!]in\%, \%[!]iin\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.\cr\cr
 \tab\tab - \code{"operator"} removes functions contained in the macro: \code{.OPERATOR_FUN}.\cr\cr
 \tab\tab - \code{"old"} removes depreciated functions contained in the macro: \code{.COLLAPSE_OLD}.\cr\cr
 
@@ -100,7 +104,7 @@ A safe way to set options affecting startup behavior is by using a \code{\link{.
 
 % \item \code{option("collapse_DT_alloccol")} sets how many empty columns \emph{collapse} data manipulation functions like \code{ftransform} allocate when taking a shallow copy of \emph{data.table}'s. The default is \code{100L}. Note that the \emph{data.table} default is \code{getOption("datatable.alloccol") = 1024L}. I chose a lower default because shallow copies are taken by each data manipulation function if you manipulate \emph{data.table}'s with collapse, and the cost increases with the number of overallocated columns. With 100 columns, the cost is 2-5 microseconds per copy.
 
-\item \code{"collapse_nthreads"}, \code{"collapse_na_rm"}, \code{"collapse_sort"}, \code{"collapse_stable_algo"}, \code{"collapse_mask"} and \code{"collapse_remove"} can be set before loading the package to initialize \code{.op} with different defaults (e.g. using an \code{\link{.Rprofile}} file). Once loaded, these options have no effect, and users need to use \code{set_collapse()} to change them. See also the Note.
+\item \code{"collapse_nthreads"}, \code{"collapse_na_rm"}, \code{"collapse_sort"}, \code{"collapse_stable_algo"}, \code{"collapse_verbose"}, \code{"collapse_digits"}, \code{"collapse_mask"} and \code{"collapse_remove"} can be set before loading the package to initialize \code{.op} with different defaults (e.g. using an \code{\link{.Rprofile}} file). Once loaded, these options have no effect, and users need to use \code{set_collapse()} to change them. See also the Note.
 }
 }
 
