@@ -280,10 +280,16 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
 
   if(asLogical(Rnames)) {
     SEXP names = PROTECT(allocVector(STRSXP, np)); ++nprotect;
-    char namei[5];
-    for(int i = 0; i < np; ++i) {
-      snprintf(namei, 5, "%d%%", (int)(probs[i]*100));
-      SET_STRING_ELT(names, i, mkChar(namei));
+    char namei[5], nameid[7];
+    for(int i = 0, dig; i < np; ++i) {
+      dig = (int)(probs[i]*1000) % 10;
+      if(dig == 0) {
+        snprintf(namei, 5, "%d%%", (int)(probs[i]*100));
+        SET_STRING_ELT(names, i, mkChar(namei));
+      } else {
+        snprintf(nameid, 7, "%d.%d%%", (int)(probs[i]*100), dig);
+        SET_STRING_ELT(names, i, mkChar(nameid));
+      }
     }
     namesgets(res, names);
   }
