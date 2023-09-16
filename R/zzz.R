@@ -130,6 +130,7 @@ do_collapse_restore_exports <- function(clpns) {
   .op$mask <- if(is.null(getOption("collapse_mask"))) NULL else getOption("collapse_mask")
   .op$remove <- if(is.null(getOption("collapse_remove"))) NULL else getOption("collapse_remove")
   .op$verbose <- if(is.null(getOption("collapse_verbose"))) 1L else as.integer(getOption("collapse_verbose"))
+  .op$digits <- if(is.null(getOption("collapse_digits"))) 2L else as.integer(getOption("collapse_digits"))
   assign(".op", .op, envir = clpns)
 
   # TODO: option to save .collapse config file in install directory?? -> Nah, .RProfile is better...

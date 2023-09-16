@@ -112,7 +112,7 @@ fFtest.formula <- function(formula, data = NULL, weights = NULL, ...) {
   fFtest.default(y, exc, X, w, ...)
 }
 
-print.fFtest <- function(x, digits = 3, ...) {
+print.fFtest <- function(x, digits = .op[["digits"]] + 1L, ...) {
   xx <- unclass(format(round(x, digits)))
   xpos <- x >= 1
   xx[xpos] <- sub(paste0(c(".", rep("0",digits)), collapse = ""), "", xx[xpos]) # Problem: Deletes .00 also..

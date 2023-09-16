@@ -413,7 +413,7 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
   invisible(x)
 }
 
-print.descr <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TRUE, total = TRUE, compact = FALSE,
+print.descr <- function(x, n = 14, perc = TRUE, digits = .op[["digits"]], t.table = TRUE, total = TRUE, compact = FALSE,
                         summary = !compact, reverse = FALSE, stepwise = FALSE, ...) {
   if(missing(...) || is.null(header <- list(...)$header)) header <- TRUE
   oldClass(x) <- NULL

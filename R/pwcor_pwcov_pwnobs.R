@@ -152,7 +152,7 @@ pwcov <- function(X, ..., w = NULL, N = FALSE, P = FALSE, array = TRUE, use = "p
   res
 }
 
-print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, return = FALSE, ...) {
+print.pwcor <- function(x, digits = .op[["digits"]], sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, return = FALSE, ...) {
   formfun <- function(x, dg1 = FALSE) {
     xx <- format(round(x, digits)) # , digits = digits-1
     xx <- sub("(-?)0\\.", "\\1.", xx)
@@ -212,7 +212,7 @@ print.pwcor <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.
 } #print.table(dapply(round(x, digits), function(j) sub("^(-?)0.", "\\1.", j)), right = TRUE, ...) # print.table(, right = TRUE)
 
 
-print.pwcov <- function(x, digits = 2L, sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, return = FALSE, ...) {
+print.pwcov <- function(x, digits = .op[["digits"]], sig.level = 0.05, show = c("all","lower.tri","upper.tri"), spacing = 1L, return = FALSE, ...) {
   formfun <- function(x, adj = FALSE) {
     xx <- format(round(x, digits), digits = 9, big.mark = "'", big.interval = 6)
     # xx <- sub("(-?)0\\.", "\\1.", xx) # Not needed here...
