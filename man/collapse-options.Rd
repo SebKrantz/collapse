@@ -53,7 +53,7 @@ get_collapse(opts = NULL)
 \cr\cr
 
 \tab\tab - \code{"shorthand"} removes function shorthands: \code{gv, gv<-, av, av<-, nv, nv<-, gvr, gvr<-, itn, ix, slt, slt<-, sbt, gby, iby, mtt, smr, tfm, tfmv, tfm<-, settfm, settfmv, rnm}. \cr\cr
-\tab\tab - \code{"infix"} removes infix functions: \code{\%!=\%, \%!in\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.\cr\cr
+\tab\tab - \code{"infix"} removes infix functions: \code{\%!=\%, \%[!]in\%, \%[!]iin\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.\cr\cr
 \tab\tab - \code{"operator"} removes functions contained in the macro: \code{.OPERATOR_FUN}.\cr\cr
 \tab\tab - \code{"old"} removes depreciated functions contained in the macro: \code{.COLLAPSE_OLD}.\cr\cr
 

@@ -90,7 +90,7 @@ do_collapse_remove <- function(clpns, rmfun, ...) {
   kwd <- c("shorthand", "operator", "infix", "old") %in% rmfun
   if(kwd[1L]) rmfun <- c(rmfun[rmfun != "shorthand"], .SHORTHANDS)
   if(kwd[2L]) rmfun <- c(rmfun[rmfun != "operator"], .OPERATOR_FUN)
-  if(kwd[3L]) rmfun <- c(rmfun[rmfun != "infix"], .COLLAPSE_ALL[startsWith(.COLLAPSE_ALL, "%")])
+  if(kwd[3L]) rmfun <- c(rmfun[rmfun != "infix"], c(.COLLAPSE_ALL[startsWith(.COLLAPSE_ALL, "%")], if(any(c("%in%", "special") %in% .op[["mask"]])) "%in%"))
   if(kwd[4L]) rmfun <- c(rmfun[rmfun != "old"], .COLLAPSE_OLD)
   do_collapse_remove_core(clpns, unique.default(rmfun), ...)
 }
