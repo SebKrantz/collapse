@@ -17,12 +17,14 @@ pivot(data,               # Summary of Documentation:
       na.rm = FALSE,      # remove rows missing 'values' in reshaped data
       factor = c("names", "labels"), # create new id col(s) as factor variable(s)?
       check.dups = FALSE, # detect duplicate 'ids'+'names' combinations
-      # Options below only apply if how = "wider" or "recast":
+
+      # Only apply if how = "wider" or "recast"
       nthreads = .op[["nthreads"]], # minor gains as grouping remains serial
       fill = NULL,        # value to insert for unbalanced data (default NA/NULL)
       drop = TRUE,        # drop unused levels (=columns) if 'names' is factor
       sort = FALSE,       # "ids": sort 'ids' and/or "names": alphabetic casting
-      # Only applies if how = "wider" with multiple long columns ('values'):
+
+      # Only applies if how = "wider" with multiple long columns ('values')
       transpose = FALSE   # "columns": applies t_list() before flattening, and/or
 )                         # "names": sets names nami_colj. default: colj_nami
 }
