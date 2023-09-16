@@ -13,6 +13,9 @@
 static inline void iswap(int *a, int *b)           {int     tmp=*a; *a=*b; *b=tmp;}
 static inline void dswap(double *a, double *b)     {double  tmp=*a; *a=*b; *b=tmp;}
 
+// For weighted quantile methods
+static double eps = 10 * DBL_EPSILON;
+
 // Barebones quickselect algorithm from Numerical Recipes in C
 #undef QUICKSELECT
 #define QUICKSELECT(SWAP)                                                         \
@@ -525,14 +528,15 @@ int k = 1;                                                                 \
 if(ret < 3) { /* lower (2), or average (1) element*/                       \
   while(wsum < h) wsum += pw[po[k++]];                                     \
   a = px[po[k-1]];                                                         \
-  if(ret == 2 || wsum != h) return a; /* h = sumw * Q must be > 0 here */  \
+  if(ret == 2 || wsum > h+eps) return a;/* h = sumw * Q must be > 0 here */\
   wsum = 2.0; wb = px[po[k]];                                              \
   while(pw[po[k]] == 0.0) { /* l should never be reached, I tested it */   \
     wb += px[po[++k]]; ++wsum;                                             \
   }                                                                        \
   return (a + wb) / wsum;                                                  \
 }                                                                          \
-while(wsum <= h) wsum += pw[po[k++]];                                      \
+wb = h + eps;                                                              \
+while(wsum <= wb) wsum += pw[po[k++]];                                      \
 a = px[po[k-1]];                                                           \
 if(ret == 3 || k == l || h == 0.0)                                         \
   return a;                                                                \
@@ -554,7 +558,7 @@ int k = 1;                                                                   \
 if(ret < 3) { /* lower (2), or average (1) element*/                         \
   while(wsum < h) wsum += pw[i_cc[k++]];                                     \
   a = x_cc[k-1];                                                             \
-  if(ret == 2 || wsum != h) res = a; /* h = sumw * Q must be > 0 here */     \
+  if(ret == 2 || wsum > h+eps) res = a; /* h = sumw * Q must be > 0 here */  \
   else {                                                                     \
     wsum = 2.0; wb = x_cc[k];                                                \
     while(pw[i_cc[k]] == 0.0) { /* n should never be reached, I tested it */ \
@@ -563,7 +567,8 @@ if(ret < 3) { /* lower (2), or average (1) element*/                         \
     res = (a + wb) / wsum;                                                   \
   }                                                                          \
 } else {                                                                     \
-  while(wsum <= h) wsum += pw[i_cc[k++]];                                    \
+  wb = h+eps;                                                                \
+  while(wsum <= wb) wsum += pw[i_cc[k++]];                                   \
   a = x_cc[k-1];                                                             \
   if(ret == 3 || k == n || h == 0.0) {                                       \
     res = a;                                                                 \
