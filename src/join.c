@@ -7,112 +7,172 @@
  And: https://en.wikipedia.org/wiki/Sort-merge_join
 */
 
+// FIRST PASS
+
 void sort_merge_join_int(const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
-                         const int *restrict pox, const int *restrict pot, // Ordering vectors
-                         const int nx, const int nt, int *restrict pres, // Sizes and result vector, pres should also be decremented by 1
-                         const int second_pass) { // Is it the first or second pass?
+                         const int *restrict pot, // Ordering vector for table
+                         const int nx, const int nt, int *restrict pres) // Sizes and result vector, pres should also be decremented by 1
+{
   int i = 0, j = 0, tmp;
   while (i != nx && j != nt) {
-    if(second_pass && pres[pox[i]] == NA_INTEGER) {
-      ++i; continue; // For second passes (Need to initialize pres or add argument to function)
-    }
     tmp = pt[pot[j]];
-    if (px[pox[i]] == tmp) {
-      pres[pox[i]] = pot[j];
+    if (px[i] == tmp) {
+      pres[i] = pot[j];
       // This takes care of duplicates in x and table
-      while (++i != nx && px[pox[i]] == tmp) pres[pox[i]] = pot[j];
+      while (++i != nx && px[i] == tmp) pres[i] = pot[j];
       while (++j != nt && pt[pot[j]] == tmp);
-    } else if (px[pox[i]] < tmp) { // No extra condition needed here because NA_INTEGER is the smallest integer
-      pres[pox[i++]] = NA_INTEGER;
+    } else if (px[i] < tmp) { // No extra condition needed here because NA_INTEGER is the smallest integer
+      pres[i++] = NA_INTEGER;
     } else ++j;
   }
-  if(!second_pass) while (i < nx) pres[pox[i++]] = NA_INTEGER;
+  while (i < nx) pres[i++] = NA_INTEGER;
 }
 
 void sort_merge_join_double(const double *restrict px, const double *restrict pt, // Data pointers, decremented by 1
-                            const int *restrict pox, const int *restrict pot, // Ordering vectors
-                            const int nx, const int nt, int *restrict pres, // Sizes and result vector, pres should also be decremented by 1
-                            const int second_pass) { // Is it the first or second pass?
+                            const int *restrict pot, // Ordering vector for table
+                            const int nx, const int nt, int *restrict pres) // Sizes and result vector, pres should also be decremented by 1
+{
   int i = 0, j = 0;
   double tmp;
   while (i != nx && j != nt) {
-    if(second_pass && pres[pox[i]] == NA_INTEGER) {
-      ++i; continue; // For second passes (Need to initialize pres or add argument to function)
-    }
     tmp = pt[pot[j]];
-    if (REQUAL(px[pox[i]], tmp)) {
-      pres[pox[i]] = pot[j];
+    if (REQUAL(px[i], tmp)) {
+      pres[i] = pot[j];
       // This takes care of duplicates in x and table
-      while (++i != nx && REQUAL(px[pox[i]], tmp)) pres[pox[i]] = pot[j];
+      while (++i != nx && REQUAL(px[i], tmp)) pres[i] = pot[j];
       while (++j != nt && REQUAL(pt[pot[j]], tmp));
-    } else if (ISNAN(px[pox[i]]) || px[pox[i]] < tmp) {
-      pres[pox[i++]] = NA_INTEGER;
+    } else if (ISNAN(px[i]) || px[i] < tmp) {
+      pres[i++] = NA_INTEGER;
     } else ++j;
   }
-  if(!second_pass) while (i < nx) pres[pox[i++]] = NA_INTEGER;
+  while (i < nx) pres[i++] = NA_INTEGER;
 }
 
 
 void sort_merge_join_string(const SEXP *restrict px, const SEXP *restrict pt, // Data pointers, decremented by 1
-                            const int *restrict pox, const int *restrict pot, // Ordering vectors
-                            const int nx, const int nt, int *restrict pres, // Sizes and result vector, pres should also be decremented by 1
-                            const int second_pass) { // Is it the first or second pass?
+                            const int *restrict pot, // Ordering vector for table
+                            const int nx, const int nt, int *restrict pres) // Sizes and result vector, pres should also be decremented by 1
+{
   int i = 0, j = 0;
   SEXP tmp;
   while (i != nx && j != nt) {
-    if(second_pass && pres[pox[i]] == NA_INTEGER) {
-      ++i; continue; // For second passes (Need to initialize pres or add argument to function)
-    }
     tmp = pt[pot[j]];
-    if (px[pox[i]] == tmp) {
-      pres[pox[i]] = pot[j];
+    if (px[i] == tmp) {
+      pres[i] = pot[j];
       // This takes care of duplicates in x and table
-      while (++i != nx && px[pox[i]] == tmp) pres[pox[i]] = pot[j];
+      while (++i != nx && px[i] == tmp) pres[i] = pot[j];
       while (++j != nt && pt[pot[j]] == tmp);
-    } else if (px[pox[i]] == NA_STRING || strcmp(CHAR(px[pox[i]]), CHAR(tmp)) < 0) {
-      pres[pox[i++]] = NA_INTEGER;
+    } else if (px[i] == NA_STRING || strcmp(CHAR(px[i]), CHAR(tmp)) < 0) {
+      pres[i++] = NA_INTEGER;
     } else ++j;
   }
-  if(!second_pass) while (i < nx) pres[pox[i++]] = NA_INTEGER;
+  while (i < nx) pres[i++] = NA_INTEGER;
 }
 
 
 void sort_merge_join_complex(const Rcomplex *restrict px, const Rcomplex *restrict pt, // Data pointers, decremented by 1
-                             const int *restrict pox, const int *restrict pot, // Ordering vectors
-                             const int nx, const int nt, int *restrict pres, // Sizes and result vector, pres should also be decremented by 1
-                             const int second_pass) { // Is it the first or second pass?
+                             const int *restrict pot, // Ordering vector for table
+                             const int nx, const int nt, int *restrict pres) // Sizes and result vector, pres should also be decremented by 1
+{
   int i = 0, j = 0;
   Rcomplex xi, tj;
   while (i != nx && j != nt) {
-    if(second_pass && pres[pox[i]] == NA_INTEGER) {
-      ++i; continue; // For second passes (Need to initialize pres or add argument to function)
-    }
     tj = pt[pot[j]];
-    xi = px[pox[i]];
+    xi = px[i];
     if (CEQUAL(xi, tj)) {
-      pres[pox[i]] = pot[j];
+      pres[i] = pot[j];
       // This takes care of duplicates in x and table
-      while (++i != nx && CEQUAL(px[pox[i]], tj)) pres[pox[i]] = pot[j];
+      while (++i != nx && CEQUAL(px[i], tj)) pres[i] = pot[j];
       while (++j != nt && CEQUAL(pt[pot[j]], tj));
     } else if (ISNAN(xi.r) || ISNAN(xi.i) || xi.r < tj.r || (xi.r == tj.r && xi.i < tj.i)) { // Todo: comparison permissible ?
-      pres[pox[i++]] = NA_INTEGER;
+      pres[i++] = NA_INTEGER;
     } else ++j;
   }
-  if(!second_pass) while (i < nx) pres[pox[i++]] = NA_INTEGER;
+  while (i < nx) pres[i++] = NA_INTEGER;
+}
+
+// SECOND PASS?
+
+// void sort_merge_join_int(const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
+//                          const int *restrict pox, const int *restrict pot, // Ordering vectors
+//                          const int nx, const int nt, int *restrict pres, // Sizes and result vector, pres should also be decremented by 1
+//                          const int second_pass) { // Is it the first or second pass?
+//   int i = 0, j = 0, tmp;
+//   while (i != nx && j != nt) {
+//     if(second_pass && pres[i] == NA_INTEGER) {
+//       ++i; continue; // For second passes (Need to initialize pres or add argument to function)
+//     }
+//     tmp = pt[pot[j]];
+//     if (px[i] == tmp) {
+//       pres[i] = pot[j];
+//       // This takes care of duplicates in x and table
+//       while (++i != nx && px[i] == tmp) pres[i] = pot[j];
+//       while (++j != nt && pt[pot[j]] == tmp);
+//     } else if (px[i] < tmp) { // No extra condition needed here because NA_INTEGER is the smallest integer
+//       pres[pox[i++]] = NA_INTEGER;
+//     } else ++j;
+//   }
+//   if(!second_pass) while (i < nx) pres[pox[i++]] = NA_INTEGER;
+// }
+
+// // TODO: Translate this to R and take it from there
+// void sort_merge_join_int_second(
+//     const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
+//     const int *restrict pox, const int *restrict pot, // Ordering vectors
+//     // int *restrict pct, // Vector to save the counts of t (needed for second pass), also decremented by 1
+//     const int nx, const int nt, int *restrict pres) {
+//   int i = 0, j = 0, tmp;
+//   while (i != nx && j != nt) {
+//     if(pres[i] == NA_INTEGER) ++i; // If missing from previous round, move ahead
+//     tmp = pt[pot[j]];
+//     if (px[i] == tmp) { // We have a match
+//       if(pres[i] == pot[j]) ++i; // We already got this match
+//       // This is because some previous entries in table could have not been matched. Only the first entry is matched on first pass.
+//       else if (pres[i] < pot[j]) { // Now this is much more interesting: different entries in previous column of the table could have been identical...
+//         pres[i] = pot[j];
+//         // This takes care of duplicates in x and table
+//         while (i != nx && px[pox[++i]] == tmp) pres[i] = pot[j];
+//         while (j != nt && pt[pot[++j]] == tmp);
+//       } else pres[pox[i++]] = NA_INTEGER; // Some redundancy here ??
+//     } else if (px[i] > tmp) { // First pass version correct here??
+//       pres[pox[i++]] = NA_INTEGER; j++;
+//     } else j++;
+//   }
+// }
+
+
+void sort_merge_join_int_second(const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
+                                const int *restrict pot, // Ordering vector for table
+                                const int nx, const int nt, int *restrict pres) // Sizes and result vector, pres should also be decremented by 1
+{
+  int i = 0, j = 0, tmp;
+  while (i != nx && j != nt) {
+    if (pres[i] == NA_INTEGER) ++i;
+    if (pres[i] > pot[j]) j += pres[i] - pot[j]; // Key: need to keep track of previous matching, if we are in a different category 1, move ahead an appropriate number of steps
+    tmp = pt[pot[j]];
+    if (px[i] == tmp) {
+      pres[i] = pot[j];
+      // This takes care of duplicates in x and table
+      while (++i != nx && pres[i] <= pot[j] && px[i] == tmp) pres[i] = pot[j];
+      while (++j != nt && pres[i] <= pot[j] && pt[pot[j]] == tmp);
+    } else if (px[i] < tmp) { // No extra condition needed here because NA_INTEGER is the smallest integer
+      pres[i++] = NA_INTEGER;
+    } else ++j;
+  }
 }
 
 
-SEXP sort_merge_join(SEXP x, SEXP table, SEXP ox, SEXP ot) {
+
+SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot) {
 
   if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("x and table need to be lists");
-  if(TYPEOF(ox) != INTSXP || TYPEOF(ot) != INTSXP) error("ox and ot need to be integers");
-  const int nx = length(ox), nt = length(ot), *restrict pox = INTEGER(ox), *restrict pot = INTEGER(ot);
+  if(TYPEOF(ot) != INTSXP) error("ot needs to be integer");
   // TODO: x and table could be atomic??
-  if(length(VECTOR_ELT(x, 0)) != nx) error("nrow(x) must match length(ox)");
-  if(length(VECTOR_ELT(table, 0)) != nt) error("nrow(x) must match length(ox)");
+  const int nx = length(VECTOR_ELT(x, 0)), nt = length(ot), *restrict pot = INTEGER(ot);
+  if(length(VECTOR_ELT(table, 0)) != nt) error("nrow(table) must match length(ot)");
 
   SEXP res = PROTECT(allocVector(INTSXP, nx));
-  int *restrict pres = INTEGER(res)-1;
+  int *restrict pres = INTEGER(res);
 
   SEXP clist = PROTECT(coerce_to_equal_types(x, table)); // This checks that the lengths match
   const SEXP *pc = SEXPPTR_RO(clist);
@@ -123,16 +183,17 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ox, SEXP ot) {
     switch(TYPEOF(pci[0])) {
       case INTSXP:
       case LGLSXP:
-        sort_merge_join_int(INTEGER(pci[0])-1, INTEGER(pci[1])-1, pox, pot, nx, nt, pres, i > 0);
+        if(i == 0) sort_merge_join_int(INTEGER(pci[0]), INTEGER(pci[1])-1, pot, nx, nt, pres);
+        else sort_merge_join_int_second(INTEGER(pci[0]), INTEGER(pci[1])-1, pot, nx, nt, pres);
         break;
       case REALSXP:
-        sort_merge_join_double(REAL(pci[0])-1, REAL(pci[1])-1, pox, pot, nx, nt, pres, i > 0);
+        sort_merge_join_double(REAL(pci[0]), REAL(pci[1])-1, pot, nx, nt, pres);
         break;
       case STRSXP:
-        sort_merge_join_string(SEXPPTR_RO(pci[0])-1, SEXPPTR_RO(pci[1])-1, pox, pot, nx, nt, pres, i > 0);
+        sort_merge_join_string(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, pot, nx, nt, pres);
         break;
       case CPLXSXP:
-        sort_merge_join_complex(COMPLEX(pci[0])-1, COMPLEX(pci[1])-1, pox, pot, nx, nt, pres, i > 0);
+        sort_merge_join_complex(COMPLEX(pci[0]), COMPLEX(pci[1])-1, pot, nx, nt, pres);
         break;
       default:
         error("Unsupported type for x/table: %s", type2char(TYPEOF(pci[0])));
@@ -143,29 +204,3 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ox, SEXP ot) {
   return res;
 }
 
-// Miscellaneous -----------------------------------------
-// SECOND PASS?
-
-// void sort_merge_join_int_second(
-//     const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
-//     const int *restrict pox, const int *restrict pot, // Ordering vectors
-//     // int *restrict pct, // Vector to save the counts of t (needed for second pass), also decremented by 1
-//     const int nx, const int nt, int *restrict pres) {
-//   int i = 0, j = 0, tmp;
-//   while (i != nx && j != nt) {
-//     if(pres[pox[i]] == NA_INTEGER) ++i; // If missing prom previous round, move ahead
-//     tmp = pt[pot[j]];
-//     if (px[pox[i]] == tmp) {
-//       if(pres[pox[i]] == pot[j]) ++i; // Cool, we already got this match
-//       else if (pres[pox[i]] < pot[j]) { // Now this is much more interesting: different entries in previous column of the table could have been identical...
-//         pres[pox[i]] = pot[j];
-//         // This takes care of duplicates in x and table
-//         while (i != nx && px[pox[++i]] == tmp) pres[pox[i]] = pot[j];
-//         while (j != nt && pt[pot[++j]] == tmp);
-//       }
-//     } else if (px[pox[i]] < tmp) {
-//       pres[pox[i++]] = NA_INTEGER;
-//     } else j++;
-//   }
-//   while (i < nx) pres[i++] = NA_INTEGER;
-// }
