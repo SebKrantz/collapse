@@ -2,10 +2,9 @@
 # Implementation of Table Joins
 ################################
 
-sort_merge_join <- function(x, table) {
-  ox <- radixorderv(x)
+sort_merge_join <- function(x_sorted, table, count = FALSE) {
   ot <- radixorderv(table)
-  .Call(C_sort_merge_join, x, table, ox, ot)
+  .Call(C_sort_merge_join, x_sorted, table, ot, count)
 }
 
 # Modeled after Pandas/Polars:
@@ -16,14 +15,12 @@ join <- function(x, y,
                  how = "left",
                  suffix = NULL, # c("_x", "_y")
                  validate = "m:m",  # NULL,
-                 # TODO: implement sort_merge_join !!!
-                 # sort = FALSE,
+                 sort = FALSE,
                  keep.col.order = TRUE,
                  drop.dup.cols = FALSE,
                  verbose = .op[["verbose"]],
-                 overid = 1L,
                  column = NULL,
-                 attr = NULL) { # method = c("hash", "radix") -> implicit to sort...
+                 attr = NULL, ...) { # method = c("hash", "radix") -> implicit to sort...
 
   # Initial checks
   if(!is.list(x)) stop("x must be a list")
@@ -58,9 +55,20 @@ join <- function(x, y,
   # Matching step
   rjoin <- switch(how, right = TRUE, FALSE)
   count <- verbose || validate != "m:m"
-  # TODO: sort argument: sort = TRUE means roworderv(x, xon), and then sort_merge_join
-  m <- if(rjoin) fmatch(y[iyon], x[ixon], overid = overid, count = count) else
-                 fmatch(x[ixon], y[iyon], overid = overid, count = count)
+
+  if(sort) {
+    if(rjoin) {
+      y <- roworderv(y, cols = iyon)
+      m <- sort_merge_join(y[iyon], x[ixon], count = count)
+    } else {
+      x <- roworderv(x, cols = ixon)
+      m <- sort_merge_join(x[ixon], y[iyon], count = count)
+      if(how == "left" && length(ax[["row.names"]])) ax[["row.names"]] <- attr(x, "row.names")
+    }
+  } else {
+    m <- if(rjoin) fmatch(y[iyon], x[ixon], nomatch = NA_integer_, count = count, ...) else
+                   fmatch(x[ixon], y[iyon], nomatch = NA_integer_, count = count, ...)
+  }
 
   # TODO: validate full join...
   switch(validate,
@@ -198,6 +206,7 @@ join <- function(x, y,
           c(on_res, x_res, y_res)
         }
       } else { # If all elements of table are matched, this is simply a left join
+        how <- "left"
         y_res <- .Call(C_subsetDT, y, m, iyon, if(count) attr(m, "N.nomatch") else TRUE) # anyNA(um) ??
         c(x, y_res)
       }
@@ -255,6 +264,7 @@ join <- function(x, y,
   if(length(attr)) ax[[if(is.character(attr)) attr else "join.match"]] <- list(call = match.call(),
                                                                                on.cols = list(x = xon, y = `names<-`(on, NULL)),
                                                                                match = m) # TODO: sort merge join probably needs to be o[m]
+  if(sort && how == "full") res <- roworderv(res, cols = xon)
   if(how != "left" && length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(fnrow(res))
   ax[["names"]] <- names(res)
   .Call(C_setattributes, res, ax)
