@@ -1016,14 +1016,9 @@ SEXP fmatch_internal(SEXP x, SEXP table, SEXP nomatch, SEXP overid) {
   return match_single(x, table, nomatch);
 }
 
-
-// This is for export
-SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count, SEXP overid) {
-  if(asLogical(count) <= 0) return fmatch_internal(x, table, nomatch, overid);
-  SEXP res = PROTECT(fmatch_internal(x, table, nomatch, overid));
+void count_match(SEXP res, int nt, int nmv) {
   const int *restrict pres = INTEGER(res);
-  int nt = isNewList(table) ? length(VECTOR_ELT(table, 0)) : length(table);
-  int n = length(res), nd = 0, nnm = 0, nmv = asInteger(nomatch);
+  int n = length(res), nd = 0, nnm = 0;
   int *restrict cnt = (int*)Calloc(nt+1, int);
   for (int i = 0; i != n; ++i) {
     if(pres[i] == nmv) ++nnm;
@@ -1040,6 +1035,14 @@ SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count, SEXP overid) {
   setAttrib(res, sym_ng, ScalarInteger(nt));
   setAttrib(res, sym_distinct, ScalarInteger(nd));
   classgets(res, mkString("qG"));
+}
+
+// This is for export
+SEXP fmatchC(SEXP x, SEXP table, SEXP nomatch, SEXP count, SEXP overid) {
+  if(asLogical(count) <= 0) return fmatch_internal(x, table, nomatch, overid);
+  SEXP res = PROTECT(fmatch_internal(x, table, nomatch, overid));
+  int nt = isNewList(table) ? length(VECTOR_ELT(table, 0)) : length(table);
+  count_match(res, nt, asInteger(nomatch));
   UNPROTECT(1);
   return res;
 }

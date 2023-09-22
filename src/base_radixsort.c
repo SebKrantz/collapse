@@ -971,7 +971,7 @@ static int StrCmp(SEXP x, SEXP y)            // also used by bmerge and chmatch
 
 #define CHAR_ENCODING(x) (IS_ASCII(x) ? CE_UTF8 : getCharCE(x))
 
-static void checkEncodings(SEXP x)
+void checkEncodings(SEXP x) // static 
 {
   cetype_t ce;
   SEXP *px = STRING_PTR(x);

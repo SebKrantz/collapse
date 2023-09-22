@@ -20,6 +20,8 @@
 #define TRLEN(x) ((int) STDVEC_TRUELENGTH(x)) // ((int) TRUELENGTH(x))
 #define SET_TRLEN(x, v) SET_STDVEC_TRUELENGTH(x, ((int) (v)))
 
+void checkEncodings(SEXP x);
+
 
 SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SORTStr, SEXP args);
 void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x);
