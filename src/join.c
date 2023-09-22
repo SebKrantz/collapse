@@ -95,55 +95,7 @@ void sort_merge_join_complex(const Rcomplex *restrict px, const Rcomplex *restri
   while (i < nx) pres[i++] = NA_INTEGER;
 }
 
-// SECOND PASS?
-
-// void sort_merge_join_int(const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
-//                          const int *restrict pox, const int *restrict pot, // Ordering vectors
-//                          const int nx, const int nt, int *restrict pres, // Sizes and result vector, pres should also be decremented by 1
-//                          const int second_pass) { // Is it the first or second pass?
-//   int i = 0, j = 0, tmp;
-//   while (i != nx && j != nt) {
-//     if(second_pass && pres[i] == NA_INTEGER) {
-//       ++i; continue; // For second passes (Need to initialize pres or add argument to function)
-//     }
-//     tmp = pt[pot[j]];
-//     if (px[i] == tmp) {
-//       pres[i] = pot[j];
-//       // This takes care of duplicates in x and table
-//       while (++i != nx && px[i] == tmp) pres[i] = pot[j];
-//       while (++j != nt && pt[pot[j]] == tmp);
-//     } else if (px[i] < tmp) { // No extra condition needed here because NA_INTEGER is the smallest integer
-//       pres[pox[i++]] = NA_INTEGER;
-//     } else ++j;
-//   }
-//   if(!second_pass) while (i < nx) pres[pox[i++]] = NA_INTEGER;
-// }
-
-// // TODO: Translate this to R and take it from there
-// void sort_merge_join_int_second(
-//     const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
-//     const int *restrict pox, const int *restrict pot, // Ordering vectors
-//     // int *restrict pct, // Vector to save the counts of t (needed for second pass), also decremented by 1
-//     const int nx, const int nt, int *restrict pres) {
-//   int i = 0, j = 0, tmp;
-//   while (i != nx && j != nt) {
-//     if(pres[i] == NA_INTEGER) ++i; // If missing from previous round, move ahead
-//     tmp = pt[pot[j]];
-//     if (px[i] == tmp) { // We have a match
-//       if(pres[i] == pot[j]) ++i; // We already got this match
-//       // This is because some previous entries in table could have not been matched. Only the first entry is matched on first pass.
-//       else if (pres[i] < pot[j]) { // Now this is much more interesting: different entries in previous column of the table could have been identical...
-//         pres[i] = pot[j];
-//         // This takes care of duplicates in x and table
-//         while (i != nx && px[pox[++i]] == tmp) pres[i] = pot[j];
-//         while (j != nt && pt[pot[++j]] == tmp);
-//       } else pres[pox[i++]] = NA_INTEGER; // Some redundancy here ??
-//     } else if (px[i] > tmp) { // First pass version correct here??
-//       pres[pox[i++]] = NA_INTEGER; j++;
-//     } else j++;
-//   }
-// }
-
+// SECOND PASS
 
 void sort_merge_join_int_second(const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
                                 int *restrict ptab, const int *restrict pot, // previous matches and ordering vector for table
@@ -244,6 +196,7 @@ void sort_merge_join_complex_second(const Rcomplex *restrict px, const Rcomplex 
 }
 
 
+// R FUNCTION
 
 SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
 
@@ -274,6 +227,7 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
         else sort_merge_join_double_second(REAL(pci[0]), REAL(pci[1])-1, ptab, pot, nx, nt, pres);
         break;
       case STRSXP:
+        checkEncodings(pci[0]); checkEncodings(pci[1]);
         if(i == 0) sort_merge_join_string(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, ptab, pot, nx, nt, pres);
         else sort_merge_join_string_second(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, ptab, pot, nx, nt, pres);
         break;
