@@ -5,6 +5,10 @@
 /* A Sort-Merge Join
  See: https://www.dcs.ed.ac.uk/home/tz/phd/thesis/node20.htm
  And: https://en.wikipedia.org/wiki/Sort-merge_join
+
+ Note: this is only used in join(..., sort = TRUE), and expects that x was
+ sorted by the join columns. The default hash join used with sort = FALSE
+ is implemented in match.c
 */
 
 // FIRST PASS
@@ -94,6 +98,8 @@ void sort_merge_join_complex(const Rcomplex *restrict px, const Rcomplex *restri
   }
   while (i < nx) pres[i++] = NA_INTEGER;
 }
+
+
 
 // SECOND PASS
 
