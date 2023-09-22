@@ -245,7 +245,7 @@ void sort_merge_join_complex_second(const Rcomplex *restrict px, const Rcomplex 
 
 
 
-SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot) {
+SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
 
   if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("x and table need to be lists");
   if(TYPEOF(ot) != INTSXP) error("ot needs to be integer");
@@ -287,6 +287,7 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot) {
   }
 
   Free(ptab);
+  if(asLogical(count)) count_match(res, nt, NA_INTEGER);
   UNPROTECT(2);
   return res;
 }
