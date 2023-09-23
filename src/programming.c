@@ -177,7 +177,7 @@ return(ans);
 SEXP anyallv(SEXP x, SEXP val, SEXP Rall) {
 
   int n = length(x), all = asLogical(Rall);
-  if(length(x) == 0) return ScalarLogical(0);
+  if(length(x) == 0) return ScalarLogical(all ? 1 : 0);
   if(length(val) != 1) error("value needs to be length 1");
 
 #define ALLANYVLOOP                                                      \
