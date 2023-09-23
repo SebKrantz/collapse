@@ -371,7 +371,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
 // ****************************************
 SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
 
-  int n = length(x), tx = TYPEOF(x), ty = TYPEOF(y), K, K2, anyNA = 2;
+  int n = length(x), tx = TYPEOF(x), ty = TYPEOF(y), K, K2, anyNA = 0;
   if(length(y) != n) error("length of first two columns in the data must be the same");
   if(tx == CPLXSXP || ty == CPLXSXP) return R_NilValue;
 
@@ -382,16 +382,16 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
   int both_discr = (tx == LGLSXP || (tx == INTSXP && (isFactor(x) || inherits(x, "qG")))) &&
                    (ty == LGLSXP || (ty == INTSXP && (isFactor(y) || inherits(y, "qG"))));
   if(both_discr) {
-    K = tx == LGLSXP ? 3 : isFactor(x) ? nlevels(x)+1 : asInteger(getAttrib(x, install("N.groups")))+1;
-    K2 = ty == LGLSXP ? 3 : isFactor(y) ? nlevels(y)+1 : asInteger(getAttrib(y, install("N.groups")))+1;
-    if(inherits(x, "na.included")) {
-      K -= 1; anyNA -= 1;
+    K = tx == LGLSXP ? 1 : isFactor(x) ? nlevels(x) : asInteger(getAttrib(x, install("N.groups")));
+    K2 = ty == LGLSXP ? 1 : isFactor(y) ? nlevels(y) : asInteger(getAttrib(y, install("N.groups")));
+    if(tx == LGLSXP || !inherits(x, "na.included")) {
+      K += 1; anyNA += 1;
     }
-    if(inherits(y, "na.included")) {
-      K2 -= 1; anyNA -= 1;
+    if(ty == LGLSXP || !inherits(y, "na.included")) {
+      K2 += 1; anyNA += 1;
     }
     if((size_t)K * K2 <= (size_t)n * 3) {
-      M = anyNA ? (size_t)K * (K2+1) + 1 : (size_t)K * K2 + 1;
+      M = anyNA ? (size_t)(K+1) * (K2+1) + 1 : (size_t)K * K2 + 1; // + 1 because of zero indexing
     } else both_discr = 0;
   }
 
@@ -417,10 +417,11 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         else pans[i] = h[id] = ++g;
       }
     } else {
+      K += 1;
       for (int i = 0, xi, yi; i != n; ++i) {
-        xi = (px[i] == NA_INTEGER) ? K : px[i];
+        xi = (px[i] == NA_INTEGER) ? K : px[i]+1;
         yi = (py[i] == NA_INTEGER) ? K2 : py[i];
-        id = xi + yi * K;
+        id = xi + yi * K; // Problem: if logical xi = 0, yi = 1 and xi = K, yi = 0 give the same..
         if(h[id]) pans[i] = h[id];
         else pans[i] = h[id] = ++g;
       }
