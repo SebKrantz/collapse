@@ -58,7 +58,7 @@ SEXP Cna_rm(SEXP x) {
   error("Unsupported type '%s' passed to na_rm()", type2char(TYPEOF(x)));
 }
 
-// Helper function to find a single sting in factor levels
+// Helper function to find a single string in factor levels
 int fchmatch(SEXP x, SEXP val, int nomatch) {
   const SEXP *px = STRING_PTR(x), v = asChar(val);
   for(int i = 0, l = length(x); i != l; ++i) if(px[i] == v) return i + 1;
@@ -177,6 +177,7 @@ return(ans);
 SEXP anyallv(SEXP x, SEXP val, SEXP Rall) {
 
   int n = length(x), all = asLogical(Rall);
+  if(length(x) == 0) return ScalarLogical(all ? 1 : 0);
   if(length(val) != 1) error("value needs to be length 1");
 
 #define ALLANYVLOOP                                                      \
