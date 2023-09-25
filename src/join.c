@@ -11,6 +11,7 @@
  is implemented in match.c
 */
 
+
 // FIRST PASS
 
 void sort_merge_join_int(const int *restrict px, const int *restrict pt, // Data pointers, decremented by 1
@@ -26,7 +27,7 @@ void sort_merge_join_int(const int *restrict px, const int *restrict pt, // Data
       // This takes care of duplicates in x and table
       while (++i != nx && px[i] == tmp) pres[i] = otj;
       while (++j != nt && pt[pot[j]] == tmp) ptab[pot[j]] = otj;
-    } else if (px[i] < tmp) { // No extra condition needed here because NA_INTEGER is the smallest integer
+    } else if ((px[i] != NA_INTEGER && px[i] < tmp) || tmp == NA_INTEGER) { // NA_INTEGER is the smallest integer: assuming ordering with na.last
       pres[i++] = NA_INTEGER;
     } else ++j;
   }
@@ -47,7 +48,7 @@ void sort_merge_join_double(const double *restrict px, const double *restrict pt
       // This takes care of duplicates in x and table
       while (++i != nx && REQUAL(px[i], tmp)) pres[i] = otj;
       while (++j != nt && REQUAL(pt[pot[j]], tmp)) ptab[pot[j]] = otj;
-    } else if (ISNAN(px[i]) || px[i] < tmp) {
+    } else if (px[i] < tmp || ISNAN(tmp)) { // ISNAN(px[i]) || // Ordering with na.last: allows NA's to be matched last...
       pres[i++] = NA_INTEGER;
     } else ++j;
   }
@@ -69,7 +70,7 @@ void sort_merge_join_string(const SEXP *restrict px, const SEXP *restrict pt, //
       // This takes care of duplicates in x and table
       while (++i != nx && px[i] == tmp) pres[i] = otj;
       while (++j != nt && pt[pot[j]] == tmp) ptab[pot[j]] = otj;
-    } else if (px[i] == NA_STRING || strcmp(CHAR(px[i]), CHAR(tmp)) < 0) {
+    } else if (tmp == NA_STRING || (px[i] != NA_STRING && strcmp(CHAR(px[i]), CHAR(tmp)) < 0)) { // Ordering with na.last
       pres[i++] = NA_INTEGER;
     } else ++j;
   }
@@ -82,17 +83,17 @@ void sort_merge_join_complex(const Rcomplex *restrict px, const Rcomplex *restri
                              const int nx, const int nt, int *restrict pres) // Sizes and result vector, pres should also be decremented by 1
 {
   int i = 0, j = 0, otj;
-  Rcomplex xi, tj;
+  Rcomplex xi, tmp;
   while (i != nx && j != nt) {
     otj = pot[j];
-    tj = pt[otj];
+    tmp = pt[otj];
     xi = px[i];
-    if (CEQUAL(xi, tj)) {
+    if (CEQUAL(xi, tmp)) {
       ptab[otj] = pres[i] = otj;
       // This takes care of duplicates in x and table
-      while (++i != nx && CEQUAL(px[i], tj)) pres[i] = otj;
-      while (++j != nt && CEQUAL(pt[pot[j]], tj)) ptab[pot[j]] = otj;
-    } else if (ISNAN(xi.r) || ISNAN(xi.i) || xi.r < tj.r || (xi.r == tj.r && xi.i < tj.i)) { // Todo: comparison permissible ?
+      while (++i != nx && CEQUAL(px[i], tmp)) pres[i] = otj;
+      while (++j != nt && CEQUAL(pt[pot[j]], tmp)) ptab[pot[j]] = otj;
+    } else if (xi.r < tmp.r || (xi.r == tmp.r && xi.i < tmp.i) || ISNAN(tmp.r) || ISNAN(tmp.i)) { // ISNAN(xi.r) || ISNAN(xi.i) || Ordering with na.last
       pres[i++] = NA_INTEGER;
     } else ++j;
   }
@@ -120,7 +121,7 @@ void sort_merge_join_int_second(const int *restrict px, const int *restrict pt, 
       ptab[otj] = pres[i] = otj;
       while (++i != nx && px[i] == tmp && pres[i] == grj) pres[i] = otj;
       while (++j != nt && pt[pot[j]] == tmp && ptab[pot[j]] == grj) ptab[pot[j]] = otj;
-    } else if (pres[i] < grj || (pres[i] == grj && px[i] < tmp)) {
+    } else if (pres[i] < grj || (pres[i] == grj && (tmp == NA_INTEGER || (px[i] != NA_INTEGER && px[i] < tmp)))) { // Assuming ordering with na.last
       pres[i++] = NA_INTEGER;
     } else ++j;
   }
@@ -145,7 +146,7 @@ void sort_merge_join_double_second(const double *restrict px, const double *rest
       // This takes care of duplicates in x and table
       while (++i != nx && REQUAL(px[i], tmp) && pres[i] == grj) pres[i] = otj;
       while (++j != nt && REQUAL(pt[pot[j]], tmp) && ptab[pot[j]] == grj) ptab[pot[j]] = otj;
-    } else if (ISNAN(px[i]) || px[i] < tmp || (REQUAL(px[i], tmp) && pres[i] < grj)) { // ISNAN(px[i]) ??
+    } else if (pres[i] < grj || (pres[i] == grj && (ISNAN(tmp) || px[i] < tmp))) { // ISNAN(px[i]) || px[i] < tmp || (REQUAL(px[i], tmp) && pres[i] < grj)
       pres[i++] = NA_INTEGER;
     } else ++j;
   }
@@ -169,7 +170,7 @@ void sort_merge_join_string_second(const SEXP *restrict px, const SEXP *restrict
       ptab[otj] = pres[i] = otj;
       while (++i != nx && px[i] == tmp && pres[i] == grj) pres[i] = otj;
       while (++j != nt && pt[pot[j]] == tmp && ptab[pot[j]] == grj) ptab[pot[j]] = otj;
-    } else if (px[i] == NA_STRING || strcmp(CHAR(px[i]), CHAR(tmp)) < 0 || (px[i] == tmp && pres[i] < grj)) { // px[i] == NA_STRING ?
+    } else if (pres[i] < grj || (pres[i] == grj && (tmp == NA_STRING || (px[i] != NA_STRING && strcmp(CHAR(px[i]), CHAR(tmp)) < 0)))) { // px[i] == NA_STRING || strcmp(CHAR(px[i]), CHAR(tmp)) < 0 || (px[i] == tmp && pres[i] < grj)
       pres[i++] = NA_INTEGER;
     } else ++j;
   }
@@ -194,12 +195,13 @@ void sort_merge_join_complex_second(const Rcomplex *restrict px, const Rcomplex 
       ptab[otj] = pres[i] = otj;
       while (++i != nx && CEQUAL(px[i], tmp) && pres[i] == grj) pres[i] = otj;
       while (++j != nt && CEQUAL(pt[pot[j]], tmp) && ptab[pot[j]] == grj) ptab[pot[j]] = otj;
-    } else if (ISNAN(xi.r) || ISNAN(xi.i) || xi.r < tmp.r || (xi.r == tmp.r && xi.i < tmp.i) || (CEQUAL(xi, tmp) && pres[i] < grj)) {
+    } else if (pres[i] < grj || (pres[i] == grj && (xi.r < tmp.r || (xi.r == tmp.r && xi.i < tmp.i) || ISNAN(tmp.r) || ISNAN(tmp.i)))) { // ISNAN(xi.r) || ISNAN(xi.i) || xi.r < tmp.r || (xi.r == tmp.r && xi.i < tmp.i) || (CEQUAL(xi, tmp) && pres[i] < grj)
       pres[i++] = NA_INTEGER;
     } else ++j;
   }
   while (i < nx) pres[i++] = NA_INTEGER;
 }
+
 
 
 // R FUNCTION
@@ -225,21 +227,21 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
     switch(TYPEOF(pci[0])) {
       case INTSXP:
       case LGLSXP:
-        if(i == 0) sort_merge_join_int(INTEGER(pci[0]), INTEGER(pci[1])-1, ptab, pot, nx, nt, pres);
-        else sort_merge_join_int_second(INTEGER(pci[0]), INTEGER(pci[1])-1, ptab, pot, nx, nt, pres);
+        if(i == 0) sort_merge_join_int(INTEGER_RO(pci[0]), INTEGER_RO(pci[1])-1, ptab, pot, nx, nt, pres);
+        else sort_merge_join_int_second(INTEGER_RO(pci[0]), INTEGER_RO(pci[1])-1, ptab, pot, nx, nt, pres);
         break;
       case REALSXP:
-        if(i == 0) sort_merge_join_double(REAL(pci[0]), REAL(pci[1])-1, ptab, pot, nx, nt, pres);
-        else sort_merge_join_double_second(REAL(pci[0]), REAL(pci[1])-1, ptab, pot, nx, nt, pres);
+        if(i == 0) sort_merge_join_double(REAL_RO(pci[0]), REAL_RO(pci[1])-1, ptab, pot, nx, nt, pres);
+        else sort_merge_join_double_second(REAL_RO(pci[0]), REAL_RO(pci[1])-1, ptab, pot, nx, nt, pres);
         break;
       case STRSXP:
         checkEncodings(pci[0]); checkEncodings(pci[1]);
-        if(i == 0) sort_merge_join_string(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, ptab, pot, nx, nt, pres);
-        else sort_merge_join_string_second(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, ptab, pot, nx, nt, pres);
+        if(i == 0) sort_merge_join_string(STRING_PTR_RO(pci[0]), STRING_PTR_RO(pci[1])-1, ptab, pot, nx, nt, pres);
+        else sort_merge_join_string_second(STRING_PTR_RO(pci[0]), STRING_PTR_RO(pci[1])-1, ptab, pot, nx, nt, pres);
         break;
       case CPLXSXP:
-        if(i == 0) sort_merge_join_complex(COMPLEX(pci[0]), COMPLEX(pci[1])-1, ptab, pot, nx, nt, pres);
-        else sort_merge_join_complex_second(COMPLEX(pci[0]), COMPLEX(pci[1])-1, ptab, pot, nx, nt, pres);
+        if(i == 0) sort_merge_join_complex(COMPLEX_RO(pci[0]), COMPLEX_RO(pci[1])-1, ptab, pot, nx, nt, pres);
+        else sort_merge_join_complex_second(COMPLEX_RO(pci[0]), COMPLEX_RO(pci[1])-1, ptab, pot, nx, nt, pres);
         break;
       default:
         error("Unsupported type for x/table: %s", type2char(TYPEOF(pci[0])));
