@@ -3,7 +3,7 @@
 ################################
 
 sort_merge_join <- function(x_sorted, table, count = FALSE) {
-  ot <- radixorderv(table)
+  ot <- radixorderv(table, decreasing = FALSE, na.last = TRUE)
   .Call(C_sort_merge_join, x_sorted, table, ot, count)
 }
 
@@ -58,10 +58,10 @@ join <- function(x, y,
 
   if(sort) {
     if(rjoin) {
-      y <- roworderv(y, cols = iyon)
+      y <- roworderv(y, cols = iyon, decreasing = FALSE, na.last = TRUE)
       m <- sort_merge_join(y[iyon], x[ixon], count = count)
     } else {
-      x <- roworderv(x, cols = ixon)
+      x <- roworderv(x, cols = ixon, decreasing = FALSE, na.last = TRUE)
       m <- sort_merge_join(x[ixon], y[iyon], count = count)
       if(how == "left" && length(ax[["row.names"]])) ax[["row.names"]] <- attr(x, "row.names")
     }
