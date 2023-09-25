@@ -74,6 +74,15 @@ test_that("fmatch works well with data frames / lists", {
 })
 
 
+wld <- wlddev |> slt(iso3c, year = PCGDP) |> roworderv()
+wld <- na_insert(wld)
+x <- ss(wld, sample.int(10000, replace = TRUE))
+table <- ss(wld, sample.int(1000, replace = TRUE))
+
+expect_identical(fmatch(x$year, table$year), match(x$year, table$year))
+expect_identical(fmatch(x, table), fmatch_base(x, table))
+
+
 ########################
 # AI Generated Tests
 ########################
