@@ -7,10 +7,13 @@
  And: https://en.wikipedia.org/wiki/Sort-merge_join
 
  Note: this is only used in join(..., sort = TRUE), and expects that x was
- sorted by the join columns. The default hash join used with sort = FALSE
- is implemented in match.c
+ sorted by the join columns (done at R-level).
+ The default hash join used with sort = FALSE is implemented in match.c
 */
 
+
+// TODO: could add any_dup condition similar to fmatch() in while loop for j, i.e. any_dup = 1;
+// this would resemble the overid argument to fmatch().
 
 // FIRST PASS
 
