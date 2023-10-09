@@ -35,7 +35,9 @@ void sort_merge_join_int(const int *restrict px, const int *restrict pt, // Data
       pg[i] = pres[i] = NA_INTEGER; ++i;
     } else ++j;
   }
-  while(i < nx) pres[i++] = NA_INTEGER;
+  while(i < nx) {
+    pg[i] = pres[i] = NA_INTEGER; ++i;
+  }
 }
 
 void sort_merge_join_double(const double *restrict px, const double *restrict pt, // Data pointers, decremented by 1
@@ -60,7 +62,9 @@ void sort_merge_join_double(const double *restrict px, const double *restrict pt
       pg[i] = pres[i] = NA_INTEGER; ++i;
     } else ++j;
   }
-  while (i < nx) pres[i++] = NA_INTEGER;
+  while(i < nx) {
+    pg[i] = pres[i] = NA_INTEGER; ++i;
+  }
 }
 
 
@@ -86,7 +90,9 @@ void sort_merge_join_string(const SEXP *restrict px, const SEXP *restrict pt, //
       pg[i] = pres[i] = NA_INTEGER; ++i;
     } else ++j;
   }
-  while (i < nx) pres[i++] = NA_INTEGER;
+  while(i < nx) {
+    pg[i] = pres[i] = NA_INTEGER; ++i;
+  }
 }
 
 
@@ -113,7 +119,9 @@ void sort_merge_join_complex(const Rcomplex *restrict px, const Rcomplex *restri
       pg[i] = pres[i] = NA_INTEGER; ++i;
     } else ++j;
   }
-  while (i < nx) pres[i++] = NA_INTEGER;
+  while(i < nx) {
+    pg[i] = pres[i] = NA_INTEGER; ++i;
+  }
 }
 
 
@@ -148,7 +156,9 @@ void sort_merge_join_int_second(const int *restrict px, const int *restrict pt, 
       pg[i] = pres[i] = NA_INTEGER; ++i;
     } else ptab[j++] = 0;
   }
-  while(i < nx) pres[i++] = NA_INTEGER;
+  while(i < nx) {
+    pg[i] = pres[i] = NA_INTEGER; ++i;
+  }
 }
 
 void sort_merge_join_double_second(const double *restrict px, const double *restrict pt, // Data pointers, decremented by 1
@@ -180,7 +190,9 @@ void sort_merge_join_double_second(const double *restrict px, const double *rest
       pg[i] = pres[i] = NA_INTEGER; ++i;
     } else ptab[j++] = 0;
   }
-  while(i < nx) pres[i++] = NA_INTEGER;
+  while(i < nx) {
+    pg[i] = pres[i] = NA_INTEGER; ++i;
+  }
 }
 
 void sort_merge_join_string_second(const SEXP *restrict px, const SEXP *restrict pt, // Data pointers, decremented by 1
@@ -212,7 +224,9 @@ void sort_merge_join_string_second(const SEXP *restrict px, const SEXP *restrict
       pg[i] = pres[i] = NA_INTEGER; ++i;
     } else ptab[j++] = 0;
   }
-  while(i < nx) pres[i++] = NA_INTEGER;
+  while(i < nx) {
+    pg[i] = pres[i] = NA_INTEGER; ++i;
+  }
 }
 
 void sort_merge_join_complex_second(const Rcomplex *restrict px, const Rcomplex *restrict pt, // Data pointers, decremented by 1
@@ -245,7 +259,9 @@ void sort_merge_join_complex_second(const Rcomplex *restrict px, const Rcomplex 
       pg[i] = pres[i] = NA_INTEGER; ++i;
     } else ptab[j++] = 0;
   }
-  while(i < nx) pres[i++] = NA_INTEGER;
+  while(i < nx) {
+    pg[i] = pres[i] = NA_INTEGER; ++i;
+  }
 }
 
 
