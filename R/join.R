@@ -41,6 +41,7 @@ join <- function(x, y,
   if(is.null(on)) {
     xon <- on <- xnam[xnam %in% ynam]
     if(length(on) == 0L) stop("No matching column names between x and y, please specify columns to join 'on'.")
+    if(anyDuplicated.default(on) > 0L) stop("Duplicated join columns: ", paste(on[fduplicated(on)], collapse = ", "), ". Please supply 'on' columns and ensure that each data frame has unique column names.")
     ixon <- match(on, xnam)
     iyon <- match(on, ynam)
   } else {
@@ -101,8 +102,8 @@ join <- function(x, y,
     ny <- attr(m, "N.distinct")
     Ny <- attr(m, "N.groups")
     if(verbose == 2L) {
-      cin_x <- paste0(xon, ":", substr(vclasses(x[ixon], FALSE), 1, 3))
-      cin_y <- paste0(on, ":", substr(vclasses(y[iyon], FALSE), 1, 3))
+      cin_x <- paste0(xon, ":", vclasses(x[ixon], FALSE))
+      cin_y <- paste0(on, ":", vclasses(y[iyon], FALSE))
     } else {
       cin_x <- xon
       cin_y <- on
@@ -263,7 +264,7 @@ join <- function(x, y,
   # Final steps
   if(length(attr)) ax[[if(is.character(attr)) attr else "join.match"]] <- list(call = match.call(),
                                                                                on.cols = list(x = xon, y = `names<-`(on, NULL)),
-                                                                               match = m) # TODO: sort merge join probably needs to be o[m]
+                                                                               match = m) # TODO: sort merge join also report o?
   if(sort && how == "full") res <- roworderv(res, cols = xon)
   if(how != "left" && length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(fnrow(res))
   ax[["names"]] <- names(res)
