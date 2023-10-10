@@ -1,5 +1,6 @@
 
 roworder <- function(X, ..., na.last = TRUE) {
+  if(inherits(X, "grouped_df")) stop("roworder() does not support grouped data: please order your data before grouping it")
   ovars <- .c(...)
   if(!length(ovars)) stop("... needs to be comma-separated column names, optionally with a '-' prefix for descending order.")
   dec <- startsWith(ovars, "-")
@@ -33,6 +34,7 @@ posord <- function(sq, o, pos) switch(pos,
                                       stop("pos must be 'front', 'end', 'exchange' or 'after'."))
 
 roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.last = TRUE, pos = "front") {
+  if(inherits(X, "grouped_df")) stop("roworderv() does not support grouped data: please order your data before grouping it")
   if(is.null(neworder)) {
     if(is.null(cols)) {
       if(inherits(X, "sf")) {

@@ -434,6 +434,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  S3method(fsubset, data.frame)
  S3method(fsubset, pseries)
  S3method(fsubset, pdata.frame)
+ S3method(fsubset, grouped_df)
  S3method(fsubset, default)
  S3method(fsubset, matrix)
  S3method(rsplit, default)
