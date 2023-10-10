@@ -1,0 +1,13 @@
+citHeader("To cite collapse in publications use:")
+
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+bibentry(bibtype = "Manual",
+         key = paste0("krantz", year, "collapse"),
+         title = "collapse: Advanced and Fast Data Transformation in R",
+         author = person("Sebastian", "Krantz"),
+         year = year,
+         note = note,
+         url = "https://sebkrantz.github.io/collapse/, https://CRAN.R-project.org/package=collapse",
+         textVersion = paste0("Krantz (", year, "). collapse: Advanced and Fast Data Transformation in R. ", note,
+                              ". https://sebkrantz.github.io/collapse/, https://CRAN.R-project.org/package=collapse"))
