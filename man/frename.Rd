@@ -9,7 +9,7 @@
 Fast Renaming and Relabelling Objects
 }
 \description{
-\code{frename} returnes a renamed shallow-copy, \code{setrename} renames objects by reference. These functions also work with objects other than data frames that have a 'names' attribute. \code{relabel} and \code{setrelabel} do that same for labels attached to data frame columns.
+\code{frename} returns a renamed shallow-copy, \code{setrename} renames objects by reference. These functions also work with objects other than data frames that have a 'names' attribute. \code{relabel} and \code{setrelabel} do that same for labels attached to data frame columns.
 }
 \usage{
 frename(.x, \dots, cols = NULL, .nse = TRUE)
