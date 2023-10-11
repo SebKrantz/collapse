@@ -98,7 +98,6 @@ wldcc <- replace_NA(wlddev)
 NCRAN <- Sys.getenv("NCRAN") == "TRUE"
 test_that("sort merge join works well with multiple vectors", {
   for (h in c("l", if(NCRAN) c("i","r","f","s","a") else NULL)) {
-    print(h)
     for (r in c(FALSE, TRUE)) { # r = replace
       expect_true(all(replicate(100, join_identical(wlddev, r, max.cols = NA, how = h))))
       expect_true(all(replicate(100, join_identical(wldna, r, max.cols = NA, how = h))))

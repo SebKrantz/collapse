@@ -36,7 +36,7 @@ I have presented collapse in detail at useR 2022. A 2h video recording that prov
 
 ## Cheatsheet
 
-There is an updated (2023) [cheatsheet](<https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf>) that compactly summarizes the package. 
+A [cheatsheet](<https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf>) compactly summarizes the package (available for v1.8.8 in 2022 at the time of writing). 
 
 ## Vignettes
 
