@@ -1,14 +1,14 @@
 ---
-title: "*collapse* and *sf*"
+title: "collapse and sf"
 subtitle: "Fast Manipulation of Simple Features Data Frames"
 author: "Sebastian Krantz, with a contribution by Grant McDermott"
-date: "`r Sys.Date()`"
+date: "2021-08-09"
 output: 
   rmarkdown::html_vignette:
     toc: true
 
 vignette: >
-  %\VignetteIndexEntry{collapse and sf: Fast Manipulation of Simple Features Data Frames}
+  %\VignetteIndexEntry{collapse and sf}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

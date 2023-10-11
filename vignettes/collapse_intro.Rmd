@@ -1,14 +1,14 @@
 ---
-title: "Introduction to *collapse*"
+title: "Introduction to collapse"
 subtitle: "Advanced and Fast Data Transformation in R"
 author: "Sebastian Krantz"
-date: "`r Sys.Date()`"
+date: "2021-06-27"
 output: 
   rmarkdown::html_vignette:
     toc: true
     
 vignette: >
-  %\VignetteIndexEntry{Introduction to collapse: Advanced and Fast Data Transformation in R}
+  %\VignetteIndexEntry{Introduction to collapse}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
