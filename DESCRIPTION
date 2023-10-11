@@ -4,7 +4,8 @@ Version: 2.0.0
 Date: 2023-09-11
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
-                  email = "sebastian.krantz@graduateinstitute.ch"),
+                  email = "sebastian.krantz@graduateinstitute.ch", 
+                  comment = c(ORCID = "0000-0001-6212-5229")),
            person("Matt", "Dowle", role = "ctb"),
            person("Arun", "Srinivasan", role = "ctb"),
            person("Morgan", "Jacob", role = "ctb"),
