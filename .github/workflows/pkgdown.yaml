@@ -37,6 +37,7 @@ jobs:
 
       - name: Build site
         run: |
+          install.packages("units")
           options(max.print = 70L)
           Sys.setenv(NCRAN = TRUE, NMAC = TRUE, RUNBENCH = TRUE, LOCAL = TRUE)
           pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
