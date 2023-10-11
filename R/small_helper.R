@@ -618,7 +618,13 @@ cols2intrmgn <- function(gn, cols, x) {
     return(which(cols))
   }
   if(is.null(cols)) return(seq_along(unclass(x))[-gn])
-  cols2int(cols, x, attr(x, "names"))
+  if(is.numeric(cols) && cols[1L] < 0) {
+    res <- logical(length(unclass(x)))
+    res[cols] <- TRUE
+    res[gn] <- FALSE
+    return(which(res))
+  }
+  cols2int(cols, x, attr(x, "names"), FALSE)
 }
 
 colsubset <- function(x, ind, checksf = FALSE) {

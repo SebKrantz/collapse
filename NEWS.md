@@ -50,7 +50,9 @@
 
 * `alloc()` now has an additional argument `simplify = TRUE`. `FALSE` always returns list output. 
 
-* `frename()` supports both `new = old` (*pandas*, used to far) and `old = new` (*dplyr*) style renaming conventions. 
+* `frename()` supports both `new = old` (*pandas*, used to far) and `old = new` (*dplyr*) style renaming conventions.
+
+* `across()` supports negative indices, also in grouped settings: these will select all variables apart from grouping variables. 
 
 # collapse 1.9.6
 
