@@ -147,6 +147,8 @@ fsubset.pdata.frame <- function(.x, subset, ..., drop.index.levels = "id") {
   res
 }
 
+fsubset.grouped_df <- function(.x, subset, ...) stop("fsubset() does not support grouped data: please subset your data before grouping it")
+
 # Example:
 # fsubset(GGDC10S, Variable == "VA" & Year > 1990, Country, Year, AGR:SUM)
 
@@ -373,8 +375,9 @@ acr_get_cols <- function(.cols, d, nam, ce) {
   cols <- eval(.cols, nl, ce)
   # Needed for programming usage, because you can pass a variable that is null
   if(is.null(cols)) return(if(is.null(d[[".g_"]])) seq_along(nam) else seq_along(nam)[nam %!in% c(".g_", ".gsplit_", d[[".g_"]]$group.vars)])
-  return(if(is.logical(cols)) which(cols) else cols2int(cols, d, nam)) # if .g_ etc. is added to data, length check for logical vectors will fail.
-  # if(is.integer(cols)) cols else (you are checking against length(cols) in setup_across)
+  if(is.logical(cols)) return(which(cols)) # if .g_ etc. is added to data, length check for logical vectors will fail
+  if(is.null(d[[".g_"]]) || is.character(cols) || (is.numeric(cols) && cols[1L] > 0)) return(cols2int(cols, d, nam))
+  cols2intrmgn(match(c(".g_", ".gsplit_", d[[".g_"]]$group.vars), nam), cols, d)
 }
 
 # Also used in collap()

@@ -31,8 +31,10 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 
 *  **Advanced statistical programming**: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast and programmable grouping, ordering, unique values/rows, 
-        factor generation and interactions. Fast and flexible functions for data 
+        data frames. Fast and programmable grouping, ordering, matching, unique values/rows, 
+        factor generation and interactions. 
+        
+* **Fast data manipulation**: Fast and flexible functions for data 
         manipulation, data object conversions, and memory efficient R programming.
 
 *  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, weighted and parallelized data aggregation.
@@ -40,7 +42,7 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 *  **Advanced transformations**: Fast row/column arithmetic, (grouped) replacing 
         and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, 
         (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations, 
-        linear prediction, model fitting and testing exclusion restrictions.
+        linear prediction, model fitting + testing exclusion restrictions, and distance matrices.
 
 *  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes. Fast (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
         differences and (compounded) growth rates on (irregular) time series and panels. 
@@ -155,6 +157,27 @@ iris %>% add_vars(w) %>%
   select(Species, Sepal.Width:w) %>% 
   group_by(Species) %>% 
   fvar(w) %>% arrange(sum.w)
+  
+## Fast Data Manipulation ---------------------------------------------------------------------------------------
+
+head(GGDC10S)
+
+# Pivot Wider: Only SUM (total)
+SUM <- GGDC10S |> pivot(c("Country", "Year"), "SUM", "Variable", how = "wider")
+head(SUM)
+
+# Joining with data from wlddev
+wlddev |>
+    join(SUM, on = c("iso3c" = "Country", "year" = "Year"), how = "inner")
+
+# Recast pivoting + supplying new labels for generated columns
+pivot(GGDC10S, values = 6:16, names = list("Variable", "Sectorcode"),
+      labels = list(to = "Sector",
+                    new = c(Sectorcode = "GGDC10S Sector Code",
+                            Sector = "Long Sector Description",
+                            VA = "Value Added",
+                            EMP = "Employment")), 
+      how = "recast", na.rm = TRUE)
 
 ## Advanced Aggregation -----------------------------------------------------------------------------------------
 
@@ -302,6 +325,11 @@ pwcor(W(pdata, keep.ids = FALSE), P = TRUE)   # Within-correlations
 <p> </p>
 
 Evaluated and more extensive sets of examples are provided on the [package page](<https://sebkrantz.github.io/collapse/reference/collapse-package.html>) (also accessible from R by calling `example('collapse-package')`), and further in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>) and  [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>).
+
+## Citation
+
+If *collapse* was instrumental for your research project, please consider citing it using `citation("collapse")`.
+
 
 ## Additional Notes
 ### Regarding Performance 

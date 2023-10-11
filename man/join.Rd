@@ -48,7 +48,7 @@ join(x, y,
 
   \item{attr}{(optional) name for attribute providing information about the join performed (including the output of \code{\link{fmatch}}) to the result. \code{TRUE} calls this attribute \code{"join.match"}.}
 
-    \item{\dots}{further arguments to \code{\link{fmatch}}. Notably, \code{overid} can bet set to 0 or 2 (default 1) to control the matching process if the join condition more than identifies the records.}
+    \item{\dots}{further arguments to \code{\link{fmatch}} (if \code{sort = FALSE}). Notably, \code{overid} can bet set to 0 or 2 (default 1) to control the matching process if the join condition more than identifies the records.}
 }
 
 

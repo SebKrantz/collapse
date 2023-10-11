@@ -13,7 +13,7 @@ df2 <- data.frame(
   dept = c("IT", "Marketing", "Sales", "IT")
 )
 
-set_collapse(verbose = 0)
+opts <- set_collapse(verbose = 0)
 
 for (sort in c(FALSE, TRUE)) {
   expect_identical(join(df1, df2, how = "inner", sort = sort), merge(df1, df2))
@@ -46,7 +46,7 @@ sort_join <- function(x, y, on, ...) {
 
 random_df_pair <- function(df, replace = FALSE, max.cols = 1) {
   d <- dim(df)
-  cols <- sample.int(d[2L], if(is.na(max.cols)) as.integer(d[2L] * 0.75 * runif(1)) else max.cols, replace)
+  cols <- sample.int(d[2L], if(is.na(max.cols)) as.integer(1 + d[2L] * 0.75 * runif(1)) else max.cols)
   rows_x <- sample.int(d[1L], as.integer(1 + d[1L] * runif(1)), replace)
   rows_table <- sample.int(d[1L], as.integer(1 + d[1L] * runif(1)), replace)
   list(ss(df, rows_x, cols), ss(df, rows_table, cols), rows_x, rows_table, cols)
@@ -66,11 +66,11 @@ join_identical <- function(df, replace = FALSE, max.cols = 1, sort = TRUE, ...) 
     av(y) <- ss(df, data[[4]], rem_y)
   }
   if(sort) {
-    id <- identical(join(x, y, on = nam[cols], sort = TRUE),
-                    sort_join(x, y, on = nam[cols], overid = 2L))
+    id <- tryCatch(identical(join(x, y, on = nam[cols], sort = TRUE, ...),
+                     sort_join(x, y, on = nam[cols], overid = 2L, ...)), error = function(e) FALSE)
   } else {
-    id <- identical(join(x, y, on = nam[cols], sort = FALSE, overid = 2L),
-                    merge(x, y, by = nam[cols], all.x = TRUE))
+    id <- identical(join(x, y, on = nam[cols], sort = FALSE, overid = 2L, ...),
+                    merge(x, y, by = nam[cols], all.x = TRUE, ...))
   }
   if(id) TRUE else list(x, y, nam[cols])
 }
@@ -78,22 +78,33 @@ join_identical <- function(df, replace = FALSE, max.cols = 1, sort = TRUE, ...) 
 # (d <- join_identical(wlddev))
 
 wldna <- na_insert(wlddev)
+wldcc <- replace_NA(wlddev)
 
 test_that("sort merge join works well with single vectors", {
-  for (r in c(FALSE, TRUE)) { # r = replace
-    expect_true(all(replicate(100, join_identical(wlddev, r))))
-    expect_true(all(replicate(100, join_identical(wldna, r))))
+  for (h in c("l","i","r","f","s","a")) {
+    for (r in c(FALSE, TRUE)) { # r = replace
+      expect_true(all(replicate(100, join_identical(wlddev, r, how = h))))
+      expect_true(all(replicate(100, join_identical(wldna, r, how = h))))
+      expect_true(all(replicate(100, join_identical(wldcc, r, how = h))))
+    }
   }
 })
 
-# wldcc = replace_NA(wlddev)
-# (d <- join_identical(wlddev[1:8], FALSE, max.cols = NA))
-#
-# test_that("sort merge join works well with multiple vectors", {
-#   for (r in c(FALSE, TRUE)) { # r = replace
-#     expect_true(all(replicate(100, join_identical(wlddev, r, max.cols = NA))))
-#     expect_true(all(replicate(100, join_identical(wldna, r, max.cols = NA))))
-#   }
-# })
 
+#  (d <- join_identical(wlddev[1:8], FALSE, max.cols = 4))
 
+wldna <- na_insert(wlddev)
+wldcc <- replace_NA(wlddev)
+NCRAN <- Sys.getenv("NCRAN") == "TRUE"
+test_that("sort merge join works well with multiple vectors", {
+  for (h in c("l", if(NCRAN) c("i","r","f","s","a") else NULL)) {
+    print(h)
+    for (r in c(FALSE, TRUE)) { # r = replace
+      expect_true(all(replicate(100, join_identical(wlddev, r, max.cols = NA, how = h))))
+      expect_true(all(replicate(100, join_identical(wldna, r, max.cols = NA, how = h))))
+      expect_true(all(replicate(100, join_identical(wldcc, r, max.cols = NA, how = h))))
+    }
+  }
+})
+
+set_collapse(opts)

@@ -1,4 +1,6 @@
-# collapse 1.9.6.9500
+# collapse 2.0.0
+
+*collapse* 2.0, released in Mid-October 2023, introduces fast table joins and data reshaping capabilities alongside other convenience functions, and enhances the packages global configurability, including interactive namespace control. 
 
 ### Potentially breaking changes
 
@@ -14,13 +16,13 @@
 
 ### Additions
 
-* Added `join()`: class-agnostic, vectorized, and (default) verbose hash-joins for R, modeled after the *polars* API. Feedback on the API is welcome!
+* Added `join()`: class-agnostic, vectorized, and (default) verbose joins for R, modeled after the *polars* API. Two different join algorithms are implemented: a hash-join (default, if `sort = FALSE`) and a sort-merge-join (if `sort = TRUE`).
 
-* Added `pivot()`: fast and easy data reshaping! It supports longer, wider and recast pivoting, including handling of variable labels, through a uniform and parsimonious API. It does not perform data aggregation, and by default does not check if the data is uniquely identified by the supplied ids. Underidentification for 'wide' and 'recast' pivots results in the last value being taken within each group. Users can toggle a duplicates check by setting `check.dups = TRUE`. Feedback on the API is welcome!
+* Added `pivot()`: fast and easy data reshaping! It supports longer, wider and recast pivoting, including handling of variable labels, through a uniform and parsimonious API. It does not perform data aggregation, and by default does not check if the data is uniquely identified by the supplied ids. Underidentification for 'wide' and 'recast' pivots results in the last value being taken within each group. Users can toggle a duplicates check by setting `check.dups = TRUE`. 
 
 * Added `rowbind()`: a fast class-agnostic alternative to `rbind.data.frame()` and `data.table::rbindlist()`. 
 
-* Added `fmatch()`: a striking fast `match()` function for vectors and data frames/lists implementing a vectorized, 2-columns at a time, hash-join algorithm. It is the workhorse function of `join()`, and also benefits `ckmatch()`, `%!in%`, and new operators `%iin%` and `%!iin%` (see below). It is also possible to `set_collapse(mask = "%in%")` to replace `base::"%in%"` using `fmatch()`. Thanks to `fmatch()`, these operators also all support data frames/lists of vectors, which are compared row-wise. 
+* Added `fmatch()`: a fast `match()` function for vectors and data frames/lists. It is the workhorse function of `join()`, and also benefits `ckmatch()`, `%!in%`, and new operators `%iin%` and `%!iin%` (see below). It is also possible to `set_collapse(mask = "%in%")` to replace `base::"%in%"` using `fmatch()`. Thanks to `fmatch()`, these operators also all support data frames/lists of vectors, which are compared row-wise. 
 
 * Added operators `%iin%` and `%!iin%`: these directly return indices, i.e. `%[!]iin%` is equivalent to `which(x %[!]in% table)`. This is useful especially for subsetting where directly supplying indices is more efficient e.g. `x[x %[!]iin% table]` is faster than `x[x %[!]in% table]`. Similarly `fsubset(wlddev, iso3c %iin% c("DEU", "ITA", "FRA"))` is very fast. 
 
@@ -48,7 +50,9 @@
 
 * `alloc()` now has an additional argument `simplify = TRUE`. `FALSE` always returns list output. 
 
-* `frename()` supports both `new = old` (*pandas*, used to far) and `old = new` (*dplyr*) style renaming conventions. 
+* `frename()` supports both `new = old` (*pandas*, used to far) and `old = new` (*dplyr*) style renaming conventions.
+
+* `across()` supports negative indices, also in grouped settings: these will select all variables apart from grouping variables. 
 
 # collapse 1.9.6
 

@@ -1,10 +1,11 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
-Version: 1.9.6.9500
-Date: 2023-07-20
+Version: 2.0.0
+Date: 2023-09-11
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
-                  email = "sebastian.krantz@graduateinstitute.ch"),
+                  email = "sebastian.krantz@graduateinstitute.ch", 
+                  comment = c(ORCID = "0000-0001-6212-5229")),
            person("Matt", "Dowle", role = "ctb"),
            person("Arun", "Srinivasan", role = "ctb"),
            person("Morgan", "Jacob", role = "ctb"),
@@ -16,21 +17,19 @@ Authors@R: c(
            person("1999-2016 The R Core Team", role = "cph")
            )
 Description: A C/C++ based package for advanced data transformation and 
-    statistical computing in R that is extremely fast, class-agnostic,
-    and programmer friendly through a flexible and robust API. Core functionality 
-    includes a rich set of S3 generic grouped and weighted statistical functions 
-    for vectors, matrices and data frames, which provide efficient low-level 
-    vectorizations, OpenMP multithreading, and skip missing values by default. 
-    These are integrated with fast grouping and ordering algorithms (also callable 
-    from C), and efficient data manipulation functions. The package also provides 
-    a flexible and rigorous approach to time series and panel data in R. It further 
-    includes fast functions for common statistical procedures, detailed (grouped, 
-    weighted) summary statistics, powerful tools to work with nested data, fast 
-    data object conversions, functions for memory efficient R programming, and 
+    statistical computing in R that is extremely fast, class-agnostic, robust and 
+    programmer friendly. Core functionality includes a rich set of S3 generic grouped 
+    and weighted statistical functions for vectors, matrices and data frames, which 
+    provide efficient low-level vectorizations, OpenMP multithreading, and skip missing 
+    values by default. These are integrated with fast grouping and ordering algorithms 
+    (also callable from C), and efficient data manipulation functions. The package also 
+    provides a flexible and rigorous approach to time series and panel data in R. 
+    It further includes fast functions for common statistical procedures, detailed 
+    (grouped, weighted) summary statistics, powerful tools to work with nested data, 
+    fast data object conversions, functions for memory efficient R programming, and 
     helpers to effectively deal with variable labels, attributes, and missing data. 
-    It is well integrated with basic R, 'dplyr'/'tibble', 'data.table', 'sf', 'plm' 
-    (panel-series and data frames), and accommodates, by virtue of smart internal 
-    attribute handling, many other classes (like 'ts', 'xts'/'zoo' or 'tsibble').
+    It is well integrated with base R classes, 'dplyr'/'tibble', 'data.table', 'sf', 
+    'plm' (panel-series and data frames), and 'xts'/'zoo'.
 URL: https://sebkrantz.github.io/collapse/,  
      https://github.com/SebKrantz/collapse,
      https://twitter.com/collapse_R
