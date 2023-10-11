@@ -25,5 +25,4 @@ man/figures
 \.log$
 _cache$
 _snaps
-
-
+^CITATION\.cff$
