@@ -1,267 +1,291 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/articles/collapse_and_data.table.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html</loc>
   </url>
   <url>
-    <loc>/articles/collapse_and_dplyr.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html</loc>
   </url>
   <url>
-    <loc>/articles/collapse_and_plm.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html</loc>
   </url>
   <url>
-    <loc>/articles/collapse_and_sf.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html</loc>
   </url>
   <url>
-    <loc>/articles/collapse_documentation.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/collapse_documentation.html</loc>
   </url>
   <url>
-    <loc>/articles/collapse_intro.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/collapse_for_tidyverse_users.html</loc>
   </url>
   <url>
-    <loc>/articles/index.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/collapse_intro.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/articles/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/authors.html</loc>
   </url>
   <url>
-    <loc>/reference/BY.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/index.html</loc>
   </url>
   <url>
-    <loc>/reference/GGDC10S.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/GRP.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/BY.html</loc>
   </url>
   <url>
-    <loc>/reference/TRA.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/GGDC10S.html</loc>
   </url>
   <url>
-    <loc>/reference/across.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/GRP.html</loc>
   </url>
   <url>
-    <loc>/reference/arithmetic.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/TRA.html</loc>
   </url>
   <url>
-    <loc>/reference/collap.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/across.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/arithmetic.html</loc>
   </url>
   <url>
-    <loc>/reference/collapse-options.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/collap.html</loc>
   </url>
   <url>
-    <loc>/reference/collapse-package.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/collapse-documentation.html</loc>
   </url>
   <url>
-    <loc>/reference/collapse-renamed.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/collapse-options.html</loc>
   </url>
   <url>
-    <loc>/reference/colorder.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/collapse-package.html</loc>
   </url>
   <url>
-    <loc>/reference/dapply.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/collapse-renamed.html</loc>
   </url>
   <url>
-    <loc>/reference/data-transformations.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/colorder.html</loc>
   </url>
   <url>
-    <loc>/reference/descr.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/dapply.html</loc>
   </url>
   <url>
-    <loc>/reference/efficient-programming.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/data-transformations.html</loc>
   </url>
   <url>
-    <loc>/reference/extract_list.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/descr.html</loc>
   </url>
   <url>
-    <loc>/reference/fFtest.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/efficient-programming.html</loc>
   </url>
   <url>
-    <loc>/reference/fast-data-manipulation.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/extract_list.html</loc>
   </url>
   <url>
-    <loc>/reference/fast-grouping-ordering.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fFtest.html</loc>
   </url>
   <url>
-    <loc>/reference/fast-statistical-functions.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html</loc>
   </url>
   <url>
-    <loc>/reference/fbetween_fwithin.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fast-grouping-ordering.html</loc>
   </url>
   <url>
-    <loc>/reference/fcumsum.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html</loc>
   </url>
   <url>
-    <loc>/reference/fdiff.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fbetween_fwithin.html</loc>
   </url>
   <url>
-    <loc>/reference/fdroplevels.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fcount.html</loc>
   </url>
   <url>
-    <loc>/reference/ffirst_flast.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fcumsum.html</loc>
   </url>
   <url>
-    <loc>/reference/fgrowth.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fdiff.html</loc>
   </url>
   <url>
-    <loc>/reference/fhdbetween_fhdwithin.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fdist.html</loc>
   </url>
   <url>
-    <loc>/reference/flag.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fdroplevels.html</loc>
   </url>
   <url>
-    <loc>/reference/flm.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/ffirst_flast.html</loc>
   </url>
   <url>
-    <loc>/reference/fmean.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fgrowth.html</loc>
   </url>
   <url>
-    <loc>/reference/fmedian.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fhdbetween_fhdwithin.html</loc>
   </url>
   <url>
-    <loc>/reference/fmin_fmax.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/flag.html</loc>
   </url>
   <url>
-    <loc>/reference/fmode.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/flm.html</loc>
   </url>
   <url>
-    <loc>/reference/fndistinct.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fmatch.html</loc>
   </url>
   <url>
-    <loc>/reference/fnobs.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fmean.html</loc>
   </url>
   <url>
-    <loc>/reference/fnth.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fmin_fmax.html</loc>
   </url>
   <url>
-    <loc>/reference/fprod.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fmode.html</loc>
   </url>
   <url>
-    <loc>/reference/frename.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fndistinct.html</loc>
   </url>
   <url>
-    <loc>/reference/fscale.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fnobs.html</loc>
   </url>
   <url>
-    <loc>/reference/fsubset.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fnth_fmedian.html</loc>
   </url>
   <url>
-    <loc>/reference/fsum.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fprod.html</loc>
   </url>
   <url>
-    <loc>/reference/fsummarise.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fquantile.html</loc>
   </url>
   <url>
-    <loc>/reference/ftransform.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/frename.html</loc>
   </url>
   <url>
-    <loc>/reference/funique.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fscale.html</loc>
   </url>
   <url>
-    <loc>/reference/fvar_fsd.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fsubset.html</loc>
   </url>
   <url>
-    <loc>/reference/group.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fsum.html</loc>
   </url>
   <url>
-    <loc>/reference/groupid.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fsummarise.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/ftransform.html</loc>
   </url>
   <url>
-    <loc>/reference/indexing.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/funique.html</loc>
   </url>
   <url>
-    <loc>/reference/is_unlistable.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/fvar_fsd.html</loc>
   </url>
   <url>
-    <loc>/reference/ldepth.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/group.html</loc>
   </url>
   <url>
-    <loc>/reference/list-processing.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/groupid.html</loc>
   </url>
   <url>
-    <loc>/reference/pad.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/psacf.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/indexing.html</loc>
   </url>
   <url>
-    <loc>/reference/psmat.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/is_unlistable.html</loc>
   </url>
   <url>
-    <loc>/reference/pwcor_pwcov_pwnobs.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/join.html</loc>
   </url>
   <url>
-    <loc>/reference/qF.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/ldepth.html</loc>
   </url>
   <url>
-    <loc>/reference/qsu.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/list-processing.html</loc>
   </url>
   <url>
-    <loc>/reference/qtab.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/pad.html</loc>
   </url>
   <url>
-    <loc>/reference/quick-conversion.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/pivot.html</loc>
   </url>
   <url>
-    <loc>/reference/radixorder.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/psacf.html</loc>
   </url>
   <url>
-    <loc>/reference/rapply2d.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/psmat.html</loc>
   </url>
   <url>
-    <loc>/reference/recode-replace.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/pwcor_pwcov_pwnobs.html</loc>
   </url>
   <url>
-    <loc>/reference/roworder.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/qF.html</loc>
   </url>
   <url>
-    <loc>/reference/rsplit.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/qsu.html</loc>
   </url>
   <url>
-    <loc>/reference/select_replace_vars.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/qtab.html</loc>
   </url>
   <url>
-    <loc>/reference/seqid.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/quick-conversion.html</loc>
   </url>
   <url>
-    <loc>/reference/small-helpers.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/radixorder.html</loc>
   </url>
   <url>
-    <loc>/reference/summary-statistics.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/rapply2d.html</loc>
   </url>
   <url>
-    <loc>/reference/t_list.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/recode-replace.html</loc>
   </url>
   <url>
-    <loc>/reference/time-series-panel-series.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/rowbind.html</loc>
   </url>
   <url>
-    <loc>/reference/timeid.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/roworder.html</loc>
   </url>
   <url>
-    <loc>/reference/unlist2d.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/rsplit.html</loc>
   </url>
   <url>
-    <loc>/reference/varying.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/select_replace_vars.html</loc>
   </url>
   <url>
-    <loc>/reference/wlddev.html</loc>
+    <loc>https://sebkrantz.github.io/collapse/reference/seqid.html</loc>
+  </url>
+  <url>
+    <loc>https://sebkrantz.github.io/collapse/reference/small-helpers.html</loc>
+  </url>
+  <url>
+    <loc>https://sebkrantz.github.io/collapse/reference/summary-statistics.html</loc>
+  </url>
+  <url>
+    <loc>https://sebkrantz.github.io/collapse/reference/t_list.html</loc>
+  </url>
+  <url>
+    <loc>https://sebkrantz.github.io/collapse/reference/time-series-panel-series.html</loc>
+  </url>
+  <url>
+    <loc>https://sebkrantz.github.io/collapse/reference/timeid.html</loc>
+  </url>
+  <url>
+    <loc>https://sebkrantz.github.io/collapse/reference/unlist2d.html</loc>
+  </url>
+  <url>
+    <loc>https://sebkrantz.github.io/collapse/reference/varying.html</loc>
+  </url>
+  <url>
+    <loc>https://sebkrantz.github.io/collapse/reference/wlddev.html</loc>
   </url>
 </urlset>
