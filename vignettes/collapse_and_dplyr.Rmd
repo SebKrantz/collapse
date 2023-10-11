@@ -1043,15 +1043,15 @@ microbenchmark(dplyr = mutate_all(gdata, function(x) (x-mean.default(x, na.rm = 
 
 ## Lag
 # Small
-microbenchmark(dplyr_unordered = mutate_all(gGGDC10S, dplyr::lag),
+microbenchmark(dplyr_unordered = mutate(gGGDC10S, across(everything(), dplyr::lag)),
                collapse_unordered = flag(cgGGDC10S),
-               dplyr_ordered = mutate_all(gGGDC10S, dplyr::lag, order_by = "Year"),
+               dplyr_ordered = mutate(gGGDC10S, across(everything(), \(x) dplyr::lag(x, order_by = Year))),
                collapse_ordered = flag(cgGGDC10S, t = Year))
 
 # Large
-microbenchmark(dplyr_unordered = mutate_all(gdata, dplyr::lag),
+microbenchmark(dplyr_unordered = mutate(gdata, across(everything(), dplyr::lag)),
                collapse_unordered = flag(cgdata),
-               dplyr_ordered = mutate_all(gdata, dplyr::lag, order_by = "Year"),
+               dplyr_ordered = mutate(gdata, across(everything(), \(x) dplyr::lag(x, order_by = Year))),
                collapse_ordered = flag(cgdata, t = Year), times = 2)
 
 ## First-Difference (unordered)
