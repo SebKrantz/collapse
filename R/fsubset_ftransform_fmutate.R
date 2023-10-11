@@ -147,7 +147,7 @@ fsubset.pdata.frame <- function(.x, subset, ..., drop.index.levels = "id") {
   res
 }
 
-fsubset.grouped_df <- function(.x, subset, ...) stop("No fsubset() method implemented for grouped data: please subset before grouping your data")
+fsubset.grouped_df <- function(.x, subset, ...) stop("fsubset() does not support grouped data: please subset your data before grouping it")
 
 # Example:
 # fsubset(GGDC10S, Variable == "VA" & Year > 1990, Country, Year, AGR:SUM)
