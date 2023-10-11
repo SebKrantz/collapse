@@ -279,6 +279,7 @@ gf <- as_factor_qG(g)
 funs <- grep("hd|log", c(.FAST_FUN, .OPERATOR_FUN), ignore.case = TRUE, invert = TRUE, value = TRUE)
 
 test_that("functions work on plain matrices", {
+  F <- getNamespace("collapse")$F
   for(i in funs) {
     expect_visible(match.fun(i)(X))
     expect_visible(match.fun(i)(X, g = g))
@@ -291,6 +292,7 @@ test_that("functions work on plain matrices", {
 Xl <- mctl(X)
 
 test_that("functions work on plain lists", {
+  F <- getNamespace("collapse")$F
   for(i in funs) {
     expect_visible(match.fun(i)(Xl))
     expect_visible(match.fun(i)(Xl, g = g, by = g))

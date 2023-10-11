@@ -298,7 +298,7 @@ X["1980/"] \%>\% fdiff(t = index(.)) # xts index is internally processed by time
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
+\keyword{ manip }
 % \keyword{ ~kwd2 }
 % Use only one keyword per line.
 % For non-standard keywords, use \concept instead of \keyword:

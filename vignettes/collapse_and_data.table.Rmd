@@ -1,14 +1,14 @@
 ---
-title: "*collapse* and *data.table*"
+title: "collapse and data.table"
 subtitle: "Harmony and High Performance"
 author: "Sebastian Krantz"
-date: "`r Sys.Date()`"
+date: "2021-06-27"
 output: 
   rmarkdown::html_vignette:
     toc: true
 
 vignette: >
-  %\VignetteIndexEntry{collapse and dplyr: Harmony and High Performance}
+  %\VignetteIndexEntry{collapse and data.table}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

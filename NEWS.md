@@ -44,6 +44,8 @@
 **Note** that this option set using `options()` is **non-reversible**, you need to unload *collapse* using `detach("package:collapse", unload = TRUE)` and load it again. 
 -->
 
+* `set_collapse()` also supports options 'digits', 'verbose' and 'stable.algo', enhancing the global configurability of *collapse*. 
+
 * `qM()` now also has a `row.names.col` argument in the second position allowing generation of rownames when converting data frame-like objects to matrix e.g. `qM(iris, "Species")` or `qM(GGDC10S, 1:5)` (interaction of id's). 
 
 * `as_factor_GRP()` and `finteraction()` now have an argument `sep = "."` denoting the separator used for compound factor labels.
@@ -53,6 +55,12 @@
 * `frename()` supports both `new = old` (*pandas*, used to far) and `old = new` (*dplyr*) style renaming conventions.
 
 * `across()` supports negative indices, also in grouped settings: these will select all variables apart from grouping variables. 
+
+* `TRA()` allows shorthands `"NA"` for `"replace_NA"` and `"fill"` for `"replace_fill"`. 
+
+* `group()` experienced a minor speedup with >= 2 vectors as the first two vectors are now hashed jointly. 
+
+* `fquantile()` with `names = TRUE` adds up to 1 digit after the comma in the percent-names, e.g. `fquantile(airmiles, probs = 0.001)` generates appropriate names (not 0% as in the previous version).
 
 # collapse 1.9.6
 

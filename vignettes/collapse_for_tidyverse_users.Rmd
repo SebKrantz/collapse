@@ -1,0 +1,183 @@
+---
+title: "collapse for tidyverse Users"
+author: "Sebastian Krantz"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+
+vignette: >
+  %\VignetteIndexEntry{collapse for tidyverse Users}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  
+---
+
+```{css, echo=FALSE}
+pre {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 500px;
+}
+```
+
+```{r, echo=FALSE}
+oldopts <- options(width = 100L)
+```
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
+                      comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
+                      fig.width = 8, fig.height = 5, 
+                      out.width = '100%')
+```
+
+
+*collapse* is a C/C++ based package for data transformation and statistical computing in R that aims to enable greater performance and statistical complexity in data manipulation tasks and offers a stable, class-agnostic, and lightweight API. It is part of the core [*fastverse*](https://fastverse.github.io/fastverse/), a suite of lightweight packages with similar objectives. 
+
+The [*tidyverse*](https://www.tidyverse.org/) set of packages provides a rich, expressive, and consistent syntax for data manipulation in R centering on the *tibble* object and tidy data principles (each observation is a row, each variable is a column). 
+
+*collapse* fully supports the *tibble* object and provides many *tidyverse*-like functions for data manipulation. It can thus be used to write *tidyverse*-like data manipulation code that, thanks to low-level vectorization of many statistical operations and optimized R code, typically runs much faster than native *tidyverse* code (in addition to being much more lightweight in dependencies). 
+
+Its aim is not to create a faster *tidyverse*, i.e., it does not implements all aspects of the rich *tidyverse* grammar or changes to it^[Notably, tidyselect, lamda expressions, and many of the smaller helper functions are left out.], and also takes inspiration from other leading data manipulation libraries to serve broad aims of performance, parsimony, complexity, and robustness in data manipulation for R. 
+
+
+## Namespace and Global Options
+
+*collapse* data manipulation functions familiar to *tidyverse* users include `fselect`, `fgroup_by`, `fsummarise`, `fmutate`, `across`, `frename`, and `fcount`. Other functions like `fsubset`, `ftramsform`, and `get_vars` are inspired by base R, while again other functions like `join`, `pivot`, `roworder`, `colorder`, `rowbind`, etc. are inspired by other data manipulation libraries such das *data.table* and *polars*. 
+
+By virtue of the f- prefixes, the *collapse* namespace has no conflicts with the *tidyverse*, and these functions can easily be substituted in a *tidyverse* workflow. 
+
+R users willing to replace the *tidyverse* have the additional option to mask functions and eliminate the prefixes with `set_collapse`. For example 
+
+```{r}
+library(collapse)
+set_collapse(mask = "manip") # version >= 2.0.0 
+```
+
+makes available functions `select`, `group_by`, `summarise`, `mutate`, `rename`, `count`, `subset`, and `tramsform` in the *collapse* namespace and detaches and re-attaches the package, such that the following code is executed by *collapse*:
+
+```{r}
+mtcars |>
+  subset(mpg > 11) |>
+  group_by(cyl, vs, am) |>
+  summarise(across(c(mpg, carb, hp), mean), 
+            qsec_wt = weighted.mean(qsec, wt))
+```
+
+*Note* that the correct documentation still needs to be called with prefixes, i.e., `?fsubset`. See `?set_collapse` for further options to the package, which also includes optimization options such as `nthreads`, `na.rm`, `sort`, and `stable.algo`. *Note* also that if you use *collapse*'s namespace masking, you can use `fastverse::fastverse_conflicts()` to check for namespace conflicts with other packages. 
+
+## Using the *Fast Statistical Functions*
+
+A key feature of *collapse* is that it not only provides functions for data manipulation, but also a full set of statistical functions and algorithms to speed up statistical calculations and perform more complex statistical operations (e.g. involving weights or time series data). 
+
+Notably among these, the [*Fast Statistical Functions*](https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html) is a consistent set of S3-generic statistical functions providing fully vectorized statistical operations in R. 
+
+Specifically, operations such as calculating the mean via the S3 generic `fmean()` function are vectorized across columns and groups and may also involve weights or transformations of the original data:
+
+```{r}
+fmean(mtcars$mpg)     # Vector
+fmean(EuStockMarkets) # Matrix
+fmean(mtcars)         # Data Frame
+
+fmean(mtcars$mpg, w = mtcars$wt)  # Weighted mean
+fmean(mtcars$mpg, g = mtcars$cyl) # Grouped mean
+fmean(mtcars$mpg, g = mtcars$cyl, w = mtcars$wt)   # Weighted group mean
+fmean(mtcars[5:10], g = mtcars$cyl, w = mtcars$wt) # Of data frame
+fmean(mtcars$mpg, g = mtcars$cyl, w = mtcars$wt, TRA = "fill") # Replace data by weighted group mean
+# etc...
+```
+
+The data manipulation functions of *collapse* are integrated with these *Fast Statistical Functions* to enable vectorized statistical operations. For example, the following code 
+
+```{r}
+mtcars |>
+  subset(mpg > 11) |>
+  group_by(cyl, vs, am) |>
+  summarise(across(c(mpg, carb, hp), fmean), 
+            qsec_wt = fmean(qsec, wt))
+```
+
+gives exactly the same result as above, but the execution is much faster (especially on larger data), because with *Fast Statistical Functions*, the data does not need to be split by groups, and there is no need to call `lapply()` inside the `across()` statement: `fmean.data.frame()` is simply applied to a subset of the data containing columns `mpg`, `carb` and `hp`. 
+
+The *Fast Statistical Functions* also have a method for grouped data, so if we did not want to calculate the weighted mean of `qsec`, the code would simplify as follows:
+
+```{r}
+mtcars |>
+  subset(mpg > 11) |>
+  group_by(cyl, vs, am) |>
+  select(mpg, carb, hp) |> 
+  fmean()
+```
+
+Note that all functions in *collapse*, including the *Fast Statistical Functions*, have the default `na.rm = TRUE`, i.e., missing values are skipped in calculations. This can be changed using `set_collpase(na.rm = FALSE)` to give behavior more consistent with base R. 
+
+Another thing to be aware of when using *Fast Statistical Functions* inside data manipulation functions is that they toggle vectorized execution wherever they are used. Expressions containing them are fully vectorized e.g. 
+
+```{r}
+mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + min(qsec)) # Vectorized
+```
+
+calculates a grouped mean of `mpg` but adds the overall minimum of `qsec` to the result, whereas 
+
+```{r}
+mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + fmin(qsec)) # Vectorized
+mtcars |> group_by(cyl) |> summarise(mpg = mean(mpg) + min(qsec))   # Not vectorized
+```
+
+both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) / fmean(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
+
+See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. 
+
+To fully use *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect parts of your code since they are S3 generic^[You can always refer to base R functions explicitly using `::` e.g. `base::mean`.]. 
+
+## Writing Efficient Code
+
+It is also performance-critical to correctly sequence operations and limit excess computations. *tidyverse* code is often inefficient simply because the *tidyverse* allows you to do everything. For example, `mtcars |> group_by(cyl) |> filter(mpg > 13) |> arrange(mpg)` is permissible but inefficient code as it filters and reorders grouped data, requiring modifications to both the data frame and the attached grouping object. *collapse* does not allow calls to `fsubset()` or `roworder()` on grouped data and will issue appropriate errors, forcing you to write more efficient code. 
+
+The above example can also be optimized because we are subsetting the whole frame and then doing computations on a subset of columns. It would be more efficient to select all required columns during the subset operation: 
+
+```{r}
+mtcars |>
+  subset(mpg > 11, cyl, vs, am, mpg, carb, hp, qsec, wt) |>
+  group_by(cyl, vs, am) |>
+  summarise(across(c(mpg, carb, hp), fmean), 
+            qsec_wt = fmean(qsec, wt))
+```
+
+Without the weighted mean of `qsec` is not needed, this could simplify to 
+
+```{r}
+mtcars |>
+  subset(mpg > 11, cyl, vs, am, mpg, carb, hp) |>
+  group_by(cyl, vs, am) |> 
+  fmean()
+```
+
+Finally, we could set the following options to toggle unsorted grouping, no missing value skipping, and multithreading across the three columns for more efficient execution.
+
+```{r}
+mtcars |>
+  subset(mpg > 11, cyl, vs, am, mpg, carb, hp) |>
+  group_by(cyl, vs, am, sort = FALSE) |> 
+  fmean(nthreads = 3, na.rm = FALSE)
+```
+
+Setting these options globally using `set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)` removes the need to set these arguments for each expression explicitly.
+
+
+## Conclusion 
+
+*collapse* enhances R both statistically and computationally and is a good option for *tidyverse* users searching for more efficient and lightweight solutions to data manipulation and statistical computing problems. For more information, I recommend reading the short vignette on [*Documentation Resources*](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html). 
+
+R users willing to write efficient/lightweight code and completely replace the *tidyverse* in their workflow are also encouraged to closely examine the [*fastverse*](https://fastverse.github.io/fastverse/) suite of packages. *collapse* alone may not always suffice, but 99% of *tidyverse* code can be replaced with an efficient and lightweight *fastverse* solution. 
+
+```{r, echo=FALSE}
+options(oldopts)
+```
+
+
+

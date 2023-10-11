@@ -1,8 +1,8 @@
 ---
-title: "*collapse*'s Handling of R Objects"
+title: "collapse's Handling of R Objects"
 subtitle: "A Quick View Behind the Scenes of Class-Agnostic R Programming"
 author: "Sebastian Krantz"
-date: "`r Sys.Date()`"
+date: "2023-05-28"
 output: 
   rmarkdown::html_vignette:
     

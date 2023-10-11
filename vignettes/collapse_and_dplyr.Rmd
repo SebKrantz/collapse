@@ -1,18 +1,16 @@
 ---
-title: "*collapse* and *dplyr*"
+title: "collapse and dplyr"
 subtitle: "Fast (Weighted) Aggregations and Transformations in a Piped Workflow"
 author: "Sebastian Krantz"
-date: "`r Sys.Date()`"
+date: "2021-01-04"
 output: 
   rmarkdown::html_vignette:
     toc: true
 
 vignette: >
-  %\VignetteIndexEntry{collapse and dplyr: Fast (Weighted) Aggregations and Transformations in a Piped Workflow}
+  %\VignetteIndexEntry{collapse and dplyr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  
-    <!--  %\VignetteIndexEntry{collapse and dplyr: Fast (weighted) Aggregations, Transformations and Time Series/Panel Computations in a dplyr Workflow} -->
 ---
 
 ```{css, echo=FALSE}
@@ -1045,15 +1043,15 @@ microbenchmark(dplyr = mutate_all(gdata, function(x) (x-mean.default(x, na.rm = 
 
 ## Lag
 # Small
-microbenchmark(dplyr_unordered = mutate_all(gGGDC10S, dplyr::lag),
+microbenchmark(dplyr_unordered = mutate(gGGDC10S, across(everything(), dplyr::lag)),
                collapse_unordered = flag(cgGGDC10S),
-               dplyr_ordered = mutate_all(gGGDC10S, dplyr::lag, order_by = "Year"),
+               dplyr_ordered = mutate(gGGDC10S, across(everything(), \(x) dplyr::lag(x, order_by = Year))),
                collapse_ordered = flag(cgGGDC10S, t = Year))
 
 # Large
-microbenchmark(dplyr_unordered = mutate_all(gdata, dplyr::lag),
+microbenchmark(dplyr_unordered = mutate(gdata, across(everything(), dplyr::lag)),
                collapse_unordered = flag(cgdata),
-               dplyr_ordered = mutate_all(gdata, dplyr::lag, order_by = "Year"),
+               dplyr_ordered = mutate(gdata, across(everything(), \(x) dplyr::lag(x, order_by = Year))),
                collapse_ordered = flag(cgdata, t = Year), times = 2)
 
 ## First-Difference (unordered)

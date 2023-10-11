@@ -1,5 +1,5 @@
-pandoc: 2.17.1.1
-pkgdown: 2.0.6
+pandoc: 3.1.1
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   collapse_and_data.table: collapse_and_data.table.html
@@ -7,6 +7,11 @@ articles:
   collapse_and_plm: collapse_and_plm.html
   collapse_and_sf: collapse_and_sf.html
   collapse_documentation: collapse_documentation.html
+  collapse_for_tidyverse_users: collapse_for_tidyverse_users.html
   collapse_intro: collapse_intro.html
-last_built: 2023-01-14T21:02Z
+  collapse_object_handling: collapse_object_handling.html
+last_built: 2023-10-11T21:24Z
+urls:
+  reference: https://sebkrantz.github.io/collapse/reference
+  article: https://sebkrantz.github.io/collapse/articles
 

@@ -1,6 +1,5 @@
 # collapse <img src='man/figures/logo.png' width="150px" align="right" />
 
-
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/SebKrantz/collapse/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/SebKrantz/collapse/actions/workflows/R-CMD-check.yaml)
 [![collapse status badge](https://fastverse.r-universe.dev/badges/collapse)](https://fastverse.r-universe.dev)
@@ -21,11 +20,6 @@
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
 It further implements a class-agnostic approach to data manipulation in R, supporting base R, *dplyr* (*tibble*), *data.table*, *sf*, *plm* classes for panel data ('pseries' and 'pdata.frame'), and non-destructively handling other matrix or data frame based classes (including most time series classes such as 'ts', 'xts' / 'zoo', 'tsibble', etc.). 
-
-<!-- *collapse* thus provides a robust, flexible, class-agnostic and computationally advanced toolkit for data manipulation in R. -->
-
-<!-- Core functions are implicit-type generic and attribute preserving, supporting other matrix or data frame based classes e.g. time series (*ts*, *xts* / *zoo*, *timeSeries* etc.), *sf* data frames etc. -->
-
 
 **Key Features:**
 
@@ -70,34 +64,15 @@ install.packages("collapse", repos = "https://fastverse.r-universe.dev")
 remotes::install_github("SebKrantz/collapse")
 
 # Install previous versions from the CRAN Archive (requires compilation)
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.8.9.tar.gz", 
-                 repos = NULL, type = "source") # Older: 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.9.6.tar.gz", 
+                 repos = NULL, type = "source") 
+# Older stable versions: 1.8.9, 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
 ```
-<!--
-# install the development version
-devtools::install_github("SebKrantz/collapse")
--->
 
 ## Documentation
 *collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` from the R console brings up the the top-level documentation page, which provides an overview of the entire functionality of the package and links to all other documentation pages. 
 
-In addition, *collapse* provides 7 vignettes:
-
-* [***collapse* Documentation and Resources**](<https://sebkrantz.github.io/collapse/articles/collapse_documentation.html>): Provides an overview of all available package documentation
-
-* [***collapse*'s Handling of R Objects**](<https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html>): Provides an overview of collapse’s class-agnostic R programming framework
-
-* [**Introduction to *collapse***](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces main features of the package in a structured way.
-
-* [***collapse* and *dplyr***](<https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html>): Demonstrates the integration of *collapse* with *dplyr* / *tidyverse* workflows and associated performance improvements.
-
-* [***collapse* and *plm***](<https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html>): Demonstrates the integration of *collapse* with the *plm* package and provides examples of fast and easy programming with panel data. 
-
-* [***collapse* and *data.table***](<https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html>): Shows how *collapse* and *data.table* may be used together in a harmonious way. 
-
-* [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames.
-
-*Note* that the latter 5 vignettes are only available on the website and currently do not cover major features introduced in versions 1.7 through 1.9. <!-- They have been updated if you see a 2022/23 in the date of the vignette. -->
+In addition there are several [vignettes](file:///Users/sebastiankrantz/Documents/R/collapse/docs/articles/index.html). 
 
 ### Cheatsheet (v1.8.8)
 
@@ -329,74 +304,6 @@ Evaluated and more extensive sets of examples are provided on the [package page]
 ## Citation
 
 If *collapse* was instrumental for your research project, please consider citing it using `citation("collapse")`.
-
-
-## Additional Notes
-### Regarding Performance 
-Some simple benchmarks against *dplyr*, *data.table* and *plm* are provided in [this](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>) blog post and in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>). In general:
-
-<!-- using functions that *data.table* also GeForce optimizes, -->
-
-* For simple aggregations of large data (~ 10 mio. obs) the performance is comparable to *data.table* (e.g. see [here](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html#benchmark>) and [here](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>)).
-
-<!--
-^[Collapse has quite efficient algorithms but no low-level parallelism. Thus huge aggregations with simple functions like `mean` or `sum` and meaningful parallel processing power are faster on *data.table*, whereas *collapse* can still be faster on 2-core machines.]. -->
-
-* For more complex categorical or weighed aggregations and for data transformations, *collapse* can be up to ~10x faster than *data.table*. Notable are very fast algorithms for (grouped) statistical mode and distinct value counts, various weighted statistics, scaling, centering, panel-lags, differences and growth rates.
-
-* Due to its highly optimized R code, *collapse* is very efficient for programming. On smaller data a *collapse* implementation will execute within microseconds, whereas packages like *dplyr* or *data.table* will typically evaluate in the millisecond domain (up to ~100x slower).
-
-* This performance extends to grouped and weighted computations on vectors and matrices (*collapse* provides separate vector, matrix and data.frame methods written in C++, the performance in matrix computations is comparable to *Rfast* and *matrixStats*).
-
-### Regarding the Integration with *dplyr*, *plm*, *data.table*, *sf* and Other Classes
-
-* ***collapse*** **and** ***dplyr***: The [Fast Statistical Functions](<https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html>) and [transformation functions and operators](<https://sebkrantz.github.io/collapse/reference/data-transformations.html>) provided by *collapse* have a *grouped_df* method, allowing them to be seamlessly integrated into *dplyr* / *tidyverse* workflows. Doing so facilitates advanced operations in *dplyr* and provides remarkable performance improvements. In addition, *collapse* provides some faster replacements for common base R / *dplyr* verbs (`fselect`/`get_vars`, `fgroup_by`, `fsubset`, `fmutate`, `fsummarise`, `across`, `roworder`, `colorder`, `frename`, `frelabel`, `funique`, `na_omit`, etc.). `options(collapse_mask = "manip")` can be used to export copies of these functions named `select`, `group_by`, `summarise`, `mutate`, `rename` etc. so that *dplyr* codes can be translated and optimized without much change of syntax. See [this vignette](<https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html>) for further examples and benchmarks. 
-
-<!-- 
-, providing further performance improvements for programming with piped expressions and non-standard evaluation
-(bringing *dplyr* close to *data.table* on large data aggregations, and making it faster than *data.table* for advanced transformations) -->
-
-* ***collapse*** **and** ***plm***: The fast [transformation functions and operators](<https://sebkrantz.github.io/collapse/reference/data-transformations.html>) provided by *collapse* also have *pseries* (panel-series) and *pdata.frame* (panel-data.frame) methods. This integrates them seamlessly into *plm* workflows and facilitates the manipulation of panel data. For typical panel data operations like between- and within-transformations or panel lags / leads / differences, *collapse* functions are 20-100x faster than *plm* equivalents, and provide greater versatility. See also [this vignette](<https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html>).
-
-<!-- (e.g. for applying transformations to multiple variables in a *pdata.frame*) -->
-
-* ***collapse*** **and** ***data.table***: All collapse functions can be applied to *data.table*'s and they will also return a *data.table* again. The C/C++ programming of *collapse* was inspired by *data.table* and directly relies on some *data.table* C source code (e.g. for grouping and row-binding). The function `qDT` efficiently converts various R objects to *data.table*, and several functions (`mrtl`, `mctl`, `unlist2d`, ...) have an option to return a *data.table*. See also [this vignette](<https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html>).
-
-* ***collapse*** **and** ***sf***: *collapse* now directly supports *sf* data frames through functions like `fselect`, `fsubset`, `num_vars`, `qsu`, `descr`, `varying`, `funique`, `roworder`, `rsplit`, `fcompute` etc., which will take along the geometry column even if it is not explicitly selected (mirroring *dplyr* methods for *sf* data frames). See also [this vignette](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>).
-
-* **Time series and other classes**: Besides explicit support for *dplyr* / *tibble*, *data.table*, *sf* and *plm* panel data classes, *collapse*'s statistical and transformation functions are S3 generic, with 'default', 'matrix' and 'data.frame' methods which dispatch on the implicit data type. Furthermore, these methods intelligently preserve the attributes of the objects passed. Therefore *collapse* can handle many other matrix or data frame based classes, including *ts*, *xts* / *zoo*, *timeSeries* and *tsibble*. Compatibility is of course limited if manipulating an object requires further actions besides preservation of the attributes and suitable modification of 'names', 'dim', 'dimnames' and 'row.names'. 
-
-<!--
-
-fndistinct(wlddev)
-fndistinct(wlddev, wlddev$iso3c)
-
-wlddev %>% fgroup_by(iso3c) %>% fndistinct
-
-collap(wlddev, ~ country + decade, fmean, fmode)
-
-fscale(num_vars(wlddev), wlddec$iso3c)
-fwithin(num_vars(wlddev), wlddec$iso3c)
-
-wlddev %>% fgroup_by(country, decade) %>% fselect(PCGDP:ODA) %>% fwithin(ODA)
-
-L(wlddev, -1:1, ~iso3c, ~year, cols = 9:12)
-
-wlddev %>% fgroup_by(country) %>% fselect(PCGDP:ODA, year) %>% flag(-1:1, year)
-
-wlddev %>% fgroup_by(country) %>% fselect(PCGDP:ODA, year) %>% fdiff(-1:1, 1:2, year)
-wlddev %>% fgroup_by(country) %>% fselect(PCGDP:ODA, year) %>% fgrowth(1, 1, year)
--->
-<!--
-## Contributing 
-If you want to contribute, please fork and create a pull request for merging with the **development** branch. Presently I am particularly interested in fast algorithms to compute weighted medians and (weighted) quantiles. 
-
-
-settransform(Species.AWMSL = finteraction(Species, AWMSL))
-
-
-
-<!-- *collapse* is not limited to programming with data.frames and it is class-secure and attribute-preserving (thus it can be applied to data.table's, tibbles, grouped tibbles etc. and also to special atomic objects like time-series and time-series matrices etc.). -->
 
 
 
