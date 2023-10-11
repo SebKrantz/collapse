@@ -13,7 +13,7 @@ name: pkgdown
 
 jobs:
   pkgdown:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     # Only restrict concurrency for non-PR jobs
     concurrency:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
@@ -37,7 +37,6 @@ jobs:
 
       - name: Build site
         run: |
-          install.packages("units")
           options(max.print = 70L)
           Sys.setenv(NCRAN = TRUE, NMAC = TRUE, RUNBENCH = TRUE, LOCAL = TRUE)
           pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
