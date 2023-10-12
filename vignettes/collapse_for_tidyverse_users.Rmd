@@ -42,7 +42,7 @@ The [*tidyverse*](https://www.tidyverse.org/) set of packages provides a rich, e
 
 *collapse* fully supports the *tibble* object and provides many *tidyverse*-like functions for data manipulation. It can thus be used to write *tidyverse*-like data manipulation code that, thanks to low-level vectorization of many statistical operations and optimized R code, typically runs much faster than native *tidyverse* code (in addition to being much more lightweight in dependencies). 
 
-Its aim is not to create a faster *tidyverse*, i.e., it does not implements all aspects of the rich *tidyverse* grammar or changes to it^[Notably, tidyselect, lamda expressions, and many of the smaller helper functions are left out.], and also takes inspiration from other leading data manipulation libraries to serve broad aims of performance, parsimony, complexity, and robustness in data manipulation for R. 
+Its aim is not to create a faster *tidyverse*, i.e., it does not implements all aspects of the rich *tidyverse* grammar or changes to it^[Notably, tidyselect, lambda expressions, and many of the smaller helper functions are left out.], and also takes inspiration from other leading data manipulation libraries to serve broad aims of performance, parsimony, complexity, and robustness in data manipulation for R. 
 
 
 ## Namespace and Global Options

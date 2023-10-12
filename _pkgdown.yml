@@ -201,13 +201,13 @@ reference:
 
 articles:
 - title: Updated
-  desc: Vignettes that are up to date with verions 2.0 and onwards
+  desc: Vignettes that are up to date with versions 2.0 and onwards
   contents:
   - collapse_documentation
   - collapse_for_tidyverse_users
   - collapse_object_handling
 - title: Legacy (Pre v1.7)
-  desc: Vignettes that cover functionality in versions of collapse up to 1.7. These
+  desc: Vignettes that cover functionality of versions <1.7. These
     remain very useful, but do not cover newer features.
   contents:
   - collapse_intro

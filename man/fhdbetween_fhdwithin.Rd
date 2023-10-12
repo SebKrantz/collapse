@@ -140,7 +140,7 @@ HDW(mtcars$mpg, mtcars$carb)                   # Simple regression problems
 HDW(mtcars$mpg, mtcars[-1])
 HDW(mtcars$mpg, qM(mtcars[-1]))
 head(HDW(qM(mtcars[3:4]), mtcars[1:2]))
-head(HDW(iris[1:2], iris[3:4]))                # Partialling columns 3 and 4 out of colums 1 and 2
+head(HDW(iris[1:2], iris[3:4]))                # Partialling columns 3 and 4 out of columns 1 and 2
 head(HDW(iris[1:2], iris[3:5]))                # Adding the Species factor -> fixed effect
 \donttest{ % We don't test because this code depends on suggested package.
 head(HDW(wlddev, PCGDP + LIFEEX ~ iso3c + qF(year))) # Partialling out 2 fixed effects
