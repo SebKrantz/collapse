@@ -344,8 +344,8 @@ operation:</p>
 <span><span class="co"># 5   6  1  0 19.12500 2.500000 115.25000 19.21275</span></span>
 <span><span class="co"># 6   8  0  0 15.98000 2.900000 191.00000 17.01239</span></span>
 <span><span class="co"># 7   8  0  1 15.40000 6.000000 299.50000 14.55297</span></span></code></pre></div>
-<p>Without the weighted mean of <code>qsec</code> is not needed, this
-could simplify to</p>
+<p>Without the weighted mean of <code>qsec</code>, this would simplify
+to</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">11</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, <span class="va">mpg</span>, <span class="va">carb</span>, <span class="va">hp</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -377,7 +377,7 @@ columns for more efficient execution.</p>
 <span><span class="co"># 7   8  0  1 15.40000 6.000000 299.50000</span></span></code></pre></div>
 <p>Setting these options globally using
 <code>set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)</code>
-removes the need to set them repeatedly.</p>
+avoids the need to set them repeatedly.</p>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>

@@ -588,12 +588,12 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, <span class="fu">gby</span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr    min      lq      mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 97.371 100.572 138.14700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE) 43.275  45.019  63.68363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr     min       lq      mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 133.642 134.9275 142.71842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE)  72.113  73.5700  77.30119</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    median       uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  118.6065 164.6455 701.073   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   52.8755  82.2260 164.338   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  135.8560 138.3655 508.873   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   74.6085  75.7085 149.289   100</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
