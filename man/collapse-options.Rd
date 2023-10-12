@@ -20,7 +20,7 @@ get_collapse(opts = NULL)
 \arguments{
 \item{\dots}{either comma separated options, or a single list of options. The available options are:
 
-  \tabular{llll}{
+  \tabular{lll}{
     \code{na.rm} \tab\tab logical, default \code{TRUE}. Sets the default for statistical algorithms such as the \link[=fast-statistical-functions]{Fast Statistical Functions} to skip missing values. If your data does not have missing values, or only in rare cases, it is recommended to change this to \code{FALSE} for performance gains. \emph{Note} that this does not affect other (non-statistical) uses of \code{na.rm} arguments, such as in \code{\link{pivot}}. \cr\cr\cr\cr
 
     \code{sort} \tab\tab logical, default \code{TRUE}. Sets the default for grouping operations to be sorted. This also applies to factor generation using \code{\link{qF}} and tabulation with \code{\link{qtab}}, but excludes other uses of \code{sort} arguments where grouping is not the objective (such as in \code{\link{funique}} or \code{\link{pivot}}). In general, sorted grouping (internally using \code{\link{radixorder}}) is slower than hash-based direct grouping (internally using \code{\link{group}}). However, if data is pre-sorted, sorted grouping is slightly faster. In general, if records don't need to be sorted or you want to maintain their first-appearance order, changing this to \code{FALSE} is recommended and often brings substantial performance gains. \emph{Note} that this also affects internal grouping applied when atomic vectors (except for factors) or lists are passed to \code{g} arguments in \link[=fast-statistical-functions]{Fast Statistical Functions}. \cr\cr\cr\cr
@@ -33,14 +33,13 @@ get_collapse(opts = NULL)
 
     \code{digits} \tab\tab integer, default \code{2}. Number of digits to print, e.g. in \code{\link{descr}} or \code{\link{pwcor}}. \cr\cr\cr\cr
 
-    \code{mask} \tab\tab character, default \code{NULL}. Allows masking existing base R/dplyr functions with faster \emph{collapse} versions, by creating additional functions in the namespace and instantly exporting them: \cr\cr\tab\tab
+    \code{mask} \tab\tab character, default \code{NULL}. Allows masking existing base R/dplyr functions with faster \emph{collapse} versions, by creating additional functions in the namespace and instantly exporting them: \cr\cr
 
-    For example \code{set_collapse(mask = "unique")} (or, equivalently, \code{set_collapse(mask = "funique")}) will create \code{unique <- funique} in the \emph{collapse} namespace, export \code{unique()}, and silently detach and attach the namespace again so R can find it - all in millisecond. Thus calling \code{unique()} afterwards uses the \emph{collapse} version - which is many times faster. \code{funique} remains available and you can still call \code{base::unique} explicitly. \cr\cr\tab\tab
+    \tab\tab For example \code{set_collapse(mask = "unique")} (or, equivalently, \code{set_collapse(mask = "funique")}) will create \code{unique <- funique} in the \emph{collapse} namespace, export \code{unique()}, and silently detach and attach the namespace again so R can find it - all in millisecond. Thus calling \code{unique()} afterwards uses the \emph{collapse} version - which is many times faster. \code{funique} remains available and you can still call \code{base::unique} explicitly. \cr\cr
 
-    All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels"))} creates \code{subset <- fsubset}, \code{transform <- ftransform} etc. Special functions are \code{"n"} and \code{"table"/"qtab"}, and \code{"\%in\%"}, which create \code{n <- GRPN} (for use in \code{(f)summarise}/\code{(f)mutate}), \code{table <- qtab}, and replace \code{\%in\%} with a fast version using \code{\link{fmatch}}, respectively.
-    \cr\cr\tab\tab
-  There are also a couple of convenience keywords that you can use to mask groups of functions:
-  \cr\cr
+  \tab\tab All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels"))} creates \code{subset <- fsubset}, \code{transform <- ftransform} etc. Special functions are \code{"n"} and \code{"table"/"qtab"}, and \code{"\%in\%"}, which create \code{n <- GRPN} (for use in \code{(f)summarise}/\code{(f)mutate}), \code{table <- qtab}, and replace \code{\%in\%} with a fast version using \code{\link{fmatch}}, respectively. \cr\cr
+
+  \tab\tab There are also a couple of convenience keywords that you can use to mask groups of functions: \cr\cr
 
 \tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr\cr
 \tab\tab - \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{fmatch}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. \cr\cr % fdim not because of infinite recursion
@@ -134,7 +133,7 @@ fastverse_extend(qs, fixest, grf, glmnet, install = TRUE)
 set_collapse(
   nthreads = 4,
   sort = FALSE,
-  mask = c("manip", "helper", "n", "table", "mean", "scale"),
+  mask = c("manip", "helper", "special", "mean", "scale"),
   remove = "old"
 )
 # Final conflicts check (optional)

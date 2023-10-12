@@ -28,7 +28,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, any::sf, local::.
+          extra-packages: |
+            cran::sf
+            github::SebKrantz/pkgdown
+            local::.
           needs: website
 
       - name: Build site
