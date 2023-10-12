@@ -133,7 +133,7 @@ fastverse_extend(qs, fixest, grf, glmnet, install = TRUE)
 set_collapse(
   nthreads = 4,
   sort = FALSE,
-  mask = c("manip", "helper", "n", "table", "mean", "scale"),
+  mask = c("manip", "helper", "special", "mean", "scale"),
   remove = "old"
 )
 # Final conflicts check (optional)
