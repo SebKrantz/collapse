@@ -46,7 +46,7 @@ Up to date vignettes are
 
 * [***collapse*'s Handling of R Objects**](<https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html>): A quick view behind the scenes of class-agnostic R programming
 
-There are 5 further vignettes which are available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website):
+There are 5 further vignettes which are only available [online](<https://sebkrantz.github.io/collapse/articles/index.html>) (due to their size and the enhanced browsing experience on the website):
 
 * [**Introduction to *collapse* **](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces key features in a structured way
 
@@ -58,7 +58,7 @@ There are 5 further vignettes which are available [online](<https://sebkrantz.gi
 
 * [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames
 
-**Note** that these vignettes do not cover major features introduced in versions 1.7 through 1.9, but contain much useful information and examples. 
+**Note** that these vignettes do not cover major features introduced in versions >= 1.7, but contain much useful information and examples. 
 
 ## Blog
 

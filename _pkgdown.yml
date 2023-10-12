@@ -6,8 +6,10 @@ home:
 
 template:
   bootstrap: 5
-  bootswatch: sandstone
-  theme: ayu-mirage
+  bootswatch: sandstone # Also good: flatly, yeti, simplex, superhero, zephyr
+  theme: ayu-dark # Or: ayu-mirage
+  bslib:
+    primary: "#003254"
 
 development:
   mode: auto

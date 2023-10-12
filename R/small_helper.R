@@ -548,7 +548,7 @@ setnck <- function(x, value) {
 
 fmatch <- function(x, table, nomatch = NA_integer_, count = FALSE, overid = 1L) .Call(C_fmatch, x, table, nomatch, count, overid)
 ckmatch <- function(x, table, e = "Unknown columns:", ...) if(anyNA(m <- fmatch(x, table, ...))) stop(paste(e, paste(x[is.na(m)], collapse = ", "))) else m
-"%fin%" <- function(x, table) fmatch(x, table, nomatch = 0L) != 0L # export through set_collapse(mask = "%in%")
+"%fin%" <- function(x, table) fmatch(x, table, 0L, overid = 2L) != 0L # export through set_collapse(mask = "%in%")
 "%!in%" <- function(x, table) fmatch(x, table, 0L, overid = 2L) == 0L
 "%!iin%" <- function(x, table) whichv(fmatch(x, table, 0L, overid = 2L), 0L)
 "%iin%" <- function(x, table) whichv(fmatch(x, table, 0L, overid = 2L), 0L, invert = TRUE)
