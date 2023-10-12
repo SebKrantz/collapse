@@ -148,7 +148,7 @@ mtcars |>
             qsec_wt = fmean(qsec, wt))
 ```
 
-Without the weighted mean of `qsec` is not needed, this could simplify to 
+Without the weighted mean of `qsec`, this would simplify to 
 
 ```{r}
 mtcars |>
