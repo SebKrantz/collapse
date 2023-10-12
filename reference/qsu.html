@@ -778,54 +778,54 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># Generate random weights</span></span></span>
 <span class="r-in"><span><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, w <span class="op">=</span> <span class="va">weights</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>     <span class="co"># Computed weighted mean, SD, skewness and kurtosis</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean          SD          Min             Max     Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year     13176    1989.9564     19.7816         1960            2020  -0.0554</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade   13176    1985.5572     19.7291         1960            2020   0.0274</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     9470   11979.0789  21055.7411     132.0776      196061.417   4.6273</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   11670      64.3372     12.6787       18.907         85.4171  -0.9268</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c           -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date            -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year       4.4855</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade     4.4899</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region          -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income          -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD            -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     45.0826</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     6.2056</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean              SD          Min             Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year     13176    1990.0169         19.6917         1960            2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade   13176    1985.6143         19.5855         1960            2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     9470   12011.3349      20619.7103     132.0776      196061.417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   11670      64.3269          12.878       18.907         85.4171</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Skew      Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country        -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c          -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date           -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year      -0.008     4.307</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade     0.035    4.1805</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region         -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income         -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD           -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     3.7236   25.8164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   -0.9497    6.1557</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"><span><span class="va">weightsNA</span> <span class="op">&lt;-</span> <span class="va">weights</span>                        <span class="co"># Weights may contain missing values.. inserting 1000</span></span></span>
 <span class="r-in"><span><span class="va">weightsNA</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, w <span class="op">=</span> <span class="va">weightsNA</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># But now these values are removed from all variables</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean          SD          Min             Max     Skew</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year     12176    1989.9375     19.8091         1960            2020  -0.0592</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade   12176    1985.5433     19.7488         1960            2020   0.0216</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -           -            -               -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     8770   11986.7352  20651.8829     132.0776      196061.417   3.9192</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   10814      64.3252     12.6878       18.907         85.4171  -0.9244</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>              Kurt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> country         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c           -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> date            -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> year       4.4702</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade     4.4526</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> region          -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> income          -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> OECD            -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     28.5402</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     6.2228</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              N         Mean              SD          Min             Max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country  13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c    13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date     13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year     12176    1989.9493         19.7146         1960            2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade   12176    1985.5562         19.6115         1960            2020</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region   13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income   13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD     13176            -               -            -               -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     8745   12045.6903      20719.4725     132.0776      196061.417</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   10789      64.3299          12.918       18.907         85.4171</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             Skew      Kurt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> country        -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> iso3c          -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> date           -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> year     -0.0193    4.2798</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade    0.0233      4.17</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> region         -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> income         -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> OECD           -         -</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP      3.761   26.3791</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX   -0.9485    6.1872</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Grouped and panel-summaries can also be weighted in the same manner</span></span></span>

@@ -139,114 +139,114 @@ Some applications are to facilitate identification of, and grouped operations on
 <span class="r-in"><span>                   value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id time       value</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1    1  0.78807808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1    2  0.08828125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1    3 -1.30459163</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1    4 -0.74394695</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2    1 -1.30999480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2    2 -0.19824471</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2    4 -0.35034523</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2    5  1.11785788</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   3    1  0.66644500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3    2  1.05790169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3    3 -1.54401829</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3    4  1.26591654</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1    1 -0.94865122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1    2 -0.38667661</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1    3 -0.69015861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1    4 -0.19063791</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2    1 -1.08968086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2    2  0.71009070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2    4 -0.06945698</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2    5  1.78115597</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   3    1  0.36877099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3    2  0.52045310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3    3  0.51907769</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3    4 -0.69028857</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## This gave a gaps in time error previous to collapse 1.5.0</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, <span class="va">value</span> <span class="op">~</span> <span class="va">id</span>, <span class="op">~</span><span class="va">time</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id time    L1.value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1    1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1    2  0.78807808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1    3  0.08828125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1    4 -1.30459163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1    2 -0.94865122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1    3 -0.38667661</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1    4 -0.69015861</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   2    1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2    2 -1.30999480</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2    2 -1.08968086</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   2    4          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2    5 -0.35034523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2    5 -0.06945698</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   3    1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3    2  0.66644500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3    3  1.05790169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3    4 -1.54401829</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3    2  0.36877099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3    3  0.52045310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3    4  0.51907769</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Generating new id variable (here seqid(time) would suffice as data is sorted)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ftransform.html">settransform</a></span><span class="op">(</span><span class="va">data</span>, newid <span class="op">=</span> <span class="fu">seqid</span><span class="op">(</span><span class="va">time</span>, <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">time</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id time       value newid</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1    1  0.78807808     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1    2  0.08828125     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1    3 -1.30459163     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1    4 -0.74394695     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2    1 -1.30999480     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2    2 -0.19824471     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2    4 -0.35034523     3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2    5  1.11785788     3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   3    1  0.66644500     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3    2  1.05790169     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3    3 -1.54401829     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3    4  1.26591654     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1    1 -0.94865122     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1    2 -0.38667661     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1    3 -0.69015861     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1    4 -0.19063791     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2    1 -1.08968086     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2    2  0.71009070     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2    4 -0.06945698     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2    5  1.78115597     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   3    1  0.36877099     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3    2  0.52045310     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3    3  0.51907769     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3    4 -0.69028857     4</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Lag the panel this way</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, <span class="va">value</span> <span class="op">~</span> <span class="va">newid</span>, <span class="op">~</span><span class="va">time</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    newid time    L1.value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      1    1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      1    2  0.78807808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      1    3  0.08828125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      1    4 -1.30459163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      1    2 -0.94865122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      1    3 -0.38667661</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      1    4 -0.69015861</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5      2    1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      2    2 -1.30999480</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      2    2 -1.08968086</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7      3    4          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      3    5 -0.35034523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      3    5 -0.06945698</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9      4    1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10     4    2  0.66644500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11     4    3  1.05790169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12     4    4 -1.54401829</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     4    2  0.36877099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     4    3  0.52045310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     4    4  0.51907769</span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co">## A different possibility: Creating a consecutive time variable</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="ftransform.html">settransform</a></span><span class="op">(</span><span class="va">data</span>, newtime <span class="op">=</span> <span class="fu">data.table</span><span class="fu">::</span><span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/rowid.html" class="external-link">rowid</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id time       value newid newtime</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1    1  0.78807808     1       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1    2  0.08828125     1       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1    3 -1.30459163     1       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1    4 -0.74394695     1       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2    1 -1.30999480     2       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2    2 -0.19824471     2       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2    4 -0.35034523     3       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2    5  1.11785788     3       4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9   3    1  0.66644500     4       1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3    2  1.05790169     4       2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3    3 -1.54401829     4       3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3    4  1.26591654     4       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1    1 -0.94865122     1       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1    2 -0.38667661     1       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1    3 -0.69015861     1       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1    4 -0.19063791     1       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   2    1 -1.08968086     2       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2    2  0.71009070     2       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2    4 -0.06945698     3       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2    5  1.78115597     3       4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   3    1  0.36877099     4       1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3    2  0.52045310     4       2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3    3  0.51907769     4       3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3    4 -0.69028857     4       4</span>
 <span class="r-in"><span><span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, <span class="va">value</span> <span class="op">~</span> <span class="va">id</span>, <span class="op">~</span><span class="va">newtime</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id newtime    L1.value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1       1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1       2  0.78807808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1       3  0.08828125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1       4 -1.30459163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1       2 -0.94865122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1       3 -0.38667661</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1       4 -0.69015861</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   2       1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2       2 -1.30999480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2       3 -0.19824471</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2       4 -0.35034523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2       2 -1.08968086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2       3  0.71009070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2       4 -0.06945698</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   3       1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3       2  0.66644500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3       3  1.05790169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3       4 -1.54401829</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3       2  0.36877099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3       3  0.52045310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3       4  0.51907769</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span><span class="co">## With sorted data, the time variable can also just be omitted..</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, <span class="va">value</span> <span class="op">~</span> <span class="va">id</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id    L1.value</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1  0.78807808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1  0.08828125</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1 -1.30459163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1 -0.94865122</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   1 -0.38667661</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   1 -0.69015861</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   2          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2 -1.30999480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2 -0.19824471</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2 -0.35034523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   2 -1.08968086</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   2  0.71009070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   2 -0.06945698</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 9   3          NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3  0.66644500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3  1.05790169</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3 -1.54401829</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  3  0.36877099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  3  0.52045310</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  3  0.51907769</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
