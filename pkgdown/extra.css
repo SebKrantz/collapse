@@ -27,3 +27,9 @@ span.fa.fa-github {
   font-size: 18px;
   margin-right: 100px;
 }
+a {
+  color: #0087b0;
+}
+a:hover {
+  color: #006887; /* #027ca1; */
+}
