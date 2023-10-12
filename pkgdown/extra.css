@@ -33,3 +33,6 @@ a {
 a:hover {
   color: #005873; /* #027ca1; */
 }
+pre {
+  color: #cccccc;
+}
