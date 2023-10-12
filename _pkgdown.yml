@@ -9,7 +9,7 @@ template:
   bootswatch: sandstone # Also good: flatly, yeti, simplex, superhero, zephyr
   theme: ayu-mirage
   bslib:
-    primary: "#01558c" # "#003581" # "#29abe0"
+    primary: "#003254"
 
 development:
   mode: auto
