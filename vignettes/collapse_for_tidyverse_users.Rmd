@@ -113,9 +113,9 @@ mtcars |>
   fmean()
 ```
 
-Note that all functions in *collapse*, including the *Fast Statistical Functions*, have the default `na.rm = TRUE`, i.e., missing values are skipped in calculations. This can be changed using `set_collpase(na.rm = FALSE)` to give behavior more consistent with base R. 
+Note that all functions in *collapse*, including the *Fast Statistical Functions*, have the default `na.rm = TRUE`, i.e., missing values are skipped in calculations. This can be changed using `set_collapse(na.rm = FALSE)` to give behavior more consistent with base R. 
 
-Another thing to be aware of when using *Fast Statistical Functions* inside data manipulation functions is that they toggle vectorized execution wherever they are used. Expressions containing them are fully vectorized e.g. 
+Another thing to be aware of when using *Fast Statistical Functions* inside data manipulation functions is that they toggle vectorized execution wherever they are used. E.g.
 
 ```{r}
 mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + min(qsec)) # Vectorized
@@ -132,7 +132,7 @@ both give the mean + the minimum within each group, but calculated in different 
 
 See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. 
 
-To fully use *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect parts of your code since they are S3 generic^[You can always refer to base R functions explicitly using `::` e.g. `base::mean`.]. 
+To fully use *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect other parts of your code^[When doing this, make sure to refer to base R functions explicitly using `::` e.g. `base::mean`.]. 
 
 ## Writing Efficient Code
 
@@ -166,12 +166,12 @@ mtcars |>
   fmean(nthreads = 3, na.rm = FALSE)
 ```
 
-Setting these options globally using `set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)` removes the need to set these arguments for each expression explicitly.
+Setting these options globally using `set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)` removes the need to set them repeatedly.
 
 
 ## Conclusion 
 
-*collapse* enhances R both statistically and computationally and is a good option for *tidyverse* users searching for more efficient and lightweight solutions to data manipulation and statistical computing problems. For more information, I recommend reading the short vignette on [*Documentation Resources*](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html). 
+*collapse* enhances R both statistically and computationally and is a good option for *tidyverse* users searching for more efficient and lightweight solutions to data manipulation and statistical computing problems in R. For more information, I recommend starting with the short vignette on [*Documentation Resources*](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html). 
 
 R users willing to write efficient/lightweight code and completely replace the *tidyverse* in their workflow are also encouraged to closely examine the [*fastverse*](https://fastverse.github.io/fastverse/) suite of packages. *collapse* alone may not always suffice, but 99% of *tidyverse* code can be replaced with an efficient and lightweight *fastverse* solution. 
 
