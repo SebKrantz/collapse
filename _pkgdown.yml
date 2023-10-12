@@ -7,7 +7,7 @@ home:
 template:
   bootstrap: 5
   bootswatch: sandstone # Also good: flatly, yeti, simplex, superhero, zephyr
-  theme: ayu-mirage
+  theme: ayu-dark # Or: ayu-mirage
   bslib:
     primary: "#003254"
 
