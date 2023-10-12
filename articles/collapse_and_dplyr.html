@@ -401,9 +401,9 @@ columns by type.</p>
 <span>               dplyr <span class="op">=</span> <span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select_all.html" class="external-link">select_at</a></span><span class="op">(</span><span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">median</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#      expr       min        lq       mean    median         uq        max neval</span></span>
-<span><span class="co">#  collapse   423.129   471.929   608.3324   531.972    580.814   4149.652   100</span></span>
-<span><span class="co">#    hybrid 13453.074 14319.465 18416.8921 15119.622  21636.038  53912.233   100</span></span>
-<span><span class="co">#     dplyr 71185.928 77154.772 95655.4000 83926.696 104753.954 279718.989   100</span></span></code></pre></div>
+<span><span class="co">#  collapse   330.502   380.084   452.9414   431.181   473.1945   1022.745   100</span></span>
+<span><span class="co">#    hybrid  9227.938  9974.068 13332.0551 10726.457 13710.5840  61067.074   100</span></span>
+<span><span class="co">#     dplyr 43242.368 47407.583 62688.0012 53320.624 67743.6340 238735.185   100</span></span></code></pre></div>
 <p>Benchmarks on the different components of this code and with larger
 data are provided under ‘Benchmarks’. Note that a grouped tibble created
 with <code>fgroup_by</code> can no longer be used for grouped
@@ -1682,7 +1682,7 @@ observations, obtained by replicating and row-binding
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span></span>
-<span><span class="co"># Ncells  1252696  67.0    2341392 125.1         NA  2341392 125.1</span></span>
+<span><span class="co"># Ncells  1252696  67.0    2341397 125.1         NA  2341397 125.1</span></span>
 <span><span class="co"># Vcells 18430091 140.7   27691545 211.3      16384 21603925 164.9</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -1694,34 +1694,34 @@ observations, obtained by replicating and row-binding
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Country</span>, <span class="va">Variable</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Country</span>, <span class="va">Variable</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr      min       lq       mean    median       uq       max neval</span></span>
-<span><span class="co">#     dplyr 3378.483 3801.761 5968.40051 4102.9840 6587.490 43958.193   100</span></span>
-<span><span class="co">#  collapse   10.322   12.987   21.55082   24.9925   29.824    37.451   100</span></span>
+<span><span class="co">#      expr      min        lq       mean   median       uq      max neval</span></span>
+<span><span class="co">#     dplyr 2364.923 2650.6700 3428.76177 2880.354 4493.106 7535.131   100</span></span>
+<span><span class="co">#  collapse    6.506    8.9885   18.76535   20.164   24.549   54.149   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">Country</span>, <span class="va">Variable</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">Country</span>, <span class="va">Variable</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr      min        lq       mean    median       uq       max neval</span></span>
-<span><span class="co">#     dplyr 3619.764 4002.0945 6358.22421 4688.0265 7913.763 23208.885   100</span></span>
-<span><span class="co">#  collapse   10.184   12.1125   21.92642   13.8895   31.259    73.388   100</span></span>
+<span><span class="co">#      expr      min        lq       mean   median       uq      max neval</span></span>
+<span><span class="co">#     dplyr 2661.687 2820.2445 3209.32998 2928.322 3245.195 6736.092   100</span></span>
+<span><span class="co">#  collapse    6.663    8.1375   17.06709   12.768   25.536   67.394   100</span></span>
 <span></span>
 <span><span class="co">## Subsetting columns </span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr      min       lq      mean   median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 1500.557 1562.221 2209.9207 1680.521 2119.4220 10148.124   100</span></span>
-<span><span class="co">#  collapse  119.655  250.936  480.9518  263.213  292.0275  5464.481   100</span></span>
+<span><span class="co">#      expr      min        lq      mean    median        uq      max neval</span></span>
+<span><span class="co">#     dplyr 1106.369 1356.3095 1581.1050 1442.6155 1838.5410 2426.156   100</span></span>
+<span><span class="co">#  collapse   76.734  204.3055  242.5595  237.4485  280.3475  438.964   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr       min        lq     mean    median       uq       max neval</span></span>
-<span><span class="co">#     dplyr 10.535627 16.065621 26.82195 18.091838 28.71757 156.49826   100</span></span>
-<span><span class="co">#  collapse  6.496028  7.963312 12.62541  8.550936 13.54240  64.75565   100</span></span>
+<span><span class="co">#      expr      min        lq     mean    median       uq       max neval</span></span>
+<span><span class="co">#     dplyr 9.462499 13.719576 18.66775 15.935159 18.53440 109.85655   100</span></span>
+<span><span class="co">#  collapse 5.909750  7.414319 10.37219  7.979875 10.07686  49.85475   100</span></span>
 <span></span>
 <span><span class="co">## Ordering rows</span></span>
 <span><span class="co"># Small</span></span>
@@ -1729,16 +1729,16 @@ observations, obtained by replicating and row-binding
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">-</span><span class="va">Country</span>, <span class="va">Variable</span>, <span class="va">Year</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#      expr      min       lq      mean   median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 6722.964 7176.344 8507.3309 7703.891 8490.3990 22925.146   100</span></span>
-<span><span class="co">#  collapse  670.336  713.990  813.7074  753.622  814.9065  2722.967   100</span></span>
+<span><span class="co">#     dplyr 4331.716 4755.551 6151.0888 5405.431 6431.3165 29730.215   100</span></span>
+<span><span class="co">#  collapse  524.522  576.357  644.8555  604.906  643.2625  1100.024   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span>, <span class="va">Variable</span>, <span class="va">Year</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">-</span><span class="va">Country</span>, <span class="va">Variable</span>, <span class="va">Year</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#      expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#     dplyr 188.1415 188.1415 192.8741 192.8741 197.6067 197.6067     2</span></span>
-<span><span class="co">#  collapse 150.8208 150.8208 159.3246 159.3246 167.8283 167.8283     2</span></span>
+<span><span class="co">#     dplyr 145.4893 145.4893 146.6613 146.6613 147.8334 147.8334     2</span></span>
+<span><span class="co">#  collapse 130.7730 130.7730 140.8166 140.8166 150.8603 150.8603     2</span></span>
 <span></span>
 <span></span>
 <span><span class="co">## Grouping </span></span>
@@ -1746,34 +1746,34 @@ observations, obtained by replicating and row-binding
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Country</span>, <span class="va">Variable</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Country</span>, <span class="va">Variable</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr      min        lq      mean    median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 3737.493 3997.9220 4549.9964 4188.1255 4582.1765 17095.948   100</span></span>
-<span><span class="co">#  collapse  301.752  322.7025  394.9228  384.2345  415.0265   824.395   100</span></span>
+<span><span class="co">#      expr      min       lq      mean   median       uq       max neval</span></span>
+<span><span class="co">#     dplyr 2524.836 2841.652 3295.2341 2992.285 3118.661 20239.627   100</span></span>
+<span><span class="co">#  collapse  230.519  248.134  295.7057  302.281  313.738   494.582   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">Country</span>, <span class="va">Variable</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">Country</span>, <span class="va">Variable</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#      expr      min       lq     mean   median       uq       max neval</span></span>
-<span><span class="co">#     dplyr 77.03320 79.31858 86.70904 81.87784 90.45980 118.39291    10</span></span>
-<span><span class="co">#  collapse 58.17485 58.95509 61.59812 62.10357 63.94597  64.43792    10</span></span>
+<span><span class="co">#     dplyr 51.68054 52.37338 61.26034 55.49005 60.89140 105.59352    10</span></span>
+<span><span class="co">#  collapse 44.52592 45.57615 46.74290 46.40332 46.69422  51.58647    10</span></span>
 <span></span>
 <span><span class="co">## Computing a new column </span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">GGDC10S</span>, NEW <span class="op">=</span> <span class="va">AGR</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span><span class="va">GGDC10S</span>, NEW <span class="op">=</span> <span class="va">AGR</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr      min        lq      mean    median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 1310.778 1428.1260 1700.4543 1507.9420 1695.3135  4734.436   100</span></span>
-<span><span class="co">#  collapse   63.099   68.9015  283.1063   83.2545   98.5225 19400.380   100</span></span>
+<span><span class="co">#      expr     min       lq      mean   median       uq      max neval</span></span>
+<span><span class="co">#     dplyr 846.510 920.6760 999.16279 971.3995 1029.745 1608.362   100</span></span>
+<span><span class="co">#  collapse  33.242  37.7975  50.46682  50.3645   60.184   91.646   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">data</span>, NEW <span class="op">=</span> <span class="va">AGR</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span><span class="va">data</span>, NEW <span class="op">=</span> <span class="va">AGR</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># Unit: milliseconds</span></span>
+<span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#      expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#     dplyr 3.319188 4.898617 7.669378 5.628799 7.858735 43.78726   100</span></span>
-<span><span class="co">#  collapse 1.335270 1.939097 4.799599 3.885080 4.475544 51.70149   100</span></span>
+<span><span class="co">#     dplyr 1949.431 2618.822 4837.828 4250.648 4696.311 31443.01   100</span></span>
+<span><span class="co">#  collapse  884.786 1488.539 3016.761 3176.247 3459.403 34699.26   100</span></span>
 <span></span>
 <span><span class="co">## All combined with pipes </span></span>
 <span><span class="co"># Small</span></span>
@@ -1787,9 +1787,9 @@ observations, obtained by replicating and row-binding
 <span>                       <span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span>NEW <span class="op">=</span> <span class="va">AGR</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>                       <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min        lq       mean     median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 14065.741 15481.642 23387.8917 20503.3390 27188.014 66762.831   100</span></span>
-<span><span class="co">#  collapse   367.317   477.292   654.5442   529.8255   682.409  3852.193   100</span></span>
+<span><span class="co">#      expr      min        lq       mean     median         uq        max neval</span></span>
+<span><span class="co">#     dplyr 9937.123 10511.932 18169.3744 11584.4185 15606.5215 201928.509   100</span></span>
+<span><span class="co">#  collapse  292.719   376.158   511.2671   453.8085   548.3125   5125.479   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -1802,14 +1802,14 @@ observations, obtained by replicating and row-binding
 <span>                       <span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span>NEW <span class="op">=</span> <span class="va">AGR</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>                       <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr      min        lq      mean    median       uq      max neval</span></span>
-<span><span class="co">#     dplyr 31.29025 33.582289 48.930239 40.666296 50.50283 102.2274    10</span></span>
-<span><span class="co">#  collapse  8.41982  8.709945  9.694662  9.020985 10.82790  11.6313    10</span></span>
+<span><span class="co">#      expr      min        lq      mean    median        uq       max neval</span></span>
+<span><span class="co">#     dplyr 21.90927 22.379900 22.791222 22.508342 23.167686 24.352513    10</span></span>
+<span><span class="co">#  collapse  7.32488  7.360033  7.414678  7.398749  7.445917  7.532191    10</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span></span>
-<span><span class="co"># Ncells  1258419  67.3    2341392 125.1         NA  2341392 125.1</span></span>
-<span><span class="co"># Vcells 18447620 140.8   56661488 432.3      16384 65372818 498.8</span></span></code></pre></div>
+<span><span class="co"># Ncells  1258419  67.3    2341397 125.1         NA  2341397 125.1</span></span>
+<span><span class="co"># Vcells 18447617 140.8   56661487 432.3      16384 65372818 498.8</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="aggregation">3.1 Aggregation<a class="anchor" aria-label="anchor" href="#aggregation"></a>
@@ -1823,22 +1823,22 @@ observations, obtained by replicating and row-binding
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">GGDC10S</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span></span>
-<span><span class="co"># Ncells  1275397  68.2    2341392 125.1         NA  2341392 125.1</span></span>
-<span><span class="co"># Vcells 18066382 137.9   56661488 432.3      16384 65372818 498.8</span></span>
+<span><span class="co"># Ncells  1275397  68.2    2341397 125.1         NA  2341397 125.1</span></span>
+<span><span class="co"># Vcells 18066379 137.9   56661487 432.3      16384 65372818 498.8</span></span>
 <span></span>
 <span><span class="co">## Conversion of Grouping object: This time would be required extra in all hybrid calls </span></span>
 <span><span class="co">## i.e. when calling collapse functions on data grouped with dplyr::group_by</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/GRP.html">GRP</a></span><span class="op">(</span><span class="va">gGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#           expr    min     lq     mean median     uq     max neval</span></span>
-<span><span class="co">#  GRP(gGGDC10S) 29.346 30.253 31.95149 30.642 31.226 129.352   100</span></span>
+<span><span class="co">#           expr    min      lq     mean median    uq     max neval</span></span>
+<span><span class="co">#  GRP(gGGDC10S) 19.352 27.3885 30.93493 28.042 28.81 168.129   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/GRP.html">GRP</a></span><span class="op">(</span><span class="va">gdata</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#        expr      min       lq     mean   median       uq     max neval</span></span>
-<span><span class="co">#  GRP(gdata) 1.716046 2.903389 3.586013 3.097385 3.484766 28.3788   100</span></span>
+<span><span class="co">#        expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  GRP(gdata) 1.189193 2.473803 2.771444 2.571181 2.654256 31.48405   100</span></span>
 <span></span>
 <span></span>
 <span><span class="co">## Sum </span></span>
@@ -1846,124 +1846,124 @@ observations, obtained by replicating and row-binding
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min       lq       mean    median         uq        max neval</span></span>
-<span><span class="co">#     dplyr 13871.433 15580.43 24621.4120 17606.252 29292.5575 144086.529   100</span></span>
-<span><span class="co">#  collapse   229.552   244.73   324.5631   274.308   299.8555   2060.564   100</span></span>
+<span><span class="co">#      expr      min       lq       mean     median        uq       max neval</span></span>
+<span><span class="co">#     dplyr 9250.936 9930.730 11881.4883 10475.5760 12301.955 25641.943   100</span></span>
+<span><span class="co">#  collapse  162.945  177.728   211.0139   211.7065   224.092   341.402   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr        min         lq       mean     median         uq        max neval</span></span>
-<span><span class="co">#     dplyr 1108.13483 1162.19767 1309.38394 1237.17092 1279.86524 2037.49500    10</span></span>
-<span><span class="co">#  collapse   36.12537   36.42079   38.41674   36.66824   38.90888   49.64222    10</span></span>
+<span><span class="co">#      expr       min         lq       mean     median         uq        max neval</span></span>
+<span><span class="co">#     dplyr 855.00033 1050.57461 1085.26560 1091.96200 1128.56492 1343.44629    10</span></span>
+<span><span class="co">#  collapse  30.53785   32.99972   38.05788   34.15113   36.89943   74.89073    10</span></span>
 <span></span>
 <span><span class="co">## Mean</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">mean.default</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min       lq       mean     median         uq       max neval</span></span>
-<span><span class="co">#     dplyr 17079.244 19230.56 26312.6617 20340.5840 23364.8960 100665.80   100</span></span>
-<span><span class="co">#  collapse   185.726   197.21   233.6336   230.1395   252.2815    762.85   100</span></span>
+<span><span class="co">#      expr       min        lq       mean     median         uq       max neval</span></span>
+<span><span class="co">#     dplyr 13385.026 16910.073 26333.0262 20049.7420 24885.4460 175810.33   100</span></span>
+<span><span class="co">#  collapse   144.772   162.101   366.6859   209.1105   254.9425   8991.48   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">mean.default</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#      expr        min         lq       mean     median         uq        max neval</span></span>
-<span><span class="co">#     dplyr 2729.55750 2973.29368 3281.72231 3214.84642 3548.82327 4052.65345    10</span></span>
-<span><span class="co">#  collapse   28.10356   28.88147   35.21559   29.58351   39.85747   56.47565    10</span></span>
+<span><span class="co">#     dplyr 1873.77744 1977.46925 2143.08215 2112.45755 2186.68468 2657.56764    10</span></span>
+<span><span class="co">#  collapse   24.39245   25.19839   26.98526   25.49497   27.97021   33.45597    10</span></span>
 <span></span>
 <span><span class="co">## Median</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">median</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min        lq       mean     median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 63026.104 69367.054 89149.6580 77903.8240 96526.554 219395.44   100</span></span>
-<span><span class="co">#  collapse   260.933   282.122   570.4541   336.4815   360.091  21945.54   100</span></span>
+<span><span class="co">#      expr      min        lq       mean    median        uq       max neval</span></span>
+<span><span class="co">#     dplyr 37367.78 39335.160 45854.8905 43257.253 48856.560 91622.319   100</span></span>
+<span><span class="co">#  collapse   202.95   218.512   255.2746   240.502   281.503   411.407   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">median</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr         min          lq       mean     median          uq         max neval</span></span>
-<span><span class="co">#     dplyr 15044.46023 15044.46023 15866.2566 15866.2566 16688.05291 16688.05291     2</span></span>
-<span><span class="co">#  collapse    34.71007    34.71007    35.6952    35.6952    36.68033    36.68033     2</span></span>
+<span><span class="co">#      expr        min         lq       mean     median         uq        max neval</span></span>
+<span><span class="co">#     dplyr 7603.69450 7603.69450 7649.57389 7649.57389 7695.45327 7695.45327     2</span></span>
+<span><span class="co">#  collapse   28.64439   28.64439   33.58288   33.58288   38.52137   38.52137     2</span></span>
 <span></span>
 <span><span class="co">## Standard Deviation</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">sd</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min         lq       mean     median        uq        max neval</span></span>
-<span><span class="co">#     dplyr 31040.752 33256.1970 41400.3501 34880.2465 41368.252 132796.393   100</span></span>
-<span><span class="co">#  collapse   333.904   352.1915   412.4977   385.0745   413.615    896.673   100</span></span>
+<span><span class="co">#      expr       min         lq       mean    median         uq        max neval</span></span>
+<span><span class="co">#     dplyr 21190.845 28692.2005 35251.0626 32079.286 37654.2725 121825.166   100</span></span>
+<span><span class="co">#  collapse   252.574   292.8115   343.2063   327.238   374.3835   1016.549   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">sd</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#      expr        min         lq       mean     median         uq        max neval</span></span>
-<span><span class="co">#     dplyr 5914.62462 5914.62462 6190.51241 6190.51241 6466.40020 6466.40020     2</span></span>
-<span><span class="co">#  collapse   62.34681   62.34681   63.83889   63.83889   65.33098   65.33098     2</span></span>
+<span><span class="co">#     dplyr 4103.08602 4103.08602 4274.06269 4274.06269 4445.03937 4445.03937     2</span></span>
+<span><span class="co">#  collapse   49.63543   49.63543   50.26219   50.26219   50.88895   50.88895     2</span></span>
 <span></span>
 <span><span class="co">## Maximum</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">max</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr        min          lq        mean      median          uq        max neval</span></span>
-<span><span class="co">#     dplyr 178904.213 194170.5565 230959.3503 200833.9080 239002.6835 534713.116   100</span></span>
-<span><span class="co">#  collapse    126.299    136.2585    204.8854    175.4465    181.0235   3691.226   100</span></span>
+<span><span class="co">#      expr        min         lq        mean     median         uq        max neval</span></span>
+<span><span class="co">#     dplyr 112321.811 122863.191 139038.5310 128539.530 141166.506 358066.585   100</span></span>
+<span><span class="co">#  collapse     80.671     92.546    122.4531    120.405    134.809    525.523   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">max</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr      min         lq      mean     median         uq        max neval</span></span>
-<span><span class="co">#     dplyr 1755.393 1969.75962 2290.9698 2175.90463 2468.35794 3301.34866    10</span></span>
-<span><span class="co">#  collapse   15.205   15.40087   16.6548   15.72122   17.78208   21.83369    10</span></span>
+<span><span class="co">#      expr        min         lq       mean     median         uq        max neval</span></span>
+<span><span class="co">#     dplyr 1290.97395 1366.53438 1512.92653 1430.15675 1469.24635 2202.48264    10</span></span>
+<span><span class="co">#  collapse   12.73822   12.93312   14.89407   14.46432   16.95245   18.07442    10</span></span>
 <span></span>
 <span><span class="co">## First Value</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">first</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/ffirst_flast.html">ffirst</a></span><span class="op">(</span><span class="va">cgGGDC10S</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min         lq       mean    median         uq        max neval</span></span>
-<span><span class="co">#     dplyr 39530.442 42725.3090 54275.8533 44897.988 52470.6230 262132.209   100</span></span>
-<span><span class="co">#  collapse    50.705    57.4135    92.5109    95.762   101.0995    484.431   100</span></span>
+<span><span class="co">#      expr       min        lq       mean     median         uq       max neval</span></span>
+<span><span class="co">#     dplyr 24395.840 26241.971 29601.1568 27135.9595 30711.6700 94263.460   100</span></span>
+<span><span class="co">#  collapse    28.034    33.142   105.8872    65.1845    73.9545  4997.902   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">first</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/ffirst_flast.html">ffirst</a></span><span class="op">(</span><span class="va">cgdata</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr         min        lq        mean      median          uq         max neval</span></span>
-<span><span class="co">#     dplyr 7892.747905 7970.5452 8255.155082 8085.733980 8722.084917 8831.627871    10</span></span>
-<span><span class="co">#  collapse    3.032833    3.0884    3.216127    3.190049    3.339126    3.479598    10</span></span>
+<span><span class="co">#      expr         min          lq        mean    median          uq       max neval</span></span>
+<span><span class="co">#     dplyr 4795.087915 4919.207325 5237.474798 5105.8093 5450.181658 6253.3524    10</span></span>
+<span><span class="co">#  collapse    2.576569    2.912223    3.007492    3.0286    3.190933    3.2267    10</span></span>
 <span></span>
 <span><span class="co">## Number of Distinct Values</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">n_distinct</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min        lq       mean    median         uq        max neval</span></span>
-<span><span class="co">#     dplyr 48517.328 54999.685 64982.2983 58639.363 68043.2985 161410.873   100</span></span>
-<span><span class="co">#  collapse   384.674   434.352   486.9321   448.332   506.9455   1455.345   100</span></span>
+<span><span class="co">#      expr       min        lq       mean    median        uq        max neval</span></span>
+<span><span class="co">#     dplyr 27506.096 28925.774 34296.1725 30069.817 34460.140 100279.719   100</span></span>
+<span><span class="co">#  collapse   316.807   328.195   395.0152   370.805   381.181   1453.526   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">n_distinct</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr        min         lq        mean     median          uq         max neval</span></span>
-<span><span class="co">#     dplyr 8998.78209 9635.89792 10143.90815 9697.07670 10180.90355 12206.88048     5</span></span>
-<span><span class="co">#  collapse   71.38415   76.62959    76.71527   77.25746    77.95823    80.34691     5</span></span>
+<span><span class="co">#      expr        min         lq       mean     median         uq        max neval</span></span>
+<span><span class="co">#     dplyr 5198.57616 5251.60189 6428.01509 6307.25842 6992.15553 8390.48347     5</span></span>
+<span><span class="co">#  collapse   61.16762   65.81193   69.45693   69.42104   73.01821   77.86583     5</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span></span>
-<span><span class="co"># Ncells  2073447 110.8    4512655 241.1         NA  4512655 241.1</span></span>
-<span><span class="co"># Vcells 19384643 147.9   56661488 432.3      16384 65372818 498.8</span></span></code></pre></div>
+<span><span class="co"># Ncells  2073447 110.8    4611094 246.3         NA  4611094 246.3</span></span>
+<span><span class="co"># Vcells 19384634 147.9   56661487 432.3      16384 65372818 498.8</span></span></code></pre></div>
 <!-- The benchmarks show that at this data size efficient primitives like `base::sum` or `base::max` can still deliver very decent performance with `summarize`. Less optimized base functions like `mean`, `median` and `sd` however take multiple seconds to compute, and here `collapse` fast functions really prove to be very useful complements to the *dplyr* system. -->
 <!-- Weighted statistics are also performed extremely fast by *collapse* functions. I would not know how to compute weighted statistics by groups in *dplyr*, as it would require the weighting variable to be split as well, which seems impossible in native *dplyr*. -->
 <!-- A further highlight of *collapse* is the extremely fast statistical mode function, which can also compute a weighted mode. Fast categorical aggregation has been an issue in R, and defining a mode function from base R and applying it to 17000 groups will probably let it run at least a minute. `fmode` reduces this time to half a second. -->
@@ -1978,58 +1978,58 @@ efficiently be performed with <em>dplyr</em>.</p>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">cgGGDC10S</span>, <span class="va">SUM</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                   expr     min       lq     mean  median       uq     max neval</span></span>
-<span><span class="co">#  fmean(cgGGDC10S, SUM) 230.282 232.4315 246.7798 235.622 255.7925 454.169   100</span></span>
+<span><span class="co">#                   expr     min      lq     mean   median      uq     max neval</span></span>
+<span><span class="co">#  fmean(cgGGDC10S, SUM) 156.818 159.008 162.0084 159.7905 160.771 300.897   100</span></span>
 <span></span>
 <span><span class="co"># Large </span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="va">SUM</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                expr      min       lq    mean   median       uq      max neval</span></span>
-<span><span class="co">#  fmean(cgdata, SUM) 34.16392 35.82445 36.7079 36.76555 37.92163 38.81693    10</span></span>
+<span><span class="co">#                expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fmean(cgdata, SUM) 26.56011 26.93547 27.45887 27.50563 27.85627 28.78057    10</span></span>
 <span></span>
 <span><span class="co">## Weighted Standard-Deviation</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">cgGGDC10S</span>, <span class="va">SUM</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                 expr     min       lq    mean   median      uq      max neval</span></span>
-<span><span class="co">#  fsd(cgGGDC10S, SUM) 359.023 376.5015 437.779 411.3265 460.692 1614.173   100</span></span>
+<span><span class="co">#                 expr     min       lq     mean   median       uq     max neval</span></span>
+<span><span class="co">#  fsd(cgGGDC10S, SUM) 259.965 261.8665 268.2476 262.9355 265.3565 405.921   100</span></span>
 <span></span>
 <span><span class="co"># Large </span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="va">SUM</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#              expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fsd(cgdata, SUM) 64.05845 66.47589 68.22244 68.08179 70.59172 71.22616    10</span></span>
+<span><span class="co">#  fsd(cgdata, SUM) 49.00464 49.23427 55.75941 52.76809 54.75977 85.27689    10</span></span>
 <span></span>
 <span><span class="co">## Statistical Mode</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmode.html">fmode</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#              expr     min       lq     mean  median       uq     max neval</span></span>
-<span><span class="co">#  fmode(cgGGDC10S) 578.737 589.0085 646.6987 602.488 682.7245 1158.85   100</span></span>
+<span><span class="co">#              expr     min      lq     mean  median       uq    max neval</span></span>
+<span><span class="co">#  fmode(cgGGDC10S) 441.843 443.029 447.0182 443.978 445.2655 545.78   100</span></span>
 <span></span>
 <span><span class="co"># Large </span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmode.html">fmode</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#           expr     min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fmode(cgdata) 106.425 111.0382 114.3062 112.7176 118.8967 120.5805    10</span></span>
+<span><span class="co">#           expr      min      lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fmode(cgdata) 83.89885 85.7455 97.24598 86.95277 90.13562 186.2964    10</span></span>
 <span></span>
 <span><span class="co">## Weighted Statistical Mode</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmode.html">fmode</a></span><span class="op">(</span><span class="va">cgGGDC10S</span>, <span class="va">SUM</span><span class="op">)</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                   expr     min      lq     mean   median      uq     max neval</span></span>
-<span><span class="co">#  fmode(cgGGDC10S, SUM) 683.035 688.002 716.9455 694.4385 711.202 998.867   100</span></span>
+<span><span class="co">#                   expr    min      lq     mean   median       uq     max neval</span></span>
+<span><span class="co">#  fmode(cgGGDC10S, SUM) 537.26 539.078 545.7441 541.0875 545.5725 643.106   100</span></span>
 <span></span>
 <span><span class="co"># Large </span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmode.html">fmode</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="va">SUM</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                expr      min       lq     mean  median       uq      max neval</span></span>
-<span><span class="co">#  fmode(cgdata, SUM) 128.0936 131.6702 134.3454 133.566 137.5173 142.5145    10</span></span>
+<span><span class="co">#                expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fmode(cgdata, SUM) 100.4183 101.1537 110.5499 104.6902 109.5642 151.6454    10</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span></span>
-<span><span class="co"># Ncells  2072901 110.8    4512655 241.1         NA  4512655 241.1</span></span>
-<span><span class="co"># Vcells 19381263 147.9   58032987 442.8      16384 68305568 521.2</span></span></code></pre></div>
+<span><span class="co"># Ncells  2072901 110.8    4611094 246.3         NA  4611094 246.3</span></span>
+<span><span class="co"># Vcells 19381254 147.9   58032973 442.8      16384 68305553 521.2</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="transformation">3.2 Transformation<a class="anchor" aria-label="anchor" href="#transformation"></a>
@@ -2041,68 +2041,68 @@ efficiently be performed with <em>dplyr</em>.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">cgGGDC10S</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min        lq       mean     median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 27582.807 31976.090 36411.7421 35354.1190 38294.175 77227.418   100</span></span>
-<span><span class="co">#  collapse   335.696   565.382   646.2039   605.9785   707.277  1029.786   100</span></span>
+<span><span class="co">#      expr      min         lq       mean    median         uq       max neval</span></span>
+<span><span class="co">#     dplyr 18483.97 19827.2520 23359.1860 20762.252 23623.2080 47413.637   100</span></span>
+<span><span class="co">#  collapse   371.75   414.3245   460.0509   443.235   476.3865   900.201   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="va">sum</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">cgdata</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr        min         lq      mean     median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 1529.69598 1542.88282 1775.5804 1819.75405 1909.4175 2129.5758    10</span></span>
-<span><span class="co">#  collapse   90.76869   92.20908  225.3312   98.69186  445.7811  538.5421    10</span></span>
+<span><span class="co">#      expr        min         lq       mean    median        uq       max neval</span></span>
+<span><span class="co">#     dplyr 1154.63931 1379.10850 1534.86793 1523.3109 1574.8650 2251.9959    10</span></span>
+<span><span class="co">#  collapse   70.78541   72.90159   92.67097   74.1252  103.0861  187.8931    10</span></span>
 <span></span>
 <span><span class="co">## Dividing by group sum</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">cgGGDC10S</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min       lq       mean     median        uq      max neval</span></span>
-<span><span class="co">#     dplyr 29428.239 30561.24 33756.6629 31903.8550 33411.690 64263.78   100</span></span>
-<span><span class="co">#  collapse   704.216   743.35   818.0745   784.2875   823.993  1740.88   100</span></span>
+<span><span class="co">#      expr       min        lq       mean    median       uq       max neval</span></span>
+<span><span class="co">#     dplyr 18958.273 20018.919 29223.8436 24174.423 35972.38 74787.827   100</span></span>
+<span><span class="co">#  collapse   413.941   455.603   573.2832   503.789   639.23  1261.917   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">cgdata</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr       min        lq     mean    median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 1986.6514 2369.3307 2508.369 2506.5150 2631.8752 2875.7785    10</span></span>
-<span><span class="co">#  collapse  125.5158  134.7924  175.230  140.1392  154.4234  475.5807    10</span></span>
+<span><span class="co">#      expr        min         lq     mean     median        uq       max neval</span></span>
+<span><span class="co">#     dplyr 1433.51522 1681.04034 1784.196 1834.87892 1939.4227 2021.3163    10</span></span>
+<span><span class="co">#  collapse   81.79295   82.07277  130.041   82.96275  109.0498  457.2566    10</span></span>
 <span></span>
 <span><span class="co">## Centering</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean.default</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min        lq       mean     median         uq       max neval</span></span>
-<span><span class="co">#     dplyr 33140.623 37236.221 43710.2077 40235.8270 45209.7215 82282.080   100</span></span>
-<span><span class="co">#  collapse   500.024   571.261   693.4303   607.8165   703.6215  1974.407   100</span></span>
+<span><span class="co">#      expr      min        lq      mean    median        uq       max neval</span></span>
+<span><span class="co">#     dplyr 21432.47 22666.477 25970.873 23808.434 25026.252 56542.514   100</span></span>
+<span><span class="co">#  collapse   251.71   392.491   443.122   433.342   466.499  1452.159   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean.default</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr        min         lq      mean    median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 3162.26940 3861.99016 4058.6139 4116.5988 4328.7428 4600.9298    10</span></span>
-<span><span class="co">#  collapse   91.55568   95.57101  113.0531   99.1854  117.3757  216.5097    10</span></span>
+<span><span class="co">#      expr        min         lq       mean     median         uq       max neval</span></span>
+<span><span class="co">#     dplyr 2126.60978 2617.91598 2767.84063 2760.71163 3051.91440 3153.5910    10</span></span>
+<span><span class="co">#  collapse   64.62847   70.29395   86.38349   76.74978   99.87323  142.6302    10</span></span>
 <span></span>
 <span><span class="co">## Centering and Scaling (Standardizing)</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean.default</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr       min        lq       mean    median        uq       max neval</span></span>
-<span><span class="co">#     dplyr 55271.924 61099.064 66654.2510 63739.011 66928.568 97131.954   100</span></span>
-<span><span class="co">#  collapse   442.656   658.414   712.0637   695.795   747.039   998.523   100</span></span>
+<span><span class="co">#      expr       min         lq       mean    median        uq       max neval</span></span>
+<span><span class="co">#     dplyr 34287.286 38549.5850 47647.4930 44719.395 53562.693 99020.703   100</span></span>
+<span><span class="co">#  collapse   340.487   509.5255   564.2411   547.878   593.462   850.184   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean.default</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#      expr       min        lq      mean    median         uq        max neval</span></span>
-<span><span class="co">#     dplyr 9350.0818 9350.0818 9772.5129 9772.5129 10194.9441 10194.9441     2</span></span>
-<span><span class="co">#  collapse  119.6394  119.6394  121.7404  121.7404   123.8413   123.8413     2</span></span>
+<span><span class="co">#      expr       min        lq      mean    median        uq       max neval</span></span>
+<span><span class="co">#     dplyr 5574.7383 5574.7383 6498.2430 6498.2430 7421.7476 7421.7476     2</span></span>
+<span><span class="co">#  collapse  103.8387  103.8387  108.7523  108.7523  113.6658  113.6658     2</span></span>
 <span></span>
 <span><span class="co">## Lag</span></span>
 <span><span class="co"># Small</span></span>
@@ -2111,11 +2111,11 @@ efficiently be performed with <em>dplyr</em>.</p>
 <span>               dplyr_ordered <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="fu"><a href="../reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">x</span>, order_by <span class="op">=</span> <span class="va">Year</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse_ordered <span class="op">=</span> <span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">cgGGDC10S</span>, t <span class="op">=</span> <span class="va">Year</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                expr        min          lq        mean      median          uq        max neval</span></span>
-<span><span class="co">#     dplyr_unordered  57371.380  62996.9815  69882.8553  66005.9565  74347.3695 141768.625   100</span></span>
-<span><span class="co">#  collapse_unordered    181.834    384.9180    442.2092    437.3425    488.1695    772.837   100</span></span>
-<span><span class="co">#       dplyr_ordered 100464.123 110586.2655 119674.9277 118229.2450 124570.3030 179400.002   100</span></span>
-<span><span class="co">#    collapse_ordered    251.411    435.4185    499.2638    493.9575    549.0685    794.144   100</span></span>
+<span><span class="co">#                expr       min         lq       mean    median        uq        max neval</span></span>
+<span><span class="co">#     dplyr_unordered 33333.318 36046.5860 46374.1497 40392.064 48229.883 194355.803   100</span></span>
+<span><span class="co">#  collapse_unordered   141.476   294.9755   345.5896   336.814   387.178    713.143   100</span></span>
+<span><span class="co">#       dplyr_ordered 57174.305 65150.9940 77667.8889 73921.944 82935.723 202810.915   100</span></span>
+<span><span class="co">#    collapse_ordered   208.888   361.6825   432.9916   406.161   482.243    726.714   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr_unordered <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="fu"><a href="../reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="va"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">)</span><span class="op">)</span>,</span>
@@ -2124,32 +2124,32 @@ efficiently be performed with <em>dplyr</em>.</p>
 <span>               collapse_ordered <span class="op">=</span> <span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">cgdata</span>, t <span class="op">=</span> <span class="va">Year</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#                expr         min          lq        mean      median          uq         max neval</span></span>
-<span><span class="co">#     dplyr_unordered 13234.82863 13234.82863 13579.20309 13579.20309 13923.57755 13923.57755     2</span></span>
-<span><span class="co">#  collapse_unordered    34.79423    34.79423    47.45244    47.45244    60.11065    60.11065     2</span></span>
-<span><span class="co">#       dplyr_ordered 22437.98594 22437.98594 23167.66779 23167.66779 23897.34964 23897.34964     2</span></span>
-<span><span class="co">#    collapse_ordered    51.10446    51.10446    65.54471    65.54471    79.98497    79.98497     2</span></span>
+<span><span class="co">#     dplyr_unordered  7006.99452  7006.99452  7191.84057  7191.84057  7376.68662  7376.68662     2</span></span>
+<span><span class="co">#  collapse_unordered    56.72877    56.72877   278.84518   278.84518   500.96158   500.96158     2</span></span>
+<span><span class="co">#       dplyr_ordered 12484.15414 12484.15414 12952.26922 12952.26922 13420.38430 13420.38430     2</span></span>
+<span><span class="co">#    collapse_ordered    64.23039    64.23039    68.13367    68.13367    72.03694    72.03694     2</span></span>
 <span></span>
 <span><span class="co">## First-Difference (unordered)</span></span>
 <span><span class="co"># Small</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr_unordered <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gGGDC10S</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse_unordered <span class="op">=</span> <span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">cgGGDC10S</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                expr       min        lq      mean    median        uq        max neval</span></span>
-<span><span class="co">#     dplyr_unordered 77232.338 81713.628 89449.939 84339.619 91480.226 307164.663   100</span></span>
-<span><span class="co">#  collapse_unordered   238.958   430.351   481.933   477.978   505.053    955.999   100</span></span>
+<span><span class="co">#                expr       min         lq       mean     median         uq        max neval</span></span>
+<span><span class="co">#     dplyr_unordered 45622.754 47519.8780 58680.0689 53940.5755 63682.3485 129569.489   100</span></span>
+<span><span class="co">#  collapse_unordered   169.227   314.7225   365.3824   358.5565   392.6225    616.789   100</span></span>
 <span></span>
 <span><span class="co"># Large</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>dplyr_unordered <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">gdata</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span> <span class="op">-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/lead-lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse_unordered <span class="op">=</span> <span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">cgdata</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                expr        min         lq       mean     median          uq         max neval</span></span>
-<span><span class="co">#     dplyr_unordered 13734.9920 13734.9920 13832.8679 13832.8679 13930.74389 13930.74389     2</span></span>
-<span><span class="co">#  collapse_unordered    63.6197    63.6197    67.2014    67.2014    70.78311    70.78311     2</span></span>
+<span><span class="co">#                expr        min         lq       mean     median        uq       max neval</span></span>
+<span><span class="co">#     dplyr_unordered 7840.74812 7840.74812 7922.71160 7922.71160 8004.6751 8004.6751     2</span></span>
+<span><span class="co">#  collapse_unordered   52.93773   52.93773   55.04856   55.04856   57.1594   57.1594     2</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span></span>
-<span><span class="co"># Ncells  2080272 111.1    4512655 241.1         NA  4512655 241.1</span></span>
-<span><span class="co"># Vcells 19398699 148.1   69719584 532.0      16384 69719577 532.0</span></span></code></pre></div>
+<span><span class="co"># Ncells  2080272 111.1    4611096 246.3         NA  4611096 246.3</span></span>
+<span><span class="co"># Vcells 19398685 148.1   69719567 532.0      16384 69719567 532.0</span></span></code></pre></div>
 <p>Below again some benchmarks for transformations not easily of
 efficiently performed with <em>dplyr</em>, such as centering on the
 overall mean, mean-preserving scaling, weighted scaling and centering,
@@ -2159,18 +2159,18 @@ rates.</p>
 <code class="sourceCode R"><span><span class="co"># Centering on overall mean</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">cgdata</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                                    expr      min      lq    mean   median       uq      max neval</span></span>
-<span><span class="co">#  fwithin(cgdata, mean = "overall.mean") 64.60858 83.4396 83.2804 83.92888 84.30549 95.31003    10</span></span>
+<span><span class="co">#                                    expr      min       lq     mean   median       uq     max neval</span></span>
+<span><span class="co">#  fwithin(cgdata, mean = "overall.mean") 54.33268 71.66218 74.09292 73.04617 76.54282 92.4619    10</span></span>
 <span></span>
 <span><span class="co"># Weighted Centering</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="va">SUM</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                  expr      min      lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fwithin(cgdata, SUM) 67.03557 82.9057 86.74555 84.65217 86.65467 108.6206    10</span></span>
+<span><span class="co">#                  expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fwithin(cgdata, SUM) 68.41163 69.52424 81.03627 75.65848 91.25386 105.0776    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="va">SUM</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                                         expr      min       lq     mean   median       uq      max</span></span>
-<span><span class="co">#  fwithin(cgdata, SUM, mean = "overall.mean") 70.51988 84.80797 87.71794 85.61452 88.68865 105.5808</span></span>
+<span><span class="co">#                                         expr      min      lq   mean   median       uq      max</span></span>
+<span><span class="co">#  fwithin(cgdata, SUM, mean = "overall.mean") 55.17595 68.5795 76.499 70.41567 83.63959 102.2548</span></span>
 <span><span class="co">#  neval</span></span>
 <span><span class="co">#     10</span></span>
 <span></span>
@@ -2178,29 +2178,29 @@ rates.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="va">SUM</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#                         expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fsd(cgdata, SUM, TRA = "/") 126.2967 138.9788 146.4787 142.3566 145.0794 174.5103    10</span></span>
+<span><span class="co">#  fsd(cgdata, SUM, TRA = "/") 85.32317 92.24285 101.7321 93.46517 97.80212 140.7295    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="va">SUM</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                 expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fscale(cgdata, SUM) 77.24717 93.15284 106.0689 110.7632 114.4728 121.3115    10</span></span>
+<span><span class="co">#                 expr      min       lq    mean   median       uq      max neval</span></span>
+<span><span class="co">#  fscale(cgdata, SUM) 64.14197 87.34255 89.3464 89.32641 98.97675 110.7183    10</span></span>
 <span></span>
 <span><span class="co"># Sequence of lags and leads</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                expr      min       lq     mean   median      uq      max neval</span></span>
-<span><span class="co">#  flag(cgdata, -1:1) 83.75184 86.01758 119.1859 103.5179 116.376 295.6639    10</span></span>
+<span><span class="co">#                expr     min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  flag(cgdata, -1:1) 69.3025 77.37085 107.5915 94.00964 105.0251 263.8179    10</span></span>
 <span></span>
 <span><span class="co"># Iterated difference</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">cgdata</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                 expr     min      lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fdiff(cgdata, 1, 2) 49.3195 74.4516 80.20538 84.93967 88.18454 90.03326    10</span></span>
+<span><span class="co">#                 expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fdiff(cgdata, 1, 2) 44.57656 68.29862 75.50929 76.67841 84.47875 98.64239    10</span></span>
 <span></span>
 <span><span class="co"># Growth Rate</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">cgdata</span>,<span class="fl">1</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fgrowth(cgdata, 1) 52.84824 69.09605 79.45303 83.82749 87.17924 93.12814    10</span></span></code></pre></div>
+<span><span class="co">#                expr      min      lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fgrowth(cgdata, 1) 26.42577 41.5204 50.53444 55.27656 56.98136 69.26745    10</span></span></code></pre></div>
 <!-- Again the benchmarks show stunning performance gains using *collapse* functions. -->
 </div>
 </div>

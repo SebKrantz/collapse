@@ -252,9 +252,9 @@ question):</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fmean</span>,</span>
 <span>               data.table <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">mean</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#        expr      min       lq     mean    median       uq      max neval</span></span>
-<span><span class="co">#    collapse  328.383  478.689 1216.415  589.1945  974.512 12600.25   100</span></span>
-<span><span class="co">#  data.table 1555.796 1942.702 4375.936 2352.0445 6323.611 20632.50   100</span></span></code></pre></div>
+<span><span class="co">#        expr     min        lq     mean    median        uq       max neval</span></span>
+<span><span class="co">#    collapse 252.330  275.6085  332.997  298.4665  348.1225   939.719   100</span></span>
+<span><span class="co">#  data.table 992.642 1066.3575 1367.537 1153.3465 1293.1450 10105.545   100</span></span></code></pre></div>
 <p>It is critical to never do something like this:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">fmean</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span></span>
@@ -278,7 +278,7 @@ applied to.</p>
 <code class="sourceCode R"><span><span class="va">fmean</span></span>
 <span><span class="co"># function (x, ...) </span></span>
 <span><span class="co"># UseMethod("fmean")</span></span>
-<span><span class="co"># &lt;bytecode: 0x7ff01d949b30&gt;</span></span>
+<span><span class="co"># &lt;bytecode: 0x7fc1916fd6d0&gt;</span></span>
 <span><span class="co"># &lt;environment: namespace:collapse&gt;</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span><span class="va">fmean</span><span class="op">)</span></span>
 <span><span class="co"># [1] fmean.data.frame  fmean.default     fmean.grouped_df* fmean.list*       fmean.matrix     </span></span>
@@ -441,12 +441,12 @@ I drive this point home with a benchmark:</p>
 <span>               hybrid_bad <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">fmean</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span>,</span>
 <span>               hybrid_ok <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span>, .SDcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#             expr       min         lq       mean    median         uq        max neval</span></span>
-<span><span class="co">#         collapse   327.549   453.2885   697.9646   533.713   612.0695   6263.171   100</span></span>
-<span><span class="co">#       data.table  1509.337  1735.3075  3142.9515  1938.503  3045.4740  13700.968   100</span></span>
-<span><span class="co">#  data.table_base 10255.356 13357.6780 20785.3657 17066.572 22433.1605  68446.631   100</span></span>
-<span><span class="co">#       hybrid_bad  7212.712  9038.3030 16616.1223 12606.113 16464.5990 136732.817   100</span></span>
-<span><span class="co">#        hybrid_ok   992.078  1229.5645  1931.5860  1361.079  1721.3360  12670.482   100</span></span></code></pre></div>
+<span><span class="co">#             expr      min        lq       mean    median         uq       max neval</span></span>
+<span><span class="co">#         collapse  248.474  337.4805   457.1017  388.8280   497.8075  4556.473   100</span></span>
+<span><span class="co">#       data.table 1025.552 1170.9245  1468.5044 1304.4540  1763.6080  4143.684   100</span></span>
+<span><span class="co">#  data.table_base 6456.728 6998.3610 10246.9714 8735.6300 11351.9885 25524.078   100</span></span>
+<span><span class="co">#       hybrid_bad 5028.770 5286.1375  7866.6892 6945.6875  8646.4445 50109.001   100</span></span>
+<span><span class="co">#        hybrid_ok  693.850  809.4125  1003.2509  929.0395  1215.3070  1573.449   100</span></span></code></pre></div>
 <p>It is evident that <em>data.table</em> has some overhead, so there is
 absolutely no need to do this kind of syntax manipulation.</p>
 <p>There is more scope to use <em>collapse</em> transformation functions
@@ -564,22 +564,22 @@ data first.</p>
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#  expr       min        lq       mean    median         uq        max neval</span></span>
-<span><span class="co">#    S1 1528.7277 1581.3810  1696.2267 1709.7872  1826.1201  1835.1174     5</span></span>
-<span><span class="co">#    S2  149.4926  155.8566   285.5356  161.2238   423.2747   537.8304     5</span></span>
-<span><span class="co">#    S3  151.0816  157.2713   247.8269  251.5658   336.0137   343.2020     5</span></span>
-<span><span class="co">#    W1 4500.1265 4753.3519  5147.7386 4967.5932  5509.2296  6008.3919     5</span></span>
-<span><span class="co">#    W2  135.1257  191.0122   207.8758  220.1489   245.3073   247.7848     5</span></span>
-<span><span class="co">#    L1 9354.3977 9706.8016 10168.6824 9790.5238 10725.4965 11266.1924     5</span></span>
-<span><span class="co">#    L2  215.0966  353.6536   430.0357  518.7228   526.0370   536.6683     5</span></span>
-<span><span class="co">#    L3 5939.1075 7200.8582  7732.5833 7935.5575  7935.7362  9651.6571     5</span></span>
-<span><span class="co">#    L4  107.3116  117.6704   220.2044  200.4814   225.8586   449.7003     5</span></span>
+<span><span class="co">#  expr       min        lq      mean    median        uq        max neval</span></span>
+<span><span class="co">#    S1 1115.1950 1137.4704 1526.6244 1300.7474 1812.2216  2267.4875     5</span></span>
+<span><span class="co">#    S2  147.1879  149.2048  232.0877  175.0402  249.2680   439.7376     5</span></span>
+<span><span class="co">#    S3  136.6298  159.5497  192.8573  203.0955  205.9997   259.0117     5</span></span>
+<span><span class="co">#    W1 2479.1147 2701.8680 3068.6419 3325.1006 3389.1638  3447.9626     5</span></span>
+<span><span class="co">#    W2  129.1877  138.0314  516.9350  218.4978  227.2014  1871.7566     5</span></span>
+<span><span class="co">#    L1 6344.6999 6351.0759 7010.9429 7230.3855 7443.0810  7685.4720     5</span></span>
+<span><span class="co">#    L2  221.2008  266.9453  308.0814  343.5123  348.3806   360.3678     5</span></span>
+<span><span class="co">#    L3 4320.5062 4388.1375 5900.1622 4696.4427 4801.6432 11294.0815     5</span></span>
+<span><span class="co">#    L4  113.7540  126.7249  220.6051  193.4823  259.3308   409.7332     5</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">DT_large</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#           used (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)</span></span>
-<span><span class="co"># Ncells 1115637 59.6    2158805  115.3         NA   2158805  115.3</span></span>
-<span><span class="co"># Vcells 2394854 18.3  273800503 2089.0      16384 281245694 2145.8</span></span></code></pre></div>
+<span><span class="co"># Ncells 1115637 59.6    2158807  115.3         NA   2158807  115.3</span></span>
+<span><span class="co"># Vcells 2394849 18.3  273800500 2089.0      16384 281245839 2145.8</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="further-collapse-features-supporting-data-tables">Further <em>collapse</em> features supporting
@@ -632,8 +632,8 @@ useful to use in <em>data.table</em> based workflows.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">m</span>, <span class="st">"car"</span><span class="op">)</span>, <span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="va">m</span>, <span class="cn">TRUE</span>, <span class="st">"data.table"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#                         expr    min      lq     mean  median      uq    max neval</span></span>
-<span><span class="co">#                qDT(m, "car") 19.418 21.2675 25.86192 23.4505 28.1275 57.574   100</span></span>
-<span><span class="co">#  mrtl(m, TRUE, "data.table") 11.241 12.2410 13.55890 12.8545 13.5645 58.077   100</span></span></code></pre></div>
+<span><span class="co">#                qDT(m, "car") 12.092 12.4810 14.06302 12.7295 13.4905 35.257   100</span></span>
+<span><span class="co">#  mrtl(m, TRUE, "data.table")  7.582  8.2335  9.93843  8.5535  9.0775 35.304   100</span></span></code></pre></div>
 <p>For example we could regress the growth rate of GDP per capita on the
 Growth rate of life expectancy in each country and save results in a
 <em>data.table</em>:</p>
@@ -694,9 +694,9 @@ also use <code><a href="../reference/flm.html">collapse::flm</a></code> together
 <span>    keyby <span class="op">=</span> <span class="va">country</span><span class="op">]</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#  expr       min        lq      mean    median        uq       max neval</span></span>
-<span><span class="co">#     A 248.77202 304.01271 380.01833 360.18311 437.58353 854.32562   100</span></span>
-<span><span class="co">#     B  13.48993  14.63227  20.75958  17.17275  22.05491  88.25205   100</span></span></code></pre></div>
+<span><span class="co">#  expr        min         lq      mean     median        uq       max neval</span></span>
+<span><span class="co">#     A 165.533857 209.223889 257.80565 240.406407 273.80569 615.89611   100</span></span>
+<span><span class="co">#     B   7.490859   8.312728  10.97617   9.206593  12.97197  31.90226   100</span></span></code></pre></div>
 <p>Another feature to highlight at this point are <em>collapse</em>’s
 list processing functions, in particular <code>rsplit</code>,
 <code>rapply2d</code>, <code>get_elem</code> and <code>unlist2d</code>.

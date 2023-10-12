@@ -89,7 +89,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2023-10-11</h4>
+            <h4 data-toc-skip class="date">2023-10-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
@@ -125,7 +125,7 @@ operations and optimized R code, typically runs much faster than native
 dependencies).</p>
 <p>Its aim is not to create a faster <em>tidyverse</em>, i.e., it does
 not implements all aspects of the rich <em>tidyverse</em> grammar or
-changes to it<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Notably, tidyselect, lamda expressions, and many of the
+changes to it<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Notably, tidyselect, lambda expressions, and many of the
 smaller helper functions are left out.&lt;/p&gt;"><sup>1</sup></a>, and also takes inspiration from other
 leading data manipulation libraries to serve broad aims of performance,
 parsimony, complexity, and robustness in data manipulation for R.</p>
@@ -271,12 +271,11 @@ grouped data, so if we did not want to calculate the weighted mean of
 <p>Note that all functions in <em>collapse</em>, including the <em>Fast
 Statistical Functions</em>, have the default <code>na.rm = TRUE</code>,
 i.e., missing values are skipped in calculations. This can be changed
-using <code>set_collpase(na.rm = FALSE)</code> to give behavior more
+using <code>set_collapse(na.rm = FALSE)</code> to give behavior more
 consistent with base R.</p>
 <p>Another thing to be aware of when using <em>Fast Statistical
 Functions</em> inside data manipulation functions is that they toggle
-vectorized execution wherever they are used. Expressions containing them
-are fully vectorized e.g. </p>
+vectorized execution wherever they are used. E.g.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">qsec</span><span class="op">)</span><span class="op">)</span> <span class="co"># Vectorized</span></span>
 <span><span class="co">#   cyl      mpg</span></span>
@@ -310,8 +309,8 @@ back to base R if this is not desired.</p>
 set <code>set_collapse(mask = "all")</code> to replace statistical
 functions in base R like <code>sum</code> and <code>mean</code> with the
 collapse versions (toggling vectorized execution in all cases), but this
-may affect parts of your code since they are S3 generic<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;You can always refer to base R functions explicitly
-using &lt;code&gt;::&lt;/code&gt; e.g. &lt;code&gt;&lt;a href="https://rdrr.io/r/base/mean.html" class="external-link"&gt;base::mean&lt;/a&gt;&lt;/code&gt;.&lt;/p&gt;'><sup>2</sup></a>.</p>
+may affect other parts of your code<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;When doing this, make sure to refer to base R functions
+explicitly using &lt;code&gt;::&lt;/code&gt; e.g. &lt;code&gt;&lt;a href="https://rdrr.io/r/base/mean.html" class="external-link"&gt;base::mean&lt;/a&gt;&lt;/code&gt;.&lt;/p&gt;'><sup>2</sup></a>.</p>
 </div>
 <div class="section level2">
 <h2 id="writing-efficient-code">Writing Efficient Code<a class="anchor" aria-label="anchor" href="#writing-efficient-code"></a>
@@ -378,8 +377,7 @@ columns for more efficient execution.</p>
 <span><span class="co"># 7   8  0  1 15.40000 6.000000 299.50000</span></span></code></pre></div>
 <p>Setting these options globally using
 <code>set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)</code>
-removes the need to set these arguments for each expression
-explicitly.</p>
+removes the need to set them repeatedly.</p>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
@@ -387,8 +385,8 @@ explicitly.</p>
 <p><em>collapse</em> enhances R both statistically and computationally
 and is a good option for <em>tidyverse</em> users searching for more
 efficient and lightweight solutions to data manipulation and statistical
-computing problems. For more information, I recommend reading the short
-vignette on <a href="https://sebkrantz.github.io/collapse/articles/collapse_documentation.html"><em>Documentation
+computing problems in R. For more information, I recommend starting with
+the short vignette on <a href="https://sebkrantz.github.io/collapse/articles/collapse_documentation.html"><em>Documentation
 Resources</em></a>.</p>
 <p>R users willing to write efficient/lightweight code and completely
 replace the <em>tidyverse</em> in their workflow are also encouraged to
