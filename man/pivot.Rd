@@ -5,7 +5,7 @@
 Fast and Easy Data Reshaping
 }
 \description{
-\code{pivot()} will become \emph{collapse}'s data reshaping command, to be formally released with v2.0.0. It combines longer-, wider-, and recast-pivoting functionality in a single parsimonious API. Notably, it can also accommodate variable labels. Please give me feedback on the API.
+\code{pivot()} is \emph{collapse}'s data reshaping command. It combines longer-, wider-, and recast-pivoting functionality in a single parsimonious API. Notably, it can also accommodate variable labels.
 }
 \usage{
 pivot(data,               # Summary of Documentation:
