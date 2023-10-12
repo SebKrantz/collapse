@@ -41,9 +41,6 @@ preferred-citation:
   notes: R package version 2.0.0
   doi: 10.5281/zenodo.8433091
   url: https://sebkrantz.github.io/collapse/
-  identifiers:
-  - type: url
-    value: https://CRAN.R-project.org/package=collapse
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
@@ -470,7 +467,5 @@ references:
     orcid: https://orcid.org/0000-0003-3925-190X
   year: '2023'
 identifiers:
-- type: url
-  value: https://CRAN.R-project.org/package=collapse
 - type: url
   value: https://twitter.com/collapse_R
