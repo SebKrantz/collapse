@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,110 +140,110 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">mna</span> <span class="op">&lt;-</span> <span class="fu"><a href="efficient-programming.html">na_insert</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">pwcor</span><span class="op">(</span><span class="va">mna</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg     1   -.88  -.86  -.77   .63  -.87   .39   .68   .68   .48  -.55</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   -.88    1    .91   .83  -.66   .81  -.51  -.78  -.71  -.52   .50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  -.86   .91    1    .80  -.65   .89  -.43  -.71  -.72  -.48   .39</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    -.77   .83   .80    1   -.36   .67  -.66  -.69  -.30   .02   .77</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat   .63  -.66  -.65  -.36    1   -.64   .02   .44   .68   .68  -.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    -.87   .81   .89   .67  -.64    1   -.16  -.63  -.73  -.53   .40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg     1   -.89  -.82  -.77   .70  -.86   .36   .69   .61   .49  -.47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   -.89    1    .92   .84  -.70   .77  -.60  -.88  -.49  -.45   .49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  -.82   .92    1    .79  -.68   .87  -.54  -.77  -.56  -.49   .33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    -.77   .84   .79    1   -.46   .65  -.75  -.75  -.27  -.11   .75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat   .70  -.70  -.68  -.46    1   -.71   .03   .51   .71   .66  -.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    -.86   .77   .87   .65  -.71    1   -.13  -.57  -.67  -.54   .35</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"><span><span class="fu">pwcov</span><span class="op">(</span><span class="va">mna</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            mpg       cyl      disp        hp      drat        wt      qsec</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg      39.63    -10.13   -657.65   -358.72      1.93     -5.66      4.64</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl     -10.13      3.06    189.03    101.77     -0.62      1.42     -1.38</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp   -657.65    189.03  13488.70   6491.81    -39.44    102.41    -79.51</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp     -358.72    101.77   6491.81   4759.58    -13.27     48.78    -84.30</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat      1.93     -0.62    -39.44    -13.27      0.28     -0.31      0.02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt       -5.66      1.42    102.41     48.78     -0.31      0.99     -0.30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg      37.87     -9.94   -599.31   -348.62      2.54     -5.45      2.76</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl      -9.94      3.24    199.06    114.70     -0.72      1.39     -2.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp   -599.31    199.06  14308.94   7201.26    -45.03     94.99   -111.84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp     -348.62    114.70   7201.26   5025.54    -18.08     49.48    -80.98</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat      2.54     -0.72    -45.03    -18.08      0.29     -0.40      0.03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt       -5.45      1.39     94.99     49.48     -0.40      0.97     -0.22</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             vs        am      gear      carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg       2.27      2.18      2.24     -5.92</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl      -0.70     -0.63     -0.69      1.50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp    -42.23    -42.93    -41.37     77.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp      -23.80    -10.31      1.13     92.78</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat      0.12      0.18      0.29     -0.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt       -0.33     -0.38     -0.36      0.71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg       1.88      1.98      2.52     -4.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl      -0.76     -0.45     -0.65      1.49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp    -46.55    -32.22    -42.57     64.73</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp      -25.89     -9.61     -6.29     87.49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat      0.13      0.20      0.29     -0.10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt       -0.28     -0.31     -0.40      0.54</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"><span><span class="fu">pwnobs</span><span class="op">(</span><span class="va">mna</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mpg cyl disp hp drat wt qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   29  27   26 26   26 27   26 26 27   26   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   27  29   27 27   26 26   26 26 27   26   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  26  27   29 26   27 26   27 26 26   26   26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    26  27   26 29   27 26   26 26 26   26   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  26  26   27 27   29 26   26 26 26   26   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    27  26   26 26   26 29   26 26 26   27   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   29  26   26 27   26 26   26 27 26   26   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   26  29   27 26   27 26   26 26 27   27   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  26  27   29 26   26 27   26 27 26   27   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    27  26   26 29   28 26   26 27 27   26   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  26  27   26 28   29 26   26 26 27   26   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    26  26   27 26   26 29   26 27 26   27   26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"><span><span class="fu">pwcor</span><span class="op">(</span><span class="va">mna</span>, N <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            mpg       cyl      disp        hp      drat        wt      qsec</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg    1  (29) -.88 (27) -.86 (26) -.77 (26)  .63 (26) -.87 (27)  .39 (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.88 (27)   1  (29)  .91 (27)  .83 (27) -.66 (26)  .81 (26) -.51 (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.86 (26)  .91 (27)   1  (29)  .80 (26) -.65 (27)  .89 (26) -.43 (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.77 (26)  .83 (27)  .80 (26)   1  (29) -.36 (27)  .67 (26) -.66 (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .63 (26) -.66 (26) -.65 (27) -.36 (27)   1  (29) -.64 (26)  .02 (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.87 (27)  .81 (26)  .89 (26)  .67 (26) -.64 (26)   1  (29) -.16 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg    1  (29) -.89 (26) -.82 (26) -.77 (27)  .70 (26) -.86 (26)  .36 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.89 (26)   1  (29)  .92 (27)  .84 (26) -.70 (27)  .77 (26) -.60 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.82 (26)  .92 (27)   1  (29)  .79 (26) -.68 (26)  .87 (27) -.54 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.77 (27)  .84 (26)  .79 (26)   1  (29) -.46 (28)  .65 (26) -.75 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .70 (26) -.70 (27) -.68 (26) -.46 (28)   1  (29) -.71 (26)  .03 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.86 (26)  .77 (26)  .87 (27)  .65 (26) -.71 (26)   1  (29) -.13 (26)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             vs        am      gear      carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   .68 (26)  .68 (27)  .48 (26) -.55 (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.78 (26) -.71 (27) -.52 (26)  .50 (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.71 (26) -.72 (26) -.48 (26)  .39 (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.69 (26) -.30 (26)  .02 (26)  .77 (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .44 (26)  .68 (26)  .68 (26) -.01 (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.63 (26) -.73 (26) -.53 (27)  .40 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   .69 (27)  .61 (26)  .49 (26) -.47 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.88 (26) -.49 (27) -.45 (27)  .49 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.77 (27) -.56 (26) -.49 (27)  .33 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.75 (27) -.27 (27) -.11 (26)  .75 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .51 (26)  .71 (27)  .66 (26) -.11 (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.57 (27) -.67 (26) -.54 (27)  .35 (26)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"><span><span class="fu">pwcor</span><span class="op">(</span><span class="va">mna</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         mpg    cyl   disp     hp   drat     wt   qsec     vs     am   gear</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg     1    -.88*  -.86*  -.77*   .63*  -.87*   .39    .68*   .68*   .48*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   -.88*    1     .91*   .83*  -.66*   .81*  -.51*  -.78*  -.71*  -.52*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  -.86*   .91*    1     .80*  -.65*   .89*  -.43*  -.71*  -.72*  -.48*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    -.77*   .83*   .80*    1    -.36    .67*  -.66*  -.69*  -.30    .02 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat   .63*  -.66*  -.65*  -.36     1    -.64*   .02    .44*   .68*   .68*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    -.87*   .81*   .89*   .67*  -.64*    1    -.16   -.63*  -.73*  -.53*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg     1    -.89*  -.82*  -.77*   .70*  -.86*   .36    .69*   .61*   .49*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   -.89*    1     .92*   .84*  -.70*   .77*  -.60*  -.88*  -.49*  -.45*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  -.82*   .92*    1     .79*  -.68*   .87*  -.54*  -.77*  -.56*  -.49*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    -.77*   .84*   .79*    1    -.46*   .65*  -.75*  -.75*  -.27   -.11 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat   .70*  -.70*  -.68*  -.46*    1    -.71*   .03    .51*   .71*   .66*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    -.86*   .77*   .87*   .65*  -.71*    1    -.13   -.57*  -.67*  -.54*</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   -.55*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl    .50*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp   .39*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp     .77*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  -.01 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt     .40*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   -.47*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl    .49*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp   .33 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp     .75*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  -.11 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt     .35 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"><span><span class="fu">pwcor</span><span class="op">(</span><span class="va">mna</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             mpg        cyl       disp         hp       drat         wt</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg    1   (29) -.88* (27) -.86* (26) -.77* (26)  .63* (26) -.87* (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.88* (27)   1   (29)  .91* (27)  .83* (27) -.66* (26)  .81* (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.86* (26)  .91* (27)   1   (29)  .80* (26) -.65* (27)  .89* (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.77* (26)  .83* (27)  .80* (26)   1   (29) -.36  (27)  .67* (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .63* (26) -.66* (26) -.65* (27) -.36  (27)   1   (29) -.64* (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.87* (27)  .81* (26)  .89* (26)  .67* (26) -.64* (26)   1   (29)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg    1   (29) -.89* (26) -.82* (26) -.77* (27)  .70* (26) -.86* (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.89* (26)   1   (29)  .92* (27)  .84* (26) -.70* (27)  .77* (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.82* (26)  .92* (27)   1   (29)  .79* (26) -.68* (26)  .87* (27)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.77* (27)  .84* (26)  .79* (26)   1   (29) -.46* (28)  .65* (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .70* (26) -.70* (27) -.68* (26) -.46* (28)   1   (29) -.71* (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.86* (26)  .77* (26)  .87* (27)  .65* (26) -.71* (26)   1   (29)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            qsec         vs         am       gear       carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   .39  (26)  .68* (26)  .68* (27)  .48* (26) -.55* (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.51* (26) -.78* (26) -.71* (27) -.52* (26)  .50* (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.43* (27) -.71* (26) -.72* (26) -.48* (26)  .39* (26)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.66* (26) -.69* (26) -.30  (26)  .02  (26)  .77* (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .02  (26)  .44* (26)  .68* (26)  .68* (26) -.01  (27)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.16  (26) -.63* (26) -.73* (26) -.53* (27)  .40* (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   .36  (26)  .69* (27)  .61* (26)  .49* (26) -.47* (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.60* (26) -.88* (26) -.49* (27) -.45* (27)  .49* (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.54* (26) -.77* (27) -.56* (26) -.49* (27)  .33  (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.75* (26) -.75* (27) -.27  (27) -.11  (26)  .75* (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .03  (26)  .51* (26)  .71* (27)  .66* (26) -.11  (26)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.13  (26) -.57* (27) -.67* (26) -.54* (27)  .35  (26)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/aperm.html" class="external-link">aperm</a></span><span class="op">(</span><span class="fu">pwcor</span><span class="op">(</span><span class="va">mna</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , mpg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r   1  -.88  -.86  -.77   .63  -.87   .39   .68   .68   .48  -.55</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N  29    27    26    26    26    27    26    26    27    26    27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P       .00   .00   .00   .00   .00   .05   .00   .00   .01   .00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> r   1  -.89  -.82  -.77   .70  -.86   .36   .69   .61   .49  -.47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N  29    26    26    27    26    26    26    27    26    26    26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P       .00   .00   .00   .00   .00   .08   .00   .00   .01   .02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , cyl</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     mpg cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> r  -.88   1   .91   .83  -.66   .81  -.51  -.78  -.71  -.52   .50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> N    27  29    27    27    26    26    26    26    27    26    27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> P   .00       .00   .00   .00   .00   .01   .00   .00   .01   .01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> r  -.89   1   .92   .84  -.70   .77  -.60  -.88  -.49  -.45   .49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> N    26  29    27    26    27    26    26    26    27    27    26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> P   .00       .00   .00   .00   .00   .00   .00   .01   .02   .01</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 9 matrix slice(s) ]</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">pwcor</span><span class="op">(</span><span class="va">mna</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, digits <span class="op">=</span> <span class="fl">3</span>, sig.level <span class="op">=</span> <span class="fl">0.01</span>, show <span class="op">=</span> <span class="st">"lower.tri"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              mpg         cyl        disp          hp        drat          wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mpg    1    (29)                                                            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.876* (27)   1    (29)                                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.864* (26)  .913* (27)   1    (29)                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.767* (26)  .827* (27)  .796* (26)   1    (29)                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .628* (26) -.660* (26) -.646* (27) -.363  (27)   1    (29)            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.872* (27)  .807* (26)  .890* (26)  .666* (26) -.643* (26)   1    (29)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl  -.889* (26)   1    (29)                                                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp -.825* (26)  .915* (27)   1    (29)                                    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp   -.774* (27)  .840* (26)  .794* (26)   1    (29)                        </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .699* (26) -.698* (27) -.679* (26) -.459  (28)   1    (29)            </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt   -.865* (26)  .768* (26)  .866* (27)  .650* (26) -.712* (26)   1    (29)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             qsec          vs          am        gear        carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mpg                                                             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> cyl                                                             </span>
@@ -255,53 +255,53 @@
 <span class="r-in"><span><span class="fu">pwcor</span><span class="op">(</span><span class="va">mna</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $r</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg      1  -.88  -.86  -.77   .63  -.87   .39   .68   .68   .48  -.55</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   -.88     1   .91   .83  -.66   .81  -.51  -.78  -.71  -.52   .50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  -.86   .91     1   .80  -.65   .89  -.43  -.71  -.72  -.48   .39</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    -.77   .83   .80     1  -.36   .67  -.66  -.69  -.30   .02   .77</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat   .63  -.66  -.65  -.36     1  -.64   .02   .44   .68   .68  -.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    -.87   .81   .89   .67  -.64     1  -.16  -.63  -.73  -.53   .40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg      1  -.89  -.82  -.77   .70  -.86   .36   .69   .61   .49  -.47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   -.89     1   .92   .84  -.70   .77  -.60  -.88  -.49  -.45   .49</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  -.82   .92     1   .79  -.68   .87  -.54  -.77  -.56  -.49   .33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    -.77   .84   .79     1  -.46   .65  -.75  -.75  -.27  -.11   .75</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat   .70  -.70  -.68  -.46     1  -.71   .03   .51   .71   .66  -.11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    -.86   .77   .87   .65  -.71     1  -.13  -.57  -.67  -.54   .35</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mpg cyl disp  hp drat  wt qsec  vs  am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   29  27   26  26   26  27   26  26  27   26   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   27  29   27  27   26  26   26  26  27   26   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  26  27   29  26   27  26   27  26  26   26   26</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    26  27   26  29   27  26   26  26  26   26   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  26  26   27  27   29  26   26  26  26   26   27</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    27  26   26  26   26  29   26  26  26   27   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   29  26   26  27   26  26   26  27  26   26   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   26  29   27  26   27  26   26  26  27   27   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  26  27   29  26   26  27   26  27  26   27   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    27  26   26  29   28  26   26  27  27   26   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  26  27   26  28   29  26   26  26  27   26   26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    26  26   27  26   26  29   26  27  26   27   26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $P</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       mpg  cyl disp   hp drat   wt qsec   vs   am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg        .00  .00  .00  .00  .00  .05  .00  .00  .01  .00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   .00       .00  .00  .00  .00  .01  .00  .00  .01  .01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  .00  .00       .00  .00  .00  .02  .00  .00  .01  .05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    .00  .00  .00       .06  .00  .00  .00  .13  .92  .00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .00  .00  .00  .06       .00  .94  .03  .00  .00  .96</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    .00  .00  .00  .00  .00       .44  .00  .00  .00  .04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg        .00  .00  .00  .00  .00  .08  .00  .00  .01  .02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   .00       .00  .00  .00  .00  .00  .00  .01  .02  .01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  .00  .00       .00  .00  .00  .00  .00  .00  .01  .10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    .00  .00  .00       .01  .00  .00  .00  .18  .60  .00</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .00  .00  .00  .01       .00  .87  .01  .00  .00  .60</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    .00  .00  .00  .00  .00       .51  .00  .00  .00  .08</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">pwcor</span><span class="op">(</span><span class="va">mna</span>, N <span class="op">=</span> <span class="cn">TRUE</span>, P <span class="op">=</span> <span class="cn">TRUE</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, show <span class="op">=</span> <span class="st">"lower.tri"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $r</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mpg      1                                                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   -.88     1                                                     </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  -.86   .91     1                                               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    -.77   .83   .80     1                                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat   .63  -.66  -.65  -.36     1                                   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    -.87   .81   .89   .67  -.64     1                             </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   -.89     1                                                     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  -.82   .92     1                                               </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    -.77   .84   .79     1                                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat   .70  -.70  -.68  -.46     1                                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    -.86   .77   .87   .65  -.71     1                             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $N</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      mpg cyl disp  hp drat  wt qsec  vs  am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> mpg   29                                             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   27  29                                         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   26  29                                         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> disp  26  27   29                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    26  27   26  29                                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  26  26   27  27   29                           </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    27  26   26  26   26  29                       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    27  26   26  29                                </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  26  27   26  28   29                           </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    26  26   27  26   26  29                       </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $P</span>
@@ -310,7 +310,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> cyl   .00                                                  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> disp  .00  .00                                             </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> hp    .00  .00  .00                                        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .00  .00  .00  .06                                   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  .00  .00  .00  .01                                   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> wt    .00  .00  .00  .00  .00                              </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -327,7 +327,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.9000.</p>
 </div>
 
     </footer></div>
