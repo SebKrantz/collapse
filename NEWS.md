@@ -1,3 +1,9 @@
+# collapse 2.0.1
+
+* `%in%` with `set_collapse(mask = "%in%")` does not warn about overidentification when used with data frames. 
+
+* Fixed several typos in the documentation. 
+
 # collapse 2.0.0
 
 *collapse* 2.0, released in Mid-October 2023, introduces fast table joins and data reshaping capabilities alongside other convenience functions, and enhances the packages global configurability, including interactive namespace control. 
