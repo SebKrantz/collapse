@@ -8,7 +8,7 @@ bibentry(bibtype = "Manual",
          author = person("Sebastian", "Krantz"),
          year = year,
          note = note,
-         doi = "10.5281/zenodo.8433091",
+         doi = "10.5281/zenodo.8433090",
          url = "https://sebkrantz.github.io/collapse/",
          textVersion = paste0("Krantz (", year, "). collapse: Advanced and Fast Data Transformation in R. ", note,
-                              ". doi:10.5281/zenodo.8433091. https://sebkrantz.github.io/collapse/."))
+                              ". doi:10.5281/zenodo.8433090. https://sebkrantz.github.io/collapse/."))
