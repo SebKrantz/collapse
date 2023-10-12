@@ -9,7 +9,9 @@ template:
   bootswatch: sandstone # Also good: flatly, yeti, simplex, superhero, zephyr
   theme: ayu-dark # Or: ayu-mirage
   bslib:
-    primary: "#003254"
+    primary: "#1e2124" # "#202224" # "#242424" # "#003254"
+    code-color: "#004573" # "#9c0027" # "#004d80" # b3002d
+    gray-dark: "#3f464d"
 
 development:
   mode: auto
@@ -49,7 +51,9 @@ navbar:
       aria-label: GitHub
 
 reference:
-- contents: collapse-package
+- contents:
+  - collapse-package
+  - collapse-documentation
 - title: Fast Statistical Functions
   desc: Fast (grouped and weighted) statistical functions for vector, matrix, data
     frame and grouped tibble (class 'grouped_df', dplyr compatible).
