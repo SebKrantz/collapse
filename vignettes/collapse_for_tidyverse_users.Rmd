@@ -166,7 +166,7 @@ mtcars |>
   fmean(nthreads = 3, na.rm = FALSE)
 ```
 
-Setting these options globally using `set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)` removes the need to set them repeatedly.
+Setting these options globally using `set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)` avoids the need to set them repeatedly.
 
 
 ## Conclusion 
