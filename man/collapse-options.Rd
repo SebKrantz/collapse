@@ -20,7 +20,7 @@ get_collapse(opts = NULL)
 \arguments{
 \item{\dots}{either comma separated options, or a single list of options. The available options are:
 
-  \tabular{llll}{
+  \tabular{lll}{
     \code{na.rm} \tab\tab logical, default \code{TRUE}. Sets the default for statistical algorithms such as the \link[=fast-statistical-functions]{Fast Statistical Functions} to skip missing values. If your data does not have missing values, or only in rare cases, it is recommended to change this to \code{FALSE} for performance gains. \emph{Note} that this does not affect other (non-statistical) uses of \code{na.rm} arguments, such as in \code{\link{pivot}}. \cr\cr\cr\cr
 
     \code{sort} \tab\tab logical, default \code{TRUE}. Sets the default for grouping operations to be sorted. This also applies to factor generation using \code{\link{qF}} and tabulation with \code{\link{qtab}}, but excludes other uses of \code{sort} arguments where grouping is not the objective (such as in \code{\link{funique}} or \code{\link{pivot}}). In general, sorted grouping (internally using \code{\link{radixorder}}) is slower than hash-based direct grouping (internally using \code{\link{group}}). However, if data is pre-sorted, sorted grouping is slightly faster. In general, if records don't need to be sorted or you want to maintain their first-appearance order, changing this to \code{FALSE} is recommended and often brings substantial performance gains. \emph{Note} that this also affects internal grouping applied when atomic vectors (except for factors) or lists are passed to \code{g} arguments in \link[=fast-statistical-functions]{Fast Statistical Functions}. \cr\cr\cr\cr
