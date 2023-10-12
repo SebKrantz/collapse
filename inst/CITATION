@@ -9,6 +9,6 @@ bibentry(bibtype = "Manual",
          year = year,
          note = note,
          doi = "10.5281/zenodo.8433091",
-         url = "https://sebkrantz.github.io/collapse/ and https://CRAN.R-project.org/package=collapse",
+         url = "https://sebkrantz.github.io/collapse/",
          textVersion = paste0("Krantz (", year, "). collapse: Advanced and Fast Data Transformation in R. ", note,
-                              ". https://sebkrantz.github.io/collapse/ and https://CRAN.R-project.org/package=collapse."))
+                              ". doi:10.5281/zenodo.8433091. https://sebkrantz.github.io/collapse/."))
