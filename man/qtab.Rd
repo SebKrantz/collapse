@@ -13,7 +13,7 @@ qtab(..., w = NULL, wFUN = NULL, wFUN.args = NULL,
      dnn = "auto", sort = .op[["sort"]], na.exclude = TRUE,
      drop = FALSE, method = "auto")
 
-qtable(...) # Long-form: to facilitate replacement of table()
+qtable(...) # Long-form. Use set_collapse(mask = "table") to replace table()
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
