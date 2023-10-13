@@ -20,7 +20,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a class-agnostic approach to data manipulation in R, supporting base R, *dplyr* (*tibble*), *data.table*, *sf*, *plm* classes for panel data, and preserving other classes (such as 'ts', 'xts'/'zoo' and 'tsibble'). 
+It further implements a class-agnostic approach to data manipulation in R, supporting base R, *tibble* (*tidyverse*), *data.table*, *sf*, *plm* panel data classes, and preserving other classes (e.g. *ts*, *xts*/*zoo* or *tsibble*). 
 
 **Key Features:**
 
