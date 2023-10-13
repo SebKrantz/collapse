@@ -81,7 +81,7 @@ The statistical functions in \emph{collapse} are S3 generic with core methods fo
 
 % attributes of atomic objects are preserved if the dimensions are unaltered by the computation, and data frame attributes are always preserved,
 
- Additional (hidden) S3 methods and C-level features enable broad based compatibility with \emph{dplyr} (grouped tibble), \emph{data.table}, \emph{sf} and \emph{plm} panel data classes. Functions and core methods also seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes).
+ Additional methods and C-level features enable broad based compatibility with \emph{dplyr} (grouped tibble), \emph{data.table}, \emph{sf} and \emph{plm} panel data classes. Functions and core methods seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes). See also the \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{vignette} on \emph{collapse}'s handling of R objects.
 
  Missing values are efficiently skipped at C/C++ level. The package default is \code{na.rm = TRUE}. This can be changed using \code{\link[=set_collapse]{set_collapse(na.rm = FALSE)}}. Missing weights are generally supported. % Core functionality and all statistical functions / computations are tested with > 20,000 unit tests for Base R equivalence, exempting some improvements (e.g. \code{fsum(NA, na.rm = TRUE)} evaluates to \code{NA}, not 0 (unless \code{fill = TRUE}), similarly for \code{fmin} and \code{fmax}; no \code{NaN} values are generated from computations involving \code{NA} values). %Generic functions provide some \link[=collapse-options]{security} against silent swallowing of arguments.
 
@@ -135,7 +135,7 @@ I thank many people from diverse fields for helpful answers on Stackoverflow, Jo
 
 \examples{
 ## Note: this set of examples is is certainly non-exhaustive and does not
-## showcase many recent features, but still a very good starting point
+## showcase many recent features, but remains a very good starting point
 
 ## Let's start with some statistical programming
 v <- iris$Sepal.Length
