@@ -38,7 +38,7 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
         and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, 
         (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations.
 
-*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes. Fast (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
+*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
         differences and (compounded) growth rates on (irregular) time series and panels. 
         Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
@@ -72,7 +72,7 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 ## Documentation
 *collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages. 
 
-In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>), amongst them one on [Documentation and Resources](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html).
+In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>), among them one on [Documentation and Resources](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html).
 
 ### Cheatsheet (v1.8.8)
 
