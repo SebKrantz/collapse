@@ -70,8 +70,8 @@ reference:
   - fnobs
   - fndistinct
 - title: Fast Grouping and Ordering
-  desc: Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering,
-    unique values / rows and counts, factor generation and interactions, run-length
+  desc: Fast (ordered) groupings from vectors, data.frames, lists. Fast ordering, matching, unique
+    values/rows and counts, factor generation and interactions, run-length
     type grouping and grouping of time-sequences.
   contents:
   - fast-grouping-ordering
@@ -87,8 +87,7 @@ reference:
   - seqid
   - timeid
 - title: Fast Data Manipulation
-  desc: Fast and flexible select, replace, add, subset, transform, sort / reorder
-    and rename / relabel data / data frame columns.
+  desc: Fast and flexible select, replace, add, subset, transform, sort/reorder, rename/relabel, bind, join and pivot/reshape data / data frame columns.
   contents:
   - fast-data-manipulation
   - fselect-get_vars-add_vars
@@ -116,10 +115,10 @@ reference:
   - advanced-aggregation
   - collap
 - title: Data Transformations
-  desc: Fast row / column arithmetic, efficient row / column apply to data objects
+  desc: Fast row/column arithmetic, efficient row/column apply to data objects
     and Split-Apply-Combine computing. Fast (grouped, weighted) replacing and sweeping
-    out of statistics, scaling / standardizing, (quasi-)centering, higher-dimensional
-    centering, linear prediction / partialling-out.
+    out of statistics, scaling/standardizing, (quasi-)centering, higher-dimensional
+    centering, linear prediction/partialling-out.
   contents:
   - data-transformations
   - arithmetic
@@ -136,8 +135,8 @@ reference:
   - flm
   - fFtest
 - title: Time Series and Panel Series
-  desc: Fast and flexible indexed time series and panel data classes. Fast (sequences
-    of) lags / leads, and (lagged / leaded, iterated, quasi-, log-) differences and
+  desc: Fast and flexible indexed time series and panel data classes, (sequences
+    of) lags/leads, and (lagged/leaded, iterated, quasi-, log-) differences and
     (compounded) growth rates on (irregular) time series and panel data. Auto-, partial-
     and cross-correlation functions for panel data. Panel data to (ts-)array conversion.
   contents:
@@ -188,7 +187,7 @@ reference:
   contents: efficient-programming
 - title: Small (Helper) Functions
   desc: Convenience functions to perform multiple-assignment, nonstandard concatenation,
-    and deal with variable names, labels, other attributes, matching and object checking,
+    and deal with variable names, labels, other attributes, object checking,
     and help with metaprogramming.
   contents: small-helpers
 - title: Data
