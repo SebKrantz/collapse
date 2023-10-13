@@ -1,5 +1,6 @@
 \name{collapse-options}
 \alias{collapse-options}
+\alias{AA4-collapse-options}
 \alias{set_collapse}
 \alias{get_collapse}
 \alias{.op}
