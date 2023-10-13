@@ -134,6 +134,9 @@ I thank many people from diverse fields for helpful answers on Stackoverflow, Jo
 %}
 
 \examples{
+## Note: this set of examples is is certainly non-exhaustive and does not
+## showcase many recent features, but still a very good starting point
+
 ## Let's start with some statistical programming
 v <- iris$Sepal.Length
 d <- num_vars(iris)    # Saving numeric variables
