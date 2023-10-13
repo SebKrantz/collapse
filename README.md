@@ -70,7 +70,7 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 ```
 
 ## Documentation
-*collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` from the R console brings up the the top-level documentation page, which provides an overview of the entire functionality of the package and links to all other documentation pages. 
+*collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, prividing an overview of the entire package and links to all other documentation pages. 
 
 In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>). 
 
