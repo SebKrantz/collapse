@@ -20,7 +20,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a class-agnostic approach to data manipulation in R, supporting base R, *dplyr* (*tibble*), *data.table*, *sf*, *plm* classes for panel data ('pseries' and 'pdata.frame'), and non-destructively handling other matrix or data frame based classes (including most time series classes such as 'ts', 'xts'/'zoo' and 'tsibble'). 
+It further implements a class-agnostic approach to data manipulation in R, supporting base R, *dplyr* (*tibble*), *data.table*, *sf*, *plm* classes for panel data, and preserving other classes (such as 'ts', 'xts'/'zoo' and 'tsibble'). 
 
 **Key Features:**
 
@@ -36,10 +36,9 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 
 *  **Advanced transformations**: Fast row/column arithmetic, (grouped) replacing 
         and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, 
-        (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations, 
-        linear prediction, model fitting + testing exclusion restrictions, and distance matrices.
+        (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations.
 
-*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes. Fast (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
+*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
         differences and (compounded) growth rates on (irregular) time series and panels. 
         Multivariate auto-, partial- and cross-correlation functions for panel data. 
         Panel data to (ts-)array conversions.
@@ -50,7 +49,7 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
 
-*collapse* utilizes both C and C++ via *Rcpp*, and also uses C/C++ functions from *data.table*, *kit*, *fixest*, *weights*, *RcppArmadillo*, *RcppEigen* and *stats*. Efforts have been made to maximize the execution speed of R code employed. 
+*collapse* utilizes both C and C++ via *Rcpp*, and also uses C/C++ functions from *data.table*, *kit*, *fixest*, *weights*, *RcppArmadillo*, *RcppEigen* and *stats*. It's R code is highly optimized, yielding minimal overheads. 
 
 ## Installation
 
@@ -71,9 +70,9 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 ```
 
 ## Documentation
-*collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` from the R console brings up the the top-level documentation page, which provides an overview of the entire functionality of the package and links to all other documentation pages. 
+*collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages. 
 
-In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>). 
+In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>), among them one on [Documentation and Resources](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html).
 
 ### Cheatsheet (v1.8.8)
 

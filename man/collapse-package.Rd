@@ -12,7 +12,7 @@ Advanced and Fast Data Transformation
 \item To help make R code fast, flexible, parsimonious and programmer friendly. % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter,
 % collapse provides a broad set.. -> Nah, its not a misc package
 }
-It is made compatible with \emph{dplyr}, \emph{data.table}, \emph{sf} and the \emph{plm} approach to panel data, and non-destructively handles other classes such as \emph{xts}.
+It is made compatible with the \emph{tidyverse}, \emph{data.table}, \emph{sf} and the \emph{plm} approach to panel data, and non-destructively handles other classes such as \emph{xts}.
 
 }
 \section{Getting Started}{
@@ -54,7 +54,7 @@ Read the short \href{https://sebkrantz.github.io/collapse/articles/collapse_docu
 
 \section{Details}{
 % Put this below bullet points ?? % \emph{collapse} provides a carefully conceived % \emph{collapse} provides a compact set of functions % organized roughly into several topics
-\emph{collapse} provides an integrated suite of statistical and data manipulation functions. These improve, complement and extend the capabilities of base R and packages like \emph{dplyr}, \emph{data.table}, \emph{plm}, \emph{matrixStats}, \emph{Rfast} etc. In a nutshell, \emph{collapse} provides:
+\emph{collapse} provides an integrated suite of statistical and data manipulation functions that greatly extend and enhance the capabilities of base R. In a nutshell, \emph{collapse} provides:
 
 \itemize{
 \item Fast C/C++ based (grouped, weighted) computations embedded in highly optimized R code.
@@ -81,9 +81,9 @@ The statistical functions in \emph{collapse} are S3 generic with core methods fo
 
 % attributes of atomic objects are preserved if the dimensions are unaltered by the computation, and data frame attributes are always preserved,
 
- Additional (hidden) S3 methods and C-level features enable broad based compatibility with \emph{dplyr} (grouped tibble), \emph{data.table}, \emph{sf} and \emph{plm} panel data classes. Functions and core methods also seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes).
+ Additional methods and C-level features enable broad based compatibility with \emph{dplyr} (grouped tibble), \emph{data.table}, \emph{sf} and \emph{plm} panel data classes. Functions and core methods seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes). See also the \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{vignette} on \emph{collapse}'s handling of R objects.
 
- Missing values are efficiently skipped at C/C++ level. The package default is \code{na.rm = TRUE}. This can be changed using \code{\link[=set_collapse]{set_collapse(na.rm = FALSE)}}. \code{na.rm = FALSE} in many cases also yields efficient checking and early termination. Missing weights are generally supported. % Core functionality and all statistical functions / computations are tested with > 20,000 unit tests for Base R equivalence, exempting some improvements (e.g. \code{fsum(NA, na.rm = TRUE)} evaluates to \code{NA}, not 0 (unless \code{fill = TRUE}), similarly for \code{fmin} and \code{fmax}; no \code{NaN} values are generated from computations involving \code{NA} values). %Generic functions provide some \link[=collapse-options]{security} against silent swallowing of arguments.
+ Missing values are efficiently skipped at C/C++ level. The package default is \code{na.rm = TRUE}. This can be changed using \code{\link[=set_collapse]{set_collapse(na.rm = FALSE)}}. Missing weights are generally supported. % Core functionality and all statistical functions / computations are tested with > 20,000 unit tests for Base R equivalence, exempting some improvements (e.g. \code{fsum(NA, na.rm = TRUE)} evaluates to \code{NA}, not 0 (unless \code{fill = TRUE}), similarly for \code{fmin} and \code{fmax}; no \code{NaN} values are generated from computations involving \code{NA} values). %Generic functions provide some \link[=collapse-options]{security} against silent swallowing of arguments.
 
  %Hence they also handle various date and time series classes etc., and can easily be integreated into most approaches to data transformation.
 
@@ -116,12 +116,12 @@ Other contributors from packages \emph{collapse} utilizes:
 \item Josh Pasek (\emph{weights})
 \item R Core Team and contributors worldwide (\emph{stats})
 }
-I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel and a host of other quant people from diverse fields for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{GitHub repository} for \emph{collapse}, Matthieu Stigler, Patrice Kiener, Zhiyi Xu, Kevin Tappe and Grant McDermott for feature requests and helpful suggestions.
+I thank many people from diverse fields for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{GitHub repository} for \emph{collapse}, and many other people for feature requests and helpful suggestions.
 }
 \section{Developing / Bug Reporting}{
 \itemize{
-\item If you are interested in extending or optimizing this package, see the source code at \url{https://github.com/SebKrantz/collapse/tree/master}, fork and send pull-requests to the 'development' branch of the repository, or e-mail me.
 \item Please report issues at \url{https://github.com/SebKrantz/collapse/issues}.
+\item Please send pull-requests to the 'development' branch of the repository.
 }
 }
 
@@ -134,6 +134,9 @@ I thank Ralf Stubner, Joseph Wood and Dirk Eddelbuettel and a host of other quan
 %}
 
 \examples{
+## Note: this set of examples is is certainly non-exhaustive and does not
+## showcase many recent features, but remains a very good starting point
+
 ## Let's start with some statistical programming
 v <- iris$Sepal.Length
 d <- num_vars(iris)    # Saving numeric variables
