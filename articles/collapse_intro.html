@@ -1170,9 +1170,9 @@ expressions involving variable names:</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>fselect <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span>,</span>
 <span>               select <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#     expr      min        lq       mean    median       uq      max neval</span></span>
-<span><span class="co">#  fselect    7.335    9.2675   13.76261   11.4345   17.521   33.318   100</span></span>
-<span><span class="co">#   select 2429.112 2484.6895 2738.31657 2607.6700 2747.203 7829.375   100</span></span></code></pre></div>
+<span><span class="co">#     expr      min       lq       mean    median        uq      max neval</span></span>
+<span><span class="co">#  fselect   10.810   14.497   21.61477   20.0335   26.3235   62.668   100</span></span>
+<span><span class="co">#   select 3716.577 4021.774 4226.02260 4103.3520 4171.3045 9905.654   100</span></span></code></pre></div>
 <p>in contrast to <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code>, <code>fselect</code> has a
 replacement method</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
@@ -1338,15 +1338,15 @@ preserves all attributes of subsetted columns:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span>, </span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr     min       lq     mean   median       uq       max neval</span></span>
-<span><span class="co">#      base 245.259 259.3100 531.8577 364.0940 382.8145 20890.920   100</span></span>
-<span><span class="co">#  collapse  71.331  81.4525 110.0287 126.2555 133.2710   168.227   100</span></span>
+<span><span class="co">#      expr     min       lq     mean  median      uq       max neval</span></span>
+<span><span class="co">#      base 446.573 520.4440 897.6796 673.570 717.867 27442.080   100</span></span>
+<span><span class="co">#  collapse 128.135 135.4315 182.8617 197.325 214.351   255.229   100</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                     expr    min      lq     mean median      uq     max neval</span></span>
-<span><span class="co">#      GGDC10S[1:10, 1:10] 92.807 93.7695 95.41385 94.394 95.1625 152.624   100</span></span>
-<span><span class="co">#  ss(GGDC10S, 1:10, 1:10)  4.335  4.7965  5.57131  5.735  6.0860  14.873   100</span></span></code></pre></div>
+<span><span class="co">#                     expr     min       lq      mean  median      uq     max neval</span></span>
+<span><span class="co">#      GGDC10S[1:10, 1:10] 172.248 178.4445 186.09477 182.712 190.739 262.741   100</span></span>
+<span><span class="co">#  ss(GGDC10S, 1:10, 1:10)   6.788   7.5305   9.87557  10.926  11.833  24.377   100</span></span></code></pre></div>
 <p>like <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">base::subset</a></code>, <code>fsubset</code> is S3 generic
 with methods for vectors, matrices and data frames. For certain classes
 such as factors, <code>fsubset.default</code> also improves upon
@@ -1369,9 +1369,9 @@ indicate descending sort.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">-</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, </span>
 <span>               dplyr <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">Variable</span><span class="op">)</span>, <span class="va">Country</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr      min       lq      mean   median        uq       max neval</span></span>
-<span><span class="co">#  collapse  341.977  452.159  498.0682  481.249  520.0035   972.239   100</span></span>
-<span><span class="co">#     dplyr 3307.700 3504.032 4313.7510 3793.048 4414.6435 14029.631   100</span></span></code></pre></div>
+<span><span class="co">#      expr      min        lq      mean    median       uq       max neval</span></span>
+<span><span class="co">#  collapse  445.267  581.1485  608.1635  610.1625  633.614   687.876   100</span></span>
+<span><span class="co">#     dplyr 4976.338 5160.7495 5741.5995 5276.4085 5427.077 17377.669   100</span></span></code></pre></div>
 <p>In contrast to <code><a href="https://Rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">data.table::setorder</a></code>,
 <code>roworder</code> creates a copy of the data frame (unless data are
 already sorted). If this copy is not required,
@@ -1611,9 +1611,9 @@ argument are preserved:</p>
 <span><span class="co"># [1] TRUE</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">wlddev</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                      expr    min      lq     mean  median      uq    max neval</span></span>
-<span><span class="co">#     cbind(wlddev, wlddev) 36.270 37.0465 39.31006 37.7655 38.5125 97.236   100</span></span>
-<span><span class="co">#  add_vars(wlddev, wlddev)  8.559  8.9685 10.48799  9.9575 10.6320 35.378   100</span></span></code></pre></div>
+<span><span class="co">#                      expr    min      lq     mean  median     uq     max neval</span></span>
+<span><span class="co">#     cbind(wlddev, wlddev) 64.747 67.9355 74.16047 70.2715 75.642 133.455   100</span></span>
+<span><span class="co">#  add_vars(wlddev, wlddev) 13.739 15.0225 19.27218 19.4430 20.918  53.429   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="renaming-columns">2.6 Renaming Columns<a class="anchor" aria-label="anchor" href="#renaming-columns"></a>
@@ -1672,9 +1672,9 @@ and to facilitate the avoidance of piped `%>%` expressions. Needless to say pipe
 microbenchmark(standard = tfm(gv(wlddev, 9:12), ODA_GDP = ODA/PCGDP),
                piped = get_vars(wlddev, 9:12) %>% ftransform(ODA_GDP = ODA/PCGDP))
 # Unit: microseconds
-#      expr    min      lq     mean median      uq     max neval
-#  standard 70.636 73.3840 77.58145 74.446 76.0475 243.839   100
-#     piped 74.062 76.6985 82.38104 77.591 81.0770 164.668   100
+#      expr     min       lq     mean  median       uq     max neval
+#  standard 138.981 143.2225 152.3245 144.930 151.8125 314.565   100
+#     piped 146.809 150.0325 161.1343 153.786 168.7630 238.433   100
 ```
 -->
 </div>
@@ -1691,9 +1691,9 @@ attributes of the data frame itself.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="va">wlddev</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                             expr      min        lq      mean   median       uq      max neval</span></span>
-<span><span class="co">#  na_omit(wlddev, na.attr = TRUE)  132.917  165.5555  262.6283  179.199  190.160 8168.266   100</span></span>
-<span><span class="co">#                  na.omit(wlddev) 1850.813 1895.6555 2374.1045 1910.289 1927.131 9764.724   100</span></span></code></pre></div>
+<span><span class="co">#                             expr      min       lq      mean   median        uq      max neval</span></span>
+<span><span class="co">#  na_omit(wlddev, na.attr = TRUE)  197.881  259.974  384.4204  277.732  294.8755 10726.77   100</span></span>
+<span><span class="co">#                  na.omit(wlddev) 2806.912 2991.076 3642.0186 3055.247 3131.6580 13187.10   100</span></span></code></pre></div>
 <p>Another added feature is the removal of cases missing on certain
 columns only:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
@@ -1778,8 +1778,8 @@ lists of atomic objects). When called on a data frame,
 <code class="sourceCode R"><span><span class="co"># Efficient replacing missing values with 0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/recode-replace.html">replace_NA</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                    expr     min      lq     mean  median      uq      max neval</span></span>
-<span><span class="co">#  replace_NA(GGDC10S, 0) 340.907 384.739 496.0716 394.095 415.527 9830.906   100</span></span>
+<span><span class="co">#                    expr     min       lq    mean  median       uq      max neval</span></span>
+<span><span class="co">#  replace_NA(GGDC10S, 0) 500.924 601.5005 753.129 625.947 651.5025 12815.85   100</span></span>
 <span></span>
 <span><span class="co"># Adding log-transformed sectoral data: Some NaN and Inf values generated</span></span>
 <span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">*</span><span class="fl">2</span><span class="op">-</span><span class="fl">5</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -1866,11 +1866,11 @@ to data.frame, <em>data.table</em> and <em>tibble</em> respectively.</p>
 <span><span class="co"># Efficient Conversion of data frames and matrices to data.table</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span>, <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                           expr     min       lq      mean   median       uq      max neval</span></span>
-<span><span class="co">#                    qDT(wlddev)   7.513  10.4160  13.26467  13.4335  15.5460   22.835   100</span></span>
-<span><span class="co">#            qDT(EuStockMarkets)  19.084  23.4325 100.74138  27.6705  31.4525 7322.634   100</span></span>
-<span><span class="co">#          as.data.table(wlddev) 243.873 576.9080 759.45573 602.7995 646.4445 8254.373   100</span></span>
-<span><span class="co">#  as.data.frame(EuStockMarkets) 158.278 182.6240 202.57902 188.8105 214.5990  709.656   100</span></span>
+<span><span class="co">#                           expr     min       lq       mean   median       uq      max neval</span></span>
+<span><span class="co">#                    qDT(wlddev)  13.035  17.9775   22.10444  22.6625  24.8470   41.482   100</span></span>
+<span><span class="co">#            qDT(EuStockMarkets)  33.304  38.7855  130.39735  43.5180  46.8890 8721.385   100</span></span>
+<span><span class="co">#          as.data.table(wlddev) 320.562 826.0270 1016.88506 856.2715 881.0895 9510.296   100</span></span>
+<span><span class="co">#  as.data.frame(EuStockMarkets) 297.030 332.7520  355.30090 347.1985 360.7625  839.131   100</span></span>
 <span></span>
 <span><span class="co"># Converting a time series to data.frame</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDF</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span></span>
@@ -1922,18 +1922,18 @@ wise convert a matrix into a plain list, data.frame or
 <code class="sourceCode R"><span><span class="co"># This converts the matrix to a list of 1860 row-vectors of length 4.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                  expr     min      lq     mean   median      uq     max neval</span></span>
-<span><span class="co">#  mrtl(EuStockMarkets) 213.301 237.237 249.8221 255.9575 264.611 310.218   100</span></span></code></pre></div>
+<span><span class="co">#                  expr     min       lq     mean  median      uq     max neval</span></span>
+<span><span class="co">#  mrtl(EuStockMarkets) 303.318 308.7695 328.8147 322.349 341.226 459.589   100</span></span></code></pre></div>
 <p>For the reverse operation, <code>qM</code> converts vectors,
 higher-dimensional arrays, data frames and suitable lists to matrix.</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Note: kit::psum is the most efficient way to do this</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="fu">kit</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kit/man/psum.html" class="external-link">psum</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                 expr    min      lq     mean  median      uq      max neval</span></span>
-<span><span class="co">#  rowSums(qM(mtcars)) 14.391 15.9045 21.72426 16.9115 17.9670  480.523   100</span></span>
-<span><span class="co">#      rowSums(mtcars) 77.488 80.2865 87.64187 89.4445 91.2240  126.201   100</span></span>
-<span><span class="co">#    kit::psum(mtcars)  1.630  2.0210 42.24485  2.8075  3.2085 3938.098   100</span></span></code></pre></div>
+<span><span class="co">#                 expr     min       lq      mean   median       uq      max neval</span></span>
+<span><span class="co">#  rowSums(qM(mtcars))  24.649  26.9270  35.09378  30.6135  31.9060  451.623   100</span></span>
+<span><span class="co">#      rowSums(mtcars) 130.531 134.1365 142.45121 136.5385 148.8425  184.415   100</span></span>
+<span><span class="co">#    kit::psum(mtcars)   2.615   3.2615  66.64427   5.7450   6.9950 6108.624   100</span></span></code></pre></div>
 <p>At last, <code>qF</code> converts vectors to factor and is quite a
 bit faster than <code>as.factor</code>:</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
@@ -1945,9 +1945,9 @@ bit faster than <code>as.factor</code>:</p>
 <span><span class="co"># [1] 216</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                       expr     min       lq     mean  median      uq      max neval</span></span>
-<span><span class="co">#         qF(wlddev$country) 145.511 148.9355 154.9185 151.957 156.627  229.604   100</span></span>
-<span><span class="co">#  as.factor(wlddev$country) 565.566 574.6980 661.6619 581.246 601.932 7917.813   100</span></span>
+<span><span class="co">#                       expr     min       lq     mean  median       uq      max neval</span></span>
+<span><span class="co">#         qF(wlddev$country) 202.054 215.7605 226.9895 224.877 236.9545  283.383   100</span></span>
+<span><span class="co">#  as.factor(wlddev$country) 755.638 806.6580 928.4818 831.753 874.1845 9919.401   100</span></span>
 <span></span>
 <span><span class="co"># Converting from numeric</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span></span>
@@ -1957,9 +1957,9 @@ bit faster than <code>as.factor</code>:</p>
 <span><span class="co"># [1] 9470</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                     expr       min         lq       mean    median         uq       max neval</span></span>
-<span><span class="co">#         qF(wlddev$PCGDP)   590.341   741.5525   806.7435   809.406   855.4475  1082.938   100</span></span>
-<span><span class="co">#  as.factor(wlddev$PCGDP) 15873.856 16437.8900 18349.5918 18288.257 18909.8540 28198.332   100</span></span></code></pre></div>
+<span><span class="co">#                     expr       min        lq      mean    median        uq       max neval</span></span>
+<span><span class="co">#         qF(wlddev$PCGDP)   814.096  1083.958  1134.489  1126.892  1173.314  1369.741   100</span></span>
+<span><span class="co">#  as.factor(wlddev$PCGDP) 21439.793 22150.018 23029.905 22509.486 23074.978 34178.435   100</span></span></code></pre></div>
 <!-- by default `qF` converts vectors to ordered factor, regulated by the default argument `ordered = TRUE`. This behavior is the same as `as.factor`, but `as.factor` does not attach a class 'ordered'. `qF(x, ordered = FALSE)` will not sort the levels and is slightly faster. Another difference to `as.factor` is that `qF` always adds a `NA` level for missing values, however by default an integer missing value (`NA_integer_`) is provided as the value for that level (thus `qF` behaves identical to `as.factor` with exception of the added level). a slight modification of this behavior can be achieved with `qF(x, na.exclude = FALSE)`, which will still have the `NA` level but now also assigns a positive integer value to the level (implying that missing values can no longer be detected using `is.na`), and attaches an additional class 'na.included'. Factor generation using `qF(x, na.exclude = FALSE)` is advised when using factors to carry out grouped computations with *collapse*'s fast functions, as the class 'na.included' prevents *collapse* functions to execute a missing value check on the factor, and thus yields a performance improvement. -->
 </div>
 <div class="section level2">
@@ -2105,9 +2105,9 @@ internally.</p>
 <span><span class="va">f2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">f</span><span class="op">)</span>, <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#          expr    min     lq     mean  median      uq    max neval</span></span>
-<span><span class="co">#   fsd(dat, f) 12.680 13.034 13.44368 13.3080 13.4805 21.026   100</span></span>
-<span><span class="co">#  fsd(dat, f2) 13.251 13.630 14.39059 13.8205 14.0475 65.796   100</span></span></code></pre></div>
+<span><span class="co">#          expr    min      lq     mean  median      uq    max neval</span></span>
+<span><span class="co">#   fsd(dat, f) 19.234 19.8900 21.16963 20.1045 20.6505 37.357   100</span></span>
+<span><span class="co">#  fsd(dat, f2) 20.495 21.0355 22.72024 21.3970 21.8455 66.934   100</span></span></code></pre></div>
 <p>For programming purposes <em>GRP</em> objects are preferable over
 factors because they never require further checks and they provide
 additional information about the grouping (such as group sizes and the
@@ -2172,9 +2172,9 @@ repeated computations over the same groups very efficient.</p>
 <span><span class="co"># Grouped computation with and without prior grouping</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span><span class="op">)</span>, <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">ind</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                             expr    min     lq     mean  median      uq     max neval</span></span>
-<span><span class="co">#                      fsd(dat, g) 39.232 39.910 40.51794 40.5855 40.8280  44.651   100</span></span>
-<span><span class="co">#  fsd(dat, get_vars(mtcars, ind)) 67.177 68.297 71.61131 68.9280 69.4815 225.855   100</span></span></code></pre></div>
+<span><span class="co">#                             expr     min       lq      mean   median      uq     max neval</span></span>
+<span><span class="co">#                      fsd(dat, g)  65.002  67.6655  73.44804  69.3405  74.295 115.971   100</span></span>
+<span><span class="co">#  fsd(dat, get_vars(mtcars, ind)) 121.260 123.9970 131.62225 126.3075 132.129 255.696   100</span></span></code></pre></div>
 <!-- Note at this point that by default (`sort = TRUE`, `order = 1L`), groups are sorted in ascending order, corresponding to *data.table* grouping with `keyby`. The ordering can be reversed (`order = -1L`), or set individually for each of the 3 grouping columns (i.e. `order = c(1L, -1L, -1L)`). If `sort = FALSE`, the grouping is unordered corresponding to *data.table* grouping with `by`.  -->
 <p>Yet another possibility is creating a grouped data frame (class
 <em>grouped_df</em>). This can either be done using
@@ -2313,8 +2313,8 @@ very low:</p>
 <span>         <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmin_fmax.html">fmin</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="st">"min_"</span><span class="op">)</span>,</span>
 <span>         <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="st">"max_"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#  expr    min      lq     mean  median      uq     max neval</span></span>
-<span><span class="co">#  call 70.524 71.5165 73.53853 72.0785 72.7185 190.613   100</span></span></code></pre></div>
+<span><span class="co">#  expr     min       lq     mean   median       uq     max neval</span></span>
+<span><span class="co">#  call 128.541 130.3345 140.2867 133.8295 148.4375 257.139   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="transformations-using-the-tra-argument">4.4 Transformations Using the <code>TRA</code> Argument<a class="anchor" aria-label="anchor" href="#transformations-using-the-tra-argument"></a>
@@ -2651,33 +2651,33 @@ and column-wise arithmetic operators for matrix-like objects:
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">/</span> <span class="va">v</span><span class="op">)</span>, <span class="va">X</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span>, <span class="va">v</span><span class="op">)</span>, <span class="va">X</span> <span class="op"><a href="../reference/arithmetic.html">%r/%</a></span> <span class="va">v</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#                         expr     min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#                    t(t(X)/v) 247.011 567.5655 581.7167 601.9660 636.4595  972.967   100</span></span>
-<span><span class="co">#  X/outer(rep(1, nrow(X)), v) 126.904 290.8420 297.7591 307.4520 325.9470  452.985   100</span></span>
-<span><span class="co">#                     X %r/% v  33.852 180.9600 402.0761 194.6025 210.3075 6102.823   100</span></span>
+<span><span class="co">#                    t(t(X)/v) 482.679 915.7695 914.9947 949.7180 981.9620 1058.982   100</span></span>
+<span><span class="co">#  X/outer(rep(1, nrow(X)), v) 317.850 528.5150 538.4786 551.0465 575.8480  648.831   100</span></span>
+<span><span class="co">#                     X %r/% v  54.311 229.3965 478.5909 246.1430 262.3615 6623.033   100</span></span>
 <span></span>
 <span><span class="co"># Data frame row operations</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%r/%</a></span> <span class="va">v</span>, <span class="co"># Same thing using mapply and collapse::copyAttrib </span></span>
 <span>               <span class="fu"><a href="../reference/small-helpers.html">copyAttrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mapply.html" class="external-link">mapply</a></span><span class="op">(</span><span class="va">`/`</span>, <span class="va">dat</span>, <span class="va">v</span>, SIMPLIFY <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                                                    expr     min      lq     mean   median      uq</span></span>
-<span><span class="co">#                                              dat %r/% v  58.140 196.319 385.9882 201.2760 218.318</span></span>
-<span><span class="co">#  copyAttrib(mapply(`/`, dat, v, SIMPLIFY = FALSE), dat) 180.986 296.377 307.8976 303.7885 318.934</span></span>
-<span><span class="co">#       max neval</span></span>
-<span><span class="co">#  9412.919   100</span></span>
-<span><span class="co">#   383.324   100</span></span>
+<span><span class="co">#                                                    expr     min       lq     mean   median       uq</span></span>
+<span><span class="co">#                                              dat %r/% v  93.154 283.5255 538.5110 299.4085 315.7100</span></span>
+<span><span class="co">#  copyAttrib(mapply(`/`, dat, v, SIMPLIFY = FALSE), dat) 387.291 593.1690 623.8938 622.6805 651.0375</span></span>
+<span><span class="co">#        max neval</span></span>
+<span><span class="co">#  12615.312   100</span></span>
+<span><span class="co">#    768.214   100</span></span>
 <span></span>
 <span><span class="co"># Data frame column arithmetic is very slow</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">dat</span> <span class="op">/</span> <span class="va">dat</span><span class="op">$</span><span class="va">SUM</span>, <span class="va">dat</span> <span class="op">/</span> <span class="fl">5</span>, <span class="va">dat</span> <span class="op">/</span> <span class="va">dat</span>, </span>
 <span>               <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="va">dat</span><span class="op">$</span><span class="va">SUM</span>, <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="fl">5</span>, <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="va">dat</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#              expr      min        lq      mean    median        uq       max neval</span></span>
-<span><span class="co">#       dat/dat$SUM 2714.173 3365.5595 4273.6820 3399.5345 3476.7145 11718.948   100</span></span>
-<span><span class="co">#             dat/5  944.949  974.2260 1070.0913  986.3955 1004.2615  8566.161   100</span></span>
-<span><span class="co">#           dat/dat 1001.152 1032.5155 1053.7943 1047.4350 1062.9145  1182.701   100</span></span>
-<span><span class="co">#  dat %c/% dat$SUM  106.510  228.6740  236.8948  234.2035  246.4090   277.689   100</span></span>
-<span><span class="co">#        dat %c/% 5  149.226  221.8345  231.6585  228.5790  240.0215   315.189   100</span></span>
-<span><span class="co">#      dat %c/% dat  151.747  227.8320 1208.4264  237.6490  251.6895 97064.088   100</span></span></code></pre></div>
+<span><span class="co">#              expr      min        lq      mean   median        uq        max neval</span></span>
+<span><span class="co">#       dat/dat$SUM 4386.893 5280.2240 6474.1947 5437.921 5649.9755  16331.092   100</span></span>
+<span><span class="co">#             dat/5 1761.025 1906.9170 2057.4423 1966.573 2011.3930  11761.681   100</span></span>
+<span><span class="co">#           dat/dat 1834.796 2017.8815 2077.0811 2082.006 2128.4930   2366.042   100</span></span>
+<span><span class="co">#  dat %c/% dat$SUM  254.821  412.9715  431.2357  428.514  449.3975    540.922   100</span></span>
+<span><span class="co">#        dat %c/% 5  280.210  390.9115  414.2883  412.877  435.9295    510.714   100</span></span>
+<span><span class="co">#      dat %c/% dat  302.679  400.9940 1710.1374  422.894  442.1340 128903.128   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="row-and-column-data-apply">6.1 Row and Column Data Apply<a class="anchor" aria-label="anchor" href="#row-and-column-data-apply"></a>
@@ -2905,12 +2905,12 @@ For the very common centering and averaging tasks, *collapse* supplies 2 special
 <span>               <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">miris</span><span class="op">)</span><span class="op">)</span>               <span class="co"># fastest, fwithin is discussed in section 6.5</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#                                      expr    min      lq     mean  median      uq     max neval</span></span>
-<span><span class="co">#               sweep(miris, 2, stats, "-") 40.137 41.6470 46.31357 43.5030 46.6330 111.909   100</span></span>
-<span><span class="co">#  miris - outer(rep(1, nrow(iris)), stats) 12.457 13.8440 15.94889 14.9030 16.4030  53.233   100</span></span>
-<span><span class="co">#             TRA(miris, fmean(miris), "-")  6.969  7.6525  8.50730  8.0455  8.7525  31.547   100</span></span>
-<span><span class="co">#                   miris %r-% fmean(miris)  7.928  8.4800 10.56458  9.1330 10.4340  84.105   100</span></span>
-<span><span class="co">#                   fmean(miris, TRA = "-")  6.214  6.7205  8.37907  7.4840  8.4265  62.624   100</span></span>
-<span><span class="co">#                            fwithin(miris)  6.294  7.2645 10.19296  8.3290  9.1705 173.197   100</span></span>
+<span><span class="co">#               sweep(miris, 2, stats, "-") 72.973 78.3550 87.29056 81.7840 92.7855 217.846   100</span></span>
+<span><span class="co">#  miris - outer(rep(1, nrow(iris)), stats) 21.282 26.1625 29.86962 28.6625 30.5750  56.629   100</span></span>
+<span><span class="co">#             TRA(miris, fmean(miris), "-") 10.257 11.5270 15.06710 12.8030 16.6795  39.761   100</span></span>
+<span><span class="co">#                   miris %r-% fmean(miris) 11.620 13.6195 16.88040 14.7615 18.0470  88.509   100</span></span>
+<span><span class="co">#                   fmean(miris, TRA = "-")  8.804 10.6975 13.86316 12.2360 15.6220  71.305   100</span></span>
+<span><span class="co">#                            fwithin(miris)  9.262 11.2010 15.68505 13.4030 16.2955 155.829   100</span></span>
 <span></span>
 <span><span class="co"># Simple replacing [same as fmean(miris, TRA = "replace") or fbetween(miris)]</span></span>
 <span><span class="fu"><a href="../reference/TRA.html">TRA</a></span><span class="op">(</span><span class="va">miris</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">miris</span><span class="op">)</span>, <span class="st">"replace"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>

@@ -92,18 +92,18 @@
 <li>To facilitate complex data transformation, exploration and computing tasks in R.</li>
 <li>To help make R code fast, flexible, parsimonious and programmer friendly.</li>
 </ul>
-<p>It further implements a class-agnostic approach to data manipulation in R, supporting base R, <em>dplyr</em> (<em>tibble</em>), <em>data.table</em>, <em>sf</em>, <em>plm</em> classes for panel data (‘pseries’ and ‘pdata.frame’), and non-destructively handling other matrix or data frame based classes (including most time series classes such as ‘ts’, ‘xts’/‘zoo’ and ‘tsibble’).</p>
+<p>It further implements a class-agnostic approach to data manipulation in R, supporting base R, <em>dplyr</em> (<em>tibble</em>), <em>data.table</em>, <em>sf</em>, <em>plm</em> classes for panel data, and preserving other classes (such as ‘ts’, ‘xts’/‘zoo’ and ‘tsibble’).</p>
 <p><strong>Key Features:</strong></p>
 <ul>
 <li><p><strong>Advanced statistical programming</strong>: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data frames. Fast and programmable grouping, ordering, matching, unique values/rows, factor generation and interactions.</p></li>
 <li><p><strong>Fast data manipulation</strong>: Fast and flexible functions for data manipulation, data object conversions, and memory efficient R programming.</p></li>
 <li><p><strong>Advanced aggregation</strong>: Fast and easy multi-data-type, multi-function, weighted and parallelized data aggregation.</p></li>
-<li><p><strong>Advanced transformations</strong>: Fast row/column arithmetic, (grouped) replacing and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations, linear prediction, model fitting + testing exclusion restrictions, and distance matrices.</p></li>
-<li><p><strong>Advanced time-computations</strong>: Fast and flexible indexed time series and panel data classes. Fast (sequences of) lags/leads, and (lagged/leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (irregular) time series and panels. Multivariate auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversions.</p></li>
+<li><p><strong>Advanced transformations</strong>: Fast row/column arithmetic, (grouped) replacing and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations.</p></li>
+<li><p><strong>Advanced time-computations</strong>: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, and (lagged/leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (irregular) time series and panels. Multivariate auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversions.</p></li>
 <li><p><strong>List processing</strong>: Recursive list search, splitting, extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.</p></li>
 <li><p><strong>Advanced data exploration</strong>: Fast (grouped, weighted, panel-decomposed) summary statistics and descriptive tools.</p></li>
 </ul>
-<p><em>collapse</em> utilizes both C and C++ via <em>Rcpp</em>, and also uses C/C++ functions from <em>data.table</em>, <em>kit</em>, <em>fixest</em>, <em>weights</em>, <em>RcppArmadillo</em>, <em>RcppEigen</em> and <em>stats</em>. Efforts have been made to maximize the execution speed of R code employed.</p>
+<p><em>collapse</em> utilizes both C and C++ via <em>Rcpp</em>, and also uses C/C++ functions from <em>data.table</em>, <em>kit</em>, <em>fixest</em>, <em>weights</em>, <em>RcppArmadillo</em>, <em>RcppEigen</em> and <em>stats</em>. It’s R code is highly optimized, yielding minimal overheads.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -125,8 +125,8 @@
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p><em>collapse</em> installs with a built-in structured <a href="https://sebkrantz.github.io/collapse/reference/index.html">documentation</a>, implemented via a set of separate help pages. Calling <code><a href="reference/collapse-documentation.html">help('collapse-documentation')</a></code> from the R console brings up the the top-level documentation page, which provides an overview of the entire functionality of the package and links to all other documentation pages.</p>
-<p>In addition there are several <a href="https://sebkrantz.github.io/collapse/articles/index.html">vignettes</a>.</p>
+<p><em>collapse</em> installs with a built-in structured <a href="https://sebkrantz.github.io/collapse/reference/index.html">documentation</a>, implemented via a set of separate help pages. Calling <code><a href="reference/collapse-documentation.html">help('collapse-documentation')</a></code> brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages.</p>
+<p>In addition there are several <a href="https://sebkrantz.github.io/collapse/articles/index.html">vignettes</a>, among them one on <a href="https://sebkrantz.github.io/collapse/articles/collapse_documentation.html">Documentation and Resources</a>.</p>
 <div class="section level3">
 <h3 id="cheatsheet-v188">Cheatsheet (v1.8.8)<a class="anchor" aria-label="anchor" href="#cheatsheet-v188"></a>
 </h3>
