@@ -364,7 +364,7 @@ mtcars %>% ftransform(fselect(., hp:qsec) %>% fmedian(cyl, TRA = 1) %>%
 # Aggregation: weighted standard deviations
 mtcars |> fgroup_by(vs) |> fsummarise(across(disp:drat, fsd, w = wt))
 # Grouped linear models (one way of doing it)
-qTBL(mtcars) |> fgroup_by(vs) |> fsummarise(reg = list(lm(disp ~ drat)))
+qTBL(mtcars) |> fgroup_by(vs) |> fsummarise(reg = list(lm(mpg ~ carb)))
 # Adding some columns. Use ftransform<- to also replace existing ones
 add_vars(iris) <- num_vars(iris) |> fsum(TRA = '%') |> add_stub("perc_")
 @
@@ -397,7 +397,7 @@ collap(wlddev, country + PCGDP + LIFEEX ~ income, w = ~ POP)
 \vspace{-5mm}
 \textcolor{lightgray}{\hrulefill}\\
 {\scriptsize \vspace{-0.5mm}
- Page 1 of 2 \hfill \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA}\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 2.0.0\ \textbullet\ Updated: 2023-10
+ Page 1 of 2 \hfill \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA}\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 2.0.3\ \textbullet\ Updated: 2023-10
 }
 
 
@@ -613,7 +613,7 @@ nest_coef |> unlist2d(c("vs", "am"), row.names = "variable") |> head(2)
 \section{(Memory) Efficient Programming}
 \itxt{Functions for (memory) efficient R programming}\\ [0.5em]
 
-\code{any|all[v|NA]}, \code{which[v|NA]}, \code{\%[=|!]=\%}, \code{copyv}, \code{setv}, \code{alloc} \code{missing\_cases}, \code{na\_[insert|rm|omit]}, \code{vlengths}, \code{vtypes}, \code{vgcd}, \code{frange}, \code{fnlevels}, \code{fn[row|col]}, \code{fdim}, \code{seq\_[row|col]}\\
+\code{any|all[v|NA]}, \code{which[v|NA]}, \code{\%[=|!]=\%}, \code{copyv}, \code{setv}, \code{alloc} \code{missing\_cases}, \code{na\_[insert|rm|omit]}, \code{vlengths}, \code{vtypes}, \code{vgcd}, \code{fnlevels}, \code{fn[row|col]}, \code{fdim}, \code{seq\_[row|col]}, \code{vec}\\
 <<eval = FALSE>>=
 fsubset(wlddev, year %==% 2010) # 2x faster fsubset(wlddev, year == 2010)
 attach(mtcars) # Efficient sub-assignment by reference, various options...
@@ -633,7 +633,7 @@ setv(am, 0, vs); setv(am, 1:10, vs); setv(am, 1:10, vs[10:20])
 \hrrule
 \section{Small (Helper) Functions}
 \itxt{Functions for (meta-)programming and attributes}\\ [0.5em]
-\code{.c}, \code{massign}, \code{\%=\%}, \code{vlabels[<-]}, \code{setLabels}, \code{vclasses}, \code{namlab}, \code{[add|rm]\_stub}, \code{\%!in\%}, \code{ckmatch}, \code{all\_identical}, \code{all\_obj\_equal}, \code{all\_funs}, \code{set[Dim|Row|Col]names}, \code{unattrib}, \code{setAttrib}, \code{copyAttrib}, \code{copyMostAttrib} %, \code{is\_categorical}, \code{is\_date}
+\code{.c}, \code{massign}, \code{\%=\%}, \code{vlabels[<-]}, \code{setLabels}, \code{vclasses}, \code{namlab}, \code{[add|rm]\_stub}, \code{all\_identical}, \code{all\_obj\_equal}, \code{all\_funs}, \code{set[Dim|Row|Col]names}, \code{unattrib}, \code{setAttrib}, \code{copyAttrib}, \code{copyMostAttrib}, \code{is\_categorical}, \code{is\_date}
 
 <<include=FALSE, echo=FALSE>>=
 wlddev <- wlddev2
@@ -648,23 +648,23 @@ namlab(wlddev[c(2, 9)], N = TRUE, Ndist = TRUE, class = TRUE)
 
 
 \hrrule
-\section{API Extensions}
+\section{API Extensions and Global Options}
 \itxt{Shorthands for frequently used functions}\\ [0.5em]
 \code{fselect -> slt, fsubset -> sbt, fmutate -> mtt, [f/set]transform[v] -> [set]tfm[v], fsummarise -> smr,
 across -> acr, fgroup\_by -> gby, finteraction -> itn, findex\_by -> iby, findex -> ix, frename -> rnm, get\_vars -> gv, num\_vars -> nv,
 add\_vars -> av} \newline
 
-\itxt{Namespace masking}\\ [0.5em]
-Can set \code{option(collpse\_mask = c(...))} with a vector of functions starting with f-, to export versions without f-, masking base R or \emph{dplyr}. A few keywords exist to mask multiple functions, see \code{help("collapse-options")}. This allows clean \& fast code, but poses additional namespace challenges:
+\itxt{Namespace masking and other global options}\\ [0.5em]
+Use \code{set\_collpse(mask = c(...))} with a vector of functions starting with f-, to export versions without f-, masking base R and/or \emph{dplyr}. A few keywords exist to mask multiple functions, see \code{help("collapse-options")}. There are also many other global defaults and optimizations that can be controlled with \code{set\_collapse(...)}. Retrieve options using \code{get\_collapse()}.
 
 <<eval = FALSE>>=
-# Masking all f- functions and specials n = GRPN and table = qtab
-options(collapse_mask = "all")
+# Masking all (f-)functions and changing some defaults (=optimizing)
 library(collapse)
-# The folowing is 100% collapse code, apart from the base pipe
-
+set_collapse(mask = "all", na.rm = FALSE, sort = FALSE, nthreads = 4)
+# The following is now 100% collapse code and executed without regard for
+# missing values, using unsorted grouping and 4 threads (where applicable)
 wlddev |>
-  subset(year >= 1990) |>
+  subset(year >= 1990 & is.finite(GINI)) |>
   group_by(year) |>
   summarise(n = n(), across(PCGDP:GINI, mean, w = POP))
 
@@ -684,14 +684,14 @@ wlddev |>
          PCGDP_growth = growth(PCGDP)) |> unindex()
 
 @
-The best way to set this option is inside an \code{.Rprofile} file placed in the user or project directory. Use it carefully.
+
 
 \end{multicols}
 
 \vspace{-5.5mm}
 \textcolor{lightgray}{\hrulefill}\\
 {\scriptsize \vspace{-0.5mm}
- Page 2 of 2 \hfill \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA}\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 1.8.8\ \textbullet\ Updated: 2022-08
+ Page 2 of 2 \hfill \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA}\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 2.0.3\ \textbullet\ Updated: 2023-10
 }
 
 \end{document}
