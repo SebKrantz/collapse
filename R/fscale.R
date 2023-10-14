@@ -87,10 +87,13 @@ STD.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0,
 STD.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...)
   fscale.pseries(x, effect, w, na.rm, mean, sd, ...)
 
-STD.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = "STD.", ...)
-  add_stub(fscale.matrix(x, g, w, na.rm, mean, sd, ...), stub)
+STD.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = .op[["stub"]], ...) {
+  res <- fscale.matrix(x, g, w, na.rm, mean, sd, ...)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "STD."))
+  res
+}
 
-STD.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
+STD.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- substitute(w)
@@ -109,16 +112,18 @@ STD.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1
 
   if(length(gn2)) {
     ax <- attributes(x)
-    ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
+    ax[["names"]] <- c(nam[gn], do_stub(stub, nam[-gn2], "STD."))
     res <- .Call(Cpp_fscalel, .subset(x, -gn2), g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
     if(length(gn)) return(setAttributes(c(.subset(x, gn), res), ax)) else return(setAttributes(res, ax))
   }
-  add_stub(.Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd)), stub)
+  res <- .Call(Cpp_fscalel,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "STD."))
+  res
 }
 
 # updated (best) version !
 STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
-                            na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = "STD.", keep.ids = TRUE,
+                            na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = .op[["stub"]], keep.ids = TRUE,
                             keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
@@ -146,15 +151,15 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
   }
 
   if(length(gn) && length(cols)) {
-    ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
+    ax[["names"]] <- c(nam[gn], do_stub(stub, nam[cols], "STD."))
     return(setAttributes(c(x[gn], .Call(Cpp_fscalel,x[cols],fnlevels(g),g,w,na.rm,cm(mean),csd(sd))), ax))
   }
   if(!length(gn)) {
-    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
+    ax[["names"]] <- do_stub(stub, nam[cols], "STD.")
     return(setAttributes(.Call(Cpp_fscalel,x[cols],fnlevels(g),g,w,na.rm,cm(mean),csd(sd)), ax))
   }
-  if(is.character(stub)) {
-    ax[["names"]] <- paste0(stub, nam)
+  if(isTRUE(stub) || is.character(stub)) {
+    ax[["names"]] <- do_stub(stub, nam, "STD.")
     return(setAttributes(.Call(Cpp_fscalel,x,fnlevels(g),g,w,na.rm,cm(mean),csd(sd)), ax))
   }
   .Call(Cpp_fscalel,`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,w,na.rm,cm(mean),csd(sd))
@@ -162,7 +167,7 @@ STD.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric,
 
 # updated, fast and data.table proof version !
 STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
-                           na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = "STD.", keep.by = TRUE,
+                           na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = .op[["stub"]], keep.by = TRUE,
                            keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
 
@@ -195,10 +200,10 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
     }
 
     if(length(gn)) {
-      ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
+      ax[["names"]] <- c(nam[gn], do_stub(stub, nam[cols], "STD."))
       return(setAttributes(c(x[gn], .Call(Cpp_fscalel,x[cols],by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd))), ax))
     }
-    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
+    ax[["names"]] <- do_stub(stub, nam[cols], "STD.")
     return(setAttributes(.Call(Cpp_fscalel,x[cols],by[[1L]],by[[2L]],w,na.rm,cm(mean),csd(sd)), ax))
   } else if(length(cols)) { # Needs to be like this, otherwise subsetting dropps the attributes !!
     ax <- attributes(x)
@@ -207,7 +212,7 @@ STD.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric,
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
-  if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
+  if(isTRUE(stub) || is.character(stub)) attr(x, "names") <- do_stub(stub, attr(x, "names"), "STD.")
 
   if(is.null(by)) return(.Call(Cpp_fscalel,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
   by <- G_guo(by)

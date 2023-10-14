@@ -71,24 +71,24 @@ flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = length(n) > 1L, shift 
 # Lag Operator   # use xt instead of by ?
 L <- function(x, n = 1, ...) UseMethod("L") # , x
 
-L.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+L.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(flag.matrix(x, n, g, t, fill, stubs, ...))
   flag.default(x, n, g, t, fill, stubs, ...)
 }
 
-L.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, shift = "time", ...)
+L.pseries <- function(x, n = 1, fill = NA, stubs = .op[["stub"]], shift = "time", ...)
   flag.pseries(x, n, fill, stubs, shift, ...)
 
-L.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+L.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], ...)
   flag.matrix(x, n, g, t, fill, stubs, ...)
 
-L.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+L.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x
   eval(substitute(flag.grouped_df(x, n, t, fill, stubs, keep.ids, ...)))
 }
 
 L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-                         fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+                         fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.call(by) || is.call(t)) {
     ax <- attributes(x)
@@ -139,7 +139,7 @@ L.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
 
 L.list <- function(x, ...) L.data.frame(x, ...)
 
-L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, shift = "time", keep.ids = TRUE, ...) {
+L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = .op[["stub"]], shift = "time", keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
   nam <- ax[["names"]]
@@ -176,29 +176,29 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, 
 # Lead Operator
 F <- function(x, n = 1, ...) UseMethod("F") # , x
 
-F.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
+F.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(flag.matrix(x, -n, g, t, fill, stubs, ...))
   flag.default(x, -n, g, t, fill, stubs, ...)
 }
 
-F.pseries <- function(x, n = 1, fill = NA, stubs = TRUE, shift = "time", ...)
+F.pseries <- function(x, n = 1, fill = NA, stubs = .op[["stub"]], shift = "time", ...)
   flag.pseries(x, -n, fill, stubs, shift, ...)
 
-F.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...)
+F.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], ...)
   flag.matrix(x, -n, g, t, fill, stubs, ...)
 
-F.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, ...) {
+F.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x
   eval(substitute(flag.grouped_df(x, -n, t, fill, stubs, keep.ids, ...)))
 }
 
 F.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-                         fill = NA, stubs = TRUE, keep.ids = TRUE, ...)
+                         fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, ...)
   L.data.frame(x, -n, by, t, cols, fill, stubs, keep.ids, ...)
 
 F.list <- F.data.frame
 
-F.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE, shift = "time", keep.ids = TRUE, ...)
+F.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = .op[["stub"]], shift = "time", keep.ids = TRUE, ...)
   L.pdata.frame(x, -n, cols, fill, stubs, shift, keep.ids, ...)
 
 

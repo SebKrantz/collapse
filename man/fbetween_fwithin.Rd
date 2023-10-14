@@ -51,15 +51,16 @@ fbetween(x, \dots)
 
 \method{fbetween}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
 \method{fwithin}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
-\method{B}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "B.", \dots)
-\method{W}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, stub = "W.", \dots)
+\method{B}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = .op[["stub"]], \dots)
+\method{W}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
+  stub = .op[["stub"]], \dots)
 
 \method{fbetween}{data.frame}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
 \method{fwithin}{data.frame}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
 \method{B}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-  fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, \dots)
+  fill = FALSE, stub = .op[["stub"]], keep.by = TRUE, keep.w = TRUE, \dots)
 \method{W}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-  mean = 0, theta = 1, stub = "W.", keep.by = TRUE, keep.w = TRUE, \dots)
+  mean = 0, theta = 1, stub = .op[["stub"]], keep.by = TRUE, keep.w = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
@@ -71,9 +72,9 @@ fbetween(x, \dots)
 \method{fbetween}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, \dots)
 \method{fwithin}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, \dots)
 \method{B}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-  fill = FALSE, stub = "B.", keep.ids = TRUE, keep.w = TRUE, \dots)
+  fill = FALSE, stub = .op[["stub"]], keep.ids = TRUE, keep.w = TRUE, \dots)
 \method{W}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-  mean = 0, theta = 1, stub = "W.", keep.ids = TRUE, keep.w = TRUE, \dots)
+  mean = 0, theta = 1, stub = .op[["stub"]], keep.ids = TRUE, keep.w = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
@@ -82,9 +83,9 @@ fbetween(x, \dots)
 \method{fwithin}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
         keep.group_vars = TRUE, keep.w = TRUE, \dots)
 \method{B}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
-  stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
+  stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, \dots)
 \method{W}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
-  stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
+  stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 
 \arguments{
@@ -95,7 +96,7 @@ fbetween(x, \dots)
     \item{cols}{\emph{B/W (p)data.frame methods}: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric columns. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{na.rm}{logical. Skip missing values in \code{x} and \code{w} when computing averages. If \code{na.rm = FALSE} and a \code{NA} or \code{NaN} is encountered, the average for that group will be \code{NA}, and all data points belonging to that group in the output vector will also be \code{NA}.}
       \item{effect}{\emph{plm} methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc. Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted. }
-  \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
+  \item{stub}{character. A prefix/stub to add to the names of all transformed columns. \code{TRUE} (default) uses \code{"W."/"B."}, \code{FALSE} will not rename columns.}
   \item{fill}{\emph{option to \code{fbetween}/\code{B}}: Logical. \code{TRUE} will overwrite missing values in \code{x} with the respective average. By default missing values in \code{x} are preserved.}
   \item{mean}{\emph{option to \code{fwithin}/\code{W}}: The mean to center on, default is 0, but a different mean can be supplied and will be added to the data after the centering is performed. A special option when performing grouped centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}
   \item{theta}{\emph{option to \code{fwithin}/\code{W}}: Double. An optional scalar parameter for quasi-demeaning i.e. \code{x - theta * xi.}. This is useful for variance components ('random-effects') estimators. see Details.}

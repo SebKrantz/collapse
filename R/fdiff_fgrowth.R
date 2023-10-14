@@ -171,7 +171,7 @@ fgrowth.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, 
 # Operator data frame methods templates
 
 DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-                         fill = NA, return = 1L, rho = 1, stubs = TRUE, keep.ids = TRUE, power = 1, ...) { # , message = 2L, power = 1
+                         fill = NA, return = 1L, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, power = 1, ...) { # , message = 2L, power = 1
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
 
@@ -224,7 +224,7 @@ DG_data_frame_template <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols
   .Call(Cpp_fdiffgrowthl,cld(x),n,diff,fill,by[[1L]],by[[2L]],by[[3L]],G_t(t),return,rho,stubs,power)
 }
 
-DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, return = 1L, rho = 1, stubs = TRUE, shift = "time",
+DG_pdata_frame_template <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, return = 1L, rho = 1, stubs = .op[["stub"]], shift = "time",
                           keep.ids = TRUE, power = 1, ...) {
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -271,34 +271,34 @@ D.expression <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, .
 D.call <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
 D.name <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
 
-D.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...) {
+D.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fdiff.matrix(x, n, diff, g, t, fill, FALSE, rho, stubs, ...))
   fdiff.default(x, n, diff, g, t, fill, FALSE, rho, stubs, ...)
 }
 
-D.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, shift = "time", ...)
+D.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = .op[["stub"]], shift = "time", ...)
   fdiff.pseries(x, n, diff, fill, FALSE, rho, stubs, shift, ...)
 
 # setOldClass("pseries")
 # setMethod("D", signature(expr = "pseries"), D.pseries)
 
-D.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...)
+D.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], ...)
   fdiff.matrix(x, n, diff, g, t, fill, FALSE, rho, stubs, ...)
 
 # setMethod("D", "matrix")
 
-D.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...) {
+D.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x # because of piped calls -> "." is not in global environment ...
   eval(substitute(fdiff.grouped_df(x, n, diff, t, fill, FALSE, rho, stubs, keep.ids, ...)))
 }
 
 D.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-                         fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...)
+                         fill = NA, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...)
   DG_data_frame_template(x, n, diff, by, t, cols, fill, 1L, rho, stubs, keep.ids, ...)
 
 D.list <- function(x, ...) D.data.frame(x, ...)
 
-D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE, shift = "time",
+D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = .op[["stub"]], shift = "time",
                           keep.ids = TRUE, ...)
   DG_pdata_frame_template(x, n, diff, cols, fill, 1L, rho, stubs, shift, keep.ids, ...)
 
@@ -306,29 +306,29 @@ D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho 
 
 Dlog <- function(x, n = 1, diff = 1, ...) UseMethod("Dlog") # , x
 
-Dlog.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...) {
+Dlog.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fdiff.matrix(x, n, diff, g, t, fill, TRUE, rho, stubs, ...))
   fdiff.default(x, n, diff, g, t, fill, TRUE, rho, stubs, ...)
 }
 
-Dlog.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, shift = "time", ...)
+Dlog.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = .op[["stub"]], shift = "time", ...)
   fdiff.pseries(x, n, diff, fill, TRUE, rho, stubs, shift, ...)
 
-Dlog.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, ...)
+Dlog.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], ...)
   fdiff.matrix(x, n, diff, g, t, fill, TRUE, rho, stubs, ...)
 
-Dlog.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...) {
+Dlog.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x
   eval(substitute(fdiff.grouped_df(x, n, diff, t, fill, TRUE, rho, stubs, keep.ids, ...)))
 }
 
 Dlog.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-                         fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, ...)
+                         fill = NA, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...)
   DG_data_frame_template(x, n, diff, by, t, cols, fill, 2L, rho, stubs, keep.ids, ...)
 
 Dlog.list <- function(x, ...) Dlog.data.frame(x, ...)
 
-Dlog.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE, shift = "time",
+Dlog.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = .op[["stub"]], shift = "time",
                           keep.ids = TRUE, ...)
   DG_pdata_frame_template(x, n, diff, cols, fill, 2L, rho, stubs, shift, keep.ids, ...)
 
@@ -337,27 +337,27 @@ Dlog.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, r
 
 G <- function(x, n = 1, diff = 1, ...) UseMethod("G") # , x
 
-G.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, ...) {
+G.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], ...) {
   if(is.matrix(x) && !inherits(x, "matrix")) return(fgrowth.matrix(x, n, diff, g, t, fill, logdiff, scale, power, stubs, ...))
   fgrowth.default(x, n, diff, g, t, fill, logdiff, scale, power, stubs, ...)
 }
 
-G.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, shift = "time", ...)
+G.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], shift = "time", ...)
   fgrowth.pseries(x, n, diff, fill, logdiff, scale, power, stubs, shift, ...)
 
-G.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, ...)
+G.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], ...)
   fgrowth.matrix(x, n, diff, g, t, fill, logdiff, scale, power, stubs, ...)
 
-G.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, ...) {
+G.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x
   eval(substitute(fgrowth.grouped_df(x, n, diff, t, fill, logdiff, scale, power, stubs, keep.ids, ...)))
 }
 
 G.data.frame <- function(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-                         fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, ...)
+                         fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...)
   DG_data_frame_template(x, n, diff, by, t, cols, fill, 4L-logdiff, scale, stubs, keep.ids, power, ...)
 
 G.list <- function(x, ...) G.data.frame(x, ...)
 
-G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, shift = "time", keep.ids = TRUE, ...)
+G.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], shift = "time", keep.ids = TRUE, ...)
   DG_pdata_frame_template(x, n, diff, cols, fill, 4L-logdiff, scale, stubs, shift, keep.ids, power, ...)

@@ -29,19 +29,19 @@ fgrowth(x, n = 1, diff = 1, \dots)
 \method{fgrowth}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
         logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, \dots)
 \method{G}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE,
-  scale = 100, power = 1, stubs = TRUE, \dots)
+  scale = 100, power = 1, stubs = .op[["stub"]], \dots)
 
 \method{fgrowth}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
         logdiff = FALSE, scale = 100, power = 1,
         stubs = length(n) + length(diff) > 2L, \dots)
 \method{G}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE,
-  scale = 100, power = 1, stubs = TRUE, \dots)
+  scale = 100, power = 1, stubs = .op[["stub"]], \dots)
 
 \method{fgrowth}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA,
         logdiff = FALSE, scale = 100, power = 1,
         stubs = length(n) + length(diff) > 2L, \dots)
 \method{G}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-  fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE,
+  fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]],
   keep.ids = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
@@ -49,12 +49,12 @@ fgrowth(x, n = 1, diff = 1, \dots)
 \method{fgrowth}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
         power = 1, stubs = length(n) + length(diff) > 2L, shift = "time", \dots)
 \method{G}{pseries}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
-  power = 1, stubs = TRUE, shift = "time", \dots)
+  power = 1, stubs = .op[["stub"]], shift = "time", \dots)
 
 \method{fgrowth}{pdata.frame}(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 100,
         power = 1, stubs = length(n) + length(diff) > 2L, shift = "time", \dots)
 \method{G}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, logdiff = FALSE,
-  scale = 100, power = 1, stubs = TRUE, shift = "time", keep.ids = TRUE, \dots)
+  scale = 100, power = 1, stubs = .op[["stub"]], shift = "time", keep.ids = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
@@ -62,7 +62,7 @@ fgrowth(x, n = 1, diff = 1, \dots)
         scale = 100, power = 1, stubs = length(n) + length(diff) > 2L,
         keep.ids = TRUE, \dots)
 \method{G}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE,
-  scale = 100, power = 1, stubs = TRUE, keep.ids = TRUE, \dots)
+  scale = 100, power = 1, stubs = .op[["stub"]], keep.ids = TRUE, \dots)
 }
 \arguments{
   \item{x}{a numeric vector / time series, (time series) matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').}
@@ -76,7 +76,7 @@ fgrowth(x, n = 1, diff = 1, \dots)
   \item{logdiff}{logical. Compute log-difference growth rates instead of exact growth rates. See Details.}
   \item{scale}{logical. Scale factor post-applied to growth rates, default is 100 which gives growth rates in percentage terms. See Details.}
   \item{power}{numeric. Apply a power to annualize or compound growth rates e.g. \code{fgrowth(AirPassengers, 12, power = 1/12)} is equivalent to \code{((AirPassengers/flag(AirPassengers, 12))^(1/12)-1)*100}.}
-  \item{stubs}{logical. \code{TRUE} will rename all computed columns by adding a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}.", or "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." if \code{logdiff = TRUE}.}
+  \item{stubs}{logical. \code{TRUE} (default) will rename all computed columns by adding a prefix "L\code{n}G\code{diff}." / "F\code{n}G\code{diff}.", or "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." if \code{logdiff = TRUE}.}
     \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} or \code{"row"}. See \code{\link{flag}} for details.}
   \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t} using formulas). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
   \item{\dots}{arguments to be passed to or from other methods.}

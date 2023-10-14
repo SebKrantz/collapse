@@ -46,9 +46,9 @@ fhdbetween(x, \dots)
 
 \method{fhdbetween}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", \dots)
 \method{fhdwithin}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", \dots)
-\method{HDB}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "HDB.",
+\method{HDB}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = .op[["stub"]],
     lm.method = "qr", \dots)
-\method{HDW}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "HDW.",
+\method{HDW}{matrix}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = .op[["stub"]],
     lm.method = "qr", \dots)
 
 \method{fhdbetween}{data.frame}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
@@ -56,9 +56,9 @@ fhdbetween(x, \dots)
 \method{fhdwithin}{data.frame}(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
           variable.wise = FALSE, lm.method = "qr", \dots)
 \method{HDB}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
-    variable.wise = FALSE, stub = "HDB.", lm.method = "qr", \dots)
+    variable.wise = FALSE, stub = .op[["stub"]], lm.method = "qr", \dots)
 \method{HDW}{data.frame}(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
-    variable.wise = FALSE, stub = "HDW.", lm.method = "qr", \dots)
+    variable.wise = FALSE, stub = .op[["stub"]], lm.method = "qr", \dots)
 
 # Methods for indexed data / compatibility with plm:
 
@@ -72,9 +72,9 @@ fhdbetween(x, \dots)
 \method{fhdwithin}{pdata.frame}(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE,
           variable.wise = TRUE, \dots)
 \method{HDB}{pdata.frame}(x, effect = "all", w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-    fill = TRUE, variable.wise = TRUE, stub = "HDB.", \dots)
+    fill = TRUE, variable.wise = TRUE, stub = .op[["stub"]], \dots)
 \method{HDW}{pdata.frame}(x, effect = "all", w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-    fill = TRUE, variable.wise = TRUE, stub = "HDW.", \dots)
+    fill = TRUE, variable.wise = TRUE, stub = .op[["stub"]], \dots)
 }
 
 \arguments{
@@ -86,7 +86,7 @@ fhdbetween(x, \dots)
   \item{fill}{If \code{na.rm = TRUE}, \code{fill = TRUE} will not remove rows with missing values in \code{x} or \code{fl}, but fill them with \code{NA}'s.}
   \item{variable.wise}{\emph{(p)data.frame methods}: Setting \code{variable.wise = TRUE} will process each column individually i.e. use all non-missing cases in each column and in \code{fl} (\code{fl} is only checked for missing values if \code{na.rm = TRUE}). This is a lot less efficient but uses all data available in each column. }
 \item{effect}{\emph{plm} methods: Select which panel identifiers should be used for centering. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc.. Index variables can also be called by name using a character vector. The keyword \code{"all"} uses all identifiers. }
-\item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
+  \item{stub}{character. A prefix/stub to add to the names of all transformed columns. \code{TRUE} (default) uses \code{"HDW."/"HDB."}, \code{FALSE} will not rename columns.}
 \item{lm.method}{character. The linear fitting method. Supported are \code{"chol"} and \code{"qr"}. See \code{\link{flm}}.}
   \item{\dots}{further arguments passed to \code{fixest::demean} (other than \code{notes} and \code{im_confident}) and \code{\link{chol}} / \code{\link{qr}}. Possible choices are \code{tol} to set a uniform numerical tolerance for the entire fitting process, or \code{nthreads} and \code{iter} to govern the higher-order centering process.}
 

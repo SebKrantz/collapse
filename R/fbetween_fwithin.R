@@ -84,11 +84,14 @@ W.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, t
 W.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...)
   fwithin.pseries(x, effect, w, na.rm, mean, theta, ...)
 
-W.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, stub = "W.", ...)
-  add_stub(fwithin.matrix(x, g, w, na.rm, mean, theta, ...), stub)
+W.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, stub = .op[["stub"]], ...) {
+  res <- fwithin.matrix(x, g, w, na.rm, mean, theta, ...)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "W."))
+  res
+}
 
 W.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
-                         stub = "W.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
+                         stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- substitute(w)
@@ -107,15 +110,17 @@ W.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 
 
   if(length(gn2)) {
     ax <- attributes(x)
-    ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
+    ax[["names"]] <- c(nam[gn], do_stub(stub, nam[-gn2], "W."))
     res <- .Call(Cpp_BWl, .subset(x, -gn2), g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
     if(length(gn)) return(setAttributes(c(.subset(x, gn), res), ax)) else return(setAttributes(res, ax))
   }
-  add_stub(.Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE), stub)
+  res <- .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "W."))
+  res
 }
 
 W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
-                          stub = "W.", keep.ids = TRUE, keep.w = TRUE, ...) {
+                          stub = .op[["stub"]], keep.ids = TRUE, keep.w = TRUE, ...) {
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
@@ -143,19 +148,19 @@ W.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .
   }
 
   if(length(gn) && length(cols)) {
-    ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
+    ax[["names"]] <- c(nam[gn], do_stub(stub, nam[cols], "W."))
     return(setAttributes(c(x[gn], .Call(Cpp_BWl,x[cols],fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE)), ax))
   } else if(!length(gn)) {
-    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
+    ax[["names"]] <- do_stub(stub, nam[cols], "W.")
     return(setAttributes(.Call(Cpp_BWl,x[cols],fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE), ax))
-  } else if(is.character(stub)) {
-    ax[["names"]] <- paste0(stub, nam)
+  } else if(isTRUE(stub) || is.character(stub)) {
+    ax[["names"]] <- do_stub(stub, nam, "W.")
     return(setAttributes(.Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE), ax))
   } else return(.Call(Cpp_BWl,`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
 }
 
 W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-                         mean = 0, theta = 1, stub = "W.", keep.by = TRUE, keep.w = TRUE, ...) {
+                         mean = 0, theta = 1, stub = .op[["stub"]], keep.by = TRUE, keep.w = TRUE, ...) {
 
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.call(by) || is.call(w)) {
@@ -187,10 +192,10 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[
     }
 
     if(length(gn)) {
-      ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
+      ax[["names"]] <- c(nam[gn], do_stub(stub, nam[cols], "W."))
       return(setAttributes(c(x[gn], .Call(Cpp_BWl,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)), ax))
     }
-    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
+    ax[["names"]] <- do_stub(stub, nam[cols], "W.")
     return(setAttributes(.Call(Cpp_BWl,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE), ax))
   } else if(length(cols)) { # Need to do like this, otherwise list-subsetting drops attributes !
     ax <- attributes(x)
@@ -199,7 +204,7 @@ W.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
-  if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
+  if(isTRUE(stub) || is.character(stub)) attr(x, "names") <- do_stub(stub, attr(x, "names"), "W.")
 
   if(is.null(by)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   by <- G_guo(by)
@@ -293,11 +298,14 @@ B.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALS
 B.pseries <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...)
   fbetween.pseries(x, effect, w, na.rm, fill, ...)
 
-B.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "B.", ...)
-  add_stub(fbetween.matrix(x, g, w, na.rm, fill, ...), stub)
+B.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = .op[["stub"]], ...) {
+  res <- fbetween.matrix(x, g, w, na.rm, fill, ...)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "B."))
+  res
+}
 
 B.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
-                         stub = "B.", keep.group_vars = TRUE, keep.w = TRUE, ...) {
+                         stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   g <- GRP.grouped_df(x, call = FALSE)
   wsym <- substitute(w)
@@ -316,15 +324,17 @@ B.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
 
   if(length(gn2)) {
     ax <- attributes(x)
-    ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[-gn2]) else nam[-gn2])
+    ax[["names"]] <- c(nam[gn], do_stub(stub, nam[-gn2], "B."))
     res <- .Call(Cpp_BWl, .subset(x, -gn2), g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
     if(length(gn)) return(setAttributes(c(.subset(x, gn), res), ax)) else return(setAttributes(res, ax))
   }
-  add_stub(.Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill), stub)
+  res <- .Call(Cpp_BWl,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "B."))
+  res
 }
 
 B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
-                          stub = "B.", keep.ids = TRUE, keep.w = TRUE, ...) {
+                          stub = .op[["stub"]], keep.ids = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   ax <- attributes(x)
   nam <- ax[["names"]]
@@ -351,19 +361,19 @@ B.pdata.frame <- function(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .
   }
 
   if(length(gn) && length(cols)) {
-    ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
+    ax[["names"]] <- c(nam[gn], do_stub(stub, nam[cols], "B."))
     return(setAttributes(c(x[gn], .Call(Cpp_BWl,x[cols],fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill)), ax))
   } else if(!length(gn)) {
-    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
+    ax[["names"]] <- do_stub(stub, nam[cols], "B.")
     return(setAttributes(.Call(Cpp_BWl,x[cols],fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill), ax))
-  } else if(is.character(stub)) {
-      ax[["names"]] <- paste0(stub, nam)
+  } else if(isTRUE(stub) || is.character(stub)) {
+      ax[["names"]] <- do_stub(stub, nam, "B.")
       return(setAttributes(.Call(Cpp_BWl,x,fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill), ax))
   } else return(.Call(Cpp_BWl,`oldClass<-`(x, ax[["class"]]),fnlevels(g),g,NULL,w,na.rm,1,0,TRUE,fill))
 }
 
 B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-                         fill = FALSE, stub = "B.", keep.by = TRUE, keep.w = TRUE, ...) {
+                         fill = FALSE, stub = .op[["stub"]], keep.by = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.call(by) || is.call(w)) {
     ax <- attributes(x)
@@ -394,10 +404,10 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[
     }
 
     if(length(gn)) {
-      ax[["names"]] <- c(nam[gn], if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols])
+      ax[["names"]] <- c(nam[gn], do_stub(stub, nam[cols], "B."))
       return(setAttributes(c(x[gn], .Call(Cpp_BWl,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,1,0,TRUE,fill)), ax))
     }
-    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[cols]) else nam[cols]
+    ax[["names"]] <- do_stub(stub, nam[cols], "B.")
     return(setAttributes(.Call(Cpp_BWl,x[cols],by[[1L]],by[[2L]],by[[3L]],w,na.rm,1,0,TRUE,fill), ax))
   } else if(length(cols)) { # Necessary, else attributes are dropped by list-subsetting !
     ax <- attributes(x)
@@ -406,7 +416,7 @@ B.data.frame <- function(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[
     ax[["names"]] <- names(x)
     setattributes(x, ax)
   }
-  if(is.character(stub)) attr(x, "names") <- paste0(stub, attr(x, "names"))
+  if(isTRUE(stub) || is.character(stub)) attr(x, "names") <- do_stub(stub, attr(x, "names"), "B.")
 
   if(is.null(by)) return(.Call(Cpp_BWl,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
   by <- G_guo(by)

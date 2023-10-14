@@ -30,11 +30,11 @@ fscale(x, \dots)
 
 \method{fscale}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
 \method{STD}{matrix}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1,
-    stub = "STD.", \dots)
+    stub = .op[["stub"]], \dots)
 
 \method{fscale}{data.frame}(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
 \method{STD}{data.frame}(x, by = NULL, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-    mean = 0, sd = 1, stub = "STD.", keep.by = TRUE, keep.w = TRUE, \dots)
+    mean = 0, sd = 1, stub = .op[["stub"]], keep.by = TRUE, keep.w = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
@@ -43,14 +43,14 @@ fscale(x, \dots)
 
 \method{fscale}{pdata.frame}(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, \dots)
 \method{STD}{pdata.frame}(x, effect = 1L, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]],
-    mean = 0, sd = 1, stub = "STD.", keep.ids = TRUE, keep.w = TRUE, \dots)
+    mean = 0, sd = 1, stub = .op[["stub"]], keep.ids = TRUE, keep.w = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
 \method{fscale}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1,
        keep.group_vars = TRUE, keep.w = TRUE, \dots)
 \method{STD}{grouped_df}(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1,
-    stub = "STD.", keep.group_vars = TRUE, keep.w = TRUE, \dots)
+    stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -61,7 +61,7 @@ fscale(x, \dots)
   \item{w}{a numeric vector of (non-negative) weights. \code{STD} data frame and \code{pdata.frame} methods also allow a one-sided formula i.e. \code{~ weightcol}. The \code{grouped_df} (\emph{dplyr}) method supports lazy-evaluation. See Examples.}
   \item{na.rm}{logical. Skip missing values in \code{x} or \code{w} when computing means and sd's.}
   \item{effect}{\emph{plm} methods: Select which panel identifier should be used as group-id. 1L takes the first variable in the \link[=indexing]{index}, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied. }
-  \item{stub}{a prefix or stub to rename all transformed columns. \code{FALSE} will not rename columns.}
+  \item{stub}{character. A prefix/stub to add to the names of all transformed columns. \code{TRUE} (default) uses \code{"STD."}, \code{FALSE} will not rename columns.}
   \item{mean}{the mean to center on (default is 0). If \code{mean = FALSE}, no centering will be performed. In that case the scaling is mean-preserving. A numeric value different from 0 (i.e. \code{mean = 5}) will be added to the data after subtracting out the mean(s), such that the data will have a mean of 5. A special option when performing grouped scaling and centering is \code{mean = "overall.mean"}. In that case the overall mean of the data will be added after subtracting out group means.}
  \item{sd}{the standard deviation to scale the data to (default is 1). A numeric value different from 0 (i.e. \code{sd = 3}) will scale the data to have a standard deviation  of 3. A special option when performing grouped scaling is \code{sd = "within.sd"}. In that case the within standard deviation (= the standard deviation of the group-centered series) will be calculated and applied to each group. The results is that the variance of the data within each group is harmonized without forcing a certain variance (such as 1).}
   \item{keep.by, keep.ids, keep.group_vars}{\emph{data.frame, pdata.frame and grouped_df methods}: Logical. Retain grouping / panel-identifier columns in the output. For \code{STD.data.frame} this only works if grouping variables were passed in a formula.}
