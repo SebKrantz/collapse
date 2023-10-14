@@ -9,10 +9,10 @@ Fast Reordering of Data Frame Rows
 A fast substitute for \code{dplyr::arrange}. It returns a sorted copy of the data frame, unless the data is already sorted in which case no copy is made. In addition, rows can be manually re-ordered. Use \code{data.table::setorder} to sort a data frame without creating a copy. %\code{roworder} also does not support grouped tibbles or pdata.frame's, i.e. every data frame is treated the same.
 }
 \usage{
-roworder(X, \dots, na.last = TRUE)
+roworder(X, \dots, na.last = TRUE, verbose = .op[["verbose"]])
 
 roworderv(X, cols = NULL, neworder = NULL, decreasing = FALSE,
-          na.last = TRUE, pos = "front")
+          na.last = TRUE, pos = "front", verbose = .op[["verbose"]])
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,6 +31,7 @@ roworderv(X, cols = NULL, neworder = NULL, decreasing = FALSE,
 
   }
   }
+  \item{verbose}{logical. \code{TRUE} (default) prints a message when ordering a grouped or indexed frame, indicating that this is not efficient and encouraging reordering the data prior to the grouping/indexing step.}
 
 }
 
