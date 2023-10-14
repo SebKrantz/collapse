@@ -73,7 +73,7 @@ The (\code{w} weighted) sum of \code{x}, grouped by \code{g}, or (if \code{\link
 \section{See Also}{
 \code{\link{fprod}}, \code{\link{fmean}}, \link[=fast-statistical-functions]{Fast Statistical Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
-\section{Examples}{\preformatted{
+\examples{
 ## default vector method
 mpg <- mtcars$mpg
 fsum(mpg)                         # Simple sum
@@ -99,19 +99,17 @@ fsum(m)
 fsum(m, TRA = "\%")
 fsum(m, g)
 fsum(m, g, TRA = "\%")
-% \donttest{ % No code relying on suggested package
+\donttest{ % No code relying on suggested package
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent and faster !!
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fsum()
-% }
 }
-}
-\section{Benchmark}{\preformatted{
 ## This compares fsum with data.table (2 threads) and base::rowsum
 # Starting with small data
+library(data.table)
 mtcDT <- qDT(mtcars)
 f <- qF(mtcars$cyl)
 
@@ -120,11 +118,6 @@ microbenchmark(mtcDT[, lapply(.SD, sum), by = f],
                rowsum(mtcDT, f, reorder = FALSE),
                fsum(mtcDT, f, na.rm = FALSE), unit = "relative")
 
-                              expr        min         lq      mean    median        uq       max neval cld
- mtcDT[, lapply(.SD, sum), by = f] 145.436928 123.542134 88.681111 98.336378 71.880479 85.217726   100   c
- rowsum(mtcDT, f, reorder = FALSE)   2.833333   2.798203  2.489064  2.937889  2.425724  2.181173   100  b
-     fsum(mtcDT, f, na.rm = FALSE)   1.000000   1.000000  1.000000  1.000000  1.000000  1.000000   100 a
-
 # Now larger data
 tdata <- qDT(replicate(100, rnorm(1e5), simplify = FALSE)) # 100 columns with 100.000 obs
 f <- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.000 groups
@@ -132,11 +125,38 @@ f <- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.00
 microbenchmark(tdata[, lapply(.SD, sum), by = f],
                rowsum(tdata, f, reorder = FALSE),
                fsum(tdata, f, na.rm = FALSE), unit = "relative")
+}
 
-                              expr      min       lq     mean   median       uq       max neval cld
- tdata[, lapply(.SD, sum), by = f] 2.646992 2.975489 2.834771 3.081313 3.120070 1.2766475   100   c
- rowsum(tdata, f, reorder = FALSE) 1.747567 1.753313 1.629036 1.758043 1.839348 0.2720937   100  b
-     fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000   100 a
-}}
+%\section{Benchmark}{\preformatted{
+%## This compares fsum with data.table (2 threads) and base::rowsum
+%# Starting with small data
+%mtcDT <- qDT(mtcars)
+%f <- qF(mtcars$cyl)
+%
+%library(microbenchmark)
+%microbenchmark(mtcDT[, lapply(.SD, sum), by = f],
+%               rowsum(mtcDT, f, reorder = FALSE),
+%               fsum(mtcDT, f, na.rm = FALSE), unit = "relative")
+%
+%                              expr        min         lq      mean    median        uq       max neval cld
+% mtcDT[, lapply(.SD, sum), by = f] 145.436928 123.542134 88.681111 98.336378 71.880479 85.217726   100   c
+% rowsum(mtcDT, f, reorder = FALSE)   2.833333   2.798203  2.489064  2.937889  2.425724  2.181173   100  b
+%     fsum(mtcDT, f, na.rm = FALSE)   1.000000   1.000000  1.000000  1.000000  1.000000  1.000000   100 a
+%
+%# Now larger data
+%tdata <- qDT(replicate(100, rnorm(1e5), simplify = FALSE)) # 100 columns with 100.000 obs
+%f <- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.000 groups
+%
+%microbenchmark(tdata[, lapply(.SD, sum), by = f],
+%               rowsum(tdata, f, reorder = FALSE),
+%               fsum(tdata, f, na.rm = FALSE), unit = "relative")
+%
+%                              expr      min       lq     mean   median       uq       max neval cld
+% tdata[, lapply(.SD, sum), by = f] 2.646992 2.975489 2.834771 3.081313 3.120070 1.2766475   100   c
+% rowsum(tdata, f, reorder = FALSE) 1.747567 1.753313 1.629036 1.758043 1.839348 0.2720937   100  b
+%     fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000   100 a
+%}
+%}
+
 \keyword{univar}
 \keyword{manip}
