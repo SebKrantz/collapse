@@ -149,7 +149,7 @@ If \code{X} should not be interpreted like a data frame, setting \code{xlist = T
 \link[=data-transformations]{Data Transformations}, \link[=small-helpers]{Small (Helper) Functions}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
-
+oldopts <- options(max.print = 70)
 ## Which value
 whichNA(wlddev$PCGDP)                # Same as which(is.na(wlddev$PCGDP))
 whichNA(wlddev$PCGDP, invert = TRUE) # Same as which(!is.na(wlddev$PCGDP))
@@ -224,6 +224,8 @@ rm(mtc_na)
 ## Efficient vectorization
 head(vec(EuStockMarkets)) # Atomic objects: no copy at all
 head(vec(mtcars))         # Lists: directly in C
+
+options(oldopts)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
