@@ -1,6 +1,5 @@
 
-roworder <- function(X, ..., na.last = TRUE) {
-  if(inherits(X, "grouped_df")) stop("roworder() does not support grouped data: please order your data before grouping it")
+roworder <- function(X, ..., na.last = TRUE, verbose = .op[["verbose"]]) {
   ovars <- .c(...)
   if(!length(ovars)) stop("... needs to be comma-separated column names, optionally with a '-' prefix for descending order.")
   dec <- startsWith(ovars, "-")
@@ -11,11 +10,20 @@ roworder <- function(X, ..., na.last = TRUE) {
   rn <- attr(X, "row.names")
   res <- .Call(C_subsetDT, X, o, seq_along(unclass(X)), FALSE)
   if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- Csv(rn, o)
-  if(inherits(X, "pdata.frame")) {
+  clx <- oldClass(X)
+  if(any(clx == "pdata.frame")) {
+    if(verbose) message("Sorting an indexed frame / pdata.frame may not be the most efficient option. Consider sorting the frame before indexing it.")
     index <- findex(X)
     index_o <- .Call(C_subsetDT, index, o, seq_along(unclass(index)), FALSE)
     if(inherits(X, "indexed_frame")) return(reindex(res, index_o))
     attr(res, "index") <- index_o
+  } else if(any(clx == "grouped_df")) {
+    if(verbose) message("Sorting a grouped data frame may not be the most efficient option. Consider sorting the frame before grouping it.")
+    g <- GRP.grouped_df(X, call = FALSE)
+    g[[2L]] <- Csv(g[[2L]], o)
+    if(is.null(g[["group.starts"]])) warning("Cannot reorder a grouped data frame created with dplyr::group_by. Converting the grouping object to collapse 'GRP' object and reordering.")
+    else if(length(g[[7L]])) g[[7L]] <- Csv(g[[7L]], o) # correct ?? -> seems so!
+    attr(res, "groups") <- g
   }
   res
 }
@@ -33,8 +41,7 @@ posord <- function(sq, o, pos) switch(pos,
                                       },
                                       stop("pos must be 'front', 'end', 'exchange' or 'after'."))
 
-roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.last = TRUE, pos = "front") {
-  if(inherits(X, "grouped_df")) stop("roworderv() does not support grouped data: please order your data before grouping it")
+roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.last = TRUE, pos = "front", verbose = .op[["verbose"]]) {
   if(is.null(neworder)) {
     if(is.null(cols)) {
       if(inherits(X, "sf")) {
@@ -53,11 +60,20 @@ roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.la
   rn <- attr(X, "row.names")
   res <- .Call(C_subsetDT, X, neworder, seq_along(unclass(X)), FALSE)
   if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- Csv(rn, neworder)
-  if(inherits(X, "pdata.frame")) {
+  clx <- oldClass(X)
+  if(any(clx == "pdata.frame")) {
+    if(verbose) message("Sorting an indexed frame / pdata.frame may not be the most efficient option. Consider sorting the frame before indexing it.")
     index <- findex(X)
     index_neworder <- .Call(C_subsetDT, index, neworder, seq_along(unclass(index)), FALSE)
     if(inherits(X, "indexed_frame")) return(reindex(res, index_neworder)) # pdata.frame cannot be data.table...
     attr(res, "index") <- index_neworder
+  } else if(any(clx == "grouped_df")) {
+    if(verbose) message("Sorting a grouped data frame may not be the most efficient option. Consider sorting the frame before grouping it.")
+    g <- GRP.grouped_df(X, call = FALSE)
+    g[[2L]] <- Csv(g[[2L]], neworder)
+    if(verbose && is.null(g[["group.starts"]])) warning("Cannot reorder a grouped data frame created with dplyr::group_by. Converting the grouping object to collapse 'GRP' object and reordering.")
+    else if(length(g[[7L]])) g[[7L]] <- Csv(g[[7L]], neworder) # correct ?? -> seems so!
+    attr(res, "groups") <- g
   }
   res
 }

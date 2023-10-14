@@ -543,12 +543,15 @@ HDW.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, l
 HDW.pseries <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, ...)
   fhdwithin.pseries(x, effect, w, na.rm, fill, ...)
 
-HDW.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "HDW.", lm.method = "qr", ...)
-  add_stub(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
+HDW.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = .op[["stub"]], lm.method = "qr", ...) {
+  res <- fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "HDW."))
+  res
+}
 
 # x = mtcars; fl = ~ qF(cyl):carb; w = wdat; stub = FALSE
 HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
-                           variable.wise = FALSE, stub = "HDW.", lm.method = "qr", ...) {
+                           variable.wise = FALSE, stub = .op[["stub"]], lm.method = "qr", ...) {
   if(is.call(fl)) {
     ax <- attributes(x)
     nam <- ax[["names"]]
@@ -560,7 +563,7 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.
       fvars <- ckmatch(all.vars(fl), nam)
       Xvars <- cols2intrmgn(fvars, cols, x) # if(length(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
     }
-    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
+    ax[["names"]] <- do_stub(stub, nam[Xvars], "HDW.")
 
     if(na.rm) {
       miss <- missDF(x, if(variable.wise) fvars else c(Xvars, fvars))
@@ -610,12 +613,17 @@ HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.
       return(setAttributes(Y, ax))
     }
   }  # fl is not a formula !!
- add_stub(fhdwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
+ res <- fhdwithin.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...)
+ if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "HDW."))
+ res
 }
 
 HDW.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = TRUE,
-                            variable.wise = TRUE, stub = "HDW.", ...)
-add_stub(fhdwithin.pdata.frame(fcolsubset(x, cols2intrmgn(which(attr(x, "names") %in% attr(findex(x), "nam")), cols, x)), effect, w, na.rm, fill, variable.wise, ...), stub)
+                            variable.wise = TRUE, stub = .op[["stub"]], ...) {
+  res <- fhdwithin.pdata.frame(fcolsubset(x, cols2intrmgn(which(attr(x, "names") %in% attr(findex(x), "nam")), cols, x)), effect, w, na.rm, fill, variable.wise, ...)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "HDW."))
+  res
+}
 
 HDW.list <- function(x, ...) HDW.data.frame(x, ...)
 
@@ -850,11 +858,14 @@ HDB.pseries <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fil
   fhdwithin.pseries(x, effect, w, na.rm, fill, ..., means = TRUE)
 
 
-HDB.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = "HDB.", lm.method = "qr", ...)
-  add_stub(fhdbetween.matrix(x, fl, w, na.rm, fill, lm.method, ...), stub)
+HDB.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, stub = .op[["stub"]], lm.method = "qr", ...) {
+  res <- fhdbetween.matrix(x, fl, w, na.rm, fill, lm.method, ...)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "HDB."))
+  res
+}
 
 HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
-                           variable.wise = FALSE, stub = "HDB.", lm.method = "qr", ...) {
+                           variable.wise = FALSE, stub = .op[["stub"]], lm.method = "qr", ...) {
   if(is.call(fl)) {
     ax <- attributes(x)
     nam <- ax[["names"]]
@@ -866,7 +877,7 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.
       fvars <- ckmatch(all.vars(fl), nam)
       Xvars <- cols2intrmgn(fvars, cols, x) #  if(length(cols)) fsetdiff(cols2int(cols, x, nam), fvars) else seq_along(unclass(x))[-fvars]
     }
-    ax[["names"]] <- if(is.character(stub)) paste0(stub, nam[Xvars]) else nam[Xvars]
+    ax[["names"]] <- do_stub(stub, nam[Xvars], "HDB.")
 
     if(na.rm) {
       miss <- missDF(x, if(variable.wise) fvars else c(Xvars, fvars))
@@ -920,13 +931,18 @@ HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.
       return(setAttributes(Y, ax))
     }
   }  # fl is not a formula !!
-  add_stub(fhdbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...), stub)
+  res <- fhdbetween.data.frame(if(is.null(cols)) x else colsubset(x, cols), fl, w, na.rm, fill, variable.wise, lm.method, ...)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "HDB."))
+  res
 }
 
 
 HDB.pdata.frame <- function(x, effect = "all", w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = TRUE,
-                            variable.wise = TRUE, stub = "HDB.", ...)
-  add_stub(fhdwithin.pdata.frame(fcolsubset(x, cols2intrmgn(which(attr(x, "names") %in% attr(findex(x), "nam")), cols, x)), effect, w, na.rm, fill, variable.wise, ..., means = TRUE), stub)
+                            variable.wise = TRUE, stub = .op[["stub"]], ...) {
+  res <- fhdwithin.pdata.frame(fcolsubset(x, cols2intrmgn(which(attr(x, "names") %in% attr(findex(x), "nam")), cols, x)), effect, w, na.rm, fill, variable.wise, ..., means = TRUE)
+  if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "HDB."))
+  res
+}
 
 HDB.list <- function(x, ...) HDB.data.frame(x, ...)
 

@@ -540,6 +540,10 @@ setnck <- function(x, value) {
   x
 }
 
+do_stub <- function(stub, nam, default) {
+  if(is.character(stub)) return(paste0(stub, nam))
+  if(isTRUE(stub)) paste0(default, nam) else nam
+}
 # give_nam <- function(x, gn, stub) {
 #   if(!gn) return(x)
 #   attr(x, "names") <- paste0(stub, attr(x, "names"))

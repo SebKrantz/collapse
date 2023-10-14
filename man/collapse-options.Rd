@@ -1,5 +1,6 @@
 \name{collapse-options}
 \alias{collapse-options}
+\alias{AA4-collapse-options}
 \alias{set_collapse}
 \alias{get_collapse}
 \alias{.op}
@@ -29,7 +30,9 @@ get_collapse(opts = NULL)
 
     \code{stable.algo} \tab\tab logical, default \code{TRUE}. Option passed to \code{\link[=fvar]{fvar()/fsd()}} and \code{\link[=qsu]{qsu()}}. \code{FALSE} enables one-pass standard deviation calculation, which is very fast, but might incur catastrophic cancellation if numbers are large and the variance is small. see \code{\link{fvar}} for details. \cr\cr\cr\cr
 
-    \code{verbose} \tab\tab integer, default \code{1}. Print additional (diagnostic) information when executing code. Currently only available for \code{\link{join}}. \cr\cr\cr\cr
+    \code{stub} \tab\tab logical, default \code{TRUE}. Controls whether \link[=.OPERATOR_FUN]{transformation operators} (\code{.OPERATOR_FUN}) such as \code{\link{W}}, \code{\link{L}}, \code{\link{STD}} etc. add prefixes to transformed columns of matrix and data.frame-like objects. \cr\cr\cr\cr
+
+    \code{verbose} \tab\tab integer, default \code{1}. Print additional (diagnostic) information or messages when executing code. Currently only used in \code{\link{join}} and \code{\link{roworder}}. \cr\cr\cr\cr
 
     \code{digits} \tab\tab integer, default \code{2}. Number of digits to print, e.g. in \code{\link{descr}} or \code{\link{pwcor}}. \cr\cr\cr\cr
 

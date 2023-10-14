@@ -40,43 +40,45 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data
 \method{fdiff}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
       stubs = TRUE, \dots)
 \method{D}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1,
-  stubs = TRUE, \dots)
-\method{Dlog}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, \dots)
+  stubs = .op[["stub"]], \dots)
+\method{Dlog}{default}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]],
+     \dots)
 
 \method{fdiff}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
       stubs = length(n) + length(diff) > 2L, \dots)
 \method{D}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1,
-  stubs = TRUE, \dots)
-\method{Dlog}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = TRUE, \dots)
+  stubs = .op[["stub"]], \dots)
+\method{Dlog}{matrix}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]],
+     \dots)
 
 \method{fdiff}{data.frame}(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1,
       stubs = length(n) + length(diff) > 2L, \dots)
 \method{D}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-  fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, \dots)
+  fill = NA, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, \dots)
 \method{Dlog}{data.frame}(x, n = 1, diff = 1, by = NULL, t = NULL, cols = is.numeric,
-     fill = NA, rho = 1, stubs = TRUE, keep.ids = TRUE, \dots)
+     fill = NA, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
 \method{fdiff}{pseries}(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1,
       stubs = length(n) + length(diff) > 2L, shift = "time", \dots)
-\method{D}{pseries}(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, shift = "time", \dots)
-\method{Dlog}{pseries}(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = TRUE, shift = "time", \dots)
+\method{D}{pseries}(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = .op[["stub"]], shift = "time", \dots)
+\method{Dlog}{pseries}(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = .op[["stub"]], shift = "time", \dots)
 
 \method{fdiff}{pdata.frame}(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 1,
       stubs = length(n) + length(diff) > 2L, shift = "time", \dots)
-\method{D}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE,
+\method{D}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = .op[["stub"]],
   shift = "time", keep.ids = TRUE, \dots)
-\method{Dlog}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = TRUE,
+\method{Dlog}{pdata.frame}(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho = 1, stubs = .op[["stub"]],
      shift = "time", keep.ids = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
 \method{fdiff}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALSE, rho = 1,
       stubs = length(n) + length(diff) > 2L, keep.ids = TRUE, \dots)
-\method{D}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE,
+\method{D}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]],
   keep.ids = TRUE, \dots)
-\method{Dlog}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = TRUE,
+\method{Dlog}{grouped_df}(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]],
      keep.ids = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -91,7 +93,7 @@ Fast (Quasi-, Log-) Differences for Time Series and Panel Data
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
   \item{log}{logical. \code{TRUE} computes log-differences. See Details.}
   \item{rho}{double. Autocorrelation parameter. Set to a value between 0 and 1 for quasi-differencing. Any numeric value can be supplied. }
-  \item{stubs}{logical. \code{TRUE} will rename all differenced columns by adding prefixes "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." for differences "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." for log-differences and replacing "D" / "Dlog" with "QD" / "QDlog" for quasi-differences. }
+  \item{stubs}{logical. \code{TRUE} (default) will rename all differenced columns by adding prefixes "L\code{n}D\code{diff}." / "F\code{n}D\code{diff}." for differences "L\code{n}Dlog\code{diff}." / "F\code{n}Dlog\code{diff}." for log-differences and replacing "D" / "Dlog" with "QD" / "QDlog" for quasi-differences. }
   \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} or \code{"row"}. See \code{\link{flag}} for details.}
   \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t} using formulas). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
   \item{\dots}{arguments to be passed to or from other methods.}

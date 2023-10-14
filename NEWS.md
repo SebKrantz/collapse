@@ -1,6 +1,13 @@
+# collapse 2.0.2
+
+* Added global option 'stub' (default `TRUE`) to `set_collapse`. It is passed to the `stub(s)` arguments of the statistical operations, `B`, `W`, `STD`, `HDW`, `HDW`, `L`, `D`, `Dlog`, `G` (in `.OPERATOR_FUN`). By default these operators add a prefix/stub to matrix or data.frame columns transformed by them. Setting `set_collapse(stub = FALSE)` now allows to switch off this behavior such that columns are not prepended with a prefix by default. 
+
+* `roworder[v]()` now also supports grouped data frames, but prints a message indicating that this is inefficient (also for indexed data). An additional argument `verbose` can be set to `0` to avoid such messages. 
+
+
 # collapse 2.0.1
 
-* `%in%` with `set_collapse(mask = "%in%")` does not warn about overidentification when used with data frames. 
+* `%in%` with `set_collapse(mask = "%in%")` does not warn anymore about overidentification when used with data frames (i.e. using `overid = 2` in `fmatch()`). 
 
 * Fixed several typos in the documentation. 
 

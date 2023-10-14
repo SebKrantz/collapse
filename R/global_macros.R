@@ -4,7 +4,7 @@ set_collapse <- function(...) {
   opts <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
   op_old <- as.list(.op)
   nam <- names(opts)
-  ckmatch(nam, c("nthreads", "na.rm", "sort", "stable.algo", "mask", "remove", "verbose", "digits"), e = "Unknown option:")
+  ckmatch(nam, c("nthreads", "na.rm", "sort", "stable.algo", "mask", "remove", "stub", "verbose", "digits"), e = "Unknown option:")
   if(length(opts$nthreads)) {
     nthreads <- as.integer(opts$nthreads)
     if(is.na(nthreads) || nthreads <= 0L) stop("nthreads needs to be a positive integer")
@@ -24,6 +24,11 @@ set_collapse <- function(...) {
     stable.algo <- as.logical(opts$stable.algo)
     if(is.na(stable.algo)) stop("stable.algo needs to be TRUE or FALSE")
     .op$stable.algo <- stable.algo
+  }
+  if(length(opts$stub)) {
+    stub <- as.logical(opts$stub)
+    if(is.na(stub)) stop("stub needs to be TRUE or FALSE")
+    .op$stub <- stub
   }
   if(length(opts$verbose)) {
     verbose <- as.integer(opts$verbose)

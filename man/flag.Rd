@@ -37,28 +37,28 @@ flag(x, n = 1, \dots)
    L(x, n = 1, \dots)
 
 \method{flag}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
-\method{L}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
+\method{L}{default}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], \dots)
 
 \method{flag}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, \dots)
-\method{L}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, \dots)
+\method{L}{matrix}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], \dots)
 
 \method{flag}{data.frame}(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(n) > 1L, \dots)
 \method{L}{data.frame}(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-  fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
+  fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
 \method{flag}{pseries}(x, n = 1, fill = NA, stubs = length(n) > 1L, shift = "time", \dots)
-\method{L}{pseries}(x, n = 1, fill = NA, stubs = TRUE, shift = "time", \dots)
+\method{L}{pseries}(x, n = 1, fill = NA, stubs = .op[["stub"]], shift = "time", \dots)
 
 \method{flag}{pdata.frame}(x, n = 1, fill = NA, stubs = length(n) > 1L, shift = "time", \dots)
-\method{L}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = TRUE,
+\method{L}{pdata.frame}(x, n = 1, cols = is.numeric, fill = NA, stubs = .op[["stub"]],
   shift = "time", keep.ids = TRUE, \dots)
 
 # Methods for grouped data frame / compatibility with dplyr:
 
 \method{flag}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1L, keep.ids = TRUE, \dots)
-\method{L}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = TRUE, keep.ids = TRUE, \dots)
+\method{L}{grouped_df}(x, n = 1, t = NULL, fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, \dots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -69,7 +69,7 @@ flag(x, n = 1, \dots)
   \item{t}{a time vector or list of vectors. Data frame methods also allows one-sided formula i.e. \code{~time}. grouped_df method supports lazy-evaluation i.e. \code{time} (no quotes). Either support wrapping a transformation function e.g. \code{~timeid(time)}, \code{qG(time)} etc.. See also Details on how \code{t} is processed.}
   \item{cols}{\emph{data.frame method}: Select columns to lag using a function, column names, indices or a logical vector. Default: All numeric variables. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
   \item{fill}{value to insert when vectors are shifted. Default is \code{NA}. }
-  \item{stubs}{logical. \code{TRUE} will rename all lagged / leaded columns by adding a stub or prefix "L\code{n}." / "F\code{n}.".}
+  \item{stubs}{logical. \code{TRUE} (default) will rename all lagged / leaded columns by adding a stub or prefix "L\code{n}." / "F\code{n}.".}
   \item{shift}{\emph{pseries / pdata.frame methods}: character. \code{"time"} performs a fully identified time-lag (if the index contains a time variable), whereas \code{"row"} performs a simple (group) lag, where observations are shifted based on the present order of rows (in each group). The latter is significantly faster, but requires time series / panels to be regularly spaced and sorted by time within each group.}
   \item{keep.ids}{\emph{data.frame / pdata.frame / grouped_df methods}: Logical. Drop all identifiers from the output (which includes all variables passed to \code{by} or \code{t} using formulas). \emph{Note}: For 'grouped_df' / 'pdata.frame' identifiers are dropped, but the \code{"groups"} / \code{"index"} attributes are kept.}
     \item{\dots}{arguments to be passed to or from other methods.}

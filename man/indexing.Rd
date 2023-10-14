@@ -24,6 +24,7 @@ Fast Indexed Time Series and Panels
 \description{
 A fast and flexible indexed time series and panel data class that inherits from \emph{plm}'s 'pseries' and 'pdata.frame', but is more rigorous, natively handles irregularity, can be superimposed on any data.frame/list, matrix or vector, and supports ad-hoc computations inside data masking functions and model formulas.
 }
+
 \usage{
 ## Create an 'indexed_frame' containing 'indexed_series'
 findex_by(.X, \dots, single = "auto", interact.ids = TRUE)
@@ -67,7 +68,9 @@ to_plm(x, row.names = FALSE)
 \method{[}{index_df}(x, i, j, drop = FALSE, drop.index.levels = "id")
 
 \method{print}{index_df}(x, topn = 5, ...)
+
 }
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{.X}{a data frame or list-like object of equal-length columns.}
@@ -135,6 +138,7 @@ The print methods for 'indexed_frame' and 'indexed_series' first call \code{prin
 \code{\link{timeid}},
 \link[=time-series-panel-series]{Time Series and Panel Series}, \link[=collapse-documentation]{Collapse Overview}}
 \examples{
+oldopts <- options(max.print = 70)
 # Indexing panel data ----------------------------------------------------------
 
 wldi <- findex_by(wlddev, iso3c, year)
@@ -294,7 +298,7 @@ X <- unindex(X)
 X["1980/"] \%>\% fdiff(t = index(.)) # xts index is internally processed by timeid()
 }
 ## Of course you can also index plain vectors / matrices...
-
+options(oldopts)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

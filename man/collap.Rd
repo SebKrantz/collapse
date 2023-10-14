@@ -1,5 +1,6 @@
 \name{collap}
 \alias{advanced-aggregation}
+\alias{A5-advanced-aggregation}
 \alias{collap}
 \alias{collapv}
 \alias{collapg}
