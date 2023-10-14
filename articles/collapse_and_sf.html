@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -360,7 +360,7 @@ without having to worry about taking along ‘geometry’:</p>
 <span><span class="co"># 3 0.143     Surry 37171  37171 MULTIPOLYGON (((-80.45634 3...</span></span>
 <span></span>
 <span><span class="co"># Same using standard evaluation (gv is a shorthand for get_vars())</span></span>
-<span><span class="fu"><a href="../reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 100 features and 4 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
 <span><span class="co"># Dimension:     XY</span></span>
@@ -407,14 +407,14 @@ without having to worry about taking along ‘geometry’:</p>
 <span><span class="co"># Selecting columns</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span>, </span>
 <span>               dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span>,</span>
-<span>               collapse2 <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span>, </span>
+<span>               collapse2 <span class="op">=</span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>               sf <span class="op">=</span> <span class="va">nc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#       expr      min        lq       mean   median        uq       max neval</span></span>
-<span><span class="co">#   collapse   11.801   15.7380   22.95518   22.044   28.8105    47.545   100</span></span>
-<span><span class="co">#      dplyr 3390.874 3545.7710 4089.55757 3681.155 4445.0335 13386.336   100</span></span>
-<span><span class="co">#  collapse2    9.644   17.0235   19.79124   20.222   21.8940    35.258   100</span></span>
-<span><span class="co">#         sf  481.445  518.4945  597.44535  564.163  681.0825   777.017   100</span></span>
+<span><span class="co">#       expr      min        lq       mean    median        uq       max neval</span></span>
+<span><span class="co">#   collapse   11.280   14.5820   22.01948   21.3010   24.8765    46.392   100</span></span>
+<span><span class="co">#      dplyr 3101.106 3163.6125 3660.11333 3220.0865 3950.4205 12431.564   100</span></span>
+<span><span class="co">#  collapse2    8.941   12.1095   19.41826   19.5755   24.2275    44.109   100</span></span>
+<span><span class="co">#         sf  446.290  468.4275  529.14961  484.9950  608.4300   679.039   100</span></span>
 <span><span class="co"># Subsetting</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span>, </span>
 <span>               dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AREA</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -422,10 +422,10 @@ without having to worry about taking along ‘geometry’:</p>
 <span>               sf <span class="op">=</span> <span class="va">nc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#       expr      min        lq       mean    median        uq       max neval</span></span>
-<span><span class="co">#   collapse   42.372   54.7650   59.92477   59.5220   63.7895    92.877   100</span></span>
-<span><span class="co">#      dplyr 4990.735 5182.7060 5467.35536 5331.6440 5432.9180 13043.753   100</span></span>
-<span><span class="co">#  collapse2   11.096   13.8505   19.58817   19.0715   23.1750    46.710   100</span></span>
-<span><span class="co">#         sf  765.023  822.4100  859.00082  858.1660  888.4155  1084.840   100</span></span></code></pre></div>
+<span><span class="co">#   collapse   39.965   46.5530   56.62864   56.4170   63.2505    95.972   100</span></span>
+<span><span class="co">#      dplyr 4629.069 4711.0825 4992.46504 4791.4955 4930.7415 11300.664   100</span></span>
+<span><span class="co">#  collapse2    9.836   12.2525   19.45122   20.0215   25.5475    46.843   100</span></span>
+<span><span class="co">#         sf  711.317  734.7305  761.60568  760.6755  780.2465   941.499   100</span></span></code></pre></div>
 <p>It needs to be noted that at this point <em>collapse</em> functions
 don’t subset the ‘agr’ attribute on selecting columns, which (if
 specified) relates columns (attributes) to the geometry, and also don’t
@@ -546,7 +546,7 @@ aggregate the geometry:</p>
 <span>             geometry <span class="op">=</span> <span class="fu"><a href="../reference/ffirst_flast.html">flast</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># The geometry is still valid...</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">slt</a></span><span class="op">(</span><span class="va">pnc_ag</span>, <span class="va">AREA_Ag</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">slt</a></span><span class="op">(</span><span class="va">pnc_ag</span>, <span class="va">AREA_Ag</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p><img src="collapse_and_sf_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
 </div>
 <div class="section level2">

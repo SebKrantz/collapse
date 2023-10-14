@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -134,8 +134,8 @@
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Missing-value removal as controlled by the <code>na.rm</code> argument is done at no extra cost since in C++ any logical comparison involving <code>NA</code> or <code>NaN</code> evaluates to <code>FALSE</code>. Large performance gains can nevertheless be achieved in the presence of missing values if <code>na.rm = FALSE</code>, since then the corresponding computation is terminated once a <code>NA</code> is encountered and <code>NA</code> is returned (unlike <code><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></code> and <code><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></code> which just run through without any checks).</p>
-<p><!-- %This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. --></p>
-<p><!-- %When applied to data frames with groups or \code{drop = FALSE}, \code{fmax} and \code{fmin} preserve all column attributes (such as variable labels) but do not distinguish between classed and unclassed objects. The attributes of the data frame itself are also preserved. --></p>
+
+
 <p>For further computational details see <code><a href="fsum.html">fsum</a></code>.</p>
     </div>
     <div class="section level2">

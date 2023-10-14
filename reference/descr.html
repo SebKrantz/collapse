@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -114,7 +114,7 @@
 
 
   <dt>Qprobs</dt>
-<dd><p>double. Probabilities for quantiles to compute on numeric variables, passed down to <code><a href="fquantile.html">.quantile</a></code>. If something non-numeric is passed (i.e. <code>NULL</code>, <code>FALSE</code>, <code>NA</code>, <code>""</code> etc.), no quantiles are computed.</p></dd>
+<dd><p>double. Probabilities for quantiles to compute on numeric variables, passed down to <code><a href="https://sebkrantz.github.io/collapse/reference/fquantile.html">.quantile</a></code>. If something non-numeric is passed (i.e. <code>NULL</code>, <code>FALSE</code>, <code>NA</code>, <code>""</code> etc.), no quantiles are computed.</p></dd>
 
   <dt>Qtype</dt>
 <dd><p>integer. Quantile types 5-9 following Hyndman and Fan (1996) who recommended type 8, default 7 as in <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></code>.</p></dd>
@@ -159,19 +159,12 @@
 <dt>gid</dt>
 <dd><p>character. Name assigned to the group-id column, when describing data by groups.</p></dd>
 
-</dl><p><!-- %\item{wsum}{\code{TRUE} sums the weights by groups and adds them as a 'WeightSum' column. Alternatively a name for the column can be supplied. } --></p>
-
-
-<p><!-- %\item{stringsAsFactors}{logical. Make factors from dimension names of 'qsu' array. Same as option to \code{\link{as.data.frame.table}}.} --></p>
-
-
-    </div>
+</dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>descr</code> was heavily inspired by <code>Hmisc::describe</code>, but is much faster and has more advanced statistical capabilities. It is principally a wrapper around <code><a href="qsu.html">qsu</a></code>, <code><a href="fquantile.html">fquantile</a></code> (<code>.quantile</code>), and <code><a href="fndistinct.html">fndistinct</a></code> for numeric variables, and computes frequency tables for categorical variables using <code><a href="qtab.html">qtab</a></code>. Date variables are summarized with <code><a href="fnobs.html">fnobs</a></code>, <code><a href="fndistinct.html">fndistinct</a></code> and <code><a href="fquantile.html">frange</a></code>.</p>
 <p>Since v1.9.0 grouped and weighted computations are fully supported. The use of sampling weights will produce a weighted mean, sd, skewness and kurtosis, and weighted quantiles for numeric data. For categorical data, tables will display the sum of weights instead of the frequencies, and percentage tables as well as the percentage of missing values indicated next to 'Statistics' in print, be relative to the total sum of weights. All this can be done by groups. Grouped (weighted) quantiles are computed using <code><a href="BY.html">BY</a></code>.</p>
-<p>For larger datasets, calling the <code>stepwise</code> option directly from <code>descr()</code> is recommended, as precomputing the statistics for all variables before digesting the results can be time consuming.
-<!-- %\code{\link{qsu}} itself is yet about 10x faster than \code{descr}, and is optimized for grouped, panel data and weighted statistics. It is possible to also compute grouped, panel data and/or weighted statistics with \code{descr} by passing group-ids to \code{g}, panel-ids to \code{pid} or a weight vector to \code{w}. These arguments are handed down to \code{\link{qsu.default}} and only affect the statistics natively computed by \code{qsu}, i.e. passing a weight vector produces a weighted mean, sd, skewness and kurtosis but not weighted quantiles. --></p>
+<p>For larger datasets, calling the <code>stepwise</code> option directly from <code>descr()</code> is recommended, as precomputing the statistics for all variables before digesting the results can be time consuming.</p>
 <p>The list-object returned from <code>descr</code> can efficiently be converted to a tidy data frame using the <code>as.data.frame</code> method. This representation will not include frequency tables computed for categorical variables. <!-- %, and the method cannot handle arrays of statistics (applicable when \code{g} or \code{pid} arguments are passed to \code{descr}, in that case \code{as.data.frame.descr} will throw an appropriate error). --></p>
     </div>
     <div class="section level2">

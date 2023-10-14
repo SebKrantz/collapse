@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -137,8 +137,9 @@
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><!-- % Non-grouped sum computations internally utilize long-doubles in C++, for additional numeric precision. --></p>
-<p><!-- % Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{sum}} which just runs through without any checks). --></p>
+    
+
+
 <p>The weighted sum (e.g. survey total) is computed as <code>sum(x * w)</code>, but in one pass and about twice as efficient. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
 <p>This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and are therefore extremely fast. See Benchmark and Examples below.</p>
 <p>When applied to data frames with groups or <code>drop = FALSE</code>, <code>fsum</code> preserves all column attributes. The attributes of the data frame itself are also preserved.</p>
@@ -155,77 +156,236 @@
     <h2 id="see-also">See Also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <p><code><a href="fprod.html">fprod</a></code>, <code><a href="fmean.html">fmean</a></code>, <a href="fast-statistical-functions.html">Fast Statistical Functions</a>, <a href="collapse-documentation.html">Collapse Overview</a></p>
     </div>
+
     <div class="section level2">
-    <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h2>
-    <div class="sourceCode"><pre><code><span></span>
-<span><span class="co">## default vector method</span></span>
-<span><span class="va">mpg</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Simple sum</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>          <span class="co"># Weighted sum (total): Weighted by hp</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>              <span class="co"># Simple transformation: obtain percentages of mpg</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>             <span class="co"># Grouped sum</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped sum (total)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>       <span class="co"># More groups..</span></span>
-<span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span> <span class="co"># Precomputing groups gives more speed !</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>           <span class="co"># Percentages by group</span></span>
-<span></span>
-<span><span class="co">## data.frame method</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mtcars</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## matrix method</span></span>
-<span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">m</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped sum (total)</span></span>
-<span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">hp</span><span class="op">)</span> <span class="co"># Equivalent and faster !!</span></span>
-<span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span>
-<span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span></code></pre></div>
-
-    </div>
-    <div class="section level2">
-    <h2 id="benchmark">Benchmark<a class="anchor" aria-label="anchor" href="#benchmark"></a></h2>
-    <div class="sourceCode"><pre><code>
-## This compares fsum with data.table (2 threads) and base::rowsum
-# Starting with small data
-mtcDT &lt;- qDT(mtcars)
-f &lt;- qF(mtcars$cyl)
-
-library(microbenchmark)
-microbenchmark(mtcDT[, lapply(.SD, sum), by = f],
-               rowsum(mtcDT, f, reorder = FALSE),
-               fsum(mtcDT, f, na.rm = FALSE), unit = "relative")
-
-                              expr        min         lq      mean    median        uq       max neval cld
- mtcDT[, lapply(.SD, sum), by = f] 145.436928 123.542134 88.681111 98.336378 71.880479 85.217726   100   c
- rowsum(mtcDT, f, reorder = FALSE)   2.833333   2.798203  2.489064  2.937889  2.425724  2.181173   100  b
-     fsum(mtcDT, f, na.rm = FALSE)   1.000000   1.000000  1.000000  1.000000  1.000000  1.000000   100 a
-
-# Now larger data
-tdata &lt;- qDT(replicate(100, rnorm(1e5), simplify = FALSE)) # 100 columns with 100.000 obs
-f &lt;- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.000 groups
-
-microbenchmark(tdata[, lapply(.SD, sum), by = f],
-               rowsum(tdata, f, reorder = FALSE),
-               fsum(tdata, f, na.rm = FALSE), unit = "relative")
-
-                              expr      min       lq     mean   median       uq       max neval cld
- tdata[, lapply(.SD, sum), by = f] 2.646992 2.975489 2.834771 3.081313 3.120070 1.2766475   100   c
- rowsum(tdata, f, reorder = FALSE) 1.747567 1.753313 1.629036 1.758043 1.839348 0.2720937   100  b
-     fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000   100 a
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## default vector method</span></span></span>
+<span class="r-in"><span><span class="va">mpg</span> <span class="op">&lt;-</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span></span></span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>                         <span class="co"># Simple sum</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 642.9</span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>          <span class="co"># Weighted sum (total): Weighted by hp</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 84362.7</span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>              <span class="co"># Simple transformation: obtain percentages of mpg</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 3.266449 3.266449 3.546430 3.328667 2.908695 2.815368 2.224296 3.795303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [9] 3.546430 2.986468 2.768704 2.550941 2.690932 2.364287 1.617670 1.617670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [17] 2.286514 5.039664 4.728574 5.272982 3.344221 2.410950 2.364287 2.068751</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 2.986468 4.246384 4.044175 4.728574 2.457614 3.064240 2.333178 3.328667</span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>             <span class="co"># Grouped sum</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     4     6     8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 293.3 138.2 211.4 </span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped sum (total)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       4       6       8 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23743.0 16873.0 43746.7 </span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">8</span><span class="op">:</span><span class="fl">9</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>       <span class="co"># More groups..</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  26.0  68.7 198.6  61.7  76.5 180.6  30.8 </span>
+<span class="r-in"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span> <span class="co"># Precomputing groups gives more speed !</span></span></span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  26.0  68.7 198.6  61.7  76.5 180.6  30.8 </span>
+<span class="r-in"><span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span> <span class="op">==</span> <span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE </span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mpg</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>           <span class="co"># Percentages by group</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  34.035656  34.035656  11.480363  27.973856  10.354374  23.660131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7]   7.918051  35.516739  33.187773  25.098039  23.267974   9.080842</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13]   9.579181   8.416390   5.758583   5.758583   8.139535  16.314199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19]  15.307150  17.069486  31.295488   8.582503   8.416390   7.364341</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  10.631229  13.746224 100.000000  15.307150  51.298701  31.928687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31]  48.701299  10.775428</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## data.frame method</span></span></span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      mpg      cyl     disp       hp     drat       wt     qsec       vs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  642.900  198.000 7383.100 4694.000  115.090  102.952  571.160   14.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       am     gear     carb </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   13.000  118.000   90.000 </span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mtcars</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg      cyl     disp       hp     drat       wt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         3.266449 3.030303 2.167111 2.343417 3.388652 2.544875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     3.266449 3.030303 2.167111 2.343417 3.388652 2.792564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        3.546430 2.020202 1.462800 1.981253 3.345208 2.253477</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    3.328667 3.030303 3.494467 2.343417 2.676166 3.122815</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.908695 4.040404 4.876001 3.728164 2.736988 3.341363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           2.815368 3.030303 3.047500 2.236898 2.398123 3.360789</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       qsec       vs       am     gear     carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         2.881854 0.000000 7.692308 3.389831 4.444444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     2.979901 0.000000 7.692308 3.389831 4.444444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        3.258281 7.142857 7.692308 3.389831 1.111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    3.403600 7.142857 0.000000 2.542373 1.111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 2.979901 0.000000 0.000000 2.542373 2.222222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           3.540164 7.142857 0.000000 2.542373 1.111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1  26.0   4  120.3   91  4.43  2.140  16.70  0  1    5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0  68.7  12  407.6  254 11.31  8.805  62.91  3  0   11    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.1 198.6  28  628.6  564 29.04 14.198 130.90  7  7   29   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1  61.7  18  465.0  395 11.42  8.265  48.98  0  3   13   14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0  76.5  24  818.2  461 13.68 13.555  76.86  4  0   14   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 180.6  96 4291.4 2330 37.45 49.249 205.71  0  0   36   37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        mpg       cyl      disp       hp      drat        wt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         34.03566 33.333333 34.408602 27.84810 34.150613 31.699940</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     34.03566 33.333333 34.408602 27.84810 34.150613 34.785239</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        11.48036 14.285714 17.181037 16.48936 13.257576 16.340330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    27.97386 25.000000 31.532633 23.86117 22.514620 23.718185</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 10.35437  8.333333  8.388871  7.51073  8.411215  6.984913</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           23.66013 25.000000 27.499389 22.77657 20.175439 25.525636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        qsec       vs       am      gear      carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         33.605553      NaN 33.33333 30.769231 28.571429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     34.748877      NaN 33.33333 30.769231 28.571429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        14.216960 14.28571 14.28571 13.793103 10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    25.292740 25.00000      NaN 21.428571 10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  8.273783      NaN      NaN  8.333333  5.405405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           26.307572 25.00000      NaN 21.428571 10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## matrix method</span></span></span>
+<span class="r-in"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">m</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      mpg      cyl     disp       hp     drat       wt     qsec       vs </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  642.900  198.000 7383.100 4694.000  115.090  102.952  571.160   14.000 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       am     gear     carb </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   13.000  118.000   90.000 </span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">m</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                          mpg      cyl      disp       hp     drat       wt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           3.266449 3.030303 2.1671114 2.343417 3.388652 2.544875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       3.266449 3.030303 2.1671114 2.343417 3.388652 2.792564</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          3.546430 2.020202 1.4628002 1.981253 3.345208 2.253477</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      3.328667 3.030303 3.4944671 2.343417 2.676166 3.122815</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   2.908695 4.040404 4.8760006 3.728164 2.736988 3.341363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             2.815368 3.030303 3.0475004 2.236898 2.398123 3.360789</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                         qsec       vs       am     gear     carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           2.881854 0.000000 7.692308 3.389831 4.444444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       2.979901 0.000000 7.692308 3.389831 4.444444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          3.258281 7.142857 7.692308 3.389831 1.111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      3.403600 7.142857 0.000000 2.542373 1.111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   2.979901 0.000000 0.000000 2.542373 2.222222</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             3.540164 7.142857 0.000000 2.542373 1.111111</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1  26.0   4  120.3   91  4.43  2.140  16.70  0  1    5    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.0  68.7  12  407.6  254 11.31  8.805  62.91  3  0   11    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4.1.1 198.6  28  628.6  564 29.04 14.198 130.90  7  7   29   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1  61.7  18  465.0  395 11.42  8.265  48.98  0  3   13   14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0  76.5  24  818.2  461 13.68 13.555  76.86  4  0   14   10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 180.6  96 4291.4 2330 37.45 49.249 205.71  0  0   36   37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                            mpg        cyl       disp         hp       drat</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            34.035656  33.333333  34.408602  27.848101  34.150613</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        34.035656  33.333333  34.408602  27.848101  34.150613</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           11.480363  14.285714  17.181037  16.489362  13.257576</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       27.973856  25.000000  31.532633  23.861171  22.514620</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout    10.354374   8.333333   8.388871   7.510730   8.411215</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              23.660131  25.000000  27.499389  22.776573  20.175439</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                             wt       qsec       vs        am       gear</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            31.699940  33.605553      NaN  33.33333  30.769231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        34.785239  34.748877      NaN  33.33333  30.769231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           16.340330  14.216960 14.28571  14.28571  13.793103</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       23.718185  25.292740 25.00000       NaN  21.428571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     6.984913   8.273783      NaN       NaN   8.333333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              25.525636  26.307572 25.00000       NaN  21.428571</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                           carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            28.571429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag        28.571429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     5.405405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsum</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped sum (total)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am sum.hp    mpg    disp  drat    wt   qsec  gear  carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     4     0     1     91  <span style="text-decoration: underline;">2</span>366   <span style="text-decoration: underline;">10</span>947.  403.  195.  <span style="text-decoration: underline;">1</span>520.   455   182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     1     0    254  <span style="text-decoration: underline;">5</span>764.  <span style="text-decoration: underline;">34</span>121.  960.  736.  <span style="text-decoration: underline;">5</span>356.   919   411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     4     1     1    564 <span style="text-decoration: underline;">15</span>613.  <span style="text-decoration: underline;">52</span>945. <span style="text-decoration: underline;">2</span>301. <span style="text-decoration: underline;">1</span>166. <span style="text-decoration: underline;">10</span>457.  <span style="text-decoration: underline;">2</span>369   838</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0     1    395  <span style="text-decoration: underline;">8</span>068.  <span style="text-decoration: underline;">60</span>575  <span style="text-decoration: underline;">1</span>492. <span style="text-decoration: underline;">1</span>089.  <span style="text-decoration: underline;">6</span>395.  <span style="text-decoration: underline;">1</span>755  <span style="text-decoration: underline;">1</span>930</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0    461  <span style="text-decoration: underline;">8</span>806.  <span style="text-decoration: underline;">93</span>235. <span style="text-decoration: underline;">1</span>593. <span style="text-decoration: underline;">1</span>563.  <span style="text-decoration: underline;">8</span>837.  <span style="text-decoration: underline;">1</span>629  <span style="text-decoration: underline;">1</span>199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0   <span style="text-decoration: underline;">2</span>330 <span style="text-decoration: underline;">34</span>550. <span style="text-decoration: underline;">846</span>042  <span style="text-decoration: underline;">7</span>323. <span style="text-decoration: underline;">9</span>690. <span style="text-decoration: underline;">39</span>808.  <span style="text-decoration: underline;">6</span>990  <span style="text-decoration: underline;">7</span>480</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1    599  <span style="text-decoration: underline;">9</span>196. <span style="text-decoration: underline;">193</span>499  <span style="text-decoration: underline;">2</span>300. <span style="text-decoration: underline;">2</span>033.  <span style="text-decoration: underline;">8</span>719   <span style="text-decoration: underline;">2</span>995  <span style="text-decoration: underline;">3</span>736</span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsum</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span> <span class="co"># Equivalent and faster !!</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am sum.hp     mpg     disp    drat       wt     qsec gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1     91  2366.0  10947.3  403.13  194.740  1519.70  455  182</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0    254  5764.3  34121.1  960.08  736.135  5356.47  919  411</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   4  1  1    564 15612.7  52945.4 2301.27 1165.914 10456.79 2369  838</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   6  0  1    395  8067.5  60575.0 1491.50 1089.200  6395.30 1755 1930</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0    461  8805.5  93234.6 1592.92 1563.190  8837.10 1629 1199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0   2330 34550.5 846042.0 7323.40 9689.735 39807.80 6990 7480</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsum</span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   cyl vs am      mpg      disp       hp      drat        wt</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           6  0  1 34.03566 34.408602 27.84810 34.150613 31.699940</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       6  0  1 34.03566 34.408602 27.84810 34.150613 34.785239</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710          4  1  1 11.48036 17.181037 16.48936 13.257576 16.340330</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      6  1  0 27.97386 31.532633 23.86117 22.514620 23.718185</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   8  0  0 10.35437  8.388871  7.51073  8.411215  6.984913</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             6  1  0 23.66013 27.499389 22.77657 20.175439 25.525636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        qsec      gear      carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         33.605553 30.769231 28.571429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     34.748877 30.769231 28.571429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        14.216960 13.793103 10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive    25.292740 21.428571 10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout  8.273783  8.333333  5.405405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant           26.307572 21.428571 10.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsum</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am   mpg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1  26.0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0  68.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   4  1  1 198.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   6  0  1  61.7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0  76.5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 180.6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1  30.8</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co">## This compares fsum with data.table (2 threads) and base::rowsum</span></span></span>
+<span class="r-in"><span><span class="co"># Starting with small data</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcDT</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">mtcDT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">sum</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">f</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/r/base/rowsum.html" class="external-link">rowsum</a></span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min       lq      mean    median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 94.149275 80.32395 57.480085 57.300148</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  5.865044  5.34331  4.277588  4.212984</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.00000  1.000000  1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         uq       max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  51.582094 34.843075   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3.841997  4.340562   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000  1.000000   100</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Now larger data</span></span></span>
+<span class="r-in"><span><span class="va">tdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e5</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="co"># 100 columns with 100.000 obs</span></span></span>
+<span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="fl">1e4</span>, <span class="fl">1e5</span>, <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>                        <span class="co"># A factor with 10.000 groups</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">tdata</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">sum</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">f</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/r/base/rowsum.html" class="external-link">rowsum</a></span><span class="op">(</span><span class="va">tdata</span>, <span class="va">f</span>, reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">tdata</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr      min       lq     mean   median       uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 2.269799 2.296943 2.090685 2.643008 2.136017</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 1.681973 1.685758 1.502039 1.676527 1.528054</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.5545641   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.8353076   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.0000000   100</span>
 </code></pre></div>
     </div>
-
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

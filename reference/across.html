@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
     </div>
 
     <div class="ref-description section level2">
-    <p><code>across()</code> can be used inside <code><a href="ftransform.html">fmutate</a></code> and <code><a href="fsummarise.html">fsummarise</a></code> to apply one or more functions to a selection of columns. It is overall very similar to <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">dplyr::across</a></code>, but does not support some <code>rlang</code> features, has some additional features (arguments), and is optimized to work with <em>collapse</em>'s, <code><a href="fast-statistical-functions.html">.FAST_FUN</a></code>, yielding much faster computations.</p>
+    <p><code>across()</code> can be used inside <code><a href="ftransform.html">fmutate</a></code> and <code><a href="fsummarise.html">fsummarise</a></code> to apply one or more functions to a selection of columns. It is overall very similar to <code><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">dplyr::across</a></code>, but does not support some <code>rlang</code> features, has some additional features (arguments), and is optimized to work with <em>collapse</em>'s, <code><a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html">.FAST_FUN</a></code>, yielding much faster computations.</p>
     </div>
 
     <div class="section level2">
@@ -93,7 +93,6 @@
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p><code>across</code> does not support <em>purr</em>-style lambdas, and does not support <code>dplyr</code>-style predicate functions e.g. <code>across(where(is.numeric), sum)</code>, simply use <code>across(is.numeric, sum)</code>. In contrast to <code>dplyr</code>, you can also compute on grouping columns.</p>
-<p><!-- %In general, my mission with \code{collapse} is not to create a \code{dplyr}-clone, but to take some of the useful features and make them robust and fast using base R and C/C++, with the aim of having a stable API. So don't ask me to implement the latest \emph{dplyr} feature, unless you firmly believe it is very useful and will be around 10 years from now. --></p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

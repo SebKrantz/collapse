@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +92,7 @@
 <li>To facilitate complex data transformation, exploration and computing tasks in R.</li>
 <li>To help make R code fast, flexible, parsimonious and programmer friendly.</li>
 </ul>
-<p>It further implements a class-agnostic approach to data manipulation in R, supporting base R, <em>dplyr</em> (<em>tibble</em>), <em>data.table</em>, <em>sf</em>, <em>plm</em> classes for panel data, and preserving other classes (such as ‘ts’, ‘xts’/‘zoo’ and ‘tsibble’).</p>
+<p>It further implements a class-agnostic approach to data manipulation in R, supporting base R, <em>tibble</em> (<em>tidyverse</em>), <em>data.table</em>, <em>sf</em>, <em>plm</em> panel data classes, and preserving other classes (e.g. <em>ts</em>, <em>xts</em>/<em>zoo</em> or <em>tsibble</em>).</p>
 <p><strong>Key Features:</strong></p>
 <ul>
 <li><p><strong>Advanced statistical programming</strong>: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data frames. Fast and programmable grouping, ordering, matching, unique values/rows, factor generation and interactions.</p></li>
@@ -265,8 +265,8 @@
 <span>       sd <span class="op">=</span> <span class="st">"within.sd"</span><span class="op">)</span>                 <span class="co"># and group sd's to fsd(fwithin(d, g, w), w = w)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>                      <span class="co"># Use get_vars for fast selecting data.frame columns, gv is shortcut</span></span>
-<span><span class="fu"><a href="reference/fhdbetween_fhdwithin.html">fhdbetween</a></span><span class="op">(</span><span class="fu"><a href="reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="co"># Linear prediction with factors and continuous covariates</span></span>
-<span><span class="fu"><a href="reference/fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span><span class="fu"><a href="reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Linear partialling out factors and continuous covariates</span></span>
+<span><span class="fu"><a href="reference/fhdbetween_fhdwithin.html">fhdbetween</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="co"># Linear prediction with factors and continuous covariates</span></span>
+<span><span class="fu"><a href="reference/fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Linear partialling out factors and continuous covariates</span></span>
 <span></span>
 <span><span class="co"># This again opens up new possibilities for data manipulation...</span></span>
 <span><span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  </span>

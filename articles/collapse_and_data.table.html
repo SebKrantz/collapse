@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -193,7 +193,7 @@ data.table back e.g. </p>
 <span><span class="va">DT</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span> <span class="co"># collapse::qDT converts objects to data.table using a shallow copy</span></span>
 <span></span>
 <span></span>
-<span><span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fmean</span></span>
+<span><span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fmean</span></span>
 <span><span class="co">#                    country      PCGDP   LIFEEX     GINI        ODA         POP</span></span>
 <span><span class="co">#   1:           Afghanistan   483.8351 49.19717       NA 1487548499 18362258.22</span></span>
 <span><span class="co">#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17</span></span>
@@ -249,12 +249,12 @@ question):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fmean</span>,</span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fmean</span>,</span>
 <span>               data.table <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">mean</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#        expr      min        lq     mean   median        uq       max neval</span></span>
-<span><span class="co">#    collapse  362.595  440.7115  464.524  461.479  482.3415   648.683   100</span></span>
-<span><span class="co">#  data.table 1574.457 1673.9950 1826.667 1740.536 1791.6885 10472.364   100</span></span></code></pre></div>
+<span><span class="co">#        expr      min       lq      mean    median        uq      max neval</span></span>
+<span><span class="co">#    collapse  347.597  399.315  546.6411  429.7375  467.2575 10600.14   100</span></span>
+<span><span class="co">#  data.table 1475.452 1535.168 2111.6788 1593.9200 1733.2460 34522.04   100</span></span></code></pre></div>
 <p>It is critical to never do something like this:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">fmean</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span></span>
@@ -278,7 +278,7 @@ applied to.</p>
 <code class="sourceCode R"><span><span class="va">fmean</span></span>
 <span><span class="co"># function (x, ...) </span></span>
 <span><span class="co"># UseMethod("fmean")</span></span>
-<span><span class="co"># &lt;bytecode: 0x7ff33438b040&gt;</span></span>
+<span><span class="co"># &lt;bytecode: 0x7fccbdb73108&gt;</span></span>
 <span><span class="co"># &lt;environment: namespace:collapse&gt;</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span><span class="va">fmean</span><span class="op">)</span></span>
 <span><span class="co"># [1] fmean.data.frame  fmean.default     fmean.grouped_df* fmean.list*       fmean.matrix     </span></span>
@@ -305,7 +305,7 @@ missing values (default: removed / skipped), group names (which are
 added as row-names to a data frame, but not to a <em>data.table</em>)
 etc. So we can also do</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">DT</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">DT</span><span class="op">$</span><span class="va">country</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">DT</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">DT</span><span class="op">$</span><span class="va">country</span><span class="op">)</span></span>
 <span><span class="co">#           PCGDP   LIFEEX     GINI        ODA         POP</span></span>
 <span><span class="co">#   1:   483.8351 49.19717       NA 1487548499 18362258.22</span></span>
 <span><span class="co">#   2:  2819.2400 71.68027 31.41111  312928126  2708297.17</span></span>
@@ -321,7 +321,7 @@ etc. So we can also do</p>
 <span></span>
 <span><span class="co"># Or</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GRP.html">GRP</a></span><span class="op">(</span><span class="va">DT</span>, <span class="st">"country"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">g</span><span class="op">[[</span><span class="st">"groups"</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">DT</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">g</span><span class="op">[[</span><span class="st">"groups"</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">DT</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">g</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#                    country      PCGDP   LIFEEX     GINI        ODA         POP</span></span>
 <span><span class="co">#   1:           Afghanistan   483.8351 49.19717       NA 1487548499 18362258.22</span></span>
 <span><span class="co">#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17</span></span>
@@ -341,7 +341,7 @@ what <em>data.table</em> is doing in
 Since <code>fmean</code> is not a function it recognizes and is able to
 optimize, it does something like this,</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/BY.html">BY</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">DT</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">fmean</span><span class="op">)</span> <span class="co"># using collapse::BY</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/BY.html">BY</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">DT</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span>, <span class="va">g</span>, <span class="va">fmean</span><span class="op">)</span> <span class="co"># using collapse::BY</span></span>
 <span><span class="co">#           PCGDP   LIFEEX     GINI        ODA         POP</span></span>
 <span><span class="co">#   1:   483.8351 49.19717       NA 1487548499 18362258.22</span></span>
 <span><span class="co">#   2:  2819.2400 71.68027 31.41111  312928126  2708297.17</span></span>
@@ -417,7 +417,7 @@ rates, including irregular time series and unbalanced panels).</p>
 <span><span class="co"># 216:  1219.4360 54.53360 45.93333  397104997  9402160.33</span></span>
 <span></span>
 <span><span class="co"># If we want to keep the grouping columns, we need to group .SD first.</span></span>
-<span><span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span>, .SDcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span>, .SDcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#                    country      PCGDP   LIFEEX     GINI        ODA         POP</span></span>
 <span><span class="co">#   1:           Afghanistan   483.8351 49.19717       NA 1487548499 18362258.22</span></span>
 <span><span class="co">#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17</span></span>
@@ -435,18 +435,18 @@ is actually not that great of a scope to use collapse’s <em>Fast
 Statistical Functions</em> for aggregations inside <em>data.table</em>.
 I drive this point home with a benchmark:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fmean</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">fmean</span>,</span>
 <span>               data.table <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">mean</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span>,</span>
 <span>               data.table_base <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="fu">base</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span>,</span>
 <span>               hybrid_bad <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">fmean</span><span class="op">)</span>, keyby <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span>,</span>
-<span>               hybrid_ok <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span>, .SDcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span>               hybrid_ok <span class="op">=</span> <span class="va">DT</span><span class="op">[</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">.SD</span>, <span class="va">country</span><span class="op">)</span><span class="op">)</span>, .SDcols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#             expr       min        lq      mean    median         uq       max neval</span></span>
-<span><span class="co">#         collapse   367.257   465.516   486.947   484.958   514.3585   665.813   100</span></span>
-<span><span class="co">#       data.table  1519.773  1760.688  1908.139  1813.801  1882.6970  7759.656   100</span></span>
-<span><span class="co">#  data.table_base 11103.785 11639.387 13693.509 11886.704 12836.5985 31188.953   100</span></span>
-<span><span class="co">#       hybrid_bad  8190.019  8450.100  9389.468  8554.358  8738.3940 29115.893   100</span></span>
-<span><span class="co">#        hybrid_ok  1059.546  1193.718  1264.295  1243.258  1311.7130  1975.393   100</span></span></code></pre></div>
+<span><span class="co">#             expr      min        lq      mean     median         uq       max neval</span></span>
+<span><span class="co">#         collapse  325.837  404.3105   480.568   447.1335   511.0225  1774.788   100</span></span>
+<span><span class="co">#       data.table 1427.826 1578.1745  1801.217  1647.0545  1818.9060  5221.960   100</span></span>
+<span><span class="co">#  data.table_base 9509.315 9976.8615 14570.246 10572.6435 15806.3650 57082.976   100</span></span>
+<span><span class="co">#       hybrid_bad 6721.377 7054.7605  9684.179  7307.6940  8514.5270 58366.811   100</span></span>
+<span><span class="co">#        hybrid_ok  897.944 1055.4200  1784.351  1134.4925  1250.0290 52833.950   100</span></span></code></pre></div>
 <p>It is evident that <em>data.table</em> has some overhead, so there is
 absolutely no need to do this kind of syntax manipulation.</p>
 <p>There is more scope to use <em>collapse</em> transformation functions
@@ -459,13 +459,13 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 <span><span class="co"># Same using fsum; "replace_fill" overwrites missing values, "replace" keeps the</span></span>
 <span><span class="va">DT</span><span class="op">[</span>, <span class="va">sum_ODA</span> <span class="op">:=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">]</span>  </span>
 <span><span class="co"># Same: A native collapse solution using settransform (or its shortcut form)</span></span>
-<span><span class="fu"><a href="../reference/ftransform.html">settfm</a></span><span class="op">(</span><span class="va">DT</span>, sum_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span>  </span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">settfm</a></span><span class="op">(</span><span class="va">DT</span>, sum_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span>  </span>
 <span></span>
 <span><span class="co"># settfm may be more convenient than `:=` for multiple column modifications,</span></span>
 <span><span class="co"># each involving a different grouping:</span></span>
 <span>  <span class="co"># This computes the percentage of total ODA distributed received by </span></span>
 <span>  <span class="co"># each country both over time and within a given year</span></span>
-<span><span class="fu"><a href="../reference/ftransform.html">settfm</a></span><span class="op">(</span><span class="va">DT</span>, perc_c_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>,</span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">settfm</a></span><span class="op">(</span><span class="va">DT</span>, perc_c_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span>,</span>
 <span>           perc_y_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">year</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>TRA</code> argument is available to all <em>Fast
 Statistical Functions</em> (see the macro <code>.FAST_STAT_FUN</code>)
@@ -502,10 +502,10 @@ or sweeping out vectors of statistics or other
 <span>   by <span class="op">=</span> <span class="va">country</span>, .SDcols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span></span>
 <span></span>
 <span><span class="co"># Same thing using collapse</span></span>
-<span><span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/compound.html" class="external-link">%&lt;&gt;%</a></span> <span class="fu"><a href="../reference/ftransform.html">tfm</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">1L</span>, <span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"growth_"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">DT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/compound.html" class="external-link">%&lt;&gt;%</a></span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">tfm</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">.</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">1L</span>, <span class="va">country</span>, <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"growth_"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or even simpler using settransform and the Growth operator</span></span>
-<span><span class="fu"><a href="../reference/ftransform.html">settfmv</a></span><span class="op">(</span><span class="va">DT</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span>, <span class="va">G</span>, <span class="fl">1L</span>, <span class="fl">1L</span>, <span class="va">country</span>, <span class="va">year</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">settfmv</a></span><span class="op">(</span><span class="va">DT</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span>, <span class="va">G</span>, <span class="fl">1L</span>, <span class="fl">1L</span>, <span class="va">country</span>, <span class="va">year</span>, apply <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">DT</span><span class="op">)</span></span>
 <span><span class="co">#        country iso3c       date year decade     region     income  OECD PCGDP LIFEEX GINI       ODA</span></span>
@@ -554,7 +554,7 @@ data first.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>  S1 <span class="op">=</span> <span class="va">DT_large</span><span class="op">[</span>, <span class="va">sum_ODA</span> <span class="op">:=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">ODA</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span>,</span>
 <span>  S2 <span class="op">=</span> <span class="va">DT_large</span><span class="op">[</span>, <span class="va">sum_ODA</span> <span class="op">:=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>  S3 <span class="op">=</span> <span class="fu"><a href="../reference/ftransform.html">settfm</a></span><span class="op">(</span><span class="va">DT_large</span>, sum_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  S3 <span class="op">=</span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">settfm</a></span><span class="op">(</span><span class="va">DT_large</span>, sum_ODA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">ODA</span>, <span class="va">country</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  W1 <span class="op">=</span> <span class="va">DT_large</span><span class="op">[</span>, <span class="va">demean_PCGDP</span> <span class="op">:=</span> <span class="va">PCGDP</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">PCGDP</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span>,</span>
 <span>  W2 <span class="op">=</span> <span class="va">DT_large</span><span class="op">[</span>, <span class="va">demean_PCGDP</span> <span class="op">:=</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">country</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  L1 <span class="op">=</span> <span class="va">DT_large</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="va">lag_PCGDP</span> <span class="op">:=</span> <span class="fu"><a href="https://Rdatatable.gitlab.io/data.table/reference/shift.html" class="external-link">shift</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">1L</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">country</span><span class="op">]</span>,</span>
@@ -564,22 +564,22 @@ data first.</p>
 <span>  times <span class="op">=</span> <span class="fl">5</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#  expr       min        lq       mean     median         uq        max neval</span></span>
-<span><span class="co">#    S1 2219.0692 2244.0344  2410.7339  2488.4129  2501.7086  2600.4444     5</span></span>
-<span><span class="co">#    S2  160.9236  213.5835   262.7576   224.4014   251.8577   463.0218     5</span></span>
-<span><span class="co">#    S3  155.4973  234.3259   383.0010   267.4051   594.9944   662.7822     5</span></span>
-<span><span class="co">#    W1 3848.8462 4019.2752  4735.8254  4461.2299  5602.4407  5747.3349     5</span></span>
-<span><span class="co">#    W2  152.7608  184.5560   245.9004   264.6466   281.3037   346.2352     5</span></span>
-<span><span class="co">#    L1 8143.8189 8265.2899  9232.8495  8299.7190  8455.3449 13000.0748     5</span></span>
-<span><span class="co">#    L2  326.4090  334.8795   436.6668   406.9493   491.4619   623.6341     5</span></span>
-<span><span class="co">#    L3 6140.0122 8027.5320 10106.0592 11796.0471 12274.1474 12292.5574     5</span></span>
-<span><span class="co">#    L4  121.1248  169.0402   341.6269   223.9164   366.3202   827.7332     5</span></span>
+<span><span class="co">#  expr       min        lq      mean    median        uq       max neval</span></span>
+<span><span class="co">#    S1 1116.7405 1132.9206 1334.1185 1223.7449 1272.4876 1924.6991     5</span></span>
+<span><span class="co">#    S2  133.5327  135.9363  166.8370  136.8988  197.8860  229.9312     5</span></span>
+<span><span class="co">#    S3  140.6602  154.2470  195.7116  189.4853  192.3965  301.7688     5</span></span>
+<span><span class="co">#    W1 3499.0066 3548.0671 3970.5289 3618.4476 4405.7091 4781.4141     5</span></span>
+<span><span class="co">#    W2  140.6620  166.3717  200.4975  199.5957  234.9197  260.9384     5</span></span>
+<span><span class="co">#    L1 8178.0712 8569.7420 8746.4220 8806.9274 8978.0520 9199.3176     5</span></span>
+<span><span class="co">#    L2  261.8488  288.7005  359.8360  334.7816  435.1485  478.7008     5</span></span>
+<span><span class="co">#    L3 5755.8588 5984.8848 6323.2743 6419.6812 6710.2145 6745.7324     5</span></span>
+<span><span class="co">#    L4  106.9093  108.3035  179.8662  160.2281  203.5299  320.3602     5</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">DT_large</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/gc.html" class="external-link">gc</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#           used (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)</span></span>
-<span><span class="co"># Ncells 1114758 59.6    2157401  115.3         NA   2157401  115.3</span></span>
-<span><span class="co"># Vcells 2394902 18.3  273800597 2089.0      16384 281252401 2145.8</span></span></code></pre></div>
+<span><span class="co"># Ncells 1106121 59.1    2074582  110.8         NA   2074582  110.8</span></span>
+<span><span class="co"># Vcells 2378879 18.2  273768710 2088.7      16384 301355020 2299.2</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="further-collapse-features-supporting-data-tables">Further <em>collapse</em> features supporting
@@ -631,9 +631,9 @@ useful to use in <em>data.table</em> based workflows.</p>
 <code class="sourceCode R"><span><span class="co"># Benchmark</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">m</span>, <span class="st">"car"</span><span class="op">)</span>, <span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="va">m</span>, <span class="cn">TRUE</span>, <span class="st">"data.table"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                         expr    min      lq    mean  median      uq      max neval</span></span>
-<span><span class="co">#                qDT(m, "car") 24.032 25.3560 43.0057 27.0945 34.7080  240.529   100</span></span>
-<span><span class="co">#  mrtl(m, TRUE, "data.table") 13.198 14.4295 37.8948 15.5930 17.7795 1397.405   100</span></span></code></pre></div>
+<span><span class="co">#                         expr    min      lq     mean  median     uq    max neval</span></span>
+<span><span class="co">#                qDT(m, "car") 18.880 19.7450 20.67603 20.1845 20.783 43.067   100</span></span>
+<span><span class="co">#  mrtl(m, TRUE, "data.table") 10.748 11.3785 12.29517 11.8735 12.392 38.453   100</span></span></code></pre></div>
 <p>For example we could regress the growth rate of GDP per capita on the
 Growth rate of life expectancy in each country and save results in a
 <em>data.table</em>:</p>
@@ -695,8 +695,8 @@ also use <code><a href="../reference/flm.html">collapse::flm</a></code> together
 <span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#  expr       min        lq      mean    median        uq       max neval</span></span>
-<span><span class="co">#     A 296.94270 304.97669 315.33394 309.12490 320.60251 409.28199   100</span></span>
-<span><span class="co">#     B  16.05161  16.55864  17.61932  16.95519  17.42404  29.73089   100</span></span></code></pre></div>
+<span><span class="co">#     A 249.85557 270.56837 309.67133 289.95978 318.73173 632.39008   100</span></span>
+<span><span class="co">#     B  13.17238  13.90686  16.47828  14.42783  16.37562  45.40991   100</span></span></code></pre></div>
 <p>Another feature to highlight at this point are <em>collapse</em>’s
 list processing functions, in particular <code>rsplit</code>,
 <code>rapply2d</code>, <code>get_elem</code> and <code>unlist2d</code>.

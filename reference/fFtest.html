@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,7 +87,7 @@
 <dd><p>numeric. A vector of (frequency) weights.</p></dd>
 
   <dt>formula</dt>
-<dd><p>a 2-part formula: <code>y ~ exc | X</code>, where both <code>exc</code> and <code>X</code> are expressions connected with <code>+</code>, and <code>X</code> can be omitted. <em>Note</em> that other operators (<code>:</code>, <code>*</code>, <code>^</code>, <code>-</code>, etc.) are not supported, you can interact variables using standard functions like <code><a href="qF.html">finteraction/itn</a></code> or <code><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">magrittr::multiply_by</a></code> inside the formula e.g. <code>log(y) ~ x1 + itn(x2, x3) | x4</code> or <code>log(y) ~ x1 + multiply_by(x2, x3) | x4</code>.</p></dd>
+<dd><p>a 2-part formula: <code>y ~ exc | X</code>, where both <code>exc</code> and <code>X</code> are expressions connected with <code>+</code>, and <code>X</code> can be omitted. <em>Note</em> that other operators (<code>:</code>, <code>*</code>, <code>^</code>, <code>-</code>, etc.) are not supported, you can interact variables using standard functions like <code><a href="https://sebkrantz.github.io/collapse/reference/qF.html">finteraction/itn</a></code> or <code><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">magrittr::multiply_by</a></code> inside the formula e.g. <code>log(y) ~ x1 + itn(x2, x3) | x4</code> or <code>log(y) ~ x1 + multiply_by(x2, x3) | x4</code>.</p></dd>
 
  <dt>data</dt>
 <dd><p>a named list or data frame.</p></dd>
@@ -121,21 +121,6 @@
 <li><p>the Restricted Model (<code>y ~ X</code>)</p></li>
 <li><p>the Exclusion Restriction of <code>exc</code>. The R-squared shown is simply the difference of the full and restricted R-Squared's, not the R-Squared of the model <code>y ~ exc</code>.</p></li>
 </ol><p>If <code>X = NULL</code>, only a vector of the same 5 statistics testing the model (<code>y ~ exc</code>) is shown.</p>
-
-
-<p><!-- %%  ~Describe the value returned --></p>
-
-
-<p><!-- %%  If it is a LIST, use --></p>
-
-
-<p><!-- %%  \item{comp1 }{Description of 'comp1'} --></p>
-
-
-<p><!-- %%  \item{comp2 }{Description of 'comp2'} --></p>
-
-
-<p><!-- %% \dots --></p>
 
 
     </div>

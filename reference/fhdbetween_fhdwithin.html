@@ -12,7 +12,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,10 +85,10 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span><span class="co"># S3 method for matrix</span></span>
 <span><span class="fu">fhdwithin</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for matrix</span></span>
-<span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>,</span>
+<span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>    lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for matrix</span></span>
-<span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>,</span>
+<span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>    lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data.frame</span></span>
@@ -99,10 +99,10 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span>          variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for data.frame</span></span>
 <span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>    variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for data.frame</span></span>
 <span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, <span class="va">fl</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>    variable.wise <span class="op">=</span> <span class="cn">FALSE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, lm.method <span class="op">=</span> <span class="st">"qr"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
 <span></span>
@@ -123,10 +123,10 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span>          variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for pdata.frame</span></span>
 <span><span class="fu">HDB</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="st">"HDB."</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for pdata.frame</span></span>
 <span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="st">"HDW."</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -155,8 +155,8 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <dt>effect</dt>
 <dd><p><em>plm</em> methods: Select which panel identifiers should be used for centering. 1L takes the first variable in the <a href="indexing.html">index</a>, 2L the second etc.. Index variables can also be called by name using a character vector. The keyword <code>"all"</code> uses all identifiers.</p></dd>
 
-<dt>stub</dt>
-<dd><p>a prefix or stub to rename all transformed columns. <code>FALSE</code> will not rename columns.</p></dd>
+  <dt>stub</dt>
+<dd><p>character. A prefix/stub to add to the names of all transformed columns. <code>TRUE</code> (default) uses <code>"HDW."/"HDB."</code>, <code>FALSE</code> will not rename columns.</p></dd>
 
 <dt>lm.method</dt>
 <dd><p>character. The linear fitting method. Supported are <code>"chol"</code> and <code>"qr"</code>. See <code><a href="flm.html">flm</a></code>.</p></dd>
@@ -178,9 +178,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     
 
-<p><!-- % \subsection{Caution with full (*) and factor-continuous variable interactions:}{ -->
-<!-- % In general full interactions specified with \code{(*)} can be very slow on large data, and \code{lfe::demeanlist} is also not very speedy on interaction between factors and continuous variables, so these structures should be used with caution (don't just specify an interaction like that on a large dataset, start with smaller data and see how long computations take. Upon further updates of \code{lfe::demeanlist}, performance might improve). -->
-<!-- % } --></p>
+
 <div class="section">
 <h3 id="on-the-differences-between-fhdwithin-hdw-and-fwithin-w-">On the differences between <code>fhdwithin/HDW</code>... and <code>fwithin/W</code>...:<a class="anchor" aria-label="anchor" href="#on-the-differences-between-fhdwithin-hdw-and-fwithin-w-"></a></h3>
 

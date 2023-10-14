@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2023-10-13</h4>
+            <h4 data-toc-skip class="date">2023-10-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
@@ -323,8 +323,8 @@ example,
 is permissible but inefficient code as it filters and reorders grouped
 data, requiring modifications to both the data frame and the attached
 grouping object. <em>collapse</em> does not allow calls to
-<code><a href="../reference/fsubset.html">fsubset()</a></code> or <code><a href="../reference/roworder.html">roworder()</a></code> on grouped data and
-will issue appropriate errors, forcing you to write more efficient
+<code><a href="../reference/fsubset.html">fsubset()</a></code> on grouped data and messages about it
+<code><a href="../reference/roworder.html">roworder()</a></code>, encouraging you to write more efficient
 code.</p>
 <p>The above example can also be optimized because we are subsetting the
 whole frame and then doing computations on a subset of columns. It would

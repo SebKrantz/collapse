@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,7 +71,7 @@
 <span>        logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for default</span></span>
 <span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for matrix</span></span>
 <span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -79,7 +79,7 @@
 <span>        stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for matrix</span></span>
 <span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for data.frame</span></span>
 <span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, g <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>,</span>
@@ -87,7 +87,7 @@
 <span>        stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for data.frame</span></span>
 <span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, by <span class="op">=</span> <span class="cn">NULL</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>,</span>
-<span>  fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
@@ -97,14 +97,14 @@
 <span>        power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for pseries</span></span>
 <span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>  power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for pdata.frame</span></span>
 <span><span class="fu">fgrowth</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>, scale <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>        power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">diff</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">2L</span>, shift <span class="op">=</span> <span class="st">"time"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for pdata.frame</span></span>
 <span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, shift <span class="op">=</span> <span class="st">"time"</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, shift <span class="op">=</span> <span class="st">"time"</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Methods for grouped data frame / compatibility with dplyr:</span></span>
 <span></span>
@@ -114,7 +114,7 @@
 <span>        keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># S3 method for grouped_df</span></span>
 <span><span class="fu">G</span><span class="op">(</span><span class="va">x</span>, n <span class="op">=</span> <span class="fl">1</span>, diff <span class="op">=</span> <span class="fl">1</span>, t <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="cn">NA</span>, logdiff <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="cn">TRUE</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span>  scale <span class="op">=</span> <span class="fl">100</span>, power <span class="op">=</span> <span class="fl">1</span>, stubs <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, keep.ids <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -153,7 +153,7 @@
 <dd><p>numeric. Apply a power to annualize or compound growth rates e.g. <code>fgrowth(AirPassengers, 12, power = 1/12)</code> is equivalent to <code>((AirPassengers/flag(AirPassengers, 12))^(1/12)-1)*100</code>.</p></dd>
 
   <dt>stubs</dt>
-<dd><p>logical. <code>TRUE</code> will rename all computed columns by adding a prefix "L<code>n</code>G<code>diff</code>." / "F<code>n</code>G<code>diff</code>.", or "L<code>n</code>Dlog<code>diff</code>." / "F<code>n</code>Dlog<code>diff</code>." if <code>logdiff = TRUE</code>.</p></dd>
+<dd><p>logical. <code>TRUE</code> (default) will rename all computed columns by adding a prefix "L<code>n</code>G<code>diff</code>." / "F<code>n</code>G<code>diff</code>.", or "L<code>n</code>Dlog<code>diff</code>." / "F<code>n</code>Dlog<code>diff</code>." if <code>logdiff = TRUE</code>.</p></dd>
 
     <dt>shift</dt>
 <dd><p><em>pseries / pdata.frame methods</em>: character. <code>"time"</code> or <code>"row"</code>. See <code><a href="flag.html">flag</a></code> for details.</p></dd>

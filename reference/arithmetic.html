@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -232,19 +232,19 @@
 <span class="r-in"><span><span class="co">## Chained Operations</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%r-%</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span> <span class="op">%c*%</span> <span class="fl">5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="ftransform.html">tfm</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">tfm</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        N      Mean        SD        Min        Max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   32  -19.3443         0   -19.3443   -19.3443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   32    0.7272    8.9296   -10.2103     9.7897</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> disp  32      -4.9  619.6935  -803.0093  1201.4907</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> hp    32  -13.1881  342.8143  -486.6256   928.3744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> drat  32    5.0411    2.6734     0.8583    11.7083</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> wt    32  -13.1432    4.8923   -21.6644    -2.1094</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> qsec  32   -1.2088    8.9347   -17.9526    24.0474</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> vs    32   -7.6068    2.5201    -9.7943    -4.7943</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> am    32     8.838     2.495     6.8067    11.8067</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> gear  32   -5.7716     3.689    -9.2091     0.7909</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> carb  32   11.1081     8.076     2.0456    37.0456</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> mpg   32  134.0954         0   134.0954   134.0954</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> cyl   32   -5.9204    8.9296   -16.8579     3.1421</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> disp  32    5.1225  619.6935  -792.9868  1211.5132</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> hp    32   -6.0425  342.8143    -479.48     935.52</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> drat  32   -4.9581    2.6734    -9.1409     1.7091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> wt    32    4.9151    4.8923    -3.6062    15.9488</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> qsec  32   -2.0631    8.9347   -18.8069    23.1931</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> vs    32    8.0493    2.5201     5.8618    10.8618</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> am    32   11.6514     2.495     9.6201    14.6201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> gear  32   -8.8294     3.689   -12.2669    -2.2669</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> carb  32    4.9269     8.076    -4.1356    30.8644</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -122,16 +122,12 @@
 <dt>keep.group_vars</dt>
 <dd><p><em>grouped_df method:</em> Logical. <code>FALSE</code> removes grouping variables after computation. See also the Note.</p></dd>
 
-</dl><p><!-- %    \item{simplify}{logical. Simplify the result to return an object of the same class and with the same attributes. If \code{FALSE}, the raw computation retult in form of a (nested) list is returned.} --></p>
-
-
-    </div>
+</dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>BY</code> is a re-implementation of the Split-Apply-Combine computing paradigm. It is faster than <code><a href="https://rdrr.io/r/base/tapply.html" class="external-link">tapply</a></code>, <code><a href="https://rdrr.io/r/base/by.html" class="external-link">by</a></code>, <code><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></code> and <em>(d)plyr</em>, and preserves data attributes just like <code><a href="dapply.html">dapply</a></code>.  <!-- % and more versatile though not faster than \emph{dplyr} --></p>
-<p><!-- %I note at this point that the philosophy of \emph{collapse} is to move beyond this rather slow computing paradigm, which is why the \link[=fast-statistical-functions]{Fast Statistical Functions} were implemented. However sometimes tasks need to be performed that involve more complex and customized operations on data, and for these cases \code{BY} is a good solution. --></p>
+
 <p>It is principally a wrapper around <code>lapply(gsplit(x, g), FUN, ...)</code>, that uses <code><a href="GRP.html">gsplit</a></code> for optimized splitting and also strongly optimizes on the internal code compared to <em>base</em> R functions. For more details look at the documentation for <code><a href="dapply.html">dapply</a></code> which works very similar (apart from the splitting performed in <code>BY</code>). The function is intended for simple cases involving flexible computation of statistics across groups using a single function e.g. <code>iris |&gt; gby(Species) |&gt; BY(IQR)</code> is simpler than <code>iris |&gt; gby(Species) |&gt; smr(acr(.fns = IQR))</code> etc..</p>
-<p><!-- % For larger tasks, the \link[=fast-statistical-functions]{Fast Statistical Functions} or the \emph{data.table} package are more appropriate tools. --></p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>

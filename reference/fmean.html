@@ -12,7 +12,7 @@ The TRA argument can further be used to transform x using its (grouped, weighted
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -137,11 +137,12 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><!-- % Non-grouped mean computations internally utilize long-doubles in C++, for additional numeric precision. --></p>
-<p><!-- % Missing-value removal as controlled by the \code{na.rm} argument is done very efficiently by simply skipping them in the computation (thus setting \code{na.rm = FALSE} on data with no missing values doesn't give extra speed). Large performance gains can nevertheless be achieved in the presence of missing values if \code{na.rm = FALSE}, since then the corresponding computation is terminated once a \code{NA} is encountered and \code{NA} is returned (unlike \code{\link{mean}} which just runs through without any checks). --></p>
+    
+
+
 <p>The weighted mean is computed as <code>sum(x * w) / sum(w)</code>, using a single pass in C. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
-<p><!-- %This all seamlessly generalizes to grouped computations, which are performed in a single pass (without splitting the data) and therefore extremely fast. --></p>
-<p><!-- %When applied to data frames with groups or \code{drop = FALSE}, \code{fmean} preserves all column attributes (such as variable labels) but does not distinguish between classed and unclassed object (thus applying \code{fmean} to a factor column will give a 'malformed factor' error). The attributes of the data frame itself are also preserved. --></p>
+
+
 <p>For further computational details see <code><a href="fsum.html">fsum</a></code>, which works equivalently.</p>
     </div>
     <div class="section level2">
