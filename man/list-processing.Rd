@@ -49,7 +49,7 @@
   \code{\link{t_list}} \tab\tab Transpose lists of lists \cr
   \code{\link{rapply2d}} \tab\tab Recursively apply functions to lists of data objects \cr
   \code{\link{unlist2d}} \tab\tab Recursively unlist/row-bind lists of data objects in 2D, to data frame or \emph{data.table} \cr
-  \code{\link{rowbind}} \tab\tab Non-recursive binding of lists or lists / data.frames. \cr
+  \code{\link{rowbind}} \tab\tab Non-recursive binding of lists of lists / data.frames. \cr
 }
 }
 \seealso{
