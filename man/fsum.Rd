@@ -107,6 +107,7 @@ mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent and faster !!
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
 mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fsum()
 }
+\donttest{
 ## This compares fsum with data.table (2 threads) and base::rowsum
 # Starting with small data
 library(data.table)
@@ -125,6 +126,7 @@ f <- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.00
 microbenchmark(tdata[, lapply(.SD, sum), by = f],
                rowsum(tdata, f, reorder = FALSE),
                fsum(tdata, f, na.rm = FALSE), unit = "relative")
+}
 }
 
 %\section{Benchmark}{\preformatted{

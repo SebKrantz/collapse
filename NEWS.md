@@ -1,6 +1,12 @@
+# collapse 2.0.3
+
+* Fixed a signed integer overflow inside a hash function detected by CRAN checks (changing to unsigned int). 
+
+* Updated the cheatsheet (see README.md). 
+
 # collapse 2.0.2
 
-* Added global option 'stub' (default `TRUE`) to `set_collapse`. It is passed to the `stub(s)` arguments of the statistical operations, `B`, `W`, `STD`, `HDW`, `HDW`, `L`, `D`, `Dlog`, `G` (in `.OPERATOR_FUN`). By default these operators add a prefix/stub to matrix or data.frame columns transformed by them. Setting `set_collapse(stub = FALSE)` now allows to switch off this behavior such that columns are not prepended with a prefix by default. 
+* Added global option 'stub' (default `TRUE`) to `set_collapse`. It is passed to the `stub(s)` arguments of the statistical operators, `B`, `W`, `STD`, `HDW`, `HDW`, `L`, `D`, `Dlog`, `G` (in `.OPERATOR_FUN`). By default these operators add a prefix/stub to transformed matrix or data.frame columns. Setting `set_collapse(stub = FALSE)` now allows to switch off this behavior such that columns are not prepended with a prefix (by default). 
 
 * `roworder[v]()` now also supports grouped data frames, but prints a message indicating that this is inefficient (also for indexed data). An additional argument `verbose` can be set to `0` to avoid such messages. 
 

@@ -20,7 +20,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a class-agnostic approach to data manipulation in R, supporting base R, *tibble* (*tidyverse*), *data.table*, *sf*, *plm* panel data classes, and preserving other classes (e.g. *ts*, *xts*/*zoo* or *tsibble*). 
+It further implements a class-agnostic approach to data manipulation in R, supporting base R, *tibble* (*tidyverse*), *data.table*, *sf*, *plm* panel data classes, and preserving other classes (e.g. *xts*/*zoo*, *tsibble*, etc.). 
 
 **Key Features:**
 
@@ -74,7 +74,7 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 
 In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>), among them one on [Documentation and Resources](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html).
 
-### Cheatsheet (v1.8.8)
+### Cheatsheet
 
 <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page1.png" width="330"/></a>  <!-- height="227" 294 -->
 <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page2.png" width="330"/></a> 

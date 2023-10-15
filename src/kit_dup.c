@@ -436,7 +436,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         case INTSXP: {
           const int *restrict px = INTEGER_RO(x), *restrict py = INTEGER_RO(y);
           for (int i = 0; i != n; ++i) {
-            id = HASH(px[i] + (64988430769U * (unsigned)py[i]), K); // Multiplication doesn't work here: too few unique values
+            id = HASH(px[i] + (64988430769U * py[i]), K); // Multiplication doesn't work here: too few unique values
             // Another large prime taken from https://oeis.org/wiki/Higher-order_prime_numbers
             while(h[id]) {
               hid = h[id]-1;
@@ -474,7 +474,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
           // fill hash table with indices of 'table'
           for (int i = 0; i != n; ++i) {
             tpx.d = px[i]; tpy.d = py[i];
-            id = HASH((64988430769 * (tpx.u[0] + tpx.u[1])) + tpy.u[0] + tpy.u[1], K); // Best combination it seems
+            id = HASH((64988430769U * (tpx.u[0] + tpx.u[1])) + tpy.u[0] + tpy.u[1], K); // Best combination it seems
             while(h[id]) {
               hid = h[id]-1;
               if(REQUAL(px[hid], px[i]) && REQUAL(py[hid], py[i])) {
@@ -498,7 +498,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         union uno tpv;
         for (int i = 0; i != n; ++i) {
           tpv.d = pr[i];
-          id = HASH((64988430769U * (unsigned)pi[i]) + tpv.u[0] + tpv.u[1], K); // Best combination it seems
+          id = HASH((64988430769U * pi[i]) + tpv.u[0] + tpv.u[1], K); // Best combination it seems
           while(h[id]) {
             hid = h[id]-1;
             if(pi[hid] == pi[i] && REQUAL(pr[hid], pr[i])) {
@@ -636,7 +636,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
     const int *restrict px = INTEGER(x);
     const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
     for (int i = 0; i != n; ++i) {
-      id = ((unsigned)pidx[i]*mult) ^ HASH(px[i], K); // HASH((unsigned)px[i] * (unsigned)pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
+      id = (pidx[i]*mult) ^ HASH(px[i], K); // HASH((unsigned)px[i] * (unsigned)pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
       while(h[id]) {  // However multiplication causes signed integer overflow... UBSAN error.
         hid = h[id]-1;
         if(pidx[hid] == pidx[i] && px[hid] == px[i]) { // Usually pidx has more distinct values...
@@ -656,7 +656,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
     union uno tpv;
     for (int i = 0; i != n; ++i) {
       tpv.d = px[i]; // R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN :px[i]);
-      id = ((unsigned)pidx[i]*mult) ^ HASH(tpv.u[0] + tpv.u[1], K); // HASH((tpv.u[0] + tpv.u[1]) ^ pidx[i], K) + pidx[i]; // Note: This is much faster than just adding pidx[i] to the hash value...
+      id = (pidx[i]*mult) ^ HASH(tpv.u[0] + tpv.u[1], K); // HASH((tpv.u[0] + tpv.u[1]) ^ pidx[i], K) + pidx[i]; // Note: This is much faster than just adding pidx[i] to the hash value...
       while(h[id]) { // Problem: This value might be seen before, but not in combination with that pidx value...
         hid = h[id]-1; // The issue here is that REQUAL(px[hid], px[i]) could be true but pidx[hid] == pidx[i] fails, although the same combination of px and pidx could be seen earlier before...
         if(pidx[hid] == pidx[i] && REQUAL(px[hid], px[i])) {
@@ -687,7 +687,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
       u = tpv.u[0] ^ tpv.u[1];
       tpv.d = tmp.i;
       u ^= tpv.u[0] ^ tpv.u[1];
-      id = ((unsigned)pidx[i]*mult) ^ HASH(u, K);
+      id = (pidx[i]*mult) ^ HASH(u, K);
       while(h[id]) {
         hid = h[id]-1;
         if(pidx[hid] == pidx[i] && CEQUAL(px[hid], px[i])) {
@@ -705,7 +705,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
     const SEXP *restrict px = STRING_PTR(x);
     const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
     for (int i = 0; i != n; ++i) {
-      id = ((unsigned)pidx[i]*mult) ^ HASH(((intptr_t) px[i] & 0xffffffff), K); // HASH(((intptr_t) px[i] & 0xffffffff) ^ pidx[i], K) + pidx[i];
+      id = (pidx[i]*mult) ^ HASH(((intptr_t) px[i] & 0xffffffff), K); // HASH(((intptr_t) px[i] & 0xffffffff) ^ pidx[i], K) + pidx[i];
       while(h[id]) {
         hid = h[id]-1;
         if(pidx[hid] == pidx[i] && px[hid] == px[i]) {
