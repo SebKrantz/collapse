@@ -82,7 +82,7 @@ join <- function(x, y,
         c2 <- c1
         c1 <- tmp
       }
-      if(c1 || c2) stop("Join is not 1:1: ", x_name, " (x) is ", if(c1) "not" else "", " unique on the join columns; ", y_name, " (y) is ", if(c2) "not" else "", " unique on the join columns")
+      if(c1 || c2) stop("Join is not 1:1: ", x_name, " (x) is ", if(c1) "not " else "", "unique on the join columns; ", y_name, " (y) is ", if(c2) "not " else "", "unique on the join columns")
     },
     "1:m" = {
       cond <- if(rjoin) attr(m, "N.groups") != attr(m, "N.distinct") && any_duplicated(x[ixon]) else
