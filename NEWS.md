@@ -1,6 +1,8 @@
 # collapse 2.0.3
 
-* Fixed a signed integer overflow inside a hash function detected by CRAN checks (changing to unsigend int). 
+* Fixed a signed integer overflow inside a hash function detected by CRAN checks (changing to unsigned int). 
+
+* Updated the cheatsheet (see README.md). 
 
 # collapse 2.0.2
 
