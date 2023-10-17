@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,8 +57,13 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.2" id="collapse-202">collapse 2.0.2<a class="anchor" aria-label="anchor" href="#collapse-202"></a></h2>
-<ul><li><p>Added global option ‘stub’ (default <code>TRUE</code>) to <code>set_collapse</code>. It is passed to the <code>stub(s)</code> arguments of the statistical operations, <code>B</code>, <code>W</code>, <code>STD</code>, <code>HDW</code>, <code>HDW</code>, <code>L</code>, <code>D</code>, <code>Dlog</code>, <code>G</code> (in <code>.OPERATOR_FUN</code>). By default these operators add a prefix/stub to matrix or data.frame columns transformed by them. Setting <code>set_collapse(stub = FALSE)</code> now allows to switch off this behavior such that columns are not prepended with a prefix by default.</p></li>
+<h2 class="pkg-version" data-toc-text="2.0.3" id="collapse-203">collapse 2.0.3<a class="anchor" aria-label="anchor" href="#collapse-203"></a></h2>
+<ul><li><p>Fixed a signed integer overflow inside a hash function detected by CRAN checks (changing to unsigned int).</p></li>
+<li><p>Updated the cheatsheet (see README.md).</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.2" id="collapse-202">collapse 2.0.2<a class="anchor" aria-label="anchor" href="#collapse-202"></a></h2><p class="text-muted">CRAN release: 2023-10-14</p>
+<ul><li><p>Added global option ‘stub’ (default <code>TRUE</code>) to <code>set_collapse</code>. It is passed to the <code>stub(s)</code> arguments of the statistical operators, <code>B</code>, <code>W</code>, <code>STD</code>, <code>HDW</code>, <code>HDW</code>, <code>L</code>, <code>D</code>, <code>Dlog</code>, <code>G</code> (in <code>.OPERATOR_FUN</code>). By default these operators add a prefix/stub to transformed matrix or data.frame columns. Setting <code>set_collapse(stub = FALSE)</code> now allows to switch off this behavior such that columns are not prepended with a prefix (by default).</p></li>
 <li><p><code>roworder[v]()</code> now also supports grouped data frames, but prints a message indicating that this is inefficient (also for indexed data). An additional argument <code>verbose</code> can be set to <code>0</code> to avoid such messages.</p></li>
 </ul></div>
     <div class="section level2">
