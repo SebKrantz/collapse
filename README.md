@@ -240,8 +240,8 @@ pdata <- EuStockMarkets %>% list(`A` = ., `B` = .) %>%
 L(pdata, -1:3, ~Id, ~Time)                   # Sequence of fully identified panel-lags (L is operator for flag) 
 pdata %>% fgroup_by(Id) %>% flag(-1:3, Time) # Same thing..
 
-# collapse supports pseries and pdata.frame's, provided by the plm package
-pdata <- plm::pdata.frame(pdata, index = c("Id", "Time"))         
+# collapse also supports indexed series and data frames (and plm panel data classes)
+pdata <- findex_by(pdata, Id, Time)         
 L(pdata, -1:3)          # Same as above, ...
 psacf(pdata)            # Multivariate panel-ACF
 psmat(pdata) %>% plot   # 3D-array of time series from panel data + plotting
