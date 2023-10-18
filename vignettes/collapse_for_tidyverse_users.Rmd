@@ -136,7 +136,7 @@ To take full advantage of *collapse*, it is highly recommended to use the *Fast 
 
 ## Writing Efficient Code
 
-It is also performance-critical to correctly sequence operations and limit excess computations. *tidyverse* code is often inefficient simply because the *tidyverse* allows you to do everything. For example, `mtcars |> group_by(cyl) |> filter(mpg > 13) |> arrange(mpg)` is permissible but inefficient code as it filters and reorders grouped data, requiring modifications to both the data frame and the attached grouping object. *collapse* does not allow calls to `fsubset()` on grouped data and messages about it `roworder()`, encouraging you to write more efficient code. 
+It is also performance-critical to correctly sequence operations and limit excess computations. *tidyverse* code is often inefficient simply because the *tidyverse* allows you to do everything. For example, `mtcars |> group_by(cyl) |> filter(mpg > 13) |> arrange(mpg)` is permissible but inefficient code as it filters and reorders grouped data, requiring modifications to both the data frame and the attached grouping object. *collapse* does not allow calls to `fsubset()` on grouped data, and messages about it in `roworder()`, encouraging you to write more efficient code. 
 
 The above example can also be optimized because we are subsetting the whole frame and then doing computations on a subset of columns. It would be more efficient to select all required columns during the subset operation: 
 
