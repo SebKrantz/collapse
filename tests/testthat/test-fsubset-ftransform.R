@@ -83,6 +83,14 @@ test_that("ftransform works like base::transform", {
 
 })
 
+test_that("settransform returns modified data", {
+  mtcars1 <- mtcars[1:3,]
+  mtcars2 <- settransform(mtcars1, test1 = 1)
+  expect_equal(mtcars1, mtcars2)
+
+  mtcars2 <- settransformv(mtcars1, is.numeric, round)
+  expect_equal(mtcars1, mtcars2)
+})
 
 test_that("fcompute works well", {
 
@@ -113,6 +121,7 @@ test_that("fcomputev works well", {
                ftransformv(iris, is.numeric, fmean, Species, TRA = "replace", apply = FALSE))
 
 })
+
 
 
 
