@@ -498,7 +498,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         union uno tpv;
         for (int i = 0; i != n; ++i) {
           tpv.d = pr[i];
-          id = HASH((64988430769U * pi[i]) + tpv.u[0] + tpv.u[1], K); // Best combination it seems
+          id = HASH((64988430769U * pi[i]) * (tpv.u[0] + tpv.u[1]), K); // Best combination it seems
           while(h[id]) {
             hid = h[id]-1;
             if(pi[hid] == pi[i] && REQUAL(pr[hid], pr[i])) {
@@ -536,7 +536,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         const int *restrict pi = INTEGER_RO(tx == INTSXP ? x : y);
         const SEXP *restrict ps = STRING_PTR_RO(tx == STRSXP ? x : y);
         for (int i = 0; i != n; ++i) {
-          id = HASH(pi[i] * ((intptr_t)ps[i] & 0xffffffff), K); // This is the fastest safe option
+          id = HASH((64988430769U * pi[i]) * ((intptr_t)ps[i] & 0xffffffff), K); // This is the fastest safe option
           while(h[id]) {
             hid = h[id]-1;
             if(pi[hid] == pi[i] && ps[hid] == ps[i]) {
