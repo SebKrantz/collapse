@@ -230,7 +230,8 @@ for(int i = 0, k = 0; i < np; ++i) {                  \
   Q = probs[i];                                       \
   if(Q > 0.0 && Q < 1.0) {                            \
     RETWQSWITCH(sumw, mu);                            \
-    while(wsum <= h) wsum += pw[po[k++]];             \
+    a = h + eps;                                      \
+    while(wsum <= a) wsum += pw[po[k++]];             \
     a = px[po[k == 0 ? 0 : k-1]];                     \
     if(k == 0 || k == l || h == 0.0) {                \
       pres[i] = a; continue;                          \
