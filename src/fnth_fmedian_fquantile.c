@@ -230,7 +230,8 @@ for(int i = 0, k = 0; i < np; ++i) {                  \
   Q = probs[i];                                       \
   if(Q > 0.0 && Q < 1.0) {                            \
     RETWQSWITCH(sumw, mu);                            \
-    while(wsum <= h) wsum += pw[po[k++]];             \
+    a = h + eps;                                      \
+    while(wsum <= a) wsum += pw[po[k++]];             \
     a = px[po[k == 0 ? 0 : k-1]];                     \
     if(k == 0 || k == l || h == 0.0) {                \
       pres[i] = a; continue;                          \
@@ -423,20 +424,19 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
     } else {
       double wsum = 0.0, sumw = 0.0; // wsum is running sum, sumw is the total sum
 
-      unsigned int nw0 = 0;
-      for(unsigned int i = 0; i != l; ++i) {
-        wsum = pw[po[i]];
-        if(wsum == 0.0) ++nw0;
-        sumw += wsum;
-      }
+      #pragma omp simd reduction(+:sumw)
+      for (int i = 0; i < l; ++i) sumw += pw[po[i]];
+
       wsum = 0.0;
       if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
       if(sumw < 0.0) error("Weights must be positive or zero");
-      if(l == nw0 || sumw == 0.0) { // error("For weighted quantile estimation, must supply at least one non-zero weight for non-NA x");
+      if(sumw < eps) { // error("For weighted quantile estimation, must supply at least one non-zero weight for non-NA x");
         n = 0;
         goto wall0;
       }
-      double mu = sumw / (l - nw0);
+      double mu = pw[po[0]]; //  = sumw / (l - nw0);
+      int i = 0;
+      while(mu <= 0.0) mu = pw[po[++i]];
 
       if(tx == REALSXP) { // Numeric data
         double *px = REAL(x)-1;
@@ -497,24 +497,27 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 
 // Expects pw and po to be consistent
 double w_compute_h(const double *pw, const int *po, const int l, const int sorted, const int ret, const double Q) {
-  double sumw = 0.0, mu, h = 0.0; /* To avoid -Wmaybe-uninitialized */
-  int nw0 = 0;
+  double sumw = 0.0, mu = 0.0, h = 0.0; /* To avoid -Wmaybe-uninitialized */
   if(sorted) {
-    for(int i = 0; i != l; ++i) {
-      if(pw[i] == 0.0) ++nw0; // nw0 += pw[i] == 0.0 -> seems not faster...
-      sumw += pw[i];
+    #pragma omp simd reduction(+:sumw)
+    for(int i = 0; i < l; ++i) sumw += pw[i];
+    if(sumw > eps) {
+      int i = 0;
+      mu = pw[0];
+      while(mu <= 0.0) mu = pw[++i];
     }
   } else {
-    for(int i = 0; i != l; ++i) {
-      mu = pw[po[i]];
-      if(mu == 0.0) ++nw0; // nw0 += mu == 0.0 -> seems not faster...
-      sumw += mu;
+    #pragma omp simd reduction(+:sumw)
+    for(int i = 0; i < l; ++i) sumw += pw[po[i]];
+    if(sumw > eps) {
+      int i = 0;
+      mu = pw[po[0]];
+      while(mu <= 0.0) mu = pw[po[++i]];
     }
   }
   if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
   if(sumw < 0.0) error("Weights must be positive or zero");
-  if(l == nw0 || sumw == 0.0) return NA_REAL;
-  mu = sumw / (l - nw0);
+  if(mu == 0.0) return NA_REAL;
   RETWQSWITCH(sumw, mu);
   return h;
 }
