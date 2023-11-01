@@ -551,7 +551,7 @@ do_stub <- function(stub, nam, default) {
 # }
 
 fmatch <- function(x, table, nomatch = NA_integer_, count = FALSE, overid = 1L) .Call(C_fmatch, x, table, nomatch, count, overid)
-ckmatch <- function(x, table, e = "Unknown columns:", ...) if(anyNA(m <- fmatch(x, table, ...))) stop(paste(e, paste(x[is.na(m)], collapse = ", "))) else m
+ckmatch <- function(x, table, e = "Unknown columns:", ...) if(anyNA(m <- fmatch(x, table, NA_integer_, ...))) stop(paste(e, if(is.list(x)) paste(c("\n", capture.output(ss(x, is.na(m)))), collapse = "\n") else paste(x[is.na(m)], collapse = ", "))) else m
 "%fin%" <- function(x, table) as.logical(fmatch(x, table, 0L, overid = 2L)) # export through set_collapse(mask = "%in%")
 "%!in%" <- function(x, table) is.na(fmatch(x, table, overid = 2L))
 "%!iin%" <- function(x, table) whichNA(fmatch(x, table, overid = 2L))
