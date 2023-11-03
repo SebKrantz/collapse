@@ -30,7 +30,8 @@ join <- function(x, y,
   ax <- attributes(x)
   x_name <- as.character(substitute(x))
   if(length(x_name) != 1L || x_name == ".") x_name <- "x" # Piped use
-  y_name <- as.character(substitute(y))[1L]
+  y_name <- as.character(substitute(y))
+  if(length(y_name) != 1L || y_name == ".") y_name <- "y" # Piped use
   oldClass(x) <- NULL
   oldClass(y) <- NULL
   xnam <- names(x)
