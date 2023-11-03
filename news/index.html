@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,11 @@
       <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.5" id="collapse-205">collapse 2.0.5<a class="anchor" aria-label="anchor" href="#collapse-205"></a></h2>
+<ul><li><p>In <code>join</code>, the if <code>y</code> is an expression e.g. <code>join(x = mtcars, y = subset(mtcars, mpg &gt; 20))</code>, then its name is not extracted but just set to <code>"y"</code>. Before, the name of <code>y</code> would be captured as <code>as.character(substitute(y))[1] = "subset"</code> in this case. This is an improvement mainly for display purposes, but could also affect code if there are duplicate columns in both datasets and <code>suffix</code> was not provided in the <code>join</code> call: before, y-columns would be renamed using a (non-sensible) <code>"_subset"</code> suffix, but now using a <code>"_y"</code> suffix. Note that this only concerns cases where <code>y</code> is an expression rather than a single object.</p></li>
+<li><p>Small performance improvements to <code>%[!]in%</code> operators: <code>%!in%</code> now uses <code>is.na(fmatch(x, table))</code> rather than <code>fmatch(x, table, 0L) == 0L</code>, and <code>%in%</code>, if exported using <code>set_collapse(mask = "%in%"|"special"|"all")</code> is <code>as.logical(fmatch(x, table, 0L))</code> instead of <code>fmatch(x, table, 0L) &gt; 0L</code>. The latter are faster because comparison operators <code>&gt;</code>, <code>==</code> with integers additionally need to check for <code>NA</code>’s (= the smallest integer in C).</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.4" id="collapse-204">collapse 2.0.4<a class="anchor" aria-label="anchor" href="#collapse-204"></a></h2>
 <ul><li><p>In <code>fnth()/fquantile()</code>, there has been a slight change to the weighted quantile algorithm. As outlined in the documentation, this algorithm gives weighted versions for all continuous quantile methods (type 7-9) in R by replacing sample quantities with their weighted counterparts. E.g., for the default quantile type 7, the continuous (lower) target element is <code>(n - 1) * p</code>. In the weighted algorithm, this became <code>(sum(w) - mean(w)) * p</code> and was compared to the cumulative sum of ordered (by <code>x</code>) weights, to preserve equivalence of the algorithms in cases where the weights are all equal. However, upon a second thought, the use of <code>mean(w)</code> does not really reflect a standard interpretation of the weights as frequencies. I have reasoned that using <code>min(w)</code> instead of <code>mean(w)</code> better reflects such an interpretation, as the minimum (non-zero) weight reflects the size of the smallest sampled unit. So the weighted quantile type 7 target is now <code>(sum(w) - min(w)) * p</code>, and also the other methods have been adjusted accordingly (note that zero weight observations are ignored in the algorithm).</p></li>
