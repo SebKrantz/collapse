@@ -9,6 +9,7 @@ t_list2 <- function(x) .Call(Cpp_mctl, do.call(rbind, x), TRUE, 0L)
 t_list <- function(l) {
   lmat <- do.call(rbind, l)
   dn <- dimnames(lmat)
+  if(is.null(dn[[1L]])) return(.Call(C_copyMostAttrib, .Call(Cpp_mctl, lmat, !is.null(dn[[2L]]), 0L), l))
   .Call(C_copyMostAttrib,
         lapply(.Call(Cpp_mctl, lmat, !is.null(dn[[2L]]), 0L), `names<-`, dn[[1L]]), l)
 }
