@@ -8,9 +8,9 @@ t_list2 <- function(x) .Call(Cpp_mctl, do.call(rbind, x), TRUE, 0L)
 # This is for export
 t_list <- function(l) {
   lmat <- do.call(rbind, l)
-  rn <- dimnames(lmat)[[1L]]
+  dn <- dimnames(lmat)
   .Call(C_copyMostAttrib,
-        lapply(.Call(Cpp_mctl, lmat, TRUE, 0L), `names<-`, rn), l)
+        lapply(.Call(Cpp_mctl, lmat, !is.null(dn[[2L]]), 0L), `names<-`, dn[[1L]]), l)
 }
 
 
