@@ -205,18 +205,20 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
          if(j != 0) {  // if(j == 0) stop("Not enough non-mising obs.");
          for(int i = j+1; i--; ) {
            if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
-           sumw += wg[i]; // great, this is correct:
-           d1 = x[i]-mean;
-           dn = d1 * (wg[i] / sumw);
-           mean += dn;
-           dn2 = dn * dn;
-           term1 = wg[i] * d1 * dn * (sumw-wg[i]);
-           M4 += term1*dn2*(sumw*sumw - 3*sumw + 3) + 6*dn2*M2 - 4*dn*M3;
-           M3 += term1*dn*(sumw - 2) - 3*dn*M2;
-           M2 += term1;
-           ++n;
+           sumw += wg[i];
+           mean += x[i] * wg[i]; ++n;
            if(min > x[i]) min = x[i];
            if(max < x[i]) max = x[i];
+         }
+         mean /= sumw;
+         for(int i = j+1; i--; ) {
+           if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
+           d1 = x[i] - mean;
+           dn = d1 * d1;
+           dn2 = dn * dn;
+           M2 += wg[i] * dn;
+           M3 += wg[i] * dn * d1;
+           M4 += wg[i] * dn2;
          }
          M4 = (sumw*M4)/(M2*M2); // kurtosis // Excess kurtosis: - 3;
          M3 = (sqrt(sumw)*M3) / sqrt(pow(M2,3)); // Skewness
@@ -283,18 +285,21 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
              n[k] = 1.0;
            } else {
              sumw[k] += wg[i];
-             d1 = x[i]-mean[k];
-             dn = d1 * (wg[i] / sumw[k]);
-             mean[k] += dn;
-             dn2 = dn * dn;
-             term1 = wg[i] * d1 * dn * (sumw[k]-wg[i]);
-             M4[k] += term1*dn2*(sumw[k]*sumw[k] - 3*sumw[k] + 3) + 6*dn2*M2[k] - 4*dn*M3[k];
-             M3[k] += term1*dn*(sumw[k] - 2) - 3*dn*M2[k];
-             M2[k] += term1;
+             mean[k] += (x[i] - mean[k]) * (wg[i] / sumw[k]);
              ++n[k];
              if(min[k] > x[i]) min[k] = x[i];
              if(max[k] < x[i]) max[k] = x[i];
            }
+         }
+         for(int i = l; i--; ) {
+           if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
+           k = g[i]-1;
+           d1 = x[i] - mean[k];
+           dn = d1 * d1;
+           dn2 = dn * dn;
+           M2[k] += wg[i] * dn;
+           M3[k] += wg[i] * dn * d1;
+           M4[k] += wg[i] * dn2;
          }
          for(int i = ng; i--; ) {
            M4[i] = (sumw[i]*M4[i])/(M2[i]*M2[i]); // kurtosis // Excess kurtosis: - 3;
