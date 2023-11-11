@@ -211,18 +211,19 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
            if(max < x[i]) max = x[i];
          }
          mean /= sumw;
+         long double M2l = 0.0, M3l = 0.0, M4l = 0.0;
          for(int i = j+1; i--; ) {
            if(std::isnan(x[i]) || std::isnan(wg[i]) || wg[i] == 0) continue;
            d1 = x[i] - mean;
            dn = d1 * d1;
            dn2 = dn * dn;
-           M2 += wg[i] * dn;
-           M3 += wg[i] * dn * d1;
-           M4 += wg[i] * dn2;
+           M2l += wg[i] * dn;
+           M3l += wg[i] * dn * d1;
+           M4l += wg[i] * dn2;
          }
-         M4 = (sumw*M4)/(M2*M2); // kurtosis // Excess kurtosis: - 3;
-         M3 = (sqrt(sumw)*M3) / sqrt(pow(M2,3)); // Skewness
-         M2 = sqrt(M2/(sumw-1)); // Standard Deviation
+         M4 = (sumw*M4l)/(M2l*M2l); // kurtosis // Excess kurtosis: - 3;
+         M3 = (sqrt(sumw)*M3l) / sqrt(pow(M2l,3)); // Skewness
+         M2 = sqrt(M2l/(sumw-1)); // Standard Deviation
          } else mean = M2 = M3 = M4 = min = max = NA_REAL;
        }
        NumericVector result = NumericVector::create(n,mean,M2,min,max,M3,M4); // NumericVector::create(n,(double)mean,(double)M2,min,max,(double)M3,(double)M4);
