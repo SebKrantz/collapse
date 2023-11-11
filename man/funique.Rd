@@ -69,6 +69,8 @@ Methods for indexed data also subset the index accordingly.
 \code{any_duplicated} is currently simply implemented as \code{fnunique(x) < NROW(x)}, which means it does not have facilities to terminate early, and users are advised to use \code{\link{anyDuplicated}} with atomic vectors if chances are high that there are duplicates at the beginning of the vector. With no duplicate values or data frames, \code{any_duplicated} is considerably faster than \code{\link{anyDuplicated}}.
 }
 \note{
+These functions treat lists like data frames, unlike \code{\link{unique}} which has a list method to determine uniqueness of (non-atomic/heterogeneous) elements in a list.
+
 No matrix method is provided. Please use the alternatives provided in package \emph{kit} with matrices. % The \emph{kit} version is also often faster for vectors.
 }
 \value{
