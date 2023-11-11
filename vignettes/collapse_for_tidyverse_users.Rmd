@@ -128,7 +128,7 @@ mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + fmin(qsec)) # Vectorized
 mtcars |> group_by(cyl) |> summarise(mpg = mean(mpg) + min(qsec))   # Not vectorized
 ```
 
-both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) / fmean(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
+both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) / fmin(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
 
 See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. 
 

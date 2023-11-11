@@ -95,6 +95,34 @@ test_that("qsu works properly for simple cases with higher-order statistics (inc
 
 })
 
+
+wtd.sd <- function(x, w) sqrt(bsum(w * (x - weighted.mean(x, w))^2)/bsum(w))
+wtd.skewness <- function(x, w) (bsum(w * (x - weighted.mean(x, w))^3)/bsum(w))/wtd.sd(x, w)^3
+wtd.kurtosis <- function(x, w) ((bsum(w * (x - weighted.mean(x, w))^4)/bsum(w))/wtd.sd(x, w)^4)
+
+base_w_qsu <- function(x, w) {
+  if(!is.numeric(x)) return(c(N = bsum(!is.na(x)), Mean = NA_real_, SD = NA_real_, Min = NA_real_, Max = NA_real_, Skew = NA_real_, Kurt = NA_real_))
+  cc <- complete.cases(x, w)
+  if(!all(cc)) {
+    x <- x[cc]
+    w <- w[cc]
+  }
+  res <- c(N = length(x), Mean = weighted.mean(x, w), SD = fsd(x, w = w),
+    `names<-`(range(x, na.rm = TRUE), c("Min", "Max")), Skew = wtd.skewness(x, w), Kurt = wtd.kurtosis(x, w))
+  class(res) <- c("qsu", "table")
+  res
+}
+
+test_that("Proper performance of weighted statsistics", {
+  x <- mtcars$mpg
+  w <- ceiling(mtcars$wt*10)
+  wx <- rep(x, w)
+  expect_equal(base_w_qsu(x, w)[-1L], qsu(wx, higher = TRUE)[-1L])
+  expect_equal(qsu(wx)[-1L], qsu(x, w = w)[-1L])
+  expect_equal(qsu(wx, higher = TRUE)[-1L], qsu(x, w = w, higher = TRUE)[-1L])
+  expect_equal(drop(qsu(wx, g = rep(1L, length(wx)), higher = TRUE))[-1L], drop(qsu(x, g = rep(1L, length(x)), w = w, higher = TRUE))[-1L])
+})
+
 g <- GRP(wlddev, ~ income)
 p <- GRP(wlddev, ~ iso3c)
 
