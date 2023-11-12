@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +89,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2023-11-03</h4>
+            <h4 data-toc-skip class="date">2023-11-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
@@ -297,7 +297,7 @@ minimum of <code>qsec</code> to the result, whereas</p>
 <span><span class="co"># 3   8 29.60000</span></span></code></pre></div>
 <p>both give the mean + the minimum within each group, but calculated in
 different ways: the former is equivalent to
-<code>fmean(mpg, g = cyl) / fmean(qsec, g = cyl)</code>, whereas the
+<code>fmean(mpg, g = cyl) / fmin(qsec, g = cyl)</code>, whereas the
 latter is equal to
 <code>sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))</code>.</p>
 <p>See <code><a href="../reference/fsummarise.html">?fsummarise</a></code> and <code><a href="../reference/ftransform.html">?fmutate</a></code> for more
