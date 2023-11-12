@@ -4,7 +4,7 @@ importFrom("graphics", "hist", "par", "plot")
 importFrom("grDevices", "rainbow")
 # importFrom("lfe", "demeanlist")
 importFrom("parallel", "mclapply")
-importFrom("utils", "packageVersion", "head", "tail")
+importFrom("utils", "packageVersion", "head", "tail", "capture.output")
 importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
            "setNames", "terms.formula", "ts", "ts.plot", "model.matrix.default",
            "quantile", ".lm.fit", "cov2cor")
