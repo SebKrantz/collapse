@@ -111,10 +111,12 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
       # if(!keep.group_vars) stop("all computations need to result in vectors of equal length")
       # gi <- seq_along(g$group.vars)
       # ef <- lr[length(gi)+1L] / g[[1L]]
-      maxlr <- bmax(lr)
-      ef <- maxlr / g[[1L]]
+      rnglr <- .range(lr)
+      ef <- rnglr / g[[1L]]
+      if(ef[1L] < 1) stop("An expression did not return a value for some groups. Please ensure that a value is returned for each group")
+      ef <- ef[2L]
       # if(!all_eq(lr[-gi]) || ef %% 1 > 0) stop("all computations need to result in vectors of equal length")
-      gi <- whichv(lr, maxlr, invert = TRUE)
+      gi <- whichv(lr, rnglr[2L], invert = TRUE)
       if(ef != as.integer(ef) || !all_eq(lr[gi])) stop("all computations need to result in vectors of length 1 or the maximum length of any expression")
       res[gi] <- .Call(C_subsetDT, res, rep(seq_len(g[[1L]]), each = ef), gi, FALSE) # Using C_subsetvector is not really faster... (1-2 microseconds gain)
     }
