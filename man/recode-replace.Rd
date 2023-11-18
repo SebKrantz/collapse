@@ -4,6 +4,8 @@
 \alias{recode_num}
 \alias{recode_char}
 \alias{replace_NA}
+\alias{replace_na}
+\alias{replace_inf}
 \alias{replace_Inf}
 \alias{replace_outliers}
 \title{
@@ -24,8 +26,10 @@ recode_num(X, \dots, default = NULL, missing = NULL, set = FALSE)
 recode_char(X, \dots, default = NULL, missing = NULL, regex = FALSE,
             ignore.case = FALSE, fixed = FALSE, set = FALSE)
 
+replace_na(X, value = 0L, cols = NULL, set = FALSE)
 replace_NA(X, value = 0L, cols = NULL, set = FALSE)
 
+replace_inf(X, value = NA, replace.nan = FALSE)
 replace_Inf(X, value = NA, replace.nan = FALSE)
 
 replace_outliers(X, limits, value = NA,

@@ -217,7 +217,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
   repfun(X)
 }
 
-replace_NA <- function(X, value = 0L, cols = NULL, set = FALSE) {
+replace_na <- function(X, value = 0L, cols = NULL, set = FALSE) {
   if(set) {
     if(is.list(X)) {
       if(is.null(cols)) {
@@ -244,8 +244,10 @@ replace_NA <- function(X, value = 0L, cols = NULL, set = FALSE) {
   scv(X, NA, value) # `[<-`(X, is.na(X), value = value)
 }
 
+replace_NA <- replace_na
+
 # Remove Inf (Infinity) and NaN (Not a number) from vectors or data frames:
-replace_Inf <- function(X, value = NA, replace.nan = FALSE) {
+replace_inf <- function(X, value = NA, replace.nan = FALSE) {
   if(is.list(X)) {
     # if(!inherits(X, "data.frame")) stop("replace_non_finite only works with atomic objects or data.frames")
     res <- duplAttributes(lapply(unattrib(X),
@@ -257,6 +259,8 @@ replace_Inf <- function(X, value = NA, replace.nan = FALSE) {
   if(replace.nan) return(`[<-`(X, is.infinite(X) | is.nan(X), value = value)) #  !is.finite(X) also replaces NA
   `[<-`(X, is.infinite(X), value = value)
 }
+
+replace_Inf <- replace_inf
 
 # replace_non_finite <- function(X, value = NA, replace.nan = TRUE) {
 #   .Deprecated("replace_Inf")
