@@ -303,7 +303,7 @@ mad_trans <- function(x) {
 }
 
 replace_outliers <- function(X, limits, value = NA,
-                             single.limit = c("SDs", "min", "max", "MADs"),
+                             single.limit = c("sd", "mad", "min", "max"),
                              ignore.groups = FALSE,
                              set = FALSE) {
 
