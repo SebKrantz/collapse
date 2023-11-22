@@ -1,5 +1,5 @@
 # Note: don't change the order of these arguments !!!
-scv <- function(x, v, r, set = FALSE, inv = FALSE) .Call(C_setcopyv, x, v, r, inv, set, FALSE)
+scv <- function(x, v, r, set = FALSE, inv = FALSE, vind1 = FALSE) .Call(C_setcopyv, x, v, r, inv, set, vind1)
 
 # inspired by ?dplyr::recode
 # Think about adopting this code for as_numeric_factor and as_character_factor
@@ -247,17 +247,26 @@ replace_na <- function(X, value = 0L, cols = NULL, set = FALSE) {
 replace_NA <- replace_na
 
 # Remove Inf (Infinity) and NaN (Not a number) from vectors or data frames:
-replace_inf <- function(X, value = NA, replace.nan = FALSE) {
+replace_inf <- function(X, value = NA, replace.nan = FALSE, set = FALSE) {
+  if(set) {
+    if(is.list(X)) {
+      lapply(unattrib(X), if(replace.nan) (function(y) if(is.numeric(y)) scv(y, is.infinite(y) | is.nan(y), value, TRUE, vind1 = TRUE) else y) else
+                                          (function(y) if(is.numeric(y)) scv(y, is.infinite(y), value, TRUE, vind1 = TRUE) else y))
+    }
+    if(!is.numeric(X)) stop("Infinite values can only be replaced in numeric objects!")
+    if(replace.nan) scv(X, is.infinite(X) | is.nan(X), value, TRUE, vind1 = TRUE) else scv(X, is.infinite(X), value, TRUE, vind1 = TRUE)
+    return(invisible(X))
+  }
   if(is.list(X)) {
     # if(!inherits(X, "data.frame")) stop("replace_non_finite only works with atomic objects or data.frames")
     res <- duplAttributes(lapply(unattrib(X),
-             if(replace.nan) (function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y) | is.nan(y), value = value) else y) else
-                             (function(y) if(is.numeric(y)) `[<-`(y, is.infinite(y), value = value) else y)), X)
+             if(replace.nan) (function(y) if(is.numeric(y)) scv(y, is.infinite(y) | is.nan(y), value, vind1 = TRUE) else y) else
+                             (function(y) if(is.numeric(y)) scv(y, is.infinite(y), value, vind1 = TRUE) else y)), X)
     return(if(inherits(X, "data.table")) alc(res) else res)
   }
   if(!is.numeric(X)) stop("Infinite values can only be replaced in numeric objects!")
-  if(replace.nan) return(`[<-`(X, is.infinite(X) | is.nan(X), value = value)) #  !is.finite(X) also replaces NA
-  `[<-`(X, is.infinite(X), value = value)
+  if(replace.nan) return(scv(X, is.infinite(X) | is.nan(X), value, vind1 = TRUE)) #  !is.finite(X) also replaces NA
+  scv(X, is.infinite(X), value, vind1 = TRUE)
 }
 
 replace_Inf <- replace_inf
@@ -267,45 +276,90 @@ replace_Inf <- replace_inf
 #   replace_Inf(X, value, replace.nan)
 # }
 
-replace_outliers <- function(X, limits, value = NA, single.limit = c("SDs", "min", "max", "overall_SDs")) {
-  ll <- length(limits)
-  if(lg1 <- ll > 1L) {
-    if(ll > 2L) stop("length(limits) must be 1 or 2")
-    l1 <- limits[1L]
-    l2 <- limits[2L]
+Crepoutl <- function(x, limits, value, single_limit, set = FALSE) .Call(C_replace_outliers, x, limits, value, single_limit, set)
+
+sd_limits <- function(x, limits) {
+  st <- fbstatsCpp(x, stable.algo = FALSE, setn = FALSE)
+  st[2L] + st[3L] * c(-limits, limits)
+}
+
+mad_limits <- function(x, limits) {
+  med <- fmedian.default(x)
+  mad <- fmedian.default(abs(x - med))
+  med + mad * c(-limits, limits)
+}
+
+# scaling data using MAD
+mad_trans <- function(x) {
+  if(inherits(x, c("pseries", "pdata.frame"))) {
+    g <- GRP(x)
+    tmp <- fmedian(x, g, TRA = "-")
+    tmp %/=% fmedian(if(is.list(tmp)) lapply(tmp, abs) else abs(tmp), g, TRA = "fill", set = TRUE)
+    return(tmp)
   }
-  if(is.list(X)) {
-    # if(!inherits(X, "data.frame")) stop("replace_outliers only works with atomic objects or data.frames")
-    if(lg1) {
-      res <- duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < l1 | y > l2, value = value) else y), X) # could use data.table::between -> but it seems not faster !
-    } else {
-      res <- switch(single.limit[1L], # Allows grouped scaling if X is a grouped_df, but requires extra memory equal to X ... extra argument gSDs ?
-           SDs = {
-             if(inherits(X, c("grouped_df", "pdata.frame"))) {
-              num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
-              num <- if(inherits(X, "grouped_df")) num & !fgroup_vars(X, "logical") else
-                      num & attr(findex(X), "names") %!in% attr(X, "names")
-              clx <- oldClass(X)
-              STDXnum <- fscale(fcolsubset(X, num))
-              oldClass(X) <- NULL
-              X[num] <- .mapply(function(z, y) `[<-`(z, abs(y) > limits, value = value), list(unattrib(X[num]), unattrib(STDXnum)), NULL)
-              `oldClass<-`(X, clx)
-             } else duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, abs(fscaleCpp(y)) > limits, value = value) else y), X)
-           },
-           min = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y < limits, value = value) else y), X),
-           max = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, y > limits, value = value) else y), X),
-           overall_SDs = duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) `[<-`(y, abs(fscaleCpp(y)) > limits, value = value) else y), X),
-           stop("Unknown single.limit option"))
+  tmp <- fmedian(x, TRA = "-")
+  tmp %/=% fmedian(if(is.list(tmp)) dapply(tmp, abs) else abs(tmp), TRA = "fill", set = TRUE)
+  return(tmp)
+}
+
+replace_outliers <- function(X, limits, value = NA,
+                             single.limit = c("SDs", "min", "max", "MADs"),
+                             ignore.groups = FALSE,
+                             set = FALSE) {
+
+  if(length(limits) == 1L) {
+   # "overall_" arguments are legacy, now accommodated via the ignore.groups argument
+   sl <- switch(single.limit[1L], SDs = 4L, min = 2L, max = 3L,
+                overall_SDs = 5L, MADs = 6L, overall_MADs = 7L,
+                stop("Unknown single.limit option: ", single.limit[1L]))
+   if(sl == 5L || sl == 7L) ignore.groups <- TRUE
+  } else sl <- 0L
+
+  if(sl > 3L) { # Outliers according to standard deviation or MAD threashold
+    if(is.list(X)) {
+      if(!ignore.groups && inherits(X, c("grouped_df", "pdata.frame"))) {
+        if(is.character(value)) stop("clipping is not yet supported with grouped/panel data and SDs/MADs thresholds.")
+        num <- .Call(C_vtypes, X, 1L) # vapply(unattrib(X), is.numeric, TRUE)
+        num <- if(inherits(X, "grouped_df")) num & !fgroup_vars(X, "logical") else
+          num & attr(findex(X), "names") %!in% attr(X, "names")
+        clx <- oldClass(X)
+        STDXnum <- if(sl > 5L) mad_trans(fcolsubset(X, num)) else fscale(fcolsubset(X, num))
+        oldClass(X) <- NULL
+        res <- .mapply(function(z, y) scv(z, abs(y) > limits, value, set, vind1 = TRUE),
+                       list(unattrib(X[num]), unattrib(STDXnum)), NULL)
+        if(set) return(invisible(X))
+        X[num] <- res
+        res <- `oldClass<-`(X, clx)
+      } else {
+        limit_fun <- if(sl > 5L) mad_limits else sd_limits
+        res <- lapply(unattrib(X), function(y) if(is.numeric(y)) Crepoutl(y, limit_fun(y, limits), value, sl, set) else y)
+        if(set) return(invisible(X))
+        res <- duplAttributes(res, X)
+      }
+      return(if(inherits(res, "data.table")) alc(res) else res)
     }
+    if(is.matrix(X)) {
+      if(is.character(value)) stop("clipping is not yet supported with matrices and SDs/MADs thresholds.")
+      res <- scv(X, abs(if(sl > 5L) mad_trans(X) else fscale(X)) > limits, value, set, vind1 = TRUE)
+    } else {
+      res <- Crepoutl(X, if(sl > 5L) mad_limits(X, limits) else sd_limits(X, limits), value, sl, set)
+    }
+    return(if(set) invisible(res) else res)
+  }
+
+  # Standard cases
+  if(set) {
+    if(is.list(X)) lapply(unattrib(X), function(y) if(is.numeric(y)) Crepoutl(y, limits, value, sl, set) else y) else
+      Crepoutl(X, limits, value, sl, set)
+    return(invisible(X))
+  }
+
+  if(is.list(X)) {
+    res <- duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) Crepoutl(y, limits, value, sl, set)), X)
     return(if(inherits(res, "data.table")) alc(res) else res)
   }
-  if(!is.numeric(X)) stop("Outliers can only be replaced in numeric objects!")
-  if(lg1) return(`[<-`(X, X < l1 | X > l2, value = value))
-  switch(single.limit[1L],
-    SDs =, overall_SDs = `[<-`(X, abs(fscale(X)) > limits, value = value),
-    min = `[<-`(X, X < limits, value = value),
-    max = `[<-`(X, X > limits, value = value),
-    stop("Unknown single.limit option"))
+
+  Crepoutl(X, limits, value, sl, set)
 }
 
 
