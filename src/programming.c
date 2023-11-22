@@ -714,7 +714,7 @@ SEXP replace_outliers(SEXP x, SEXP limits, SEXP value, SEXP single_limit, SEXP s
     }
     default: error("Unsupported type '%s'", type2char(TYPEOF(x)));
   }
-  if(setl == 0) copyMostAttrib(x, res);
+  if(setl == 0) SHALLOW_DUPLICATE_ATTRIB(res, x);
   UNPROTECT(nprotect);
   return res;
 }
