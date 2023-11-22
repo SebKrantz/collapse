@@ -12,7 +12,7 @@ recode_num <- function(X, ..., default = NULL, missing = NULL, set = FALSE) {
   arglen <- length(args)
   missingl <- !is.null(missing)
   if(missingl && any(nam == missing))  warning(paste0("To improve performance missing values are replaced prior to recode, so this replaces all missing values with ",
-                                               missing, " and those are then again replaced with ", args[[which(nam == missing)]], ". If this is not desired, call replace_NA after recode with missing = NULL."))
+                                               missing, " and those are then again replaced with ", args[[which(nam == missing)]], ". If this is not desired, call replace_na after recode with missing = NULL."))
   if(arglen == 1L) {
     args <- args[[1L]]
     if(is.null(default)) {
@@ -88,7 +88,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
   arglen <- length(args)
   missingl <- !is.null(missing)
   if(missingl && any(nam == missing))  warning(paste0("To improve performance missing values are replaced prior to recode, so this replaces all missing values with ",
-                                                      missing, " and those are then again replaced with ", args[[which(nam == missing)]], ". If this is not desired, call replace_NA after recode with missing = NULL."))
+                                                      missing, " and those are then again replaced with ", args[[which(nam == missing)]], ". If this is not desired, call replace_na after recode with missing = NULL."))
   if(regex) {
     if(arglen == 1L) {
       args <- args[[1L]]
@@ -310,7 +310,8 @@ replace_outliers <- function(X, limits, value = NA,
   if(length(limits) == 1L) {
    # "overall_" arguments are legacy, now accommodated via the ignore.groups argument
    sl <- switch(single.limit[1L], SDs = 4L, min = 2L, max = 3L,
-                overall_SDs = 5L, MADs = 6L, overall_MADs = 7L,
+                overall_SDs = 5L, sd = 4L, mad = 6L,
+                MADs = 6L, overall_MADs = 7L, # Just in case
                 stop("Unknown single.limit option: ", single.limit[1L]))
    if(sl == 5L || sl == 7L) ignore.groups <- TRUE
   } else sl <- 0L
