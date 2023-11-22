@@ -28,7 +28,7 @@ setTRA(x, STATS, FUN = "-", ...) # Shorthand for invisible(TRA(..., set = TRUE))
   \item{STATS}{a matching set of summary statistics. See Details and Examples.}
   \item{FUN}{an integer or character string indicating the operation to perform. There are 11 supported operations:
     \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
-                 0 \tab\tab "NA" or "replace_NA"   \tab\tab replace missing values in \code{x} \cr
+                 0 \tab\tab "na" or "replace_na"   \tab\tab replace missing values in \code{x} \cr
                  1 \tab\tab "fill" or "replace_fill"   \tab\tab replace data and missing values in \code{x} \cr
                  2 \tab\tab "replace" \tab\tab replace data but preserve missing values in \code{x} \cr
                  3 \tab\tab "-"   \tab\tab subtract (i.e. center) \cr

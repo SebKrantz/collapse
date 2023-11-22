@@ -16,8 +16,8 @@
 \item \code{\link[=TRA]{(set)TRA}} is a more advanced S3 generic to efficiently perform \bold{(groupwise) replacing and sweeping out of statistics}, either by creating a copy of the data or by reference. %The basic syntax is \code{TRA(x, xag, g)} where \code{x} is data to be transformed, \code{xag} is some set of aggregate statistics to tranform \code{x} and \code{g} is an optional grouping vector for grouped transformations.
 Supported operations are:
   \tabular{lllll}{\emph{ Integer-id }  \tab\tab \emph{ String-id }  \tab\tab \emph{ Description }  \cr % \Sexpr{"\u200B"} \Sexpr{"\u200B"} % \Sexpr{"\u200B"} \Sexpr{"\u200B"}
-                 0 \tab\tab "replace_NA"   \tab\tab replace missing values \cr
-                 1 \tab\tab "replace_fill"   \tab\tab replace everything \cr
+                 0 \tab\tab "na" or "replace_na"   \tab\tab replace only missing values \cr
+                 1 \tab\tab "fill" or "replace_fill"   \tab\tab replace everything \cr
                  2 \tab\tab "replace" \tab\tab replace data but preserve missing values \cr
                  3 \tab\tab "-"   \tab\tab subtract \cr
                  4 \tab\tab "-+"  \tab\tab subtract group-statistics but add group-frequency weighted average of group statistics \cr

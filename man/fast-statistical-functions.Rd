@@ -38,7 +38,7 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 \code{w} \tab \tab a numeric vector of (non-negative) weights, may contain missing values. Supported by \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fnth}}, \code{\link{fvar}}, \code{\link{fsd}} and \code{\link{fmode}}. \cr
 
 \code{TRA} \tab \tab an integer or quoted operator indicating the transformation to perform:
-0 - "NA"     |     1 - "fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}. \cr
+0 - "na"     |     1 - "fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "\%"     |     7 - "+"     |     8 - "*"     |     9 - "\%\%"     |     10 - "-\%\%". See \code{\link{TRA}}. \cr
 
 \code{na.rm} \tab \tab logical. Skip missing values in \code{x}. Defaults to \code{TRUE} in all functions and implemented at very little computational cost. Not available for \code{\link{fnobs}}. \cr
 

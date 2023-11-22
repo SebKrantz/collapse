@@ -87,7 +87,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
 # ".default$|.matrix$|.data.frame$"
 # v <- grep("\\.|N|HD", objects("package:collapse"), invert = TRUE, value = TRUE) # getNamespaceExports("collapse")
 # # grep("N", objects("package:collapse"), value = TRUE)
-# v <- c(v, "GRPN", "GRPid", "HDB", "HDW", "allNA", "whichNA", "replace_NA")
+# v <- c(v, "GRPN", "GRPid", "HDB", "HDW", "allNA", "whichNA", "replace_na")
 # TODO: also remove Date_vars...
 # cat(v, sep = '", "')
 
@@ -154,7 +154,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                             "pwnobs", "pwNobs", "qDF", "qDT", "qF", "qG", "qM", "qsu", "qsu.data.frame",
                             "qsu.default", "qsu.matrix", "qtab", "qtable", "qTBL", "radixorder",
                             "radixorderv", "rapply2d", "recode_char", "recode_num", "reg_elem",
-                            "reindex", "relabel", "replace_Inf", "replace_NA", "replace_outliers",
+                            "reindex", "relabel", "replace_inf", "replace_na", "replace_outliers",
                             "rm_stub", "rnm", "rowbind", "roworder", "roworderv", "rsplit",
                             "rsplit.data.frame", "rsplit.default", "rsplit.matrix", "sbt",
                             "seq_col", "seq_row", "seqid", "set_collapse", "setattrib", "setAttrib",
@@ -188,12 +188,12 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                                "mrtl", "mtt", "na_insert", "na_omit", "na_rm", "namlab", "num_vars", "num_vars<-", "nv", "nv<-", "pad", "psacf",
                                "psccf", "psmat", "pspacf", "pwcor", "pwcov", "pwnobs", "qDF", "qDT", "qF", "qG", "qM", "qsu", "qtab", "qtable",
                                "qTBL", "radixorder", "radixorderv", "rapply2d", "recode_char", "recode_num", "reg_elem", "reindex", "relabel",
-                               "replace_Inf", "replace_outliers", "rm_stub", "rnm", "roworder", "roworderv", "rsplit", "sbt", "seq_col", "seq_row",
+                               "replace_inf", "replace_outliers", "rm_stub", "rnm", "roworder", "roworderv", "rsplit", "sbt", "seq_col", "seq_row",
                                "seqid", "setattrib", "setAttrib", "setColnames", "setDimnames", "setLabels", "setop", "setrelabel", "setrename",
                                "setRownames", "settfm", "settfmv", "setTRA", "settransform", "settransformv", "setv", "slt", "slt<-", "smr", "ss",
                                "STD", "t_list", "tfm", "tfm<-", "tfmv", "timeid", "to_plm", "TRA", "unattrib", "unindex", "unlist2d", "varying",
                                "vclasses", "vgcd", "vlabels", "vlabels<-", "vlengths", "vtypes", "W", "whichv", "wlddev", "GRPN", "GRPid", "HDB",
-                               "HDW", "allNA", "whichNA", "replace_NA", "pivot", "rowbind")))
+                               "HDW", "allNA", "whichNA", "replace_na", "pivot", "rowbind")))
 
 .COLLAPSE_GENERIC   <-   sort(unique(c("B","BY","D","Dlog","F","fsubset","fbetween","fdiff","ffirst","fgrowth","fhdbetween",
                            "fhdwithin","flag","flast","fmax","fmean","fmedian","fnth","fmin","fmode","varying",
