@@ -22,8 +22,30 @@ for (sort in c(FALSE, TRUE)) {
   expect_identical(join(df1, df2, how = "full", sort = sort), merge(df1, df2, all = TRUE))
 }
 
+# Different types of joins
+# https://github.com/SebKrantz/collapse/issues/503
+x1 = data.frame(
+  id = c(1L, 1L, 2L, 3L, NA_integer_),
+  t  = c(1L, 2L, 1L, 2L, NA_integer_),
+  x  = 11:15
+)
+y1 = data.frame(
+  id = c(1,2, 4),
+  y  = c(11L, 15L, 16)
+)
+
+for(i in c("l","i","r","f","s","a")) {
+  expect_identical(capture.output(join(df1, df2, how = i, verbose = 1))[-1], capture.output(join(df1, df2, how = i, verbose = 0)))
+  expect_identical(capture.output(join(x1, y1, how = i, verbose = 1))[-1], capture.output(join(x1, y1, how = i, verbose = 0)))
+}
+
 df1 = na_insert(df1, 0.3)
 df2 = na_insert(df2, 0.3)
+
+for(i in c("l","i","r","f","s","a")) {
+  expect_identical(capture.output(join(df1, df2, how = i, verbose = 1))[-1], capture.output(join(df1, df2, how = i, verbose = 0)))
+}
+
 
 sort_merge <- function(..., sort = FALSE) {
   res = merge(...)
