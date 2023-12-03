@@ -186,7 +186,7 @@ join <- function(x, y,
       if(cond) {
         um <- if(!count || length(m)-attr(m, "N.distinct")-attr(m, "N.nomatch") != 0L)
           .Call(C_funique, m) else m # This gets the rows of table matched
-        if(!count || attr(m, "N.nomatch")) um <- na_rm(m)
+        if(!count || attr(m, "N.nomatch")) um <- na_rm(um)
         if(count) tsize <- attr(m, "N.groups")
         else {
           tsize <- fnrow(y)
