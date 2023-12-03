@@ -34,7 +34,7 @@ replace_outliers(X, limits, value = NA,
 \item{missing}{optional argument to specify a scalar value to replace missing elements with. \emph{Note} that to increase efficiency this is done before the rest of the recoding i.e. the recoding is performed on data where missing values are filled!}
 \item{set}{logical. \code{TRUE} does replacements by reference (i.e. in-place modification of the data) and returns the result invisibly.}
 \item{regex}{logical. If \code{TRUE}, all recode-argument names are (sequentially) passed to \code{\link{grepl}} as a pattern to search \code{X}. All matches are replaced. \emph{Note} that \code{NA}'s are also matched as strings by \code{grepl}. }
-\item{value}{a single (scalar) value to replace matching elements with. In \code{replace_outliers} setting \code{value = "clip"} will replace outliers with the corresponding threshold value. See Examples.}
+\item{value}{a single (scalar) value to replace matching elements with. In \code{replace_outliers} setting \code{value = "clip"} will replace outliers with the corresponding threshold values. See Examples.}
 \item{cols}{select columns to replace missing values in using a function, column names, indices or a logical vector.}
   \item{replace.nan}{logical. \code{TRUE} replaces \code{NaN/Inf/-Inf}. \code{FALSE} (default) replaces only \code{Inf/-Inf}.}
   \item{limits}{either a vector of two-numeric values \code{c(minval, maxval)} constituting a two-sided outlier threshold, or a single numeric value:}
@@ -73,7 +73,7 @@ replace_outliers(X, limits, value = NA,
 \note{
 These functions are not generic and do not offer support for factors or date(-time) objects. see \code{dplyr::recode_factor}, \emph{forcats} and other appropriate packages for dealing with these classes.
 
-Simple replacing tasks on a vector can also effectively be handled by, \code{\link{setv}} / \code{\link{copyv}}. Fast vectorized switches are offered by package \emph{kit} (functions \code{iif}, \code{nif}, \code{vswitch}, \code{nswitch}) as well as \code{data.table::fcase} and \code{data.table::fifelse}. Using switches is more efficient than \code{recode_*}.
+Simple replacing tasks on a vector can also effectively be handled by, \code{\link{setv}} / \code{\link{copyv}}. Fast vectorized switches are offered by package \emph{kit} (functions \code{iif}, \code{nif}, \code{vswitch}, \code{nswitch}) as well as \code{data.table::fcase} and \code{data.table::fifelse}. Using switches is more efficient than \code{recode_*}, as \code{recode_*} creates an internal copy of the object to enable cross-replacing.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
