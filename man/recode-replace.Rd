@@ -74,6 +74,8 @@ replace_outliers(X, limits, value = NA,
 These functions are not generic and do not offer support for factors or date(-time) objects. see \code{dplyr::recode_factor}, \emph{forcats} and other appropriate packages for dealing with these classes.
 
 Simple replacing tasks on a vector can also effectively be handled by, \code{\link{setv}} / \code{\link{copyv}}. Fast vectorized switches are offered by package \emph{kit} (functions \code{iif}, \code{nif}, \code{vswitch}, \code{nswitch}) as well as \code{data.table::fcase} and \code{data.table::fifelse}. Using switches is more efficient than \code{recode_*}, as \code{recode_*} creates an internal copy of the object to enable cross-replacing.
+
+Function \code{\link{TRA}}, and the associated \code{TRA} ('transform') argument to \link[=fast-statistical-functions]{Fast Statistical Functions} also has option \code{"replace_na"}, to replace missing values with a statistic computed on the non-missing observations, e.g. \code{fmedian(airquality, TRA = "replace_na")} does median imputation.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
