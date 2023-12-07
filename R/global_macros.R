@@ -83,13 +83,13 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
 # .COLLAPSE_HELP <- unlist(lapply(rd, tools:::.Rd_get_metadata, "name"), use.names = FALSE)
 # grep("^A|depreciated", unlist(lapply(rd, tools:::.Rd_get_metadata, "name"), use.names = FALSE), invert = TRUE, value = TRUE)
 
-# Get updated .COLLAPSE_ALL:
-# ".default$|.matrix$|.data.frame$"
-v <- grep("\\.|N|HD", objects("package:collapse"), invert = TRUE, value = TRUE) # getNamespaceExports("collapse")
-# grep("N", objects("package:collapse"), value = TRUE)
-v <- c(v, "GRPN", "GRPid", "HDB", "HDW", "allNA", "whichNA", "replace_NA")
-# TODO: also remove Date_vars...
-cat(unique(sort(v)), sep = '", "')
+# # Get updated .COLLAPSE_ALL:
+# # ".default$|.matrix$|.data.frame$"
+# v <- grep("\\.|N|HD", objects("package:collapse"), invert = TRUE, value = TRUE) # getNamespaceExports("collapse")
+# # grep("N", objects("package:collapse"), value = TRUE)
+# v <- c(v, "GRPN", "GRPid", "HDB", "HDW", "allNA", "whichNA", "replace_NA")
+# # TODO: also remove Date_vars...
+# cat(unique(sort(v)), sep = '", "')
 
 # all package objects..
 # allobj <- ls(getNamespace("collapse"), all.names=TRUE)
