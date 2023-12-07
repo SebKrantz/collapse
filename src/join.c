@@ -345,7 +345,7 @@ SEXP multi_match(SEXP m, SEXP g) {
   int *cgs = (int*)R_alloc(ng+2, sizeof(int)); cgs[1] = 1;
   for(int i = 1; i != ngp; ++i) cgs[i+1] = cgs[i] + gs[i];
   int *restrict cnt = (int*)Calloc(ngp, int);
-  int *po = (int*) R_alloc(l, sizeof(int)); --po;
+  int *po = (int*)R_alloc(l, sizeof(int)); --po;
   for(int i = 1; i != lp; ++i) po[cgs[pg[i]] + cnt[pg[i]]++] = i;
   Free(cnt);
 
@@ -354,7 +354,7 @@ SEXP multi_match(SEXP m, SEXP g) {
   // Indices to duplicate y (this is the normal fmatch(x, y) vector but now accounting for multiple matches)
   SEXP y_ind = PROTECT(allocVector(INTSXP, n));
   int *px_ind = INTEGER(x_ind), *py_ind = INTEGER(y_ind);
-  for(int i = 0, j = 0, q, k, s; i != lm; ++i) {
+  for(int i = 0, j = 0, q = 0, k = 0, s = 0; i != lm; ++i) {
     if(pm[i] == NA_INTEGER) {
       px_ind[j] = i+1;
       py_ind[j++] = NA_INTEGER;
