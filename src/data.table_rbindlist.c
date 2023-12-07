@@ -394,7 +394,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           const char *str = isString(s) ? CHAR(STRING_ELT(s,w2)) : "";
             snprintf(buff, sizeof(buff), "Column %d ['%s'] of item %d is missing in item %d. Use fill=TRUE to fill with NA (NULL for list columns), or use.names=FALSE to ignore column names.%s",
                         w2+1, str, i+1, missi+1, extra );
-          if (usenames==TRUE) error((const char*)buff);
+          if (usenames==TRUE) error("%s", buff);
           i = ll; // break from outer i loop
           break;         // break from inner j loop
         }
@@ -675,7 +675,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       }
       for (int k=0; k<nLevel; ++k) SET_TRUELENGTH(levelsRaw[k], 0);
       savetl_end();
-      if (warnStr[0]) warning((const char*)warnStr);  // now savetl_end() has happened it's safe to call warning (could error if options(warn=2))
+      if (warnStr[0]) warning("%s", warnStr);  // now savetl_end() has happened it's safe to call warning (could error if options(warn=2))
       copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
       SEXP levelsSxp;
       setAttrib(target, R_LevelsSymbol, levelsSxp=allocVector(STRSXP, nLevel));
