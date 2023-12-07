@@ -377,7 +377,7 @@ replace_outliers <- function(X, limits, value = NA,
   }
 
   if(is.list(X)) {
-    res <- duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) Crepoutl(y, limits, value, sl, set)), X)
+    res <- duplAttributes(lapply(unattrib(X), function(y) if(is.numeric(y)) Crepoutl(y, limits, value, sl, set) else y), X)
     return(if(inherits(res, "data.table")) alc(res) else res)
   }
 
