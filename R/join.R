@@ -82,6 +82,7 @@ join <- function(x, y,
       if(rjoin) y <- .Call(C_subsetDT, y, m[[1L]], seq_along(y), FALSE)
       else x <- .Call(C_subsetDT, x, m[[1L]], seq_along(x), FALSE)
       m <- m[[2L]]
+      if(how == "left" && length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(length(m))
     }
   }
 
