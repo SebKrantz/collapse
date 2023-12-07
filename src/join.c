@@ -321,3 +321,61 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
   return res;
 }
 
+/*
+ Helper to Perform Multi-Match Join
+ The input is fmatch(x, y) and group(y, group.sizes = TRUE)
+*/
+SEXP multi_match(SEXP m, SEXP g) {
+
+  SEXP ng_sym = install("N.groups"), sizes_sym = install("group.sizes"), gsR = getAttrib(g, sizes_sym);
+  if(isNull(gsR)) error("Internal error: g needs to be a 'qG' type vector with a 'group.sizes' attribute.");
+  const int ng = asInteger(getAttrib(g, ng_sym)), ngp = ng+1;
+  if(ng != length(gsR)) error("'qG' vector is invalied, 'N.groups' attribute does not match 'group.sizes' attribute");
+  const int lm = length(m), l = length(g), lp = l+1,
+    *gs = INTEGER(gsR)-1, *pm = INTEGER(m), *pg = INTEGER(g)-1;
+
+  // No multiple matches, records are unique
+  if(ng == l) return m;
+  int n = 0;
+  #pragma omp simd reduction(+:n)
+  for(int i = 0; i < lm; ++i) n += pm[i] == NA_INTEGER ? 1 : gs[pg[pm[i]]];
+  if(n == lm) return m;
+
+  // This just creates an ordering vector for g, could also use radixorder on y
+  int *cgs = (int*)R_alloc(ng+2, sizeof(int)); cgs[1] = 1;
+  for(int i = 1; i != ngp; ++i) cgs[i+1] = cgs[i] + gs[i];
+  int *restrict cnt = (int*)Calloc(ngp, int);
+  int *po = (int*) R_alloc(l, sizeof(int)); --po;
+  for(int i = 1; i != lp; ++i) po[cgs[pg[i]] + cnt[pg[i]]++] = i;
+  Free(cnt);
+
+  // Indices to duplicate x
+  SEXP x_ind = PROTECT(allocVector(INTSXP, n));
+  // Indices to duplicate y (this is the normal fmatch(x, y) vector but now accounting for multiple matches)
+  SEXP y_ind = PROTECT(allocVector(INTSXP, n));
+  int *px_ind = INTEGER(x_ind), *py_ind = INTEGER(y_ind);
+  for(int i = 0, j = 0, q, k, s; i != lm; ++i) {
+    if(pm[i] == NA_INTEGER) {
+      px_ind[j] = i+1;
+      py_ind[j++] = NA_INTEGER;
+      continue;
+    }
+    k = pg[pm[i]];
+    q = cgs[k];
+    s = q + gs[k];
+    while(q < s) {
+      px_ind[j] = i+1;
+      py_ind[j++] = po[q++];
+    }
+  }
+
+  if(isObject(m)) count_match(y_ind, l, NA_INTEGER);
+  // SHALLOW_DUPLICATE_ATTRIB(y_ind, m);
+
+  SEXP res = PROTECT(allocVector(VECSXP, 2));
+  SET_VECTOR_ELT(res, 0, x_ind);
+  SET_VECTOR_ELT(res, 1, y_ind);
+
+  UNPROTECT(3);
+  return res;
+}

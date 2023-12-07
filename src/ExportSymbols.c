@@ -108,6 +108,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_groupat", (DL_FUNC) &groupAtVec, 3},
   {"C_funique", (DL_FUNC) &funiqueC, 1},
   {"C_fmatch", (DL_FUNC) &fmatchC, 5},
+  {"C_multi_match", (DL_FUNC) &multi_match, 2},
   {"C_radixsort", (DL_FUNC) &Cradixsort, 6},
   {"C_frankds", (DL_FUNC) &frankds, 4},
   {"C_pacf1", (DL_FUNC) &pacf1, 2},
