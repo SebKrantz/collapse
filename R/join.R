@@ -223,7 +223,7 @@ join <- function(x, y,
         }
       } else { # If all elements of table are matched, this is simply a left join
         how <- "left"
-        y_res <- .Call(C_subsetDT, y, m, iyon, if(count) attr(m, "N.nomatch") else TRUE) # anyNA(um) ??
+        y_res <- .Call(C_subsetDT, y, m, seq_along(y)[-iyon], if(count) attr(m, "N.nomatch") else TRUE) # anyNA(um) ??
         c(x, y_res)
       }
     },
