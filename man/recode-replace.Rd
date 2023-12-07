@@ -28,7 +28,7 @@ replace_outliers(X, limits, value = NA,
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a vector, matrix, array, data frame or list of atomic objects. \code{replace_outliers} has internal methods for \link[fgroup_by]{grouped} and \link[findex_by]{indexed} data.}
+  \item{X}{a vector, matrix, array, data frame or list of atomic objects. \code{replace_outliers} has internal methods for \link[=fgroup_by]{grouped} and \link[=findex_by]{indexed} data.}
   \item{\dots}{comma-separated recode arguments of the form: \code{value = replacement, `2` = 0, Secondary = "SEC"} etc. \code{recode_char} with \code{regex = TRUE} also supports regular expressions i.e. \code{`^S|D$` = "STD"} etc.}
 \item{default}{optional argument to specify a scalar value to replace non-matched elements with.}
 \item{missing}{optional argument to specify a scalar value to replace missing elements with. \emph{Note} that to increase efficiency this is done before the rest of the recoding i.e. the recoding is performed on data where missing values are filled!}
