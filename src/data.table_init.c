@@ -51,7 +51,7 @@ static void setSizes(void) {
   sizes[CPLXSXP] = sizeof(Rcomplex);  typeorder[CPLXSXP] = 4;
   sizes[STRSXP] =  sizeof(SEXP *);    typeorder[STRSXP] =  5;
   sizes[VECSXP] =  sizeof(SEXP *);    typeorder[VECSXP] =  6;   // list column
-  if (sizeof(char *)>8) error("Pointers are %d bytes, greater than 8. We have not tested on any architecture greater than 64bit yet.", sizeof(char *));
+  if (sizeof(char *)>8) error("Pointers are %d bytes, greater than 8. We have not tested on any architecture greater than 64bit yet.", (int)sizeof(char *));
   // One place we need the largest sizeof is the working memory malloc in reorder.c
 }
 // before it was SEXP  attribute_visible
@@ -64,23 +64,23 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   const char *msg = "... failed. Please forward this message to maintainer('collapse').";
   if ((int)NA_INTEGER != (int)INT_MIN) error("Checking NA_INTEGER [%d] == INT_MIN [%d] %s", NA_INTEGER, INT_MIN, msg);
   if ((int)NA_INTEGER != (int)NA_LOGICAL) error("Checking NA_INTEGER [%d] == NA_LOGICAL [%d] %s", NA_INTEGER, NA_LOGICAL, msg);
-  if (sizeof(int) != 4) error("Checking sizeof(int) [%d] is 4 %s", sizeof(int), msg);
-  if (sizeof(double) != 8) error("Checking sizeof(double) [%d] is 8 %s", sizeof(double), msg);     // 8 on both 32bit and 64bit
+  if (sizeof(int) != 4) error("Checking sizeof(int) [%d] is 4 %s", (int)sizeof(int), msg);
+  if (sizeof(double) != 8) error("Checking sizeof(double) [%d] is 8 %s", (int)sizeof(double), msg);     // 8 on both 32bit and 64bit
   // alignof not available in C99: if (alignof(double) != 8) error("Checking alignof(double) [%d] is 8 %s", alignof(double), msg);  // 8 on both 32bit and 64bit
-  if (sizeof(long long) != 8) error("Checking sizeof(long long) [%d] is 8 %s", sizeof(long long), msg);
-  if (sizeof(char *) != 4 && sizeof(char *) != 8) error("Checking sizeof(pointer) [%d] is 4 or 8 %s", sizeof(char *), msg);
-  if (sizeof(SEXP) != sizeof(char *)) error("Checking sizeof(SEXP) [%d] == sizeof(pointer) [%d] %s", sizeof(SEXP), sizeof(char *), msg);
-  if (sizeof(uint64_t) != 8) error("Checking sizeof(uint64_t) [%d] is 8 %s", sizeof(uint64_t), msg);
-  if (sizeof(int64_t) != 8) error("Checking sizeof(int64_t) [%d] is 8 %s", sizeof(int64_t), msg);
-  if (sizeof(signed char) != 1) error("Checking sizeof(signed char) [%d] is 1 %s", sizeof(signed char), msg);
-  if (sizeof(int8_t) != 1) error("Checking sizeof(int8_t) [%d] is 1 %s", sizeof(int8_t), msg);
-  if (sizeof(uint8_t) != 1) error("Checking sizeof(uint8_t) [%d] is 1 %s", sizeof(uint8_t), msg);
-  if (sizeof(int16_t) != 2) error("Checking sizeof(int16_t) [%d] is 2 %s", sizeof(int16_t), msg);
-  if (sizeof(uint16_t) != 2) error("Checking sizeof(uint16_t) [%d] is 2 %s", sizeof(uint16_t), msg);
+  if (sizeof(long long) != 8) error("Checking sizeof(long long) [%d] is 8 %s", (int)sizeof(long long), msg);
+  if (sizeof(char *) != 4 && sizeof(char *) != 8) error("Checking sizeof(pointer) [%d] is 4 or 8 %s", (int)sizeof(char *), msg);
+  if (sizeof(SEXP) != sizeof(char *)) error("Checking sizeof(SEXP) [%d] == sizeof(pointer) [%d] %s", (int)sizeof(SEXP), (int)sizeof(char *), msg);
+  if (sizeof(uint64_t) != 8) error("Checking sizeof(uint64_t) [%d] is 8 %s", (int)sizeof(uint64_t), msg);
+  if (sizeof(int64_t) != 8) error("Checking sizeof(int64_t) [%d] is 8 %s", (int)sizeof(int64_t), msg);
+  if (sizeof(signed char) != 1) error("Checking sizeof(signed char) [%d] is 1 %s", (int)sizeof(signed char), msg);
+  if (sizeof(int8_t) != 1) error("Checking sizeof(int8_t) [%d] is 1 %s", (int)sizeof(int8_t), msg);
+  if (sizeof(uint8_t) != 1) error("Checking sizeof(uint8_t) [%d] is 1 %s", (int)sizeof(uint8_t), msg);
+  if (sizeof(int16_t) != 2) error("Checking sizeof(int16_t) [%d] is 2 %s", (int)sizeof(int16_t), msg);
+  if (sizeof(uint16_t) != 2) error("Checking sizeof(uint16_t) [%d] is 2 %s", (int)sizeof(uint16_t), msg);
 
   SEXP tmp = PROTECT(allocVector(INTSXP,2));
   if (LENGTH(tmp)!=2) error("Checking LENGTH(allocVector(INTSXP,2)) [%d] is 2 %s", LENGTH(tmp), msg);
-  if (TRUELENGTH(tmp)!=0) error("Checking TRUELENGTH(allocVector(INTSXP,2)) [%d] is 0 %s", TRUELENGTH(tmp), msg);
+  if (TRUELENGTH(tmp)!=0) error("Checking TRUELENGTH(allocVector(INTSXP,2)) [%d] is 0 %s", (int)TRUELENGTH(tmp), msg);
   UNPROTECT(1);
 
   // According to IEEE (http://en.wikipedia.org/wiki/IEEE_754-1985#Zero) we can rely on 0.0 being all 0 bits.

@@ -504,7 +504,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
       SEXP max = PROTECT(ScalarInteger(nrow)); nprotect++;
       rows = PROTECT(convertNegAndZeroIdx(rows, max, ScalarLogical(TRUE))); nprotect++;
       const char *err = check_idx(rows, nrow, &anyNA); // , &orderedSubset
-      if (err!=NULL) error(err);
+      if (err!=NULL) error((const char*)err);
     }
 
       // Adding sf geometry column if not already selected...
@@ -612,7 +612,7 @@ SEXP subsetVector(SEXP x, SEXP idx, SEXP checkidx) { // idx is 1-based passed fr
     SEXP max = PROTECT(ScalarInteger(length(x))); nprotect++;
     idx = PROTECT(convertNegAndZeroIdx(idx, max, ScalarLogical(TRUE))); nprotect++;
     const char *err = check_idx(idx, length(x), &anyNA); // , &orderedSubset
-    if (err != NULL) error(err);
+    if (err != NULL) error((const char*)err);
   }
   SEXP ans = PROTECT(allocVector(TYPEOF(x), length(idx))); nprotect++;
   copyMostAttrib(x, ans);

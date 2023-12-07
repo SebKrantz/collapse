@@ -13,6 +13,7 @@ join(x, y,
      how = "left",
      suffix = NULL,
      validate = "m:m",
+     multiple = FALSE,
      sort = FALSE,
      keep.col.order = TRUE,
      drop.dup.cols = FALSE,
@@ -34,7 +35,9 @@ join(x, y,
 
   \item{suffix}{character(1 or 2). Suffix to add to duplicate column names. \code{NULL} renames duplicate \code{y} columns as \code{paste(col, y_name, sep = "_")}, where \code{y_name = as.character(substitute(y))} i.e. the name of the data frame as passed into the function. In general, passing \code{suffix} length 1 will only rename \code{y}, whereas a length 2 suffix will rename both \code{x} and \code{y}, respectively. If \code{verbose > 0} a message will be printed. }
 
-  \item{validate}{character. (Optional) check if join is of specified type. One of \code{"1:1"}, \code{"1:m"}, \code{"m:1"} or \code{"m:m"}. The default \code{"m:m"} does not perform any checks, first matches in \code{x} and \code{y} are taken. Checks are done before the actual join step and failure results in an error.}
+  \item{validate}{character. (Optional) check if join is of specified type. One of \code{"1:1"}, \code{"1:m"}, \code{"m:1"} or \code{"m:m"}. The default \code{"m:m"} does not perform any checks. Checks are done before the actual join step and failure results in an error. \emph{Note} that this argument does not affect the result, it only triggers a check.}
+
+  \item{multiple}{logical. Handling of rows in \code{x} with multiple matches in \code{y}. The default \code{FALSE} takes the first match in \code{y}. \code{TRUE} returns every match in \code{y}, increasing the size of the joined table.}
 
   \item{sort}{logical. \code{TRUE} implements a sort-merge-join: a completely separate join algorithm that sorts both datasets on the join columns using \code{\link{radixorder}} and then matches the rows without hashing. \emph{Note} that in this case the result will be sorted by the join columns, whereas \code{sort = FALSE} preserves the order of rows in \code{x}.}
 

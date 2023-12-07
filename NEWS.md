@@ -1,3 +1,7 @@
+# collapse 2.0.7
+
+* Fixed bug in full join if `verbose = 0`. Thanks @zander-prinsloo for reporting. 
+
 # collapse 2.0.6
 
 * Fixed a serious bug in `qsu()` where higher order weighted statistics were erroneous, i.e. whenever `qsu(x, ..., w = weights, higher = TRUE)` was invoked, the 'SD', 'Skew' and 'Kurt' columns were wrong (if `higher = FALSE` the weighted 'SD' is correct). The reason is that there appears to be no straightforward generalization of Welford's Online Algorithm to higher-order weighted statistics. This was not detected earlier because the algorithm was only tested with unit weights. The fix involved replacing Welford's Algorithm for the higher-order weighted case by a 2-pass method, that additionally uses long doubles for higher-order terms. Thanks @randrescastaneda for reporting. 

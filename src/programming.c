@@ -641,6 +641,84 @@ SEXP setop(SEXP x, SEXP val, SEXP op, SEXP roww) {
   return setop_core(x, val, op, roww);
 }
 
+
+SEXP replace_outliers(SEXP x, SEXP limits, SEXP value, SEXP single_limit, SEXP set)  {
+  const int ll = length(limits), sl = asInteger(single_limit), l = length(x), setl = asLogical(set);
+  int nprotect = setl == 0;
+  if(ll != 1 && ll != 2) error("'limits' must be length 1 or 2. You supplied limits length %d", ll);
+
+  int clip = 0;
+  if(TYPEOF(value) == STRSXP && strcmp(CHAR(STRING_ELT(value, 0)), "clip") == 0) {
+    value = limits;
+    clip = 1;
+  }
+
+  SEXP res = setl ? x : PROTECT(allocVector(TYPEOF(x), l));
+
+  switch(TYPEOF(x)) {
+    case INTSXP: {
+      if(TYPEOF(limits) != INTSXP) {
+        PROTECT(limits = coerceVector(limits, INTSXP)); ++nprotect;
+      }
+      int *px = INTEGER(x), *pres = INTEGER(res), val = asInteger(value);
+      if(ll == 1) {
+        if(sl == 2 || sl == 3) {
+          int l1 = INTEGER(limits)[0];
+          if(sl == 2) { // minimum
+            #pragma omp simd
+            for (int i = 0; i < l; ++i) pres[i] = px[i] < l1 && px[i] != NA_INTEGER ? val : px[i];
+          } else { // maximum
+            #pragma omp simd
+            for (int i = 0; i < l; ++i) pres[i] = px[i] > l1 ? val : px[i];
+          }
+        }
+      } else { // two-sided
+        int l1 = INTEGER(limits)[0], l2 = INTEGER(limits)[1];
+        if(clip) {
+          #pragma omp simd
+          for (int i = 0; i < l; ++i) pres[i] = px[i] > l2 ? l2 : px[i] < l1 && px[i] != NA_INTEGER ? l1 : px[i];
+        } else {
+          #pragma omp simd
+          for (int i = 0; i < l; ++i) pres[i] = px[i] > l2 || (px[i] < l1 && px[i] != NA_INTEGER) ? val : px[i];
+        }
+      }
+      break;
+    }
+    case REALSXP: {
+      if(TYPEOF(limits) != REALSXP) {
+        PROTECT(limits = coerceVector(limits, REALSXP)); ++nprotect;
+      }
+      double *px = REAL(x), *pres = REAL(res), val = asReal(value);
+      if(ll == 1) {
+        if(sl == 2 || sl == 3) {
+          double l1 = REAL(limits)[0];
+          if(sl == 2) { // minimum
+            #pragma omp simd
+            for (int i = 0; i < l; ++i) pres[i] = px[i] < l1 ? val : px[i];
+          } else { // maximum
+            #pragma omp simd
+            for (int i = 0; i < l; ++i) pres[i] = px[i] > l1 ? val : px[i];
+          }
+        }
+      } else { // two-sided
+        double l1 = REAL(limits)[0], l2 = REAL(limits)[1];
+        if(clip) {
+          #pragma omp simd
+          for (int i = 0; i < l; ++i) pres[i] = px[i] > l2 ? l2 : px[i] < l1 ? l1 : px[i];
+        } else {
+          #pragma omp simd
+          for (int i = 0; i < l; ++i) pres[i] = px[i] > l2 || px[i] < l1 ? val : px[i];
+        }
+      }
+      break;
+    }
+    default: error("Unsupported type '%s'", type2char(TYPEOF(x)));
+  }
+  if(setl == 0) SHALLOW_DUPLICATE_ATTRIB(res, x);
+  UNPROTECT(nprotect);
+  return res;
+}
+
 SEXP vtypes(SEXP x, SEXP isnum) {
   int tx = TYPEOF(x);
   if(tx != VECSXP) return ScalarInteger(tx);

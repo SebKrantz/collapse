@@ -3,6 +3,8 @@
 // Faster version of base R's spit based on grouping objects..
 // Support DF's?
 // -> works for factors, Date and POSIXct, but not for POSIXlt (handeled in R)
+// TODO: SIMD / multithreading? -> I checked SIMD doesn't work, and multithreading hardly give any performance gains.
+// The largest cost anyways is lapply(), not gsplit() !!
 
 SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
   if(TYPEOF(gobj) != VECSXP || !inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
@@ -262,12 +264,12 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
 // This is for fmutate, to reorder the result of grouped data if the result has the same length as x
 SEXP greorder(SEXP x, SEXP gobj) {
   if(TYPEOF(gobj) != VECSXP || !inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
-  if(LOGICAL(VECTOR_ELT(gobj, 5))[1] == 1) return x;
   const SEXP g = VECTOR_ELT(gobj, 1), gs = VECTOR_ELT(gobj, 2), order = VECTOR_ELT(gobj, 6);
   const int ng = length(gs), l = length(g), tx = TYPEOF(x),
             *pgs = INTEGER(gs), *pg = INTEGER(g);
-  if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
   if(l != length(x)) error("length(x) must match length(g)");
+  if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
+  if(LOGICAL(VECTOR_ELT(gobj, 5))[1] == 1) return x;
 
   SEXP res = PROTECT(allocVector(tx, l));
 

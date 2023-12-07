@@ -181,7 +181,7 @@ rm(airquality)
 airquality \%>\% fgroup_by(Month) \%>\%
   ftransform(get_vars(., 1:3) \%>\% fwithin \%>\% flag(0:2)) \%>\% head
 
-airquality \%>\% ftransform(STD(., cols = 1:3) \%>\% replace_NA(0)) \%>\% head
+airquality \%>\% ftransform(STD(., cols = 1:3) \%>\% replace_na(0)) \%>\% head
 
 # The list argument feature also allows flexible operations creating multiple new columns
 airquality \%>\% # The variance of Wind and Ozone, by month, weighted by temperature:

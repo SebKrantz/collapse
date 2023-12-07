@@ -115,7 +115,7 @@ print(descr(GGDC10S), reverse = TRUE, t.table = FALSE)
 as.data.frame(descr(wlddev, table = FALSE))
 
 ## Weighted Desciptions
-descr(wlddev, w = ~ replace_NA(POP)) # replacing NA's with 0's for fquantile()
+descr(wlddev, w = ~ replace_na(POP)) # replacing NA's with 0's for fquantile()
 
 ## Grouped Desciptions
 descr(GGDC10S, ~ Variable)
@@ -123,7 +123,7 @@ descr(wlddev, ~ income)
 print(descr(wlddev, ~ income), compact = TRUE)
 
 ## Grouped & Weighted Desciptions
-descr(wlddev, ~ income, w = ~ replace_NA(POP))
+descr(wlddev, ~ income, w = ~ replace_na(POP))
 
 ## Passing Arguments down to qsu.default: for Panel Data Statistics
 descr(iris, pid = iris$Species)
