@@ -36,3 +36,6 @@ a:hover {
 pre {
   color: #cccccc;
 }
+small.nav-text.text-muted {
+  color: #8e8c84 !important; /* #999a9c; -> Same as navbar */
+}
