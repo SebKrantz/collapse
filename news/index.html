@@ -57,7 +57,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.7" id="collapse-207">collapse 2.0.7<a class="anchor" aria-label="anchor" href="#collapse-207"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.7" id="collapse-207">collapse 2.0.7<a class="anchor" aria-label="anchor" href="#collapse-207"></a></h2><p class="text-muted">CRAN release: 2023-12-07</p>
 <ul><li><p>Fixed bug in full join if <code>verbose = 0</code>. Thanks <a href="https://github.com/zander-prinsloo" class="external-link">@zander-prinsloo</a> for reporting.</p></li>
 <li><p>Added argument <code>multiple = FALSE</code> to <code><a href="../reference/join.html">join()</a></code>. Setting <code>multiple = TRUE</code> performs a multiple-matching join where a row in <code>x</code> is matched to all matching rows in <code>y</code>. The default <code>FALSE</code> just takes the first matching row in <code>y</code>.</p></li>
 <li><p>Improved recode/replace functions. Notably, <code><a href="../reference/recode-replace.html">replace_outliers()</a></code> now supports option <code>value = "clip"</code> to replace outliers with the respective upper/lower bounds, and also has option <code>single.limit = "mad"</code> which removes outliers exceeding a certain number of median absolute deviations. Furthermore, all functions now have a <code>set</code> argument which fully applies the transformations by reference.</p></li>
