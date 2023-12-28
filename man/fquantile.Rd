@@ -21,8 +21,8 @@ fquantile(x, probs = c(0, 0.25, 0.5, 0.75, 1), w = NULL,
           na.rm = TRUE, type = 7L, names = FALSE, check.o = FALSE)
 
 # Fast range (min and max)
-frange(x, na.rm = .op[["na.rm"]])
-.range(x, na.rm = TRUE)
+frange(x, na.rm = .op[["na.rm"]], finite = FALSE)
+.range(x, na.rm = TRUE, finite = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -31,6 +31,7 @@ frange(x, na.rm = .op[["na.rm"]])
   \item{w}{a numeric vector of sampling weights. Missing weights are only supported if \code{x} is also missing.}
   \item{o}{integer. An vector giving the ordering of the elements in \code{x}, such that \code{identical(x[o], sort(x))}. If available this considerably speeds up the estimation.}
   \item{na.rm}{logical. Remove missing values, default \code{TRUE}. }
+  \item{finite}{logical. Omit all non-finite values.}
   \item{type}{integer. Quantile types 5-9. See \code{\link{quantile}}. Further details are provided in Hyndman and Fan (1996) who recommended type 8. The default method is type 7.}
   \item{names}{logical. Generates names of the form \code{paste0(round(probs * 100, 1), "\%")} (in C). Set to \code{FALSE} for speedup. }
   \item{check.o}{logical. If \code{o} is supplied, \code{TRUE} runs through \code{o} once and checks that it is valid, i.e. that each element is in \code{[1, length(x)]}. Set to \code{FALSE} for significant speedup if \code{o} is known to be valid. }

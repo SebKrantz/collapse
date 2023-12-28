@@ -266,7 +266,8 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
 
   if(tr != tx) { // lr == n &&
     if(!((tx == INTSXP && tr == LGLSXP) || (tx == LGLSXP && tr == INTSXP))) {
-      warning("Type of value (%s) is not the same as x (%s) and thus coerced. This may incur loss of information, such as digits of real numbers being truncated upon coercion to integer. To avoid this, make sure x has a larger type than value: character > double > integer > logical.", type2char(tr), type2char(tx));
+      if(tr > tx && !(lr == 1 && tx == INTSXP && tr == REALSXP && REAL_ELT(rep, 0) == (int)REAL_ELT(rep, 0)))
+         warning("Type of R (%s) is larger than X (%s) and thus coerced. This incurs loss of information, such as digits of real numbers being truncated upon coercion to integer. To avoid this, make sure X has a larger type than R: character > double > integer > logical.", type2char(tr), type2char(tx));
       if(lr > 1) {
         tr = tx;
         rep = PROTECT(coerceVector(rep, tx));
@@ -870,8 +871,8 @@ SEXP vlengths(SEXP x, SEXP usenam) {
 
 
 // faster version of base::range, which calls both min() and max()
-SEXP frange(SEXP x, SEXP Rnarm) {
-  int l = length(x), narm = asLogical(Rnarm), tx = TYPEOF(x);
+SEXP frange(SEXP x, SEXP Rnarm, SEXP Rfinite) {
+  int l = length(x), narm = asLogical(Rnarm), finite = asLogical(Rfinite), tx = TYPEOF(x);
 
   SEXP out = PROTECT(allocVector(tx, 2));
 
@@ -918,14 +919,25 @@ SEXP frange(SEXP x, SEXP Rnarm) {
         break;
       }
       double min, max, tmp, *px = REAL(x);
-      if(narm) {
+      if(narm || finite) {
         int j = l-1;
-        while(ISNAN(px[j]) && j!=0) --j;
+        if(finite) while(!R_FINITE(px[j]) && j!=0) --j;
+        else while(ISNAN(px[j]) && j!=0) --j;
         min = max = px[j];
-        if(j != 0) for(int i = j; i--; ) {
-          tmp = px[i];
-          if(min > tmp) min = tmp;
-          if(max < tmp) max = tmp;
+        if(j != 0) {
+          if(finite) {
+            for(int i = j; i--; ) {
+              tmp = px[i];
+              if(min > tmp && tmp > R_NegInf) min = tmp;
+              if(max < tmp && tmp < R_PosInf) max = tmp;
+            }
+          } else {
+            for(int i = j; i--; ) {
+              tmp = px[i];
+              if(min > tmp) min = tmp;
+              if(max < tmp) max = tmp;
+            }
+          }
         }
       } else {
         min = max = px[0];

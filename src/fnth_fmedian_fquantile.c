@@ -318,7 +318,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   } else if(np <= 2 && isNull(o) && (probs[0] == 0.0 || probs[0] == 1.0) && (np <= 1 || probs[1] == 1.0)) {
 
     // TODO: could also check weights here, but this case is presumably very rare anyway..
-    SEXP rng = PROTECT(frange(x, Rnarm)); ++nprotect;
+    SEXP rng = PROTECT(frange(x, Rnarm, ScalarLogical(FALSE))); ++nprotect;
     if(TYPEOF(rng) != REALSXP) {
       rng = PROTECT(coerceVector(rng, REALSXP)); ++nprotect;
     }
