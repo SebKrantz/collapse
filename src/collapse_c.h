@@ -52,7 +52,7 @@ void writeNA(SEXP, const int, const int);
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng);
 void DFcopyAttr(SEXP out, SEXP x, int ng);
 SEXP falloc(SEXP, SEXP, SEXP);
-SEXP frange(SEXP x, SEXP Rnarm);
+SEXP frange(SEXP x, SEXP Rnarm, SEXP Rfinite);
 SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads);
 SEXP fnrowC(SEXP x);
 // SEXP CasChar(SEXP x);

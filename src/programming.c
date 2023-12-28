@@ -100,7 +100,11 @@ if(length(val) == n && n > 1) {
   {
     const double *px = REAL(x);
     const double *pv = REAL(val);
-    WHICHVLOOPLX
+    if(invert) {
+      for(int i = 0; i != n; ++i) if(px[i] != pv[i] && (NISNAN(px[i]) || NISNAN(pv[i]))) buf[j++] = i+1;
+    } else {
+      for(int i = 0; i != n; ++i) if(px[i] == pv[i] || (ISNAN(px[i]) && ISNAN(pv[i]))) buf[j++] = i+1;
+    }
     break;
   }
   case STRSXP:
@@ -260,13 +264,15 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
     if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
   }
 
-  if(lr > 1 && tr != tx) { // lr == n &&
+  if(tr != tx) { // lr == n &&
     if(!((tx == INTSXP && tr == LGLSXP) || (tx == LGLSXP && tr == INTSXP))) {
-      // PROTECT_INDEX ipx;
-      // PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
-      tr = tx;
-      rep = PROTECT(coerceVector(rep, tx));
-      ++nprotect;
+      if(tr > tx && !(lr == 1 && tx == INTSXP && tr == REALSXP && REAL_ELT(rep, 0) == (int)REAL_ELT(rep, 0)))
+         warning("Type of R (%s) is larger than X (%s) and thus coerced. This incurs loss of information, such as digits of real numbers being truncated upon coercion to integer. To avoid this, make sure X has a larger type than R: character > double > integer > logical.", type2char(tr), type2char(tx));
+      if(lr > 1) {
+        tr = tx;
+        rep = PROTECT(coerceVector(rep, tx));
+        ++nprotect;
+      }
     } // error("typeof(x) needs to match typeof(r)");
   }
 
@@ -865,8 +871,8 @@ SEXP vlengths(SEXP x, SEXP usenam) {
 
 
 // faster version of base::range, which calls both min() and max()
-SEXP frange(SEXP x, SEXP Rnarm) {
-  int l = length(x), narm = asLogical(Rnarm), tx = TYPEOF(x);
+SEXP frange(SEXP x, SEXP Rnarm, SEXP Rfinite) {
+  int l = length(x), narm = asLogical(Rnarm), finite = asLogical(Rfinite), tx = TYPEOF(x);
 
   SEXP out = PROTECT(allocVector(tx, 2));
 
@@ -913,14 +919,25 @@ SEXP frange(SEXP x, SEXP Rnarm) {
         break;
       }
       double min, max, tmp, *px = REAL(x);
-      if(narm) {
+      if(narm || finite) {
         int j = l-1;
-        while(ISNAN(px[j]) && j!=0) --j;
+        if(finite) while(!R_FINITE(px[j]) && j!=0) --j;
+        else while(ISNAN(px[j]) && j!=0) --j;
         min = max = px[j];
-        if(j != 0) for(int i = j; i--; ) {
-          tmp = px[i];
-          if(min > tmp) min = tmp;
-          if(max < tmp) max = tmp;
+        if(j != 0) {
+          if(finite) {
+            for(int i = j; i--; ) {
+              tmp = px[i];
+              if(min > tmp && tmp > R_NegInf) min = tmp;
+              if(max < tmp && tmp < R_PosInf) max = tmp;
+            }
+          } else {
+            for(int i = j; i--; ) {
+              tmp = px[i];
+              if(min > tmp) min = tmp;
+              if(max < tmp) max = tmp;
+            }
+          }
         }
       } else {
         min = max = px[0];

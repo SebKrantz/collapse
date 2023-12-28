@@ -109,7 +109,7 @@ make_time_factor <- function(x) {
       # message("Time variable is of type double, but not a date/time object. It is therefore coerced to integer and assumed to represent unitary timesteps. If this is not desired pass timeid(t). To silence this message pass as.integer(t).")
       x <- as.integer(x)
     }
-    r <- .Call(C_frange, x, FALSE) # na.rm = FALSE # Note that inside flag() and fgrowth() etc. we subtract the minimum within each group...
+    r <- .Call(C_frange, x, FALSE, FALSE) # na.rm = FALSE # Note that inside flag() and fgrowth() etc. we subtract the minimum within each group...
     if(anyNA(r)) stop("Time variable may not contain missing values")
     if(r[1L] != 1) {
       if(idbl) x %-=% (r[1L] - 1L)
