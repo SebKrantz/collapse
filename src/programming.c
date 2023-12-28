@@ -264,13 +264,14 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
     if(lr != 1 && lr != n) error("If length(v) == 1, length(r) must be 1 or length(x)");
   }
 
-  if(lr > 1 && tr != tx) { // lr == n &&
+  if(tr != tx) { // lr == n &&
     if(!((tx == INTSXP && tr == LGLSXP) || (tx == LGLSXP && tr == INTSXP))) {
-      // PROTECT_INDEX ipx;
-      // PROTECT_WITH_INDEX(rep = coerceVector(rep, tx), &ipx);
-      tr = tx;
-      rep = PROTECT(coerceVector(rep, tx));
-      ++nprotect;
+      warning("Type of value (%s) is not the same as x (%s) and thus coerced. This may incur loss of information, such as digits of real numbers being truncated upon coercion to integer. To avoid this, make sure x has a larger type than value: character > double > integer > logical.", type2char(tr), type2char(tx));
+      if(lr > 1) {
+        tr = tx;
+        rep = PROTECT(coerceVector(rep, tx));
+        ++nprotect;
+      }
     } // error("typeof(x) needs to match typeof(r)");
   }
 
