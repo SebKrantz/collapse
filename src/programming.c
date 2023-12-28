@@ -100,7 +100,11 @@ if(length(val) == n && n > 1) {
   {
     const double *px = REAL(x);
     const double *pv = REAL(val);
-    WHICHVLOOPLX
+    if(invert) {
+      for(int i = 0; i != n; ++i) if(px[i] != pv[i] && (NISNAN(px[i]) || NISNAN(pv[i]))) buf[j++] = i+1;
+    } else {
+      for(int i = 0; i != n; ++i) if(px[i] == pv[i] || (ISNAN(px[i]) && ISNAN(pv[i]))) buf[j++] = i+1;
+    }
     break;
   }
   case STRSXP:
