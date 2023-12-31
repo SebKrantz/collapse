@@ -88,11 +88,11 @@ varying.pdata.frame <- function(x, effect = 1L, cols = NULL, any_group = TRUE, u
   index <- unclass(findex(x))
   g <- if(length(effect) == 1L) index[[effect]] else finteraction(index[effect], sort = !any_group && .op[["sort"]])
   x <- if(is.null(cols)) fcolsubset(x, attr(x, "names") %!in% names(index[effect])) else colsubset(x, cols)
-  if(!any_group && use.g.names) {
+  res <- if(!any_group && use.g.names) {
     lev <- attr(g, "levels")
-    return(setRnDF(.Call(Cpp_varyingl,x,length(lev),g,any_group,FALSE), lev))
-  }
-  .Call(Cpp_varyingl,x,fnlevels(g),g,any_group,drop)
+    setRnDF(.Call(Cpp_varyingl,x,length(lev),g,any_group,FALSE), lev)
+  } else .Call(Cpp_varyingl,x,fnlevels(g),g,any_group,drop)
+  return(if(any_group) res else unindex_light(res))
 }
 
 varying.grouped_df <- function(x, any_group = TRUE, use.g.names = FALSE, drop = TRUE, keep.group_vars = TRUE, ...) {
