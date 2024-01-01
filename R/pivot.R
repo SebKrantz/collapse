@@ -93,6 +93,13 @@ melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
   res
 }
 
+# Retain labels in wider reshaping
+add_labels <- function(l, labs) {
+  ll <- .Call(C_vlabels, l, "label", FALSE)
+  if(!allNA(ll)) labs <- paste(ll, labs, sep = " - ")
+  .Call(C_setvlabels, l, "label", labs, NULL)
+}
+
 # TODO: Think about: values could be list input, names only atomic. that would make more sense...
 # Or: allow for both options... needs to be consistent with "labels" though...
 
@@ -287,7 +294,7 @@ pivot <- function(data,
           namv <- names(data)[values]
           attributes(data) <- NULL
           value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads))
-          if(length(labels)) value_cols <- lapply(value_cols, `vlabels<-`, value = labels)
+          if(length(labels)) value_cols <- lapply(value_cols, add_labels, labels)
           value_cols <- unlist(if(transpose[1L]) t_list2(value_cols) else value_cols, FALSE, FALSE)
           namv_res <- if(transpose[2L]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
           names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)

@@ -1,3 +1,15 @@
+# collapse 2.0.8
+
+* In `pivot(..., values = [multiple columns], labels = "new_labels_column", how = "wieder")`, if the columns selected through `values` already have variable labels, they are concatenated with the new labels provided through `"new_labels_col"` using `" - "` as a separator (similar to `names` where the separator is `"_"`). 
+
+* `whichv()` and operators `%==%`, `%!=%` now properly account for missing double values, e.g. `c(NA_real_, 1) %==% c(NA_real_, 1)` yields `c(1, 2)` rather than `2`. Thanks @eutwt for flagging this (#518). 
+
+* In `setv(X, v, R)`, if the type of `R` is greater than `X` e.g. `setv(1:10, 1:3, 9.5)`, then a warning is issued that conversion of `R` to the lower type (real to integer in this case) may incur loss of information. Thanks @tony-aw for suggesting (#498).
+
+* `frange()` has an option `finite = FALSE`, like `base::range`. Thanks @MLopez-Ibanez for suggesting (#511).
+
+* `varying.pdata.frame(..., any_group = FALSE)` now unindexes the result (as should be the case).
+
 # collapse 2.0.7
 
 * Fixed bug in full join if `verbose = 0`. Thanks @zander-prinsloo for reporting. 
