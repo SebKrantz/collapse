@@ -8,7 +8,7 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.7
+version: 2.0.8
 doi: 10.5281/zenodo.8433090
 abstract: A C/C++ based package for advanced data transformation and statistical computing
   in R that is extremely fast, class-agnostic, robust and programmer friendly. Core
@@ -37,14 +37,14 @@ preferred-citation:
     given-names: Sebastian
     email: sebastian.krantz@graduateinstitute.ch
     orcid: https://orcid.org/0000-0001-6212-5229
-  year: '2023'
-  notes: R package version 2.0.7
+  year: '2024'
+  notes: R package version 2.0.8
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2023-12-07'
+date-released: '2024-01-01'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -77,7 +77,7 @@ references:
   - name: R Core Team
   location:
     name: Vienna, Austria
-  year: '2023'
+  year: '2024'
   institution:
     name: R Foundation for Statistical Computing
   version: '>= 3.3.0'
@@ -106,7 +106,7 @@ references:
     given-names: Douglas
   - family-names: Chambers
     given-names: John
-  year: '2023'
+  year: '2024'
   version: '>= 1.0.1'
 - type: software
   title: Rcpp
@@ -133,7 +133,7 @@ references:
     given-names: Douglas
   - family-names: Chambers
     given-names: John
-  year: '2023'
+  year: '2024'
 - type: software
   title: fastverse
   abstract: 'fastverse: A Suite of High-Performance Packages for Statistics and Data
@@ -145,7 +145,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
     email: sebastian.krantz@graduateinstitute.ch
-  year: '2023'
+  year: '2024'
 - type: software
   title: data.table
   abstract: 'data.table: Extension of `data.frame`'
@@ -153,13 +153,16 @@ references:
   url: https://r-datatable.com
   repository: https://CRAN.R-project.org/package=data.table
   authors:
+  - family-names: Barrett
+    given-names: Tyson
+    email: t.barrett88@gmail.com
   - family-names: Dowle
     given-names: Matt
     email: mattjdowle@gmail.com
   - family-names: Srinivasan
     given-names: Arun
     email: asrini@pm.me
-  year: '2023'
+  year: '2024'
 - type: software
   title: magrittr
   abstract: 'magrittr: A Forward-Pipe Operator for R'
@@ -173,7 +176,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: kit
   abstract: 'kit: Data Manipulation Functions Implemented in C'
@@ -184,7 +187,7 @@ references:
   - family-names: Jacob
     given-names: Morgan
     email: morgan.emailbox@gmail.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: xts
   abstract: 'xts: eXtensible Time Series'
@@ -197,7 +200,7 @@ references:
   - family-names: Ulrich
     given-names: Joshua M.
     email: josh.m.ulrich@gmail.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: zoo
   abstract: 'zoo: S3 Infrastructure for Regular and Irregular Time Series (Z''s Ordered
@@ -216,7 +219,7 @@ references:
   - family-names: Ryan
     given-names: Jeffrey A.
     email: jeff.a.ryan@gmail.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: plm
   abstract: 'plm: Linear Models for Panel Data'
@@ -233,7 +236,7 @@ references:
   - family-names: Tappe
     given-names: Kevin
     email: kevin.tappe@bwi.uni-stuttgart.de
-  year: '2023'
+  year: '2024'
 - type: software
   title: fixest
   abstract: 'fixest: Fast Fixed-Effects Estimations'
@@ -244,7 +247,7 @@ references:
   - family-names: Berge
     given-names: Laurent
     email: laurent.berge@u-bordeaux.fr
-  year: '2023'
+  year: '2024'
 - type: software
   title: vars
   abstract: 'vars: VAR Modelling'
@@ -255,7 +258,7 @@ references:
   - family-names: Pfaff
     given-names: Bernhard
     email: bernhard@pfaffikus.de
-  year: '2023'
+  year: '2024'
 - type: software
   title: RcppArmadillo
   abstract: 'RcppArmadillo: ''Rcpp'' Integration for the ''Armadillo'' Templated Linear
@@ -274,7 +277,7 @@ references:
     given-names: Binxiang
   - family-names: Sanderson
     given-names: Conrad
-  year: '2023'
+  year: '2024'
 - type: software
   title: RcppEigen
   abstract: 'RcppEigen: ''Rcpp'' Integration for the ''Eigen'' Templated Linear Algebra
@@ -291,7 +294,7 @@ references:
     given-names: Romain
   - family-names: Eigen
     given-names: Yixuan Qiu; the authors of Eigen for the included version of
-  year: '2023'
+  year: '2024'
 - type: software
   title: tibble
   abstract: 'tibble: Simple Data Frames'
@@ -306,7 +309,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: dplyr
   abstract: 'dplyr: A Grammar of Data Manipulation'
@@ -330,7 +333,7 @@ references:
     given-names: Davis
     email: davis@posit.co
     orcid: https://orcid.org/0000-0003-4777-038X
-  year: '2023'
+  year: '2024'
 - type: software
   title: ggplot2
   abstract: 'ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics'
@@ -365,7 +368,7 @@ references:
   - family-names: Dunnington
     given-names: Dewey
     orcid: https://orcid.org/0000-0002-9415-4582
-  year: '2023'
+  year: '2024'
 - type: software
   title: scales
   abstract: 'scales: Scale Functions for Visualization'
@@ -382,7 +385,7 @@ references:
     orcid: https://orcid.org/0000-0002-5147-4711
   - family-names: Seidel
     given-names: Dana
-  year: '2023'
+  year: '2024'
 - type: software
   title: microbenchmark
   abstract: 'microbenchmark: Accurate Timing Functions'
@@ -392,7 +395,7 @@ references:
   authors:
   - family-names: Mersmann
     given-names: Olaf
-  year: '2023'
+  year: '2024'
 - type: software
   title: testthat
   abstract: 'testthat: Unit Testing for R'
@@ -403,7 +406,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@posit.co
-  year: '2023'
+  year: '2024'
 - type: software
   title: covr
   abstract: 'covr: Test Coverage for Packages'
@@ -414,7 +417,7 @@ references:
   - family-names: Hester
     given-names: Jim
     email: james.f.hester@gmail.com
-  year: '2023'
+  year: '2024'
 - type: software
   title: knitr
   abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
@@ -426,7 +429,7 @@ references:
     given-names: Yihui
     email: xie@yihui.name
     orcid: https://orcid.org/0000-0003-0645-5666
-  year: '2023'
+  year: '2024'
 - type: software
   title: rmarkdown
   abstract: 'rmarkdown: Dynamic Documents for R'
@@ -469,7 +472,7 @@ references:
     given-names: Richard
     email: rich@posit.co
     orcid: https://orcid.org/0000-0003-3925-190X
-  year: '2023'
+  year: '2024'
 identifiers:
 - type: url
   value: https://twitter.com/collapse_R
