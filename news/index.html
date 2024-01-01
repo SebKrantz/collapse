@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,14 @@
       <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.8" id="collapse-208">collapse 2.0.8<a class="anchor" aria-label="anchor" href="#collapse-208"></a></h2>
+<ul><li><p>In <code>pivot(..., values = [multiple columns], labels = "new_labels_column", how = "wieder")</code>, if the columns selected through <code>values</code> already have variable labels, they are concatenated with the new labels provided through <code>"new_labels_col"</code> using <code>" - "</code> as a separator (similar to <code>names</code> where the separator is <code>"_"</code>).</p></li>
+<li><p><code><a href="../reference/efficient-programming.html">whichv()</a></code> and operators <code>%==%</code>, <code>%!=%</code> now properly account for missing double values, e.g. <code>c(NA_real_, 1) %==% c(NA_real_, 1)</code> yields <code>c(1, 2)</code> rather than <code>2</code>. Thanks <a href="https://github.com/eutwt" class="external-link">@eutwt</a> for flagging this (<a href="https://github.com/SebKrantz/collapse/issues/518" class="external-link">#518</a>).</p></li>
+<li><p>In <code>setv(X, v, R)</code>, if the type of <code>R</code> is greater than <code>X</code> e.g. <code>setv(1:10, 1:3, 9.5)</code>, then a warning is issued that conversion of <code>R</code> to the lower type (real to integer in this case) may incur loss of information. Thanks <a href="https://github.com/tony-aw" class="external-link">@tony-aw</a> for suggesting (<a href="https://github.com/SebKrantz/collapse/issues/498" class="external-link">#498</a>).</p></li>
+<li><p><code><a href="../reference/fquantile.html">frange()</a></code> has an option <code>finite = FALSE</code>, like <code><a href="https://rdrr.io/r/base/range.html" class="external-link">base::range</a></code>. Thanks <a href="https://github.com/MLopez-Ibanez" class="external-link">@MLopez-Ibanez</a> for suggesting (<a href="https://github.com/SebKrantz/collapse/issues/511" class="external-link">#511</a>).</p></li>
+<li><p><code>varying.pdata.frame(..., any_group = FALSE)</code> now unindexes the result (as should be the case).</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.7" id="collapse-207">collapse 2.0.7<a class="anchor" aria-label="anchor" href="#collapse-207"></a></h2><p class="text-muted">CRAN release: 2023-12-07</p>
 <ul><li><p>Fixed bug in full join if <code>verbose = 0</code>. Thanks <a href="https://github.com/zander-prinsloo" class="external-link">@zander-prinsloo</a> for reporting.</p></li>

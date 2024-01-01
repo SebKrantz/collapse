@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,8 +74,8 @@
 <span>          na.rm <span class="op">=</span> <span class="cn">TRUE</span>, type <span class="op">=</span> <span class="fl">7L</span>, names <span class="op">=</span> <span class="cn">FALSE</span>, check.o <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Fast range (min and max)</span></span>
-<span><span class="fu">frange</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/fquantile.html">.range</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">frange</span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, finite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/fquantile.html">.range</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>, finite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -94,6 +94,9 @@
 
   <dt>na.rm</dt>
 <dd><p>logical. Remove missing values, default <code>TRUE</code>.</p></dd>
+
+  <dt>finite</dt>
+<dd><p>logical. Omit all non-finite values.</p></dd>
 
   <dt>type</dt>
 <dd><p>integer. Quantile types 5-9. See <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></code>. Further details are provided in Hyndman and Fan (1996) who recommended type 8. The default method is type 7.</p></dd>
