@@ -108,8 +108,10 @@ do_collapse_unmask <- function(clpns) {
 do_collapse_restore_exports <- function(clpns) {
   clpns_exports <- .getNamespaceInfo(clpns, "exports")
   missing <- fsetdiff(.COLLAPSE_ALL_EXPORTS, names(clpns_exports))
+  if(length(missing)) {
   names(missing) <- missing
   list2env(as.list(missing), clpns_exports) # = namespaceExport(clpns, missing)
+  }
 }
 
 
