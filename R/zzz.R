@@ -45,18 +45,18 @@ do_collapse_mask <- function(clpns, mask) {
   if(any(mask == "n")) {
     unmask_special <- "n"
     mask <- mask[mask != "n"]
-    assign("n", clpns[["n_internal"]], envir = clpns)
+    if(is.null(clpns[["n"]])) assign("n", clpns[["n_internal"]], envir = clpns)
     assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, "n"), envir = clpns)
     assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, "n"), envir = clpns)
     assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, "n"), envir = clpns)
   }
   if(any(mask %in% c("qtab", "qtable", "table"))) {
-    assign("table", clpns[["qtab"]], envir = clpns)
+    if(is.null(clpns[["table"]])) assign("table", clpns[["qtab"]], envir = clpns)
     unmask_special <- c(unmask_special, "table")
     mask <- mask[!mask %in% c("qtab", "qtable", "table")]
   }
   if(any(mask == "%in%")) {
-    assign("%in%", clpns[["%fin%"]], envir = clpns)
+    if(is.null(clpns[["%in%"]])) assign("%in%", clpns[["%fin%"]], envir = clpns)
     unmask_special <- c(unmask_special, "%in%")
     mask <- mask[mask != "%in%"]
   }
@@ -64,7 +64,8 @@ do_collapse_mask <- function(clpns, mask) {
   if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f', except for 'n' and 'qtab'/'table'. You supplied: ", paste(mask[!m], collapse = ", "))
   # This now creates the additional functions (does the masking)
   unmask <- substr(mask, 2L, 100L)
-  for(i in seq_along(mask)) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
+  unmask_ind <- unmask %!iin% names(clpns) # Important: cannot change locked bindings in namespace!
+  for(i in unmask_ind) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
   # Internals of namespaceExport(clpns, c(unmask, unmask_special)):
   export_names <- c(unmask, unmask_special)
   names(export_names) <- export_names
