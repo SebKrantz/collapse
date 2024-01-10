@@ -75,7 +75,7 @@ do_collapse_mask <- function(clpns, mask) {
 do_collapse_remove_core <- function(clpns, rmfun, exports = TRUE, namespace = TRUE) { # exports = FALSE in .onLoad, because exports not defined yet
   if(exports) {
     clpns_exports <- .getNamespaceInfo(clpns, "exports")
-    ckmatch(rmfun, names(clpns_exports), e = "Unknown functions to be removed:")
+    rmfun <- rmfun[rmfun %in% names(clpns_exports)] # ckmatch(rmfun, names(clpns_exports), e = "Unknown functions to be removed:")
   }
   if(any(tmp <- .FAST_STAT_FUN_EXT %in% rmfun)) assign(".FAST_STAT_FUN_EXT", .FAST_STAT_FUN_EXT[!tmp], envir = clpns)
   if(any(tmp <- .FAST_STAT_FUN_POLD %in% rmfun)) assign(".FAST_STAT_FUN_POLD", .FAST_STAT_FUN_POLD[!tmp], envir = clpns)
