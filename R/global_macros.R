@@ -51,8 +51,9 @@ set_collapse <- function(...) {
       if(maskl && length(op_old$mask)) do_collapse_unmask(clpns) # Fixed in do_collapse_mask(): not overriding already masked function in namespace anymore
       if(length(opts$mask)) do_collapse_mask(clpns, opts$mask)
       .op$mask <- opts$mask
-      if(removel) {
-        if(length(op_old$remove)) do_collapse_restore_exports(clpns)
+      if(removel || (maskl && length(op_old$remove))) { # When changing mask setting also need to change remove again if specified
+        if(!removel) opts$remove <- op_old$remove
+        if(removel && length(op_old$remove)) do_collapse_restore_exports(clpns) # Also adjusted do_collapse_remove() to only remove existing funs
         if(length(opts$remove)) do_collapse_remove(clpns, opts$remove, namespace = FALSE)
         .op$remove <- opts$remove
       }
