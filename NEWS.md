@@ -1,3 +1,9 @@
+# collapse 2.0.9
+
+* Improved right join such that ids of `x` instead of `y` are preserved. This is more consistent with the other joins, especially when id columns in `x` and `y` have different names or data types. 
+
+* More fluent and safe interplay of 'mask' and 'remove' options in `set_collapse()`. 
+
 # collapse 2.0.8
 
 * In `pivot(..., values = [multiple columns], labels = "new_labels_column", how = "wieder")`, if the columns selected through `values` already have variable labels, they are concatenated with the new labels provided through `"new_labels_col"` using `" - "` as a separator (similar to `names` where the separator is `"_"`). 
