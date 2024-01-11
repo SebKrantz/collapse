@@ -1,5 +1,7 @@
 # collapse 2.0.9
 
+* `replace_na()` now has a `type` argument which supports options `"locf"` and `"focb"` (default `"const"`), similar to `data.table::nafill`. The `replace_na()` implementation also supports character data and list-columns (`NULL/empty` elements). Thanks @BenoitLondon for suggesting (#489). 
+
 * Fixed a bug in weighted quantile estimation (`fquantile()`) that could lead to wrong/out-of-range estimates in some cases. Thanks @zander-prinsloo for reporting (#523). 
 
 * Improved right join such that join column names of `x` instead of `y` are preserved. This is more consistent with the other joins when join columns in `x` and `y` have different names. 
