@@ -16,7 +16,7 @@ It performs simple and weighted aggregations, multi-type aggregations automatica
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -262,14 +262,14 @@ Therefore it is possible to append <a href="fast-statistical-functions.html">Fas
 <span class="r-in"><span><span class="va">weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="efficient-programming.html">fnrow</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="op">~</span> <span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>                           <span class="co"># Some random weights..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    weights Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 31.30842     5.012471    3.420665     1.484930   0.2550086     setosa</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 32.75483     5.912476    2.822646     4.262576   1.3381514 versicolor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 34.88155     6.589928    3.055595     5.553182   2.0886227  virginica</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 39.93530     5.017369    3.471858     1.423437   0.2294352     setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 37.81365     5.974606    2.797564     4.326272   1.3399010 versicolor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 39.86655     6.548987    2.961331     5.533366   2.0115706  virginica</span>
 <span class="r-in"><span><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="va">iris</span><span class="op">$</span><span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span><span class="op">)</span>                        <span class="co"># Note this behavior..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species  weights Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 31.30842     5.012471    3.420665     1.484930   0.2550086</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 32.75483     5.912476    2.822646     4.262576   1.3381514</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 34.88155     6.589928    3.055595     5.553182   2.0886227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa 39.93530     5.017369    3.471858     1.423437   0.2294352</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor 37.81365     5.974606    2.797564     4.326272   1.3399010</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  virginica 39.86655     6.548987    2.961331     5.533366   2.0115706</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     setosa</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 versicolor</span>
@@ -277,9 +277,9 @@ Therefore it is possible to append <a href="fast-statistical-functions.html">Fas
 <span class="r-in"><span><span class="fu">collap</span><span class="op">(</span><span class="va">iris</span>, <span class="va">iris</span><span class="op">$</span><span class="va">Species</span>, w <span class="op">=</span> <span class="va">weights</span>,</span></span>
 <span class="r-in"><span>       keep.by <span class="op">=</span> <span class="cn">FALSE</span>, keep.w <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.012471    3.420665     1.484930   0.2550086     setosa</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.912476    2.822646     4.262576   1.3381514 versicolor</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     6.589928    3.055595     5.553182   2.0886227  virginica</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     5.017369    3.471858     1.423437   0.2294352     setosa</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     5.974606    2.797564     4.326272   1.3399010 versicolor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     6.548987    2.961331     5.533366   2.0115706  virginica</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Multi-Type Aggregation --------------------------------------</span></span></span>

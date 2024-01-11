@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +68,7 @@
 <span><span class="fu">recode_char</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span>, default <span class="op">=</span> <span class="cn">NULL</span>, missing <span class="op">=</span> <span class="cn">NULL</span>, regex <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>            ignore.case <span class="op">=</span> <span class="cn">FALSE</span>, fixed <span class="op">=</span> <span class="cn">FALSE</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">replace_na</span><span class="op">(</span><span class="va">X</span>, value <span class="op">=</span> <span class="fl">0</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">replace_na</span><span class="op">(</span><span class="va">X</span>, value <span class="op">=</span> <span class="fl">0</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, set <span class="op">=</span> <span class="cn">FALSE</span>, type <span class="op">=</span> <span class="st">"const"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">replace_inf</span><span class="op">(</span><span class="va">X</span>, value <span class="op">=</span> <span class="cn">NA</span>, replace.nan <span class="op">=</span> <span class="cn">FALSE</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
@@ -93,6 +93,9 @@
 
 <dt>set</dt>
 <dd><p>logical. <code>TRUE</code> does replacements by reference (i.e. in-place modification of the data) and returns the result invisibly.</p></dd>
+
+<dt>type</dt>
+<dd><p>character. One of <code>"const"</code>, <code>"locf"</code> (last non-missing observation carried forward) or <code>"focb"</code> (first non-missing observation carried back). The latter two ignore <code>value</code>.</p></dd>
 
 <dt>regex</dt>
 <dd><p>logical. If <code>TRUE</code>, all recode-argument names are (sequentially) passed to <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></code> as a pattern to search <code>X</code>. All matches are replaced. <em>Note</em> that <code>NA</code>'s are also matched as strings by <code>grepl</code>.</p></dd>

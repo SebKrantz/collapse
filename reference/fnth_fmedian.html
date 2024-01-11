@@ -12,7 +12,7 @@ fmedian is a simple wrapper around fnth, which fixes n = 0.5 and (default) ties 
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -203,7 +203,7 @@ If <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how to r
 <span class="r-in"><span><span class="fu">fnth</span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span><span class="op">)</span>                   <span class="co"># Third quartile</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 22.8</span>
 <span class="r-in"><span><span class="fu">fnth</span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>    <span class="co"># Weighted third quartile: Weighted by hp</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 19.95705</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 20.34443</span>
 <span class="r-in"><span><span class="fu">fnth</span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>        <span class="co"># Simple transformation: Subtract third quartile</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  -1.8  -1.8   0.0  -1.4  -4.1  -4.7  -8.5   1.6   0.0  -3.6  -5.0  -6.4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13]  -5.5  -7.6 -12.4 -12.4  -8.1   9.6   7.6  11.1  -1.3  -7.3  -7.6  -9.5</span>
@@ -220,19 +220,19 @@ If <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how to r
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26.000 23.600 31.400 21.000 19.750 16.625 15.600 </span>
 <span class="r-in"><span><span class="fu">fnth</span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, <span class="va">g</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span><span class="op">)</span>           <span class="co"># Grouped weighted third quartile</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    4.0.1    4.1.0    4.1.1    6.0.1    6.1.0    8.0.0    8.0.1 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26.00000 22.48387 30.40000 20.88182 19.45000 16.26875 15.38485 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26.00000 23.14947 30.40000 20.92571 19.65610 16.24250 15.47284 </span>
 <span class="r-in"><span><span class="fu">fnth</span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"-"</span><span class="op">)</span>           <span class="co"># Groupwise subtract third quartile</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1]   0.000   0.000  -8.600   1.650   2.075  -1.650  -2.325   0.800  -0.800</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [10]  -0.550  -1.950  -0.225   0.675  -1.425  -6.225  -6.225  -1.925   1.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [19]  -1.000   2.500  -2.100  -1.125  -1.425  -3.325   2.575  -4.100   0.000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [28]  -1.000   0.200  -1.300  -0.600 -10.000</span>
 <span class="r-in"><span><span class="fu">fnth</span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, <span class="va">g</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">hp</span>, <span class="st">"-"</span><span class="op">)</span>      <span class="co"># Groupwise subtract weighted third quartile</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.1181818  0.1181818 -7.6000000  1.9500000  2.4312500 -1.3500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -1.9687500  1.9161290  0.3161290 -0.2500000 -1.6500000  0.1312500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  1.0312500 -1.0687500 -5.8687500 -5.8687500 -1.5687500  2.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [19]  0.0000000  3.5000000 -0.9838710 -0.7687500 -1.0687500 -2.9687500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  2.9312500 -3.1000000  0.0000000  0.0000000  0.4151515 -1.1818182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [31] -0.3848485 -9.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.07428571  0.07428571 -7.60000000  1.74390244  2.45750000 -1.55609756</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -1.94250000  1.25052632 -0.34947368 -0.45609756 -1.85609756  0.15750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  1.05750000 -1.04250000 -5.84250000 -5.84250000 -1.54250000  2.00000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19]  0.00000000  3.50000000 -1.64947368 -0.74250000 -1.04250000 -2.94250000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25]  2.95750000 -3.10000000  0.00000000  0.00000000  0.32716418 -1.22571429</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] -0.47283582 -9.00000000</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## data.frame method</span></span></span>
 <span class="r-in"><span><span class="fu">fnth</span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">0.75</span><span class="op">)</span></span></span>
@@ -315,12 +315,12 @@ If <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how to r
 <span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am sum.hp   mpg  disp  drat    wt  qsec  gear  carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     4     0     1     91  26    120.  4.43  2.14  16.7  5     2   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     1     0    254  22.5  140.  3.89  3.14  22.4  4     2   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     4     1     1    564  30.4  111.  4.04  2.29  18.8  4.13  2   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0     1    395  20.9  159.  3.87  2.81  16.4  4.96  5.93</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0    461  19.4  229.  3.92  3.44  19.5  4     4   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0   <span style="text-decoration: underline;">2</span>330  16.3  428.  3.21  4.99  17.6  3     4   </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1    599  15.4  325.  3.87  3.55  14.6  5     7.85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     1     0    254  23.1  142.  3.89  3.16  22.5  4     2   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     4     1     1    564  30.4  110.  4.11  2.28  18.8  4.10  2   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0     1    395  20.9  159.  3.88  2.83  16.4  4.94  5.89</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0    461  19.7  227.  3.92  3.44  19.5  4     4   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0   <span style="text-decoration: underline;">2</span>330  16.2  425.  3.21  4.96  17.6  3     4   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1    599  15.5  331.  3.94  3.55  14.6  5     7.81</span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fnth</span><span class="op">(</span><span class="fl">0.75</span><span class="op">)</span>              <span class="co"># Faster grouping!</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am    mpg   disp     hp  drat     wt   qsec gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1 26.000 120.30  91.00 4.430 2.1400 16.700  5.0    2</span>
@@ -351,37 +351,37 @@ If <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how to r
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>    <span class="co"># Faster selecting</span></span></span>
 <span class="r-in"><span>      <span class="fu">fnth</span><span class="op">(</span><span class="fl">0.75</span>, <span class="va">hp</span>, <span class="st">"/"</span><span class="op">)</span>  <span class="co"># Divide mpg by its third weighted group-quartile, using hp as weights</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      hp       mpg</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           110 1.0056596</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       110 1.0056596</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           110 1.0035500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       110 1.0035500</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710           93 0.7500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      110 1.1002571</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   175 1.1494430</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             105 0.9305913</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          245 0.8789858</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            62 1.0852224</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230             95 1.0140603</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            123 0.9871465</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C           123 0.9151671</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          180 1.0080676</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          180 1.0633884</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         180 0.9343066</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  205 0.6392624</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 215 0.6392624</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   230 0.9035728</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      110 1.0887207</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   175 1.1513006</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             105 0.9208339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360          245 0.8804063</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D            62 1.0540196</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 230             95 0.9849036</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280            123 0.9767961</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C           123 0.9055714</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SE          180 1.0096968</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SL          180 1.0651070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 450SLC         180 0.9358165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Cadillac Fleetwood  205 0.6402955</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Lincoln Continental 215 0.6402955</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chrysler Imperial   230 0.9050331</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fiat 128             66 1.0657895</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Honda Civic          52 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corolla       65 1.1151316</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona        97 0.9562410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    150 0.9527468</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         150 0.9343066</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          245 0.8175182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    175 1.1801767</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Toyota Corona        97 0.9287468</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Dodge Challenger    150 0.9542866</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> AMC Javelin         150 0.9358165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Camaro Z28          245 0.8188395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Pontiac Firebird    175 1.1820840</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fiat X1-9            66 0.8980263</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Porsche 914-2        91 1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Lotus Europa        113 1.0000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L      264 1.0269844</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino        175 0.9434044</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora       335 0.9749852</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ford Pantera L      264 1.0211444</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ferrari Dino        175 0.9414255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Maserati Bora       335 0.9694409</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Volvo 142E          109 0.7039474</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>

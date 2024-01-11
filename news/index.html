@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,6 +56,13 @@
       <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.9" id="collapse-209">collapse 2.0.9<a class="anchor" aria-label="anchor" href="#collapse-209"></a></h2>
+<ul><li><p>Added functions <code><a href="../reference/efficient-programming.html">na_locf()</a></code> and <code><a href="../reference/efficient-programming.html">na_focb()</a></code> for fast basic C implementations of these procedures (optionally by reference). <code><a href="../reference/recode-replace.html">replace_na()</a></code> now also has a <code>type</code> argument which supports options <code>"locf"</code> and <code>"focb"</code> (default <code>"const"</code>), similar to <code><a href="https://rdatatable.gitlab.io/data.table/reference/nafill.html" class="external-link">data.table::nafill</a></code>. The implementation also supports character data and list-columns (<code>NULL/empty</code> elements). Thanks <a href="https://github.com/BenoitLondon" class="external-link">@BenoitLondon</a> for suggesting (<a href="https://github.com/SebKrantz/collapse/issues/489" class="external-link">#489</a>). I note that <code><a href="../reference/efficient-programming.html">na_locf()</a></code> exists in some other packages (such as <em>imputeTS</em>) where it is implemented in R and has additional options. Users should utilize the flexible namespace i.e. <code>set_collapse(remove = "na_locf")</code> to deal with this.</p></li>
+<li><p>Fixed a bug in weighted quantile estimation (<code><a href="../reference/fquantile.html">fquantile()</a></code>) that could lead to wrong/out-of-range estimates in some cases. Thanks <a href="https://github.com/zander-prinsloo" class="external-link">@zander-prinsloo</a> for reporting (<a href="https://github.com/SebKrantz/collapse/issues/523" class="external-link">#523</a>).</p></li>
+<li><p>Improved right join such that join column names of <code>x</code> instead of <code>y</code> are preserved. This is more consistent with the other joins when join columns in <code>x</code> and <code>y</code> have different names.</p></li>
+<li><p>More fluent and safe interplay of ‘mask’ and ‘remove’ options in <code><a href="../reference/collapse-options.html">set_collapse()</a></code>: it is now seamlessly possible to switch from any combination of ‘mask’ and ‘remove’ to any other combination without the need of setting them to <code>NULL</code> first.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.8" id="collapse-208">collapse 2.0.8<a class="anchor" aria-label="anchor" href="#collapse-208"></a></h2>
 <ul><li><p>In <code>pivot(..., values = [multiple columns], labels = "new_labels_column", how = "wieder")</code>, if the columns selected through <code>values</code> already have variable labels, they are concatenated with the new labels provided through <code>"new_labels_col"</code> using <code>" - "</code> as a separator (similar to <code>names</code> where the separator is <code>"_"</code>).</p></li>
