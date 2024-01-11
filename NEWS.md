@@ -4,7 +4,7 @@
 
 * Improved right join such that join column names of `x` instead of `y` are preserved. This is more consistent with the other joins when join columns in `x` and `y` have different names. 
 
-* More fluent and safe interplay of 'mask' and 'remove' options in `set_collapse()`. 
+* More fluent and safe interplay of 'mask' and 'remove' options in `set_collapse()`: it is now seamlessly possible to switch from any combination of 'mask' and 'remove' to any other combination without the need of setting them to `NULL` first. 
 
 # collapse 2.0.8
 
