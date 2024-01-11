@@ -239,10 +239,14 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
 }
 
 
-na_locf <- function(x, ph1, ph2, set = FALSE) .Call(C_na_locf_focb, x, 1L, set)
-na_focb <- function(x, ph1, ph2, set = FALSE) .Call(C_na_locf_focb, x, 2L, set)
+na_locf <- function(x, set = FALSE) .Call(C_na_locf, x, set)
+na_focb <- function(x, set = FALSE) .Call(C_na_focb, x, set)
+
+na_locf_ph <- function(x, ph1, ph2, set = FALSE) .Call(C_na_locf, x, set)
+na_focb_ph <- function(x, ph1, ph2, set = FALSE) .Call(C_na_focb, x, set)
+
 replace_na <- function(X, value = 0L, cols = NULL, set = FALSE, type = "const") {
-  FUN <- switch(type, const =, value = scv, locf = na_locf, focb = na_focb,
+  FUN <- switch(type, const =, value = scv, locf = na_locf_ph, focb = na_focb_ph,
                 stop("Unknown type:", type))
   if(set) {
     if(is.list(X)) {
