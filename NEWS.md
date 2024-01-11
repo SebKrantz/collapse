@@ -1,6 +1,6 @@
 # collapse 2.0.9
 
-* Improved right join such that ids of `x` instead of `y` are preserved. This is more consistent with the other joins, especially when id columns in `x` and `y` have different names or data types. 
+* Improved right join such that join column names of `x` instead of `y` are preserved. This is more consistent with the other joins when join columns in `x` and `y` have different names. 
 
 * More fluent and safe interplay of 'mask' and 'remove' options in `set_collapse()`. 
 
