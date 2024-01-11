@@ -1,5 +1,7 @@
 # collapse 2.0.9
 
+* Fixed a bug in weighted quantile estimation (`fquantile()`) that could lead to wrong/out-of-range estimates in some cases. Thanks @zander-prinsloo for reporting (#523). 
+
 * Improved right join such that join column names of `x` instead of `y` are preserved. This is more consistent with the other joins when join columns in `x` and `y` have different names. 
 
 * More fluent and safe interplay of 'mask' and 'remove' options in `set_collapse()`. 
