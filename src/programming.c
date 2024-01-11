@@ -725,6 +725,139 @@ SEXP replace_outliers(SEXP x, SEXP limits, SEXP value, SEXP single_limit, SEXP s
   return res;
 }
 
+void na_locf(SEXP x) {
+  int n = length(x);
+  switch (TYPEOF(x)) {
+  case INTSXP:
+  case LGLSXP:
+  {
+    int *data = INTEGER(x);
+    int last = data[0];
+    for (int i = 0; i < n; i++) {
+      if (data[i] == NA_INTEGER) {
+        data[i] = last;
+      } else {
+        last = data[i];
+      }
+    }
+    break;
+  }
+  case REALSXP:
+  {
+    double *data = REAL(x);
+    double last = data[0];
+    for (int i = 0; i < n; i++) {
+      if (ISNAN(data[i])) {
+        data[i] = last;
+      } else {
+        last = data[i];
+      }
+    }
+    break;
+  }
+  case STRSXP:
+  {
+    SEXP *data = STRING_PTR(x);
+    SEXP last = data[0];
+    for (int i = 0; i < n; i++) {
+      if (data[i] == NA_STRING) {
+        data[i] = last;
+      } else {
+        last = data[i];
+      }
+    }
+    break;
+  }
+  case VECSXP:
+  {
+    const SEXP *data = SEXPPTR_RO(x);
+    SEXP last = data[0];
+    for (int i = 0; i < n; i++) {
+      if (length(data[i]) == 0) {
+        SET_VECTOR_ELT(x, i, last);
+      } else {
+        last = data[i];
+      }
+    }
+    break;
+  }
+  default:
+    error("na_locf does not support type '%s'", type2char(TYPEOF(x)));
+  }
+}
+
+void na_focb(SEXP x) {
+  int n = length(x);
+  switch (TYPEOF(x)) {
+  case INTSXP:
+  case LGLSXP:
+  {
+    int *data = INTEGER(x);
+    int last = data[0];
+    for (int i = n; i--; ) {
+      if (data[i] == NA_INTEGER) {
+        data[i] = last;
+      } else {
+        last = data[i];
+      }
+    }
+    break;
+  }
+  case REALSXP:
+  {
+    double *data = REAL(x);
+    double last = data[0];
+    for (int i = n; i--; ) {
+      if (ISNAN(data[i])) {
+        data[i] = last;
+      } else {
+        last = data[i];
+      }
+    }
+    break;
+  }
+  case STRSXP:
+  {
+    SEXP *data = STRING_PTR(x);
+    SEXP last = data[0];
+    for (int i = n; i--; ) {
+      if (data[i] == NA_STRING) {
+        data[i] = last;
+      } else {
+        last = data[i];
+      }
+    }
+    break;
+  }
+  case VECSXP:
+  {
+    const SEXP *data = SEXPPTR_RO(x);
+    SEXP last = data[0];
+    for (int i = n; i--; ) {
+      if (length(data[i]) == 0) {
+        SET_VECTOR_ELT(x, i, last);
+      } else {
+        last = data[i];
+      }
+    }
+    break;
+  }
+  default:
+    error("na_focb does not support type '%s'", type2char(TYPEOF(x)));
+  }
+}
+
+SEXP na_locf_focb(SEXP x, SEXP Rtype, SEXP Rset) {
+  int copy = asLogical(Rset) == 0, type = asInteger(Rtype);
+  if(isMatrix(x)) warning("na_locf/focb do not yet have explicit support for matrices, i.e., they treat a matrix as a single vector. Use dapply(M, replace_na, type = 'locf') if column-wise processing is desired");
+  if(copy) x = PROTECT(shallow_duplicate(x));
+  if(type == 1) na_locf(x);
+  else if(type == 2) na_focb(x);
+  else error("Internal error, unknown locf/focb 'type': %d", type);
+  UNPROTECT(copy);
+  return x;
+}
+
 SEXP vtypes(SEXP x, SEXP isnum) {
   int tx = TYPEOF(x);
   if(tx != VECSXP) return ScalarInteger(tx);

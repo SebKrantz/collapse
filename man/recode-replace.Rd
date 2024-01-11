@@ -18,7 +18,7 @@ recode_num(X, \dots, default = NULL, missing = NULL, set = FALSE)
 recode_char(X, \dots, default = NULL, missing = NULL, regex = FALSE,
             ignore.case = FALSE, fixed = FALSE, set = FALSE)
 
-replace_na(X, value = 0, cols = NULL, set = FALSE)
+replace_na(X, value = 0, cols = NULL, set = FALSE, type = "const")
 
 replace_inf(X, value = NA, replace.nan = FALSE, set = FALSE)
 
@@ -33,6 +33,7 @@ replace_outliers(X, limits, value = NA,
 \item{default}{optional argument to specify a scalar value to replace non-matched elements with.}
 \item{missing}{optional argument to specify a scalar value to replace missing elements with. \emph{Note} that to increase efficiency this is done before the rest of the recoding i.e. the recoding is performed on data where missing values are filled!}
 \item{set}{logical. \code{TRUE} does replacements by reference (i.e. in-place modification of the data) and returns the result invisibly.}
+\item{type}{character. One of \code{"const"}, \code{"locf"} (last non-missing observation carried forward) or \code{"focb"} (first non-missing observation carried back). The latter two ignore \code{value}.}
 \item{regex}{logical. If \code{TRUE}, all recode-argument names are (sequentially) passed to \code{\link{grepl}} as a pattern to search \code{X}. All matches are replaced. \emph{Note} that \code{NA}'s are also matched as strings by \code{grepl}. }
 \item{value}{a single (scalar) value to replace matching elements with. In \code{replace_outliers} setting \code{value = "clip"} will replace outliers with the corresponding threshold values. See Examples.}
 \item{cols}{select columns to replace missing values in using a function, column names, indices or a logical vector.}
