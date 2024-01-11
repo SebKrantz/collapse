@@ -241,7 +241,7 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
 
 na_locf <- function(x, ph1, ph2, set = FALSE) .Call(C_na_locf_focb, x, 1L, set)
 na_focb <- function(x, ph1, ph2, set = FALSE) .Call(C_na_locf_focb, x, 2L, set)
-replace_na <- function(X, value = 0L, cols = NULL, set = FALSE, type = "value") {
+replace_na <- function(X, value = 0L, cols = NULL, set = FALSE, type = "const") {
   FUN <- switch(type, const =, value = scv, locf = na_locf, focb = na_focb,
                 stop("Unknown type:", type))
   if(set) {
