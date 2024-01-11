@@ -1,3 +1,13 @@
+# collapse 2.0.9
+
+* `replace_na()` now has a `type` argument which supports options `"locf"` and `"focb"` (default `"const"`), similar to `data.table::nafill`. The `replace_na()` implementation also supports character data and list-columns (`NULL/empty` elements). Thanks @BenoitLondon for suggesting (#489). 
+
+* Fixed a bug in weighted quantile estimation (`fquantile()`) that could lead to wrong/out-of-range estimates in some cases. Thanks @zander-prinsloo for reporting (#523). 
+
+* Improved right join such that join column names of `x` instead of `y` are preserved. This is more consistent with the other joins when join columns in `x` and `y` have different names. 
+
+* More fluent and safe interplay of 'mask' and 'remove' options in `set_collapse()`: it is now seamlessly possible to switch from any combination of 'mask' and 'remove' to any other combination without the need of setting them to `NULL` first. 
+
 # collapse 2.0.8
 
 * In `pivot(..., values = [multiple columns], labels = "new_labels_column", how = "wieder")`, if the columns selected through `values` already have variable labels, they are concatenated with the new labels provided through `"new_labels_col"` using `" - "` as a separator (similar to `names` where the separator is `"_"`). 

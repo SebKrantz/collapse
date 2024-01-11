@@ -45,18 +45,18 @@ do_collapse_mask <- function(clpns, mask) {
   if(any(mask == "n")) {
     unmask_special <- "n"
     mask <- mask[mask != "n"]
-    assign("n", clpns[["n_internal"]], envir = clpns)
+    if(is.null(clpns[["n"]])) assign("n", clpns[["n_internal"]], envir = clpns)
     assign(".FAST_STAT_FUN_EXT", c(.FAST_STAT_FUN_EXT, "n"), envir = clpns)
     assign(".FAST_STAT_FUN_POLD", c(.FAST_STAT_FUN_POLD, "n"), envir = clpns)
     assign(".FAST_FUN_MOPS", c(.FAST_FUN_MOPS, "n"), envir = clpns)
   }
   if(any(mask %in% c("qtab", "qtable", "table"))) {
-    assign("table", clpns[["qtab"]], envir = clpns)
+    if(is.null(clpns[["table"]])) assign("table", clpns[["qtab"]], envir = clpns)
     unmask_special <- c(unmask_special, "table")
     mask <- mask[!mask %in% c("qtab", "qtable", "table")]
   }
   if(any(mask == "%in%")) {
-    assign("%in%", clpns[["%fin%"]], envir = clpns)
+    if(is.null(clpns[["%in%"]])) assign("%in%", clpns[["%fin%"]], envir = clpns)
     unmask_special <- c(unmask_special, "%in%")
     mask <- mask[mask != "%in%"]
   }
@@ -64,7 +64,8 @@ do_collapse_mask <- function(clpns, mask) {
   if(!all(m <- startsWith(mask, "f"))) stop("All functions to me masked must start with 'f', except for 'n' and 'qtab'/'table'. You supplied: ", paste(mask[!m], collapse = ", "))
   # This now creates the additional functions (does the masking)
   unmask <- substr(mask, 2L, 100L)
-  for(i in seq_along(mask)) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
+  unmask_ind <- unmask %!iin% names(clpns) # Important: cannot change locked bindings in namespace!
+  for(i in unmask_ind) assign(unmask[i], clpns[[mask[i]]], envir = clpns)
   # Internals of namespaceExport(clpns, c(unmask, unmask_special)):
   export_names <- c(unmask, unmask_special)
   names(export_names) <- export_names
@@ -74,7 +75,7 @@ do_collapse_mask <- function(clpns, mask) {
 do_collapse_remove_core <- function(clpns, rmfun, exports = TRUE, namespace = TRUE) { # exports = FALSE in .onLoad, because exports not defined yet
   if(exports) {
     clpns_exports <- .getNamespaceInfo(clpns, "exports")
-    ckmatch(rmfun, names(clpns_exports), e = "Unknown functions to be removed:")
+    rmfun <- rmfun[rmfun %in% names(clpns_exports)] # ckmatch(rmfun, names(clpns_exports), e = "Unknown functions to be removed:")
   }
   if(any(tmp <- .FAST_STAT_FUN_EXT %in% rmfun)) assign(".FAST_STAT_FUN_EXT", .FAST_STAT_FUN_EXT[!tmp], envir = clpns)
   if(any(tmp <- .FAST_STAT_FUN_POLD %in% rmfun)) assign(".FAST_STAT_FUN_POLD", .FAST_STAT_FUN_POLD[!tmp], envir = clpns)
@@ -107,8 +108,10 @@ do_collapse_unmask <- function(clpns) {
 do_collapse_restore_exports <- function(clpns) {
   clpns_exports <- .getNamespaceInfo(clpns, "exports")
   missing <- fsetdiff(.COLLAPSE_ALL_EXPORTS, names(clpns_exports))
+  if(length(missing)) {
   names(missing) <- missing
   list2env(as.list(missing), clpns_exports) # = namespaceExport(clpns, missing)
+  }
 }
 
 

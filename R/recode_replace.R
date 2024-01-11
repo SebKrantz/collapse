@@ -238,31 +238,36 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
   return(if(set) invisible(res) else res)
 }
 
-replace_na <- function(X, value = 0L, cols = NULL, set = FALSE) {
+
+na_locf <- function(x, ph1, ph2, set = FALSE) .Call(C_na_locf_focb, x, 1L, set)
+na_focb <- function(x, ph1, ph2, set = FALSE) .Call(C_na_locf_focb, x, 2L, set)
+replace_na <- function(X, value = 0L, cols = NULL, set = FALSE, type = "const") {
+  FUN <- switch(type, const =, value = scv, locf = na_locf, focb = na_focb,
+                stop("Unknown type:", type))
   if(set) {
     if(is.list(X)) {
       if(is.null(cols)) {
-        lapply(unattrib(X), scv, NA, value, TRUE)
+        lapply(unattrib(X), FUN, NA, value, TRUE)
       } else if(is.function(cols)) {
-        lapply(unattrib(X), function(y) if(cols(y)) scv(y, NA, value, TRUE) else y)
+        lapply(unattrib(X), function(y) if(cols(y)) FUN(y, NA, value, TRUE) else y)
       } else {
         cols <- cols2int(cols, X, attr(X, "names"), FALSE)
-        lapply(unattrib(X)[cols], scv, NA, value, TRUE)
+        lapply(unattrib(X)[cols], FUN, NA, value, TRUE)
       }
-    } else scv(X, NA, value, TRUE) # `[<-`(X, is.na(X), value = value)
+    } else FUN(X, NA, value, TRUE) # `[<-`(X, is.na(X), value = value)
     return(invisible(X))
   }
   if(is.list(X)) {
-    if(is.null(cols)) return(condalc(duplAttributes(lapply(unattrib(X), scv, NA, value), X), inherits(X, "data.table"))) # function(y) `[<-`(y, is.na(y), value = value)
+    if(is.null(cols)) return(condalc(duplAttributes(lapply(unattrib(X), FUN, NA, value), X), inherits(X, "data.table"))) # function(y) `[<-`(y, is.na(y), value = value)
     if(is.function(cols)) return(condalc(duplAttributes(lapply(unattrib(X),
-      function(y) if(cols(y)) scv(y, NA, value) else y), X), inherits(X, "data.table")))
+      function(y) if(cols(y)) FUN(y, NA, value) else y), X), inherits(X, "data.table")))
     clx <- oldClass(X)
     oldClass(X) <- NULL
     cols <- cols2int(cols, X, names(X), FALSE)
-    X[cols] <- lapply(unattrib(X[cols]), scv, NA, value) #  function(y) `[<-`(y, is.na(y), value = value)
+    X[cols] <- lapply(unattrib(X[cols]), FUN, NA, value) #  function(y) `[<-`(y, is.na(y), value = value)
     return(condalc(`oldClass<-`(X, clx), any(clx == "data.table")))
   }
-  scv(X, NA, value) # `[<-`(X, is.na(X), value = value)
+  FUN(X, NA, value) # `[<-`(X, is.na(X), value = value)
 }
 
 replace_NA <- replace_na

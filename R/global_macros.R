@@ -41,22 +41,27 @@ set_collapse <- function(...) {
     .op$digits <- digits
   }
   if(any(mrl <- c("mask", "remove") %in% nam)) { # either can be NULL
-    clpns <- getNamespace("collapse")
-    .Call(C_unlock_collapse_namespace, clpns)
-    if(mrl[1L] && !identical(op_old$mask, opts$mask)) {
-      if(length(op_old$mask)) do_collapse_unmask(clpns)
+    maskl <- mrl[1L] && !identical(op_old$mask, opts$mask)
+    removel <- mrl[2L] && !identical(op_old$remove, opts$remove)
+    if(maskl || removel) {
+      clpns <- getNamespace("collapse")
+      .Call(C_unlock_collapse_namespace, clpns)
+      if(!maskl) opts$mask <- op_old$mask
+      # problem: option remove does not restore masked exports, e.g. when moving from remove = "between" to remove = NULL when mask = "all" (and not changing)
+      if(maskl && length(op_old$mask)) do_collapse_unmask(clpns) # Fixed in do_collapse_mask(): not overriding already masked function in namespace anymore
       if(length(opts$mask)) do_collapse_mask(clpns, opts$mask)
       .op$mask <- opts$mask
-    }
-    if(mrl[2L] && !identical(op_old$remove, opts$remove)) {
-      if(length(op_old$remove)) do_collapse_restore_exports(clpns)
-      if(length(opts$remove)) do_collapse_remove(clpns, opts$remove, namespace = FALSE)
-      .op$remove <- opts$remove
-    }
-    lockEnvironment(clpns, bindings = TRUE)
-    if(anyv(search(), "package:collapse")) {
-      detach("package:collapse")
-      suppressPackageStartupMessages(attachNamespace(clpns))
+      if(removel || (maskl && length(op_old$remove))) { # When changing mask setting also need to change remove again if specified
+        if(!removel) opts$remove <- op_old$remove
+        if(removel && length(op_old$remove)) do_collapse_restore_exports(clpns) # Also adjusted do_collapse_remove() to only remove existing funs
+        if(length(opts$remove)) do_collapse_remove(clpns, opts$remove, namespace = FALSE)
+        .op$remove <- opts$remove
+      }
+      lockEnvironment(clpns, bindings = TRUE)
+      if(anyv(search(), "package:collapse")) {
+        detach("package:collapse")
+        suppressPackageStartupMessages(attachNamespace(clpns))
+      }
     }
   }
   invisible(op_old)

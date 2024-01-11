@@ -230,12 +230,14 @@ join <- function(x, y,
     right = {
       x_res <- .Call(C_subsetDT, x, m, seq_along(x)[-ixon], if(count) attr(m, "N.nomatch") else TRUE)
       # if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(length(m))
+      y_on <- y[iyon]
+      names(y_on) <- xon
       if(keep.col.order) {
-        add_vars(x_res, pos = ixon) <- y[iyon]
+        add_vars(x_res, pos = ixon) <- y_on
         c(x_res, y[-iyon])
       } else {
         keep.col.order <- 2L # has global effects !!
-        c(y[iyon], x_res, y[-iyon])
+        c(y_on, x_res, y[-iyon])
       }
     },
     semi = { # = return rows in x that have matching values in y
