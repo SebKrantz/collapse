@@ -345,6 +345,8 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(allNA)
  export(missing_cases)
  export(na_rm)
+ export(na_locf)
+ export(na_focb)
  export(na_omit)
  export(na_insert)
  export(massign)
