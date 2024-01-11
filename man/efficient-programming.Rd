@@ -27,6 +27,8 @@
 \alias{fdim}
 \alias{missing_cases}
 \alias{na_rm}
+\alias{na_locf}
+\alias{na_focb}
 \alias{na_omit}
 \alias{na_insert}
 \alias{seq_row}
@@ -61,8 +63,9 @@ X \%+=\% V                    # Infix for setop(X, "+", V). See also Note (2)
 X \%-=\% V                    # Infix for setop(X, "-", V). See also Note (2)
 X \%*=\% V                    # Infix for setop(X, "*", V). See also Note (2)
 X \%/=\% V                    # Infix for setop(X, "/", V). See also Note (2)
-na_rm(x)                    # Fast: if(anyNA(x)) x[!is.na(x)] else x,
-                            # also removes NULL / empty elements from list
+na_rm(x)                    # Fast: if(anyNA(x)) x[!is.na(x)] else x, last
+na_locf(x, set = FALSE)     # obs. carried forward and first obs. carried back.
+na_focb(x, set = FALSE)     # (by reference). These also support lists (NULL/empty)
 na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
         na.attr = FALSE,    # can use selected columns to check, attach indices,
         prop = 0, ...)      # and remove cases with a proportion of values missing
@@ -88,6 +91,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{x, v}{a (atomic) vector or matrix (\code{na_rm} also supports lists).}
   \item{value}{a single value of any (atomic) vector type. For \code{whichv} it can also be a \code{length(x)} vector.}
   \item{invert}{logical. \code{TRUE} considers elements \code{x != value}.}
+  \item{set}{logical. \code{TRUE} transforms \code{x} by reference.}
   \item{simplify}{logical. If \code{value} is a length-1 atomic vector, \code{alloc()} with \code{simplify = TRUE} returns a length-n atomic vector. If \code{simplify = FALSE}, the result is always a list.}
   \item{vind1}{logical. If \code{length(v) == 1L}, setting \code{vind1 = TRUE} will interpret \code{v} as an index, rather than a value to search and replace.}
   \item{xlist}{logical. If \code{X} is a list, the default is to treat it like a data frame and replace rows. Setting \code{xlist = TRUE} will treat \code{X} and its replacement \code{R} like 1-dimensional list vectors.}

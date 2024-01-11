@@ -1,6 +1,6 @@
 # collapse 2.0.9
 
-* `replace_na()` now has a `type` argument which supports options `"locf"` and `"focb"` (default `"const"`), similar to `data.table::nafill`. The `replace_na()` implementation also supports character data and list-columns (`NULL/empty` elements). Thanks @BenoitLondon for suggesting (#489). 
+* Added functions `na_locf()` and `na_focb()` for fast basic C implementations of these procedures (optionally by reference). `replace_na()` now also has a `type` argument which supports options `"locf"` and `"focb"` (default `"const"`), similar to `data.table::nafill`. The implementation also supports character data and list-columns (`NULL/empty` elements). Thanks @BenoitLondon for suggesting (#489). I note that `na_locf()` exists in some other packages (such as *imputeTS*) where it is implemented in R and has additional options. Users should utilize the flexible namespace i.e. `set_collapse(remove = "na_locf")` to deal with this. 
 
 * Fixed a bug in weighted quantile estimation (`fquantile()`) that could lead to wrong/out-of-range estimates in some cases. Thanks @zander-prinsloo for reporting (#523). 
 
