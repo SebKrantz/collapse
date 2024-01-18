@@ -35,10 +35,10 @@ fmedian(x, \dots)
 \method{fmedian}{data.frame}(x, \dots, ties = "mean")
 
 \method{fnth}{grouped_df}(x, n = 0.5, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
+     use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, stub = .op[["stub"]],
      ties = "q7", nthreads = .op[["nthreads"]], \dots)
 \method{fmedian}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-        use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE,
+        use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, stub = .op[["stub"]],
         ties = "mean", nthreads = .op[["nthreads"]], \dots)
 
 }
@@ -78,6 +78,8 @@ fmedian(x, \dots)
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
 \item{keep.w}{\emph{grouped_df method:} Logical. Retain \code{sum} of weighting variable after computation (if contained in \code{grouped_df}).}
+
+\item{stub}{character. If \code{keep.w = TRUE} and \code{stub = TRUE} (default), the summed weights column is prefixed by \code{"sum."}. Users can specify a different prefix through this argument, or set it to \code{FALSE} to avoid prefixing.}
 
 \item{\dots}{for \code{fmedian}: further arguments passed to \code{fnth} (apart from \code{n}). If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly.}
 

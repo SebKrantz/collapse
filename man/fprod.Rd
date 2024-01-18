@@ -21,7 +21,8 @@ fprod(x, \dots)
       use.g.names = TRUE, drop = TRUE, \dots)
 
 \method{fprod}{grouped_df}(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]],
-      use.g.names = FALSE, keep.group_vars = TRUE, keep.w = TRUE, \dots)
+      use.g.names = FALSE, keep.group_vars = TRUE,
+      keep.w = TRUE, stub = .op[["stub"]], \dots)
 }
 \arguments{
 \item{x}{a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').}
@@ -43,6 +44,8 @@ fprod(x, \dots)
 \item{keep.group_vars}{\emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation.}
 
 \item{keep.w}{\emph{grouped_df method:} Logical. Retain product of weighting variable after computation (if contained in \code{grouped_df}).}
+
+\item{stub}{character. If \code{keep.w = TRUE} and \code{stub = TRUE} (default), the weights column is prefixed by \code{"prod."}. Users can specify a different prefix through this argument, or set it to \code{FALSE} to avoid prefixing.}
 
 \item{\dots}{arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly.}
 }
