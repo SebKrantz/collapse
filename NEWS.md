@@ -1,3 +1,7 @@
+# collapse 2.0.9.9000
+
+* Added `stub = TRUE` argument to the *grouped_df* methods of *Fast Statistical Functions* supporting weights, to be able to remove or alter prefixes given to aggregated weights columns if `keep.w = TRUE`. Globally, users can set `st_collapse(stub = FALSE)` to disable this prefixing in all statistical functions and operators. 
+
 # collapse 2.0.9
 
 * Added functions `na_locf()` and `na_focb()` for fast basic C implementations of these procedures (optionally by reference). `replace_na()` now also has a `type` argument which supports options `"locf"` and `"focb"` (default `"const"`), similar to `data.table::nafill`. The implementation also supports character data and list-columns (`NULL/empty` elements). Thanks @BenoitLondon for suggesting (#489). I note that `na_locf()` exists in some other packages (such as *imputeTS*) where it is implemented in R and has additional options. Users should utilize the flexible namespace i.e. `set_collapse(remove = "na_locf")` to deal with this. 
