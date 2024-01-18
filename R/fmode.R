@@ -63,7 +63,7 @@ fmode.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], us
       if(any(gn %in% wn)) stop("Weights coincide with grouping variables!")
       gn <- c(gn, wn)
       if(keep.w) {
-        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), do_stub(stub, if(length(wsym) == 1L) wsym else deparse(wsym), "sum.")) else if(keep.group_vars)
+        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), do_stub(stub, if(length(wsym) == 1L) as.character(wsym) else deparse(wsym), "sum.")) else if(keep.group_vars)
           gn2 <- gn else sumw <- gn2 <- wn
       }
     }
