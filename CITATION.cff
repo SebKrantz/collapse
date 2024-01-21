@@ -8,7 +8,7 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.9
+version: 2.0.9.9000
 doi: 10.5281/zenodo.8433090
 abstract: A C/C++ based package for advanced data transformation and statistical computing
   in R that is extremely fast, class-agnostic, robust and programmer friendly. Core
@@ -38,13 +38,13 @@ preferred-citation:
     email: sebastian.krantz@graduateinstitute.ch
     orcid: https://orcid.org/0000-0001-6212-5229
   year: '2024'
-  notes: R package version 2.0.9
+  notes: R package version 2.0.9.9000
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2024-01-11'
+date-released: '2024-01-18'
 contact:
 - family-names: Krantz
   given-names: Sebastian
