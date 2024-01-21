@@ -78,7 +78,7 @@ fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.r
 fsd.list <- function(x, ...) fsd.data.frame(x, ...)
 
 fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
-                             keep.group_vars = TRUE, keep.w = TRUE, stable.algo = .op[["stable.algo"]], ...) {
+                             keep.group_vars = TRUE, keep.w = TRUE, stub = .op[["stub"]], stable.algo = .op[["stable.algo"]], ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   wsym <- substitute(w)
@@ -93,7 +93,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.
       if(any(gn %in% wn)) stop("Weights coincide with grouping variables!")
       gn <- c(gn, wn)
       if(keep.w) {
-        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", if(length(wsym) == 1L) wsym else deparse(wsym))) else if(keep.group_vars)
+        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), do_stub(stub, if(length(wsym) == 1L) as.character(wsym) else deparse(wsym), "sum.")) else if(keep.group_vars)
           gn2 <- gn else sumw <- gn2 <- wn
       }
     }
@@ -207,7 +207,7 @@ fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.
 fvar.list <- function(x, ...) fvar.data.frame(x, ...)
 
 fvar.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
-                           keep.group_vars = TRUE, keep.w = TRUE, stable.algo = .op[["stable.algo"]], ...) {
+                           keep.group_vars = TRUE, keep.w = TRUE, stub = .op[["stub"]], stable.algo = .op[["stable.algo"]], ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   wsym <- substitute(w)
@@ -222,7 +222,7 @@ fvar.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use
       if(any(gn %in% wn)) stop("Weights coincide with grouping variables!")
       gn <- c(gn, wn)
       if(keep.w) {
-        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", if(length(wsym) == 1L) wsym else deparse(wsym))) else if(keep.group_vars)
+        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), do_stub(stub, if(length(wsym) == 1L) as.character(wsym) else deparse(wsym), "sum.")) else if(keep.group_vars)
           gn2 <- gn else sumw <- gn2 <- wn
       }
     }

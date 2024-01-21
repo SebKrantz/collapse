@@ -26,7 +26,7 @@ FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 ## S3 method for class 'grouped_df'
 FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
     use.g.names = FALSE, keep.group_vars = TRUE,
-    [keep.w = TRUE,] [nthreads = 1L,] ...)
+    [keep.w = TRUE,] [stub = TRUE,] [nthreads = 1L,] ...)
 }
 }
 \section{Arguments}{
@@ -51,6 +51,8 @@ FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 \code{keep.group_vars}  \tab \tab \emph{grouped_df method:} Logical. \code{FALSE} removes grouping variables after computation. By default grouping variables are added, even if not present in the grouped_df. \cr
 
 \code{keep.w} \tab \tab \emph{grouped_df method:} Logical. \code{TRUE} (default) also aggregates weights and saves them in a column, \code{FALSE} removes weighting variable after computation (if contained in \code{grouped_df}). \cr
+
+\code{stub} \tab \tab \emph{grouped_df method:} Character. If \code{keep.w = TRUE} and \code{stub = TRUE} (default), the aggregated weights column is prefixed by the name of the aggregation function (mostly \code{"sum."}). Users can specify a different prefix through this argument, or set it to \code{FALSE} to avoid prefixing.\cr
 
 \code{\dots} \tab \tab arguments to be passed to or from other methods. If \code{TRA} is used, passing \code{set = TRUE} will transform data by reference and return the result invisibly (except for the grouped_df method which always returns visible output). \cr
 }

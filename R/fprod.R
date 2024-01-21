@@ -77,7 +77,7 @@ fprod.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na
 fprod.list <- function(x, ...) fprod.data.frame(x, ...)
 
 fprod.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
-                            keep.group_vars = TRUE, keep.w = TRUE, ...) {
+                            keep.group_vars = TRUE, keep.w = TRUE, stub = .op[["stub"]], ...) {
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
   wsym <- substitute(w)
@@ -92,7 +92,7 @@ fprod.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], us
       if(any(gn %in% wn)) stop("Weights coincide with grouping variables!")
       gn <- c(gn, wn)
       if(keep.w) {
-        if(nTRAl) prodw <- `names<-`(list(.Call(C_fprod,w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("prod.", if(length(wsym) == 1L) wsym else deparse(wsym))) else if(keep.group_vars)
+        if(nTRAl) prodw <- `names<-`(list(.Call(C_fprod,w,g[[1L]],g[[2L]],NULL,na.rm)), do_stub(stub, if(length(wsym) == 1L) as.character(wsym) else deparse(wsym), "prod.")) else if(keep.group_vars)
           gn2 <- gn else prodw <- gn2 <- wn
       }
     }

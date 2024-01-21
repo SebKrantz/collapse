@@ -43,7 +43,7 @@ fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = 
 fnth.list <- function(x, ...) fnth.data.frame(x, ...)
 
 fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
-                             keep.group_vars = TRUE, keep.w = TRUE, ties = "q7", nthreads = .op[["nthreads"]], ...) {
+                             keep.group_vars = TRUE, keep.w = TRUE, stub = .op[["stub"]], ties = "q7", nthreads = .op[["nthreads"]], ...) {
 
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
@@ -59,7 +59,7 @@ fnth.grouped_df <- function(x, n = 0.5, w = NULL, TRA = NULL, na.rm = .op[["na.r
       if(any(gn %in% wn)) stop("Weights coincide with grouping variables!")
       gn <- c(gn, wn)
       if(keep.w) {
-        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", if(length(wsym) == 1L) wsym else deparse(wsym))) else if(keep.group_vars)
+        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), do_stub(stub, if(length(wsym) == 1L) as.character(wsym) else deparse(wsym), "sum.")) else if(keep.group_vars)
           gn2 <- gn else sumw <- gn2 <- wn
       }
     }
@@ -110,7 +110,7 @@ fmedian.data.frame <- function(x, ..., ties = "mean")
 fmedian.list <- fmedian.data.frame
 
 fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = FALSE,
-                            keep.group_vars = TRUE, keep.w = TRUE, ties = "mean", nthreads = .op[["nthreads"]], ...) {
+                            keep.group_vars = TRUE, keep.w = TRUE, stub = .op[["stub"]], ties = "mean", nthreads = .op[["nthreads"]], ...) {
 
   g <- GRP.grouped_df(x, call = FALSE)
   if(is.null(g[[4L]])) keep.group_vars <- FALSE
@@ -126,7 +126,7 @@ fmedian.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], 
       if(any(gn %in% wn)) stop("Weights coincide with grouping variables!")
       gn <- c(gn, wn)
       if(keep.w) {
-        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), paste0("sum.", if(length(wsym) == 1L) wsym else deparse(wsym))) else if(keep.group_vars)
+        if(nTRAl) sumw <- `names<-`(list(fsumC(w,g[[1L]],g[[2L]],NULL,na.rm)), do_stub(stub, if(length(wsym) == 1L) as.character(wsym) else deparse(wsym), "sum.")) else if(keep.group_vars)
           gn2 <- gn else sumw <- gn2 <- wn
       }
     }
