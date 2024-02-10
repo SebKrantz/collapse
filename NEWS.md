@@ -1,6 +1,15 @@
-# collapse 2.0.9.9000
+# collapse 2.0.10
+
+* Fixed a bug in `fmatch()` when matching integer vectors to factors. This also affected `join()`. 
+
+* Improved cross-platform compatibility of OpenMP flags. Thanks @kalibera. 
 
 * Added `stub = TRUE` argument to the *grouped_df* methods of *Fast Statistical Functions* supporting weights, to be able to remove or alter prefixes given to aggregated weights columns if `keep.w = TRUE`. Globally, users can set `st_collapse(stub = FALSE)` to disable this prefixing in all statistical functions and operators. 
+
+<!-- fixest error: sent PR!
+HDB(mtcars, mpg ~ carb*qF(cyl) + qF(vs) + qF(am))
+-> not the same as fitted(lm(mpg ~ carb*qF(cyl) + qF(vs) + qF(am), mtcars))
+-->
 
 # collapse 2.0.9
 
