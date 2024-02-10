@@ -38,7 +38,7 @@
   Small Functions to Make R Programming More Efficient
 }
 \description{
- A small set of functions to addresses some common inefficiencies in R, such as the creation of logical vectors to compare quantities, unnecessary copies of objects in elementary mathematical or subsetting operations, obtaining information about objects (esp. data frames), or dealing with missing values. % It makes sense to use them when dealing with > 10,000 obs. on modern computers.
+ A small set of functions to address some common inefficiencies in R, such as the creation of logical vectors to compare quantities, unnecessary copies of objects in elementary mathematical or subsetting operations, obtaining information about objects (esp. data frames), or dealing with missing values. % It makes sense to use them when dealing with > 10,000 obs. on modern computers.
 }
 \usage{
 anyv(x, value)              # Faster than any(x == value). See also kit::panyv()
@@ -71,7 +71,7 @@ na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
         prop = 0, ...)      # and remove cases with a proportion of values missing
 na_insert(X, prop = 0.1,    # Insert missing values at random
           value = NA)
-missing_cases(X, cols=NULL, # The oposite of complete.cases(), faster for DF's.
+missing_cases(X, cols=NULL, # The opposite of complete.cases(), faster for DF's.
   prop = 0, count = FALSE)  # See also kit::panyNA(), kit::pallNA(), kit::pcountNA()
 vlengths(X, use.names=TRUE) # Faster lengths() and nchar() (in C, no method dispatch)
 vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
