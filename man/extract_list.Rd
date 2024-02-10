@@ -59,7 +59,7 @@ has_elem(l, elem, recursive = TRUE, DF.as.list = FALSE, regex = FALSE, \dots)
   \item{recursive}{logical. Should the list search be recursive (i.e. go though all the elements), or just at the top-level?}
   \item{DF.as.list}{logical. \code{TRUE} treats data frames like (sub-)lists; \code{FALSE} like atomic elements.}
   \item{keep.tree}{logical. \code{TRUE} always returns the entire list tree leading up to all matched results, while \code{FALSE} drops the top-level part of the tree if possible.}
-  \item{keep.class}{logical. For objects: should the class be retained?}
+  \item{keep.class}{logical. For list-based objects: should the class be retained? This only works if these objects have a \code{[} method that retains the class.}
   \item{regex}{logical. Should regular expression search be used on the list names, or only exact matches?}
   \item{invert}{logical. Invert search i.e. exclude matched elements from the list?}
   \item{\dots}{further arguments to \code{grep} (if \code{regex = TRUE}).}

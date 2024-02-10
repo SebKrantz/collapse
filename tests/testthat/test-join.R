@@ -128,4 +128,18 @@ test_that("sort merge join works well with multiple vectors", {
   }
 })
 
+
+# Testing misc. issues: factors with integers and doubles
+d1 = mtcars |> fcompute(v1 = mpg, g = qF(seq_len(32)+100))
+d2 = mtcars |> fcompute(v2 = mpg, g = seq_len(32)+100L)
+
+expect_true(all_identical(with(join(d1, d2, verbose = 0), list(v1, v2))))
+expect_true(all_identical(with(join(d1, d2, verbose = 0, sort = TRUE), list(v1, v2))))
+
+d2 = mtcars |> fcompute(v2 = mpg, g = seq_len(32)+100)
+
+expect_true(all_identical(with(join(d1, d2, verbose = 0), list(v1, v2))))
+expect_true(all_identical(with(join(d1, d2, verbose = 0, sort = TRUE), list(v1, v2))))
+
+
 set_collapse(opts)
