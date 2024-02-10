@@ -23,12 +23,15 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     }
   }
   int tx = TYPEOF(x), tt = TYPEOF(table);
+  // factor is between logical and integer
+  if(tx == INTSXP && isFactor(x)) tx -= 1;
+  if(tt == INTSXP && isFactor(table)) tt -= 1;
   if(tx == LGLSXP) tx = INTSXP;
   if(tt == LGLSXP) tt = INTSXP;
 
   if(tx != tt) {
-    if(tx < tt) { // table could be double, complex, character....
-      if(isFactor(x)) { // For factors there is a shorthand: just match the levels against table...
+    if(tx < tt) { // table could be integer, double, complex, character....
+      if(tx == INTSXP-1) { // For factors there is a shorthand: just match the levels against table...
         PROTECT(table = match_single(getAttrib(x, R_LevelsSymbol), table, ScalarInteger(nmv))); ++nprotect;
         int *pans = INTEGER(ans), *pt = INTEGER(table)-1, *px = INTEGER(x);
         if(inherits(x, "na.included")) {
@@ -43,16 +46,16 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       }
       PROTECT(x	= coerceVector(x,	tt)); ++nprotect; // Coercing to largest common type
     } else { // x has a larger type than table...
-      if(isFactor(table)) { // There could be a complicated shorthand involving matching x against the levels and then replacing this by the first occurence index
+      if(tt == INTSXP-1) { // There could be a complicated shorthand involving matching x against the levels and then replacing this by the first occurence index
         PROTECT(table = asCharacterFactor(table)); ++nprotect;
-        if(tx!= STRSXP) { // Worst case: need to coerce x as well to make the match
+        if(tx != STRSXP) { // Worst case: need to coerce x as well to make the match
           PROTECT(x = coerceVector(x, STRSXP)); ++nprotect;
         }
       } else {
         PROTECT(table = coerceVector(table,	tx)); ++nprotect;
       }
     }
-  } else if(isFactor(x) && isFactor(table)) {
+  } else if(tx == INTSXP-1 && tt == INTSXP-1) { // Both factors
     if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
       // This is the inefficient way: coercing both to character
       // PROTECT(x = asCharacterFactor(x)); ++nprotect;
@@ -283,21 +286,25 @@ SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
   x = VECTOR_ELT(out, 0);
   table = VECTOR_ELT(out, 1);
   int tx = TYPEOF(x), tt = TYPEOF(table);
+  if(tx == INTSXP && isFactor(x)) tx -= 1;
+  if(tt == INTSXP && isFactor(table)) tt -= 1;
   if(tx == LGLSXP) tx = INTSXP;
   if(tt == LGLSXP) tt = INTSXP;
+
+
   if(tx != tt) {
     if(tx > tt) {
-      if(isFactor(table)) { // TODO: could implement as in single case..
+      if(tt == INTSXP-1) { // TODO: could implement as in single case..
         SET_VECTOR_ELT(out, 1, asCharacterFactor(table));
         if(tx != STRSXP) SET_VECTOR_ELT(out, 0, coerceVector(x, STRSXP));
       } else SET_VECTOR_ELT(out, 1, coerceVector(table, tx));
     } else {
-      if(isFactor(x)) { // TODO: could implement as in single case..
+      if(tx == INTSXP-1) { // TODO: could implement as in single case..
         SET_VECTOR_ELT(out, 0, asCharacterFactor(x));
         if(tt != STRSXP) SET_VECTOR_ELT(out, 1, coerceVector(table, STRSXP));
       } else SET_VECTOR_ELT(out, 0, coerceVector(x, tt));
     }
-  } else if(isFactor(x) && isFactor(table)) {
+  } else if(tx == INTSXP-1 && tt == INTSXP-1) { // Both factors
     if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
       SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
       SEXP table_new;
@@ -469,7 +476,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         tpv.d = ptr[i];
-        id = HASH((64988430769U * pti[i]) + tpv.u[0] + tpv.u[1], K);
+        id = HASH((64988430769U * pti[i]) + tpv.u[0] + tpv.u[1], K); // TODO: improve!
         while(h[id]) {
           if(pti[h[id]-1] == pti[i] && REQUAL(ptr[h[id]-1], ptr[i])) goto irbl;
           if(++id >= M) id = 0;
@@ -480,7 +487,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
         tpv.d = pxr[i];
-        id = HASH((64988430769U * pxi[i]) + tpv.u[0] + tpv.u[1], K);
+        id = HASH((64988430769U * pxi[i]) + tpv.u[0] + tpv.u[1], K); // TODO: improve!
         while(h[id]) {
           if(pti[h[id]-1] == pxi[i] && REQUAL(ptr[h[id]-1], pxr[i])) {
             pans[i] = h[id];
@@ -531,7 +538,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        id = HASH(pti[i] * ((intptr_t)pts[i] & 0xffffffff), K);
+        id = HASH(pti[i] * ((intptr_t)pts[i] & 0xffffffff), K); // TODO: improve!
         while(h[id]) {
           if(pts[h[id]-1] == pts[i] && pti[h[id]-1] == pti[i]) goto isbl;
           if(++id >= M) id = 0;
