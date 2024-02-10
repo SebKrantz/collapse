@@ -65,6 +65,7 @@ getfl <- function(mf) {
 
     # Any interactions involving factors
     if(any(fctinteract)) {
+      modelterms <- tl[!fctterms & tl %in% names(which(rowSums(factors) <= 1))]
       single <- rowSums(factors[facts, , drop = FALSE] > 0L) == 1 # These are either single factors or factors only appearing inside an interaction...
       factors <- factors[, fctinteract, drop = FALSE]
       nointeract <- frowSums(factors[facts, , drop = FALSE]) == 0  # These are factors not appearing in interactions
@@ -144,8 +145,10 @@ getfl <- function(mf) {
         attr(fctdat, "slope.flag") <- slflag  # c(integer(length(fctdat)-length(intslope)), lengths(slopes)) # what about other slopes (not poly??)
       }
       # drop unused factor levels ??
-    } else fctdat <- mf[facts]
-    modelterms <- tl[!fctterms]
+    } else {
+      modelterms <- tl[!fctterms]
+      fctdat <- mf[facts]
+    }
     slflag <- attr(fctdat, "slope.flag")
     if(length(modelterms)) { # Intercept only needed if facts with only negative slope flag...
       form <- paste0(if(is.null(slflag) || any(slflag > 0L)) "~ -1 + " else "~ ", paste(modelterms, collapse = " + "))
