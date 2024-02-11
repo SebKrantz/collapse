@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,16 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.9" id="collapse-209">collapse 2.0.9<a class="anchor" aria-label="anchor" href="#collapse-209"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.10" id="collapse-2010">collapse 2.0.10<a class="anchor" aria-label="anchor" href="#collapse-2010"></a></h2>
+<ul><li><p>Fixed a bug in <code><a href="../reference/fmatch.html">fmatch()</a></code> when matching integer vectors to factors. This also affected <code><a href="../reference/join.html">join()</a></code>.</p></li>
+<li><p>Improved cross-platform compatibility of OpenMP flags. Thanks <a href="https://github.com/kalibera" class="external-link">@kalibera</a>.</p></li>
+<li><p>Added <code>stub = TRUE</code> argument to the <em>grouped_df</em> methods of <em>Fast Statistical Functions</em> supporting weights, to be able to remove or alter prefixes given to aggregated weights columns if <code>keep.w = TRUE</code>. Globally, users can set <code>st_collapse(stub = FALSE)</code> to disable this prefixing in all statistical functions and operators.</p></li>
+</ul><!-- fixest error: sent PR!
+HDB(mtcars, mpg ~ carb*qF(cyl) + qF(vs) + qF(am))
+-> not the same as fitted(lm(mpg ~ carb*qF(cyl) + qF(vs) + qF(am), mtcars))
+--></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.9" id="collapse-209">collapse 2.0.9<a class="anchor" aria-label="anchor" href="#collapse-209"></a></h2><p class="text-muted">CRAN release: 2024-01-11</p>
 <ul><li><p>Added functions <code><a href="../reference/efficient-programming.html">na_locf()</a></code> and <code><a href="../reference/efficient-programming.html">na_focb()</a></code> for fast basic C implementations of these procedures (optionally by reference). <code><a href="../reference/recode-replace.html">replace_na()</a></code> now also has a <code>type</code> argument which supports options <code>"locf"</code> and <code>"focb"</code> (default <code>"const"</code>), similar to <code><a href="https://rdatatable.gitlab.io/data.table/reference/nafill.html" class="external-link">data.table::nafill</a></code>. The implementation also supports character data and list-columns (<code>NULL/empty</code> elements). Thanks <a href="https://github.com/BenoitLondon" class="external-link">@BenoitLondon</a> for suggesting (<a href="https://github.com/SebKrantz/collapse/issues/489" class="external-link">#489</a>). I note that <code><a href="../reference/efficient-programming.html">na_locf()</a></code> exists in some other packages (such as <em>imputeTS</em>) where it is implemented in R and has additional options. Users should utilize the flexible namespace i.e. <code>set_collapse(remove = "na_locf")</code> to deal with this.</p></li>
 <li><p>Fixed a bug in weighted quantile estimation (<code><a href="../reference/fquantile.html">fquantile()</a></code>) that could lead to wrong/out-of-range estimates in some cases. Thanks <a href="https://github.com/zander-prinsloo" class="external-link">@zander-prinsloo</a> for reporting (<a href="https://github.com/SebKrantz/collapse/issues/523" class="external-link">#523</a>).</p></li>
 <li><p>Improved right join such that join column names of <code>x</code> instead of <code>y</code> are preserved. This is more consistent with the other joins when join columns in <code>x</code> and <code>y</code> have different names.</p></li>

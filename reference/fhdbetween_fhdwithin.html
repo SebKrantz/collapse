@@ -12,7 +12,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -293,12 +293,12 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 -16.317261  0.0002597179</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">HDW</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">year</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># Country specific cubic trends</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    HDW.PCGDP   HDW.LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   2.914335  0.013684567</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  10.700179  0.001758541</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -10.597683 -0.011406202</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  -4.786569 -0.021447054</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -22.047963 -0.026002000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  -7.067991 -0.016287725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   8.885334  0.023614035</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  13.685446  0.006724458</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 -10.597857 -0.011405315</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  -6.279492 -0.023928535</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 -22.048660 -0.025998452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  -8.561088 -0.018768318</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># More complex examples</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.mpg</span> <span class="op">~</span> <span class="va">HDW.hp</span>, data <span class="op">=</span> <span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">:</span><span class="va">carb</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -309,7 +309,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)       HDW.hp  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -4.120e-17   -2.366e-02  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -1.198e-16   -3.265e-02  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span><span class="op">:</span><span class="va">carb</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -334,7 +334,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)       HDW.hp  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    6.25e-16    -2.74e-02  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -1.198e-16   -3.265e-02  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">wt</span><span class="op">:</span><span class="va">gear</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -380,7 +380,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)       HDW.hp  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0.006219    -0.059501  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -1.151e-15   -4.725e-02  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">cyl</span><span class="op">*</span><span class="va">carb</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">drat</span>,<span class="fl">2</span><span class="op">)</span>, data <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

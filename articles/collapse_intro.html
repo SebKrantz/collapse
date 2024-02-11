@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1170,9 +1170,9 @@ expressions involving variable names:</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>fselect <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span>,</span>
 <span>               select <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#     expr      min        lq       mean   median        uq      max neval</span></span>
-<span><span class="co">#  fselect    6.098    7.8025   11.96296   10.436   14.9165   34.218   100</span></span>
-<span><span class="co">#   select 2072.781 2167.4305 2356.50026 2240.008 2343.6550 6987.091   100</span></span></code></pre></div>
+<span><span class="co">#     expr      min       lq       mean   median        uq      max neval</span></span>
+<span><span class="co">#  fselect    6.519    8.393   12.71575   10.896   15.3145   83.561   100</span></span>
+<span><span class="co">#   select 1466.604 1495.048 1604.09636 1544.620 1583.1425 6326.502   100</span></span></code></pre></div>
 <p>in contrast to <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code>, <code>fselect</code> has a
 replacement method</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
@@ -1338,15 +1338,15 @@ preserves all attributes of subsetted columns:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span>, </span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr     min       lq     mean   median       uq       max neval</span></span>
-<span><span class="co">#      base 224.269 229.6550 272.6105 233.8005 338.6265   463.375   100</span></span>
-<span><span class="co">#  collapse  64.080  66.5805 235.9543  68.9640  78.1085 15632.000   100</span></span>
+<span><span class="co">#      expr     min      lq     mean   median       uq       max neval</span></span>
+<span><span class="co">#      base 241.104 249.042 301.9264 272.1335 353.8545   389.421   100</span></span>
+<span><span class="co">#  collapse  66.405  76.996 242.4907 113.8245 119.5260 14131.503   100</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                     expr    min      lq     mean  median      uq     max neval</span></span>
-<span><span class="co">#      GGDC10S[1:10, 1:10] 78.666 80.3235 85.52720 80.8815 81.8095 193.610   100</span></span>
-<span><span class="co">#  ss(GGDC10S, 1:10, 1:10)  3.719  3.9770  4.72753  4.8950  5.2285  12.496   100</span></span></code></pre></div>
+<span><span class="co">#                     expr    min     lq     mean median      uq     max neval</span></span>
+<span><span class="co">#      GGDC10S[1:10, 1:10] 85.193 86.453 87.95780 86.967 87.5095 142.920   100</span></span>
+<span><span class="co">#  ss(GGDC10S, 1:10, 1:10)  3.900  4.266  5.02323  5.235  5.4915  13.705   100</span></span></code></pre></div>
 <p>like <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">base::subset</a></code>, <code>fsubset</code> is S3 generic
 with methods for vectors, matrices and data frames. For certain classes
 such as factors, <code>fsubset.default</code> also improves upon
@@ -1369,9 +1369,9 @@ indicate descending sort.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">-</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, </span>
 <span>               dplyr <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">Variable</span><span class="op">)</span>, <span class="va">Country</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr      min        lq      mean  median        uq       max neval</span></span>
-<span><span class="co">#  collapse  343.261  365.9525  385.7481  379.35  395.0355   532.542   100</span></span>
-<span><span class="co">#     dplyr 2842.815 2989.5945 3434.8870 3028.39 3184.7200 12797.798   100</span></span></code></pre></div>
+<span><span class="co">#      expr      min       lq      mean    median        uq       max neval</span></span>
+<span><span class="co">#  collapse  259.781  370.587  388.2981  380.6795  402.5795   531.549   100</span></span>
+<span><span class="co">#     dplyr 2964.267 3005.919 3396.6901 3036.4005 3096.8975 11515.844   100</span></span></code></pre></div>
 <p>In contrast to <code><a href="https://rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">data.table::setorder</a></code>,
 <code>roworder</code> creates a copy of the data frame (unless data are
 already sorted). If this copy is not required,
@@ -1611,9 +1611,9 @@ argument are preserved:</p>
 <span><span class="co"># [1] TRUE</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">wlddev</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                      expr    min      lq     mean  median      uq    max neval</span></span>
-<span><span class="co">#     cbind(wlddev, wlddev) 31.774 32.5895 34.02625 33.0630 33.7610 84.549   100</span></span>
-<span><span class="co">#  add_vars(wlddev, wlddev)  7.741  8.1465  9.35747  9.1305  9.4935 25.487   100</span></span></code></pre></div>
+<span><span class="co">#                      expr    min      lq     mean  median      uq     max neval</span></span>
+<span><span class="co">#     cbind(wlddev, wlddev) 33.354 34.2320 37.60989 34.9245 35.8085 106.134   100</span></span>
+<span><span class="co">#  add_vars(wlddev, wlddev)  7.938  8.5285  9.90965  9.4345 10.1740  29.913   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="renaming-columns">2.6 Renaming Columns<a class="anchor" aria-label="anchor" href="#renaming-columns"></a>
@@ -1672,9 +1672,9 @@ and to facilitate the avoidance of piped `%>%` expressions. Needless to say pipe
 microbenchmark(standard = tfm(gv(wlddev, 9:12), ODA_GDP = ODA/PCGDP),
                piped = get_vars(wlddev, 9:12) %>% ftransform(ODA_GDP = ODA/PCGDP))
 # Unit: microseconds
-#      expr    min      lq     mean  median      uq     max neval
-#  standard 59.666 61.9395 72.85159 62.8515 69.3035 229.234   100
-#     piped 63.018 65.5535 77.70048 67.5650 79.2750 183.423   100
+#      expr    min      lq     mean median      uq     max neval
+#  standard 61.358 62.8045 66.76071 63.496 65.8685 215.382   100
+#     piped 64.470 66.2030 69.36406 67.111 68.7610 128.154   100
 ```
 -->
 </div>
@@ -1691,9 +1691,9 @@ attributes of the data frame itself.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="va">wlddev</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                             expr      min       lq      mean    median        uq      max neval</span></span>
-<span><span class="co">#  na_omit(wlddev, na.attr = TRUE)  124.453  149.647  238.2783  163.0215  174.6245 7080.907   100</span></span>
-<span><span class="co">#                  na.omit(wlddev) 1600.340 1637.109 2079.0429 1654.0000 1696.5505 9322.459   100</span></span></code></pre></div>
+<span><span class="co">#                             expr      min      lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  na_omit(wlddev, na.attr = TRUE)  133.184  142.97  231.191  152.258  165.845 7040.192   100</span></span>
+<span><span class="co">#                  na.omit(wlddev) 1549.573 1637.85 2094.994 1657.592 1697.463 9223.564   100</span></span></code></pre></div>
 <p>Another added feature is the removal of cases missing on certain
 columns only:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
@@ -1778,8 +1778,8 @@ lists of atomic objects). When called on a data frame,
 <code class="sourceCode R"><span><span class="co"># Efficient replacing missing values with 0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/collapse-renamed.html">replace_NA</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                    expr     min      lq     mean   median      uq      max neval</span></span>
-<span><span class="co">#  replace_NA(GGDC10S, 0) 284.777 322.165 415.0729 327.1545 338.442 8210.146   100</span></span>
+<span><span class="co">#                    expr     min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  replace_NA(GGDC10S, 0) 303.273 328.5765 416.6731 332.7885 343.8635 8135.793   100</span></span>
 <span></span>
 <span><span class="co"># Adding log-transformed sectoral data: Some NaN and Inf values generated</span></span>
 <span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">*</span><span class="fl">2</span><span class="op">-</span><span class="fl">5</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -1867,10 +1867,10 @@ to data.frame, <em>data.table</em> and <em>tibble</em> respectively.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span>, <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#                           expr     min       lq      mean   median       uq      max neval</span></span>
-<span><span class="co">#                    qDT(wlddev)   7.371   8.8825  11.39853  11.6770  13.4075   17.202   100</span></span>
-<span><span class="co">#            qDT(EuStockMarkets)  15.338  20.1525  83.58264  24.5500  30.7695 5793.395   100</span></span>
-<span><span class="co">#          as.data.table(wlddev) 216.946 496.8985 641.75537 508.4805 519.2500 7063.246   100</span></span>
-<span><span class="co">#  as.data.frame(EuStockMarkets) 145.299 156.8755 180.25641 175.3305 184.4605  592.899   100</span></span>
+<span><span class="co">#                    qDT(wlddev)   7.349   8.8280  11.73116  11.3680  13.4600   31.324   100</span></span>
+<span><span class="co">#            qDT(EuStockMarkets)  15.228  17.5115  81.57441  20.5975  23.4425 6074.599   100</span></span>
+<span><span class="co">#          as.data.table(wlddev) 218.221 490.2835 623.89038 500.1060 513.1410 6359.489   100</span></span>
+<span><span class="co">#  as.data.frame(EuStockMarkets) 143.074 148.5150 167.22609 165.7795 171.9755  680.161   100</span></span>
 <span></span>
 <span><span class="co"># Converting a time series to data.frame</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDF</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span></span>
@@ -1891,13 +1891,14 @@ data frame:</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This saves the row-names in a column named 'car'</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="st">"car"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#                  car  mpg cyl disp  hp drat    wt  qsec vs am gear carb</span></span>
-<span><span class="co"># 1:         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span></span>
-<span><span class="co"># 2:     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span></span>
-<span><span class="co"># 3:        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span></span>
-<span><span class="co"># 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span></span>
-<span><span class="co"># 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span></span>
-<span><span class="co"># 6:           Valiant 18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</span></span>
+<span><span class="co">#                  car   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb</span></span>
+<span><span class="co">#               &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;</span></span>
+<span><span class="co"># 1:         Mazda RX4  21.0     6   160   110  3.90 2.620 16.46     0     1     4     4</span></span>
+<span><span class="co"># 2:     Mazda RX4 Wag  21.0     6   160   110  3.90 2.875 17.02     0     1     4     4</span></span>
+<span><span class="co"># 3:        Datsun 710  22.8     4   108    93  3.85 2.320 18.61     1     1     4     1</span></span>
+<span><span class="co"># 4:    Hornet 4 Drive  21.4     6   258   110  3.08 3.215 19.44     1     0     3     1</span></span>
+<span><span class="co"># 5: Hornet Sportabout  18.7     8   360   175  3.15 3.440 17.02     0     0     3     2</span></span>
+<span><span class="co"># 6:           Valiant  18.1     6   225   105  2.76 3.460 20.22     1     0     3     1</span></span>
 <span></span>
 <span><span class="va">N_distinct</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span></span>
 <span><span class="va">N_distinct</span></span>
@@ -1922,18 +1923,18 @@ wise convert a matrix into a plain list, data.frame or
 <code class="sourceCode R"><span><span class="co"># This converts the matrix to a list of 1860 row-vectors of length 4.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                  expr     min       lq     mean  median       uq     max neval</span></span>
-<span><span class="co">#  mrtl(EuStockMarkets) 199.502 212.6925 220.3416 215.731 226.2175 287.436   100</span></span></code></pre></div>
+<span><span class="co">#                  expr     min      lq     mean  median      uq     max neval</span></span>
+<span><span class="co">#  mrtl(EuStockMarkets) 200.233 209.192 213.8451 211.926 214.319 312.001   100</span></span></code></pre></div>
 <p>For the reverse operation, <code>qM</code> converts vectors,
 higher-dimensional arrays, data frames and suitable lists to matrix.</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Note: kit::psum is the most efficient way to do this</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="fu">kit</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kit/man/psum.html" class="external-link">psum</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                 expr    min      lq     mean  median      uq      max neval</span></span>
-<span><span class="co">#  rowSums(qM(mtcars)) 12.968 13.4680 17.78347 14.1045 14.5120  380.186   100</span></span>
-<span><span class="co">#      rowSums(mtcars) 69.612 70.7350 72.36282 71.3610 72.3025  107.497   100</span></span>
-<span><span class="co">#    kit::psum(mtcars)  1.421  1.6935 35.09148  2.2965  2.6070 3286.905   100</span></span></code></pre></div>
+<span><span class="co">#                 expr    min     lq     mean  median      uq      max neval</span></span>
+<span><span class="co">#  rowSums(qM(mtcars)) 13.560 14.345 19.20142 14.9190 15.4045  422.698   100</span></span>
+<span><span class="co">#      rowSums(mtcars) 74.235 75.446 76.75118 76.2355 76.9660  111.220   100</span></span>
+<span><span class="co">#    kit::psum(mtcars)  1.472  1.730 38.22632  2.4130  2.7330 3589.083   100</span></span></code></pre></div>
 <p>At last, <code>qF</code> converts vectors to factor and is quite a
 bit faster than <code>as.factor</code>:</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
@@ -1945,9 +1946,9 @@ bit faster than <code>as.factor</code>:</p>
 <span><span class="co"># [1] 216</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                       expr     min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#         qF(wlddev$country) 140.006 143.0965 147.9482 146.4350 149.1335  189.527   100</span></span>
-<span><span class="co">#  as.factor(wlddev$country) 530.956 548.4850 619.3599 552.9065 558.9810 7000.032   100</span></span>
+<span><span class="co">#                       expr     min       lq     mean  median       uq      max neval</span></span>
+<span><span class="co">#         qF(wlddev$country) 141.251 144.6925 149.4732 147.829 151.5005  190.937   100</span></span>
+<span><span class="co">#  as.factor(wlddev$country) 518.043 551.1100 626.5162 556.090 562.3090 7390.140   100</span></span>
 <span></span>
 <span><span class="co"># Converting from numeric</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span></span>
@@ -1957,9 +1958,9 @@ bit faster than <code>as.factor</code>:</p>
 <span><span class="co"># [1] 9470</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                     expr       min         lq       mean     median        uq       max neval</span></span>
-<span><span class="co">#         qF(wlddev$PCGDP)   534.532   634.0645   667.6814   655.1405   677.642  1071.732   100</span></span>
-<span><span class="co">#  as.factor(wlddev$PCGDP) 14305.125 14738.5520 15367.4200 15016.6565 15298.029 22272.010   100</span></span></code></pre></div>
+<span><span class="co">#                     expr      min         lq     mean   median        uq       max neval</span></span>
+<span><span class="co">#         qF(wlddev$PCGDP)   522.64   649.9175   671.53   667.01   684.322   912.356   100</span></span>
+<span><span class="co">#  as.factor(wlddev$PCGDP) 15038.58 15303.7685 15679.70 15376.32 15516.826 22702.554   100</span></span></code></pre></div>
 <!-- by default `qF` converts vectors to ordered factor, regulated by the default argument `ordered = TRUE`. This behavior is the same as `as.factor`, but `as.factor` does not attach a class 'ordered'. `qF(x, ordered = FALSE)` will not sort the levels and is slightly faster. Another difference to `as.factor` is that `qF` always adds a `NA` level for missing values, however by default an integer missing value (`NA_integer_`) is provided as the value for that level (thus `qF` behaves identical to `as.factor` with exception of the added level). a slight modification of this behavior can be achieved with `qF(x, na.exclude = FALSE)`, which will still have the `NA` level but now also assigns a positive integer value to the level (implying that missing values can no longer be detected using `is.na`), and attaches an additional class 'na.included'. Factor generation using `qF(x, na.exclude = FALSE)` is advised when using factors to carry out grouped computations with *collapse*'s fast functions, as the class 'na.included' prevents *collapse* functions to execute a missing value check on the factor, and thus yields a performance improvement. -->
 </div>
 <div class="section level2">
@@ -2105,9 +2106,9 @@ internally.</p>
 <span><span class="va">f2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">f</span><span class="op">)</span>, <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#          expr    min      lq     mean  median      uq    max neval</span></span>
-<span><span class="co">#   fsd(dat, f) 10.855 11.1555 11.36841 11.2905 11.4840 14.825   100</span></span>
-<span><span class="co">#  fsd(dat, f2) 11.420 11.7450 12.17479 11.8845 12.0655 37.497   100</span></span></code></pre></div>
+<span><span class="co">#          expr    min      lq     mean  median     uq    max neval</span></span>
+<span><span class="co">#   fsd(dat, f) 11.143 11.4345 11.70905 11.5125 11.686 20.508   100</span></span>
+<span><span class="co">#  fsd(dat, f2) 11.742 11.9720 12.46592 12.0905 12.241 42.831   100</span></span></code></pre></div>
 <p>For programming purposes <em>GRP</em> objects are preferable over
 factors because they never require further checks and they provide
 additional information about the grouping (such as group sizes and the
@@ -2172,9 +2173,9 @@ repeated computations over the same groups very efficient.</p>
 <span><span class="co"># Grouped computation with and without prior grouping</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span><span class="op">)</span>, <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">ind</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                             expr    min      lq     mean  median      uq     max neval</span></span>
-<span><span class="co">#                      fsd(dat, g) 36.635 37.3500 37.84867 37.7985 38.1495  41.675   100</span></span>
-<span><span class="co">#  fsd(dat, get_vars(mtcars, ind)) 62.552 63.5545 66.02058 64.0360 64.6300 171.443   100</span></span></code></pre></div>
+<span><span class="co">#                             expr    min     lq     mean  median      uq     max neval</span></span>
+<span><span class="co">#                      fsd(dat, g) 35.688 36.258 36.74584 36.6895 36.9380  46.026   100</span></span>
+<span><span class="co">#  fsd(dat, get_vars(mtcars, ind)) 60.326 61.017 62.84701 61.3760 61.8575 146.472   100</span></span></code></pre></div>
 <!-- Note at this point that by default (`sort = TRUE`, `order = 1L`), groups are sorted in ascending order, corresponding to *data.table* grouping with `keyby`. The ordering can be reversed (`order = -1L`), or set individually for each of the 3 grouping columns (i.e. `order = c(1L, -1L, -1L)`). If `sort = FALSE`, the grouping is unordered corresponding to *data.table* grouping with `by`.  -->
 <p>Yet another possibility is creating a grouped data frame (class
 <em>grouped_df</em>). This can either be done using
@@ -2313,8 +2314,8 @@ very low:</p>
 <span>         <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmin_fmax.html">fmin</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="st">"min_"</span><span class="op">)</span>,</span>
 <span>         <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="st">"max_"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#  expr    min      lq     mean  median      uq     max neval</span></span>
-<span><span class="co">#  call 61.793 62.5565 64.20046 62.9295 63.5075 155.821   100</span></span></code></pre></div>
+<span><span class="co">#  expr    min     lq     mean median     uq     max neval</span></span>
+<span><span class="co">#  call 65.802 66.828 68.90315 67.386 68.172 168.938   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="transformations-using-the-tra-argument">4.4 Transformations Using the <code>TRA</code> Argument<a class="anchor" aria-label="anchor" href="#transformations-using-the-tra-argument"></a>
@@ -2650,34 +2651,34 @@ and column-wise arithmetic operators for matrix-like objects:
 <span><span class="co"># Base R vs. efficient base R vs. collapse</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">/</span> <span class="va">v</span><span class="op">)</span>, <span class="va">X</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span>, <span class="va">v</span><span class="op">)</span>, <span class="va">X</span> <span class="op"><a href="../reference/arithmetic.html">%r/%</a></span> <span class="va">v</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                         expr     min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#                    t(t(X)/v) 222.650 491.4870 493.8964 500.6935 509.8775  946.550   100</span></span>
-<span><span class="co">#  X/outer(rep(1, nrow(X)), v) 112.149 245.8215 247.3196 251.1555 258.6670  490.682   100</span></span>
-<span><span class="co">#                     X %r/% v  29.082 148.3825 335.9266 154.1810 164.9365 5357.296   100</span></span>
+<span><span class="co">#                         expr     min       lq     mean  median       uq      max neval</span></span>
+<span><span class="co">#                    t(t(X)/v) 217.213 479.2830 466.2132 487.249 497.0480  546.018   100</span></span>
+<span><span class="co">#  X/outer(rep(1, nrow(X)), v) 115.001 248.2570 288.2325 253.482 264.5010 4603.370   100</span></span>
+<span><span class="co">#                     X %r/% v  30.384 149.0045 275.1172 153.921 161.5115 4654.513   100</span></span>
 <span></span>
 <span><span class="co"># Data frame row operations</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%r/%</a></span> <span class="va">v</span>, <span class="co"># Same thing using mapply and collapse::copyAttrib </span></span>
 <span>               <span class="fu"><a href="../reference/small-helpers.html">copyAttrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mapply.html" class="external-link">mapply</a></span><span class="op">(</span><span class="va">`/`</span>, <span class="va">dat</span>, <span class="va">v</span>, SIMPLIFY <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                                                    expr     min       lq     mean   median       uq</span></span>
-<span><span class="co">#                                              dat %r/% v  51.529 163.2825 330.8369 167.4355 177.3445</span></span>
-<span><span class="co">#  copyAttrib(mapply(`/`, dat, v, SIMPLIFY = FALSE), dat) 128.515 252.9580 265.6598 259.0655 268.7240</span></span>
+<span><span class="co">#                                                    expr     min      lq     mean   median       uq</span></span>
+<span><span class="co">#                                              dat %r/% v  69.097 167.694 341.6965 171.2095 185.3215</span></span>
+<span><span class="co">#  copyAttrib(mapply(`/`, dat, v, SIMPLIFY = FALSE), dat) 194.827 254.631 268.8418 259.9480 271.7025</span></span>
 <span><span class="co">#       max neval</span></span>
-<span><span class="co">#  8094.699   100</span></span>
-<span><span class="co">#   412.934   100</span></span>
+<span><span class="co">#  9030.098   100</span></span>
+<span><span class="co">#   477.936   100</span></span>
 <span></span>
 <span><span class="co"># Data frame column arithmetic is very slow</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">dat</span> <span class="op">/</span> <span class="va">dat</span><span class="op">$</span><span class="va">SUM</span>, <span class="va">dat</span> <span class="op">/</span> <span class="fl">5</span>, <span class="va">dat</span> <span class="op">/</span> <span class="va">dat</span>, </span>
 <span>               <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="va">dat</span><span class="op">$</span><span class="va">SUM</span>, <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="fl">5</span>, <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="va">dat</span><span class="op">)</span> </span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#              expr      min        lq      mean    median        uq       max neval</span></span>
-<span><span class="co">#       dat/dat$SUM 2420.828 3032.6670 4684.8003 3072.3635 3172.0855 85543.087   100</span></span>
-<span><span class="co">#             dat/5  819.739  868.6470  949.5446  885.1360  898.0035  7141.251   100</span></span>
-<span><span class="co">#           dat/dat  821.418  929.9990  941.4979  945.0420  958.6485  1031.830   100</span></span>
-<span><span class="co">#  dat %c/% dat$SUM  185.464  196.1955  208.3078  206.2525  214.2895   305.733   100</span></span>
-<span><span class="co">#        dat %c/% 5  134.948  191.1225  201.5522  198.6505  211.8335   260.215   100</span></span>
-<span><span class="co">#      dat %c/% dat  111.123  194.9755  206.2997  204.0045  211.6235   358.571   100</span></span></code></pre></div>
+<span><span class="co">#       dat/dat$SUM 2440.420 3039.1525 3830.0056 3065.8290 3135.3280 10088.329   100</span></span>
+<span><span class="co">#             dat/5  847.870  874.4325  973.2617  885.6935  904.6940  7840.545   100</span></span>
+<span><span class="co">#           dat/dat  870.155  932.3650  951.3345  942.4355  963.0830  1179.488   100</span></span>
+<span><span class="co">#  dat %c/% dat$SUM  112.175  198.8750  209.0630  205.0140  217.0660   369.548   100</span></span>
+<span><span class="co">#        dat %c/% 5  135.976  192.7275  200.7691  198.9785  206.6955   240.864   100</span></span>
+<span><span class="co">#      dat %c/% dat  181.212  196.5845 1173.8002  203.8915  213.8880 96994.564   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="row-and-column-data-apply">6.1 Row and Column Data Apply<a class="anchor" aria-label="anchor" href="#row-and-column-data-apply"></a>
@@ -2905,12 +2906,12 @@ For the very common centering and averaging tasks, *collapse* supplies 2 special
 <span>               <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">miris</span><span class="op">)</span><span class="op">)</span>               <span class="co"># fastest, fwithin is discussed in section 6.5</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#                                      expr    min      lq     mean  median      uq     max neval</span></span>
-<span><span class="co">#               sweep(miris, 2, stats, "-") 36.182 37.5785 39.18834 38.2850 39.4135  89.225   100</span></span>
-<span><span class="co">#  miris - outer(rep(1, nrow(iris)), stats) 11.377 12.4745 13.53758 13.3905 14.0005  35.125   100</span></span>
-<span><span class="co">#             TRA(miris, fmean(miris), "-")  6.495  6.9095  7.55431  7.2785  7.9105  20.488   100</span></span>
-<span><span class="co">#                   miris %r-% fmean(miris)  7.348  7.7845  8.94932  8.0720  8.8345  74.629   100</span></span>
-<span><span class="co">#                   fmean(miris, TRA = "-")  5.575  6.2000  7.24501  6.6110  7.4140  52.246   100</span></span>
-<span><span class="co">#                            fwithin(miris)  5.616  6.1940  8.01188  6.8720  7.5580 116.326   100</span></span>
+<span><span class="co">#               sweep(miris, 2, stats, "-") 35.575 37.1910 38.99867 38.1915 39.1100  86.235   100</span></span>
+<span><span class="co">#  miris - outer(rep(1, nrow(iris)), stats) 11.288 12.4560 13.54854 13.4865 13.9725  33.839   100</span></span>
+<span><span class="co">#             TRA(miris, fmean(miris), "-")  6.659  7.0520  7.62842  7.3630  7.8705  20.400   100</span></span>
+<span><span class="co">#                   miris %r-% fmean(miris)  7.370  7.8305  9.05672  8.1430  8.7960  74.058   100</span></span>
+<span><span class="co">#                   fmean(miris, TRA = "-")  5.720  6.2850  7.32599  6.7500  7.2780  53.163   100</span></span>
+<span><span class="co">#                            fwithin(miris)  5.559  6.2640  8.01843  7.0320  7.5040 111.679   100</span></span>
 <span></span>
 <span><span class="co"># Simple replacing [same as fmean(miris, TRA = "replace") or fbetween(miris)]</span></span>
 <span><span class="fu"><a href="../reference/TRA.html">TRA</a></span><span class="op">(</span><span class="va">miris</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">miris</span><span class="op">)</span>, <span class="st">"replace"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
@@ -3316,7 +3317,7 @@ covariates.</p>
 <span><span class="co"># Same using HDW </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.PCGDP</span> <span class="op">~</span> <span class="va">HDW.LIFEEX</span>, <span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">*</span> <span class="va">year</span> <span class="op">+</span> <span class="va">ODA</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#   (Intercept)    HDW.LIFEEX </span></span>
-<span><span class="co"># -4.344568e-07  8.938626e+00</span></span>
+<span><span class="co"># -4.094734e-12  8.938626e+00</span></span>
 <span></span>
 <span><span class="co"># example of a simple continuous problem</span></span>
 <span><span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
@@ -4034,19 +4035,19 @@ lag:</p>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="../reference/efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">-</span><span class="fl">1</span>, <span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="co">#   STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE L1.STD.HDW.AGR</span></span>
-<span><span class="co"># 1  0.98206750   2.5821941    2.461862  0.14846457   1.8080289    1.3714893             NA</span></span>
-<span><span class="co"># 2  0.11968310   2.1379142    2.301208  1.36730445   1.6123645    1.1618242     0.98206750</span></span>
-<span><span class="co"># 3  0.13361587  -0.5515093    2.332044  0.10541221   1.1548186    0.8312780     0.11968310</span></span>
-<span><span class="co"># 4 -0.09782384  -1.5823101   -1.697620 -2.58254634  -1.4866072    0.5840447     0.13361587</span></span>
-<span><span class="co"># 5 -0.19786571  -4.0942094   -1.611144 -2.67452947  -0.4454290   -2.0564626    -0.09782384</span></span>
-<span><span class="co"># 6 -0.65759897  -1.2342415   -1.954451 -0.08878416  -0.9936077   -2.1366610    -0.19786571</span></span>
+<span><span class="co"># 1  0.65713943   2.2350584    1.946383 -0.03574399   1.0877811    1.0476507             NA</span></span>
+<span><span class="co"># 2 -0.14377115   1.8693570    1.905081  1.23225734   1.0542315    0.9105622     0.65713943</span></span>
+<span><span class="co"># 3 -0.09209878  -0.8212004    1.997253 -0.01783824   0.6718465    0.6134260    -0.14377115</span></span>
+<span><span class="co"># 4 -0.25213869  -1.7830320   -1.970855 -2.68332505  -1.8475551    0.4382902    -0.09209878</span></span>
+<span><span class="co"># 5 -0.31623401  -4.2931567   -1.822211 -2.75551916  -0.7066491   -2.1982640    -0.25213869</span></span>
+<span><span class="co"># 6 -0.72691916  -1.3219387   -2.079333 -0.12148295  -1.1398220   -2.2230474    -0.31623401</span></span>
 <span><span class="co">#   L1.STD.HDW.MAN L1.STD.HDW.WRT L1.STD.HDW.CON L1.STD.HDW.TRA L1.STD.HDW.FIRE</span></span>
 <span><span class="co"># 1             NA             NA             NA             NA              NA</span></span>
-<span><span class="co"># 2      2.5821941       2.461862      0.1484646       1.808029       1.3714893</span></span>
-<span><span class="co"># 3      2.1379142       2.301208      1.3673045       1.612365       1.1618242</span></span>
-<span><span class="co"># 4     -0.5515093       2.332044      0.1054122       1.154819       0.8312780</span></span>
-<span><span class="co"># 5     -1.5823101      -1.697620     -2.5825463      -1.486607       0.5840447</span></span>
-<span><span class="co"># 6     -4.0942094      -1.611144     -2.6745295      -0.445429      -2.0564626</span></span></code></pre></div>
+<span><span class="co"># 2      2.2350584       1.946383    -0.03574399      1.0877811       1.0476507</span></span>
+<span><span class="co"># 3      1.8693570       1.905081     1.23225734      1.0542315       0.9105622</span></span>
+<span><span class="co"># 4     -0.8212004       1.997253    -0.01783824      0.6718465       0.6134260</span></span>
+<span><span class="co"># 5     -1.7830320      -1.970855    -2.68332505     -1.8475551       0.4382902</span></span>
+<span><span class="co"># 6     -4.2931567      -1.822211    -2.75551916     -0.7066491      -2.1982640</span></span></code></pre></div>
 <p>Having prepared the data, the code below estimates the panel-VAR
 using <code>lm</code> and creates the <em>varest</em> object:</p>
 <!-- pVAR <- list(varresult = setNames(lapply(seq_len(6), function(i)    # list of 6 lm's each regressing -->
@@ -4090,7 +4091,7 @@ purposes of this vignette this shall not bother us.</p>
 <span><span class="co">#   Portmanteau Test (asymptotic)</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># data:  Residuals of VAR object pVAR</span></span>
-<span><span class="co"># Chi-squared = 1688.7, df = 540, p-value &lt; 2.2e-16</span></span></code></pre></div>
+<span><span class="co"># Chi-squared = 1685.9, df = 540, p-value &lt; 2.2e-16</span></span></code></pre></div>
 <p>By default the VAR is identified using a Choleski ordering of the
 direct impact matrix in which the first variable (here Agriculture) is
 assumed to not be directly impacted by any other sector in the current
@@ -4172,42 +4173,42 @@ Choleski ordering.
 <span><span class="co"># </span></span>
 <span><span class="co"># Estimated A matrix:</span></span>
 <span><span class="co">#              STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
-<span><span class="co"># STD.HDW.AGR       1.0000   -0.628212     0.51487     0.00000    0.000000            0</span></span>
-<span><span class="co"># STD.HDW.MAN      -0.3788    1.000000    -0.07018    -0.02294   -0.278671            0</span></span>
-<span><span class="co"># STD.HDW.WRT       0.1312   -0.566782     1.00000    -0.15757    0.009725            0</span></span>
-<span><span class="co"># STD.HDW.CON       0.0000    0.008677    -0.21871     1.00000    0.000000            0</span></span>
-<span><span class="co"># STD.HDW.TRA       0.0000   -0.025839    -0.07289     0.00000    1.000000            0</span></span>
-<span><span class="co"># STD.HDW.FIRE      0.0000    0.000000     0.00000     0.00000    0.000000            1</span></span>
+<span><span class="co"># STD.HDW.AGR       1.0000    -0.41820      0.6285     0.00000     0.00000            0</span></span>
+<span><span class="co"># STD.HDW.MAN      -0.4781     1.00000     -0.1256    -0.01217    -0.33279            0</span></span>
+<span><span class="co"># STD.HDW.WRT       0.1970    -0.61805      1.0000    -0.50725     0.04714            0</span></span>
+<span><span class="co"># STD.HDW.CON       0.0000    -0.02461     -0.1146     1.00000     0.00000            0</span></span>
+<span><span class="co"># STD.HDW.TRA       0.0000     0.02680     -0.1269     0.00000     1.00000            0</span></span>
+<span><span class="co"># STD.HDW.FIRE      0.0000     0.00000      0.0000     0.00000     0.00000            1</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># Estimated B matrix:</span></span>
 <span><span class="co">#              STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
-<span><span class="co"># STD.HDW.AGR       0.6582      0.0000      0.0000      0.0000      0.0000       0.0000</span></span>
-<span><span class="co"># STD.HDW.MAN       0.0000      0.6242      0.0000      0.0000      0.0000       0.0000</span></span>
-<span><span class="co"># STD.HDW.WRT       0.0000      0.0000      0.6415      0.0000      0.0000       0.0000</span></span>
-<span><span class="co"># STD.HDW.CON       0.0000      0.0000      0.0000      0.4981      0.0000       0.0000</span></span>
-<span><span class="co"># STD.HDW.TRA       0.0000      0.0000      0.0000      0.0000      0.4264       0.0000</span></span>
-<span><span class="co"># STD.HDW.FIRE      0.0000      0.0000      0.0000      0.0000      0.0000       0.6464</span></span></code></pre></div>
+<span><span class="co"># STD.HDW.AGR       0.6675      0.0000      0.0000      0.0000      0.0000       0.0000</span></span>
+<span><span class="co"># STD.HDW.MAN       0.0000      0.5989      0.0000      0.0000      0.0000       0.0000</span></span>
+<span><span class="co"># STD.HDW.WRT       0.0000      0.0000      0.6435      0.0000      0.0000       0.0000</span></span>
+<span><span class="co"># STD.HDW.CON       0.0000      0.0000      0.0000      0.5355      0.0000       0.0000</span></span>
+<span><span class="co"># STD.HDW.TRA       0.0000      0.0000      0.0000      0.0000      0.4936       0.0000</span></span>
+<span><span class="co"># STD.HDW.FIRE      0.0000      0.0000      0.0000      0.0000      0.0000       0.6678</span></span></code></pre></div>
 <p>Now this object is quite involved, which brings us to the actual
 subject of this section:</p>
 <div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># psVAR$var$varresult is a list containing the 6 linear models fitted above, it is not displayed in full here.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">pSVAR</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span>, max.level <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co"># List of 13</span></span>
-<span><span class="co">#  $ A      : num [1:6, 1:6] 1 -0.379 0.131 0 0 ...</span></span>
+<span><span class="co">#  $ A      : num [1:6, 1:6] 1 -0.478 0.197 0 0 ...</span></span>
 <span><span class="co">#  $ Ase    : num [1:6, 1:6] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span><span class="co">#  $ B      : num [1:6, 1:6] 0.658 0 0 0 0 ...</span></span>
+<span><span class="co">#  $ B      : num [1:6, 1:6] 0.667 0 0 0 0 ...</span></span>
 <span><span class="co">#  $ Bse    : num [1:6, 1:6] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span><span class="co">#  $ LRIM   : NULL</span></span>
-<span><span class="co">#  $ Sigma.U: num [1:6, 1:6] 91.02 51.51 -9.06 -4.61 2.98 ...</span></span>
+<span><span class="co">#  $ Sigma.U: num [1:6, 1:6] 87.29 35.87 -33.52 -14.05 -4.35 ...</span></span>
 <span><span class="co">#  $ LR     :List of 5</span></span>
-<span><span class="co">#   ..$ statistic: Named num 3217</span></span>
+<span><span class="co">#   ..$ statistic: Named num 4070</span></span>
 <span><span class="co">#   ..$ parameter: Named num 1</span></span>
 <span><span class="co">#   ..$ p.value  : Named num 0</span></span>
 <span><span class="co">#   ..$ method   : chr "LR overidentification"</span></span>
 <span><span class="co">#   ..$ data.name: symbol data</span></span>
 <span><span class="co">#  $ opt    :List of 5</span></span>
-<span><span class="co">#   ..$ par        : num [1:20] -0.3788 0.13116 -0.62821 -0.56678 0.00868 ...</span></span>
-<span><span class="co">#   ..$ value      : num 11712</span></span>
+<span><span class="co">#   ..$ par        : num [1:20] -0.4781 0.197 -0.4182 -0.6181 -0.0246 ...</span></span>
+<span><span class="co">#   ..$ value      : num 11938</span></span>
 <span><span class="co">#   ..$ counts     : Named int [1:2] 501 NA</span></span>
 <span><span class="co">#   ..$ convergence: int 1</span></span>
 <span><span class="co">#   ..$ message    : NULL</span></span>
@@ -4222,19 +4223,19 @@ subject of this section:</p>
 <span><span class="co">#   .. ..$ STD.HDW.TRA :List of 13</span></span>
 <span><span class="co">#   .. ..$ STD.HDW.FIRE:List of 13</span></span>
 <span><span class="co">#   ..$ datamat     :'data.frame':  2060 obs. of  12 variables:</span></span>
-<span><span class="co">#   .. ..$ STD.HDW.AGR    : num [1:2060] 0.1197 0.1336 -0.0978 -0.1979 -0.6576 ...</span></span>
-<span><span class="co">#   .. ..$ STD.HDW.MAN    : num [1:2060] 2.138 -0.552 -1.582 -4.094 -1.234 ...</span></span>
-<span><span class="co">#   .. ..$ STD.HDW.WRT    : num [1:2060] 2.3 2.33 -1.7 -1.61 -1.95 ...</span></span>
-<span><span class="co">#   .. ..$ STD.HDW.CON    : num [1:2060] 1.3673 0.1054 -2.5825 -2.6745 -0.0888 ...</span></span>
-<span><span class="co">#   .. ..$ STD.HDW.TRA    : num [1:2060] 1.612 1.155 -1.487 -0.445 -0.994 ...</span></span>
-<span><span class="co">#   .. ..$ STD.HDW.FIRE   : num [1:2060] 1.162 0.831 0.584 -2.056 -2.137 ...</span></span>
-<span><span class="co">#   .. ..$ L1.STD.HDW.AGR : num [1:2060] 0.9821 0.1197 0.1336 -0.0978 -0.1979 ...</span></span>
-<span><span class="co">#   .. ..$ L1.STD.HDW.MAN : num [1:2060] 2.582 2.138 -0.552 -1.582 -4.094 ...</span></span>
-<span><span class="co">#   .. ..$ L1.STD.HDW.WRT : num [1:2060] 2.46 2.3 2.33 -1.7 -1.61 ...</span></span>
-<span><span class="co">#   .. ..$ L1.STD.HDW.CON : num [1:2060] 0.148 1.367 0.105 -2.583 -2.675 ...</span></span>
-<span><span class="co">#   .. ..$ L1.STD.HDW.TRA : num [1:2060] 1.808 1.612 1.155 -1.487 -0.445 ...</span></span>
-<span><span class="co">#   .. ..$ L1.STD.HDW.FIRE: num [1:2060] 1.371 1.162 0.831 0.584 -2.056 ...</span></span>
-<span><span class="co">#   ..$ y           : num [1:2061, 1:6] 0.9821 0.1197 0.1336 -0.0978 -0.1979 ...</span></span>
+<span><span class="co">#   .. ..$ STD.HDW.AGR    : num [1:2060] -0.1438 -0.0921 -0.2521 -0.3162 -0.7269 ...</span></span>
+<span><span class="co">#   .. ..$ STD.HDW.MAN    : num [1:2060] 1.869 -0.821 -1.783 -4.293 -1.322 ...</span></span>
+<span><span class="co">#   .. ..$ STD.HDW.WRT    : num [1:2060] 1.91 2 -1.97 -1.82 -2.08 ...</span></span>
+<span><span class="co">#   .. ..$ STD.HDW.CON    : num [1:2060] 1.2323 -0.0178 -2.6833 -2.7555 -0.1215 ...</span></span>
+<span><span class="co">#   .. ..$ STD.HDW.TRA    : num [1:2060] 1.054 0.672 -1.848 -0.707 -1.14 ...</span></span>
+<span><span class="co">#   .. ..$ STD.HDW.FIRE   : num [1:2060] 0.911 0.613 0.438 -2.198 -2.223 ...</span></span>
+<span><span class="co">#   .. ..$ L1.STD.HDW.AGR : num [1:2060] 0.6571 -0.1438 -0.0921 -0.2521 -0.3162 ...</span></span>
+<span><span class="co">#   .. ..$ L1.STD.HDW.MAN : num [1:2060] 2.235 1.869 -0.821 -1.783 -4.293 ...</span></span>
+<span><span class="co">#   .. ..$ L1.STD.HDW.WRT : num [1:2060] 1.95 1.91 2 -1.97 -1.82 ...</span></span>
+<span><span class="co">#   .. ..$ L1.STD.HDW.CON : num [1:2060] -0.0357 1.2323 -0.0178 -2.6833 -2.7555 ...</span></span>
+<span><span class="co">#   .. ..$ L1.STD.HDW.TRA : num [1:2060] 1.088 1.054 0.672 -1.848 -0.707 ...</span></span>
+<span><span class="co">#   .. ..$ L1.STD.HDW.FIRE: num [1:2060] 1.048 0.911 0.613 0.438 -2.198 ...</span></span>
+<span><span class="co">#   ..$ y           : num [1:2061, 1:6] 0.6571 -0.1438 -0.0921 -0.2521 -0.3162 ...</span></span>
 <span><span class="co">#   ..$ type        : chr "none"</span></span>
 <span><span class="co">#   ..$ p           : num 1</span></span>
 <span><span class="co">#   ..$ K           : num 6</span></span>
@@ -4304,19 +4305,19 @@ course works in a much broader range of contexts.&lt;/p&gt;"><sup>7</sup></a>.</
 <div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This is the path to the residuals from a single equation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">pSVAR</span><span class="op">$</span><span class="va">var</span><span class="op">$</span><span class="va">varresult</span><span class="op">$</span><span class="va">STD.HDW.AGR</span><span class="op">$</span><span class="va">residuals</span><span class="op">)</span></span>
-<span><span class="co">#  Named num [1:2060] -0.7117 -0.1802 -0.244 0.0774 -0.1789 ...</span></span>
+<span><span class="co">#  Named num [1:2060] -0.7218 -0.2029 -0.223 0.0833 -0.1512 ...</span></span>
 <span><span class="co">#  - attr(*, "names")= chr [1:2060] "2" "3" "4" "5" ...</span></span>
 <span></span>
 <span><span class="co"># get_elem gets the residuals from all 6 equations and puts them in a top-level list</span></span>
 <span><span class="va">resid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_list.html">get_elem</a></span><span class="op">(</span><span class="va">pSVAR</span>, <span class="st">"residuals"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resid</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co"># List of 6</span></span>
-<span><span class="co">#  $ STD.HDW.AGR : Named num [1:2060] -0.7117 -0.1802 -0.244 0.0774 -0.1789 ...</span></span>
-<span><span class="co">#  $ STD.HDW.MAN : Named num [1:2060] 0.364 -1.919 -1.145 -3.046 1.426 ...</span></span>
-<span><span class="co">#  $ STD.HDW.WRT : Named num [1:2060] 0.404 0.689 -3.045 -0.413 -0.466 ...</span></span>
-<span><span class="co">#  $ STD.HDW.CON : Named num [1:2060] 1.027 -1.068 -2.642 -0.635 2.218 ...</span></span>
-<span><span class="co">#  $ STD.HDW.TRA : Named num [1:2060] 0.217 -0.148 -2.23 0.849 -0.187 ...</span></span>
-<span><span class="co">#  $ STD.HDW.FIRE: Named num [1:2060] -0.1068 -0.2939 0.0731 -2.1064 -0.0925 ...</span></span>
+<span><span class="co">#  $ STD.HDW.AGR : Named num [1:2060] -0.7218 -0.2029 -0.223 0.0833 -0.1512 ...</span></span>
+<span><span class="co">#  $ STD.HDW.MAN : Named num [1:2060] 0.362 -1.982 -1.144 -3.092 1.482 ...</span></span>
+<span><span class="co">#  $ STD.HDW.WRT : Named num [1:2060] 0.388 0.648 -3.065 -0.419 -0.428 ...</span></span>
+<span><span class="co">#  $ STD.HDW.CON : Named num [1:2060] 1.054 -1.071 -2.631 -0.627 2.26 ...</span></span>
+<span><span class="co">#  $ STD.HDW.TRA : Named num [1:2060] 0.167 -0.238 -2.247 0.847 -0.139 ...</span></span>
+<span><span class="co">#  $ STD.HDW.FIRE: Named num [1:2060] -0.0948 -0.3081 0.1083 -2.1211 -0.0563 ...</span></span>
 <span></span>
 <span><span class="co"># Quick conversion to matrix and plotting</span></span>
 <span><span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">resid</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/plot.ts.html" class="external-link">plot.ts</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"Panel-VAR Residuals"</span><span class="op">)</span></span></code></pre></div>
@@ -4343,26 +4344,26 @@ the object:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">pIRF</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co"># List of 11</span></span>
 <span><span class="co">#  $ irf       :List of 6</span></span>
-<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 0.82 0.526 0.349 0.24 0.171 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] 0.271 0.212 0.171 0.14 0.115 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] -0.3984 -0.2332 -0.14 -0.0872 -0.0568 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] -0.04378 -0.00482 0.01435 0.02235 0.02431 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] 0.0542 0.0504 0.0435 0.0362 0.0295 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 0.0139 0.0169 0.0153 0.0122 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 0.767 0.495 0.332 0.231 0.166 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] -0.000553 0.038252 0.055844 0.060633 0.058292 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] -0.4907 -0.2925 -0.1799 -0.1153 -0.0774 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] -0.20715 -0.1018 -0.04488 -0.01524 -0.00064 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] 0.0176 0.0312 0.0338 0.0316 0.0275 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 0.0145 0.0176 0.0159 0.0127 ...</span></span>
 <span><span class="co">#  $ Lower     :List of 6</span></span>
-<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 0.3046 0.1645 0.0765 0.0287 0.0136 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] -0.7464 -0.4234 -0.2448 -0.1452 -0.0841 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] -0.67 -0.417 -0.274 -0.2 -0.154 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] -0.6963 -0.4097 -0.2341 -0.1421 -0.0857 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] -0.468 -0.301 -0.209 -0.152 -0.109 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 -0.0116 -0.016 -0.0168 -0.0167 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 0.3172 0.1641 0.0849 0.0368 0.0127 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] -0.6107 -0.361 -0.2074 -0.1179 -0.0674 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] -0.666 -0.417 -0.292 -0.211 -0.164 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] -0.6838 -0.4095 -0.2331 -0.1421 -0.0851 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] -0.461 -0.301 -0.209 -0.153 -0.111 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 -0.0113 -0.0156 -0.0163 -0.016 ...</span></span>
 <span><span class="co">#  $ Upper     :List of 6</span></span>
-<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 1.376 0.964 0.678 0.485 0.357 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] 0.965 0.664 0.471 0.356 0.276 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] 0.996 0.654 0.44 0.296 0.203 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] 0.57 0.406 0.296 0.224 0.186 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] 0.601 0.399 0.247 0.17 0.129 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 0.0423 0.0538 0.0514 0.044 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 1.315 0.913 0.623 0.44 0.327 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] 0.904 0.585 0.427 0.316 0.238 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] 0.951 0.582 0.363 0.257 0.194 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] 0.59 0.406 0.296 0.226 0.196 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] 0.507 0.329 0.214 0.152 0.117 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 0.0444 0.0575 0.0551 0.0472 ...</span></span>
 <span><span class="co">#  $ response  : chr [1:6] "STD.HDW.AGR" "STD.HDW.MAN" "STD.HDW.WRT" "STD.HDW.CON" ...</span></span>
 <span><span class="co">#  $ impulse   : chr [1:6] "STD.HDW.AGR" "STD.HDW.MAN" "STD.HDW.WRT" "STD.HDW.CON" ...</span></span>
 <span><span class="co">#  $ ortho     : logi TRUE</span></span>
@@ -4410,24 +4411,24 @@ sectoral impulse and stores them in a data frame:</p>
 <span>  <span class="fu"><a href="../reference/rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="co"># Recursively apply the column-sums to coefficient matrices (could also use colSums)</span></span>
 <span>  <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Type"</span>, <span class="st">"Impulse"</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Recursively row-bind the result to a data.frame and add identifier columns</span></span>
 <span><span class="co">#     Type      Impulse STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
-<span><span class="co"># 1    irf  STD.HDW.AGR        2.53        1.73        1.36        0.88        0.88         0.78</span></span>
-<span><span class="co"># 2    irf  STD.HDW.MAN        1.26        2.50        2.08        1.19        1.03         1.12</span></span>
-<span><span class="co"># 3    irf  STD.HDW.WRT       -1.04       -0.79        1.16        0.32        0.01        -0.16</span></span>
-<span><span class="co"># 4    irf  STD.HDW.CON        0.11        0.02        0.22        1.90        0.44         0.24</span></span>
-<span><span class="co"># 5    irf  STD.HDW.TRA        0.30        0.60        0.40        0.11        1.29         0.16</span></span>
-<span><span class="co"># 6    irf STD.HDW.FIRE        0.08       -0.08        0.02       -0.09       -0.05         1.84</span></span>
-<span><span class="co"># 7  Lower  STD.HDW.AGR        0.55       -1.10       -1.46       -1.08       -1.49        -0.52</span></span>
-<span><span class="co"># 8  Lower  STD.HDW.MAN       -1.76        0.60       -1.17       -1.03       -1.19         0.14</span></span>
-<span><span class="co"># 9  Lower  STD.HDW.WRT       -2.17       -2.39       -0.26       -3.12       -2.32        -0.88</span></span>
-<span><span class="co"># 10 Lower  STD.HDW.CON       -1.76       -2.48       -2.14        0.42       -1.47        -0.53</span></span>
-<span><span class="co"># 11 Lower  STD.HDW.TRA       -1.53       -1.80       -1.64       -1.70        0.02        -0.72</span></span>
-<span><span class="co"># 12 Lower STD.HDW.FIRE       -0.13       -0.25       -0.16       -0.25       -0.19         0.99</span></span>
-<span><span class="co"># 13 Upper  STD.HDW.AGR        4.82        4.63        3.88        4.13        3.01         2.12</span></span>
-<span><span class="co"># 14 Upper  STD.HDW.MAN        3.52        4.51        3.66        4.01        3.72         1.96</span></span>
-<span><span class="co"># 15 Upper  STD.HDW.WRT        3.13        3.08        4.67        2.16        3.62         1.27</span></span>
-<span><span class="co"># 16 Upper  STD.HDW.CON        2.29        3.16        2.63        3.92        2.42         1.63</span></span>
-<span><span class="co"># 17 Upper  STD.HDW.TRA        1.90        2.41        2.22        1.58        2.95         0.69</span></span>
-<span><span class="co"># 18 Upper STD.HDW.FIRE        0.32        0.13        0.27        0.11        0.19         2.31</span></span></code></pre></div>
+<span><span class="co"># 1    irf  STD.HDW.AGR        2.42        1.85        1.41        0.92        0.86         0.83</span></span>
+<span><span class="co"># 2    irf  STD.HDW.MAN        0.43        1.92        1.77        0.87        0.72         0.87</span></span>
+<span><span class="co"># 3    irf  STD.HDW.WRT       -1.34       -0.96        1.13       -0.02        0.00        -0.27</span></span>
+<span><span class="co"># 4    irf  STD.HDW.CON       -0.33       -0.30        0.54        1.98        0.46         0.15</span></span>
+<span><span class="co"># 5    irf  STD.HDW.TRA        0.23        0.71        0.46        0.10        1.47         0.19</span></span>
+<span><span class="co"># 6    irf STD.HDW.FIRE        0.09       -0.08        0.02       -0.09       -0.05         1.90</span></span>
+<span><span class="co"># 7  Lower  STD.HDW.AGR        0.58       -1.10       -1.44       -1.14       -1.45        -0.51</span></span>
+<span><span class="co"># 8  Lower  STD.HDW.MAN       -1.46        0.58       -1.20       -1.02       -1.08         0.15</span></span>
+<span><span class="co"># 9  Lower  STD.HDW.WRT       -2.23       -2.33       -0.06       -3.13       -2.55        -0.95</span></span>
+<span><span class="co"># 10 Lower  STD.HDW.CON       -1.74       -2.48       -2.13        0.60       -1.52        -0.52</span></span>
+<span><span class="co"># 11 Lower  STD.HDW.TRA       -1.52       -1.55       -1.39       -1.61        0.08        -0.67</span></span>
+<span><span class="co"># 12 Lower STD.HDW.FIRE       -0.13       -0.24       -0.16       -0.24       -0.19         0.99</span></span>
+<span><span class="co"># 13 Upper  STD.HDW.AGR        4.49        4.23        3.86        2.68        2.61         1.73</span></span>
+<span><span class="co"># 14 Upper  STD.HDW.MAN        3.17        4.22        3.49        3.97        3.57         1.87</span></span>
+<span><span class="co"># 15 Upper  STD.HDW.WRT        2.89        3.07        4.79        1.79        3.59         1.37</span></span>
+<span><span class="co"># 16 Upper  STD.HDW.CON        2.40        3.24        2.74        3.91        2.52         1.62</span></span>
+<span><span class="co"># 17 Upper  STD.HDW.TRA        1.64        2.42        2.09        1.81        3.00         0.79</span></span>
+<span><span class="co"># 18 Upper STD.HDW.FIRE        0.34        0.14        0.28        0.12        0.18         2.34</span></span></code></pre></div>
 <p>The function <code>rapply2d</code> used here is very similar to
 <code><a href="https://rdrr.io/r/base/rapply.html" class="external-link">base::rapply</a></code>, with the difference that the result is not
 simplified / unlisted by default and that <code>rapply2d</code> will
@@ -4461,17 +4462,19 @@ just use the impulses:</p>
 <span>                    DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>            <span class="co"># -&gt; Output as data.table (default is data.frame)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#        Impulse Time STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
-<span><span class="co"># 1: STD.HDW.AGR    1   0.8203054   0.3202319  0.07595687  0.01383377  0.01381068   0.00000000</span></span>
-<span><span class="co"># 2: STD.HDW.AGR    2   0.5257170   0.3172185  0.18062743  0.07596643  0.07907935   0.05088155</span></span>
-<span><span class="co"># 3: STD.HDW.AGR    3   0.3489775   0.2733605  0.20818362  0.10758084  0.10979791   0.08536206</span></span>
+<span><span class="co">#        Impulse  Time STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
+<span><span class="co">#         &lt;fctr&gt; &lt;int&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;        &lt;num&gt;</span></span>
+<span><span class="co"># 1: STD.HDW.AGR     1   0.7674084   0.3794286  0.09343315  0.02004176 0.001684801   0.00000000</span></span>
+<span><span class="co"># 2: STD.HDW.AGR     2   0.4954712   0.3485165  0.19223443  0.08376727 0.073369923   0.05906256</span></span>
+<span><span class="co"># 3: STD.HDW.AGR     3   0.3320293   0.2894440  0.21561244  0.11485124 0.107560818   0.09537373</span></span>
 <span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>                   <span class="co"># Using data.table's melt</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#        Impulse Time    variable     value</span></span>
-<span><span class="co"># 1: STD.HDW.AGR    1 STD.HDW.AGR 0.8203054</span></span>
-<span><span class="co"># 2: STD.HDW.AGR    2 STD.HDW.AGR 0.5257170</span></span>
-<span><span class="co"># 3: STD.HDW.AGR    3 STD.HDW.AGR 0.3489775</span></span>
+<span><span class="co">#        Impulse  Time    variable     value</span></span>
+<span><span class="co">#         &lt;fctr&gt; &lt;int&gt;      &lt;fctr&gt;     &lt;num&gt;</span></span>
+<span><span class="co"># 1: STD.HDW.AGR     1 STD.HDW.AGR 0.7674084</span></span>
+<span><span class="co"># 2: STD.HDW.AGR     2 STD.HDW.AGR 0.4954712</span></span>
+<span><span class="co"># 3: STD.HDW.AGR     3 STD.HDW.AGR 0.3320293</span></span>
 <span></span>
 <span><span class="co"># Here comes the plot:</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Time</span>, y <span class="op">=</span> <span class="va">value</span>, color <span class="op">=</span> <span class="va">Impulse</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -4494,10 +4497,11 @@ To round things off, below we do the same thing for the FEVD’s:</p>
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">pFEVD</span>, idcols <span class="op">=</span> <span class="st">"variable"</span>, row.names <span class="op">=</span> <span class="st">"Time"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span>, DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>            <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"Time"</span><span class="op">)</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span></span>
-<span><span class="co">#       variable Time      Sector     value</span></span>
-<span><span class="co"># 1: STD.HDW.AGR    1 STD.HDW.AGR 0.7392817</span></span>
-<span><span class="co"># 2: STD.HDW.AGR    2 STD.HDW.AGR 0.7365958</span></span>
-<span><span class="co"># 3: STD.HDW.AGR    3 STD.HDW.AGR 0.7327294</span></span>
+<span><span class="co">#       variable  Time      Sector     value</span></span>
+<span><span class="co">#         &lt;fctr&gt; &lt;int&gt;      &lt;fctr&gt;     &lt;num&gt;</span></span>
+<span><span class="co"># 1: STD.HDW.AGR     1 STD.HDW.AGR 0.6746685</span></span>
+<span><span class="co"># 2: STD.HDW.AGR     2 STD.HDW.AGR 0.6856381</span></span>
+<span><span class="co"># 3: STD.HDW.AGR     3 STD.HDW.AGR 0.6914552</span></span>
 <span></span>
 <span><span class="co"># Here comes the plot:</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Time</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">Sector</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>

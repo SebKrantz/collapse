@@ -24,7 +24,7 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.9</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -202,13 +202,19 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">qDT</span><span class="op">(</span><span class="va">mtcars</span>, <span class="st">"cars"</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Saving row.names when converting data frame to data.table</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 cars  mpg cyl disp  hp drat    wt  qsec vs am gear carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1:         Mazda RX4 21.0   6  160 110 3.90 2.620 16.46  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        Datsun 710 22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4:    Hornet 4 Drive 21.4   6  258 110 3.08 3.215 19.44  1  0    3    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5: Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 cars   mpg   cyl  disp    hp  drat    wt  qsec    vs    am</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;char&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:         Mazda RX4  21.0     6   160   110  3.90 2.620 16.46     0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     Mazda RX4 Wag  21.0     6   160   110  3.90 2.875 17.02     0     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:        Datsun 710  22.8     4   108    93  3.85 2.320 18.61     1     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:    Hornet 4 Drive  21.4     6   258   110  3.08 3.215 19.44     1     0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     gear  carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    &lt;num&gt; &lt;num&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1:     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2:     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3:     4     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4:     3     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 2 rows ]</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">qM</span><span class="op">(</span><span class="va">iris</span>, <span class="st">"Species"</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Examples converting data to matrix, saving information</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> setosa          5.1         3.5          1.4         0.2</span>
@@ -261,11 +267,11 @@ as_numeric_factor and as_character_factor convert factors, or all factor columns
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"lon ="</span>, <span class="va">d</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, <span class="st">", lat ="</span>, <span class="va">d</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="co"># do something complicated ...</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lon = -0.3295705 , lat = -0.5831302</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lon = 0.8138328 , lat = -1.83419</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lon = 0.5940194 , lat = -0.001671664</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lon = -0.2474109 , lat = -0.6572413</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> lon = -0.3070199 , lat = 0.8021363</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lon = -1.34008 , lat = 0.4111546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lon = -0.9054664 , lat = 0.5640929</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lon = -0.2121424 , lat = 0.06356228</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lon = -0.778162 , lat = 0.5173632</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lon = -0.1411845 , lat = 0.4395096</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/rm.html" class="external-link">rm</a></span><span class="op">(</span><span class="va">coord</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Factors</span></span></span>
