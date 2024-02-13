@@ -20,10 +20,13 @@
 <<preliminaries, echo=FALSE, message=FALSE, warning=FALSE, results=hide>>=
 # knitr::opts_chunk$set(cache = FALSE, size = "small")
 options(prompt = "R> ", continue = "+  ", width = 80, digits = 4, useFancyQuotes = FALSE, warn = 1)
-library(data.table)
-library(magrittr)
-library(microbenchmark)
-library(collapse)
+# Loading libraries and installing if unavailable
+if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
+library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
+fastverse_extend(microbenchmark, Rfast, fixest, install = TRUE) # loads and installs if unavailable
+# Package versions used in the article:
+# fastverse 0.3.2, collapse 2.0.10, data.table 1.15.0, magrittr 2.0.3,
+# microbenchmark 1.4.10, Rfast 2.1.0, and fixest 0.11.3
 @
 
 
@@ -45,7 +48,7 @@ library(collapse)
 
 %% - \Abstract{} almost as usual
 \Abstract{
-\pkg{collapse} is a large C/C++-based infrastructure package for \proglang{R} facilitating complex statistical computing, data transformation, and exploration tasks in \proglang{R} - at outstanding levels of performance and programming efficiency. It also implements a class-agnostic approach to \proglang{R} programming, supporting vector, matrix and data frame-like objects and their popular variants (e.g. \class{factor}, \class{ts}, \class{xts}, \class{tibble}, \class{data.table}, \class{sf}), enabling seamless integration with large parts of the \proglang{R} ecosystem. This article introduces the package's key components and design principles in a structured way, supported by a rich set of examples. A small benchmark demonstrates its computational performance.
+\pkg{collapse} is a large C/C++-based infrastructure package facilitating complex statistical computing, data transformation, and exploration tasks in \proglang{R} - at outstanding levels of performance and programming efficiency. It also implements a class-agnostic approach to \proglang{R} programming, supporting vector, matrix and data frame-like objects and their popular variants (e.g. \class{factor}, \class{ts}, \class{xts}, \class{tibble}, \class{data.table}, \class{sf}), enabling its seamless integration with large parts of the \proglang{R} ecosystem. This article introduces the package's key components and design principles in a structured way, supported by a rich set of examples. A small benchmark demonstrates its computational performance.
 %  This short article illustrates how to write a manuscript for the
 %  \emph{Journal of Statistical Software} (JSS) using its {\LaTeX} style files.
 %  Generally, we ask to follow JSS's style guide and FAQs precisely. Also,
@@ -606,17 +609,18 @@ The above is now 100\% \pkg{collapse} code. Similarly, using this option, all co
 %
 \section{Benchmark} \label{sec:bench}
 %
-This section offers a small benchmark to demonstrate that \pkg{collapse} provides best-in-\proglang{R} performance for many basic statistical and data manipulation tasks. They are executed on an Apple M1 MacBook Pro with 16 GB unified memory. All packages are compiled and used in single-threaded mode to avoid artifacts of different parallel setups and resource utilization. The \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks} compare more software packages on larger datasets.
+This section offers a small benchmark to demonstrate that \pkg{collapse} provides best-in-\proglang{R} performance for many basic statistical and data manipulation tasks. They are executed on an Apple M1 MacBook Pro with 16 GB unified memory. The \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks} compare more software packages on larger datasets, using a large server with many (slow) cores.
 %
 <<bench, cache=TRUE>>=
-set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 1)
+setDTthreads(4)
+set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 4)
 set.seed(101)
 m <- matrix(rnorm(1e7), ncol = 1000)
 data <- qDT(replicate(100, rnorm(1e5), simplify = FALSE))
 g <- sample.int(1e4, 1e5, TRUE)
 
 microbenchmark(R = colMeans(m),
-               Rfast = Rfast::colmeans(m),
+               Rfast = Rfast::colmeans(m, parallel = TRUE, cores = 4),
                collapse = fmean(m))
 microbenchmark(R = rowsum(data, g, reorder = FALSE),
                data.table = data[, lapply(.SD, sum), by = g],
@@ -659,13 +663,13 @@ Apart from the raw algorithmic efficiency demonstrated here, \pkg{collapse} is o
 
 \section{Conclusion} \label{sec:conclusion}
 
-It is coming close to 4 years since the first CRAN release of \pkg{collapse} in March 2020, and since then, the package has grown and matured considerably. At the time of writing this article, it has been downloaded $>$1.5 million times off CRAN and is known and used by thousands of \proglang{R} users. In this article, I have articulated key ideas and design principles and demonstrated some core features of the package. In summary, my work with \proglang{R} as an applied economist has led me to believe that there should be a new foundation package for statistical computing and data manipulation in \proglang{R} that is statistically advanced, class-agnostic, flexible, fast, lightweight, stable, and able to manipulate complex scientific data with ease. \pkg{collapse} is my attempt at providing such a package, and the feedback I have received over the years, particularly from users in academia, government, and international organizations, is a strong indication that I have responded to a need felt in larger parts of the \proglang{R} community. As mentioned, a single article cannot summarize \pkg{collapse} in 2024, but there is an excellent \href{https://sebkrantz.github.io/collapse/index.html}{website} with comprehensive \href{https://sebkrantz.github.io/collapse/articles/collapse_documentation.html}{Documentation Resources}.
+It is coming close to 4 years since the first CRAN release of \pkg{collapse} in March 2020, and since then, the package has grown and matured considerably. At the time of writing this article, it has been downloaded $>$1.5 million times off CRAN and is known and used by thousands of \proglang{R} users. In this article, I have articulated key ideas and design principles and demonstrated some core features of the package. In summary, my work with \proglang{R} as an applied economist has led me to believe that there should be a new foundation package for statistical computing and data manipulation in \proglang{R} that is statistically advanced, class-agnostic, flexible, fast, lightweight, stable, and able to manipulate complex scientific data with ease. \pkg{collapse} is my attempt at providing such a package, and the feedback I have received over the years, particularly from users in academia, government, and international organizations, is a strong indication that I have responded to a need felt in larger parts of the \proglang{R} community. As mentioned, a single article cannot summarize \pkg{collapse}, but there is an excellent \href{https://sebkrantz.github.io/collapse/index.html}{website} with comprehensive \href{https://sebkrantz.github.io/collapse/articles/collapse_documentation.html}{Documentation Resources}.
 
 
 %% -- Optional special unnumbered sections -------------------------------------
 
 \section*{Computational details}
-The results in this paper were obtained using \proglang{R} \citep{R} 4.3.0 with \pkg{collapse} 2.0.8, \pkg{data.table} 1.14.10, \pkg{Rfast} 2.1.0, \pkg{fixest} 0.11.2, \pkg{magrittr} \citep{rmagrittr} 2.0.3 and \pkg{microbenchmark} \citep{rmicrobenchmark} 1.4.10. All packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at https://CRAN.R-project.org/. The benchmark was run on an Apple M1 MacBook Pro (2020) with 16GB unified memory and serially compiled CRAN binaries for Mac.
+The results in this paper were obtained using \proglang{R} \citep{R} 4.3.0 with \pkg{collapse} 2.0.10, \pkg{data.table} 1.15.0, \pkg{Rfast} 2.1.0, \pkg{fixest} 0.11.3, \pkg{magrittr} \citep{rmagrittr} 2.0.3 and \pkg{microbenchmark} \citep{rmicrobenchmark} 1.4.10. All packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at https://CRAN.R-project.org/. The benchmark was run on an Apple M1 MacBook Pro (2020) with 16GB unified memory. Packages were compiled from source using Homebrew Clang version 16.0.4 with OpenMP enabled and the -O3 optimization flag.
 
 \section*{Acknowledgments}
 
