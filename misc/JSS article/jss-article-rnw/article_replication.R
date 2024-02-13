@@ -15,6 +15,7 @@ options(prompt = "R> ", continue = "+  ", width = 80, digits = 4, useFancyQuotes
 
 # Loading libraries and installing if unavailable
 if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
+options(fastverse.styling = FALSE)
 library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
 fastverse_extend(microbenchmark, Rfast, fixest, install = TRUE) # loads and installs if unavailable
 # Package versions used in the article:
