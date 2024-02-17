@@ -37,7 +37,7 @@
 
 %% - \Abstract{} almost as usual
 \Abstract{
-\pkg{collapse} is a large C/C++-based infrastructure package for \proglang{R} facilitating complex statistical computing, data transformation, and exploration tasks in \proglang{R} - at outstanding levels of performance and programming efficiency. It also implements a class-agnostic approach to \proglang{R} programming, supporting vector, matrix and data frame-like objects and their popular variants (e.g. \class{factor}, \class{ts}, \class{xts}, \class{tibble}, \class{data.table}, \class{sf}), enabling seamless integration with large parts of the \proglang{R} ecosystem. This article introduces the package's key components and design principles in a structured way, supported by a rich set of examples. A small benchmark demonstrates its computational performance.
+\pkg{collapse} is a large C/C++-based infrastructure package facilitating complex statistical computing, data transformation, and exploration tasks in \proglang{R} - at outstanding levels of performance and programming efficiency. It also implements a class-agnostic approach to \proglang{R} programming, supporting vector, matrix and data frame-like objects and their popular variants (e.g. \class{factor}, \class{ts}, \class{xts}, \class{tibble}, \class{data.table}, \class{sf}), enabling its seamless integration with large parts of the \proglang{R} ecosystem. This article introduces the package's key components and design principles in a structured way, supported by a rich set of examples. A small benchmark demonstrates its computational performance.
 %  This short article illustrates how to write a manuscript for the
 %  \emph{Journal of Statistical Software} (JSS) using its {\LaTeX} style files.
 %  Generally, we ask to follow JSS's style guide and FAQs precisely. Also,
@@ -86,7 +86,7 @@
 
 \section[Introduction]{Introduction} \label{sec:intro}
 %
-\href{https://sebkrantz.github.io/collapse/}{\pkg{collapse}}\footnote{Website: https://sebkrantz.github.io/collapse/} is a large C/C++ based \proglang{R} package that provides an integrated suite of statistical and data manipulation functions. Most of these statistical functions are vectorized along multiple dimensions (notably along groups and columns) and perform high-cardinality operations\footnote{With many columns and/or groups relative to data size.} very efficiently. It also offers vectorizations for advanced operations such as weighted statistics (including mode and quantiles), functions and classes for fully indexed (time-aware) computations on time series and panel data, recursive (list-processing) tools to deal with nested data and advanced descriptive statistical tools. This functionality is supported by efficient algorithms for intensive operations like grouping, unique values, matching, ordering, etc., tailored to \proglang{R}'s data structures and powerful data manipulation functions. The package also supplies many features for memory efficient \proglang{R} programming, such as data transformation and math by reference and aversion of logical vectors. \pkg{collapse} is class-agnostic, i.e., it provides most statistical operations for atomic vectors, matrices, and data frames/lists, and seamlessly supports key variants of these objects used in the \proglang{R} ecosystem (e.g. \emph{tibble}, \emph{data.table}, \emph{sf}, \emph{xts}, \emph{pdata.frame}). It is globally and interactively configurable, which includes setting different defaults for key function arguments (such as \code{na.rm} arguments to statistical functions, default \code{TRUE}), and modifying the package namespace itself.\footnote{\pkg{collapse}'s namespace is fully compatible with base \proglang{R} and the \pkg{tidyverse}, but can be interactively modified to overwrite key functions like \code{unique}, \code{match}, \code{\%in\%}, \code{table}, \code{subset}, \code{mutate}, \code{summarise} etc. with much faster \pkg{collapse} equivalents.} \newline
+\href{https://sebkrantz.github.io/collapse/}{\pkg{collapse}}\footnote{Website: https://sebkrantz.github.io/collapse/} is a large C/C++-based \proglang{R} package that provides an integrated suite of statistical and data manipulation functions. Most of these statistical functions are vectorized along multiple dimensions (notably along groups and columns) and perform high-cardinality operations\footnote{With many columns and/or groups relative to data size.} very efficiently. It also offers vectorizations for advanced operations such as weighted statistics (including mode and quantiles), functions and classes for fully indexed (time-aware) computations on time series and panel data, recursive (list-processing) tools to deal with nested data and advanced descriptive statistical tools. This functionality is supported by efficient algorithms for intensive operations like grouping, unique values, matching, ordering, etc., tailored to \proglang{R}'s data structures and powerful data manipulation functions. The package also supplies many features for memory efficient \proglang{R} programming, such as data transformation and math by reference and aversion of logical vectors. \pkg{collapse} is class-agnostic, i.e., it provides most statistical operations for atomic vectors, matrices, and data frames/lists, and seamlessly supports key variants of these objects used in the \proglang{R} ecosystem (e.g. \emph{tibble}, \emph{data.table}, \emph{sf}, \emph{xts}, \emph{pdata.frame}). It is globally and interactively configurable, which includes setting different defaults for key function arguments (such as \code{na.rm} arguments to statistical functions, default \code{TRUE}), and modifying the package namespace itself.\footnote{\pkg{collapse}'s namespace is fully compatible with base \proglang{R} and the \pkg{tidyverse}, but can be interactively modified to overwrite key functions like \code{unique}, \code{match}, \code{\%in\%}, \code{table}, \code{subset}, \code{mutate}, \code{summarise} etc. with much faster \pkg{collapse} equivalents.} \newline
 
 What is the purpose of combining all of this in a package? The short answer is to make computations in \proglang{R} as flexible and powerful as possible. The more elaborate answer is to (1) facilitate complex data transformation, exploration, and computing tasks in \proglang{R}; (2) increase performance and parsimony by avoiding \proglang{R}-level repetition\footnote{Such as applying \proglang{R} functions across columns or split-apply-combine computing to apply functions across groups or other divisions of data.}; (3) increase the memory efficiency and flexibility of \proglang{R} programs\footnote{E.g. by avoiding object conversions and the need for certain classes to do certain things, such as converting to data frame or \class{data.table} to do something "by groups" and then convert back to matrix to continue with linear algebra, and in general to reduce the need for metaprogramming.}; and (4) to create a new foundation package for statistics and data manipulation in \proglang{R} that implements successful ideas developed in the \proglang{R} ecosystem and other programming environments such as \proglang{Python} or \proglang{STATA} \citep{STATA}, including some new ideas, in a stable, high performance, and broadly compatible manor.\footnote{Examples of such ideas are \pkg{tidyverse} syntax, vectorized aggregations (\pkg{data.table}), data transformation by reference (\proglang{Python}, \pkg{pandas}), vectorized and verbose joins (\pkg{polars}, \proglang{STATA}), indexed time series and panel data (\pkg{xts}, \pkg{plm}), summary statistics for panel data (\proglang{STATA}), reshaping labelled data (myself) etc...} \newline
 
@@ -341,8 +341,8 @@ R> mtcars |>
 \begin{Soutput}
   cyl vs am mpg_min mpg_Q1 mpg_mean mpg_median mpg_mode mpg_Q3 mpg_max
 1   4  0  1    26.0  26.00    26.00      26.00     26.0  26.00    26.0
-2   4  1  0    21.5  22.10    23.02      23.17     24.4  24.38    24.4
-3   4  1  1    21.4  22.29    27.74      27.85     30.4  31.79    33.9
+2   4  1  0    21.5  21.90    23.02      23.16     24.4  24.38    24.4
+3   4  1  1    21.4  22.37    27.74      28.28     30.4  31.51    33.9
 \end{Soutput}
 \end{Schunk}
 %
@@ -490,8 +490,8 @@ R> HDW(wlddev, PCGDP + LIFEEX ~ iso3c * poly(year, 3), stub = F) |> head(2)
 \end{Sinput}
 \begin{Soutput}
    PCGDP   LIFEEX
-1  9.964 0.023670
-2 14.045 0.006743
+1  8.885 0.023614
+2 13.685 0.006724
 \end{Soutput}
 \end{Schunk}
 %
@@ -722,10 +722,10 @@ R> print(data)
 \end{Sinput}
 \begin{Soutput}
   type type_name id      r      h
-1    A    Apples  1 0.1054 3.5624
-2    A    Apples  2 0.7924 3.9380
-3    B   Bananas  1 0.1717 1.1828
-4    B   Bananas  2 0.3461 0.3884
+1    A    Apples  1 0.9322 0.4315
+2    A    Apples  2 0.2230 0.7225
+3    B   Bananas  1 0.8147 0.4918
+4    B   Bananas  2 0.5642 2.4131
 \end{Soutput}
 \begin{Sinput}
 R> vlabels(data)
@@ -744,14 +744,14 @@ R> (dl <- pivot(data, ids = c("type", "type_name", "id"), labels = "label"))
 \end{Sinput}
 \begin{Soutput}
   type type_name id variable        label  value
-1    A    Apples  1        r Fruit Radius 0.1054
-2    A    Apples  2        r Fruit Radius 0.7924
-3    B   Bananas  1        r Fruit Radius 0.1717
-4    B   Bananas  2        r Fruit Radius 0.3461
-5    A    Apples  1        h Fruit Height 3.5624
-6    A    Apples  2        h Fruit Height 3.9380
-7    B   Bananas  1        h Fruit Height 1.1828
-8    B   Bananas  2        h Fruit Height 0.3884
+1    A    Apples  1        r Fruit Radius 0.9322
+2    A    Apples  2        r Fruit Radius 0.2230
+3    B   Bananas  1        r Fruit Radius 0.8147
+4    B   Bananas  2        r Fruit Radius 0.5642
+5    A    Apples  1        h Fruit Height 0.4315
+6    A    Apples  2        h Fruit Height 0.7225
+7    B   Bananas  1        h Fruit Height 0.4918
+8    B   Bananas  2        h Fruit Height 2.4131
 \end{Soutput}
 \begin{Sinput}
 R> vlabels(dl)
@@ -771,9 +771,9 @@ The second option is a wider pivot with \code{how = "wider"}. Here, \code{names}
 R> (dw <- pivot(data, "id", names = "type", labels = "type_name", how = "w"))
 \end{Sinput}
 \begin{Soutput}
-  id    r_A    r_B   h_A    h_B
-1  1 0.1054 0.1717 3.562 1.1828
-2  2 0.7924 0.3461 3.938 0.3884
+  id    r_A    r_B    h_A    h_B
+1  1 0.9322 0.8147 0.4315 0.4918
+2  2 0.2230 0.5642 0.7225 2.4131
 \end{Soutput}
 \begin{Sinput}
 R> namlab(dw)
@@ -797,10 +797,10 @@ R> (dr <- pivot(data, ids = "id", names = list(from = "type"),
 \end{Sinput}
 \begin{Soutput}
   id variable        label      A      B
-1  1        r Fruit Radius 0.1054 0.1717
-2  2        r Fruit Radius 0.7924 0.3461
-3  1        h Fruit Height 3.5624 1.1828
-4  2        h Fruit Height 3.9380 0.3884
+1  1        r Fruit Radius 0.9322 0.8147
+2  2        r Fruit Radius 0.2230 0.5642
+3  1        h Fruit Height 0.4315 0.4918
+4  2        h Fruit Height 0.7225 2.4131
 \end{Soutput}
 \begin{Sinput}
 R> vlabels(dr)
@@ -966,8 +966,8 @@ TRUE   2156  18.49   2016  74.97  5.36  45.37  84.36   -1.3  6.55
 
 Quantiles
           1%     5%    10%    25%    50%    75%    90%    95%    99%
-FALSE  41.32  37.63  48.98   57.5  65.87  69.68   74.1  32.39  76.18
-TRUE   56.67  65.65  69.69  71.84  75.32  78.61  81.26  81.23  83.59
+FALSE  41.39  45.78  49.08  57.51  65.98  70.14  74.12  75.63  76.91
+TRUE   56.65  65.98   69.7  71.85  75.38  78.64  81.26  82.43   83.6
 -----------------------------------------------------------------------------
 \end{Soutput}
 \end{Schunk}
@@ -1063,25 +1063,26 @@ The above is now 100\% \pkg{collapse} code. Similarly, using this option, all co
 %
 \section{Benchmark} \label{sec:bench}
 %
-This section offers a small benchmark to demonstrate that \pkg{collapse} provides best-in-\proglang{R} performance for many basic statistical and data manipulation tasks. They are executed on an Apple M1 MacBook Pro with 16 GB unified memory. All packages are compiled and used in single-threaded mode to avoid artifacts of different parallel setups and resource utilization. The \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks} compare more software packages on larger datasets.
+This section offers a small benchmark to demonstrate that \pkg{collapse} provides best-in-\proglang{R} performance for many basic statistical and data manipulation tasks. They are executed on an Apple M1 MacBook Pro with 16 GB unified memory. The \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks} compare more software packages on larger datasets, using a large server with many (slow) cores.
 %
 \begin{Schunk}
 \begin{Sinput}
-R> set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 1)
+R> setDTthreads(4)
+R> set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 4)
 R> set.seed(101)
 R> m <- matrix(rnorm(1e7), ncol = 1000)
 R> data <- qDT(replicate(100, rnorm(1e5), simplify = FALSE))
 R> g <- sample.int(1e4, 1e5, TRUE)
 R> microbenchmark(R = colMeans(m),
-+                 Rfast = Rfast::colmeans(m),
++                 Rfast = Rfast::colmeans(m, parallel = TRUE, cores = 4),
 +                 collapse = fmean(m))
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-     expr   min    lq  mean median    uq    max neval
-        R 9.489 9.538 9.622  9.587 9.625 11.013   100
-    Rfast 4.732 4.757 4.974  4.779 4.826 22.022   100
- collapse 1.356 1.459 1.685  1.564 1.737  7.917   100
+     expr   min    lq  mean median    uq   max neval
+        R 9.632 9.837 9.959  9.852 9.940 12.70   100
+    Rfast 1.315 1.805 2.257  1.840 1.917 11.92   100
+ collapse 1.321 1.432 1.847  1.506 1.603 16.33   100
 \end{Soutput}
 \begin{Sinput}
 R> microbenchmark(R = rowsum(data, g, reorder = FALSE),
@@ -1090,10 +1091,10 @@ R> microbenchmark(R = rowsum(data, g, reorder = FALSE),
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-       expr    min     lq  mean median     uq   max neval
-          R 10.721 11.036 12.69 11.323 11.901 51.54   100
- data.table 16.200 16.695 18.56 16.940 18.126 60.54   100
-   collapse  5.109  5.512  6.08  5.617  5.952 16.85   100
+       expr    min    lq   mean median    uq   max neval
+          R 10.715 11.19 11.550 11.295 11.61 16.89   100
+ data.table  9.154 18.70 19.743 19.229 20.19 30.22   100
+   collapse  2.330  2.89  3.619  3.078  3.71 15.94   100
 \end{Soutput}
 \begin{Sinput}
 R> add_vars(data) <- g
@@ -1102,9 +1103,9 @@ R> microbenchmark(data.table = data[, lapply(.SD, median), by = g],
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-       expr   min    lq  mean median    uq   max neval
- data.table 130.1 130.9 132.5  131.8 133.1 150.5   100
-   collapse 117.1 118.1 119.5  118.6 119.6 130.3   100
+       expr    min     lq   mean median     uq   max neval
+ data.table 136.36 137.50 140.23 138.54 140.62 173.7   100
+   collapse  68.42  76.85  82.25  80.28  83.36 163.3   100
 \end{Soutput}
 \begin{Sinput}
 R> d <- data.table(g = unique(g), x = 1, y = 2, z = 3)
@@ -1113,9 +1114,9 @@ R> microbenchmark(data.table = d[data, on = "g"],
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-       expr    min     lq   mean median     uq    max neval
- data.table 21.136 23.775 34.691 25.463 45.039 72.758   100
-   collapse  1.178  1.323  1.348  1.356  1.377  1.509   100
+       expr   min     lq   mean median     uq    max neval
+ data.table 8.915 10.881 16.398 13.166 16.903 73.045   100
+   collapse 1.228  1.379  1.452  1.413  1.459  2.337   100
 \end{Soutput}
 \begin{Sinput}
 R> microbenchmark(data.table = melt(data, "g"),
@@ -1124,8 +1125,8 @@ R> microbenchmark(data.table = melt(data, "g"),
 \begin{Soutput}
 Unit: milliseconds
        expr   min    lq  mean median    uq   max neval
- data.table 11.87 14.86 19.92  16.07 17.60 56.57   100
-   collapse 11.67 12.69 19.28  15.83 17.27 60.33   100
+ data.table 11.79 12.84 17.99  15.87 17.68 73.75   100
+   collapse 11.73 13.77 20.37  15.69 18.17 76.75   100
 \end{Soutput}
 \begin{Sinput}
 R> settransform(data, id = rowid(g))
@@ -1135,9 +1136,9 @@ R> microbenchmark(data.table = dcast(data, g ~ id, value.var = cols),
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-       expr   min    lq   mean median     uq    max neval
- data.table 63.45 102.5 104.88 104.89 108.03 140.38   100
-   collapse 33.23  71.4  74.14  72.77  75.69  93.31   100
+       expr   min    lq  mean median     uq   max neval
+ data.table 60.01 69.99 90.12  74.28 111.73 157.7   100
+   collapse 32.59 41.80 63.15  48.87  63.98 177.0   100
 \end{Soutput}
 \end{Schunk}
 %
@@ -1155,11 +1156,11 @@ R> microbenchmark(base_int = unique(g_int), collapse_int = funique(g_int),
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-          expr    min     lq  mean median    uq    max neval
-      base_int 60.165 62.240 64.93 64.143 65.25 113.92   100
-  collapse_int  8.518  9.183 11.16  9.374 12.51  54.94   100
-     base_char 92.549 95.915 98.02 97.444 99.13 124.71   100
- collapse_char 22.018 23.435 24.55 23.829 24.36  34.54   100
+          expr   min     lq   mean median     uq    max neval
+      base_int 60.07 61.852  67.56 65.613  68.55 133.05   100
+  collapse_int  6.69  9.222  10.34  9.581  10.18  17.56   100
+     base_char 91.79 94.570 102.38 99.497 103.65 170.41   100
+ collapse_char 22.29 23.879  26.83 24.577  27.58  80.46   100
 \end{Soutput}
 \begin{Sinput}
 R> microbenchmark(base_int = match(g_int, 1:1000),
@@ -1171,11 +1172,11 @@ R> microbenchmark(base_int = match(g_int, 1:1000),
 \begin{Soutput}
 Unit: milliseconds
             expr    min     lq   mean median     uq   max neval
-        base_int 27.159 27.309 29.033 28.026 30.473 32.37    10
-    collapse_int  8.592  8.626  9.294  8.808  9.155 13.23    10
-       base_char 76.203 76.389 80.089 77.340 82.390 88.61    10
- data.table_char 41.366 41.470 42.315 41.750 42.040 47.57    10
-   collapse_char 26.039 26.153 26.871 26.369 26.630 31.65    10
+        base_int 26.873 26.993 28.261 27.094 27.306 33.25    10
+    collapse_int  8.603  8.633  9.352  8.662  8.723 15.53    10
+       base_char 84.091 84.726 86.127 85.100 86.008 91.23    10
+ data.table_char 40.970 41.169 42.597 41.307 41.407 48.49    10
+   collapse_char 30.482 30.541 30.774 30.622 30.803 31.47    10
 \end{Soutput}
 \end{Schunk}
 %
@@ -1186,13 +1187,13 @@ Apart from the raw algorithmic efficiency demonstrated here, \pkg{collapse} is o
 
 \section{Conclusion} \label{sec:conclusion}
 
-It is coming close to 4 years since the first CRAN release of \pkg{collapse} in March 2020, and since then, the package has grown and matured considerably. At the time of writing this article, it has been downloaded $>$1.5 million times off CRAN and is known and used by thousands of \proglang{R} users. In this article, I have articulated key ideas and design principles and demonstrated some core features of the package. In summary, my work with \proglang{R} as an applied economist has led me to believe that there should be a new foundation package for statistical computing and data manipulation in \proglang{R} that is statistically advanced, class-agnostic, flexible, fast, lightweight, stable, and able to manipulate complex scientific data with ease. \pkg{collapse} is my attempt at providing such a package, and the feedback I have received over the years, particularly from users in academia, government, and international organizations, is a strong indication that I have responded to a need felt in larger parts of the \proglang{R} community. As mentioned, a single article cannot summarize \pkg{collapse} in 2024, but there is an excellent \href{https://sebkrantz.github.io/collapse/index.html}{website} with comprehensive \href{https://sebkrantz.github.io/collapse/articles/collapse_documentation.html}{Documentation Resources}.
+It is coming close to 4 years since the first CRAN release of \pkg{collapse} in March 2020, and since then, the package has grown and matured considerably. At the time of writing this article, it has been downloaded $>$1.5 million times off CRAN and is known and used by thousands of \proglang{R} users. In this article, I have articulated key ideas and design principles and demonstrated some core features of the package. In summary, my work with \proglang{R} as an applied economist has led me to believe that there should be a new foundation package for statistical computing and data manipulation in \proglang{R} that is statistically advanced, class-agnostic, flexible, fast, lightweight, stable, and able to manipulate complex scientific data with ease. \pkg{collapse} is my attempt at providing such a package, and the feedback I have received over the years, particularly from users in academia, government, and international organizations, is a strong indication that I have responded to a need felt in larger parts of the \proglang{R} community. As mentioned, a single article cannot summarize \pkg{collapse}, but there is an excellent \href{https://sebkrantz.github.io/collapse/index.html}{website} with comprehensive \href{https://sebkrantz.github.io/collapse/articles/collapse_documentation.html}{Documentation Resources}.
 
 
 %% -- Optional special unnumbered sections -------------------------------------
 
 \section*{Computational details}
-The results in this paper were obtained using \proglang{R} \citep{R} 4.3.0 with \pkg{collapse} 2.0.8, \pkg{data.table} 1.14.10, \pkg{Rfast} 2.1.0, \pkg{fixest} 0.11.2, \pkg{magrittr} \citep{rmagrittr} 2.0.3 and \pkg{microbenchmark} \citep{rmicrobenchmark} 1.4.10. All packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at https://CRAN.R-project.org/. The benchmark was run on an Apple M1 MacBook Pro (2020) with 16GB unified memory and serially compiled CRAN binaries for Mac.
+The results in this paper were obtained using \proglang{R} \citep{R} 4.3.0 with \pkg{collapse} 2.0.10, \pkg{data.table} 1.15.0, \pkg{Rfast} 2.1.0, \pkg{fixest} 0.11.3, \pkg{magrittr} \citep{rmagrittr} 2.0.3 and \pkg{microbenchmark} \citep{rmicrobenchmark} 1.4.10. All packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at https://CRAN.R-project.org/. The benchmark was run on an Apple M1 MacBook Pro (2020) with 16GB unified memory. Packages were compiled from source using Homebrew Clang version 16.0.4 with OpenMP enabled and the -O3 optimization flag.
 
 \section*{Acknowledgments}
 

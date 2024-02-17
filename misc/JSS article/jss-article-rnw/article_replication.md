@@ -17,47 +17,14 @@
 ###################################################
 
 options(prompt = "R> ", continue = "+  ", width = 80, digits = 4, useFancyQuotes = FALSE, warn = 1)
-library(data.table)     # v1.14.10
-```
 
-```
-## Warning: package 'data.table' was built under R version 4.3.1
-```
-
-```
-## data.table 1.14.10 using 1 threads (see ?getDTthreads).  Latest news: r-datatable.com
-```
-
-```
-## **********
-## This installation of data.table has not detected OpenMP support. It should still work but in single-threaded mode.
-## This is a Mac. Please read https://mac.r-project.org/openmp/. Please engage with Apple and ask them for support. Check r-datatable.com for updates, and our Mac instructions here: https://github.com/Rdatatable/data.table/wiki/Installation. After several years of many reports of installation problems on Mac, it's time to gingerly point out that there have been no similar problems on Windows or Linux.
-## **********
-```
-
-```r
-library(magrittr)       # v2.0.3
-library(microbenchmark) # v1.4.10
-library(collapse)       # v2.0.8
-```
-
-```
-## collapse 2.0.8, see ?`collapse-package` or ?`collapse-documentation`
-```
-
-```
-## 
-## Attaching package: 'collapse'
-```
-
-```
-## The following object is masked from 'package:stats':
-## 
-##     D
-```
-
-```r
-# Also used: {Rfast} v2.1.0 and {fixest} v0.11.2
+# Loading libraries and installing if unavailable
+if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
+library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
+fastverse_extend(microbenchmark, Rfast, fixest, install = TRUE) # loads and installs if unavailable
+# Package versions used in the article:
+# fastverse 0.3.2, collapse 2.0.10, data.table 1.15.0, magrittr 2.0.3,
+# microbenchmark 1.4.10, Rfast 2.1.0, and fixest 0.11.3
 
 ###################################################
 ### code chunk number 2: collapse Topics and Documentation
@@ -87,7 +54,7 @@ fnobs(airquality)
 
 ```
 ##   Ozone Solar.R    Wind    Temp   Month     Day 
-##     116     146     153     153     153     153
+##     153     153     153     153     153     153
 ```
 
 ```r
@@ -125,20 +92,17 @@ str(g <- GRP(mtcars, ~ cyl + vs + am))
 ```
 ## Class 'GRP'  hidden list of 9
 ##  $ N.groups    : int 7
-##  $ group.id    : int [1:32] 4 4 3 5 6 5 6 2 2 5 ...
-##  $ group.sizes : int [1:7] 1 3 7 3 4 12 2
+##  $ group.id    : int [1:32] 1 1 2 3 4 3 4 5 5 3 ...
+##  $ group.sizes : int [1:7] 3 7 4 12 3 1 2
 ##  $ groups      :'data.frame':	7 obs. of  3 variables:
-##   ..$ cyl: num [1:7] 4 4 4 6 6 8 8
+##   ..$ cyl: num [1:7] 6 4 6 8 4 4 8
 ##   ..$ vs : num [1:7] 0 1 1 0 1 0 0
-##   ..$ am : num [1:7] 1 0 1 1 0 0 1
+##   ..$ am : num [1:7] 1 1 0 0 0 1 1
 ##  $ group.vars  : chr [1:3] "cyl" "vs" "am"
-##  $ ordered     : Named logi [1:2] TRUE FALSE
+##  $ ordered     : Named logi [1:2] FALSE NA
 ##   ..- attr(*, "names")= chr [1:2] "ordered" "sorted"
-##  $ order       : int [1:32] 27 8 9 21 3 18 19 20 26 28 ...
-##   ..- attr(*, "starts")= int [1:7] 1 2 5 12 15 19 31
-##   ..- attr(*, "maxgrpn")= int 12
-##   ..- attr(*, "sorted")= logi FALSE
-##  $ group.starts: int [1:7] 27 8 3 1 4 5 29
+##  $ order       : NULL
+##  $ group.starts: int [1:7] 1 3 4 5 8 27 29
 ##  $ call        : language GRP.default(X = mtcars, by = ~cyl + vs + am)
 ```
 
@@ -154,8 +118,8 @@ add_vars(g$groups,
 
 ```
 ##   cyl vs am w_mean_mpg w_mean_disp w_sd_mpg w_sd_disp
-## 1   4  0  1      26.00       120.3    0.000       0.0
-## 2   4  1  0      23.02       137.1    1.236      11.6
+## 1   6  0  1      20.56      154.97   0.6545     7.552
+## 2   4  1  1      27.74       92.24   4.8330    19.254
 ```
 
 ```r
@@ -187,9 +151,9 @@ mtcars |>
 ```
 
 ```
-##   cyl vs am  mpg  carb    hp qsec_w_med
-## 1   4  0  1 26.0 2.000 91.00      16.70
-## 2   4  1  0 22.9 1.667 84.67      21.04
+##   cyl vs am   mpg  carb     hp qsec_w_med
+## 1   6  0  1 20.57 4.667 131.67      16.33
+## 2   4  1  1 28.37 1.429  80.57      18.76
 ```
 
 ```r
@@ -203,9 +167,9 @@ mtcars |>
 ```
 
 ```
-##   cyl vs am sum.wt   mpg carb   hp
-## 1   4  0  1  2.140 26.00 2.00 91.0
-## 2   4  1  0  8.805 23.02 1.72 83.6
+##   cyl vs am sum.wt   mpg  carb     hp
+## 1   6  0  1  8.265 20.56 4.670 131.78
+## 2   4  1  1 14.198 27.74 1.416  82.12
 ```
 
 ```r
@@ -242,9 +206,9 @@ mtcars |>
 
 ```
 ##   cyl vs am mpg_min mpg_Q1 mpg_mean mpg_median mpg_mode mpg_Q3 mpg_max
-## 1   4  0  1    26.0  26.00    26.00      26.00     26.0  26.00    26.0
-## 2   4  1  0    21.5  22.10    23.02      23.17     24.4  24.38    24.4
-## 3   4  1  1    21.4  22.29    27.74      27.85     30.4  31.79    33.9
+## 1   6  0  1    19.7  19.91    20.56      20.99     21.0  21.00    21.0
+## 2   4  1  1    21.4  22.37    27.74      28.28     30.4  31.51    33.9
+## 3   6  1  0    17.8  17.92    19.09      18.61     18.1  20.37    21.4
 ```
 
 ```r
@@ -256,11 +220,11 @@ collap(wlddev, country + PCGDP + LIFEEX ~ year + income, w = ~ POP) |>
 ```
 
 ```
-##         country year              income   PCGDP LIFEEX       POP
-## 1 United States 1960         High income 12768.7  68.59 7.495e+08
-## 2      Ethiopia 1960          Low income   658.5  38.33 1.474e+08
-## 3         India 1960 Lower middle income   500.8  45.27 9.280e+08
-## 4         China 1960 Upper middle income  1166.1  49.86 1.184e+09
+##    country year     income PCGDP LIFEEX       POP
+## 1 Ethiopia 1960 Low income    NA  38.33 147355735
+## 2 Ethiopia 1961 Low income    NA  38.76 150594270
+## 3 Ethiopia 1962 Low income    NA  39.19 153958958
+## 4 Ethiopia 1963 Low income    NA  39.62 157464100
 ```
 
 ```r
@@ -379,9 +343,9 @@ HDW(wlddev, PCGDP + LIFEEX ~ iso3c * poly(year, 3), stub = F) |> head(2)
 ```
 
 ```
-##    PCGDP   LIFEEX
-## 1  9.964 0.023670
-## 2 14.045 0.006743
+##   PCGDP LIFEEX
+## 1    NA     NA
+## 2    NA     NA
 ```
 
 ```r
@@ -448,15 +412,7 @@ lm(D(LIFEEX) ~ L(PCGDP_ld, 0:5) + B(PCGDP_ld), wldi) |>
 ```
 
 ```
-##                    Estimate Std. Error t value Pr(>|t|)
-## (Intercept)           0.299      0.007  44.412    0.000
-## L(PCGDP_ld, 0:5)--    0.300      0.080   3.735    0.000
-## L(PCGDP_ld, 0:5)L1    0.269      0.081   3.332    0.001
-## L(PCGDP_ld, 0:5)L2    0.227      0.079   2.854    0.004
-## L(PCGDP_ld, 0:5)L3    0.200      0.078   2.563    0.010
-## L(PCGDP_ld, 0:5)L4    0.143      0.076   1.871    0.061
-## L(PCGDP_ld, 0:5)L5    0.095      0.073   1.301    0.193
-## B(PCGDP_ld)          -1.021      0.316  -3.234    0.001
+## Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...): 0 (non-NA) cases
 ```
 
 ```r
@@ -579,11 +535,11 @@ print(data)
 ```
 
 ```
-##   type type_name id       r      h
-## 1    A    Apples  1 0.26103 0.4104
-## 2    A    Apples  2 0.36128 1.0518
-## 3    B   Bananas  1 1.04000 0.5072
-## 4    B   Bananas  2 0.05624 2.5290
+##   type type_name id      r      h
+## 1    A    Apples  1 0.2157 1.6308
+## 2    A    Apples  2 0.3613 4.7243
+## 3    B   Bananas  1 0.2459 0.3345
+## 4    B   Bananas  2 1.2065 0.1468
 ```
 
 ```r
@@ -603,15 +559,15 @@ vlabels(data)
 ```
 
 ```
-##   type type_name id variable        label   value
-## 1    A    Apples  1        r Fruit Radius 0.26103
-## 2    A    Apples  2        r Fruit Radius 0.36128
-## 3    B   Bananas  1        r Fruit Radius 1.04000
-## 4    B   Bananas  2        r Fruit Radius 0.05624
-## 5    A    Apples  1        h Fruit Height 0.41043
-## 6    A    Apples  2        h Fruit Height 1.05181
-## 7    B   Bananas  1        h Fruit Height 0.50718
-## 8    B   Bananas  2        h Fruit Height 2.52899
+##   type type_name id variable        label  value
+## 1    A    Apples  1        r Fruit Radius 0.2157
+## 2    A    Apples  2        r Fruit Radius 0.3613
+## 3    B   Bananas  1        r Fruit Radius 0.2459
+## 4    B   Bananas  2        r Fruit Radius 1.2065
+## 5    A    Apples  1        h Fruit Height 1.6308
+## 6    A    Apples  2        h Fruit Height 4.7243
+## 7    B   Bananas  1        h Fruit Height 0.3345
+## 8    B   Bananas  2        h Fruit Height 0.1468
 ```
 
 ```r
@@ -631,9 +587,9 @@ vlabels(dl)
 ```
 
 ```
-##   id    r_A     r_B    h_A    h_B
-## 1  1 0.2610 1.04000 0.4104 0.5072
-## 2  2 0.3613 0.05624 1.0518 2.5290
+##   id    r_A    r_B   h_A    h_B
+## 1  1 0.2157 0.2459 1.631 0.3345
+## 2  2 0.3613 1.2065 4.724 0.1468
 ```
 
 ```r
@@ -658,11 +614,11 @@ namlab(dw)
 ```
 
 ```
-##   id variable        label      A       B
-## 1  1        r Fruit Radius 0.2610 1.04000
-## 2  2        r Fruit Radius 0.3613 0.05624
-## 3  1        h Fruit Height 0.4104 0.50718
-## 4  2        h Fruit Height 1.0518 2.52899
+##   id variable        label      A      B
+## 1  1        r Fruit Radius 0.2157 0.2459
+## 2  2        r Fruit Radius 0.3613 1.2065
+## 3  1        h Fruit Height 1.6308 0.3345
+## 4  2        h Fruit Height 4.7243 0.1468
 ```
 
 ```r
@@ -684,11 +640,11 @@ vlabels(dr)
 ```
 ## List of 2
 ##  $ 0:List of 2
-##   ..$ 0:'data.frame':	12 obs. of  3 variables:
 ##   ..$ 1:'data.frame':	6 obs. of  3 variables:
+##   ..$ 0:'data.frame':	12 obs. of  3 variables:
 ##  $ 1:List of 2
-##   ..$ 0:'data.frame':	7 obs. of  3 variables:
 ##   ..$ 1:'data.frame':	7 obs. of  3 variables:
+##   ..$ 0:'data.frame':	7 obs. of  3 variables:
 ```
 
 ```r
@@ -706,11 +662,11 @@ nest_lm_coef |> str(give.attr = FALSE, strict = "cut")
 ```
 ## List of 2
 ##  $ 0:List of 2
-##   ..$ 0: num [1:3, 1:4] 15.8791 0.0683 -4.5715 3.655 0.0345 ...
 ##   ..$ 1: num [1:3, 1:4] 26.9556 -0.0319 -0.308 2.293 0.0149 ...
+##   ..$ 0: num [1:3, 1:4] 15.8791 0.0683 -4.5715 3.655 0.0345 ...
 ##  $ 1:List of 2
-##   ..$ 0: num [1:3, 1:4] 30.896903 -0.099403 -0.000332 3.346033 0.03587 ...
 ##   ..$ 1: num [1:3, 1:4] 37.0012 -0.1155 0.4762 7.3316 0.0894 ...
+##   ..$ 0: num [1:3, 1:4] 30.896903 -0.099403 -0.000332 3.346033 0.03587 ...
 ```
 
 ```r
@@ -722,8 +678,8 @@ nest_lm_coef |> unlist2d(c("vs", "am"), row.names = "variable") |> head(2)
 
 ```
 ##   vs am    variable Estimate Std. Error t value Pr(>|t|)
-## 1  0  0 (Intercept) 15.87915    3.65495   4.345 0.001865
-## 2  0  0          hp  0.06832    0.03449   1.981 0.078938
+## 1  0  1 (Intercept)  26.9556    2.29296  11.756 0.001323
+## 2  0  1          hp  -0.0319    0.01487  -2.146 0.121198
 ```
 
 ```r
@@ -826,8 +782,8 @@ descr(wlddev, LIFEEX ~ OECD, w = ~ replace_na(POP))
 ## 
 ## Quantiles
 ##           1%     5%    10%    25%    50%    75%    90%    95%    99%
-## FALSE  41.32  37.63  48.98   57.5  65.87  69.68   74.1  32.39  76.18
-## TRUE   56.67  65.65  69.69  71.84  75.32  78.61  81.26  81.23  83.59
+## FALSE  41.39  45.78  49.08  57.51  65.98  70.14  74.12  75.63  76.91
+## TRUE   56.65  65.98   69.7  71.85  75.38  78.64  81.26  82.43   83.6
 ## --------------------------------------------------------------------------------
 ```
 
@@ -842,9 +798,9 @@ wlda15 %$% qtab(OECD, income)
 
 ```
 ##        income
-## OECD    High income Low income Lower middle income Upper middle income
-##   FALSE          45         30                  47                  58
-##   TRUE           34          0                   0                   2
+## OECD    Low income Upper middle income High income Lower middle income
+##   FALSE         30                  58          45                  47
+##   TRUE           0                   2          34                   0
 ```
 
 ```r
@@ -856,9 +812,9 @@ wlda15 %$% qtab(OECD, income, w = POP) %>% divide_by(1e6)
 
 ```
 ##        income
-## OECD    High income Low income Lower middle income Upper middle income
-##   FALSE       93.01     694.89             3063.54             2459.71
-##   TRUE      1098.75       0.00                0.00              211.01
+## OECD    Low income Upper middle income High income Lower middle income
+##   FALSE          0                   0           0                   0
+##   TRUE           0                   0           0                   0
 ```
 
 ```r
@@ -870,9 +826,9 @@ wlda15 %$% qtab(OECD, income, w = LIFEEX, wFUN = fmean) %>% replace_na(0)
 
 ```
 ##        income
-## OECD    High income Low income Lower middle income Upper middle income
-##   FALSE       78.75      62.81               68.30               73.81
-##   TRUE        81.09       0.00                0.00               76.37
+## OECD    Low income Upper middle income High income Lower middle income
+##   FALSE          0                   0           0                   0
+##   TRUE           0                   0           0                   0
 ```
 
 ```r
@@ -885,38 +841,33 @@ wlda15 %$% qtab(OECD, income, w = LIFEEX, wFUN = fmean,
 
 ```
 ##        income
-## OECD    High income Low income Lower middle income Upper middle income
-##   FALSE       77.91      63.81               68.76               75.93
-##   TRUE        81.13       0.00                0.00               76.10
+## OECD    Low income Upper middle income High income Lower middle income
+##   FALSE          0                   0           0                   0
+##   TRUE           0                   0           0                   0
 ```
 
 ```r
 ###################################################
 ### code chunk number 46: Benchmark: Statistics and Data Manipulation
 ###################################################
-set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 1)
+setDTthreads(4)
+set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 4)
 set.seed(101)
 m <- matrix(rnorm(1e7), ncol = 1000)
 data <- qDT(replicate(100, rnorm(1e5), simplify = FALSE))
 g <- sample.int(1e4, 1e5, TRUE)
 
 microbenchmark(R = colMeans(m),
-               Rfast = Rfast::colmeans(m),
+               Rfast = Rfast::colmeans(m, parallel = TRUE, cores = 4),
                collapse = fmean(m))
-```
-
-```
-## Warning in microbenchmark(R = colMeans(m), Rfast = Rfast::colmeans(m), collapse
-## = fmean(m)): less accurate nanosecond times to avoid potential integer
-## overflows
 ```
 
 ```
 ## Unit: milliseconds
 ##      expr   min    lq  mean median    uq    max neval
-##         R 9.493 9.662 9.913  9.842 9.906 13.703   100
-##     Rfast 4.738 4.801 5.364  4.919 4.979 40.632   100
-##  collapse 1.402 1.569 1.869  1.677 1.884  7.335   100
+##         R 9.838 9.857 9.904  9.876 9.915 10.605   100
+##     Rfast 1.296 1.336 1.578  1.357 1.547  5.162   100
+##  collapse 1.287 1.321 1.411  1.341 1.441  2.477   100
 ```
 
 ```r
@@ -928,9 +879,9 @@ microbenchmark(R = rowsum(data, g, reorder = FALSE),
 ```
 ## Unit: milliseconds
 ##        expr    min     lq   mean median     uq   max neval
-##           R 10.555 11.001 12.002 11.126 11.367 55.73   100
-##  data.table 15.797 16.532 17.566 16.705 17.036 51.62   100
-##    collapse  5.099  5.464  6.131  5.577  5.864 12.85   100
+##           R 10.924 11.330 11.572 11.407 11.572 23.75   100
+##  data.table  8.177  8.607  9.720  8.954  9.336 40.16   100
+##    collapse  1.939  1.994  2.678  2.036  2.172 19.12   100
 ```
 
 ```r
@@ -941,9 +892,9 @@ microbenchmark(data.table = data[, lapply(.SD, median), by = g],
 
 ```
 ## Unit: milliseconds
-##        expr   min    lq  mean median    uq   max neval
-##  data.table 129.2 130.7 132.2  131.4 132.4 142.4   100
-##    collapse 116.9 118.0 119.2  118.7 119.7 127.4   100
+##        expr   min     lq   mean median     uq    max neval
+##  data.table 135.7 136.93 137.89 137.44 138.19 150.93   100
+##    collapse  46.5  47.89  49.87  48.46  49.76  80.01   100
 ```
 
 ```r
@@ -954,9 +905,9 @@ microbenchmark(data.table = d[data, on = "g"],
 
 ```
 ## Unit: milliseconds
-##        expr    min     lq   mean median     uq    max neval
-##  data.table 20.956 24.659 36.358 26.198 36.002 78.567   100
-##    collapse  1.225  1.348  1.384  1.378  1.412  1.798   100
+##        expr   min    lq   mean median     uq    max neval
+##  data.table 6.669 7.839 11.673  8.725 12.076 94.218   100
+##    collapse 1.213 1.379  1.447  1.436  1.484  2.028   100
 ```
 
 ```r
@@ -967,22 +918,22 @@ microbenchmark(data.table = melt(data, "g"),
 ```
 ## Unit: milliseconds
 ##        expr   min    lq  mean median    uq   max neval
-##  data.table 11.45 14.80 21.52  16.17 17.72 76.84   100
-##    collapse 11.49 13.36 21.95  16.14 17.46 65.15   100
+##  data.table 9.866 12.08 18.02  14.37 16.35 82.37   100
+##    collapse 9.817 12.07 17.64  14.81 16.39 97.40   100
 ```
 
 ```r
 settransform(data, id = rowid(g))
-cols = grep("^V", names(data), value = TRUE)
+cols <- grep("^V", names(data), value = TRUE)
 microbenchmark(data.table = dcast(data, g ~ id, value.var = cols),
           collapse = pivot(data, ids = "g", names = "id", how = "w"))
 ```
 
 ```
 ## Unit: milliseconds
-##        expr   min     lq  mean median     uq   max neval
-##  data.table 68.30 107.68 111.4 111.78 116.48 133.2   100
-##    collapse 35.18  76.12  79.4  78.34  83.67 105.3   100
+##        expr   min    lq  mean median    uq   max neval
+##  data.table 57.72 64.59 81.98  68.42 80.90 146.8   100
+##    collapse 21.80 27.60 49.15  30.95 91.41 149.6   100
 ```
 
 ```r
@@ -1001,10 +952,10 @@ microbenchmark(base_int = unique(g_int), collapse_int = funique(g_int),
 ```
 ## Unit: milliseconds
 ##           expr    min     lq  mean median     uq    max neval
-##       base_int 60.026 61.009 63.98 63.811 65.181 113.13   100
-##   collapse_int  8.494  9.153 10.04  9.311  9.787  16.91   100
-##      base_char 91.912 94.418 96.91 96.118 97.607 143.70   100
-##  collapse_char 21.173 22.595 23.30 22.929 23.318  30.64   100
+##       base_int 60.143 61.072 66.54 65.042  67.27 131.55   100
+##   collapse_int  8.528  9.201 10.35  9.365  10.22  18.60   100
+##      base_char 92.209 94.647 98.92 97.870 100.61 149.55   100
+##  collapse_char 21.945 23.612 25.32 23.958  24.90  43.61   100
 ```
 
 ```r
@@ -1017,12 +968,12 @@ microbenchmark(base_int = match(g_int, 1:1000),
 
 ```
 ## Unit: milliseconds
-##             expr   min     lq   mean median      uq     max neval
-##         base_int 26.69 26.809 28.908 27.055  32.516  33.839    10
-##     collapse_int  8.59  8.733  8.812  8.787   8.859   9.248    10
-##        base_char 94.55 94.624 98.492 96.228 101.662 108.488    10
-##  data.table_char 41.42 41.516 43.104 41.709  42.128  48.874    10
-##    collapse_char 36.57 36.654 37.747 36.792  37.865  44.645    10
+##             expr    min     lq   mean median     uq   max neval
+##         base_int 27.083 27.293 29.298 28.013 31.569 34.02    10
+##     collapse_int  8.607  8.793  9.724  9.037  9.283 15.79    10
+##        base_char 81.336 81.791 86.729 86.664 88.101 97.05    10
+##  data.table_char 41.703 41.789 43.908 42.606 45.060 49.84    10
+##    collapse_char 28.285 28.441 28.924 28.541 28.753 31.15    10
 ```
 
 ```r
@@ -1045,23 +996,24 @@ sessionInfo()
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
-## time zone: Europe/Berlin
+## time zone: America/Los_Angeles
 ## tzcode source: internal
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] collapse_2.0.8        microbenchmark_1.4.10 magrittr_2.0.3       
-## [4] data.table_1.14.10   
+##  [1] fixest_0.11.3         Rfast_2.1.0           RcppParallel_5.1.7   
+##  [4] RcppZiggurat_0.1.6    Rcpp_1.0.12           microbenchmark_1.4.10
+##  [7] collapse_2.0.10       kit_0.0.13            magrittr_2.0.3       
+## [10] data.table_1.15.0     fastverse_0.3.2      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Formula_1.2-5       numDeriv_2016.8-1.1 xfun_0.39          
-##  [4] fixest_0.11.2       lattice_0.21-8      RcppZiggurat_0.1.6 
-##  [7] zoo_1.8-12          knitr_1.43          parallel_4.3.0     
-## [10] RcppParallel_5.1.7  dreamerr_1.3.0      sandwich_3.1-0     
-## [13] grid_4.3.0          compiler_4.3.0      rstudioapi_0.14    
-## [16] tools_4.3.0         Rfast_2.1.0         nlme_3.1-162       
-## [19] evaluate_0.21       Rcpp_1.0.11
+##  [1] stringmagic_1.0.0   nlme_3.1-162        knitr_1.43         
+##  [4] xfun_0.39           Formula_1.2-5       zoo_1.8-12         
+##  [7] markdown_1.7        grid_4.3.0          evaluate_0.21      
+## [10] numDeriv_2016.8-1.1 compiler_4.3.0      sandwich_3.1-0     
+## [13] rstudioapi_0.14     dreamerr_1.4.0      lattice_0.21-8     
+## [16] parallel_4.3.0      commonmark_1.9.0    tools_4.3.0
 ```
 

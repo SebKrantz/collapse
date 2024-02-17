@@ -877,7 +877,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         is_num = 0;
         tci = TYPEOF(px[i]);
         tnum = tci == INTSXP || tci == REALSXP;
-        if(tnum) is_num = inherits(px[i], "integer") || inherits(px[i], "numeric") || inherits(px[i], "ts") || inherits(px[i], "units");
+        if(tnum) is_num = inherits(px[i], "integer") || inherits(px[i], "numeric") || inherits(px[i], "ts") || inherits(px[i], "units") || inherits(px[i], "integer64");
         pans[i] = tnum && is_num;
       }
       // for(int i = 0; i != n; ++i) {
@@ -890,7 +890,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         tci = TYPEOF(px[i]);
         tnum = tci == INTSXP || tci == REALSXP;
         is_num = tnum && OBJECT(px[i]) == 0;
-        if(tnum && !is_num) is_num = inherits(px[i], "ts") || inherits(px[i], "units");
+        if(tnum && !is_num) is_num = inherits(px[i], "ts") || inherits(px[i], "units") || inherits(px[i], "integer64");
         pans[i] = is_num;
       }
     }

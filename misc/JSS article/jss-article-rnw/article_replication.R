@@ -12,11 +12,15 @@
 ###################################################
 
 options(prompt = "R> ", continue = "+  ", width = 80, digits = 4, useFancyQuotes = FALSE, warn = 1)
-library(data.table)     # v1.14.10
-library(magrittr)       # v2.0.3
-library(microbenchmark) # v1.4.10
-library(collapse)       # v2.0.8
-# Also used: {Rfast} v2.1.0 and {fixest} v0.11.2
+
+# Loading libraries and installing if unavailable
+if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
+options(fastverse.styling = FALSE)
+library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
+fastverse_extend(microbenchmark, Rfast, fixest, install = TRUE) # loads and installs if unavailable
+# Package versions used in the article:
+# fastverse 0.3.2, collapse 2.0.10, data.table 1.15.0, magrittr 2.0.3,
+# microbenchmark 1.4.10, Rfast 2.1.0, and fixest 0.11.3
 
 ###################################################
 ### code chunk number 2: collapse Topics and Documentation
@@ -355,14 +359,15 @@ wlda15 %$% qtab(OECD, income, w = LIFEEX, wFUN = fmean,
 ###################################################
 ### code chunk number 46: Benchmark: Statistics and Data Manipulation
 ###################################################
-set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 1)
+setDTthreads(4)
+set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 4)
 set.seed(101)
 m <- matrix(rnorm(1e7), ncol = 1000)
 data <- qDT(replicate(100, rnorm(1e5), simplify = FALSE))
 g <- sample.int(1e4, 1e5, TRUE)
 
 microbenchmark(R = colMeans(m),
-               Rfast = Rfast::colmeans(m),
+               Rfast = Rfast::colmeans(m, parallel = TRUE, cores = 4),
                collapse = fmean(m))
 microbenchmark(R = rowsum(data, g, reorder = FALSE),
                data.table = data[, lapply(.SD, sum), by = g],
@@ -376,7 +381,7 @@ microbenchmark(data.table = d[data, on = "g"],
 microbenchmark(data.table = melt(data, "g"),
                collapse = pivot(data, "g"))
 settransform(data, id = rowid(g))
-cols = grep("^V", names(data), value = TRUE)
+cols <- grep("^V", names(data), value = TRUE)
 microbenchmark(data.table = dcast(data, g ~ id, value.var = cols),
           collapse = pivot(data, ids = "g", names = "id", how = "w"))
 
