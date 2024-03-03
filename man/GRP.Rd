@@ -82,7 +82,7 @@ fungroup(X, \dots)
 
 \method{print}{GRP}(x, n = 6, \dots)
 
-\method{plot}{GRP}(x, breaks = "auto", type = "s", horizontal = FALSE, \dots)
+\method{plot}{GRP}(x, breaks = "auto", type = "l", horizontal = FALSE, \dots)
 }
 \arguments{
   \item{X}{a vector, list of columns or data frame (default method), or a suitable object (conversion / extractor methods).}
@@ -142,7 +142,7 @@ fungroup(X, \dots)
 
   \item{type}{linetype for plot.}
 
-  \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other.}
+  \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other. \emph{Note} that the size of each group is only plotted for objects with less than 10,000 groups.}
 
   \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{gsplit}, \code{greorder}, \code{GRPN} and \code{GRPid}: further arguments passed to \code{GRP} (if \code{g/x} is not already a 'GRP' object). For example the \code{by} argument could be used if a data frame is passed.}
 }

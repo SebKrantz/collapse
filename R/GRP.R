@@ -237,20 +237,25 @@ print.GRP <- function(x, n = 6, ...) {
   }
 }
 
-plot.GRP <- function(x, breaks = "auto", type = "s", horizontal = FALSE, ...) {
+plot.GRP <- function(x, breaks = "auto", type = "l", horizontal = FALSE, ...) {
   # if(!missing(...)) unused_arg_action(match.call(), ...)
-  oldpar <- par(mfrow = if(horizontal) 1:2 else 2:1, mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
-  on.exit(par(oldpar))
+  if(x[[1L]] <= 1e4) {
+    oldpar <- par(mfrow = if(horizontal) 1:2 else 2:1,
+                  mar = c(3.9,4.1,2.1,1), mgp = c(2.5,1,0))
+    on.exit(par(oldpar))
+  }
   if(breaks == "auto") {
-    ugs <- length(funique(x[[3L]]))
+    ugs <- fndistinct.default(x[[3L]])
     breaks <- if(ugs > 80) 80 else ugs
   }
-  plot(seq_len(x[[1L]]), x[[3L]], type = type, xlab = "Group id", ylab = "Group Size",
-       main = paste0("Sizes of ", x[[1L]], if(isTRUE(any(x[[6L]]))) " Ordered"  else if(anyNA(x[[6L]])) "" else " Unordered", " Groups"), frame.plot = FALSE, ...)
+  if(x[[1L]] <= 1e4) plot(seq_len(x[[1L]]), x[[3L]], type = type, xlab = "Group id", ylab = "Group Size",
+                          xlim = c(1L, x[[1L]]), ylim = c(0L, bmax(x[[3L]])),
+                          main = paste0("Sizes of ", x[[1L]], if(isTRUE(any(x[[6L]]))) " Ordered" else if(anyNA(x[[6L]])) "" else " Unordered", " Groups"), frame.plot = FALSE, ...)
   # grid()
   if(breaks == 1L) plot(x[[3L]][1L], x[[1L]], type = "h", ylab = "Frequency", xlab = "Group Size",
                         main = "Histogram of Group Sizes", frame.plot = FALSE, ...) else
-  hist(x[[3L]], breaks, xlab = "Group Size", main = "Histogram of Group Sizes", ...)
+  hist(x[[3L]], breaks, xlab = "Group Size",
+       main = paste0("Histogram of Group Sizes", if(x[[1L]] > 1e4) paste0(" (N = ", x[[1L]], ")") else ""), ...)
 }
 
 as_factor_GRP <- function(x, ordered = FALSE, sep = ".") { # , ...
