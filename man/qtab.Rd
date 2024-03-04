@@ -63,13 +63,13 @@ An array of class 'qtab' that inherits from 'table'. Thus all 'table' methods ap
 qtab(iris$Species)
 with(mtcars, qtab(vs, am))
 qtab(mtcars[.c(vs, am)])
-\donttest{ % No code relying on suggested package
+
 library(magrittr)
 iris \%$\% qtab(Sepal.Length > mean(Sepal.Length), Species)
 iris \%$\% qtab(AMSL = Sepal.Length > mean(Sepal.Length), Species)
 
 ## World after 2015
-wlda15 <- wlddev \%>\% fsubset(year >= 2015) \%>\% collap(~ iso3c)
+wlda15 <- wlddev |> fsubset(year >= 2015) |> collap(~ iso3c)
 
 # Regions and income levels (country frequency)
 wlda15 \%$\% qtab(region, income)
@@ -77,7 +77,7 @@ wlda15 \%$\% qtab(region, income, dnn = vlabels)
 wlda15 \%$\% qtab(region, income, dnn = "namlab")
 
 # Population (millions)
-wlda15 \%$\% qtab(region, income, w = POP) \%>\% divide_by(1e6)
+wlda15 \%$\% qtab(region, income, w = POP) |> divide_by(1e6)
 
 # Life expectancy (years)
 wlda15 \%$\% qtab(region, income, w = LIFEEX, wFUN = fmean)
@@ -99,20 +99,19 @@ tab <- wlda15 \%$\% qtab(region, income, OECD)
 tab
 
 # Various 'table' methods
-tab \%>\% addmargins()
-tab \%>\% marginSums(margin = c("region", "income"))
-tab \%>\% proportions()
-tab \%>\% proportions(margin = "income")
-as.data.frame(tab) \%>\% head(10)
+tab |> addmargins()
+tab |> marginSums(margin = c("region", "income"))
+tab |> proportions()
+tab |> proportions(margin = "income")
+as.data.frame(tab) |> head(10)
 ftable(tab, row.vars = c("region", "OECD"))
 
 # Other options
-tab \%>\% fsum(TRA = "\%")    # Percentage table (on a matrix use fsum.default)
+tab |> fsum(TRA = "\%")    # Percentage table (on a matrix use fsum.default)
 tab \%/=\% (sum(tab)/100)    # Another way (division by reference, preserves integers)
 tab
 
 rm(tab, wlda15)
-}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):

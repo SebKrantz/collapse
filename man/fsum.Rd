@@ -101,18 +101,17 @@ fsum(m)
 fsum(m, TRA = "\%")
 fsum(m, g)
 fsum(m, g, TRA = "\%")
-\donttest{ % No code relying on suggested package
+
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
-library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fsum(hp)  # Weighted grouped sum (total)
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(hp) # Equivalent and faster !!
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsum(TRA = "\%")
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fsum()
-}
-\donttest{
-## This compares fsum with data.table (2 threads) and base::rowsum
+mtcars |> fgroup_by(cyl,vs,am) |> fsum(hp)  # Weighted grouped sum (total)
+mtcars |> fgroup_by(cyl,vs,am) |> fsum(TRA = "\%")
+mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg) |> fsum()
+
+\donttest{ %% Needs to be in \donttest because of example execution time limits
+## This compares fsum with data.table and base::rowsum
 # Starting with small data
 library(data.table)
+opts <- set_collapse(nthreads = getDTthreads())
 mtcDT <- qDT(mtcars)
 f <- qF(mtcars$cyl)
 
@@ -128,6 +127,8 @@ f <- qF(sample.int(1e4, 1e5, TRUE))                        # A factor with 10.00
 microbenchmark(tdata[, lapply(.SD, sum), by = f],
                rowsum(tdata, f, reorder = FALSE),
                fsum(tdata, f, na.rm = FALSE), unit = "relative")
+# Reset options
+set_collapse(opts)
 }
 }
 

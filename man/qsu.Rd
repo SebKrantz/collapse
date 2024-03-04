@@ -130,8 +130,8 @@ stats <- qsu(wlddev, ~ region + income,     # World Bank Income Level
              cols = 9:10, higher = TRUE)    # Same variables, by both region and income
 aperm(stats)                                # A different perspective on the same stats
 
-library(magrittr) # Grouped summary
-wlddev \%>\% fgroup_by(region) \%>\% fselect(PCGDP, LIFEEX) \%>\% qsu()
+# Grouped summary
+wlddev |> fgroup_by(region) |> fselect(PCGDP, LIFEEX) |> qsu()
 
 # Panel Data Summaries ---------------------
 qsu(wlddev, pid = ~ iso3c, labels = TRUE)   # Adding between and within countries statistics

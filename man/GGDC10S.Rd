@@ -45,22 +45,23 @@ Timmer, M. P., de Vries, G. J., & de Vries, K. (2015). "Patterns of Structural C
 namlab(GGDC10S, class = TRUE)
 # aperm(qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE))
 \donttest{
-library(data.table)
-library(magrittr)
 library(ggplot2)
+# Solves https://github.com/r-lib/vctrs/issues/1888 (not a collapse problem)
+vec_ptype2.factor.factor <- function(x, y, ...) x
 
 ## World Regions Structural Change Plot
 
-GGDC10S \%>\%
+GGDC10S |>
   fmutate(across(AGR:OTH, `*`, 1 / SUM),
-          Variable = fifelse(Variable == "VA","Value Added Share", "Employment Share")) \%>\%
-  replace_outliers(0, NA, "min") \%>\%
-  collap( ~ Variable + Region + Year, cols = 6:15) \%>\% qDT() \%>\%
-  melt(1:3, variable.name = "Sector", na.rm = TRUE) \%>\%
+          Variable = ifelse(Variable == "VA","Value Added Share", "Employment Share")) |>
+  replace_outliers(0, NA, "min") |>
+  collap( ~ Variable + Region + Year, cols = 6:15) |> qDT() |>
+  pivot(1:3, names = list(variable = "Sector"), na.rm = TRUE) |>
 
   ggplot(aes(x = Year, y = value, fill = Sector)) +
     geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +
-    theme_linedraw(base_size = 14) + facet_grid(Variable ~ Region, scales = "free_x") +
+    theme_linedraw(base_size = 14) +
+    facet_grid(Variable ~ Region, scales = "free_x") +
     scale_fill_manual(values = sub("#00FF66", "#00CC66", rainbow(10))) +
     scale_x_continuous(breaks = scales::pretty_breaks(n = 7), expand = c(0, 0))+
     scale_y_continuous(breaks = scales::pretty_breaks(n = 10), expand = c(0, 0),
@@ -72,12 +73,12 @@ GGDC10S \%>\%
 
 plotGGDC <- function(ctry) {
 
-  GGDC10S \%>\%
-  fsubset(Country == ctry, Variable, Year, AGR:SUM) \%>\%
+  GGDC10S |>
+  fsubset(Country == ctry, Variable, Year, AGR:SUM) |>
   fmutate(across(AGR:OTH, `*`, 1 / SUM), SUM = NULL,
-          Variable = fifelse(Variable == "VA","Value Added Share", "Employment Share")) \%>\%
-  replace_outliers(0, NA, "min") \%>\% qDT() \%>\%
-  melt(1:2, variable.name = "Sector", na.rm = TRUE) \%>\%
+          Variable = ifelse(Variable == "VA","Value Added Share", "Employment Share")) |>
+  replace_outliers(0, NA, "min") |> qDT() |>
+  pivot(1:2, names = list(variable = "Sector"), na.rm = TRUE) |>
 
   ggplot(aes(x = Year, y = value, fill = Sector)) +
     geom_area(position = "fill", alpha = 0.9) + labs(x = NULL, y = NULL) +

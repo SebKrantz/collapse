@@ -155,26 +155,26 @@ POP[30:5000]                  # Subsetting indexed_series
 Dlog(POP[30:5000])            # Log-difference of subset
 psacf(identity(POP[30:5000])) # ACF of subset
 L(Dlog(POP[30:5000], c(1, 10)), -1:1) # Multiple computations on subset
-\donttest{ % No code relying on suggested package
-library(magrittr)
+
 # Fast Statistical Functions don't have dedicated methods
 # Thus for aggregation we need to unindex beforehand ...
 fmean(unindex(POP))
-wldi \%>\% unindex() \%>\%
-  fgroup_by(iso3c) \%>\% num_vars() \%>\% fmean()
+wldi |> unindex() |>
+  fgroup_by(iso3c) |> num_vars() |> fmean()
 
+library(magrittr)
 # ... or unindex after taking group identifiers from the index
 fmean(unindex(fgrowth(POP)), ix(POP)$iso3c)
-wldi \%>\% num_vars() \%>\%
-  fgroup_by(iso3c = ix(.)$iso3c) \%>\%
-  unindex() \%>\% fmean()
+wldi |> num_vars() \%>\%
+  fgroup_by(iso3c = ix(.)$iso3c) |>
+  unindex() |> fmean()
 
 # With matrix methods it is easier as most attributes are dropped upon aggregation.
 G(POP, c(1, 10)) \%>\% fmean(ix(.)$iso3c)
 
 # Example of index with multiple ids
-GGDC10S \%>\% findex_by(Variable, Country, Year) \%>\% head() # default is interact.ids = TRUE
-GGDCi <- GGDC10S \%>\% findex_by(Variable, Country, Year, interact.ids = FALSE)
+GGDC10S |> findex_by(Variable, Country, Year) |> head() # default is interact.ids = TRUE
+GGDCi <- GGDC10S |> findex_by(Variable, Country, Year, interact.ids = FALSE)
 head(GGDCi)
 findex(GGDCi)
 # The benefit is increased flexibility for summary statistics and data transformation
@@ -194,35 +194,35 @@ plm::plm(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), to_plm(wldi),
 
 # With country and time fixed effects via fixest
 fixest::feols(G(PCGDP, 5, p=1/5) ~ L(G(LIFEEX, 5, p=1/5), c(0, 5)), wldi, fixef = .c(iso3c, year))
-\dontrun{
+\dontrun{ % Not suggested packages
 # Running a robust MM regression without fixed effects
 robustbase::lmrob(G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5)), wldi)
 
 # Running a robust MM regression with country and time fixed effects
-wldi \%>\% fselect(PCGDP, LIFEEX) \%>\%
-  fgrowth(5, power = 1/5) \%>\% ftransform(LIFEEX_L5 = L(LIFEEX, 5)) \%>\%
+wldi |> fselect(PCGDP, LIFEEX) |>
+  fgrowth(5, power = 1/5) |> ftransform(LIFEEX_L5 = L(LIFEEX, 5)) |>
   # drop abbreviates drop.index.levels (not strictly needed here but more consistent)
-  na_omit(drop = "all") \%>\% fhdwithin(na.rm = FALSE) \%>\% # For TFE use fwithin(effect = "year")
-  unindex() \%>\% robustbase::lmrob(formula = PCGDP ~.)    # using lm() gives same result as fixest
+  na_omit(drop = "all") |> fhdwithin(na.rm = FALSE) |> # For TFE use fwithin(effect = "year")
+  unindex() |> robustbase::lmrob(formula = PCGDP ~.)    # using lm() gives same result as fixest
 
 # Using a random forest model without fixed effects
 # ranger does not support these kinds of formulas, thus we need some preprocessing...
-wldi \%>\% fselect(PCGDP, LIFEEX) \%>\%
-  fgrowth(5, power = 1/5) \%>\% ftransform(LIFEEX_L5 = L(LIFEEX, 5)) \%>\%
-  unindex() \%>\% na_omit() \%>\% ranger::ranger(formula = PCGDP ~.)
+wldi |> fselect(PCGDP, LIFEEX) |>
+  fgrowth(5, power = 1/5) |> ftransform(LIFEEX_L5 = L(LIFEEX, 5)) |>
+  unindex() |> na_omit() |> ranger::ranger(formula = PCGDP ~.)
 }
 
 # Indexing other data frame based classes --------------------------------------
 
 library(tibble)
-wlditbl <- qTBL(wlddev) \%>\% findex_by(iso3c, year)
+wlditbl <- qTBL(wlddev) |> findex_by(iso3c, year)
 wlditbl[,2] # Works like a tibble...
 wlditbl[[2]]
 wlditbl[1:1000, 10]
 head(wlditbl)
 
 library(data.table)
-wldidt <- qDT(wlddev) \%>\% findex_by(iso3c, year)
+wldidt <- qDT(wlddev) |> findex_by(iso3c, year)
 wldidt[1:1000]      # Works like a data.table...
 wldidt[year > 2000]
 wldidt[, .(sum_PCGDP = sum(PCGDP, na.rm = TRUE)), by = country] # Aggregation unindexes the result
@@ -261,9 +261,8 @@ is_irregular(pedi, any_id = FALSE) # irregularity in all sequences
 # Collapse can just compute correct lag on indexed series or frames
 library(dplyr)
 microbenchmark(
-  dplyr = fill_gaps(pedestrian) \%>\% group_by_key() \%>\% mutate(Lag_Count = lag(Count)),
+  dplyr = fill_gaps(pedestrian) |> group_by_key() |> mutate(Lag_Count = lag(Count)),
   collapse = fmutate(pedi, Lag_Count = flag(Count)), times = 10)
-}
 }
 # Indexing Atomic objects ---------------------------------------------------------
 
@@ -282,9 +281,9 @@ L(G(iAP[-(20:30)], c(0,1,12)), 0:1) # Lagged level, period and annual growth rat
 ## xts
 library(xts)
 library(zoo) # Needed for as.yearmon() and index() functions
-X <- wlddev \%>\% fsubset(iso3c == "DEU", date, PCGDP:POP) \%>\% {
+X <- wlddev |> fsubset(iso3c == "DEU", date, PCGDP:POP) \%>\% {
   xts(num_vars(.), order.by = as.yearmon(.$date))
-  } \%>\% ss(-(30:40)) \%>\% reindex(identity(index(.))) # Introducing a gap
+  } |> ss(-(30:40)) \%>\% reindex(identity(index(.))) # Introducing a gap
 # plot(G(unindex(X)))
 diff(unindex(X))    # diff.xts gixes wrong result
 fdiff(X)            # fdiff gives right result

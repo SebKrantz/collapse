@@ -140,10 +140,10 @@ wide <- pivot(GGDC10S, c("Country", "Year"), c("AGR", "MAN", "SUM"), "Variable",
               how = "wider", na.rm = TRUE)
 head(wide)
 library(magrittr)
-wide \%>\% {av(pivot(., 1:2, grep("_VA", names(.))), pivot(gvr(., "_EMP")))} \%>\% head()
-wide \%>\% {av(av(gv(., 1:2), rm_stub(gvr(., "_VA"), "_VA", pre = FALSE)) \%>\%
-                  pivot(1:2, names = list("Sectorcode", "VA"), labels = "Sector"),
-             EMP = vec(gvr(., "_EMP")))} \%>\% head()
+wide \%>\% {av(pivot(., 1:2, grep("_VA", names(.))), pivot(gvr(., "_EMP")))} |> head()
+wide \%>\% {av(av(gv(., 1:2), rm_stub(gvr(., "_VA"), "_VA", pre = FALSE)) |>
+                   pivot(1:2, names = list("Sectorcode", "VA"), labels = "Sector"),
+             EMP = vec(gvr(., "_EMP")))} |> head()
 rm(wide)
 
 # -------------------------------- PIVOT WIDER ---------------------------------

@@ -96,13 +96,11 @@ m <- qM(mtcars)
 fmax(m)
 head(fmax(m, TRA = "\%"))
 fmax(m, g) # etc..
-\donttest{ % No code relying on suggested package
+
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
-library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmax()
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmax("\%")
-mtcars \%>\% group_by(cyl,vs,am) \%>\% select(mpg) \%>\% fmax()
-}
+mtcars |> fgroup_by(cyl,vs,am) |> fmax()
+mtcars |> fgroup_by(cyl,vs,am) |> fmax("\%")
+mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg) |> fmax()
 }
 \keyword{univar}
 \keyword{manip}
