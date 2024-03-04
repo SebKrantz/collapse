@@ -14,12 +14,13 @@
 
 %% For Sweave-based articles about R packages:
 %% need no \usepackage{Sweave}
+%% need no \usepackage{Sweave.sty}
 \SweaveOpts{engine=R, eps=FALSE, keep.source = TRUE, cache=TRUE}
 % \renewenvironment{knitrout}{\setlength{\topsep}{0mm}}{}
 
 <<preliminaries, echo=FALSE, message=FALSE, warning=FALSE, results=hide>>=
 # knitr::opts_chunk$set(cache = FALSE, size = "small")
-options(prompt = "R> ", continue = "+  ", width = 80, digits = 4, useFancyQuotes = FALSE, warn = 1)
+options(prompt = "R> ", continue = "+  ", width = 77, digits = 4, useFancyQuotes = FALSE, warn = 1)
 # Loading libraries and installing if unavailable
 if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
 library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
@@ -122,10 +123,10 @@ help("collapse-documentation")
 %
 The \href{https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html}{Fast Statistical Functions}, comprising \fct{fsum}, \fct{fprod}, \fct{fmean}, \fct{fmedian}, \fct{fmode}, \fct{fvar}, \fct{fsd}, \fct{fmin}, \fct{fmax}, \fct{fnth}, \fct{ffirst}, \fct{flast}, \fct{fnobs} and \fct{fndistinct}, are a consistent set of S3-generic statistical functions providing fully vectorized statistical operations in R. Specifically, operations such as calculating the mean via the S3 generic \code{fmean()} function are vectorized across columns and groups. They may also involve weights or transformations of the original data. The basic syntax of these functions is
 \begin{Code}
-FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
-    use.g.names = TRUE, drop = TRUE, [nthreads = 1L,] ...)
+FUN(x, g = NULL, [w = NULL], TRA = NULL, [na.rm = TRUE],
+    use.g.names = TRUE, drop = TRUE, [nthreads = 1L], ...)
 \end{Code}
-with arguments \code{x} - data (vector, matrix or data frame-like), \code{g} - groups (atomic vector, list of vectors, or \class{GRP} object), \code{w} - weights, \code{TRA} - transformation, \code{na.rm} - missing values, \code{use.g.names} -  attach group names upon aggregation (if \code{g} is used), \code{drop} - drop dimensions (i.e., simplify to atomic vector if \code{is.null(g)} and \code{x} is matrix or data frame-like), \code{nthreads} - multithreading\footnote{Not all functions are multithreaded, and parallelism is implemented differently for different functions (detailed in the documentation). The use of Single Instruction Multiple Data (SIMD) parallelism in single-threaded mode also implies limited gains from multithreading for simple operations such as \fct{fsum}.}. The following examples, taken from the \href{https://sebkrantz.github.io/collapse/articles/collapse_for_tidyverse_users.html#using-the-fast-statistical-functions}{\pkg{collapse} for \pkg{tidyverse} Users} vignette (and executed there, not here for parsimony) demonstrate their basic usage.
+with arguments \code{x} - data (vector, matrix or data frame-like), \code{g} - groups (atomic vector, list of vectors, or \class{GRP} object), \code{w} - weights, \code{TRA} - transformation, \code{na.rm} - missing values, \code{use.g.names} -  attach group names upon aggregation (if \code{g} is used), \code{drop} - drop dimensions (i.e., simplify to atomic vector if \code{is.null(g)} and \code{x} is matrix or data frame-like), \code{nthreads} - multithreading\footnote{Not all functions are multithreaded, and parallelism is implemented differently for different functions (detailed in the documentation). The use of single instruction multiple data (SIMD) parallelism in single-threaded mode also implies limited gains from multithreading for simple operations such as \fct{fsum}.}. The following examples, taken from the \href{https://sebkrantz.github.io/collapse/articles/collapse_for_tidyverse_users.html#using-the-fast-statistical-functions}{\pkg{collapse} for \pkg{tidyverse} Users} vignette (and executed there) demonstrate their basic usage to calculate (column-wise, grouped, weighted) statistics on different objects. As laid out in the \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{vignette} on object handling, these statistical functions have basis S3 methods for vectors (\class{default}), \class{matrix} and \class{data.frame}, which call corresponding C implementations that intelligently preserve object attributes. Thus, the functions can be applied to a broad set of \class{matrix} or \class{data.frame}-based objects without the need to define explicit methods. Users can also directly call the basis methods in case S3 dispatch does not yield the intended outcome. For example, \code{fmean.default(EuStockMarkets)} computes the mean of the entire matrix. %, and attributes are preserved as much as possible ()
 \begin{Code}
 fmean(mtcars$mpg)
 fmean(EuStockMarkets)
@@ -137,11 +138,11 @@ fmean(mtcars[5:10], g = mtcars$cyl, w = mtcars$wt)
 fmean(mtcars$mpg, g = mtcars$cyl, TRA = "fill")
 \end{Code}
 \subsection{Transformations}
-The \code{TRA} argument, more specifically, invokes the \fct{TRA} function for column-wise (grouped) replacing and sweeping operations (by reference). Its syntax is
+The final example invoking \code{TRA} expands the mean vector to full length, like \code{stats::ave(mtcars$mpg, mtcars$cyl)}, but much faster. The \code{TRA} argument invokes the \fct{TRA} function for column-wise (grouped) replacing and sweeping operations (by reference). Its syntax is
 \begin{Code}
 TRA(x, STATS, FUN = "-", g = NULL, set = FALSE, ...)
 \end{Code}
-where \code{STATS} is a vector/matrix/data.frame of statistics used to transform \code{x}. The \code{FUN} argument supports 11 different operations indicated using either an integer or string.
+where \code{STATS} is a vector/matrix/data.frame of statistics used to transform \code{x}. Table~\ref{tab:TRA} lists the 11 possible \code{FUN} operations, toggled using either an integer or string.
 %
 \begin{table}[h!]
 \resizebox{\textwidth}{!}{
@@ -160,6 +161,7 @@ where \code{STATS} is a vector/matrix/data.frame of statistics used to transform
   10 && \code{"-\%\%"} && subtract modulus (i.e., make data divisible by \code{STATS})
   \end{tabular}
 }
+\caption{\label{tab:TRA} Arguments to \code{TRA()}.}
 \end{table}
 %
 \code{TRA()} is called internally in the \emph{Fast Statistical Functions}, the \code{TRA} argument is passed to \code{FUN}. Thus \code{fmean(x, g, w, TRA = "-")} is equivalent to \code{TRA(x, fmean(x, g, w), "-", g)}. The \code{set} argument can also be passed to \emph{Fast Statistical Functions} to toggle transformation by reference. The following examples demonstrate how this design allows flexible ad-hoc transformations using \proglang{R}'s built-in \code{airquality} dataset with daily measurements for 5 months.
@@ -178,7 +180,7 @@ airquality |> fmutate(
   ozone_deg = Ozone / Temp,
   ozone_amed = Ozone > fmedian(Ozone, Month, TRA = "fill"),
   ozone_resid = fmean(Ozone, list(Month, ozone_amed), ozone_deg, "-")
-) |> head(3)
+  ) |> head(3)
 @
 %
 \subsection{Grouping objects and optimization}
@@ -203,7 +205,7 @@ add_vars(g$groups,
   fsd(dat, g, w, use.g.names = FALSE) |> add_stub("w_sd_")) |> head(2)
 @
 %
-Similar, data can be transformed, here also using the S3 generic \fct{fscale} function.
+Similar, data can be transformed, here using the S3 generic \fct{fscale} function.
 %
 <<gtrans>>=
 mtcars |> add_vars(fmean(dat, g, w, "-") |> add_stub("w_demean_"),
@@ -244,7 +246,7 @@ mtcars |>
  fsummarise(slope = fsum(mpg, dm_carb) %/=% fsum(dm_carb^2))
 @
 %
-Apart from vectorization, this code avoids 3 intermediate copies: (1) \code{fmean(carb, TRA = "-")} avoids an expanded vector of group means, (2) \code{fsum(mpg, dm\_carb)} uses the weights (\code{w}) argument to \fct{fsum} to avoid materializing a multiplication (as in \code{fsum(mpg * dm\_carb)}), and (3) division by reference (\code{\%/=\%}) avoids allocating an additional vector for the final result. Under the hood, the expression boils down to an (expensive) grouping step, 5 allocations (of which 2 full length), and 6 loops in C to calculate the result. Any modern laptop can calculate 1 million regression slopes in less than 1 second like this. \newline
+Apart from vectorization, this code avoids 3 intermediate copies: (1) \code{fmean(carb, TRA = "-")} avoids an expanded vector of group means, (2) \code{fsum(mpg, dm\_carb)} uses the weights (\code{w}) argument to \fct{fsum} to avoid materializing a multiplication (as in \code{fsum(mpg * dm\_carb)}), and (3) division by reference (\code{\%/=\%}) avoids allocating an additional vector for the final result. Under the hood, the expression boils down to an (expensive) grouping step, 5 allocations (of which 2 full length), and 6 loops in C to calculate the result. Any modern laptop can calculate 1 million regression slopes in less than 1 second like this. Another neat example, shared by Andrew Ghazi in a recent \href{https://andrewghazi.github.io/posts/collapse_is_sick/sick.html}{blog post}, involved vectorizing an expression to compute the p-value across 300k groups for a simulation study, yielding a 70x performance increase. \newline
 
 \pkg{collapse} also supplies advanced statistics, such as weighted medians and modes. The following example calculates a weighted set of summary statistics by groups, with weighted quantiles type 8 following \citet{hyndman1996sample}\footnote{\pkg{collapse} calculates weighted quantiles by replacing the sample size with the sum of weights and 1 with the minimum non-zero weight in the respective quantile definition. See \href{https://sebkrantz.github.io/collapse/reference/fquantile.html}{fquantile} for more details.}, and a weighted maximum mode.\footnote{The weighted maximum mode is the largest element with the maximum sum of weights.}
 %
@@ -270,7 +272,7 @@ collap(wlddev, country + PCGDP + LIFEEX ~ year + income, w = ~ POP) |>
 %
 \section{Time series and panel data} \label{sec:ts_ps}
 %
-\pkg{collapse} provides a flexible high-performance architecture to perform (\emph{time aware}) computations on time series and panel series. In particular, the user enjoys great flexibility in deciding the desired degree of indexation and mode of computation. It is possible to apply time series and panel data transformations without any indexation by passing individual and/or time identifiers to the respective functions in an ad-hoc fashion or by using \class{indexed\_frame} and \class{indexes\_series} classes, which implement full and deep indexation. The following list summarizes \pkg{collapse}'s time series and panel data functions.
+\pkg{collapse} provides a flexible high-performance architecture to perform (\emph{time aware}) computations on time series and panel series. In particular, the user enjoys great flexibility in deciding the desired degree of indexation and mode of computation. It is possible to apply time series and panel data transformations without any indexation by passing individual and/or time identifiers to the respective functions in an ad-hoc fashion or by using \class{indexed\_frame} and \class{indexes\_series} classes, which implement full and deep indexation. Table~\ref{tab:TSfun} summarizes \pkg{collapse}'s time series and panel data architecture.
 %
 \begin{table}[h]
 \begin{tabular}{p{\textwidth}}
@@ -285,6 +287,7 @@ collap(wlddev, country + PCGDP + LIFEEX ~ year + income, w = ~ POP) |>
 \emph{Summary Functions with Supporting Methods} \\
 \code{qsu(), varying()} [panel-variance decomposed statistics] \\
 \end{tabular}
+\caption{\label{tab:TSfun} Time series and panel data architecture.}
 \end{table}
 %
 \subsection{Ad-hoc computations}
@@ -323,7 +326,7 @@ Similarly, functions to scale, center, and average data have groups (\code{g}) a
 iris |> fgroup_by(Species) |> fscale() |> head(2)
 STD(iris, ~ Species) |> head(2)
 @
-The following example demonstrates a fixed-effects regression a la \citet{mundlak1978pooling}.
+The following example demonstrates a fixed-effects regression \`a la \citet{mundlak1978pooling}.
 <<example_reg>>=
 lm(mpg ~ carb + B(carb, cyl), data = mtcars) |> coef()
 @
@@ -344,7 +347,7 @@ with(data, indexed_series)
 index_df = findex(data_ix)
 \end{Code}
 %
-Data can be indexed using one or more indexing variables. Unlike \class{pdata.frame}, an \\ \class{indexed\_frame} is a deeply indexed structure, i.e., every series inside the frame is already an \class{indexes\_series} and contains, in its \class{index\_df} attribute, an external pointer to the \class{index\_df} attribute of the frame (to avoid duplication in memory). A comprehensive set of \href{https://sebkrantz.github.io/collapse/reference/indexing.html}{methods for subsetting and manipulation}, and applicable \class{pseries} and \class{pdata.frame} methods for time series and transformation functions like \pkg{flag/L}, ensure that these objects behave in a time-/panel-aware manor in any caller environment (created by \code{with}, \code{lm} etc.). % A basic demonstration with World Bank panel data showcases the flexibility of these classes.
+Data can be indexed using one or more indexing variables. Unlike \class{pdata.frame}, an \\ \class{indexed\_frame} is a deeply indexed structure, i.e., every series inside the frame is already an \class{indexes\_series} and contains, in its \class{index\_df} attribute, an external pointer to the \class{index\_df} attribute of the frame (to avoid duplication in memory). A comprehensive set of \href{https://sebkrantz.github.io/collapse/reference/indexing.html}{methods for subsetting and manipulation}, and applicable \class{pseries} and \class{pdata.frame} methods for time series and transformation functions like \code{flag()/L()}, ensure that these objects behave in a time-/panel-aware manor in any caller environment (created by \fct{with}, \fct{lm} etc.). % A basic demonstration with World Bank panel data showcases the flexibility of these classes.
 Indexation can be undone using \code{unindex()} and redone with \code{reindex()} and a suitable \class{index\_df}. \class{indexes\_series} can be atomic vectors or matrices (including objects such as \class{ts} or \class{xts}) and can also be created directly using \code{reindex()}.
 %
 \begin{Code}
@@ -358,7 +361,7 @@ An example using the \code{wlddev} data follows:
 wldi <- wlddev |> findex_by(iso3c, year)
 wldi |> fsubset(-3, iso3c, year, PCGDP:POP) |> G() |> head(4)
 @
-The index statistics are: \code{[N. ids] | [N. periods (total periods: (max-min)/GCD)]}. This creates an \class{indexes\_series} of life expectancy and demonstrates its properties.
+The index statistics are: \code{[N. ids] | [N. periods (total periods: (max-min)/GCD)]}. This creates an \class{indexes\_series} of life expectancy and demonstrates its properties:
 <<indexing_2>>=
 LIFEEXi = wldi$LIFEEX
 str(LIFEEXi, width = 70, strict = "cut")
@@ -373,7 +376,7 @@ lm(D(LIFEEX) ~ L(PCGDP_ld, 0:5) + B(PCGDP_ld), wldi) |>
 @
 The above example could also have been executed in one line as \code{lm(D(LIFEEX) ~ } \\ \code{L(Dlog(PCGDP), 0:5) + B(Dlog(PCGDP)), wldi)}, log-differencing \code{PCGDP} twice. \newline
 
-In comparison with existing solutions, the flexibility of this architecture is new to the \proglang{R} ecosystem: A \class{pdata.frame} or \class{fixest\_panel} only works inside \pkg{plm}/\pkg{fixest} estimation functions\footnote{And, in the case of \pkg{fixest}, inside \pkg{data.table} due to dedicated methods.}. Time series classes like \class{xts} and \class{tsibble} also do not provide deeply indexed structures for time series operations or native handling of irregularity in basic operations. \class{indexed\_series} and \class{indexed\_frame}, on the other hand, work anywhere and can be superimposed on any suitable object (such as \class{sf} to create a spatiotemporal panel), as long as \pkg{collapse}'s functions (\code{flag()/L()} etc.) are used to perform the time-based computations. The \class{index\_df} attached to these objects can be used with other general tools such as \code{collapse::BY()} to perform grouped computations on these objects with 3rd-party functions. An example of calculating a 5-year rolling average is given below. Last but not least, the performance of these classes is second to none, as demonstrated in the useR 2022 presentation \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{on slide 40}.
+In comparison with existing solutions, the flexibility of this architecture is new to the \proglang{R} ecosystem: A \class{pdata.frame} or \class{fixest\_panel} only works inside \pkg{plm}/\pkg{fixest} estimation functions\footnote{And, in the case of \pkg{fixest}, inside \pkg{data.table} due to dedicated methods.}. Time series classes like \class{xts} and \class{tsibble} also do not provide deeply indexed structures for time series operations or native handling of irregularity in basic operations. \class{indexed\_series} and \class{indexed\_frame}, on the other hand, work anywhere and can be superimposed on any suitable object (such as \class{sf} to create a spatiotemporal panel), as long as \pkg{collapse}'s functions (\code{flag()/L()} etc.) are used to perform the time-based computations. The \class{index\_df} attached to these objects can be used with other general tools such as \code{collapse::BY()} to perform grouped computations using 3rd-party functions. An example of calculating a 5-year rolling average is given below. Last but not least, the performance of these classes is second to none, as demonstrated in the useR 2022 presentation \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{on slide 40}.
 %
 <<rollmean>>=
 BY(LIFEEXi, findex(LIFEEXi)$iso3c, data.table::frollmean, 5) |> head(10)
@@ -381,7 +384,7 @@ BY(LIFEEXi, findex(LIFEEXi)$iso3c, data.table::frollmean, 5) |> head(10)
 %
 \section{Table joins and pivots} \label{sec:join_pivot}
 %
-While \pkg{collapse} has a broad set of \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html}{Data Manipulation Functions}, its implementations of table joins and pivots is particularly noteworthy since they offer several new features such as various verbose options for table joins, pivots supporting variable labels, and 'recast' pivots.
+While \pkg{collapse} has a broad set of \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html}{data manipulation functions}, its implementations of table \href{https://sebkrantz.github.io/collapse/reference/join.html}{joins} and \href{https://sebkrantz.github.io/collapse/reference/pivot.html}{pivots} is particularly noteworthy since they offer several new features, including rich verbosity for table joins, pivots supporting variable labels, and 'recast' pivots. Both implementations also provide outstanding computational performance and memory efficiency.
 %
 \subsection{Joins}
 %
@@ -391,7 +394,7 @@ join(x, y, on = NULL, how = "left", suffix = NULL, validate = "m:m",
      multiple = FALSE, sort = FALSE, keep.col.order = TRUE,
      drop.dup.cols = FALSE, verbose = 1, column = NULL, attr = NULL, ...)
 \end{Code}
-By default (\code{verbose = 1}), it prints information about the join operation and number of records joined. Users can request the generation of a '.join' column, akin to \proglang{STATA}'s '\_merge' column, indicating the origin of records in the joined table, as shown below.
+By default (\code{verbose = 1}), it prints information about the join operation and number of records joined. Users can request the generation of a '.join' column (\code{column = TRUE}), akin to \proglang{STATA}'s '\_merge' column, indicating the origin of records in the joined table, as shown below.
 %
 <<joins>>=
 df1 <- data.frame(id1 = c(1, 1, 2, 3),
@@ -406,18 +409,19 @@ df2 <- data.frame(id1 = c(1, 2, 3, 3),
 join(df1, df2, on = c("id1", "id2"), how = "full", column = TRUE)
 @
 %
-An alternative to the join column is to request an attribute that also summarizes the join operation, including the output of \fct{fmatch} (the workhorse of \fct{join} if \code{sort = FALSE}). Users can also invoke the \code{validate} argument to check the uniqueness of the join keys in either table: passing a '1' for a non-unique key produces an error.
+An alternative to the join column is to request an attribute that also summarizes the join operation, including the output of \fct{fmatch} (the workhorse of \fct{join} if \code{sort = FALSE}, implementing a vectorized hash join). Users can also invoke the \code{validate} argument to check the uniqueness of the join keys in either table: passing a '1' for a non-unique key produces an error.
 %
 <<joins_2>>=
 join(df1, df2, on = c("id1", "id2"), validate = "1:1", attr = "join") |>
   attr("join") |> str(width = 70, strict = "cut")
 @
 %
-A few further particularities are worth highlighting. First, \code{collapse::join} is also class-agnostic and preserves the attributes of \code{x}. It supports 6 different join operations (\code{"left"}, \code{"right"}, \code{"inner"}, \code{"full"}, \code{"semi"} or \code{"anti"}) and default to \code{"left"}, so the default behavior simply adds columns to \code{x}. By default (\code{sort = FALSE}), the order of rows in \code{x} is also preserved. Setting \code{sort = TRUE} sorts all records in the joined table by the keys.\footnote{This is done using a separate sort-merge-join algorithm, so it is faster than performing a hash join (using \fct{fmatch}) followed by sorting, particularly if the data is already sorted on the keys. } Additionally, by default (\code{multiple = FALSE}), only the first matches from both tables are joined to avoid silent cartesian duplication of records. In multi-match settings, this will be reflected by few records from \code{y} being used. \fct{fmatch} also has a built-in overidentification check, which issues a warning if more key columns than necessary to identify the records are provided.
+A few further particularities are worth highlighting. First, \code{collapse::join} is also class-agnostic and preserves the attributes of \code{x}. It supports 6 different join operations (\code{"left"}, \code{"right"}, \code{"inner"}, \code{"full"}, \code{"semi"} or \code{"anti"}) and default to \code{"left"}, so the default behavior simply adds columns to \code{x}. By default (\code{sort = FALSE}), the order of rows in \code{x} is also preserved. Setting \code{sort = TRUE} sorts all records in the joined table by the keys.\footnote{This is done using a separate sort-merge-join algorithm, so it is faster than performing a hash join (using \fct{fmatch}) followed by sorting, particularly if the data is already sorted on the keys. } Additionally, by default (\code{multiple = FALSE}), only the first matches from \code{y} are joined to avoid silent cartesian duplication of records. In multi-match settings, this will be reflected by few records from \code{y} being used. \fct{fmatch} also has a built-in overidentification check, which issues a warning if more key columns than necessary to identify the records are provided.
 %
 <<join_3>>=
 df2$name = df1$name
-join(df1, df2) |> capture.output(type="m") |> strwrap(77) |> cat(sep="\n")
+join(df1, df2) |> capture.output(type = "m") |>
+  strwrap(77) |> cat(sep = "\n")
 @
 %
 % This warning can be silenced by passing \code{overid = 2} or restricting the join columns using \code{on}.
@@ -431,9 +435,9 @@ By default (\code{suffix = NULL}), \fct{join} extracts the name of the \code{y} 
 %
 \subsection{Pivots}
 %
-The reshaping/pivoting functionality of commercial and open source software is also unsatisfying for complex datasets such as surveys or disaggregated production, trade, or financial sector data, where variable names resemble codes and variable labels are essential to making sense of the data. Such datasets can only be reshaped by losing these labels or additional manual efforts to retain them. Modern \proglang{R} packages also offer different functions for different reshaping operations, such as \code{data.table::melt/ tidyr::pivot_longer} to combine columns and \code{data.table::dcast/tidyr::pivot_wider} to expand them, requiring users to learn both. Finally, since the depreciation of \pkg{reshape(2)} \citep{rreshape2}, there is no modern replacement for \code{reshape2::recast()}. This requires \proglang{R} users to consecutively call two reshaping functions, incurring a high cost in terms of syntax and memory for such frequently required data transpositions. \newline
+The reshaping/pivoting functionality of commercial and open source software is also unsatisfying for complex datasets such as surveys or disaggregated production, trade, or financial sector data, where variable names resemble codes and variable labels are essential to making sense of the data. Such datasets can only be reshaped by losing these labels or additional manual efforts to retain them. Modern \proglang{R} packages also offer different functions for different reshaping operations, such as \code{data.table::melt/ tidyr::pivot_longer} to combine columns and \code{data.table::dcast/tidyr::pivot_wider} to expand them, requiring users to learn both. Finally, since the depreciation of \pkg{reshape(2)} \citep{rreshape2}, there is no modern replacement for \code{reshape2::recast()}. This requires \proglang{R} users to consecutively call two reshaping functions, incurring a high cost in terms of syntax and memory. \newline
 
-\code{collapse::pivot} provides a modern class-agnostic implementation of reshaping for \proglang{R} that addresses these shortcomings: it has a single intuitive syntax to perform 'longer', 'wider', and 'recast' pivots, can handle complex labelled data without loss of information, and offers best-in-\proglang{R} computational performance and memory efficiency. Its syntax is:
+\code{collapse::pivot} provides a modern class-agnostic implementation of reshaping for \proglang{R} that addresses these shortcomings: it has a single intuitive syntax to perform 'longer', 'wider', and 'recast' pivots, and supports complex labelled data without loss of information. Its syntax is:
 %
 \begin{Code}
 pivot(data, ids = NULL, values = NULL, names = NULL, labels = NULL,
@@ -442,7 +446,7 @@ pivot(data, ids = NULL, values = NULL, names = NULL, labels = NULL,
       sort = FALSE, transpose = FALSE)
 \end{Code}
 %
-Below, its use is demonstrated with a generated dataset about fruits. We could also think about a survey with households and individuals, or sectors and firms. Variable labels are stored in \code{attr(column, "label")}. The \href{https://sebkrantz.github.io/collapse/reference/pivot.html#ref-examples}{documentation} provides more elaborate examples with real data.
+Below, I demonstrate it with a generated dataset about fruits. We could also think about a survey with households and individuals, or sectors and firms. Variable labels are stored in \code{attr(column, "label")}. The \href{https://sebkrantz.github.io/collapse/reference/pivot.html#ref-examples}{documentation} provides more elaborate examples with real data.
 %
 <<pivots>>=
 data <- data.frame(type = rep(c("A", "B"), each = 2),
@@ -477,7 +481,7 @@ For the recast pivot (\code{how = "recast"}), unless a column named 'variable' e
 vlabels(dr)
 @
 %
-As with the other pivots, this operation does not incur any loss of information. A suitable reverse operation also exists: \code{pivot(dr, "id", names = list(to = "type"), labels = list(from = "label", to = "type_name"), how = "r")}. More features of \fct{pivot} are demonstrated in the \href{https://sebkrantz.github.io/collapse/reference/pivot.html#ref-examples}{documentation examples}. Notably, it is also possible to perform longer and recast pivots without id variables. The recast pivot without IDs resembles a generalization of \code{data.table::transpose}, albeit slightly less efficient.
+As with the other pivots, this operation does not incur any loss of information. A suitable reverse operation also exists: \code{pivot(dr, "id", names = list(to = "type"), labels = list(from = "label", to = "type_name"), how = "r")}. More features of \fct{pivot} are demonstrated in the \href{https://sebkrantz.github.io/collapse/reference/pivot.html#ref-examples}{documentation examples}. Notably, it is also possible to perform longer and recast pivots without id variables. The recast pivot without ids resembles a generalization of \code{data.table::transpose()}, albeit slightly less efficient.
 %
 \section{List processing} \label{sec:list_proc}
 %
@@ -516,7 +520,7 @@ This example does not represent an optimal workflow for this specific task\footn
 %
 <<prep, include=FALSE, echo=FALSE>>=
 wldi <- wldi[1:13]
-options(width = 77)
+# options(width = 77)
 @
 <<varying_1>>=
 varying(wldi)
@@ -547,7 +551,7 @@ The output shows that the variation in life expectancy is significantly larger f
 descr(wlddev, LIFEEX ~ OECD, w = ~ replace_na(POP))
 @
 <<set_width, echo=FALSE>>=
-options(width = 80)
+# options(width = 80)
 @
 
 %
@@ -609,7 +613,7 @@ The above is now 100\% \pkg{collapse} code. Similarly, using this option, all co
 %
 \section{Benchmark} \label{sec:bench}
 %
-This section offers a small benchmark to demonstrate that \pkg{collapse} provides best-in-\proglang{R} performance for many basic statistical and data manipulation tasks. They are executed on an Apple M1 MacBook Pro with 16 GB unified memory. The \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks} compare more software packages on larger datasets, using a large server with many (slow) cores.
+This Section offers a small benchmark to demonstrate that \pkg{collapse} provides best-in-\proglang{R} performance for many basic statistical and data manipulation tasks. They are executed on an Apple M1 MacBook Pro with 16 GB unified memory. The \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks} compare more software packages on larger datasets, using a large server with many (slow) cores.
 %
 <<bench, cache=TRUE>>=
 setDTthreads(4)
