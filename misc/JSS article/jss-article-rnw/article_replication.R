@@ -8,10 +8,10 @@
 #####################################################
 
 ###################################################
-### code chunk number 1: Preliminaries
+### code chunk number 0: Preliminaries
 ###################################################
 
-options(prompt = "R> ", continue = "+  ", width = 80, digits = 4, useFancyQuotes = FALSE, warn = 1)
+options(prompt = "R> ", continue = "+  ", width = 77, digits = 4, useFancyQuotes = FALSE, warn = 1)
 
 # Loading libraries and installing if unavailable
 if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
@@ -23,10 +23,23 @@ fastverse_extend(microbenchmark, Rfast, fixest, install = TRUE) # loads and inst
 # microbenchmark 1.4.10, Rfast 2.1.0, and fixest 0.11.3
 
 ###################################################
-### code chunk number 2: collapse Topics and Documentation
+### code chunk number 1: collapse Topics and Documentation
 ###################################################
 .COLLAPSE_TOPICS
 help("collapse-documentation")
+
+
+###################################################
+### code chunk number 2: Fast Statistical Functions: Basic Examples
+###################################################
+fmean(mtcars$mpg)
+fmean(EuStockMarkets)
+fmean(mtcars[5:10])
+fmean(mtcars$mpg, w = mtcars$wt)
+fmean(mtcars$mpg, g = mtcars$cyl)
+fmean(mtcars$mpg, g = mtcars$cyl, w = mtcars$wt)
+fmean(mtcars[5:10], g = mtcars$cyl, w = mtcars$wt)
+fmean(mtcars$mpg, g = mtcars$cyl, TRA = "fill") |> head(20)
 
 
 ###################################################
@@ -401,6 +414,7 @@ microbenchmark(base_int = match(g_int, 1:1000),
                base_char = match(g_char, char),
                data.table_char = chmatch(g_char, char),
                collapse_char = fmatch(g_char, char), times = 10)
+
 
 ###################################################
 ### Print Session Information
