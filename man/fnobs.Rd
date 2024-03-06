@@ -62,13 +62,11 @@ head(fnobs(wlddev, wlddev$iso3c))
 aqm <- qM(airquality)
 fnobs(aqm)                                  # Also works for character or logical matrices
 fnobs(aqm, airquality$Month)
-\donttest{ % No code relying on suggested package
+
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
-library(dplyr)
-airquality \%>\% group_by(Month) \%>\% fnobs()
-wlddev \%>\% group_by(country) \%>\%
-           select(PCGDP,LIFEEX,GINI,ODA) \%>\% fnobs()
-}
+airquality |> fgroup_by(Month) |> fnobs()
+wlddev |> fgroup_by(country) |>
+           fselect(PCGDP,LIFEEX,GINI,ODA) |> fnobs()
 }
 \keyword{univar}
 \keyword{manip}

@@ -53,11 +53,10 @@ diff(attr(tid, "unique"))
 
 # So in this case simple factor generation gives a better result
 qF(wlddev$date, ordered = TRUE, na.exclude = FALSE)
-\donttest{
+
 # The best way to deal with this data would be to convert it
 # to zoo::yearmon and then use timeid:
 timeid(zoo::as.yearmon(wlddev$date), factor = TRUE, extra = TRUE)
-}
 
 options(oldopts)
 rm(oldopts, tid)

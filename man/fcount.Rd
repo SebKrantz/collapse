@@ -40,18 +40,17 @@ fcount(mtcars, cyl, vs, am, add = TRUE)
 fcount(mtcars, cyl, vs, am, add = "group_vars")
 
 ## With grouped data
-library(magrittr) # As |> not available in older R versions
-mtcars \%>\% fgroup_by(cyl, vs, am) \%>\% fcount()
-mtcars \%>\% fgroup_by(cyl, vs, am) \%>\% fcount(add = TRUE)
-mtcars \%>\% fgroup_by(cyl, vs, am) \%>\% fcount(add = "group_vars")
+mtcars |> fgroup_by(cyl, vs, am) |> fcount()
+mtcars |> fgroup_by(cyl, vs, am) |> fcount(add = TRUE)
+mtcars |> fgroup_by(cyl, vs, am) |> fcount(add = "group_vars")
 
 ## With indexed data: by default counting on the first index variable
-wlddev \%>\% findex_by(country, year) \%>\% fcount()
-wlddev \%>\% findex_by(country, year) \%>\% fcount(add = TRUE)
+wlddev |> findex_by(country, year) |> fcount()
+wlddev |> findex_by(country, year) |> fcount(add = TRUE)
 # Use fcountv to pass additional arguments to GRP.pdata.frame,
 # here using the effect argument to choose a different index variable
-wlddev \%>\% findex_by(country, year) \%>\% fcountv(effect = "year")
-wlddev \%>\% findex_by(country, year) \%>\% fcountv(add = "group_vars", effect = "year")
+wlddev |> findex_by(country, year) |> fcountv(effect = "year")
+wlddev |> findex_by(country, year) |> fcountv(add = "group_vars", effect = "year")
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

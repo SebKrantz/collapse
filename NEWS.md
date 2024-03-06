@@ -1,3 +1,9 @@
+# collapse 2.0.11
+
+* Removed *magrittr* from most documentation examples (using base pipe). 
+
+* Improved `plot.GRP` a little bit - on request of JSS editors. 
+
 # collapse 2.0.10
 
 * Fixed a bug in `fmatch()` when matching integer vectors to factors. This also affected `join()`. 

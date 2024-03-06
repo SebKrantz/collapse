@@ -129,14 +129,12 @@ head(STD(wldi, effect = 2L))                     # Standardizing all numeric var
 weights = abs(rnorm(nrow(wlddev)))
 head(fscale(get_vars(wlddev,9:12), wlddev$iso3c, weights))
 head(STD(wlddev, ~iso3c, weights, 9:12))
-\donttest{ % No code relying on suggested package
+
 # Grouped data
-library(magrittr)
-wlddev \%>\% fgroup_by(iso3c) \%>\% fselect(PCGDP,LIFEEX) \%>\% STD()
-wlddev \%>\% fgroup_by(iso3c) \%>\% fselect(PCGDP,LIFEEX) \%>\% STD(weights) # weighted standardizing
-wlddev \%>\% fgroup_by(iso3c) \%>\% fselect(PCGDP,LIFEEX,POP) \%>\% STD(POP) # weighting by POP ->
+wlddev |> fgroup_by(iso3c) |> fselect(PCGDP,LIFEEX) |> STD()
+wlddev |> fgroup_by(iso3c) |> fselect(PCGDP,LIFEEX) |> STD(weights) # weighted standardizing
+wlddev |> fgroup_by(iso3c) |> fselect(PCGDP,LIFEEX,POP) |> STD(POP) # weighting by POP ->
 # ..keeps the weight column unless keep.w = FALSE
-}
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

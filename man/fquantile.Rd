@@ -98,13 +98,13 @@ all.equal(wquantile7R(mtcars$mpg, mtcars$wt),
 BY(mtcars$mpg, mtcars$cyl, .quantile, names = TRUE, expand.wide = TRUE)
 BY(mtcars, mtcars$cyl, .quantile, names = TRUE)
 library(magrittr)
-mtcars \%>\% fgroup_by(cyl) \%>\% BY(.quantile)
+mtcars |> fgroup_by(cyl) |> BY(.quantile)
 
 ## With weights
 BY(mtcars$mpg, mtcars$cyl, .quantile, w = mtcars$wt, names = TRUE, expand.wide = TRUE)
 BY(mtcars, mtcars$cyl, .quantile, w = mtcars$wt, names = TRUE)
-mtcars \%>\% fgroup_by(cyl) \%>\% fselect(-wt) \%>\% BY(.quantile, w = mtcars$wt)
-mtcars \%>\% fgroup_by(cyl) \%>\% fsummarise(across(names(.) != "wt", .quantile, w = wt))
+mtcars |> fgroup_by(cyl) |> fselect(-wt) |> BY(.quantile, w = mtcars$wt)
+mtcars |> fgroup_by(cyl) |> fsummarise(across(-wt, .quantile, w = wt))
 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the

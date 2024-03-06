@@ -227,10 +227,10 @@ fsd(gv(mtcars, -c(2,8:9)), g)
 f1 <- qF(mtcars$cyl)                     # Unlike GRP objects, factors are checked for NA's
 f2 <- qF(mtcars$cyl, na.exclude = FALSE) # This can however be avoided through this option
 class(f2)                                # Note the added class
-\donttest{ % No code relying on suggested package
+
 library(microbenchmark)
 microbenchmark(fmean(mtcars, f1), fmean(mtcars, f2)) # A minor difference, larger on larger data
-}
+
 with(mtcars, finteraction(cyl, vs, am))  # Efficient interactions of vectors and/or factors
 finteraction(gv(mtcars, c(2,8:9)))       # .. or lists of vectors/factors
 
@@ -245,9 +245,9 @@ BY(mtcars, f2, quantile, expand.wide = TRUE)
 # For efficient (grouped) replacing and sweeping out computed statistics, use TRA()
 sds <- fsd(mtcars)
 head(TRA(mtcars, sds, "/"))     # Simple scaling (if sd's not needed, use fsd(mtcars, TRA = "/"))
-\donttest{ % No code relying on suggested package
+
 microbenchmark(TRA(mtcars, sds, "/"), sweep(mtcars, 2, sds, "/")) # A remarkable performance gain..
-}
+
 sds <- fsd(mtcars, f2)
 head(TRA(mtcars, sds, "/", f2)) # Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))
 
@@ -258,9 +258,8 @@ head(qDF(mtcarsM))                         # data.frame from matrix columns
 head(mrtl(mtcarsM, TRUE, "data.frame"))    # data.frame from matrix rows, etc..
 head(qDT(mtcarsM, "cars"))                 # Saving row.names when converting matrix to data.table
 head(qDT(mtcars, "cars"))                  # Same use a data.frame
-\donttest{ % No code relying on suggested package
+\donttest{ % No code relying on suggested packages and the tidyverse, also need to reduce execution time for CRAN
 ## Now let's get some real data and see how we can use this power for data manipulation
-library(magrittr)
 head(wlddev) # World Bank World Development Data: 216 countries, 61 years, 5 series (columns 9-13)
 
 # Starting with some discriptive tools...
@@ -276,14 +275,14 @@ qsu(wlddev, pid = ~ country,           # Panel-summarize columns 9 though 12 of 
 qsu(wlddev, ~ region, ~ country,       # Do all of that by region and also compute higher moments
     cols = 9:12, higher = TRUE)        # -> returns a 4D array
 qsu(wlddev, ~ region, ~ country, cols = 9:12,
-    higher = TRUE, array = FALSE) \%>\%                           # Return as a list of matrices..
-unlist2d(c("Variable","Trans"), row.names = "Region") \%>\% head  # and turn into a tidy data.frame
+    higher = TRUE, array = FALSE) |>                           # Return as a list of matrices..
+unlist2d(c("Variable","Trans"), row.names = "Region") |> head()# and turn into a tidy data.frame
 pwcor(num_vars(wlddev), P = TRUE)                           # Pairwise correlations with p-value
 pwcor(fmean(num_vars(wlddev), wlddev$country), P = TRUE)    # Correlating country means
 pwcor(fwithin(num_vars(wlddev), wlddev$country), P = TRUE)  # Within-country correlations
 psacf(wlddev, ~country, ~year, cols = 9:12)                 # Panel-data Autocorrelation function
 pspacf(wlddev, ~country, ~year, cols = 9:12)                # Partial panel-autocorrelations
-psmat(wlddev, ~iso3c, ~year, cols = 9:12) \%>\% plot          # Convert panel to 3D array and plot
+psmat(wlddev, ~iso3c, ~year, cols = 9:12) |> plot()         # Convert panel to 3D array and plot
 
 ## collapse offers a few very efficent functions for data manipulation:
 # Fast selecting and replacing columns
@@ -301,14 +300,15 @@ ss(wlddev, 1:10, 1:10) # This is an order of magnitude faster than wlddev[1:10, 
 head(ftransform(wlddev, ODA_GDP = ODA / PCGDP, ODA_LIFEEX = sqrt(ODA) / LIFEEX))
 settransform(wlddev, ODA_GDP = ODA / PCGDP, ODA_LIFEEX = sqrt(ODA) / LIFEEX) # by reference
 head(ftransform(wlddev, PCGDP = NULL, ODA = NULL, GINI_sum = fsum(GINI)))
-head(ftransformv(wlddev, 9:12, log))           # Can also transform with lists of columns
+head(ftransformv(wlddev, 9:12, log))                   # Can also transform with lists of columns
 head(ftransformv(wlddev, 9:12, fscale, apply = FALSE)) # apply = FALSE invokes fscale.data.frame
 settransformv(wlddev, 9:12, fscale, apply = FALSE)     # Changing the data by reference
 ftransform(wlddev) <- fscale(gv(wlddev, 9:12))         # Same thing (using replacement method)
 
-wlddev \%<>\% ftransformv(9:12, fscale, apply = FALSE) # Same thing, using magrittr
-wlddev \%>\% ftransform(gv(., 9:12) \%>\%              # With compound pipes: Scaling and lagging
-                        fscale \%>\% flag(0:2, iso3c, year)) \%>\% head
+library(magrittr) # Same thing, using magrittr
+wlddev \%<>\% ftransformv(9:12, fscale, apply = FALSE)
+wlddev \%>\% ftransform(gv(., 9:12) |>              # With compound pipes: Scaling and lagging
+                        fscale() |> flag(0:2, iso3c, year)) |> head()
 
 # Fast reordering
 head(roworder(wlddev, -country, year))
@@ -320,85 +320,84 @@ setrename(wlddev, country = Ctry, year = Yr)     # By reference
 head(frename(wlddev, tolower, cols = 9:12))
 
 # Fast grouping
-fgroup_by(wlddev, Ctry, decade) \%>\% fgroup_vars \%>\% head # fgroup_by is faster than dplyr::group_by
-
+fgroup_by(wlddev, Ctry, decade) |> fgroup_vars() |> head()
 rm(wlddev)                                       # .. but only works with collapse functions
 
 ## Now lets start putting things together
-wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:ODA) \%>\%
-  fgroup_by(region, income) \%>\% fmean            # Fast aggregation using the mean
+wlddev |> fsubset(year > 1990, region, income, PCGDP:ODA) |>
+  fgroup_by(region, income) |> fmean()         # Fast aggregation using the mean
 
 # Same thing using dplyr manipulation verbs
 library(dplyr)
-wlddev \%>\% filter(year > 1990) \%>\% select(region, income, PCGDP:ODA) \%>\%
-  group_by(region,income) \%>\% fmean       # This is already a lot faster than summarize_all(mean)
+wlddev |> filter(year > 1990) |> select(region, income, PCGDP:ODA) |>
+  group_by(region,income) |> fmean()       # This is already a lot faster than summarize_all(mean)
 
-wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:POP) \%>\%
-  fgroup_by(region, income) \%>\% fmean(POP)     # Weighted group means
+wlddev |> fsubset(year > 1990, region, income, PCGDP:POP) |>
+  fgroup_by(region, income) |> fmean(POP)     # Weighted group means
 
-wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:POP) \%>\%
-  fgroup_by(region, income) \%>\% fsd(POP)       # Weighted group standard deviations
+wlddev |> fsubset(year > 1990, region, income, PCGDP:POP) |>
+  fgroup_by(region, income) |> fsd(POP)       # Weighted group standard deviations
 
-wlddev \%>\% na_omit(cols = "POP") \%>\% fgroup_by(region, income) \%>\%
-  fselect(PCGDP:POP) \%>\% fnth(0.75, POP)       # Weighted group third quartile
+wlddev |> na_omit(cols = "POP") |> fgroup_by(region, income) |>
+  fselect(PCGDP:POP) |> fnth(0.75, POP)       # Weighted group third quartile
 
-wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\%
-fwithin \%>\% head                               # Within transformation
-wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\%
-fmedian(TRA = "-") \%>\% head                    # Grouped centering using the median
+wlddev |> fgroup_by(country) |> fselect(PCGDP:ODA) |>
+  fwithin() |> head()                         # Within transformation
+wlddev |> fgroup_by(country) |> fselect(PCGDP:ODA) |>
+  fmedian(TRA = "-") |> head()                # Grouped centering using the median
 # Replacing data points by the weighted first quartile:
-wlddev \%>\% na_omit(cols = "POP") \%>\% fgroup_by(country) \%>\%
+wlddev |> na_omit(cols = "POP") |> fgroup_by(country) |>
   fselect(country, year, PCGDP:POP) \%>\%
-  ftransform(fselect(., -country, -year) \%>\%
-  fnth(0.25, POP, "replace_fill")) \%>\% head
+  ftransform(fselect(., -country, -year) |>
+             fnth(0.25, POP, "fill")) |> head()
 
-wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:ODA) \%>\% fscale \%>\% head    # Standardizing
-wlddev \%>\% fgroup_by(country) \%>\% fselect(PCGDP:POP) \%>\%
-   fscale(POP) \%>\% head  # Weigted..
+wlddev |> fgroup_by(country) |> fselect(PCGDP:ODA) |> fscale() |> head() # Standardizing
+wlddev |> fgroup_by(country) |> fselect(PCGDP:POP) |>
+   fscale(POP) |> head()  # Weighted..
 
-wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%  # Adding 1 lead and 2 lags of each variable
-  fgroup_by(country) \%>\% flag(-1:2, year) \%>\% head
-wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%  # Adding 1 lead and 10-year growth rates
-  fgroup_by(country) \%>\% fgrowth(c(0:1,10), 1, year) \%>\% head
+wlddev |> fselect(country, year, PCGDP:ODA) |>  # Adding 1 lead and 2 lags of each variable
+  fgroup_by(country) |> flag(-1:2, year) |> head()
+wlddev |> fselect(country, year, PCGDP:ODA) |>  # Adding 1 lead and 10-year growth rates
+  fgroup_by(country) |> fgrowth(c(0:1,10), 1, year) |> head()
 
 # etc...
 
 # Aggregation with multiple functions
-wlddev \%>\% fsubset(year > 1990, region, income, PCGDP:ODA) \%>\%
+wlddev |> fsubset(year > 1990, region, income, PCGDP:ODA) |>
   fgroup_by(region, income) \%>\% {
     add_vars(fgroup_vars(., "unique"),
-             fmedian(., keep.group_vars = FALSE) \%>\% add_stub("median_"),
-             fmean(., keep.group_vars = FALSE) \%>\% add_stub("mean_"),
-             fsd(., keep.group_vars = FALSE) \%>\% add_stub("sd_"))
-  } \%>\% head
+             fmedian(., keep.group_vars = FALSE) |> add_stub("median_"),
+             fmean(., keep.group_vars = FALSE) |> add_stub("mean_"),
+             fsd(., keep.group_vars = FALSE) |> add_stub("sd_"))
+  } |> head()
 
 # Transformation with multiple functions
-wlddev \%>\% fselect(country, year, PCGDP:ODA) \%>\%
+wlddev |> fselect(country, year, PCGDP:ODA) |>
   fgroup_by(country) \%>\% {
-    add_vars(fdiff(., c(1,10), 1, year) \%>\% flag(0:2, year),  # Sequence of lagged differences
-             ftransform(., fselect(., PCGDP:ODA) \%>\% fwithin \%>\% add_stub("W.")) \%>\%
-               flag(0:2, year, keep.ids = FALSE))             # Sequence of lagged demeaned vars
-  } \%>\% head
+    add_vars(fdiff(., c(1,10), 1, year) |> flag(0:2, year),  # Sequence of lagged differences
+             ftransform(., fselect(., PCGDP:ODA) |> fwithin() |> add_stub("W.")) |>
+               flag(0:2, year, keep.ids = FALSE))            # Sequence of lagged demeaned vars
+  } |> head()
 
 # With ftransform, can also easily do one or more grouped mutations on the fly..
-settransform(wlddev, median_ODA = fmedian(ODA, list(region, income), TRA = "replace_fill"))
+settransform(wlddev, median_ODA = fmedian(ODA, list(region, income), TRA = "fill"))
 
-settransform(wlddev, sd_ODA = fsd(ODA, list(region, income), TRA = "replace_fill"),
-                     mean_GDP = fmean(PCGDP, country, TRA = "replace_fill"))
+settransform(wlddev, sd_ODA = fsd(ODA, list(region, income), TRA = "fill"),
+                     mean_GDP = fmean(PCGDP, country, TRA = "fill"))
 
 wlddev \%<>\% ftransform(fmedian(list(median_ODA = ODA, median_GDP = PCGDP),
-                               list(region, income), TRA = "replace_fill"))
+                               list(region, income), TRA = "fill"))
 
 # On a groped data frame it is also possible to grouped transform certain columns
 # but perform aggregate operatins on others:
-wlddev \%>\% fgroup_by(region, income) \%>\%
+wlddev |> fgroup_by(region, income) \%>\%
     ftransform(gmedian_GDP = fmedian(PCGDP, GRP(.), TRA = "replace"),
                omedian_GDP = fmedian(PCGDP, TRA = "replace"),  # "replace" preserves NA's
-               omedian_GDP_fill = fmedian(PCGDP)) \%>\% tail
+               omedian_GDP_fill = fmedian(PCGDP)) |> tail()
 
 rm(wlddev)
 
-## For multi-type data aggregation, the function collap offers ease and flexibility
+## For multi-type data aggregation, the function collap() offers ease and flexibility
 # Aggregate this data by country and decade: Numeric columns with mean, categorical with mode
 head(collap(wlddev, ~ country + decade, fmean, fmode))
 
@@ -415,10 +414,10 @@ head(collap(wlddev, ~ country + decade,
             custom = list(fmean = 9:10, fsd = 9:12, flast = 3, ffirst = 6:8)))
 
 # For grouped data frames use collapg
-wlddev \%>\% fsubset(year > 1990, country, region, income, PCGDP:ODA) \%>\%
-  fgroup_by(country) \%>\% collapg(fmean, ffirst) \%>\%
-  ftransform(AMGDP = PCGDP > fmedian(PCGDP, list(region, income), TRA = "replace_fill"),
-             AMODA = ODA > fmedian(ODA, income, TRA = "replace_fill")) \%>\% head
+wlddev |> fsubset(year > 1990, country, region, income, PCGDP:ODA) |>
+  fgroup_by(country) |> collapg(fmean, ffirst) |>
+  ftransform(AMGDP = PCGDP > fmedian(PCGDP, list(region, income), TRA = "fill"),
+             AMODA = ODA > fmedian(ODA, income, TRA = "replace_fill")) |> head()
 
 ## Additional flexibility for data transformation tasks is offerend by tidy transformation operators
 # Within-transformation (centering on overall mean)
@@ -443,11 +442,11 @@ get_vars(wlddev, "G1.", regex = TRUE) <- NULL # Deleting again
 # These operators can conveniently be used in regression formulas:
 # Using a Mundlak (1978) procedure to estimate the effect of OECD on LIFEEX, controlling for PCGDP
 lm(LIFEEX ~ log(PCGDP) + OECD + B(log(PCGDP), country),
-   wlddev \%>\% fselect(country, OECD, PCGDP, LIFEEX) \%>\% na_omit)
+   wlddev |> fselect(country, OECD, PCGDP, LIFEEX) |> na_omit())
 
 # Adding 10-year lagged life-expectancy to allow for some convergence effects (dynamic panel model)
 lm(LIFEEX ~ L(LIFEEX, 10, country) + log(PCGDP) + OECD + B(log(PCGDP), country),
-   wlddev \%>\% fselect(country, OECD, PCGDP, LIFEEX) \%>\% na_omit)
+   wlddev |> fselect(country, OECD, PCGDP, LIFEEX) |> na_omit())
 
 # Tranformation functions and operators also support indexed data classes:
 wldi <- findex_by(wlddev, country, year)

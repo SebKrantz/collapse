@@ -91,19 +91,17 @@ BY(num_vars(iris), g, fquantile)
 BY(num_vars(iris), g, fquantile, expand.wide = TRUE)
 BY(num_vars(iris), g, fquantile,       # Return as list of matrices
    expand.wide = TRUE, return = "list")
-\donttest{ % No code relying on suggested package
+
 ## grouped data frame method
-library(magrittr) # Note: Used because |> is not available on older R versions
 giris <- fgroup_by(iris, Species)
-giris \%>\% BY(sum)                      # Compute sum
-giris \%>\% BY(sum, use.g.names = TRUE,  # Use row.names and
+giris |> BY(sum)                      # Compute sum
+giris |> BY(sum, use.g.names = TRUE,  # Use row.names and
              keep.group_vars = FALSE)  # remove 'Species' and groups attribute
-giris \%>\% BY(sum, return = "matrix")   # Return matrix
-giris \%>\% BY(sum, return = "matrix",   # Matrix with row.names
+giris |> BY(sum, return = "matrix")   # Return matrix
+giris |> BY(sum, return = "matrix",   # Matrix with row.names
              use.g.names = TRUE)
-giris \%>\% BY(.quantile)                # Compute quantiles (output is stacked)
-giris \%>\% BY(.quantile, names = TRUE,  # Wide output
+giris |> BY(.quantile)                # Compute quantiles (output is stacked)
+giris |> BY(.quantile, names = TRUE,  # Wide output
                expand.wide = TRUE)
-}
 }
 \keyword{manip}

@@ -82,7 +82,7 @@ fungroup(X, \dots)
 
 \method{print}{GRP}(x, n = 6, \dots)
 
-\method{plot}{GRP}(x, breaks = "auto", type = "s", horizontal = FALSE, \dots)
+\method{plot}{GRP}(x, breaks = "auto", type = "l", horizontal = FALSE, \dots)
 }
 \arguments{
   \item{X}{a vector, list of columns or data frame (default method), or a suitable object (conversion / extractor methods).}
@@ -142,7 +142,7 @@ fungroup(X, \dots)
 
   \item{type}{linetype for plot.}
 
-  \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other.}
+  \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other. \emph{Note} that the size of each group is only plotted for objects with less than 10,000 groups.}
 
   \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{gsplit}, \code{greorder}, \code{GRPN} and \code{GRPid}: further arguments passed to \code{GRP} (if \code{g/x} is not already a 'GRP' object). For example the \code{by} argument could be used if a data frame is passed.}
 }
@@ -219,35 +219,33 @@ identical(mtcars$mpg,              # greorder and unlist undo the effect of gspl
 ## Convert factor to GRP object and vice-versa
 GRP(iris$Species)
 as_factor_GRP(g)
-\donttest{ % No code relying on suggested package
+\donttest{ % The tidyverse regularly causes havoc to CRAN tests in other packages, therefore this is not tested
 ## dplyr integration
 library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% GRP()    # Get GRP object from a dplyr grouped tibble
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmean()  # Grouped mean using dplyr grouping
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmean() # Faster alternative with collapse grouping
+mtcars |> group_by(cyl,vs,am) |> GRP()    # Get GRP object from a dplyr grouped tibble
+mtcars |> group_by(cyl,vs,am) |> fmean()  # Grouped mean using dplyr grouping
+mtcars |> fgroup_by(cyl,vs,am) |> fmean() # Faster alternative with collapse grouping
 
-mtcars \%>\% fgroup_by(cyl,vs,am)            # Print method for grouped data frame
+mtcars |> fgroup_by(cyl,vs,am)            # Print method for grouped data frame
 
-library(magrittr)
 ## Adding a column of group sizes.
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fsummarise(Sizes = GRPN())
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmutate(Sizes = GRPN())
-# Note: can also set options(collapse_mask = "n") to use n() instead, see help("collapse-options")
+mtcars |> fgroup_by(cyl,vs,am) |> fsummarise(Sizes = GRPN())
+# Note: can also set_collapse(mask = "n") to use n() instead, see help("collapse-options")
 # Other usage modes:
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% ftransform(Sizes = GRPN(.))
-mtcars \%>\% ftransform(Sizes = GRPN(list(cyl,vs,am)))  # Same thing, slightly more efficient
+mtcars |> fgroup_by(cyl,vs,am) |> fmutate(Sizes = GRPN())
+mtcars |> fmutate(Sizes = GRPN(list(cyl,vs,am)))  # Same thing, slightly more efficient
 
 ## Various options for programming and interactive use
-fgroup_by(GGDC10S, Variable, Decade = floor(Year / 10) * 10) \%>\% head(3)
-fgroup_by(GGDC10S, 1:3, 5) \%>\% head(3)
-fgroup_by(GGDC10S, c("Variable", "Country")) \%>\% head(3)
-fgroup_by(GGDC10S, is.character) \%>\% head(3)
-fgroup_by(GGDC10S, Country:Variable, Year) \%>\% head(3)
-fgroup_by(GGDC10S, Country:Region, Var = Variable, Year) \%>\% head(3)
+fgroup_by(GGDC10S, Variable, Decade = floor(Year / 10) * 10) |> head(3)
+fgroup_by(GGDC10S, 1:3, 5) |> head(3)
+fgroup_by(GGDC10S, c("Variable", "Country")) |> head(3)
+fgroup_by(GGDC10S, is.character) |> head(3)
+fgroup_by(GGDC10S, Country:Variable, Year) |> head(3)
+fgroup_by(GGDC10S, Country:Region, Var = Variable, Year) |> head(3)
 
 ## Note that you can create a grouped data frame without materializing the unique grouping columns
-fgroup_by(GGDC10S, Variable, Country, return.groups = FALSE) \%>\% fmutate(across(AGR:SUM, fscale))
-fgroup_by(GGDC10S, Variable, Country, return.groups = FALSE) \%>\% fselect(AGR:SUM) \%>\% fmean()
+fgroup_by(GGDC10S, Variable, Country, return.groups = FALSE) |> fmutate(across(AGR:SUM, fscale))
+fgroup_by(GGDC10S, Variable, Country, return.groups = FALSE) |> fselect(AGR:SUM) |> fmean()
 
 ## Note also that setting sort = FALSE on unsorted data can be much faster... if not required...
 library(microbenchmark)

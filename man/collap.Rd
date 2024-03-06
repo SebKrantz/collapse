@@ -202,16 +202,13 @@ head(collap(wlddev, ~ country + decade,                         # No column reor
             wFUN = list(fsum, fmax),
             parallel = TRUE, mc.cores = 1L, keep.col.order = FALSE))
 
-\donttest{ % No code relying on suggested package
 ## Piped Use --------------------------------------------------
-library(magrittr) # Note: Used because |> is not available on older R versions
-iris \%>\% fgroup_by(Species) \%>\% collapg()
-wlddev \%>\% fgroup_by(country, decade) \%>\% collapg() \%>\% head()
-wlddev \%>\% fgroup_by(region, year) \%>\% collapg(w = POP) \%>\% head()
-wlddev \%>\% fgroup_by(country, decade) \%>\% collapg(fmedian, flast) \%>\% head()
-wlddev \%>\% fgroup_by(country, decade) \%>\%
-  collapg(custom = list(fmean = 9:12, fmode = 5:7, flast = 3)) \%>\% head()
-}
+iris |> fgroup_by(Species) |> collapg()
+wlddev |> fgroup_by(country, decade) |> collapg() |> head()
+wlddev |> fgroup_by(region, year) |> collapg(w = POP) |> head()
+wlddev |> fgroup_by(country, decade) |> collapg(fmedian, flast) |> head()
+wlddev |> fgroup_by(country, decade) |>
+  collapg(custom = list(fmean = 9:12, fmode = 5:7, flast = 3)) |> head()
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

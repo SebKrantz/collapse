@@ -152,12 +152,11 @@ head(L(wldi, 0:2, cols = 9:10))                              # Again 2 lags of G
 head(L(wldi$PCGDP))                                          # Lagging an indexed series
 summary(lm(PCGDP ~ L(PCGDP,1:2) + L(LIFEEX,0:2), wldi))      # Running the lm again
 summary(lm(PCGDP ~ ., L(wldi, 0:2, 9:10, keep.ids = FALSE))) # Same thing
-\donttest{ % No code relying on suggested package
+
 ## Using grouped data:
 library(magrittr)
-wlddev \%>\% fgroup_by(iso3c) \%>\% fselect(PCGDP,LIFEEX) \%>\% flag(0:2)
-wlddev \%>\% fgroup_by(iso3c) \%>\% fselect(year,PCGDP,LIFEEX) \%>\% flag(0:2,year) # Also using t (safer)
-}
+wlddev |> fgroup_by(iso3c) |> fselect(PCGDP,LIFEEX) |> flag(0:2)
+wlddev |> fgroup_by(iso3c) |> fselect(year,PCGDP,LIFEEX) |> flag(0:2,year) # Also using t (safer)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.

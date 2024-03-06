@@ -150,23 +150,20 @@ m <- qM(mtcars)
 fnth(m, 0.75)
 head(fnth(m, 0.75, TRA = "-"))
 fnth(m, 0.75, g) # etc..
-\donttest{ % No code relying on suggested package
-library(dplyr)
-## grouped_df method
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fnth(0.75)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fnth(0.75, hp)           # Weighted
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75)              # Faster grouping!
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fnth(0.75, TRA = "/")   # Divide by third quartile
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%    # Faster selecting
+
+## method for grouped data frames - created with dplyr::group_by or fgroup_by
+mtcars |> fgroup_by(cyl,vs,am) |> fnth(0.75)
+mtcars |> fgroup_by(cyl,vs,am) |> fnth(0.75, hp)         # Weighted
+mtcars |> fgroup_by(cyl,vs,am) |> fnth(0.75, TRA = "/")  # Divide by third quartile
+mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg, hp) |>    # Faster selecting
       fnth(0.75, hp, "/")  # Divide mpg by its third weighted group-quartile, using hp as weights
 
 # Efficient grouped estimation of multiple quantiles
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\%
-    fmutate(o = radixorder(GRPid(), mpg)) \%>\%
+mtcars |> fgroup_by(cyl,vs,am) |>
+    fmutate(o = radixorder(GRPid(), mpg)) |>
     fsummarise(mpg_Q1 = fnth(mpg, 0.25, o = o),
                mpg_median = fmedian(mpg, o = o),
                mpg_Q3 = fnth(mpg, 0.75, o = o))
-}
 
 ## fmedian()
 fmedian(mpg)                         # Simple median value
@@ -190,15 +187,13 @@ fmedian(mtcars, g, use.g.names = FALSE)   # No row-names generated
 fmedian(m)
 head(fmedian(m, TRA = "-"))
 fmedian(m, g) # etc..
-\donttest{ % No code relying on suggested package
-# grouped_df method
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian()
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fmedian(hp)             # Weighted
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian()              # Faster grouping!
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fmedian(TRA = "-")     # De-median
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg, hp) \%>\%   # Faster selecting
+
+## method for grouped data frames - created with dplyr::group_by or fgroup_by
+mtcars |> fgroup_by(cyl,vs,am) |> fmedian()
+mtcars |> fgroup_by(cyl,vs,am) |> fmedian(hp)           # Weighted
+mtcars |> fgroup_by(cyl,vs,am) |> fmedian(TRA = "-")    # De-median
+mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg, hp) |>   # Faster selecting
       fmedian(hp, "-")  # Weighted de-median mpg, using hp as weights
-}
 }
 \keyword{univar}
 \keyword{manip}

@@ -93,14 +93,11 @@ m <- qM(mtcars)
 fprod(m)
 head(fprod(m, TRA = "/"))
 fprod(m, g) # etc..
-\donttest{ % No code relying on suggested package
+
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
-library(dplyr)
-mtcars \%>\% group_by(cyl,vs,am) \%>\% fprod(hp)   # Weighted grouped product
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(hp)  # Equivalent and faster
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fprod(TRA = "/")
-mtcars \%>\% fgroup_by(cyl,vs,am) \%>\% fselect(mpg) \%>\% fprod()
-}
+mtcars |> fgroup_by(cyl,vs,am) |> fprod()
+mtcars |> fgroup_by(cyl,vs,am) |> fprod(TRA = "/")
+mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg) |> fprod()
 }
 \keyword{univar}
 \keyword{manip}

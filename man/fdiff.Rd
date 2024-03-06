@@ -190,16 +190,15 @@ summary(lm(D(PCGDP) ~ L(D(PCGDP, 0:1)) + L(D(LIFEEX), 0:1), data = wldi))
 summary(lm(Dlog(PCGDP) ~ L(Dlog(PCGDP, 0:1)) + L(Dlog(LIFEEX), 0:1), data = wldi))
 # Same thing:
 summary(lm(D1.PCGDP ~., data = L(D(wldi,0:1,1,9:10),0:1,keep.ids = FALSE)[,-1]))
-\donttest{ % No code relying on suggested package
+
 ## Grouped data
 library(magrittr)
-wlddev \%>\% fgroup_by(country) \%>\%
-             fselect(PCGDP,LIFEEX) \%>\% fdiff(0:1,1:2)       # Adding a first and second difference
-wlddev \%>\% fgroup_by(country) \%>\%
-             fselect(year,PCGDP,LIFEEX) \%>\% D(0:1,1:2,year) # Also using t (safer)
-wlddev \%>\% fgroup_by(country) \%>\%                           # Dropping id's
-             fselect(year,PCGDP,LIFEEX) \%>\% D(0:1,1:2,year, keep.ids = FALSE)
-}
+wlddev |> fgroup_by(country) |>
+             fselect(PCGDP,LIFEEX) |> fdiff(0:1,1:2)       # Adding a first and second difference
+wlddev |> fgroup_by(country) |>
+             fselect(year,PCGDP,LIFEEX) |> D(0:1,1:2,year) # Also using t (safer)
+wlddev |> fgroup_by(country) |>                            # Dropping id's
+             fselect(year,PCGDP,LIFEEX) |> D(0:1,1:2,year, keep.ids = FALSE)
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
