@@ -1,4 +1,4 @@
-\documentclass[article]{jss}
+\documentclass[nojss]{jss} % article
 
 %% -- LaTeX packages and custom commands ---------------------------------------
 
@@ -641,7 +641,7 @@ Indexed by:  iso3c [1] | year [10 (61)]
 %
 \section{Table joins and pivots} \label{sec:join_pivot}
 %
-While \pkg{collapse} has a broad set of \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html}{data manipulation functions}, its implementations of table \href{https://sebkrantz.github.io/collapse/reference/join.html}{joins} and \href{https://sebkrantz.github.io/collapse/reference/pivot.html}{pivots} is particularly noteworthy since they offer several new features, including rich verbosity for table joins, pivots supporting variable labels, and 'recast' pivots. Both implementations also provide outstanding computational performance and memory efficiency.
+While \pkg{collapse} has a broad set of \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html}{data manipulation functions}, its implementations of table \href{https://sebkrantz.github.io/collapse/reference/join.html}{joins} and \href{https://sebkrantz.github.io/collapse/reference/pivot.html}{pivots} is particularly noteworthy since they offer several new features, including rich verbosity for table joins, pivots supporting variable labels, and 'recast' pivots. Both implementations provide outstanding computational performance and memory efficiency.
 %
 \subsection{Joins}
 %
@@ -762,11 +762,11 @@ R> setrelabel(data, id = "Fruit Id", r = "Fruit Radius", h = "Fruit Height")
 R> print(data)
 \end{Sinput}
 \begin{Soutput}
-  type type_name id      r      h
-1    A    Apples  1 0.0356 2.4303
-2    A    Apples  2 1.8575 0.5427
-3    B   Bananas  1 0.5966 1.8641
-4    B   Bananas  2 0.8115 0.7461
+  type type_name id      r     h
+1    A    Apples  1 0.3139 2.983
+2    A    Apples  2 0.4095 1.572
+3    B   Bananas  1 0.4302 2.220
+4    B   Bananas  2 0.1851 2.380
 \end{Soutput}
 \begin{Sinput}
 R> vlabels(data)
@@ -785,14 +785,14 @@ R> (dl <- pivot(data, ids = c("type", "type_name", "id"), labels = "label"))
 \end{Sinput}
 \begin{Soutput}
   type type_name id variable        label  value
-1    A    Apples  1        r Fruit Radius 0.0356
-2    A    Apples  2        r Fruit Radius 1.8575
-3    B   Bananas  1        r Fruit Radius 0.5966
-4    B   Bananas  2        r Fruit Radius 0.8115
-5    A    Apples  1        h Fruit Height 2.4303
-6    A    Apples  2        h Fruit Height 0.5427
-7    B   Bananas  1        h Fruit Height 1.8641
-8    B   Bananas  2        h Fruit Height 0.7461
+1    A    Apples  1        r Fruit Radius 0.3139
+2    A    Apples  2        r Fruit Radius 0.4095
+3    B   Bananas  1        r Fruit Radius 0.4302
+4    B   Bananas  2        r Fruit Radius 0.1851
+5    A    Apples  1        h Fruit Height 2.9829
+6    A    Apples  2        h Fruit Height 1.5722
+7    B   Bananas  1        h Fruit Height 2.2203
+8    B   Bananas  2        h Fruit Height 2.3797
 \end{Soutput}
 \begin{Sinput}
 R> vlabels(dl)
@@ -812,9 +812,9 @@ The second option is a wider pivot with \code{how = "wider"}. Here, \code{names}
 R> (dw <- pivot(data, "id", names = "type", labels = "type_name", how = "w"))
 \end{Sinput}
 \begin{Soutput}
-  id    r_A    r_B    h_A    h_B
-1  1 0.0356 0.5966 2.4303 1.8641
-2  2 1.8575 0.8115 0.5427 0.7461
+  id    r_A    r_B   h_A  h_B
+1  1 0.3139 0.4302 2.983 2.22
+2  2 0.4095 0.1851 1.572 2.38
 \end{Soutput}
 \begin{Sinput}
 R> namlab(dw)
@@ -838,10 +838,10 @@ R> (dr <- pivot(data, ids = "id", names = list(from = "type"),
 \end{Sinput}
 \begin{Soutput}
   id variable        label      A      B
-1  1        r Fruit Radius 0.0356 0.5966
-2  2        r Fruit Radius 1.8575 0.8115
-3  1        h Fruit Height 2.4303 1.8641
-4  2        h Fruit Height 0.5427 0.7461
+1  1        r Fruit Radius 0.3139 0.4302
+2  2        r Fruit Radius 0.4095 0.1851
+3  1        h Fruit Height 2.9829 2.2203
+4  2        h Fruit Height 1.5722 2.3797
 \end{Soutput}
 \begin{Sinput}
 R> vlabels(dr)
@@ -1116,10 +1116,10 @@ R> microbenchmark(R = colMeans(m),
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-     expr   min    lq   mean median     uq   max neval
-        R 9.755 9.871 10.279  9.978 10.422 14.36   100
-    Rfast 1.374 1.823  2.460  1.974  2.376 15.22   100
- collapse 1.415 1.488  2.088  1.535  1.702 12.40   100
+     expr   min    lq   mean median    uq    max neval
+        R 9.827 9.858 10.061  9.885 9.970 16.701   100
+    Rfast 1.349 1.819  2.135  1.877 2.009 11.236   100
+ collapse 1.321 1.475  1.728  1.521 1.701  5.502   100
 \end{Soutput}
 \begin{Sinput}
 R> microbenchmark(R = rowsum(data, g, reorder = FALSE),
@@ -1128,10 +1128,10 @@ R> microbenchmark(R = rowsum(data, g, reorder = FALSE),
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-       expr    min     lq   mean median     uq   max neval
-          R 10.948 11.254 13.085 11.404 11.749 96.20   100
- data.table 13.031 19.024 22.010 19.743 23.276 62.05   100
-   collapse  2.213  2.874  3.607  3.084  3.567 13.94   100
+       expr    min     lq   mean median     uq    max neval
+          R 11.002 11.331 12.255 11.516 11.946 24.269   100
+ data.table 13.918 19.036 21.956 19.746 21.676 64.273   100
+   collapse  1.911  2.743  3.408  3.136  3.702  6.514   100
 \end{Soutput}
 \begin{Sinput}
 R> add_vars(data) <- g
@@ -1140,9 +1140,9 @@ R> microbenchmark(data.table = data[, lapply(.SD, median), by = g],
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-       expr    min     lq   mean median     uq    max neval
- data.table 136.63 137.82 139.30 138.51 140.47 149.33   100
-   collapse  73.28  79.03  82.12  81.74  84.15  99.39   100
+       expr    min     lq   mean median     uq   max neval
+ data.table 136.94 137.72 141.04 138.48 140.01 265.1   100
+   collapse  70.48  76.56  81.03  79.72  82.17 191.9   100
 \end{Soutput}
 \begin{Sinput}
 R> d <- data.table(g = unique(g), x = 1, y = 2, z = 3)
@@ -1152,8 +1152,8 @@ R> microbenchmark(data.table = d[data, on = "g"],
 \begin{Soutput}
 Unit: milliseconds
        expr   min     lq   mean median     uq    max neval
- data.table 8.525 12.288 24.414 14.395 20.293 73.406   100
-   collapse 1.272  1.386  1.477  1.424  1.459  2.843   100
+ data.table 9.153 12.140 24.382 14.118 20.849 66.701   100
+   collapse 1.220  1.391  1.472  1.424  1.466  2.948   100
 \end{Soutput}
 \begin{Sinput}
 R> microbenchmark(data.table = melt(data, "g"),
@@ -1161,9 +1161,9 @@ R> microbenchmark(data.table = melt(data, "g"),
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-       expr   min    lq  mean median    uq   max neval
- data.table 11.83 15.16 22.61  16.60 18.44 67.87   100
-   collapse 11.75 14.87 22.46  16.33 18.52 71.10   100
+       expr   min    lq mean median    uq   max neval
+ data.table 11.96 15.34 22.6  16.63 18.41 75.20   100
+   collapse 11.74 15.01 22.0  16.32 18.28 63.01   100
 \end{Soutput}
 \begin{Sinput}
 R> settransform(data, id = rowid(g))
@@ -1174,8 +1174,8 @@ R> microbenchmark(data.table = dcast(data, g ~ id, value.var = cols),
 \begin{Soutput}
 Unit: milliseconds
        expr   min     lq   mean median     uq   max neval
- data.table 73.64 113.04 117.94 115.83 121.94 181.0   100
-   collapse 54.87  72.95  83.95  79.95  92.68 134.4   100
+ data.table 72.48 116.74 119.65  119.7 123.68 142.7   100
+   collapse 55.83  87.97  92.83   90.6  93.19 200.7   100
 \end{Soutput}
 \end{Schunk}
 %
@@ -1193,11 +1193,11 @@ R> microbenchmark(base_int = unique(g_int), collapse_int = funique(g_int),
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-          expr   min     lq  mean median     uq    max neval
-      base_int 60.68 63.462 66.31 64.833  66.42 129.54   100
-  collapse_int  8.50  9.193 10.48  9.374  10.23  19.99   100
-     base_char 92.71 95.737 99.69 98.380 100.45 149.15   100
- collapse_char 22.25 23.781 25.86 24.143  25.14  79.24   100
+          expr    min     lq  mean median     uq    max neval
+      base_int 60.294 63.508 65.73 65.251  66.62 110.97   100
+  collapse_int  8.677  9.347 10.49  9.595  10.91  15.83   100
+     base_char 92.569 95.032 99.15 98.483 100.67 141.98   100
+ collapse_char 21.756 23.128 24.91 23.691  24.46  88.37   100
 \end{Soutput}
 \begin{Sinput}
 R> microbenchmark(base_int = match(g_int, 1:1000),
@@ -1208,12 +1208,12 @@ R> microbenchmark(base_int = match(g_int, 1:1000),
 \end{Sinput}
 \begin{Soutput}
 Unit: milliseconds
-            expr    min     lq   mean median     uq   max neval
-        base_int 27.156 27.313 29.131 27.956 31.399 32.45    10
-    collapse_int  8.766  8.838  9.395  8.862  8.901 13.63    10
-       base_char 84.300 84.414 88.440 85.985 89.799 98.14    10
- data.table_char 42.195 42.372 43.311 42.621 43.390 48.58    10
-   collapse_char 29.627 29.786 30.585 30.038 30.367 34.70    10
+            expr   min     lq   mean median      uq    max neval
+        base_int 27.24 27.502 29.085 28.093  30.789  32.41    10
+    collapse_int  8.78  8.867  9.429  8.891   9.185  13.29    10
+       base_char 94.72 96.474 99.857 97.048 101.644 110.06    10
+ data.table_char 42.21 42.412 44.063 42.758  43.287  51.68    10
+   collapse_char 36.61 36.769 37.592 36.959  37.667  41.62    10
 \end{Soutput}
 \end{Schunk}
 %

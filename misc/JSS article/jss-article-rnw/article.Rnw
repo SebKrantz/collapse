@@ -1,4 +1,4 @@
-\documentclass[article]{jss}
+\documentclass[nojss]{jss} % article
 
 %% -- LaTeX packages and custom commands ---------------------------------------
 
@@ -376,7 +376,7 @@ BY(LIFEEXi, findex(LIFEEXi)$iso3c, data.table::frollmean, 5) |> head(10)
 %
 \section{Table joins and pivots} \label{sec:join_pivot}
 %
-While \pkg{collapse} has a broad set of \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html}{data manipulation functions}, its implementations of table \href{https://sebkrantz.github.io/collapse/reference/join.html}{joins} and \href{https://sebkrantz.github.io/collapse/reference/pivot.html}{pivots} is particularly noteworthy since they offer several new features, including rich verbosity for table joins, pivots supporting variable labels, and 'recast' pivots. Both implementations also provide outstanding computational performance and memory efficiency.
+While \pkg{collapse} has a broad set of \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html}{data manipulation functions}, its implementations of table \href{https://sebkrantz.github.io/collapse/reference/join.html}{joins} and \href{https://sebkrantz.github.io/collapse/reference/pivot.html}{pivots} is particularly noteworthy since they offer several new features, including rich verbosity for table joins, pivots supporting variable labels, and 'recast' pivots. Both implementations provide outstanding computational performance and memory efficiency.
 %
 \subsection{Joins}
 %
