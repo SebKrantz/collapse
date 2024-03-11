@@ -1,5 +1,7 @@
 # collapse 2.0.11
 
+* An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* has been submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/). The preprint is available through *arXiv*.  
+
 * Removed *magrittr* from most documentation examples (using base pipe). 
 
 * Improved `plot.GRP` a little bit - on request of JSS editors. 
