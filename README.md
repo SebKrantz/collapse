@@ -79,6 +79,10 @@ In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/
 <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page1.png" width="330"/></a>  <!-- height="227" 294 -->
 <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page2.png" width="330"/></a> 
 
+### Article on arXiv
+
+An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* has been submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/) in March 2024. 
+
 ### Presentation at [useR 2022](https://user2022.r-project.org)
 
 [**Video Recording**](<https://www.youtube.com/watch?v=OwWT1-dSEts>) | 

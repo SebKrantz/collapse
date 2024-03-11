@@ -16,7 +16,7 @@ vignette: >
 1. To facilitate complex data transformation, exploration and computing tasks in R.
 2. To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-Documentation comes in 5 different forms:
+Documentation comes in 6 different forms:
 
 ## Built-In Structured Documentation
 
@@ -33,6 +33,11 @@ Reading `help("collapse-package")` and `help("collapse-documentation")` is the m
 ## Cheatsheet
 
 An up-to-date (v2.0) [cheatsheet](<https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf>) compactly summarizes the package. 
+
+## Article on arXiv
+
+An [article](https://arxiv.org/abs/2403.05038) on *collapse* (v2.0.10) has been submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/) in March 2024. 
+
 
 ## useR 2022 Presentation and Slides
 
