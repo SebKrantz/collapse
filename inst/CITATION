@@ -1,4 +1,16 @@
-citHeader("To cite collapse in publications use:")
+citHeader("To cite collapse in publications, please use:")
+
+bibentry(bibtype = "misc",
+         key = "krantz2024collapse",
+         title = "collapse: Advanced and Fast Statistical Computing and Data Transformation in R",
+         author = person("Sebastian", "Krantz"),
+         year = "2024",
+         note = note,
+         eprint="2403.05038",
+         archivePrefix="arXiv",
+         primaryClass="stat.CO",
+         url = "https://arxiv.org/abs/2403.05038",
+         textVersion = "Krantz, S. (2024). collapse: Advanced and Fast Statistical Computing and Data Transformation in R [Preprint]. arXiv. https://arxiv.org/abs/2403.05038")
 
 year <- sub("-.*", "", meta$Date)
 note <- sprintf("R package version %s", meta$Version)
