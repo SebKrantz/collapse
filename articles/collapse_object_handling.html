@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -299,7 +299,7 @@ i.e. <code>qM(EuStockMarkets, keep.attr = TRUE)</code>.</p>
 columns by data type without the need to check data frame columns by
 applying a function such as <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric()</a></code> in R. For
 <code>is.numeric</code>, the C implementation is equivalent to
-<code>is_numeric_C &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; (!is.object(x) || inherits(x, "ts") || inherits(x, "units"))</code>.
+<code>is_numeric_C &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; (!is.object(x) || inherits(x, "ts") || inherits(x, "units") || inherits(x, "integer64"))</code>.
 This of course does not respect the behavior of other classes that
 define methods for <code>is.numeric</code>
 e.g. <code>is.numeric.foo &lt;- function(x) TRUE</code>, then for
@@ -312,9 +312,9 @@ be aware of here is when using <code><a href="../reference/collap.html">collap()
 <code>FUN</code> and <code>catFUN</code> arguments, where the C code
 (<code>is_numeric_C</code>) is used internally to decide whether a
 column is numeric or categorical. Thus numeric columns with a class
-attribute other than “ts” or “units” are not recognized as numeric by
-<code><a href="../reference/collap.html">collap()</a></code>. <em>collapse</em> also does not support
-statistical operations on complex data.</p>
+attribute other than “ts”, “units”, and “integer64” are not recognized
+as numeric by <code><a href="../reference/collap.html">collap()</a></code>. <em>collapse</em> also does not
+support statistical operations on complex data.</p>
 </div>
 <div class="section level4">
 <h4 id="parsing-of-time-ids">Parsing of Time-IDs<a class="anchor" aria-label="anchor" href="#parsing-of-time-ids"></a>

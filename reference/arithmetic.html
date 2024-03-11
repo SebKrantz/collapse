@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -228,9 +228,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout      0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant               -1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Chained Operations</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Note: Used because |&gt; is not available on older R versions</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span> <span class="co"># Needed here to evaluate infix operators in sequence</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%r-%</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span> <span class="op">%c*%</span> <span class="fl">5</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">tfm</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="fsum.html">fsum</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="qsu.html">qsu</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        N       Mean        SD        Min        Max</span>
@@ -245,7 +245,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> am    32     1.7819     2.495    -0.2493     4.7507</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> gear  32    -3.9142     3.689    -7.3517     2.6483</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> carb  32    -4.0221     8.076   -13.0846    21.9154</span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

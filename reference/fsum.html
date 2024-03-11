@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -301,21 +301,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     5.405405</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              10.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
-<span class="r-in"><span> </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsum</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped sum (total)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     cyl    vs    am sum.hp    mpg    disp  drat    wt   qsec  gear  carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>     4     0     1     91  <span style="text-decoration: underline;">2</span>366   <span style="text-decoration: underline;">10</span>947.  403.  195.  <span style="text-decoration: underline;">1</span>520.   455   182</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>     4     1     0    254  <span style="text-decoration: underline;">5</span>764.  <span style="text-decoration: underline;">34</span>121.  960.  736.  <span style="text-decoration: underline;">5</span>356.   919   411</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>     4     1     1    564 <span style="text-decoration: underline;">15</span>613.  <span style="text-decoration: underline;">52</span>945. <span style="text-decoration: underline;">2</span>301. <span style="text-decoration: underline;">1</span>166. <span style="text-decoration: underline;">10</span>457.  <span style="text-decoration: underline;">2</span>369   838</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>     6     0     1    395  <span style="text-decoration: underline;">8</span>068.  <span style="text-decoration: underline;">60</span>575  <span style="text-decoration: underline;">1</span>492. <span style="text-decoration: underline;">1</span>089.  <span style="text-decoration: underline;">6</span>395.  <span style="text-decoration: underline;">1</span>755  <span style="text-decoration: underline;">1</span>930</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>     6     1     0    461  <span style="text-decoration: underline;">8</span>806.  <span style="text-decoration: underline;">93</span>235. <span style="text-decoration: underline;">1</span>593. <span style="text-decoration: underline;">1</span>563.  <span style="text-decoration: underline;">8</span>837.  <span style="text-decoration: underline;">1</span>629  <span style="text-decoration: underline;">1</span>199</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>     8     0     0   <span style="text-decoration: underline;">2</span>330 <span style="text-decoration: underline;">34</span>550. <span style="text-decoration: underline;">846</span>042  <span style="text-decoration: underline;">7</span>323. <span style="text-decoration: underline;">9</span>690. <span style="text-decoration: underline;">39</span>808.  <span style="text-decoration: underline;">6</span>990  <span style="text-decoration: underline;">7</span>480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>     8     0     1    599  <span style="text-decoration: underline;">9</span>196. <span style="text-decoration: underline;">193</span>499  <span style="text-decoration: underline;">2</span>300. <span style="text-decoration: underline;">2</span>033.  <span style="text-decoration: underline;">8</span>719   <span style="text-decoration: underline;">2</span>995  <span style="text-decoration: underline;">3</span>736</span>
-<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsum</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span> <span class="co"># Equivalent and faster !!</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">fsum</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped sum (total)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am sum.hp     mpg     disp    drat       wt     qsec gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1     91  2366.0  10947.3  403.13  194.740  1519.70  455  182</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0    254  5764.3  34121.1  960.08  736.135  5356.47  919  411</span>
@@ -324,7 +312,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   6  1  0    461  8805.5  93234.6 1592.92 1563.190  8837.10 1629 1199</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0   2330 34550.5 846042.0 7323.40 9689.735 39807.80 6990 7480</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 rows ]</span>
-<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsum</span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">fsum</span><span class="op">(</span>TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   cyl vs am      mpg      disp       hp      drat        wt</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4           6  0  1 34.03566 34.408602 27.84810 34.150613 31.699940</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag       6  0  1 34.03566 34.408602 27.84810 34.150613 34.785239</span>
@@ -342,7 +330,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  cyl, vs, am  [7 | 5 (3.8) 1-12] </span>
-<span class="r-in"><span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">fsum</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">fsum</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   cyl vs am   mpg</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   4  0  1  26.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   4  1  0  68.7</span>
@@ -352,10 +340,19 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   8  0  0 180.6</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 7   8  0  1  30.8</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
-<span class="r-in"><span><span class="co">## This compares fsum with data.table (2 threads) and base::rowsum</span></span></span>
+<span class="r-in"><span> </span></span>
+<span class="r-in"><span><span class="co">## This compares fsum with data.table and base::rowsum</span></span></span>
 <span class="r-in"><span><span class="co"># Starting with small data</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘data.table’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:dplyr’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     between, first, last</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:collapse’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     fdroplevels</span>
+<span class="r-in"><span><span class="va">opts</span> <span class="op">&lt;-</span> <span class="fu"><a href="collapse-options.html">set_collapse</a></span><span class="op">(</span>nthreads <span class="op">=</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/openmp-utils.html" class="external-link">getDTthreads</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mtcDT</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -364,13 +361,13 @@
 <span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/r/base/rowsum.html" class="external-link">rowsum</a></span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr        min        lq      mean    median</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 112.570452 95.215093 53.227899 45.399825</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)   5.119184  4.688011  3.510357  3.221536</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)   1.000000  1.000000  1.000000  1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr        min        lq      mean   median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 104.008193 85.700653 54.298081 59.17574</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)   4.792251  4.430582  3.582128  3.45223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)   1.000000  1.000000  1.000000  1.00000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         uq       max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  36.117077 74.039212   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   2.870342  8.867524   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  42.186459 46.754718   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3.249668  7.213463   100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000  1.000000   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now larger data</span></span></span>
@@ -382,14 +379,16 @@
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">tdata</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               expr      min       lq     mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 2.323345 2.360172 2.190457 2.416560 2.298752</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.028765 2.069772 1.728752 2.033133 1.898099</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 2.278650 2.330488 2.311972 2.338977 2.405293</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.075369 2.027811 1.763885 2.012791 1.928930</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.5361290   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.3128638   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.4576750   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.3866569   100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  1.0000000   100</span>
-<span class="r-in"><span><span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="co"># Reset options</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="collapse-options.html">set_collapse</a></span><span class="op">(</span><span class="va">opts</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

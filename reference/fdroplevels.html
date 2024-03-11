@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
     </div>
 
     <div class="ref-description section level2">
-    <p>A substantially faster replacement for <code><a href="https://rdatatable.gitlab.io/data.table/reference/fdroplevels.html" class="external-link">droplevels</a></code>.</p>
+    <p>A substantially faster replacement for <code><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></code>.</p>
     </div>
 
     <div class="section level2">
@@ -83,7 +83,7 @@
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><code><a href="https://rdatatable.gitlab.io/data.table/reference/fdroplevels.html" class="external-link">droplevels</a></code> passes a factor from which levels are to be dropped to <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></code>, which first calls <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">unique</a></code> and then <code><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></code> to drop unused levels. Both functions internally use a hash table, which is highly inefficient. <code>fdroplevels</code> does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, <code>x</code> is simply returned. Any missing values found in <code>x</code> are efficiently skipped in the process of checking and replacing levels. All other attributes of <code>x</code> are preserved.</p>
+    <p><code><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></code> passes a factor from which levels are to be dropped to <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></code>, which first calls <code><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></code> and then <code><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></code> to drop unused levels. Both functions internally use a hash table, which is highly inefficient. <code>fdroplevels</code> does not require mapping values at all, but uses a super fast boolean vector method to determine which levels are unused and remove those levels. In addition, if no unused levels are found, <code>x</code> is simply returned. Any missing values found in <code>x</code> are efficiently skipped in the process of checking and replacing levels. All other attributes of <code>x</code> are preserved.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -141,7 +141,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">fdroplevels</span><span class="op">(</span><span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/droplevels.html" class="external-link">droplevels</a></span><span class="op">(</span><span class="fu"><a href="fsubset.html">ss</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in fdroplevels(ss(iris, 1:100)):</span> inherits(x, "factor") is not TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -362,10 +362,9 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   AFG        NA  -1.310197       NA -0.4305893</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   AFG        NA  -1.259427       NA -0.3974435</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6   AFG        NA  -1.209379       NA -0.3712913</span>
-<span class="r-in"><span> </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Grouped data</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">STD</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">STD</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    STD.PCGDP  STD.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1         NA -1.65318076</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2         NA -1.60225647</span>
@@ -405,7 +404,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13141 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  iso3c  [216 | 61 (0)] </span>
-<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">STD</span><span class="op">(</span><span class="va">weights</span><span class="op">)</span> <span class="co"># weighted standardizing</span></span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">STD</span><span class="op">(</span><span class="va">weights</span><span class="op">)</span> <span class="co"># weighted standardizing</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    STD.PCGDP   STD.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1         NA -1.467563659</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2         NA -1.414317039</span>
@@ -445,7 +444,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13141 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  iso3c  [216 | 61 (0)] </span>
-<span class="r-in"><span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span>,<span class="va">POP</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">STD</span><span class="op">(</span><span class="va">POP</span><span class="op">)</span> <span class="co"># weighting by POP -&gt;</span></span></span>
+<span class="r-in"><span><span class="va">wlddev</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">iso3c</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>,<span class="va">LIFEEX</span>,<span class="va">POP</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">STD</span><span class="op">(</span><span class="va">POP</span><span class="op">)</span> <span class="co"># weighting by POP -&gt;</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         POP STD.PCGDP STD.LIFEEX</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   8996973        NA -2.1727695</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   9169410        NA -2.1194893</span>
@@ -474,7 +473,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Grouped by:  iso3c  [216 | 61 (0)] </span>
 <span class="r-in"><span><span class="co"># ..keeps the weight column unless keep.w = FALSE</span></span></span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

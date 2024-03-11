@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -144,14 +144,14 @@ fmode(wlddev, wlddev$income)             # Grouped statistical modes ..
 m &lt;- qM(mtcars)
 fsum(m)
 fsum(m, g) # ..
-\donttest{ <!-- % No code relying on suggested package -->
+\donttest{ <!-- % The tidyverse regularly causes havoc to CRAN tests in other packages, therefore this is not tested -->
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
-mtcars %&gt;% group_by(cyl,vs,am) %&gt;% select(mpg,carb) %&gt;% fsum()
-mtcars %&gt;% fgroup_by(cyl,vs,am) %&gt;% fselect(mpg,carb) %&gt;% fsum() # equivalent and faster !!
-mtcars %&gt;% fgroup_by(cyl,vs,am) %&gt;% fsum(TRA = "%")
-mtcars %&gt;% fgroup_by(cyl,vs,am) %&gt;% fmean(hp)         # weighted grouped mean, save sum of weights
-mtcars %&gt;% fgroup_by(cyl,vs,am) %&gt;% fmean(hp, keep.group_vars = FALSE)
+mtcars |&gt; group_by(cyl,vs,am) |&gt; select(mpg,carb) |&gt; fsum()
+mtcars |&gt; fgroup_by(cyl,vs,am) |&gt; fselect(mpg,carb) |&gt; fsum() # equivalent and faster !!
+mtcars |&gt; fgroup_by(cyl,vs,am) |&gt; fsum(TRA = "%")
+mtcars |&gt; fgroup_by(cyl,vs,am) |&gt; fmean(hp)         # weighted grouped mean, save sum of weights
+mtcars |&gt; fgroup_by(cyl,vs,am) |&gt; fmean(hp, keep.group_vars = FALSE)
 }
 </code></pre></div>
 

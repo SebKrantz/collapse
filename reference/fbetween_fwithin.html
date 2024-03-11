@@ -12,7 +12,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.10</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -367,11 +367,10 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span>      34.8297       -0.4655       -4.7750  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="co"># ..Mundlak (1978) - partialling out group averages amounts to the same as demeaning the data</span></span></span>
-<span class="r-in"><span> </span></span>
 <span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"within"</span><span class="op">)</span>   <span class="co"># "Proof"..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fc8ba32a0d0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fa8baa6bab8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     carb </span>
@@ -456,18 +455,17 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)         carb  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     21.8727      -0.6336  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span> </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># A slightly different method to obtain theta...</span></span></span>
 <span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fc8ba32a0d0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x7fa8baa6bab8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)        carb </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    22.40631    -0.68522 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
