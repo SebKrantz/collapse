@@ -215,7 +215,8 @@ join <- function(x, y,
         on_res <- .Call(C_rbindlist, list(x[ixon], .Call(C_subsetDT, y, tind, iyon, FALSE)), FALSE, FALSE, NULL)
         # if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(res_nrow)
         if(keep.col.order) {
-          add_vars(x_res, pos = ixon) <- on_res
+          if(length(x_res)) add_vars(x_res, pos = ixon) <- on_res
+          else x_res <- on_res
           c(x_res, y_res)
         } else {
           keep.col.order <- 2L # has global effects !!
@@ -233,7 +234,8 @@ join <- function(x, y,
       y_on <- y[iyon]
       names(y_on) <- xon
       if(keep.col.order) {
-        add_vars(x_res, pos = ixon) <- y_on
+        if(length(x_res)) add_vars(x_res, pos = ixon) <- y_on
+        else x_res <- y_on
         c(x_res, y[-iyon])
       } else {
         keep.col.order <- 2L # has global effects !!
