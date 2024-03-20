@@ -21,7 +21,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a class-agnostic approach to data manipulation in R, supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *pseries*, *pdata.frame* (*plm*), and preserving many others (e.g. *xts*/*zoo*, *tsibble*, *units*, *integer64*). 
+It further implements a [class-agnostic approach to R programming](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html), supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *pseries*, *pdata.frame* (*plm*), and preserving many others (e.g. *xts*/*zoo*, *tsibble*, *units*, *integer64*). 
 
 **Key Features:**
 
@@ -50,7 +50,7 @@ It further implements a class-agnostic approach to data manipulation in R, suppo
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
 
-*collapse* is written in C and C++. Its algorithms are multiple times faster than base R's and scale well on <= 1 billion observations. Its R code is also strongly optimized, yielding minimal R-level overheads and blazing fast syntax evaluation. It only depends on *Rcpp*. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
+*collapse* is written in C and C++. Its algorithms are multiple times faster than base R's and [scale well on <= 1 billion observations](https://duckdblabs.github.io/db-benchmark/). Its R code is also strongly optimized, yielding minimal R-level overheads and blazing fast syntax evaluation. It only depends on *Rcpp*. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
 ## Installation
 
