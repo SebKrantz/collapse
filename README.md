@@ -21,7 +21,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a class-agnostic approach to data manipulation in R, supporting base R, (grouped) *tibble* (*tidyverse*), *data.table*, *sf*, *plm* panel data classes, and preserving many others (e.g. *xts*/*zoo*, *tsibble*, *units*, *integer64*). 
+It further implements a class-agnostic approach to data manipulation in R, supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *pseries*, *pdata.frame* (*plm*), and preserving many others (e.g. *xts*/*zoo*, *tsibble*, *units*, *integer64*). 
 
 **Key Features:**
 
