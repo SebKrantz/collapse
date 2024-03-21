@@ -71,6 +71,7 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 ```
 
 ## Documentation
+
 *collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/collapse-documentation.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages. 
 
 In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>), among them one on [Documentation and Resources](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html).
@@ -91,8 +92,6 @@ An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* has been submit
 
 ## Example Usage
 This provides a simple set of examples introducing some important features of *collapse*. It should be easy to follow for readers familiar with R. 
-
-
 <details>
   <summary><b><a style="cursor: pointer;">Click here to expand </a></b> </summary>
   
