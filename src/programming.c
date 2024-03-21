@@ -1180,7 +1180,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
         if(nthreads > nrow) nthreads = nrow;
         for (int j = 0; j < ncol; ++j) {
           double *pxj = px + j * nrow, v = pv[j];
-          #pragma omp parallel for simd num_threads(nthreads)
+          #pragma omp parallel for num_threads(nthreads)
           for (int i = 0; i < nrow; ++i) {
             double tmp = pxj[i] - v;
             pres[i] += tmp * tmp;
@@ -1220,7 +1220,7 @@ SEXP fdist(SEXP x, SEXP vec, SEXP Rret, SEXP Rnthreads) {
   // Square Root
   if(ret == 1) {
     if(nthreads > 1) {
-      #pragma omp parallel for simd num_threads(nthreads)
+      #pragma omp parallel for num_threads(nthreads)
       for (size_t i = 0; i < l; ++i) pres[i] = sqrt(pres[i]);
     } else {
       #pragma omp simd

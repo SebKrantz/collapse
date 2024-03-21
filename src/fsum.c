@@ -52,12 +52,12 @@ double fsum_double_omp_impl(const double *restrict px, const int narm, const int
     sum = px[0];
     while(ISNAN(sum) && j != l) sum = px[j++];
     if(j != l) {
-      #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
+      #pragma omp parallel for num_threads(nthreads) reduction(+:sum)
       for(int i = j; i < l; ++i) sum += NISNAN(px[i]) ? px[i] : 0.0;
     } else if(narm == 2) sum = 0.0;
   } else {
     sum = 0;
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:sum)
     for(int i = 0; i < l; ++i) sum += px[i]; // Cannot have break statements in OpenMP for loop
   }
   return sum;
@@ -135,12 +135,12 @@ double fsum_weights_omp_impl(const double *restrict px, const double *restrict p
     while(j!=l && (ISNAN(px[j]) || ISNAN(pw[j]))) ++j;
     if(j != l) {
       sum = px[j] * pw[j];
-      #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
+      #pragma omp parallel for num_threads(nthreads) reduction(+:sum)
       for(int i = j+1; i < l; ++i) sum += (NISNAN(px[i]) && NISNAN(pw[i])) ? px[i] * pw[i] : 0.0;
     } else sum = narm == 1 ? NA_REAL : 0.0;
   } else {
     sum = 0;
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:sum)
     for(int i = 0; i < l; ++i) sum += px[i] * pw[i];
   }
   return sum;
@@ -234,12 +234,12 @@ double fsum_int_omp_impl(const int *restrict px, const int narm, const int l, co
     while(px[j] == NA_INTEGER && j!=l) ++j;
     if(j == l && px[j-1] == NA_INTEGER) return narm == 1 ? NA_REAL : 0;
     sum = (long long)px[j];
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:sum)
     for(int i = j+1; i < l; ++i) sum += px[i] != NA_INTEGER ? (long long)px[i] : 0;
   } else {
     if(px[0] == NA_INTEGER || px[l-1] == NA_INTEGER) return NA_REAL;
     sum = 0;
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:sum)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:sum)
     for(int i = 0; i < l; ++i) sum += (long long)px[i]; // Need this, else wrong result
   }
   return (double)sum;

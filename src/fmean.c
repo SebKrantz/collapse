@@ -34,7 +34,7 @@ double fmean_double_omp_impl(const double *restrict px, const int narm, const in
   double mean = 0;
   if(narm) {
     int n = 0;
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,n)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:mean,n)
     for(int i = 0; i < l; ++i) {
       int tmp = NISNAN(px[i]);
       mean += tmp ? px[i] : 0.0;
@@ -42,7 +42,7 @@ double fmean_double_omp_impl(const double *restrict px, const int narm, const in
     }
     return n == 0 ? NA_REAL : mean / n;
   }
-  #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean)
+  #pragma omp parallel for num_threads(nthreads) reduction(+:mean)
   for(int i = 0; i < l; ++i) mean += px[i];
   return mean / l;
 }
@@ -103,7 +103,7 @@ double fmean_weights_impl(const double *restrict px, const double *restrict pw, 
 double fmean_weights_omp_impl(const double *restrict px, const double *restrict pw, const int narm, const int l, const int nthreads) {
   double mean = 0, sumw = 0;
   if(narm) {
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,sumw)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:mean,sumw)
     for(int i = 0; i < l; ++i) {
       int tmp = NISNAN(px[i]) + NISNAN(pw[i]) == 2; // && doesn't vectorize for some reason
       mean += tmp ? px[i] * pw[i] : 0.0;
@@ -111,7 +111,7 @@ double fmean_weights_omp_impl(const double *restrict px, const double *restrict 
     }
     if(mean == 0 && sumw == 0) sumw = NA_REAL;
   } else {
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,sumw)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:mean,sumw)
     for(int i = 0; i < l; ++i) {
       mean += px[i] * pw[i];
       sumw += pw[i];
@@ -175,7 +175,7 @@ double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, c
   double dmean;
   if(narm) {
     int n = 0;
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean,n)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:mean,n)
     for(int i = 0; i < l; ++i) {
       int tmp = px[i] != NA_INTEGER;
       mean += tmp ? px[i] : 0;
@@ -184,7 +184,7 @@ double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, c
     dmean = n == 0 ? NA_REAL : (double)mean / n;
   } else {
     if(px[0] == NA_INTEGER || px[l-1] == NA_INTEGER) return NA_REAL;
-    #pragma omp parallel for simd num_threads(nthreads) reduction(+:mean)
+    #pragma omp parallel for num_threads(nthreads) reduction(+:mean)
     for(int i = 0; i < l; ++i) mean += px[i];
     dmean = (double)mean / l;
   }
