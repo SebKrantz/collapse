@@ -518,7 +518,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         union uno tpv;
         for (int i = 0; i != n; ++i) {
           tpv.d = pr[i];
-          id = HASH((tpv.u[0] + tpv.u[1]) * ((intptr_t)ps[i] & 0xffffffff), K); // Best combination it seems
+          id = HASH((tpv.u[0] + tpv.u[1]) * (unsigned)((intptr_t)ps[i] & 0xffffffff), K); // Best combination it seems
           while(h[id]) {
             hid = h[id]-1;
             if(REQUAL(pr[hid], pr[i]) && ps[hid] == ps[i]) { // Seems comparing reals is faster..
@@ -536,7 +536,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         const int *restrict pi = INTEGER_RO(tx == INTSXP ? x : y);
         const SEXP *restrict ps = STRING_PTR_RO(tx == STRSXP ? x : y);
         for (int i = 0; i != n; ++i) {
-          id = HASH(pi[i] * ((intptr_t)ps[i] & 0xffffffff), K); // This is the fastest safe option
+          id = HASH(pi[i] * (unsigned)((intptr_t)ps[i] & 0xffffffff), K);
           while(h[id]) {
             hid = h[id]-1;
             if(pi[hid] == pi[i] && ps[hid] == ps[i]) {
@@ -635,7 +635,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   case INTSXP: {
     const int *restrict px = INTEGER(x);
     const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
-    for (int i = 0; i != n; ++i) {
+    for (int i = 0; i != n; ++i) { // Check this... DATA group_by lon, lat main_cat, main_tag, main_tag_value: main_tag is the issue..
       id = (pidx[i]*mult) ^ HASH(px[i], K); // HASH((unsigned)px[i] * (unsigned)pidx[i], K) + pidx[i]; // Need multiplication here instead of bitwise, see your benchmark with 100 mio. obs where second group is just sample.int(1e4, 1e8, T), there bitwise is very slow!!
       while(h[id]) {  // However multiplication causes signed integer overflow... UBSAN error.
         hid = h[id]-1;

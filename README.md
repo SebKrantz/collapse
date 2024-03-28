@@ -50,7 +50,7 @@ It further implements a [class-agnostic approach to R programming](https://sebkr
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
 
-*collapse* is written in C and C++ and only depends on *Rcpp*. Its algorithms are multiple times faster than base R's, [scale well to <= 1 billion obs](https://duckdblabs.github.io/db-benchmark/), and very efficient for complex tasks (e.g. quantiles, weighted stats, mode/counting/deduplication, joins). Optimized R code ensures minimal overheads and blazing fast syntax evaluation. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
+*collapse* is written in C and C++ and only depends on *Rcpp*. Its algorithms are multiple times faster than base R's, [scale well to <= 1 billion obs](https://duckdblabs.github.io/db-benchmark/), and very efficient for complex tasks (e.g. quantiles, weighted stats, mode/counting/deduplication, joins). Optimized R code ensures minimal overheads and fast syntax evaluation. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
 ## Installation
 
@@ -71,6 +71,7 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 ```
 
 ## Documentation
+
 *collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/collapse-documentation.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages. 
 
 In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>), among them one on [Documentation and Resources](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html).
@@ -91,8 +92,6 @@ An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* has been submit
 
 ## Example Usage
 This provides a simple set of examples introducing some important features of *collapse*. It should be easy to follow for readers familiar with R. 
-
-
 <details>
   <summary><b><a style="cursor: pointer;">Click here to expand </a></b> </summary>
   
