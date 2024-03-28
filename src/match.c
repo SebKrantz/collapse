@@ -7,7 +7,15 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     // Todo: optimizations for length 1 x or table???
   const int n = length(x), nt = length(table), nmv = asInteger(nomatch);
   if(n == 0) return allocVector(INTSXP, 0);
-  if(nt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(n), ScalarInteger(1));
+  if(nt == 0) {
+    SEXP nmvint = PROTECT(ScalarInteger(nmv));
+    SEXP nint = PROTECT(ScalarInteger(n));
+    SEXP sint1 = PROTECT(ScalarInteger(1));
+    SEXP res = falloc(nmvint, nint, sint1);
+    UNPROTECT(3);
+    return res;
+  }
+
   int nprotect = 1;
 
   // Allocating here. For factors there is a shorthand
@@ -32,7 +40,8 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   if(tx != tt) {
     if(tx < tt) { // table could be integer, double, complex, character....
       if(tx == INTSXP-1) { // For factors there is a shorthand: just match the levels against table...
-        PROTECT(table = match_single(getAttrib(x, R_LevelsSymbol), table, ScalarInteger(nmv))); ++nprotect;
+        SEXP nmvint = PROTECT(ScalarInteger(nmv)); ++nprotect;
+        PROTECT(table = match_single(getAttrib(x, R_LevelsSymbol), table, nmvint)); ++nprotect;
         int *pans = INTEGER(ans), *pt = INTEGER(table)-1, *px = INTEGER(x);
         if(inherits(x, "na.included")) {
           #pragma omp simd
@@ -62,7 +71,8 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       // PROTECT(table = asCharacterFactor(table)); ++nprotect;
 
       // The efficient solution: matching the levels and regenerating table, taking zero as nomatch value here so that NA does not get matched against NA in x
-      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
+      SEXP sint0 = PROTECT(ScalarInteger(0)); ++nprotect;
+      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), sint0)); ++nprotect;
       SEXP table_new = PROTECT(duplicate(table)); ++nprotect;
       subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included"));
       table = table_new;
@@ -306,7 +316,8 @@ SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
     }
   } else if(tx == INTSXP-1 && tt == INTSXP-1) { // Both factors
     if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
-      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
+      SEXP sint0 = PROTECT(ScalarInteger(0)); ++nprotect;
+      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), sint0)); ++nprotect;
       SEXP table_new;
       SET_VECTOR_ELT(out, 1, table_new = duplicate(table));
       subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included")); // TODO: check this !!
@@ -345,7 +356,14 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
   if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("both x and table need to be atomic vectors or lists");
   const int l = length(x), lt = length(table), nmv = asInteger(nomatch);
   if(l == 0) return allocVector(INTSXP, 0);
-  if(lt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(length(VECTOR_ELT(x, 0))), ScalarInteger(1));
+  if(lt == 0) {
+    SEXP nmvint = PROTECT(ScalarInteger(nmv));
+    SEXP lx0 = PROTECT(ScalarInteger(length(VECTOR_ELT(x, 0))));
+    SEXP sint1 = PROTECT(ScalarInteger(1));
+    SEXP res = falloc(nmvint, lx0, sint1);
+    UNPROTECT(3);
+    return res;
+  }
 
   if(l != lt) error("length(n) must match length(nt)");
   if(l != 2) error("Internal function match_two_vectors() only supports lists of length 2");
@@ -966,7 +984,14 @@ SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch, SEXP overid)  {
   if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("both x and table need to be atomic vectors or lists");
   const int l = length(x), lt = length(table), nmv = asInteger(nomatch);
   if(l == 0) return allocVector(INTSXP, 0);
-  if(lt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(length(VECTOR_ELT(x, 0))), ScalarInteger(1));
+  if(lt == 0) {
+    SEXP nmvint = PROTECT(ScalarInteger(nmv));
+    SEXP lx0 = PROTECT(ScalarInteger(length(VECTOR_ELT(x, 0))));
+    SEXP sint1 = PROTECT(ScalarInteger(1));
+    SEXP res = falloc(nmvint, lx0, sint1);
+    UNPROTECT(3);
+    return res;
+  }
   if(l != lt) error("length(n) must match length(nt)");
 
   // Shallow copy and coercing as necessary
