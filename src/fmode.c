@@ -476,7 +476,7 @@ SEXP mode_string(const SEXP *restrict px, const int *restrict po, const int l, c
     for(; i < l; ++i) {
       val = px[i];
       if(val == NA_STRING && narm) continue;
-      id = HASH(((intptr_t) val & 0xffffffff), K);
+      id = HASH(((uintptr_t) val & 0xffffffff), K);
       while(h[id]) {
         index = h[id]-1;
         if(px[index] == val) goto sbls;
@@ -504,7 +504,7 @@ SEXP mode_string(const SEXP *restrict px, const int *restrict po, const int l, c
     for(; i < l; ++i) {
       val = px[po[i]-1];
       if(val == NA_STRING && narm) continue;
-      id = HASH(((intptr_t) val & 0xffffffff), K);
+      id = HASH(((uintptr_t) val & 0xffffffff), K);
       while(h[id]) {
         index = h[id]-1;
         if(px[po[index]-1] == val) goto sbl;
@@ -556,7 +556,7 @@ SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int
     for(; i != l; ++i) {
       val = px[i];
       if(ISNAN(pw[i]) || (val == NA_STRING && narm)) continue;
-      id = HASH(((intptr_t) val & 0xffffffff), K);
+      id = HASH(((uintptr_t) val & 0xffffffff), K);
       while(h[id]) {
         index = h[id]-1;
         if(px[index] == val) goto sbls;
@@ -586,7 +586,7 @@ SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int
       oi = po[i]-1;
       val = px[oi];
       if(ISNAN(pw[oi]) || (val == NA_STRING && narm)) continue;
-      id = HASH(((intptr_t) val & 0xffffffff), K);
+      id = HASH(((uintptr_t) val & 0xffffffff), K);
       while(h[id]) {
         index = h[id]-1;
         if(px[po[index]-1] == val) goto sbl;
