@@ -238,7 +238,13 @@ SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam) {
   const SEXP *px = SEXPPTR_RO(x);
   for(int i = 0; i < l; ++i) {
     SEXP labxi = getAttrib(px[i], sym_attrn);
-    pres[i] = TYPEOF(labxi) == STRSXP ? STRING_ELT(labxi, 0) : labxi == R_NilValue ? NA_STRING : asChar(labxi);
+    if(TYPEOF(labxi) == STRSXP) pres[i] = STRING_ELT(labxi, 0);
+    else if(labxi == R_NilValue) pres[i] = NA_STRING;
+    else {
+      PROTECT(labxi);
+      pres[i] = asChar(labxi);
+      UNPROTECT(1);
+    }
   }
   if(asLogical(usenam)) {
     SEXP nam = getAttrib(x, R_NamesSymbol);

@@ -1328,6 +1328,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   if(!nullw) {
     CHECK_WEIGHTS(l);
     if(l == 1) {
+      UNPROTECT(nprotect);
       if(ISNAN(pw[1])) return ScalarReal(NA_REAL);
       return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
     }
