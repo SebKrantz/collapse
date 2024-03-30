@@ -80,7 +80,7 @@ melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
     if(factor[2L]) {
       label_col <- res[[1L]]
       attr(label_col, "levels") <- labs
-      oldClass(label_col) <- c("factor", "na.included")
+      oldClass(label_col) <- "factor" # c("factor", "na.included")
     } else label_col <- Csv(labs, res[[1L]])
     label_col <- list(label_col)
     names(label_col) <- if(is.character(labels)) labels else "label"
@@ -88,7 +88,7 @@ melt_all <- function(vd, names, factor, na.rm, labels, check.dups) {
   }
   if(factor[1L]) {
     attr(res[[1L]], "levels") <- nam
-    oldClass(res[[1L]]) <- c("factor", "na.included")
+    oldClass(res[[1L]]) <- "factor" # c("factor", "na.included")
   } else if(length(labels)) res[[1L]] <- Csv(nam, res[[1L]])
   res
 }
@@ -185,7 +185,7 @@ pivot <- function(data,
             if(factor[2L]) {
               label_col <- value_cols[[1L]]
               attr(label_col, "levels") <- labs
-              oldClass(label_col) <- c("factor", "na.included")
+              oldClass(label_col) <- "factor" # c("factor", "na.included")
             } else label_col <- Csv(labs, value_cols[[1L]])
             label_col <- list(label_col)
             if(is.list(labels)) { # Setting new labels...
@@ -212,7 +212,7 @@ pivot <- function(data,
           }
           if(factor[1L]) {
             attr(value_cols[[1L]], "levels") <- nam[values]
-            oldClass(value_cols[[1L]]) <- c("factor", "na.included")
+            oldClass(value_cols[[1L]]) <- "factor" # c("factor", "na.included")
           } else if(length(labels)) value_cols[[1L]] <- duplAttributes(Csv(nam[values], value_cols[[1L]]), value_cols[[1L]])
           res <- c(id_cols, value_cols)
         }
@@ -397,7 +397,7 @@ pivot <- function(data,
           if(factor[2L]) {
             label_col <- value_cols[[1L]]
             attr(label_col, "levels") <- labs
-            oldClass(label_col) <- c("factor", "na.included")
+            oldClass(label_col) <- "factor" # c("factor", "na.included")
           } else label_col <- Csv(labs, value_cols[[1L]])
           label_col <- list(label_col)
           names(label_col) <- labels[[2L]]
@@ -406,7 +406,7 @@ pivot <- function(data,
 
         if(factor[1L]) {
           attr(value_cols[[1L]], "levels") <- namv
-          oldClass(value_cols[[1L]]) <- c("factor", "na.included")
+          oldClass(value_cols[[1L]]) <- "factor" # c("factor", "na.included")
         } else if(save_labels) value_cols[[1L]] <- Csv(namv, value_cols[[1L]])
 
         if(length(new_labels <- labels[[3L]])) {
