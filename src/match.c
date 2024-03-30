@@ -252,7 +252,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     const SEXP *restrict px = STRING_PTR(x), *restrict pt = STRING_PTR(table);
     // fill hash table with indices of 'table'
     for (int i = 0; i != nt; ++i) {
-      id = HASH(((intptr_t) pt[i] & 0xffffffff), K);
+      id = HASH(((uintptr_t) pt[i] & 0xffffffff), K);
       while(h[id]) {
         if(pt[h[id]-1] == pt[i]) goto sbl;
         if(++id >= M) id = 0;
@@ -262,7 +262,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     }
     // look up values of x in hash table
     for (int i = 0; i != n; ++i) {
-      id = HASH(((intptr_t) px[i] & 0xffffffff), K);
+      id = HASH(((uintptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
         if(pt[h[id]-1] == px[i]) {
           pans[i] = h[id];
@@ -430,7 +430,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
                    *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
         // fill hash table with indices of 'table'
         for (int i = 0; i != nt; ++i) {
-          id = HASH(64988430769U * ((intptr_t)pt1[i] & 0xffffffff) + ((intptr_t)pt2[i] & 0xffffffff), K);
+          id = HASH(64988430769U * ((uintptr_t)pt1[i] & 0xffffffff) + ((uintptr_t)pt2[i] & 0xffffffff), K);
           while(h[id]) {
             if(pt1[h[id]-1] == pt1[i] && pt2[h[id]-1] == pt2[i]) goto sbl;
             if(++id >= M) id = 0;
@@ -440,7 +440,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
         }
         // look up values of x in hash table
         for (int i = 0; i != n; ++i) {
-          id = HASH(64988430769U * ((intptr_t)px1[i] & 0xffffffff) + ((intptr_t)px2[i] & 0xffffffff), K);
+          id = HASH(64988430769U * ((uintptr_t)px1[i] & 0xffffffff) + ((uintptr_t)px2[i] & 0xffffffff), K);
           while(h[id]) {
             if(pt1[h[id]-1] == px1[i] && pt2[h[id]-1] == px2[i]) {
               pans[i] = h[id];
@@ -526,7 +526,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         tpv.d = ptr[i];
-        id = HASH((tpv.u[0] + tpv.u[1]) * (unsigned)((intptr_t)pts[i] & 0xffffffff), K);
+        id = HASH((tpv.u[0] + tpv.u[1]) * ((uintptr_t)pts[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pts[i] && REQUAL(ptr[h[id]-1], ptr[i])) goto rsbl;
           if(++id >= M) id = 0;
@@ -537,7 +537,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
         tpv.d = pxr[i];
-        id = HASH((tpv.u[0] + tpv.u[1]) * (unsigned)((intptr_t)pxs[i] & 0xffffffff), K);
+        id = HASH((tpv.u[0] + tpv.u[1]) * ((uintptr_t)pxs[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pxs[i] && REQUAL(ptr[h[id]-1], pxr[i])) {
             pans[i] = h[id];
@@ -556,7 +556,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        id = HASH(pti[i] * (unsigned)((intptr_t)pts[i] & 0xffffffff), K); // TODO: improve!
+        id = HASH(pti[i] * ((uintptr_t)pts[i] & 0xffffffff), K); // TODO: improve!
         while(h[id]) {
           if(pts[h[id]-1] == pts[i] && pti[h[id]-1] == pti[i]) goto isbl;
           if(++id >= M) id = 0;
@@ -566,7 +566,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       }
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
-        id = HASH(pxi[i] * (unsigned)((intptr_t)pxs[i] & 0xffffffff), K);
+        id = HASH(pxi[i] * ((uintptr_t)pxs[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pxs[i] && pti[h[id]-1] == pxi[i]) {
             pans[i] = h[id];
@@ -644,7 +644,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
                  *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        id = HASH(64988430769U * ((intptr_t)pt1[i] & 0xffffffff) + ((intptr_t)pt2[i] & 0xffffffff), K);
+        id = HASH(64988430769U * ((uintptr_t)pt1[i] & 0xffffffff) + ((uintptr_t)pt2[i] & 0xffffffff), K);
         while(h[id]) {
           if(pt1[h[id]-1] == pt1[i] && pt2[h[id]-1] == pt2[i]) {
             ptab[i] = ptab[h[id]-1];
@@ -657,7 +657,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       }
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
-        id = HASH(64988430769U * ((intptr_t)px1[i] & 0xffffffff) + ((intptr_t)px2[i] & 0xffffffff), K);
+        id = HASH(64988430769U * ((uintptr_t)px1[i] & 0xffffffff) + ((uintptr_t)px2[i] & 0xffffffff), K);
         while(h[id]) {
           if(pt1[h[id]-1] == px1[i] && pt2[h[id]-1] == px2[i]) {
             pans[i] = h[id];
@@ -749,7 +749,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         tpv.d = ptr[i];
-        id = HASH((tpv.u[0] + tpv.u[1]) * (unsigned)((intptr_t)pts[i] & 0xffffffff), K);
+        id = HASH((tpv.u[0] + tpv.u[1]) * ((uintptr_t)pts[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pts[i] && REQUAL(ptr[h[id]-1], ptr[i])) { // TODO: which comparison is more expensive?
             ptab[i] = ptab[h[id]-1];
@@ -763,7 +763,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
         tpv.d = pxr[i];
-        id = HASH((tpv.u[0] + tpv.u[1]) * (unsigned)((intptr_t)pxs[i] & 0xffffffff), K);
+        id = HASH((tpv.u[0] + tpv.u[1]) * ((uintptr_t)pxs[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pxs[i] && REQUAL(ptr[h[id]-1], pxr[i])) { // TODO: which comparison is more expensive?
             pans[i] = h[id];
@@ -782,7 +782,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        id = HASH(pti[i] * (unsigned)((intptr_t)pts[i] & 0xffffffff), K);
+        id = HASH(pti[i] * ((uintptr_t)pts[i] & 0xffffffff), K);
         while(h[id]) {
           if(pti[h[id]-1] == pti[i] && pts[h[id]-1] == pts[i]) {
             ptab[i] = ptab[h[id]-1];
@@ -795,7 +795,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       }
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
-        id = HASH(pxi[i] * (unsigned)((intptr_t)pxs[i] & 0xffffffff), K);
+        id = HASH(pxi[i] * ((uintptr_t)pxs[i] & 0xffffffff), K);
         while(h[id]) {
           if(pti[h[id]-1] == pxi[i] && pts[h[id]-1] == pxs[i]) {
             pans[i] = h[id];
@@ -875,7 +875,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
           ++ngt;
           continue;
         }
-        id = (ptab_copy[i]*mult) ^ HASH(((intptr_t) pt[i] & 0xffffffff), K); // HASH(ptab_copy[i], K)
+        id = (ptab_copy[i]*mult) ^ HASH(((uintptr_t) pt[i] & 0xffffffff), K); // HASH(ptab_copy[i], K)
         while(h[id]) {
           if(ptab_copy[h[id]-1] == ptab_copy[i] && pt[h[id]-1] == pt[i]) {
             ptab[i] = ptab[h[id]-1];
@@ -889,7 +889,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
         if(pans_copy[i] == nmv) continue;
-        id = (pans_copy[i]*mult) ^ HASH(((intptr_t) px[i] & 0xffffffff), K); // HASH(pans_copy[i], K)
+        id = (pans_copy[i]*mult) ^ HASH(((uintptr_t) px[i] & 0xffffffff), K); // HASH(pans_copy[i], K)
         while(h[id]) {
           if(ptab_copy[h[id]-1] == pans_copy[i] && pt[h[id]-1] == px[i]) {
             pans[i] = h[id];

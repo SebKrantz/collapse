@@ -199,7 +199,7 @@ int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int 
         anyNA = 1;
         continue;
       }
-      id = HASH(((intptr_t) px[i] & 0xffffffff), K);
+      id = HASH(((uintptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
         if(px[h[id]-1] == px[i]) goto sbls;
         if(++id >= M) id %= M; //++id; id %= M;
@@ -215,7 +215,7 @@ int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int 
         anyNA = 1;
         continue;
       }
-      id = HASH(((intptr_t) xi & 0xffffffff), K);
+      id = HASH(((uintptr_t) xi & 0xffffffff), K);
       while(h[id]) {
         if(px[po[h[id]-1]-1] == xi) goto sbl;
         if(++id >= M) id %= M; //++id; id %= M;
