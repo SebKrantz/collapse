@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.12</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -314,15 +314,15 @@
 <span class="r-in"><span>                            Sector <span class="op">=</span> <span class="st">"Long Sector Description"</span>,</span></span>
 <span class="r-in"><span>                            Value <span class="op">=</span> <span class="st">"Employment or Value Added"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="small-helpers.html">namlab</a></span><span class="op">(</span>N <span class="op">=</span> <span class="cn">TRUE</span>, Nd <span class="op">=</span> <span class="cn">TRUE</span>, class <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Variable              Class     N Ndist                     Label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Country          character 46942    43                   Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Regioncode          character 46942     6               Region code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     Region          character 46942     6                    Region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Variable          character 46942     2                  Variable</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5       Year            numeric 46942    67                      Year</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Sectorcode factor na.included 46942    11       GGDC10S Sector Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7     Sector factor na.included 46942    11   Long Sector Description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8      Value            numeric 46942 46478 Employment or Value Added</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Variable     Class     N Ndist                     Label</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Country character 46942    43                   Country</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Regioncode character 46942     6               Region code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     Region character 46942     6                    Region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   Variable character 46942     2                  Variable</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       Year   numeric 46942    67                      Year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Sectorcode    factor 46942    11       GGDC10S Sector Code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7     Sector    factor 46942    11   Long Sector Description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      Value   numeric 46942 46478 Employment or Value Added</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Note that pivot() currently does not support melting to multiple columns</span></span></span>
 <span class="r-in"><span><span class="co"># But you can tackle the issue with a bit of programming:</span></span></span>
@@ -676,15 +676,15 @@
 <span class="r-in"><span>                            VA <span class="op">=</span> <span class="st">"Value Added"</span>,</span></span>
 <span class="r-in"><span>                            EMP <span class="op">=</span> <span class="st">"Employment"</span><span class="op">)</span><span class="op">)</span>, how <span class="op">=</span> <span class="st">"r"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="small-helpers.html">namlab</a></span><span class="op">(</span>N <span class="op">=</span> <span class="cn">TRUE</span>, Nd <span class="op">=</span> <span class="cn">TRUE</span>, class <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     Variable              Class     N Ndist                   Label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Country          character 21648    42                 Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Regioncode          character 21648     6             Region code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     Region          character 21648     6                  Region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       Year            numeric 21648    63                    Year</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Sectorcode factor na.included 21648    11     GGDC10S Sector Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     Sector factor na.included 21648    11 Long Sector Description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         VA            numeric 21648 21508             Value Added</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        EMP            numeric 21648 21447              Employment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Variable     Class     N Ndist                   Label</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Country character 21648    42                 Country</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Regioncode character 21648     6             Region code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     Region character 21648     6                  Region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       Year   numeric 21648    63                    Year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Sectorcode    factor 21648    11     GGDC10S Sector Code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     Sector    factor 21648    11 Long Sector Description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         VA   numeric 21648 21508             Value Added</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        EMP   numeric 21648 21447              Employment</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now another (slightly unconventional) use case here is data transposition</span></span></span>
 <span class="r-in"><span><span class="co"># Let's get the data for Botswana</span></span></span>

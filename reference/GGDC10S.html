@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.12</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -154,8 +154,6 @@
 <span class="r-in"><span><span class="co"># aperm(qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE))</span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Solves https://github.com/r-lib/vctrs/issues/1888 (not a collapse problem)</span></span></span>
-<span class="r-in"><span><span class="va">vec_ptype2.factor.factor</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">...</span><span class="op">)</span> <span class="va">x</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## World Regions Structural Change Plot</span></span></span>
 <span class="r-in"><span></span></span>
@@ -176,90 +174,6 @@
 <span class="r-in"><span>                       labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/percent_format.html" class="external-link">percent</a></span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">315</span>, hjust <span class="op">=</span> <span class="fl">0</span>, margin <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">margin</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>          strip.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"grey30"</span>, fill <span class="op">=</span> <span class="st">"grey30"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
 <span class="r-plt img"><img src="GGDC10S-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># A function to plot the structural change of an arbitrary country</span></span></span>
@@ -286,20 +200,6 @@
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">plotGGDC</span><span class="op">(</span><span class="st">"BWA"</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Computation failed in `stat_align()`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Caused by error in `stop_native_implementation()`:</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> `vec_ptype2.factor.factor()` is implemented at C level.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   This R function is purely indicative and should never be called.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> This is an internal error that was detected in the <span style="color: #0000BB;">vctrs</span> package.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report it at <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/r-lib/vctrs/issues&gt;</span> with a reprex</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   (<span style="color: #0000BB; font-style: italic;">&lt;https://tidyverse.org/help/&gt;</span>) and the full backtrace.</span>
 <span class="r-plt img"><img src="GGDC10S-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># }</span></span></span>

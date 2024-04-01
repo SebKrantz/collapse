@@ -16,7 +16,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.11</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.12</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -574,12 +574,12 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr     min       lq     mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 115.615 120.1355 209.2175</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE)  50.806  54.7450 109.1264</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   median       uq      max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  153.998 251.5585 1403.739   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   91.120 143.4160  524.793   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr     min       lq      mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 106.973 110.6525 117.62001</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE)  46.759  48.9845  51.08928</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    median       uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  111.6545 114.0435 533.863   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   49.7685  50.7635 124.443   100</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
