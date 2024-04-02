@@ -1,3 +1,7 @@
+# collapse 2.0.12
+
+* Fixes some issues with signed int overflows inside hash functions and possible protect bugs flagged by RCHK. With few exceptions these fixes are cosmetic to appease the C/C++ code checks on CRAN.  
+
 # collapse 2.0.11
 
 * An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* has been submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/). The preprint is available through *arXiv*.  

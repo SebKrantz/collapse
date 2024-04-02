@@ -46,8 +46,6 @@ namlab(GGDC10S, class = TRUE)
 # aperm(qsu(GGDC10S, ~ Variable, ~ Variable + Country, vlabels = TRUE))
 \donttest{
 library(ggplot2)
-# Solves https://github.com/r-lib/vctrs/issues/1888 (not a collapse problem)
-vec_ptype2.factor.factor <- function(x, y, ...) x
 
 ## World Regions Structural Change Plot
 

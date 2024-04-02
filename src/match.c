@@ -7,7 +7,15 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     // Todo: optimizations for length 1 x or table???
   const int n = length(x), nt = length(table), nmv = asInteger(nomatch);
   if(n == 0) return allocVector(INTSXP, 0);
-  if(nt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(n), ScalarInteger(1));
+  if(nt == 0) {
+    SEXP nmvint = PROTECT(ScalarInteger(nmv));
+    SEXP nint = PROTECT(ScalarInteger(n));
+    SEXP sint1 = PROTECT(ScalarInteger(1));
+    SEXP res = falloc(nmvint, nint, sint1);
+    UNPROTECT(3);
+    return res;
+  }
+
   int nprotect = 1;
 
   // Allocating here. For factors there is a shorthand
@@ -32,7 +40,8 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   if(tx != tt) {
     if(tx < tt) { // table could be integer, double, complex, character....
       if(tx == INTSXP-1) { // For factors there is a shorthand: just match the levels against table...
-        PROTECT(table = match_single(getAttrib(x, R_LevelsSymbol), table, ScalarInteger(nmv))); ++nprotect;
+        SEXP nmvint = PROTECT(ScalarInteger(nmv)); ++nprotect;
+        PROTECT(table = match_single(getAttrib(x, R_LevelsSymbol), table, nmvint)); ++nprotect;
         int *pans = INTEGER(ans), *pt = INTEGER(table)-1, *px = INTEGER(x);
         if(inherits(x, "na.included")) {
           #pragma omp simd
@@ -62,7 +71,8 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       // PROTECT(table = asCharacterFactor(table)); ++nprotect;
 
       // The efficient solution: matching the levels and regenerating table, taking zero as nomatch value here so that NA does not get matched against NA in x
-      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
+      SEXP sint0 = PROTECT(ScalarInteger(0)); ++nprotect;
+      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), sint0)); ++nprotect;
       SEXP table_new = PROTECT(duplicate(table)); ++nprotect;
       subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included"));
       table = table_new;
@@ -242,7 +252,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     const SEXP *restrict px = STRING_PTR(x), *restrict pt = STRING_PTR(table);
     // fill hash table with indices of 'table'
     for (int i = 0; i != nt; ++i) {
-      id = HASH(((intptr_t) pt[i] & 0xffffffff), K);
+      id = HASH(((uintptr_t) pt[i] & 0xffffffff), K);
       while(h[id]) {
         if(pt[h[id]-1] == pt[i]) goto sbl;
         if(++id >= M) id = 0;
@@ -252,7 +262,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     }
     // look up values of x in hash table
     for (int i = 0; i != n; ++i) {
-      id = HASH(((intptr_t) px[i] & 0xffffffff), K);
+      id = HASH(((uintptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
         if(pt[h[id]-1] == px[i]) {
           pans[i] = h[id];
@@ -306,7 +316,8 @@ SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
     }
   } else if(tx == INTSXP-1 && tt == INTSXP-1) { // Both factors
     if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
-      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), ScalarInteger(0))); ++nprotect;
+      SEXP sint0 = PROTECT(ScalarInteger(0)); ++nprotect;
+      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), sint0)); ++nprotect;
       SEXP table_new;
       SET_VECTOR_ELT(out, 1, table_new = duplicate(table));
       subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included")); // TODO: check this !!
@@ -345,7 +356,14 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
   if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("both x and table need to be atomic vectors or lists");
   const int l = length(x), lt = length(table), nmv = asInteger(nomatch);
   if(l == 0) return allocVector(INTSXP, 0);
-  if(lt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(length(VECTOR_ELT(x, 0))), ScalarInteger(1));
+  if(lt == 0) {
+    SEXP nmvint = PROTECT(ScalarInteger(nmv));
+    SEXP lx0 = PROTECT(ScalarInteger(length(VECTOR_ELT(x, 0))));
+    SEXP sint1 = PROTECT(ScalarInteger(1));
+    SEXP res = falloc(nmvint, lx0, sint1);
+    UNPROTECT(3);
+    return res;
+  }
 
   if(l != lt) error("length(n) must match length(nt)");
   if(l != 2) error("Internal function match_two_vectors() only supports lists of length 2");
@@ -412,7 +430,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
                    *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
         // fill hash table with indices of 'table'
         for (int i = 0; i != nt; ++i) {
-          id = HASH(64988430769U * ((intptr_t)pt1[i] & 0xffffffff) + ((intptr_t)pt2[i] & 0xffffffff), K);
+          id = HASH(64988430769U * ((uintptr_t)pt1[i] & 0xffffffff) + ((uintptr_t)pt2[i] & 0xffffffff), K);
           while(h[id]) {
             if(pt1[h[id]-1] == pt1[i] && pt2[h[id]-1] == pt2[i]) goto sbl;
             if(++id >= M) id = 0;
@@ -422,7 +440,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
         }
         // look up values of x in hash table
         for (int i = 0; i != n; ++i) {
-          id = HASH(64988430769U * ((intptr_t)px1[i] & 0xffffffff) + ((intptr_t)px2[i] & 0xffffffff), K);
+          id = HASH(64988430769U * ((uintptr_t)px1[i] & 0xffffffff) + ((uintptr_t)px2[i] & 0xffffffff), K);
           while(h[id]) {
             if(pt1[h[id]-1] == px1[i] && pt2[h[id]-1] == px2[i]) {
               pans[i] = h[id];
@@ -508,7 +526,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         tpv.d = ptr[i];
-        id = HASH((tpv.u[0] + tpv.u[1]) * ((intptr_t)pts[i] & 0xffffffff), K);
+        id = HASH((tpv.u[0] + tpv.u[1]) * ((uintptr_t)pts[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pts[i] && REQUAL(ptr[h[id]-1], ptr[i])) goto rsbl;
           if(++id >= M) id = 0;
@@ -519,7 +537,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
         tpv.d = pxr[i];
-        id = HASH((tpv.u[0] + tpv.u[1]) * ((intptr_t)pxs[i] & 0xffffffff), K);
+        id = HASH((tpv.u[0] + tpv.u[1]) * ((uintptr_t)pxs[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pxs[i] && REQUAL(ptr[h[id]-1], pxr[i])) {
             pans[i] = h[id];
@@ -538,7 +556,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        id = HASH(pti[i] * ((intptr_t)pts[i] & 0xffffffff), K); // TODO: improve!
+        id = HASH(pti[i] * ((uintptr_t)pts[i] & 0xffffffff), K); // TODO: improve!
         while(h[id]) {
           if(pts[h[id]-1] == pts[i] && pti[h[id]-1] == pti[i]) goto isbl;
           if(++id >= M) id = 0;
@@ -548,7 +566,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       }
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
-        id = HASH(pxi[i] * ((intptr_t)pxs[i] & 0xffffffff), K);
+        id = HASH(pxi[i] * ((uintptr_t)pxs[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pxs[i] && pti[h[id]-1] == pxi[i]) {
             pans[i] = h[id];
@@ -626,7 +644,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
                  *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        id = HASH(64988430769U * ((intptr_t)pt1[i] & 0xffffffff) + ((intptr_t)pt2[i] & 0xffffffff), K);
+        id = HASH(64988430769U * ((uintptr_t)pt1[i] & 0xffffffff) + ((uintptr_t)pt2[i] & 0xffffffff), K);
         while(h[id]) {
           if(pt1[h[id]-1] == pt1[i] && pt2[h[id]-1] == pt2[i]) {
             ptab[i] = ptab[h[id]-1];
@@ -639,7 +657,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       }
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
-        id = HASH(64988430769U * ((intptr_t)px1[i] & 0xffffffff) + ((intptr_t)px2[i] & 0xffffffff), K);
+        id = HASH(64988430769U * ((uintptr_t)px1[i] & 0xffffffff) + ((uintptr_t)px2[i] & 0xffffffff), K);
         while(h[id]) {
           if(pt1[h[id]-1] == px1[i] && pt2[h[id]-1] == px2[i]) {
             pans[i] = h[id];
@@ -731,7 +749,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         tpv.d = ptr[i];
-        id = HASH((tpv.u[0] + tpv.u[1]) * ((intptr_t)pts[i] & 0xffffffff), K);
+        id = HASH((tpv.u[0] + tpv.u[1]) * ((uintptr_t)pts[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pts[i] && REQUAL(ptr[h[id]-1], ptr[i])) { // TODO: which comparison is more expensive?
             ptab[i] = ptab[h[id]-1];
@@ -745,7 +763,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
         tpv.d = pxr[i];
-        id = HASH((tpv.u[0] + tpv.u[1]) * ((intptr_t)pxs[i] & 0xffffffff), K);
+        id = HASH((tpv.u[0] + tpv.u[1]) * ((uintptr_t)pxs[i] & 0xffffffff), K);
         while(h[id]) {
           if(pts[h[id]-1] == pxs[i] && REQUAL(ptr[h[id]-1], pxr[i])) { // TODO: which comparison is more expensive?
             pans[i] = h[id];
@@ -764,7 +782,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
-        id = HASH(pti[i] * ((intptr_t)pts[i] & 0xffffffff), K);
+        id = HASH(pti[i] * ((uintptr_t)pts[i] & 0xffffffff), K);
         while(h[id]) {
           if(pti[h[id]-1] == pti[i] && pts[h[id]-1] == pts[i]) {
             ptab[i] = ptab[h[id]-1];
@@ -777,7 +795,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       }
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
-        id = HASH(pxi[i] * ((intptr_t)pxs[i] & 0xffffffff), K);
+        id = HASH(pxi[i] * ((uintptr_t)pxs[i] & 0xffffffff), K);
         while(h[id]) {
           if(pti[h[id]-1] == pxi[i] && pts[h[id]-1] == pxs[i]) {
             pans[i] = h[id];
@@ -857,7 +875,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
           ++ngt;
           continue;
         }
-        id = (ptab_copy[i]*mult) ^ HASH(((intptr_t) pt[i] & 0xffffffff), K); // HASH(ptab_copy[i], K)
+        id = (ptab_copy[i]*mult) ^ HASH(((uintptr_t) pt[i] & 0xffffffff), K); // HASH(ptab_copy[i], K)
         while(h[id]) {
           if(ptab_copy[h[id]-1] == ptab_copy[i] && pt[h[id]-1] == pt[i]) {
             ptab[i] = ptab[h[id]-1];
@@ -871,7 +889,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
       // look up values of x in hash table
       for (int i = 0; i != n; ++i) {
         if(pans_copy[i] == nmv) continue;
-        id = (pans_copy[i]*mult) ^ HASH(((intptr_t) px[i] & 0xffffffff), K); // HASH(pans_copy[i], K)
+        id = (pans_copy[i]*mult) ^ HASH(((uintptr_t) px[i] & 0xffffffff), K); // HASH(pans_copy[i], K)
         while(h[id]) {
           if(ptab_copy[h[id]-1] == pans_copy[i] && pt[h[id]-1] == px[i]) {
             pans[i] = h[id];
@@ -966,7 +984,14 @@ SEXP match_multiple(SEXP x, SEXP table, SEXP nomatch, SEXP overid)  {
   if(TYPEOF(x) != VECSXP || TYPEOF(table) != VECSXP) error("both x and table need to be atomic vectors or lists");
   const int l = length(x), lt = length(table), nmv = asInteger(nomatch);
   if(l == 0) return allocVector(INTSXP, 0);
-  if(lt == 0) return falloc(ScalarInteger(nmv), ScalarInteger(length(VECTOR_ELT(x, 0))), ScalarInteger(1));
+  if(lt == 0) {
+    SEXP nmvint = PROTECT(ScalarInteger(nmv));
+    SEXP lx0 = PROTECT(ScalarInteger(length(VECTOR_ELT(x, 0))));
+    SEXP sint1 = PROTECT(ScalarInteger(1));
+    SEXP res = falloc(nmvint, lx0, sint1);
+    UNPROTECT(3);
+    return res;
+  }
   if(l != lt) error("length(n) must match length(nt)");
 
   // Shallow copy and coercing as necessary

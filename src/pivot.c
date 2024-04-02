@@ -105,7 +105,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
 
   // Add ID column
   if(asLogical(idcol)) {
-    SEXP names = getAttrib(data, R_NamesSymbol);
+    SEXP names = PROTECT(getAttrib(data, R_NamesSymbol)); // PROTECT() not really necessary but RCHK gives warning
     SEXP result = PROTECT(allocVector(VECSXP, 2));
     SEXP id_column;
     SET_VECTOR_ELT(result, 0, id_column = allocVector(isNull(names) ? INTSXP : STRSXP, length(res)));
@@ -126,7 +126,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
         pid += end;
       }
     }
-    UNPROTECT(2);
+    UNPROTECT(3);
     return result;
   }
 
