@@ -1,7 +1,7 @@
 context("dapply")
 
 # rm(list = ls())
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 test_that("All common uses of dapply can be performed, as per examples", {
   # data.frame

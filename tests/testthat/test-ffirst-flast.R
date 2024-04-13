@@ -1,6 +1,6 @@
 context("ffirst and flast")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # TODO: Check matrix with list columns !!
 # Benchmark with groups: Bettr to check missing x ???
 

@@ -1,6 +1,6 @@
 context("fprod")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 bprod <- base::prod
 

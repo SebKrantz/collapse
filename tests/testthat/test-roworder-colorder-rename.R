@@ -1,6 +1,6 @@
 context("roworder, colorder, frename")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 test_that("roworder works as intended", {
 

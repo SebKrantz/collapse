@@ -3,7 +3,7 @@ context("radixorder, GRP, qF, qG")
 # print(str(wlddev))
 # rm(list = ls())
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 NCRAN <- Sys.getenv("NCRAN") == "TRUE"
 set.seed(101)

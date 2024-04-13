@@ -1,6 +1,6 @@
 context("fbetween / B and fwithin / W")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 # rm(list = ls())
 set.seed(101)

@@ -1,6 +1,6 @@
 context("miscellaneous issues")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 # rm(list = ls())
 

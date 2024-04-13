@@ -1,6 +1,6 @@
 context("qtab")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 set.seed(101)
 wldNA <- na_insert(wlddev)

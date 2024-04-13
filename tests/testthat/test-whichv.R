@@ -1,6 +1,6 @@
 context("anyv, allv, whichv, setv, copyv etc.")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 # d <- replace_NA(wlddev, cols = 9:13)
 
