@@ -180,5 +180,6 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = .op[["
 
 
 # Lead Operator
-F <- function(x, n = 1, ...) L(x, -n, ...)
+F <- function(x, n = 1, ...) eval.parent(substitute(L(x, -n, ...)))
+
 
