@@ -3,7 +3,7 @@
 fnth <- function(x, n = 0.5, ...) UseMethod("fnth") # , x
 
 fnth.default <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ties = "q7", nthreads = .op[["nthreads"]], o = NULL, check.o = is.null(attr(o, "sorted")), ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fnth.matrix(x, n, g, w, TRA, na.rm, use.g.names, ties = ties, nthreads = nthreads, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fnth.matrix(x, n, g, w, TRA, na.rm, use.g.names, ties = ties, nthreads = nthreads, ...))
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fnth, x, n, g, w, na.rm, ties, nthreads, o, check.o)
   if(is.null(TRA)) {
@@ -26,6 +26,9 @@ fnth.matrix <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[
   }
   TRAmC(x,res,g[[2L]],TRA, ...)
 }
+
+fnth.zoo <- function(x, ...) if(is.matrix(x)) fnth.matrix(x, ...) else fnth.default(x, ...)
+fnth.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fnth.matrix(x, ...), x) else fnth.default(x, ...)
 
 fnth.data.frame <- function(x, n = 0.5, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ties = "q7", nthreads = .op[["nthreads"]], ...) {
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
@@ -103,6 +106,9 @@ fmedian.default <- function(x, ..., ties = "mean")
 
 fmedian.matrix <- function(x, ..., ties = "mean")
   fnth.matrix(x, 0.5, ..., ties = ties)
+
+fmedian.zoo <- function(x, ...) if(is.matrix(x)) fmedian.matrix(x, ...) else fmedian.default(x, ...)
+fmedian.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fmedian.matrix(x, ...), x) else fmedian.default(x, ...)
 
 fmedian.data.frame <- function(x, ..., ties = "mean")
   fnth.data.frame(x, 0.5, ..., ties = ties)

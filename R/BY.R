@@ -7,7 +7,7 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]],
                        return = c("same", "vector", "list")) {
 
   # If matrix, dispatch to matrix method
-  if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("BY", unclass(x)))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("BY", unclass(x)))
   if(!is.function(FUN)) FUN <- match.fun(FUN)
 
   aplyfun <- if(parallel) function(...) mclapply(..., mc.cores = mc.cores) else lapply
@@ -373,4 +373,5 @@ BY.grouped_df <- function(x, FUN, ..., reorder = TRUE, keep.group_vars = TRUE, u
   condalcSA(c(g[[4L]], res), ar, any(ar$class == "data.table"))
 }
 
-
+BY.zoo <- function(x, ...) if(is.matrix(x)) BY.matrix(x, ...) else BY.default(x, ...)
+BY.units <- BY.zoo # return = "same" preserves attributes by default

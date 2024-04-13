@@ -2,7 +2,7 @@
 fndistinct <- function(x, ...) UseMethod("fndistinct") # , x
 
 fndistinct.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, nthreads = .op[["nthreads"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fndistinct.matrix(x, g, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fndistinct.matrix(x, g, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fndistinct,x,g,na.rm,nthreads)
   if(is.null(TRA)) {
@@ -25,6 +25,9 @@ fndistinct.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], u
   }
   TRAmC(x,res,g[[2L]],TRA, ...)
 }
+
+fndistinct.zoo <- function(x, ...) if(is.matrix(x)) fndistinct.matrix(x, ...) else fndistinct.default(x, ...)
+fndistinct.units <- fndistinct.zoo
 
 fndistinct.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, nthreads = .op[["nthreads"]], ...) {
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
@@ -82,6 +85,7 @@ fNdistinct <- function(x, ...) {
   UseMethod("fndistinct")
 }
 fNdistinct.default <- function(x, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fndistinct.matrix(x, ...))
   # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fndistinct.default(x, ...)
 }
@@ -93,3 +97,4 @@ fNdistinct.data.frame <- function(x, ...) {
   # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fndistinct.data.frame(x, ...)
 }
+

@@ -4,7 +4,7 @@
 ffirst <- function(x, ...) UseMethod("ffirst") # , x
 
 ffirst.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(ffirst.matrix(x, g, TRA, na.rm, use.g.names, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(ffirst.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_ffirst,x,0L,0L,NULL,na.rm))
@@ -49,6 +49,9 @@ ffirst.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g
   g <- G_guo(g)
   TRAmC(x,.Call(C_ffirstm,x,g[[1L]],g[[2L]],g$group.starts,na.rm,FALSE),g[[2L]],TRA, ...)
 }
+
+ffirst.zoo <- function(x, ...) if(is.matrix(x)) ffirst.matrix(x, ...) else ffirst.default(x, ...)
+ffirst.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(ffirst.matrix(x, ...), x) else ffirst.default(x, ...)
 
 ffirst.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {

@@ -276,7 +276,7 @@ flmres <- function(y, X, w = NULL, meth = "qr", resi = TRUE, ...) {
 fhdwithin <- function(x, ...) UseMethod("fhdwithin") # , x
 
 fhdwithin.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, ...))
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -418,6 +418,9 @@ fhdwithin.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FAL
   } else return(setAttributes(demean(x, fl, w, ...), ax))
 }
 
+fhdwithin.zoo <- function(x, ...) if(is.matrix(x)) fhdwithin.matrix(x, ...) else fhdwithin.default(x, ...)
+fhdwithin.units <- fhdwithin.zoo
+
 # x = collapse:::colsubset(pwlddev, is.numeric)
 fhdwithin.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, variable.wise = TRUE, ...) {
   ix <- findex(x)
@@ -539,7 +542,7 @@ fhdwithin.list <- function(x, ...) fhdwithin.data.frame(x, ...)
 HDW <- function(x, ...) UseMethod("HDW") # , x
 
 HDW.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(HDW.matrix(x, fl, w, na.rm, fill, lm.method, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(HDW.matrix(x, fl, w, na.rm, fill, lm.method, ...))
   fhdwithin.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
@@ -551,6 +554,9 @@ HDW.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, st
   if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "HDW."))
   res
 }
+
+HDW.zoo <- function(x, ...) if(is.matrix(x)) HDW.matrix(x, ...) else HDW.default(x, ...)
+HDW.units <- HDW.zoo
 
 # x = mtcars; fl = ~ qF(cyl):carb; w = wdat; stub = FALSE
 HDW.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
@@ -647,7 +653,7 @@ fhdbetween <- function(x, ...) UseMethod("fhdbetween") # , x
 
 
 fhdbetween.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, fl, w, na.rm, fill, lm.method, ...))
   ax <- attributes(x)
   if(na.rm) {
     cc <- complete.cases(x, fl, w) # gives error if lengths don't match, otherwise demeanlist and qr.resid give errors !!
@@ -768,6 +774,9 @@ fhdbetween.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FA
   } else return(setAttributes(demean(x, fl, w, ..., means = TRUE), ax))
 }
 
+fhdbetween.zoo <- function(x, ...) if(is.matrix(x)) fhdbetween.matrix(x, ...) else fhdbetween.default(x, ...)
+fhdbetween.units <- fhdbetween.zoo
+
 fhdbetween.pdata.frame <- function(x, effect = "all", w = NULL, na.rm = .op[["na.rm"]], fill = TRUE, variable.wise = TRUE, ...)
   fhdwithin.pdata.frame(x, effect, w, na.rm, fill, variable.wise, ..., means = TRUE)
 
@@ -853,7 +862,7 @@ fhdbetween.list <- function(x, ...) fhdbetween.data.frame(x, ...)
 HDB <- function(x, ...) UseMethod("HDB") # , x
 
 HDB.default <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, lm.method = "qr", ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(HDB.matrix(x, fl, w, na.rm, fill, lm.method, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(HDB.matrix(x, fl, w, na.rm, fill, lm.method, ...))
   fhdbetween.default(x, fl, w, na.rm, fill, lm.method, ...)
 }
 
@@ -866,6 +875,9 @@ HDB.matrix <- function(x, fl, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, st
   if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "HDB."))
   res
 }
+
+HDB.zoo <- function(x, ...) if(is.matrix(x)) HDB.matrix(x, ...) else HDB.default(x, ...)
+HDB.units <- HDB.zoo
 
 HDB.data.frame <- function(x, fl, w = NULL, cols = is.numeric, na.rm = .op[["na.rm"]], fill = FALSE,
                            variable.wise = FALSE, stub = .op[["stub"]], lm.method = "qr", ...) {
@@ -954,6 +966,7 @@ fHDbetween <- function(x, ...) {
   UseMethod("fhdbetween")
 }
 fHDbetween.default <- function(x, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fhdbetween.matrix(x, ...))
   # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fhdbetween.default(x, ...)
 }
@@ -972,6 +985,7 @@ fHDwithin <- function(x, ...) {
   UseMethod("fhdwithin")
 }
 fHDwithin.default <- function(x, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fhdwithin.matrix(x, ...))
   # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fhdwithin.default(x, ...)
 }

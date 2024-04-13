@@ -4,7 +4,7 @@
 fmean <- function(x, ...) UseMethod("fmean") # , x
 
 fmean.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, nthreads = .op[["nthreads"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fmean.matrix(x, g, w, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fmean.matrix(x, g, w, TRA, na.rm, use.g.names, nthreads = nthreads, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fmean,x,0L,0L,NULL,w,na.rm,nthreads))
@@ -49,6 +49,9 @@ fmean.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"
   g <- G_guo(g)
   TRAmC(x,.Call(C_fmeanm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,drop,nthreads),g[[2L]],TRA, ...)
 }
+
+fmean.zoo <- function(x, ...) if(is.matrix(x)) fmean.matrix(x, ...) else fmean.default(x, ...)
+fmean.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fmean.matrix(x, ...), x) else fmean.default(x, ...)
 
 fmean.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, nthreads = .op[["nthreads"]], ...) {
   if(is.null(TRA)) {

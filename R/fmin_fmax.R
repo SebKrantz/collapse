@@ -4,7 +4,7 @@
 fmin <- function(x, ...) UseMethod("fmin") # , x
 
 fmin.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fmin.matrix(x, g, TRA, na.rm, use.g.names, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fmin.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fmin,x,0L,0L,na.rm))
@@ -49,6 +49,9 @@ fmin.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.n
   g <- G_guo(g)
   TRAmC(x,.Call(C_fminm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRA, ...)
 }
+
+fmin.zoo <- function(x, ...) if(is.matrix(x)) fmin.matrix(x, ...) else fmin.default(x, ...)
+fmin.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fmin.matrix(x, ...), x) else fmin.default(x, ...)
 
 fmin.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
@@ -115,7 +118,7 @@ fmin.grouped_df <- function(x, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names =
 fmax <- function(x, ...) UseMethod("fmax") # , x
 
 fmax.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fmax.matrix(x, g, TRA, na.rm, use.g.names, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fmax.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fmax,x,0L,0L,na.rm))
@@ -160,6 +163,9 @@ fmax.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.n
   g <- G_guo(g)
   TRAmC(x,.Call(C_fmaxm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRA, ...)
 }
+
+fmax.zoo <- function(x, ...) if(is.matrix(x)) fmax.matrix(x, ...) else fmax.default(x, ...)
+fmax.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fmax.matrix(x, ...), x) else fmax.default(x, ...)
 
 fmax.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
