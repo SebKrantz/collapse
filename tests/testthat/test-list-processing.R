@@ -1,6 +1,6 @@
 context("list-processing")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 NCRAN <- Sys.getenv("NCRAN") == "TRUE"
 
 l <- lm(mpg ~cyl +  vs + am, mtcars)

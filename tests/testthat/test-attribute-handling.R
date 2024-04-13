@@ -1,6 +1,6 @@
 context("Attribute Handling")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 v <- wlddev$PCGDP
 date <- wlddev$date

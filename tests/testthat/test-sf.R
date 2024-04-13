@@ -1,9 +1,5 @@
 context("collapse and sf")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
-
-expect_equal(1, 1)
-
 if(Sys.getenv("NMAC") == "TRUE" && requireNamespace(paste0("s", "f"), quietly = TRUE)) {
 
 eval(parse(text = paste0("libr", "ary(", "sf)")))

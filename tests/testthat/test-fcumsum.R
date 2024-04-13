@@ -1,6 +1,6 @@
 context("fcumsum")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 # rm(liso = ls())
 set.seed(101)

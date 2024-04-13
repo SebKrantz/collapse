@@ -1,6 +1,6 @@
 context("indexing")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 wldi <- iby(wlddev, country, year)
 

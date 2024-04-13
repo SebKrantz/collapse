@@ -1,6 +1,6 @@
 context("gsplit and rsplit")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 wld2 <- wlddev
 oldClass(wld2) <- NULL

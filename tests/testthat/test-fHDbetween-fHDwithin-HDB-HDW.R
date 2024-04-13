@@ -1,6 +1,6 @@
 context("fhdbetween / HDB and fhdwithin / HDW")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 # rm(list = ls())
 
 # TODO: Sort out why certain tests fail...
