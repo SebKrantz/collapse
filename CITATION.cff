@@ -1,14 +1,14 @@
-# -----------------------------------------------------------
-# CITATION file created with {cffr} R package, v1.0.0
+# --------------------------------------------
+# CITATION file created with {cffr} R package
 # See also: https://docs.ropensci.org/cffr/
-# -----------------------------------------------------------
+# --------------------------------------------
  
 cff-version: 1.2.0
 message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.12
+version: 2.0.13
 abstract: A C/C++ based package for advanced data transformation and statistical computing
   in R that is extremely fast, class-agnostic, robust and programmer friendly. Core
   functionality includes a rich set of S3 generic grouped and weighted statistical
@@ -42,7 +42,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2024-03-28'
+date-released: '2024-04-13'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -73,7 +73,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
   year: '2024'
-  notes: R package version 2.0.12
+  notes: R package version 2.0.13
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
@@ -493,3 +493,4 @@ references:
 identifiers:
 - type: url
   value: https://twitter.com/collapse_R
+
