@@ -34,7 +34,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.12</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.13</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,8 +112,9 @@ base R classes and data types (<em>integer</em>, <em>double</em>,
 <em>character</em>, <em>logical</em>, <em>list</em>,
 <em>data.frame</em>, <em>matrix</em>, <em>factor</em>, <em>Date</em>,
 <em>POSIXct</em>, <em>ts</em>), as well as <em>data.table</em>,
-<em>tibble</em>, <em>grouped_df</em>, <em>xts</em>, <em>pseries</em>,
-<em>pdata.frame</em>, and <em>sf</em> (no geometric operations).</p>
+<em>tibble</em>, <em>grouped_df</em>, <em>xts</em>, <em>zoo</em>,
+<em>pseries</em>, <em>pdata.frame</em>, <em>units</em>, and <em>sf</em>
+(no geometric operations).</p>
 <p>It also introduces <a href="https://sebkrantz.github.io/collapse/reference/GRP.html"><em>GRP_df</em></a>
 as a more performant and class-agnostic grouped data frame, and <a href="https://sebkrantz.github.io/collapse/reference/indexing.html"><em>indexed_series</em>
 and <em>indexed_frame</em></a> classes as modern class-agnostic
@@ -147,13 +148,9 @@ Statistical Functions</em></a> like <code><a href="../reference/fmean.html">fmea
 support all 3 types of objects.</p>
 <p>S3 generic functions initially dispatch to <code>.default</code>,
 <code>.matrix</code>, <code>.data.frame</code>, and (hidden)
-<code>.list</code> methods. The <code>.default</code> method has an
-internal check and dispatches to the <code>.matrix</code> method if
-<code>is.matrix(x) &amp;&amp; !inherits(x, "matrix")</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;This guards against the automatic application of the
-&lt;code&gt;.default&lt;/code&gt; method to matrix-like objects which do not inherit
-the “matrix” class (such as &lt;em&gt;xts&lt;/em&gt;) while still allowing the user
-to manually call the default method on matrices.&lt;/p&gt;"><sup>1</sup></a>. The
-<code>.list</code> method generally dispatches to the
+<code>.list</code> methods.
+<!-- The `.default` method has an internal check and dispatches to the `.matrix` method if `is.matrix(x) && !inherits(x, "matrix")`^[This guards against the automatic application of the `.default` method to matrix-like objects which do not inherit the "matrix" class (such as *xts*) while still allowing the user to manually call the default method on matrices.]. -->
+The <code>.list</code> method generally dispatches to the
 <code>.data.frame</code> method. These basic methods, and other
 non-generic functions in <em>collapse</em>, then decide how exactly to
 handle the object based on the statistical operation performed and
@@ -169,7 +166,7 @@ about copying attributes, I mean a shallow copy, not a deep copy. You
 can perform shallow copies with &lt;a href="https://sebkrantz.github.io/collapse/reference/small-helpers.html"&gt;helper
 functions&lt;/a&gt; &lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;copyAttrib()&lt;/a&gt;&lt;/code&gt; or
 &lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;copyMostAttrib()&lt;/a&gt;&lt;/code&gt;, and directly set attribute lists using
-&lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;setAttrib()&lt;/a&gt;&lt;/code&gt; or &lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;setattrib()&lt;/a&gt;&lt;/code&gt;.&lt;/p&gt;'><sup>2</sup></a>.</p>
+&lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;setAttrib()&lt;/a&gt;&lt;/code&gt; or &lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;setattrib()&lt;/a&gt;&lt;/code&gt;.&lt;/p&gt;'><sup>1</sup></a>.</p>
 <p>Another simple case for matrices and lists arises when a statistical
 operation reduces them to a single dimension such as
 <code>fmean(x)</code>, where, under the <code>drop = TRUE</code> default
@@ -191,8 +188,7 @@ suitable modifications of the (row-)names attribute. However, if
 are only retained if <code>!is.object(x)</code>, that is, if the matrix
 does not have a ‘class’ attribute. For atomic vectors, attributes are
 retained if <code>!inherits(x, "ts")</code>, as aggregating a time
-series will break the class<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Note that &lt;em&gt;xts&lt;/em&gt; are based on matrices, so by the
-former, aggregating them also returns a plain matrix.&lt;/p&gt;"><sup>3</sup></a>. This also applies to columns in a data
+series will break the class. This also applies to columns in a data
 frame being aggregated.</p>
 <p>When data is transformed using statistics as provided by the <a href="https://sebkrantz.github.io/collapse/reference/TRA.html"><code>TRA()</code>
 function</a> e.g. <code>TRA(x, STATS, operation, groups)</code> and the
@@ -249,7 +245,7 @@ e.g. &lt;code&gt;BY(factor, group, function(x) x[1])&lt;/code&gt; is dealt with
 because &lt;code&gt;&lt;a href="https://rdrr.io/r/base/unlist.html" class="external-link"&gt;unlist()&lt;/a&gt;&lt;/code&gt; preserves factors, so
 &lt;code&gt;identical(class(x), class(y))&lt;/code&gt; is &lt;code&gt;TRUE&lt;/code&gt;. The
 last part of the expression again guards against reducing the length of
-univariate time series and then copying the attributes.&lt;/p&gt;'><sup>4</sup></a> (<span class="math inline">\(\approx\)</span> of the same data type). If they
+univariate time series and then copying the attributes.&lt;/p&gt;'><sup>2</sup></a> (<span class="math inline">\(\approx\)</span> of the same data type). If they
 are deemed incompatible, <code>copyMostAttributes</code> still checks if
 <code>x</code> has a <code>"label"</code> attribute and copies that one
 to <code>y</code>.</p>
@@ -257,13 +253,13 @@ to <code>y</code>.</p>
 to preserve attributes in all cases except for where it is likely to
 break something, beholding the way most commonly used R classes and
 objects behave. The most likely operations that break something are when
-aggregating matrices which have a class (such as <em>xts</em>) or
-univariate time series (<em>ts</em>), when data is to be replaced by
-another object, or when applying an unknown function to a vector by
-groups and assembling the result with <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>. In the
-latter cases, particular attention is paid to integer vectors and
-factors, as we often count something generating integers, and malformed
-factors need to be avoided.</p>
+aggregating matrices which have a class (such as
+<em>mts</em>/<em>xts</em>) or univariate time series (<em>ts</em>), when
+data is to be replaced by another object, or when applying an unknown
+function to a vector by groups and assembling the result with
+<code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>. In the latter cases, particular attention is paid
+to integer vectors and factors, as we often count something generating
+integers, and malformed factors need to be avoided.</p>
 <p>The following section provides some further details for some
 <em>collapse</em> functions and supported classes.</p>
 </div>
@@ -341,7 +337,25 @@ In such cases ordered grouping is applied to generate an integer
 time-id, but this should rather be avoided.</p>
 </div>
 <div class="section level4">
-<h4 id="support-for-sf">Support for <em>sf</em><a class="anchor" aria-label="anchor" href="#support-for-sf"></a>
+<h4 id="xtszoo-time-series">
+<em>xts</em>/<em>zoo</em> Time Series<a class="anchor" aria-label="anchor" href="#xtszoo-time-series"></a>
+</h4>
+<p><em>xts</em>/<em>zoo</em> time series are handled through
+<code>.zoo</code> methods to all relevant functions. These methods are
+simple and all follow this pattern:
+<code>FUN.zoo &lt;- function(x, ...) if(is.matrix(x)) FUN.matrix(x, ...) else FUN.default(x, ....)</code>.
+Thus the general principles apply. Time-Series function do not
+automatically use the index for indexed computations, partly for
+consistency with native methods where this is also not the case
+(e.g. <code>lag.xts</code> does not perform an indexed lag), and partly
+because, as outlined above, the index does not necessarily accurately
+reflect the time structure. Thus the user must exercise discretion to
+perform an indexed lag on <em>xts</em>/<em>zoo</em>. For example:
+<code>flag(xts_daily, 1:3, t = index(xts_daily))</code> or
+<code>flag(xts_monthly, 1:3, t = zoo::as.yearmon(index(xts_monthly)))</code>.</p>
+</div>
+<div class="section level4">
+<h4 id="support-for-sf-and-units">Support for <em>sf</em> and <em>units</em><a class="anchor" aria-label="anchor" href="#support-for-sf-and-units"></a>
 </h4>
 <p><em>collapse</em> internally supports <em>sf</em> by seeking to avoid
 undue destruction of <em>sf</em> objects through removal of the
@@ -359,6 +373,15 @@ seeking to appropriately deal with the ‘geometry’ column. It cannot
 perform any geometrical operations, for example after subsetting
 <em>sf</em> with <code><a href="../reference/fsubset.html">fsubset()</a></code>, the bounding box attribute of
 the geometry is unaltered and likely too large.</p>
+<p>Regarding <em>units</em> objects, all relevant functions also have
+simple methods of the form
+<code>FUN.units &lt;- function(x, ...) copyMostAttrib(if(is.matrix(x)) FUN.matrix(x, ...), x) else FUN.default(x, ....)</code>.
+According to the general principles, the default method preserves the
+units class, whereas the matrix method does not if <code>FUN</code>
+aggregates the data. The use of <code><a href="../reference/small-helpers.html">copyMostAttrib()</a></code>, which
+copies all attributes apart from <code>"dim"</code>,
+<code>"dimnames"</code>, and <code>"names"</code>, ensures that the
+returned objects are still <em>units</em> objects.</p>
 </div>
 <div class="section level4">
 <h4 id="support-for-data-table">Support for <em>data.table</em><a class="anchor" aria-label="anchor" href="#support-for-data-table"></a>
@@ -376,7 +399,7 @@ columns by reference (e.g. <code>DT[, new := 1]</code>),
 allocated to be able to add columns without taking a shallow copy of the
 &lt;em&gt;data.table&lt;/em&gt;, and an &lt;code&gt;".internal.selfref"&lt;/code&gt; attribute
 containing an external pointer is used to check if any shallow copy was
-made using base R commands like &lt;code&gt;&amp;lt;-&lt;/code&gt;.&lt;/p&gt;'><sup>5</sup></a>.
+made using base R commands like &lt;code&gt;&amp;lt;-&lt;/code&gt;.&lt;/p&gt;'><sup>3</sup></a>.
 <em>collapse</em> copied some C code from <em>data.table</em> to do the
 overallocation and generate the <code>".internal.selfref"</code>
 attribute, so that <code><a href="../reference/quick-conversion.html">qDT()</a></code> creates a valid and fully
@@ -424,14 +447,14 @@ assigns a class attribute as follows</p>
 <p>In words: a class <code>"GRP_df"</code> is added in front, followed
 by the classes of the original object<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Removing
 &lt;code&gt;c("GRP_df", "grouped_df", "data.frame")&lt;/code&gt; if present to avoid
-duplicate classes and allowing grouped data to be re-grouped.&lt;/p&gt;'><sup>6</sup></a>, followed by <code>"grouped_df"</code> and
+duplicate classes and allowing grouped data to be re-grouped.&lt;/p&gt;'><sup>4</sup></a>, followed by <code>"grouped_df"</code> and
 finally <code>"data.frame"</code>, if present. The first class
 <code>"GRP_df"</code> is for dealing appropriately with the object
 through methods for <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and subsetting (<code>[</code>,
 <code>[[</code>), e.g. <code>print.GRP_df</code> fetches the grouping
 object, prints <code>fungroup(.X)</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Which reverses the changes of &lt;code&gt;&lt;a href="../reference/GRP.html"&gt;fgroup_by()&lt;/a&gt;&lt;/code&gt;
 so that the print method for the original object &lt;code&gt;.X&lt;/code&gt; is
-called.&lt;/p&gt;'><sup>7</sup></a>, and then prints a
+called.&lt;/p&gt;'><sup>5</sup></a>, and then prints a
 summary of the grouping. <code>[.GRP_df</code> works similarly: it saves
 the groups, calls <code>[</code> on <code>fungroup(.X)</code>, and
 attaches the groups again if the result is a list with the same number
@@ -478,7 +501,7 @@ matrix of any class can become an <em>indexed_series</em>.</p>
 one, two or more variables in the index to support both time series and
 complex panels, natively deal with irregularity in time<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;This is done through the creation of a time-factor in
 the &lt;em&gt;index_df&lt;/em&gt; attribute whose levels represent time steps
-i.e. the factor will have unused levels for gaps in time.&lt;/p&gt;"><sup>8</sup></a>, and provide a rich
+i.e. the factor will have unused levels for gaps in time.&lt;/p&gt;"><sup>6</sup></a>, and provide a rich
 set of methods for subsetting and manipulation which also subset the
 <em>index_df</em> attribute, including internal methods for
 <code><a href="../reference/fsubset.html">fsubset()</a></code>, <code><a href="../reference/funique.html">funique()</a></code>, <code>roworder(v)</code>
