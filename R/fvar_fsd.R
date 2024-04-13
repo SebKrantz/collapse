@@ -5,7 +5,7 @@
 fsd <- function(x, ...) UseMethod("fsd") # , x
 
 fsd.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, stable.algo = .op[["stable.algo"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fsd.matrix(x, g, w, TRA, na.rm, use.g.names, stable.algo = stable.algo, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fsd.matrix(x, g, w, TRA, na.rm, use.g.names, stable.algo = stable.algo, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(Cpp_fvarsd,x,0L,0L,NULL,w,na.rm,stable.algo,TRUE))
@@ -50,6 +50,9 @@ fsd.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]]
   g <- G_guo(g)
   TRAmC(x,.Call(Cpp_fvarsdm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,TRUE,FALSE),g[[2L]],TRA, ...)
 }
+
+fsd.zoo <- function(x, ...) if(is.matrix(x)) fsd.matrix(x, ...) else fsd.default(x, ...)
+fsd.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fsd.matrix(x, ...), x) else fsd.default(x, ...)
 
 fsd.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, stable.algo = .op[["stable.algo"]], ...) {
   if(is.null(TRA)) {
@@ -134,7 +137,7 @@ fsd.grouped_df <- function(x, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.
 fvar <- function(x, ...) UseMethod("fvar") # , x
 
 fvar.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, stable.algo = .op[["stable.algo"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fvar.matrix(x, g, w, TRA, na.rm, use.g.names, stable.algo = stable.algo, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fvar.matrix(x, g, w, TRA, na.rm, use.g.names, stable.algo = stable.algo, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(Cpp_fvarsd,x,0L,0L,NULL,w,na.rm,stable.algo,FALSE))
@@ -179,6 +182,9 @@ fvar.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]
   g <- G_guo(g)
   TRAmC(x,.Call(Cpp_fvarsdm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,stable.algo,FALSE,FALSE),g[[2L]],TRA, ...)
 }
+
+fvar.zoo <- function(x, ...) if(is.matrix(x)) fvar.matrix(x, ...) else fvar.default(x, ...)
+fvar.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fvar.matrix(x, ...), x) else fvar.default(x, ...)
 
 fvar.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, stable.algo = .op[["stable.algo"]], ...) {
   if(is.null(TRA)) {

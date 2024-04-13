@@ -4,7 +4,7 @@
 flast <- function(x, ...) UseMethod("flast") # , x
 
 flast.default <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(flast.matrix(x, g, TRA, na.rm, use.g.names, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(flast.matrix(x, g, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_flast,x,0L,0L,na.rm))
@@ -49,6 +49,9 @@ flast.matrix <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.
   g <- G_guo(g)
   TRAmC(x,.Call(C_flastm,x,g[[1L]],g[[2L]],na.rm,FALSE),g[[2L]],TRA, ...)
 }
+
+flast.zoo <- function(x, ...) if(is.matrix(x)) flast.matrix(x, ...) else flast.default(x, ...)
+flast.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(flast.matrix(x, ...), x) else flast.default(x, ...)
 
 flast.data.frame <- function(x, g = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {

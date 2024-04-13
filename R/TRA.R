@@ -5,7 +5,7 @@ TRA <- function(x, STATS, FUN = "-", ...) UseMethod("TRA") # , x
 setTRA <- function(x, STATS, FUN = "-", ...) invisible(TRA(x, STATS, FUN, ..., set = TRUE))
 
 TRA.default <- function(x, STATS, FUN = "-", g = NULL, set = FALSE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(TRA.matrix(x, STATS, FUN, g, set, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(TRA.matrix(x, STATS, FUN, g, set, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(C_TRA,x,STATS,0L,FUN,set))
   if(is.atomic(g)) {
@@ -73,3 +73,6 @@ TRA.grouped_df <- function(x, STATS, FUN = "-", keep.group_vars = TRUE, set = FA
   oldClass(x) <- clx
   x
 }
+
+TRA.zoo <- function(x, STATS, FUN = "-", ...) if(is.matrix(x)) TRA.matrix(x, STATS, FUN, ...) else TRA.default(x, STATS, FUN, ...)
+TRA.units <- TRA.zoo

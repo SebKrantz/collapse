@@ -4,7 +4,7 @@
 fprod <- function(x, ...) UseMethod("fprod") # , x
 
 fprod.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fprod.matrix(x, g, w, TRA, na.rm, use.g.names, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fprod.matrix(x, g, w, TRA, na.rm, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fprod,x,0L,0L,w,na.rm))
@@ -49,6 +49,9 @@ fprod.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"
   g <- G_guo(g)
   TRAmC(x,.Call(C_fprodm,x,g[[1L]],g[[2L]],w,na.rm,FALSE),g[[2L]],TRA, ...)
 }
+
+fprod.zoo <- function(x, ...) if(is.matrix(x)) fprod.matrix(x, ...) else fprod.default(x, ...)
+fprod.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fprod.matrix(x, ...), x) else fprod.default(x, ...)
 
 fprod.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {

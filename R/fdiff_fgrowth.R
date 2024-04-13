@@ -14,7 +14,7 @@ baselog <- base::log
 fdiff <- function(x, n = 1, diff = 1, ...) UseMethod("fdiff") # , x
 
 fdiff.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fdiff", unclass(x)))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fdiff", unclass(x)))
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
   if(log) x <- baselog(x)
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t),1L+log,rho,stubs,1))
@@ -43,6 +43,9 @@ fdiff.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, log 
   g <- G_guo(g)
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),1L+log,rho,stubs,1)
 }
+
+fdiff.zoo <- function(x, ...) if(is.matrix(x)) fdiff.matrix(x, ...) else fdiff.default(x, ...)
+fdiff.units <- fdiff.zoo
 
 fdiff.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, log = FALSE, rho = 1, stubs = length(n) + length(diff) > 2L, keep.ids = TRUE, ...) {
   if(!missing(...)) if(checkld(...)) log <- list(...)[["logdiff"]] else unused_arg_action(match.call(), ...)
@@ -94,7 +97,7 @@ fdiff.pdata.frame <- function(x, n = 1, diff = 1, fill = NA, log = FALSE, rho = 
 fgrowth <- function(x, n = 1, diff = 1, ...) UseMethod("fgrowth") # , x
 
 fgrowth.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fgrowth", unclass(x)))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fgrowth", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(logdiff) x <- if(scale == 1) baselog(x) else baselog(x) %*=% scale
   if(is.null(g)) return(.Call(Cpp_fdiffgrowth,x,n,diff,fill,0L,0L,NULL,G_t(t),4L-logdiff,scale,stubs,power))
@@ -123,6 +126,9 @@ fgrowth.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, lo
   g <- G_guo(g)
   .Call(Cpp_fdiffgrowthm,x,n,diff,fill,g[[1L]],g[[2L]],g[[3L]],G_t(t),4L-logdiff,scale,stubs,power)
 }
+
+fgrowth.zoo <- function(x, ...) if(is.matrix(x)) fgrowth.matrix(x, ...) else fgrowth.default(x, ...)
+fgrowth.units <- fgrowth.zoo
 
 fgrowth.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = length(n) + length(diff) > 2L, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -272,7 +278,7 @@ D.call <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
 D.name <- function(x, ...) if(missing(x)) stats::D(...) else stats::D(x, ...)
 
 D.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fdiff.matrix(x, n, diff, g, t, fill, FALSE, rho, stubs, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fdiff.matrix(x, n, diff, g, t, fill, FALSE, rho, stubs, ...))
   fdiff.default(x, n, diff, g, t, fill, FALSE, rho, stubs, ...)
 }
 
@@ -286,6 +292,9 @@ D.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1,
   fdiff.matrix(x, n, diff, g, t, fill, FALSE, rho, stubs, ...)
 
 # setMethod("D", "matrix")
+
+D.zoo <- function(x, ...) if(is.matrix(x)) D.matrix(x, ...) else D.default(x, ...)
+D.units <- D.zoo
 
 D.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x # because of piped calls -> "." is not in global environment ...
@@ -307,7 +316,7 @@ D.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, rho 
 Dlog <- function(x, n = 1, diff = 1, ...) UseMethod("Dlog") # , x
 
 Dlog.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fdiff.matrix(x, n, diff, g, t, fill, TRUE, rho, stubs, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fdiff.matrix(x, n, diff, g, t, fill, TRUE, rho, stubs, ...))
   fdiff.default(x, n, diff, g, t, fill, TRUE, rho, stubs, ...)
 }
 
@@ -316,6 +325,9 @@ Dlog.pseries <- function(x, n = 1, diff = 1, fill = NA, rho = 1, stubs = .op[["s
 
 Dlog.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], ...)
   fdiff.matrix(x, n, diff, g, t, fill, TRUE, rho, stubs, ...)
+
+Dlog.zoo <- function(x, ...) if(is.matrix(x)) Dlog.matrix(x, ...) else Dlog.default(x, ...)
+Dlog.units <- Dlog.zoo
 
 Dlog.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, rho = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x
@@ -338,7 +350,7 @@ Dlog.pdata.frame <- function(x, n = 1, diff = 1, cols = is.numeric, fill = NA, r
 G <- function(x, n = 1, diff = 1, ...) UseMethod("G") # , x
 
 G.default <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fgrowth.matrix(x, n, diff, g, t, fill, logdiff, scale, power, stubs, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fgrowth.matrix(x, n, diff, g, t, fill, logdiff, scale, power, stubs, ...))
   fgrowth.default(x, n, diff, g, t, fill, logdiff, scale, power, stubs, ...)
 }
 
@@ -347,6 +359,9 @@ G.pseries <- function(x, n = 1, diff = 1, fill = NA, logdiff = FALSE, scale = 10
 
 G.matrix <- function(x, n = 1, diff = 1, g = NULL, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], ...)
   fgrowth.matrix(x, n, diff, g, t, fill, logdiff, scale, power, stubs, ...)
+
+G.zoo <- function(x, ...) if(is.matrix(x)) G.matrix(x, ...) else G.default(x, ...)
+G.units <- G.zoo
 
 G.grouped_df <- function(x, n = 1, diff = 1, t = NULL, fill = NA, logdiff = FALSE, scale = 100, power = 1, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x

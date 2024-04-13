@@ -2,7 +2,7 @@
 flag <- function(x, n = 1, ...) UseMethod("flag") # , x
 
 flag.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("flag", unclass(x)))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("flag", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_flaglead,x,n,fill,0L,0L,G_t(t),stubs))
   g <- G_guo(g)
@@ -26,6 +26,9 @@ flag.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = length(
   g <- G_guo(g)
   .Call(Cpp_flagleadm,x,n,fill,g[[1L]],g[[2L]],G_t(t),stubs)
 }
+
+flag.zoo <- function(x, ...) if(is.matrix(x)) flag.matrix(x, ...) else flag.default(x, ...)
+flag.units <- flag.zoo
 
 flag.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = length(n) > 1L, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -72,7 +75,7 @@ flag.pdata.frame <- function(x, n = 1, fill = NA, stubs = length(n) > 1L, shift 
 L <- function(x, n = 1, ...) UseMethod("L") # , x
 
 L.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(flag.matrix(x, n, g, t, fill, stubs, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(flag.matrix(x, n, g, t, fill, stubs, ...))
   flag.default(x, n, g, t, fill, stubs, ...)
 }
 
@@ -81,6 +84,9 @@ L.pseries <- function(x, n = 1, fill = NA, stubs = .op[["stub"]], shift = "time"
 
 L.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], ...)
   flag.matrix(x, n, g, t, fill, stubs, ...)
+
+L.zoo <- function(x, ...) if(is.matrix(x)) L.matrix(x, ...) else L.default(x, ...)
+L.units <- L.zoo
 
 L.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
   x <- x
@@ -174,31 +180,6 @@ L.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = .op[["
 
 
 # Lead Operator
-F <- function(x, n = 1, ...) UseMethod("F") # , x
-
-F.default <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(flag.matrix(x, -n, g, t, fill, stubs, ...))
-  flag.default(x, -n, g, t, fill, stubs, ...)
-}
-
-F.pseries <- function(x, n = 1, fill = NA, stubs = .op[["stub"]], shift = "time", ...)
-  flag.pseries(x, -n, fill, stubs, shift, ...)
-
-F.matrix <- function(x, n = 1, g = NULL, t = NULL, fill = NA, stubs = .op[["stub"]], ...)
-  flag.matrix(x, -n, g, t, fill, stubs, ...)
-
-F.grouped_df <- function(x, n = 1, t = NULL, fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, ...) {
-  x <- x
-  eval(substitute(flag.grouped_df(x, -n, t, fill, stubs, keep.ids, ...)))
-}
-
-F.data.frame <- function(x, n = 1, by = NULL, t = NULL, cols = is.numeric,
-                         fill = NA, stubs = .op[["stub"]], keep.ids = TRUE, ...)
-  L.data.frame(x, -n, by, t, cols, fill, stubs, keep.ids, ...)
-
-F.list <- F.data.frame
-
-F.pdata.frame <- function(x, n = 1, cols = is.numeric, fill = NA, stubs = .op[["stub"]], shift = "time", keep.ids = TRUE, ...)
-  L.pdata.frame(x, -n, cols, fill, stubs, shift, keep.ids, ...)
+F <- function(x, n = 1, ...) eval.parent(substitute(L(x, -n, ...)))
 
 

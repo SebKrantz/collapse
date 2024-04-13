@@ -13,7 +13,7 @@ ford <- function(x, g = NULL) {
 fcumsum <- function(x, ...) UseMethod("fcumsum") # , x
 
 fcumsum.default <- function(x, g = NULL, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fcumsum", unclass(x)))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(UseMethod("fcumsum", unclass(x)))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(length(o) && check.o) o <- ford(o, g)
   if(is.null(g)) return(.Call(C_fcumsum,x,0L,0L,o,na.rm,fill))
@@ -38,6 +38,9 @@ fcumsum.matrix <- function(x, g = NULL, o = NULL, na.rm = .op[["na.rm"]], fill =
   g <- G_guo(g)
   .Call(C_fcumsumm,x,g[[1L]],g[[2L]],o,na.rm,fill)
 }
+
+fcumsum.zoo <- function(x, ...) if(is.matrix(x)) fcumsum.matrix(x, ...) else fcumsum.default(x, ...)
+fcumsum.units <- fcumsum.zoo
 
 fcumsum.grouped_df <- function(x, o = NULL, na.rm = .op[["na.rm"]], fill = FALSE, check.o = TRUE, keep.ids = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)

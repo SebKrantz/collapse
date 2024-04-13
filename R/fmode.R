@@ -4,7 +4,7 @@
 fmode <- function(x, ...) UseMethod("fmode") # , x
 
 fmode.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, ties = "first", nthreads = .op[["nthreads"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fmode.matrix(x, g, w, TRA, na.rm, use.g.names, ties = ties, nthreads = nthreads, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fmode.matrix(x, g, w, TRA, na.rm, use.g.names, ties = ties, nthreads = nthreads, ...))
   r <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))
   if(!is.null(g)) g <- GRP(g, return.groups = use.g.names && is.null(TRA), call = FALSE) # sort = FALSE for TRA: not faster here...
   res <- .Call(C_fmode,x,g,w,na.rm,r,nthreads)
@@ -29,6 +29,9 @@ fmode.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"
   }
   TRAmC(x,res,g[[2L]],TRA, ...)
 }
+
+fmode.zoo <- function(x, ...) if(is.matrix(x)) fmode.matrix(x, ...) else fmode.default(x, ...)
+fmode.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fmode.matrix(x, ...), x) else fmode.default(x, ...)
 
 fmode.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, ties = "first", nthreads = .op[["nthreads"]], ...) {
   r <- switch(ties, first = 0L, min = 1L, max = 2L, last = 3L, stop("Unknown ties option: ", ties))

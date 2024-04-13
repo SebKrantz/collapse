@@ -2,7 +2,7 @@
 varying <- function(x, ...) UseMethod("varying") # , x
 
 varying.default <- function(x, g = NULL, any_group = TRUE, use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(varying.matrix(x, g, any_group, use.g.names, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(varying.matrix(x, g, any_group, use.g.names, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_varying,x,0L,0L,any_group))
   if(is.atomic(g)) {
@@ -47,6 +47,9 @@ varying.matrix <- function(x, g = NULL, any_group = TRUE, use.g.names = TRUE, dr
   if(use.g.names && !any_group) return(`dimnames<-`(.Call(Cpp_varyingm,x,g[[1L]],g[[2L]],any_group,FALSE), list(GRPnames(g), dimnames(x)[[2L]])))
   .Call(Cpp_varyingm,x,g[[1L]],g[[2L]],any_group,drop)
 }
+
+varying.zoo <- function(x, ...) if(is.matrix(x)) varying.matrix(x, ...) else varying.default(x, ...)
+varying.units <- varying.zoo
 
 varying.data.frame <- function(x, by = NULL, cols = NULL, any_group = TRUE, use.g.names = TRUE, drop = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)

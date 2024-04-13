@@ -3,7 +3,7 @@
 fsum <- function(x, ...) UseMethod("fsum") # , x
 
 fsum.default <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, fill = FALSE, nthreads = .op[["nthreads"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fsum.matrix(x, g, w, TRA, na.rm, use.g.names, fill = fill, nthreads = nthreads, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fsum.matrix(x, g, w, TRA, na.rm, use.g.names, fill = fill, nthreads = nthreads, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fsum,x,0L,0L,w,na.rm,fill,nthreads))
@@ -48,6 +48,9 @@ fsum.matrix <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]
   g <- G_guo(g)
   TRAmC(x,.Call(C_fsumm,x,g[[1L]],g[[2L]],w,na.rm,fill,FALSE,nthreads),g[[2L]],TRA, ...)
 }
+
+fsum.zoo <- function(x, ...) if(is.matrix(x)) fsum.matrix(x, ...) else fsum.default(x, ...)
+fsum.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(fsum.matrix(x, ...), x) else fsum.default(x, ...)
 
 fsum.data.frame <- function(x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], use.g.names = TRUE, drop = TRUE, fill = FALSE, nthreads = .op[["nthreads"]], ...) {
   if(is.null(TRA)) {
