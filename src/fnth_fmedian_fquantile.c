@@ -269,6 +269,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   if(ret < 5 || ret > 9) error("fquantile only supports continuous quantile types 5-9. You requested type: %d", ret);
 
   SEXP res = PROTECT(allocVector(REALSXP, np));
+  copyMostAttrib(x, res); // Consistent with other functions, and works for "units"
   if(np == 0) { // quantile(x, numeric(0))
     UNPROTECT(nprotect);
     return res;
