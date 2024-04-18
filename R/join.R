@@ -105,6 +105,7 @@ join <- function(x, y,
     g <- group(if(rjoin) x[ixon] else y[iyon], group.sizes = TRUE)
     m <- multi_match(m, g)
     if(is.list(m)) {
+      multiple <- 2L
       if(rjoin) y <- .Call(C_subsetDT, y, m[[1L]], seq_along(y), FALSE)
       else x <- .Call(C_subsetDT, x, m[[1L]], seq_along(x), FALSE)
       m <- m[[2L]]
@@ -223,7 +224,7 @@ join <- function(x, y,
           c(on_res, x_res, y_res)
         }
       } else { # If all elements of table are matched, this is simply a left join
-        how <- "left"
+        how <- if(multiple == 2L) "left_setrn" else "left"
         y_res <- .Call(C_subsetDT, y, m, seq_along(y)[-iyon], if(count) attr(m, "N.nomatch") else TRUE) # anyNA(um) ??
         c(x, y_res)
       }
