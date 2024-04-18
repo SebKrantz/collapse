@@ -2,7 +2,7 @@
 qsu <- function(x, ...) UseMethod("qsu") # , x
 
 qsu.default <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array = TRUE, stable.algo = .op[["stable.algo"]], ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(qsu.matrix(x, g, pid, w, higher, array, stable.algo, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(qsu.matrix(x, g, pid, w, higher, array, stable.algo, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) {
     if(is.null(pid)) return(fbstatsCpp(x,higher, w = w, stable.algo = stable.algo))
@@ -54,6 +54,9 @@ qsu.matrix <- function(x, g = NULL, pid = NULL, w = NULL, higher = FALSE, array 
   pid <- G_guo(pid)
   fbstatsmCpp(x,higher,g[[1L]],g[[2L]],pid[[1L]],pid[[2L]],w,stable.algo,array,GRPnames(g))
 }
+
+qsu.zoo <- function(x, ...) if(is.matrix(x)) qsu.matrix(x, ...) else qsu.default(x, ...)
+qsu.units <- qsu.zoo
 
 qsu.data.frame <- function(x, by = NULL, pid = NULL, w = NULL, cols = NULL, higher = FALSE, array = TRUE, labels = FALSE, stable.algo = .op[["stable.algo"]], ...) {
   if(!missing(...)) {

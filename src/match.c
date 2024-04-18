@@ -65,14 +65,15 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       }
     }
   } else if(tx == INTSXP-1 && tt == INTSXP-1) { // Both factors
-    if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
+    SEXP x_lev = PROTECT(getAttrib(x, R_LevelsSymbol)); ++nprotect; // Unecessary but appeases RCHK
+    if(!R_compute_identical(x_lev, getAttrib(table, R_LevelsSymbol), 0)) {
       // This is the inefficient way: coercing both to character
       // PROTECT(x = asCharacterFactor(x)); ++nprotect;
       // PROTECT(table = asCharacterFactor(table)); ++nprotect;
 
       // The efficient solution: matching the levels and regenerating table, taking zero as nomatch value here so that NA does not get matched against NA in x
       SEXP sint0 = PROTECT(ScalarInteger(0)); ++nprotect;
-      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), sint0)); ++nprotect;
+      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), x_lev, sint0)); ++nprotect;
       SEXP table_new = PROTECT(duplicate(table)); ++nprotect;
       subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included"));
       table = table_new;
@@ -315,9 +316,10 @@ SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
       } else SET_VECTOR_ELT(out, 0, coerceVector(x, tt));
     }
   } else if(tx == INTSXP-1 && tt == INTSXP-1) { // Both factors
-    if(!R_compute_identical(getAttrib(x, R_LevelsSymbol), getAttrib(table, R_LevelsSymbol), 0)) {
+    SEXP x_lev = PROTECT(getAttrib(x, R_LevelsSymbol)); ++nprotect; // Unnecessary but appeases RCHK
+    if(!R_compute_identical(x_lev, getAttrib(table, R_LevelsSymbol), 0)) {
       SEXP sint0 = PROTECT(ScalarInteger(0)); ++nprotect;
-      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), getAttrib(x, R_LevelsSymbol), sint0)); ++nprotect;
+      SEXP tab_ilev = PROTECT(match_single(getAttrib(table, R_LevelsSymbol), x_lev, sint0)); ++nprotect;
       SEXP table_new;
       SET_VECTOR_ELT(out, 1, table_new = duplicate(table));
       subsetVectorRaw(table_new, tab_ilev, table, /*anyNA=*/!inherits(table, "na.included")); // TODO: check this !!

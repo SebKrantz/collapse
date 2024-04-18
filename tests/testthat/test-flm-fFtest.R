@@ -1,6 +1,6 @@
 context("flm and fFtest")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 y <- mtcars$mpg
 x <- qM(mtcars[c("cyl","vs","am","carb","hp")])

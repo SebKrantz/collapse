@@ -1,6 +1,6 @@
 context("varying")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 # rm(list = ls())
 

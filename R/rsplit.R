@@ -18,7 +18,7 @@ t_list <- function(l) {
 rsplit <- function(x, ...) UseMethod("rsplit")
 
 rsplit.default <- function(x, fl, drop = TRUE, flatten = FALSE, use.names = TRUE, ...) { # , check = TRUE
-  if(is.matrix(x) && !inherits(x, "matrix")) return(rsplit.matrix(x, fl, drop, flatten, use.names, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(rsplit.matrix(x, fl, drop, flatten, use.names, ...))
   if(is.atomic(fl) || flatten || is_GRP(fl)) return(gsplit(x, fl, use.names, drop = drop, ...))
   attributes(fl) <- NULL
   # if(check) fl <- lapply(fl, qF) # necessary ? -> split.default is actually faster on non-factor variables !
@@ -47,6 +47,8 @@ rsplit.matrix <- function(x, fl, drop = TRUE, flatten = FALSE, use.names = TRUE,
   rspl(x, fl)
 }
 
+rsplit.zoo <- function(x, ...) if(is.matrix(x)) rsplit.matrix(x, ...) else rsplit.default(x, ...)
+rsplit.units <- rsplit.zoo
 
 # From stackoverflow package:
 # rsplit <- function (x, by, drop = FALSE)

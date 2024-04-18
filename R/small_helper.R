@@ -560,6 +560,7 @@ ckmatch <- function(x, table, e = "Unknown columns:", ...) if(anyNA(m <- fmatch(
 
 cols2int <- function(cols, x, nam, topos = TRUE) {
  if(is.numeric(cols)) {
+   if(length(cols) == 0L) return(integer(0L))
    l <- length(unclass(x)) # length(nam) ?
    if(cols[1L] < 0L) { # This is sufficient to check negative indices: No R function allows subsetting mixing positive and negative indices.
      if(-bmin(cols) > l) stop("Index out of range abs(1:length(x))")
@@ -622,7 +623,7 @@ cols2intrmgn <- function(gn, cols, x) {
     return(which(cols))
   }
   if(is.null(cols)) return(seq_along(unclass(x))[-gn])
-  if(is.numeric(cols) && cols[1L] < 0) {
+  if(is.numeric(cols) && length(cols) && cols[1L] < 0) {
     res <- logical(length(unclass(x)))
     res[cols] <- TRUE
     res[gn] <- FALSE

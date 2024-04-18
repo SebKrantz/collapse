@@ -6,7 +6,7 @@ ckm <- function(x) if(is.double(x)) x else if(is.character(x) && x == "overall.m
 fwithin <- function(x, ...) UseMethod("fwithin") # , x
 
 fwithin.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fwithin.matrix(x, g, w, na.rm, mean, theta, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fwithin.matrix(x, g, w, na.rm, mean, theta, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,theta,ckm(mean),FALSE,FALSE))
   g <- G_guo(g)
@@ -29,6 +29,9 @@ fwithin.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean =
   g <- G_guo(g)
   .Call(Cpp_BWm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,theta,ckm(mean),FALSE,FALSE)
 }
+
+fwithin.zoo <- function(x, ...) if(is.matrix(x)) fwithin.matrix(x, ...) else fwithin.default(x, ...)
+fwithin.units <- fwithin.zoo
 
 fwithin.data.frame <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -77,7 +80,7 @@ fwithin.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, th
 W <- function(x, ...) UseMethod("W") # , x
 
 W.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(W.matrix(x, g, w, na.rm, mean, theta, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(W.matrix(x, g, w, na.rm, mean, theta, ...))
   fwithin.default(x, g, w, na.rm, mean, theta, ...)
 }
 
@@ -89,6 +92,9 @@ W.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, th
   if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "W."))
   res
 }
+
+W.zoo <- function(x, ...) if(is.matrix(x)) W.matrix(x, ...) else W.default(x, ...)
+W.units <- W.zoo
 
 W.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, theta = 1,
                          stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, ...) {
@@ -219,7 +225,7 @@ W.list <- function(x, ...) W.data.frame(x, ...)
 fbetween <- function(x, ...) UseMethod("fbetween") # , x
 
 fbetween.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fbetween.matrix(x, g, w, na.rm, fill, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fbetween.matrix(x, g, w, na.rm, fill, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_BW,x,0L,0L,NULL,w,na.rm,1,0,TRUE,fill))
   g <- G_guo(g)
@@ -242,6 +248,9 @@ fbetween.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill 
   g <- G_guo(g)
   .Call(Cpp_BWm,x,g[[1L]],g[[2L]],g[[3L]],w,na.rm,1,0,TRUE,fill)
 }
+
+fbetween.zoo <- function(x, ...) if(is.matrix(x)) fbetween.matrix(x, ...) else fbetween.default(x, ...)
+fbetween.units <- fbetween.zoo
 
 fbetween.data.frame <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -291,7 +300,7 @@ fbetween.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALS
 B <- function(x, ...) UseMethod("B") # , x
 
 B.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(B.matrix(x, g, w, na.rm, fill, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(B.matrix(x, g, w, na.rm, fill, ...))
   fbetween.default(x, g, w, na.rm, fill, ...)
 }
 
@@ -303,6 +312,9 @@ B.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE
   if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "B."))
   res
 }
+
+B.zoo <- function(x, ...) if(is.matrix(x)) B.matrix(x, ...) else B.default(x, ...)
+B.units <- B.zoo
 
 B.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], fill = FALSE,
                          stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, ...) {

@@ -1,6 +1,6 @@
 context("select, replace or add vars")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 # rm(list = ls())
 

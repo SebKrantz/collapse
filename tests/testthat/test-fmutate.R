@@ -1,6 +1,6 @@
 context("fsummarise and fmutate")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 expect_equal(1, 1)
 
 if(requireNamespace("magrittr", quietly = TRUE) && requireNamespace("dplyr", quietly = TRUE)) {

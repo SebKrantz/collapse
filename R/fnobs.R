@@ -4,7 +4,7 @@
 fnobs <- function(x, ...) UseMethod("fnobs") # , x
 
 fnobs.default <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fnobs.matrix(x, g, TRA, use.g.names, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fnobs.matrix(x, g, TRA, use.g.names, ...))
   if(is.null(TRA)) {
     if(!missing(...)) unused_arg_action(match.call(), ...)
     if(is.null(g)) return(.Call(C_fnobs,x,0L,0L))
@@ -49,6 +49,9 @@ fnobs.matrix <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRU
   g <- G_guo(g)
   TRAmC(x,.Call(C_fnobsm,x,g[[1L]],g[[2L]],FALSE),g[[2L]],TRA, ...)
 }
+
+fnobs.zoo <- function(x, ...) if(is.matrix(x)) fnobs.matrix(x, ...) else fnobs.default(x, ...)
+fnobs.units <- fnobs.zoo
 
 fnobs.data.frame <- function(x, g = NULL, TRA = NULL, use.g.names = TRUE, drop = TRUE, ...) {
   if(is.null(TRA)) {
@@ -116,6 +119,7 @@ fNobs <- function(x, ...) {
   UseMethod("fnobs")
 }
 fNobs.default <- function(x, ...) {
+  if(is.matrix(x) && !inherits(x, "matrix")) return(fnobs.matrix(x, ...))
   # .Deprecated(msg = "This method belongs to a renamed function and will be removed end of 2022, see help('collapse-renamed')")
   fnobs.default(x, ...)
 }

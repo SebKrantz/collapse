@@ -1,6 +1,6 @@
 context("setop")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 d <- mtcars$mpg
 dc <- copyv(d, 0, 0)

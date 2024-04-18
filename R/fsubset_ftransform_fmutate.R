@@ -5,7 +5,7 @@ sbt <- fsubset
 
 # Also not really faster than default for numeric (but a bit faster for factors ...)
 fsubset.default <- function(.x, subset, ...) {
-  if(is.matrix(.x) && !inherits(.x, "matrix")) return(fsubset.matrix(.x, subset, ...))
+  # if(is.matrix(.x) && !inherits(.x, "matrix")) return(fsubset.matrix(.x, subset, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.logical(subset)) return(.Call(C_subsetVector, .x, which(subset), FALSE))
   .Call(C_subsetVector, .x, subset, TRUE)
@@ -18,6 +18,9 @@ fsubset.matrix <- function(.x, subset, ..., drop = FALSE) {
   if(missing(subset)) return(.x[, vars, drop = drop])
   .x[subset, vars, drop = drop]
 }
+
+fsubset.zoo <- function(.x, ...) if(is.matrix(.x)) fsubset.matrix(.x, ...) else fsubset.default(.x, ...)
+fsubset.units <- fsubset.zoo
 
 # No lazy eval
 ss <- function(x, i, j, check = TRUE) {

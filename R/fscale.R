@@ -8,7 +8,7 @@ csd <- function(x) if(is.double(x)) x else if(is.character(x) && x == "within.sd
 fscale <- function(x, ...) UseMethod("fscale") # , x
 
 fscale.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(fscale.matrix(x, g, w, na.rm, mean, sd, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(fscale.matrix(x, g, w, na.rm, mean, sd, ...))
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.null(g)) return(.Call(Cpp_fscale,x,0L,0L,w,na.rm,cm(mean),csd(sd)))
   g <- G_guo(g)
@@ -31,6 +31,9 @@ fscale.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 
   g <- G_guo(g)
   .Call(Cpp_fscalem,x,g[[1L]],g[[2L]],w,na.rm,cm(mean),csd(sd))
 }
+
+fscale.zoo <- function(x, ...) if(is.matrix(x)) fscale.matrix(x, ...) else fscale.default(x, ...)
+fscale.units <- fscale.zoo
 
 fscale.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
@@ -80,7 +83,7 @@ fscale.pdata.frame <- function(x, effect = 1L, w = NULL, na.rm = .op[["na.rm"]],
 STD <- function(x, ...) UseMethod("STD") # , x
 
 STD.default <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, ...) {
-  if(is.matrix(x) && !inherits(x, "matrix")) return(STD.matrix(x, g, w, na.rm, mean, sd, ...))
+  # if(is.matrix(x) && !inherits(x, "matrix")) return(STD.matrix(x, g, w, na.rm, mean, sd, ...))
   fscale.default(x, g, w, na.rm, mean, sd, ...)
 }
 
@@ -92,6 +95,9 @@ STD.matrix <- function(x, g = NULL, w = NULL, na.rm = .op[["na.rm"]], mean = 0, 
   if(isTRUE(stub) || is.character(stub)) return(add_stub(res, if(is.character(stub)) stub else "STD."))
   res
 }
+
+STD.zoo <- function(x, ...) if(is.matrix(x)) STD.matrix(x, ...) else STD.default(x, ...)
+STD.units <- STD.zoo
 
 STD.grouped_df <- function(x, w = NULL, na.rm = .op[["na.rm"]], mean = 0, sd = 1, stub = .op[["stub"]], keep.group_vars = TRUE, keep.w = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)

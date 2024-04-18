@@ -1,6 +1,6 @@
 context("recode, replace")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 gmtc <- fgroup_by(mtcars, cyl)
 
@@ -20,10 +20,27 @@ expect_equal(replace_inf(log(EuStockMarkets), replace.nan = TRUE), `[<-`(log(EuS
 })
 
 
+# scaling data using MAD
+mad_trans <- function(x) {
+  if(inherits(x, c("pseries", "pdata.frame"))) {
+    g <- GRP(x)
+    tmp <- fmedian(x, g, TRA = "-")
+    tmp %/=% fmedian(if(is.list(tmp)) lapply(tmp, abs) else abs(tmp), g, TRA = "fill", set = TRUE)
+    return(tmp)
+  }
+  tmp <- fmedian(x, TRA = "-")
+  tmp %/=% fmedian(if(is.list(tmp)) dapply(tmp, abs) else abs(tmp), TRA = "fill", set = TRUE)
+  return(tmp)
+}
+
 test_that("replace_outliers works well.", {
 
   expect_equal(replace_outliers(mtcars, 2), replace(mtcars, fscale(mtcars) > 2, NA))
+  # expect_equal(replace_outliers(mtcars, 2, single.limit = "mad"), replace(mtcars, mad_trans(mtcars) > 2, NA))
+
   expect_equal(replace_outliers(gmtc, 2, single.limit = "sd", ignore.groups = TRUE), replace(gmtc, dapply(mtcars, fscale) > 2, NA))
+  # expect_equal(replace_outliers(gmtc, 2, single.limit = "mad", ignore.groups = TRUE), replace(gmtc, dapply(mtcars, mad_trans) > 2, NA))
+
   expect_equal(replace_outliers(mtcars, 2, single.limit = "min"), replace(mtcars, mtcars < 2, NA))
   expect_equal(replace_outliers(mtcars, 2, single.limit = "max"), replace(mtcars, mtcars > 2, NA))
 
@@ -84,7 +101,7 @@ mtcNA <- na_insert(mtcars)
 test_that("recode_num works well", {
 
   expect_equal(recode_num(vmiss, `4` = 5), replace(vmiss, vmiss == 4, 5))
-  expect_visible(recode_num(vmiss, `4` = 5, missing = 4))  # continue here to write proper tests!!..
+  expect_visible(recode_num(vmiss, `4` = 5, missing = 4))  # continue here to write proper tests!!!..
   expect_visible(recode_num(vmiss, `4` = 5, missing = 7))
   expect_visible(recode_num(vmiss, `4` = 5, default = 8))
   expect_visible(recode_num(vmiss, `4` = 5, default = 8, missing = 7))

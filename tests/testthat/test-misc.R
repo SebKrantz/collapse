@@ -1,6 +1,6 @@
 context("Misc")
 
-if(!is.null(attributes(identical(FALSE, TRUE)))) stop("OECD label issue")
+
 
 # rm(list = ls())
 set.seed(101)
@@ -101,10 +101,9 @@ test_that("adding and removing stubs works", {
   expect_identical(rm_stub(names(iris), "Width", regex = TRUE)[4], "Petal.")
 })
 
-test_that("deep matrix dispatch works well", {
+test_that("zoo dispatch works well", {
 
-  tsm <- EuStockMarkets
-  class(tsm) <- setdiff(class(tsm), "matrix")
+  tsm <- zoo::as.zoo(EuStockMarkets)
   set.seed(101)
   f <- qF(sample.int(5, nrow(tsm), TRUE))
   NCOL2 <- function(x) if(length(d <- dim(x)) > 1L) d[2L] else length(x)
@@ -118,6 +117,32 @@ test_that("deep matrix dispatch works well", {
 
   for(i in c("flag", "L", "fdiff", "D", "Dlog", "fgrowth", "G"))
       expect_true(all(is.na(match.fun(i)(tsm)[1L, ])))
+
+})
+
+test_that("units support works well", {
+
+  v = abs(rnorm(5))
+  m = abs(matrix(rnorm(25), 5))
+  g = qF(c(1,1,2,3,3))
+  attributes(v) <- list(units = structure(list(numerator = "m", denominator = character(0)), class = "symbolic_units"), class = "units")
+  attributes(m) <- list(dim = c(5L, 5L), units = structure(list(numerator = "m", denominator = character(0)), class = "symbolic_units"), class = "units")
+
+  for (f in setdiff(c(.FAST_FUN, .OPERATOR_FUN), c("fnobs", "fndistinct", "F"))) {
+    # print(f)
+    FUN = match.fun(f)
+    if (!startsWith(f, "fhd") && !startsWith(f, "HD")) {
+      expect_true(inherits(FUN(v), "units"))
+      expect_true(inherits(FUN(m), "units"))
+    }
+    if (f %in% c("fnth","flag","L","fdiff","D","Dlog", "fgrowth","G")) {
+      expect_true(inherits(FUN(v, g = g), "units"))
+      expect_true(inherits(FUN(m, g = g), "units"))
+    } else {
+      expect_true(inherits(FUN(v, g), "units"))
+      expect_true(inherits(FUN(m, g), "units"))
+    }
+  }
 
 })
 
