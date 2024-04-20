@@ -59,7 +59,7 @@ join <- function(x, y,
 
   # Matching step
   rjoin <- switch(how, right = TRUE, FALSE)
-  count <- verbose || validate != "m:m"
+  count <- verbose || validate != "m:m" || length(attr)
 
   if(sort) {
     if(rjoin) {
