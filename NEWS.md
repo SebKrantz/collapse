@@ -1,3 +1,24 @@
+# collapse 2.0.14
+
+* Added function `group_by_vars()`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> group_by_vars(ind1) |> collapg(custom = list(fmean = ind2, fsum = ind3))`. Or, using *magrittr*: 
+```r 
+library(magrittr)
+set_collapse(mask = "manip") # for fgroup_vars -> group_vars
+
+data %>% 
+  group_by_vars(ind1) %>% {
+  add_vars(
+    group_vars(., "unique"),
+    get_vars(., ind2) %>% fmean(keep.g = FALSE) %>% add_stub("mean_"),
+    get_vars(., ind3) %>% fsum(keep.g = FALSE) %>% add_stub("sum_")
+  ) 
+}
+```
+
+* In `join()`, if `attr = TRUE`, the `count` option to `fmatch()` is always invoked, so that the attribute attached always has the same form, regardless of `verbose` or `validate` settings. 
+
+* `roworder[v]()` has optional setting `verbose = 2L` to indicate if `x` is already sorted, making the call to `roworder[v]()` redundant. 
+
 # collapse 2.0.13
 
 * *collapse* now explicitly supports *xts*/*zoo* and *units* objects and concurrently removes an additional check in the `.default` method of statistical functions that called the matrix method if `is.matrix(x) && !inherits(x, "matrix")`. This was a smart solution to account for the fact that *xts* objects are matrix-based but don't inherit the `"matrix"` class, thus wrongly calling the default method. The same is the case for *units*, but here, my recent more intensive engagement with spatial data convinced me that this should be changed. For one, under the previous heuristic solution, it was not possible to call the default method on a *units* matrix, e.g., `fmean.default(st_distance(points_sf))` called `fmean.matrix()` and yielded a vector. This should not be the case. Secondly, aggregation e.g. `fmean(st_distance(points_sf))` or `fmean(st_distance(points_sf), g = group_vec)` yielded a plain numeric object that lost the *units* class (in line with the [general attribute handling principles](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html#general-principles)). Therefore, I have now decided to remove the heuristic check within the default methods, and explicitly support *zoo* and *units* objects. For [*Fast Statistical Functions*](https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html), the methods are `FUN.zoo <- function(x, ...) if(is.matrix(x)) FUN.matrix(x, ...) else FUN.default(x, ...)` and `FUN.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(FUN.matrix(x, ...), x) else FUN.default(x, ...)`. While the behavior for *xts*/*zoo* remains the same, the behavior for *units* is enhanced, as now the class is preserved in aggregations (the [`.default` method preserves attributes except for *ts*](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html#general-principles)), and it is possible to manually invoke the `.default` method on a units matrix and obtain an aggregate statistic. This change may impact computations on other matrix based classes which don't inherit from `"matrix"` (*mts* does inherit from `"matrix"`, and I am not aware of any other affected classes, but user code like `m <- matrix(rnorm(25), 5); class(m) <- "bla"; fmean(m)` will now yield a scalar instead of a vector. Such code must be adjusted to either `class(m) <- c("bla", "matrix")` or `fmean.matrix(m)`). Overall, the change makes *collapse* behave in a more standard and predictable way, and enhances its support for *units* objects central in the *sf* ecosystem. 

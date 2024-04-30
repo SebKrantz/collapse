@@ -187,6 +187,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(GRP.default)
  export(fgroup_by)
  export(gby)
+ export(group_by_vars)
  export(fgroup_vars)
  export(fungroup)
  export(findex_by)

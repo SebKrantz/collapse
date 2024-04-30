@@ -106,14 +106,15 @@ GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, 
       } else if(is.character(by)) {
         namby <- by
         by <- ckmatch(by, attr(X, "names"))
-      } else if(is.numeric(by)) {
-        by <- as.integer(by)
+      } else {
+        by <- if(is.numeric(by)) as.integer(by) else if(is.logical(by)) which(by) else if(is.function(by)) which(vapply(unattrib(X), by, TRUE)) else
+              stop("by needs to be either a one-sided formula, character column names, column indices, a logical vector or selector function!")
         namby <- attr(X, "names")[by]
         if(is.null(namby)) {
           namby <- paste0("Group.", seq_along(by))
           attr(X, "names") <- paste0("Group.", seq_along(unclass(X))) # best ?
         }
-      } else stop("by needs to be either a one-sided formula, character column names or column indices!")
+      }
       o <- switchGRP(.subset(X, by), na.last, decreasing, return.groups || !use.group, TRUE, sort, use.group)
     }
   } else {
@@ -419,6 +420,17 @@ fgroup_by <- function(.X, ..., sort = .op[["sort"]], decreasing = FALSE, na.last
 }
 
 gby <- fgroup_by
+
+group_by_vars <- function(X, by = NULL, ...) {
+  clx <- oldClass(X)
+  oldClass(X) <- NULL
+  m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
+  if(length(by)) by <- cols2int(by, X, names(X), FALSE)
+  attr(X, "groups") <- GRP.default(X[by], NULL, ..., call = FALSE) # Need to unclass because of sf and regrouping! (and some functions expect unclassed)
+  oldClass(X) <- c("GRP_df",  if(length(mp <- m[m != 0L])) clx[-mp] else clx, "grouped_df", if(m[3L]) "data.frame")
+  if(any(clx == "data.table")) return(alc(X))
+  X
+}
 
 print.GRP_df <- function(x, ...) {
   print(fungroup(x), ...) # better !! (the method could still print groups attribute etc. ) And can also get rid of .rows() in fgroup_by and other fuzz..

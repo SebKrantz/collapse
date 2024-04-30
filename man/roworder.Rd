@@ -6,7 +6,9 @@
 Fast Reordering of Data Frame Rows
 }
 \description{
-A fast substitute for \code{dplyr::arrange}. It returns a sorted copy of the data frame, unless the data is already sorted in which case no copy is made. In addition, rows can be manually re-ordered. Use \code{data.table::setorder} to sort a data frame without creating a copy. %\code{roworder} also does not support grouped tibbles or pdata.frame's, i.e. every data frame is treated the same.
+A fast substitute for \code{dplyr::arrange}, based on \code{\link[=radixorder]{radixorder(v)}} and inspired by \code{data.table::setorder(v)}. It returns a sorted copy of the data frame, unless the data is already sorted in which case no copy is made. In addition, rows can be manually re-ordered. \code{roworderv} is a programmers version that takes vectors/variables as input.
+
+Use \code{data.table::setorder(v)} to sort a data frame without creating a copy. %\code{roworder} also does not support grouped tibbles or pdata.frame's, i.e. every data frame is treated the same.
 }
 \usage{
 roworder(X, \dots, na.last = TRUE, verbose = .op[["verbose"]])
@@ -31,7 +33,7 @@ roworderv(X, cols = NULL, neworder = NULL, decreasing = FALSE,
 
   }
   }
-  \item{verbose}{logical. \code{TRUE} (default) prints a message when ordering a grouped or indexed frame, indicating that this is not efficient and encouraging reordering the data prior to the grouping/indexing step.}
+  \item{verbose}{logical. \code{1L} (default) prints a message when ordering a grouped or indexed frame, indicating that this is not efficient and encouraging reordering the data prior to the grouping/indexing step. Users can also set \code{verbose = 2L} to also toggle a message if \code{x} is already sorted, implying that no copy was made and the call to \code{roworder(v)} is redundant.}
 
 }
 
@@ -41,7 +43,7 @@ A copy of \code{X} with rows reordered. If \code{X} is already sorted, \code{X} 
 \note{
 If you don't require a copy of the data, use \code{data.table::setorder} (you can also use it in a piped call as it invisibly returns the data).
 
-\code{roworder(v)} has internal facilities to deal with \link[=indexing]{indexed data}.
+\code{roworder(v)} has internal facilities to deal with \link[=GRP]{grouped} and \link[=indexing]{indexed} data. This is however inefficient (since in most cases data could be reordered before grouping/indexing), and therefore issues a message if \code{verbose > 0L}.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
