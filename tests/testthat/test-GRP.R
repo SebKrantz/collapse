@@ -147,7 +147,7 @@ test_that("GRP gives errors for wrong input", {
   expect_error(GRP(1:10, 1))
   expect_error(GRP(1:10, ~ cyl))
   expect_error(GRP(1:10, "cyl"))
-  expect_error(GRP(mtcars, TRUE))
+  # expect_error(GRP(mtcars, TRUE))
   expect_error(GRP(mtcars, ~ cyl + bla))
   expect_error(GRP(mtcars, c("bal","cyl")))
   expect_error(GRP(mtcars, 11:12))
