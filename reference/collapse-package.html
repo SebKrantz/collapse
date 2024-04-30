@@ -16,7 +16,7 @@ It is made compatible with the tidyverse, data.table, sf and the plm approach to
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.14</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -551,9 +551,9 @@ It is made compatible with the tidyverse, data.table, sf and the plm approach to
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f1</span><span class="op">)</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># A minor difference, larger on larger data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               expr    min      lq     mean  median     uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 12.566 13.3560 16.14189 13.5930 13.832 173.460   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 11.889 12.4395 16.60860 12.6455 12.825 378.481   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               expr   min    lq    mean median    uq    max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.936 4.018 4.37429  4.059 4.141 30.053   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.772 3.895 3.97003  3.936 4.018  4.592   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Efficient interactions of vectors and/or factors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0</span>
@@ -639,12 +639,12 @@ It is made compatible with the tidyverse, data.table, sf and the plm approach to
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">2</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># A remarkable performance gain..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr      min        lq       mean   median        uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")    5.605    7.6115   13.32519    9.482   18.2305</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 1322.488 1356.2875 1419.24119 1388.427 1440.3570</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    28.884   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  2399.979   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq      mean  median       uq     max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.091   2.3985   3.31321   2.911   3.4645  14.227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 303.687 308.3815 320.98080 315.823 323.0390 499.667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sds</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span></span></span>
@@ -1063,12 +1063,12 @@ It is made compatible with the tidyverse, data.table, sf and the plm approach to
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>the standard deviation is zero</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           year  decade   PCGDP  LIFEEX    GINI     ODA     POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> year       NA      NA      NA      NA      NA      NA      NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> decade     NA      NA      NA      NA      NA      NA      NA </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP      NA      NA      1      .60*   -.42*   -.25*   -.07 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     NA      NA     .60*     1     -.40*   -.21*   -.02 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> GINI       NA      NA    -.42*   -.40*     1     -.19*   -.04 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ODA        NA      NA    -.25*   -.21*   -.19*     1      .50*</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> POP        NA      NA    -.07    -.02    -.04     .50*     1  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> decade     NA      1      .00     .00     .00     .00     .00 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP      NA     .00      1      .60*   -.42*   -.25*   -.07 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     NA     .00     .60*     1     -.40*   -.21*   -.02 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> GINI       NA     .00    -.42*   -.40*     1     -.19*   -.04 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ODA        NA     .00    -.25*   -.21*   -.19*     1      .50*</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> POP        NA     .00    -.07    -.02    -.04     .50*     1  </span>
 <span class="r-in"><span><span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># Within-country correlations</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          year decade  PCGDP LIFEEX   GINI    ODA    POP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> year      1     .99*   .44*   .84*  -.21*   .19*   .24*</span>

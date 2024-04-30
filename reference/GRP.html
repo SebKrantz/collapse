@@ -16,7 +16,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.13</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.14</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,9 +117,11 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span><span class="co"># Fast, class-agnostic pendant to dplyr::group_by for use with fast functions, see details</span></span>
 <span><span class="fu">fgroup_by</span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>          return.groups <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span><span class="co"># Standard-evaluation analogue (slim wrapper around GRP.default(), for programming)</span></span>
+<span><span class="fu">group_by_vars</span><span class="op">(</span><span class="va">X</span>, by <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span><span class="co"># Shorthand for fgroup_by</span></span>
-<span>      <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>          return.groups <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>    return.groups <span class="op">=</span> <span class="cn">TRUE</span>, return.order <span class="op">=</span> <span class="va">sort</span>, method <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by</span></span>
 <span><span class="fu">fgroup_vars</span><span class="op">(</span><span class="va">X</span>, return <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span>
@@ -149,7 +151,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 
 
   <dt>by</dt>
-<dd><p>if <code>X</code> is a data frame or list, <code>by</code> can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. <code>~ col1 + col2</code>.</p></dd>
+<dd><p>if <code>X</code> is a data frame or list, <code>by</code> can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, a one-sided formula i.e. <code>~ col1 + col2</code>, a logical vector (converted to indices) or a selector function e.g. <code>is_categorical</code>.</p></dd>
 
 
   <dt>sort</dt>
@@ -233,7 +235,7 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 
 
   <dt>...</dt>
-<dd><p>for <code>fgroup_by</code>: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For <code>gsplit</code>, <code>greorder</code>, <code>GRPN</code> and <code>GRPid</code>: further arguments passed to <code>GRP</code> (if <code>g/x</code> is not already a 'GRP' object). For example the <code>by</code> argument could be used if a data frame is passed.</p></dd>
+<dd><p>for <code>fgroup_by</code>: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For <code>group_by_vars</code>, <code>gsplit</code>, <code>greorder</code>, <code>GRPN</code> and <code>GRPid</code>: further arguments passed to <code>GRP</code> (if <code>g/x</code> is not already a 'GRP' object). For example the <code>by</code> argument could be used if a data frame is passed.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -573,13 +575,14 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-in"><span><span class="co">## Note also that setting sort = FALSE on unsorted data can be much faster... if not required...</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>less accurate nanosecond times to avoid potential integer overflows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr     min       lq      mean</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 132.083 134.3165 263.86337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE)  71.728  73.2595  97.75198</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   median       uq      max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  139.189 152.7975 4850.385   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   75.009  78.6385 1817.037   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr    min     lq     mean  median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 76.588 77.736 85.02293 79.4785</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE) 26.527 27.634 29.03497 28.3105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  82.1435 227.509   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  29.0075  50.061   100</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
