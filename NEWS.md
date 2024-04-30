@@ -6,8 +6,9 @@ data %>%
   get_vars(ind1) %>% 
   group_by_vars(ind2) %>% {
   add_vars(
-    get_vars(., ind3) %>% fmean(),
-    get_vars(., ind4) %>% fsum(keep.g = FALSE)
+    fgroup_vars(., "unique"),
+    get_vars(., ind3) %>% fmean(keep.g = FALSE) %>% add_stub("mean_"),
+    get_vars(., ind4) %>% fsum(keep.g = FALSE) %>% add_stub("sum_")
   ) 
 }
 ```
