@@ -33,7 +33,7 @@ roworderv(X, cols = NULL, neworder = NULL, decreasing = FALSE,
 
   }
   }
-  \item{verbose}{logical. \code{1L} (default) prints a message when ordering a grouped or indexed frame, indicating that this is not efficient and encouraging reordering the data prior to the grouping/indexing step. Users can also set \code{verbose = 2L} to also toggle a message if \code{x} is already sorted, implying that the no copy was made and the call to \code{roworder(v)} is redundant.}
+  \item{verbose}{logical. \code{1L} (default) prints a message when ordering a grouped or indexed frame, indicating that this is not efficient and encouraging reordering the data prior to the grouping/indexing step. Users can also set \code{verbose = 2L} to also toggle a message if \code{x} is already sorted, implying that no copy was made and the call to \code{roworder(v)} is redundant.}
 
 }
 

@@ -16,7 +16,7 @@ data %>%
 }
 ```
 
-* In join, if `attr = TRUE`, the `count` option to `fmatch()` is always invoked, so that the attribute attached always has the same form, regardless of `verbose` or `validate` settings. 
+* In `join()`, if `attr = TRUE`, the `count` option to `fmatch()` is always invoked, so that the attribute attached always has the same form, regardless of `verbose` or `validate` settings. 
 
 * `roworder[v]()` has optional setting `verbose = 2L` to indicate if `x` is already sorted, making the call to `roworder[v]()` redundant. 
 
