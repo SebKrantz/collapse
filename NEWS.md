@@ -1,22 +1,21 @@
 # collapse 2.0.14
 
-* Added function `group_by_vars`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> get_vars(ind1) |> group_by_vars(ind2) |> collapg(custom = list(fmean = ind3, fsum = ind4))`. Or, using magrittr: 
+* Added function `group_by_vars`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> group_by_vars(ind1) |> collapg(custom = list(fmean = ind2, fsum = ind3))`. Or, using *magrittr*: 
 ```r 
 library(magrittr)
 set_collapse(mask = "manip") # for fgroup_vars -> group_vars
 
 data %>% 
-  get_vars(ind1) %>% 
-  group_by_vars(ind2) %>% {
+  group_by_vars(ind1) %>% {
   add_vars(
     group_vars(., "unique"),
-    get_vars(., ind3) %>% fmean(keep.g = FALSE) %>% add_stub("mean_"),
-    get_vars(., ind4) %>% fsum(keep.g = FALSE) %>% add_stub("sum_")
+    get_vars(., ind2) %>% fmean(keep.g = FALSE) %>% add_stub("mean_"),
+    get_vars(., ind3) %>% fsum(keep.g = FALSE) %>% add_stub("sum_")
   ) 
 }
 ```
 
-* In join, if `attr = TRUE`, the `count` option to `fmatch()` is always invoked, so that the attribute attached always has the same form, regardless of `verbose` or `validate` settings. 
+* In `join()`, if `attr = TRUE`, the `count` option to `fmatch()` is always invoked, so that the attribute attached always has the same form, regardless of `verbose` or `validate` settings. 
 
 * `roworder[v]()` has optional setting `verbose = 2L` to indicate if `x` is already sorted, making the call to `roworder[v]()` redundant. 
 
