@@ -9,6 +9,7 @@
 \alias{GRP.grouped_df}
 \alias{fgroup_by}
 \alias{gby}
+\alias{group_by_vars}
 \alias{fgroup_vars}
 \alias{fungroup}
 \alias{gsplit}
@@ -70,9 +71,11 @@ greorder(x, g, \dots)
 # Fast, class-agnostic pendant to dplyr::group_by for use with fast functions, see details
 fgroup_by(.X, \dots, sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE,
           return.groups = TRUE, return.order = sort, method = "auto")
+# Standard-evaluation analogue (slim wrapper around GRP.default(), for programming)
+group_by_vars(X, by = NULL, ...)
 # Shorthand for fgroup_by
-      gby(.X, \dots, sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE,
-          return.groups = TRUE, return.order = sort, method = "auto")
+gby(.X, \dots, sort = .op[["sort"]], decreasing = FALSE, na.last = TRUE,
+    return.groups = TRUE, return.order = sort, method = "auto")
 
 # Get grouping columns from a grouped data frame created with dplyr::group_by or fgroup_by
 fgroup_vars(X, return = "data")
@@ -91,7 +94,7 @@ fungroup(X, \dots)
 
   \item{x, g}{a 'GRP' object. For \code{gsplit/greorder}, \code{x} can be a vector of any type, or \code{NULL} to return the integer indices of the groups. \code{gsplit/greorder/GRPN/GRPid} also support vectors or data frames to be passed to \code{g/x}.}
 
-  \item{by}{if \code{X} is a data frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, or using a one-sided formula i.e. \code{~ col1 + col2}.}
+  \item{by}{if \code{X} is a data frame or list, \code{by} can indicate columns to use for the grouping (by default all columns are used). Columns must be passed using a vector of column names, indices, a one-sided formula i.e. \code{~ col1 + col2}, a logical vector (converted to indices) or a selector function e.g. \code{is_categorical}.}
 
   \item{sort}{logical. If \code{FALSE}, groups are not ordered but simply grouped in the order of first appearance of unique elements / rows. This often provides a performance gain if the data was not sorted beforehand. See also \code{method}.}
   \item{ordered}{logical. \code{TRUE} adds a class 'ordered' i.e. generates an ordered factor.}
@@ -144,7 +147,7 @@ fungroup(X, \dots)
 
   \item{horizontal}{logical. \code{TRUE} arranges plots next to each other, instead of above each other. \emph{Note} that the size of each group is only plotted for objects with less than 10,000 groups.}
 
-  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{gsplit}, \code{greorder}, \code{GRPN} and \code{GRPid}: further arguments passed to \code{GRP} (if \code{g/x} is not already a 'GRP' object). For example the \code{by} argument could be used if a data frame is passed.}
+  \item{\dots}{for \code{fgroup_by}: unquoted comma-separated column names, sequences of columns, expressions involving columns, and column names, indices, logical vectors or selector functions. See Examples. For \code{group_by_vars}, \code{gsplit}, \code{greorder}, \code{GRPN} and \code{GRPid}: further arguments passed to \code{GRP} (if \code{g/x} is not already a 'GRP' object). For example the \code{by} argument could be used if a data frame is passed.}
 }
 \details{
 \code{GRP} is a central function in the \emph{collapse} package because it provides, in the form of integer vectors, some key pieces of information to efficiently perform grouped operations at the \code{C/C++} level.

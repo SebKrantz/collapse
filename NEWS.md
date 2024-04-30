@@ -1,5 +1,17 @@
 # collapse 2.0.14
 
+* Added function `group_by_vars`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> get_vars(ind1) |> group_by_vars(ind2) |> collapg(custom = list(fmean = ind3, fsum = ind4))`. Or, using magrittr: 
+```r 
+data %>% 
+  get_vars(ind1) %>% 
+  group_by_vars(ind2) %>% {
+  add_vars(
+    get_vars(., ind3) %>% fmean(),
+    get_vars(., ind4) %>% fsum(keep.g = FALSE),
+  ) 
+}
+```
+
 * In join, if `attr = TRUE`, the `count` option to `fmatch()` is always invoked, so that the attribute attached always has the same form, regardless of `verbose` or `validate` settings. 
 
 * `roworder[v]()` has optional setting `verbose = 2L` to indicate if `x` is already sorted, making the call to `roworder[v]()` redundant. 
