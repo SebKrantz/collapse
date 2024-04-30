@@ -7,7 +7,7 @@ data %>%
   group_by_vars(ind2) %>% {
   add_vars(
     get_vars(., ind3) %>% fmean(),
-    get_vars(., ind4) %>% fsum(keep.g = FALSE),
+    get_vars(., ind4) %>% fsum(keep.g = FALSE)
   ) 
 }
 ```
