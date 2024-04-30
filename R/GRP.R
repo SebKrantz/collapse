@@ -423,8 +423,10 @@ gby <- fgroup_by
 
 group_by_vars <- function(X, by = NULL, ...) {
   clx <- oldClass(X)
+  oldClass(X) <- NULL
   m <- match(c("GRP_df", "grouped_df", "data.frame"), clx, nomatch = 0L)
-  attr(X, "groups") <- GRP.default(unclass(X), by, ..., call = FALSE) # Need to unclass because of sf!! (and some functions expect unclassed)
+  if(length(by)) by <- cols2int(by, X, names(X), FALSE)
+  attr(X, "groups") <- GRP.default(X[by], NULL, ..., call = FALSE) # Need to unclass because of sf!! (and some functions expect unclassed)
   oldClass(X) <- c("GRP_df",  if(length(mp <- m[m != 0L])) clx[-mp] else clx, "grouped_df", if(m[3L]) "data.frame")
   if(any(clx == "data.table")) return(alc(X))
   X
