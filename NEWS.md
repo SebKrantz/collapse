@@ -1,6 +1,6 @@
 # collapse 2.0.14
 
-* Added function `group_by_vars`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> get_vars(ind1) |> group_by_vars(ind2) |> collapg(custom = list(fmean = ind3, fsum = ind4))`. Or, using magrittr: 
+* Added function `group_by_vars`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> get_vars(ind1) |> group_by_vars(ind2) |> collapg(custom = list(fmean = ind3, fsum = ind4))`. Or, using *magrittr*: 
 ```r 
 library(magrittr)
 set_collapse(mask = "manip") # for fgroup_vars -> group_vars
