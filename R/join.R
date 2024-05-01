@@ -180,7 +180,7 @@ join <- function(x, y,
   # Core: do the joins
   res <- switch(how,
     left = {
-      y_res <- .Call(C_subsetDT, y, m, seq_along(y)[-iyon], if(count) attr(m, "N.nomatch") else TRUE)
+      y_res <- if(identical(unattrib(m), seq_row(y))) y[-iyon] else .Call(C_subsetDT, y, m, seq_along(y)[-iyon], if(count) attr(m, "N.nomatch") else TRUE)
       c(x, y_res)
     },
     inner = {
@@ -193,7 +193,7 @@ join <- function(x, y,
         # if(length(rn)) ax[["row.names"]] <- if(is.numeric(rn) || is.null(rn) || rn[1L] == "1")
         #             .set_row_names(length(x_ind)) else Csv(rn, x_ind)
       }
-      y_res <- .Call(C_subsetDT, y, m, seq_along(y)[-iyon], FALSE)
+      y_res <- if(identical(unattrib(m), seq_row(y))) y[-iyon] else .Call(C_subsetDT, y, m, seq_along(y)[-iyon], FALSE)
       c(x, y_res)
     },
     full = {
@@ -225,12 +225,12 @@ join <- function(x, y,
         }
       } else { # If all elements of table are matched, this is simply a left join
         how <- if(multiple == 2L) "left_setrn" else "left"
-        y_res <- .Call(C_subsetDT, y, m, seq_along(y)[-iyon], if(count) attr(m, "N.nomatch") else TRUE) # anyNA(um) ??
+        y_res <- if(identical(unattrib(m), seq_row(y))) y[-iyon] else .Call(C_subsetDT, y, m, seq_along(y)[-iyon], if(count) attr(m, "N.nomatch") else TRUE) # anyNA(um) ??
         c(x, y_res)
       }
     },
     right = {
-      x_res <- .Call(C_subsetDT, x, m, seq_along(x)[-ixon], if(count) attr(m, "N.nomatch") else TRUE)
+      x_res <- if(identical(unattrib(m), seq_row(x))) x[-ixon] else .Call(C_subsetDT, x, m, seq_along(x)[-ixon], if(count) attr(m, "N.nomatch") else TRUE)
       # if(length(ax[["row.names"]])) ax[["row.names"]] <- .set_row_names(length(m))
       y_on <- y[iyon]
       names(y_on) <- xon
