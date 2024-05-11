@@ -209,7 +209,7 @@ join <- function(x, y,
         }
       }
       if(cond) { # TODO: special case ? 1 distinct value etc.??
-        tind <- seq_len(tsize)[-um] # TODO: Table may not be unique.
+        tind <- if(length(um)) seq_len(tsize)[-um] else seq_len(tsize) # TODO: Table may not be unique.
         res_nrow <- length(m) + length(tind)
         x_res <- .Call(C_subsetDT, x, seq_len(res_nrow), seq_along(x)[-ixon], TRUE)  # Need check here because oversize indices !!
         y_res <- .Call(C_subsetDT, y, vec(list(m, tind)), seq_along(y)[-iyon], TRUE) # Need check here because oversize indices !!
