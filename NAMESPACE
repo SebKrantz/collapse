@@ -405,6 +405,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(fncol)
  export(fdim)
  export(as_numeric_factor)
+ export(as_integer_factor)
  export(as_character_factor)
  export(as.numeric_factor)
  export(as.character_factor)

@@ -17,6 +17,8 @@ data %>%
 }
 ```
 
+* Added function `as_integer_factor()` to turn factors/factor columns into integer vectors. `as_numeric_factor()` already exists, but is memory inefficient for most factors where levels can be integers. 
+
 * `join()` now internally checks if the rows of the joined datasets match exactly. This check, using `identical(m, seq_row(y))`, is inexpensive, but, if `TRUE`, saves a full subset and deep copy of `y`. Thus `join()` now inherits the intelligence already present in functions like `fsubset()`, `roworder()` and `funique()` - a key for efficient data manipulation is simply doing less.  
 
 * In `join()`, if `attr = TRUE`, the `count` option to `fmatch()` is always invoked, so that the attribute attached always has the same form, regardless of `verbose` or `validate` settings. 

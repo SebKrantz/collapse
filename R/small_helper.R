@@ -501,6 +501,16 @@ as_numeric_factor <- function(X, keep.attr = TRUE) {
   res
 }
 
+as_integer_factor <- function(X, keep.attr = TRUE) {
+  if(is.atomic(X)) if(keep.attr) return(ffka(X, as.integer)) else
+    return(as.integer(attr(X, "levels"))[X])
+  res <- duplAttributes(lapply(unattrib(X),
+    if(keep.attr) (function(y) if(is.factor(y)) ffka(y, as.integer) else y) else
+                  (function(y) if(is.factor(y)) as.integer(attr(y, "levels"))[y] else y)), X)
+  if(inherits(X, "data.table")) return(alc(res))
+  res
+}
+
 as_character_factor <- function(X, keep.attr = TRUE) {
   if(is.atomic(X)) if(keep.attr) return(ffka(X, tochar)) else
     return(as.character.factor(X))
