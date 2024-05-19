@@ -11,6 +11,8 @@ vignette: >
   %\VignetteIndexEntry{collapse and data.table}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+params:
+  cache: true
 ---
 
 ```{css, echo=FALSE}
