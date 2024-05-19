@@ -21,7 +21,7 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a [class-agnostic approach to R programming](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html), supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *pseries*, *pdata.frame* (*plm*), and preserving many others (e.g. *units*, *xts*/*zoo*, *tsibble*). 
+It further implements a [class-agnostic approach to R programming](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html), supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *units*, *pseries*, *pdata.frame* (*plm*), and *xts*/*zoo*. 
 
 **Key Features:**
 
