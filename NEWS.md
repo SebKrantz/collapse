@@ -1,5 +1,7 @@
 # collapse 2.0.14
 
+* Updated '*collapse* and *sf*' vignette to reflect the recent support for *units* objects, and added a few more examples.
+
 * Fixed a bug in `join()` where a full join silently became a left join if there are no matches between the tables (#574). Thanks @D3SL for reporting. 
 
 * Added function `group_by_vars()`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> group_by_vars(ind1) |> collapg(custom = list(fmean = ind2, fsum = ind3))`. Or, using *magrittr*: 
