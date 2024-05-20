@@ -49,6 +49,8 @@ Updated vignettes are
 
 * [***collapse* for *tidyverse* Users**](<https://sebkrantz.github.io/collapse/articles/collapse_for_tidyverse_users.html>): A quick introduction to *collapse* for *tidyverse* users
 
+* [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames
+
 * [***collapse*'s Handling of R Objects**](<https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html>): A quick view behind the scenes of class-agnostic R programming
 
 The other vignettes (only available [online](<https://sebkrantz.github.io/collapse/articles/index.html>)) do not cover major features introduced in versions >= 1.7, but contain much useful information and examples:
@@ -60,8 +62,6 @@ The other vignettes (only available [online](<https://sebkrantz.github.io/collap
 * [***collapse* and *plm***](<https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html>): Demonstrates the integration of collapse with *plm* and shows examples of efficient programming with panel data
 
 * [***collapse* and *data.table***](<https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html>): Shows how collapse and *data.table* may be used together in a harmonious way
-
-* [***collapse* and *sf***](<https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html>): Shows how collapse can be used to efficiently manipulate *sf* data frames
 
 
 ## Blog
