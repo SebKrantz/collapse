@@ -487,7 +487,7 @@ gives a concise summary. We can subset columns internally using the
 <span><span class="co"># ODA      8608  454'720131  868'712654  -997'679993  2.56715605e+10   6.9832  114.889</span></span></code></pre></div>
 <p>We could easily compute these statistics by region:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">region</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span><span class="va">region</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co"># , , PCGDP: GDP per capita (constant 2010 US$)</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co">#                                N        Mean          SD         Min         Max    Skew     Kurt</span></span>
@@ -797,7 +797,7 @@ which we could also subset (<code>[</code>) or permute
 we don’t like the array, we can also output as a nested list of
 statistics matrices:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span> <span class="va">region</span>, pid <span class="op">=</span> <span class="op">~</span> <span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<code class="sourceCode R"><span><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">wlddev</span>, by <span class="op">=</span> <span class="op">~</span> <span class="va">region</span>, pid <span class="op">=</span> <span class="op">~</span> <span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, vlabels <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>         higher <span class="op">=</span> <span class="cn">TRUE</span>, array <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">l</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -959,11 +959,11 @@ second problem is again nicely handled by <code>qsu</code>, which can
 also compute panel-statistics by groups.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Converting data to percentages of overall VA / EMP, dapply keeps the attributes, see section 6.1</span></span>
-<span><span class="va">pGGDC10S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ftransform.html">ftransformv</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">6</span><span class="op">:</span><span class="fl">15</span>, <span class="va">`*`</span>, <span class="fl">100</span> <span class="op">/</span> <span class="va">SUM</span><span class="op">)</span> </span>
+<span><span class="va">pGGDC10S</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ftransform.html">ftransformv</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">6</span><span class="op">:</span><span class="fl">15</span>, <span class="va">`*`</span>, <span class="fl">100</span> <span class="op">/</span> <span class="va">SUM</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Summarizing the sectoral data by variable, overall, between and within countries</span></span>
-<span><span class="va">su</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">pGGDC10S</span>, by <span class="op">=</span> <span class="op">~</span> <span class="va">Variable</span>, pid <span class="op">=</span> <span class="op">~</span> <span class="va">Variable</span> <span class="op">+</span> <span class="va">Country</span>, </span>
-<span>          cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> </span>
+<span><span class="va">su</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">pGGDC10S</span>, by <span class="op">=</span> <span class="op">~</span> <span class="va">Variable</span>, pid <span class="op">=</span> <span class="op">~</span> <span class="va">Variable</span> <span class="op">+</span> <span class="va">Country</span>,</span>
+<span>          cols <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># This gives a 4D array of summary statistics</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">su</span><span class="op">)</span></span>
@@ -1101,16 +1101,16 @@ Botswana:</p>
 <span>  <span class="co"># Select and subset</span></span>
 <span>  <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Country</span> <span class="op">==</span> <span class="va">ctry</span>, <span class="va">Variable</span>, <span class="va">Year</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># Convert to shares and replace negative values with NA</span></span>
-<span>  <span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">.</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">OTH</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>             <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">`*`</span>, <span class="fl">1</span> <span class="op">/</span> <span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">.</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">OTH</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">`*`</span>, <span class="fl">1</span> <span class="op">/</span> <span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>             <span class="fu"><a href="../reference/recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="fl">0</span>, <span class="cn">NA</span>, <span class="st">"min"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># Remove totals column and make proper variable labels</span></span>
-<span>  <span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span>Variable <span class="op">=</span> <span class="fu"><a href="../reference/recode-replace.html">recode_char</a></span><span class="op">(</span><span class="va">Variable</span>, </span>
+<span>  <span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span>Variable <span class="op">=</span> <span class="fu"><a href="../reference/recode-replace.html">recode_char</a></span><span class="op">(</span><span class="va">Variable</span>,</span>
 <span>                                    VA <span class="op">=</span> <span class="st">"Value Added Share"</span>,</span>
 <span>                                    EMP <span class="op">=</span> <span class="st">"Employment Share"</span><span class="op">)</span>,</span>
-<span>             SUM <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>             SUM <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># Fast conversion to data.table</span></span>
-<span>  <span class="va">qDT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="va">qDT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># data.table's melt function</span></span>
 <span>  <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># ggplot with some scales provided by the 'scales' package</span></span>
@@ -1128,7 +1128,11 @@ Botswana:</p>
 <span></span>
 <span><span class="co"># Plotting the structural transformation of Botswana</span></span>
 <span><span class="fu">plotGGDC</span><span class="op">(</span><span class="st">"BWA"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-21-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/scplot_BWA-1.png" alt="plot of chunk scplot_BWA" width="100%"><p class="caption">
+plot of chunk scplot_BWA
+</p>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -1170,9 +1174,9 @@ expressions involving variable names:</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>fselect <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span>,</span>
 <span>               select <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">country</span>, <span class="va">year</span>, <span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#     expr     min      lq      mean   median       uq      max neval</span></span>
-<span><span class="co">#  fselect   2.870   3.444   5.04259   4.2025   5.8015   31.365   100</span></span>
-<span><span class="co">#   select 388.926 395.609 434.73325 400.2625 413.4235 2707.353   100</span></span></code></pre></div>
+<span><span class="co">#     expr     min       lq      mean   median       uq      max neval</span></span>
+<span><span class="co">#  fselect   2.911   3.4645   4.76297   4.3665   5.3710   20.459   100</span></span>
+<span><span class="co">#   select 382.284 393.0055 442.70734 410.3075 441.4265 2951.262   100</span></span></code></pre></div>
 <p>in contrast to <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code>, <code>fselect</code> has a
 replacement method</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
@@ -1335,18 +1339,18 @@ preserves all attributes of subsetted columns:</p>
 <p>Thanks to the <em>data.table</em> C code and optimized R code,
 <code>fsubset</code> is very fast.</p>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>base <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span>,</span>
 <span>               collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span> <span class="op">&amp;</span> <span class="va">Year</span> <span class="op">&gt;</span> <span class="fl">1990</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#      expr     min       lq      mean   median      uq      max neval</span></span>
-<span><span class="co">#      base 133.947 140.0150 189.72791 154.5905 160.884 3512.306   100</span></span>
-<span><span class="co">#  collapse  43.009  45.5305  48.86831  47.8265  50.512   98.769   100</span></span>
+<span><span class="co">#      base 150.839 156.5585 199.63105 160.3510 166.993 3778.191   100</span></span>
+<span><span class="co">#  collapse  45.715  49.0975  51.55545  50.9015  52.357   82.861   100</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                     expr    min     lq     mean  median     uq    max neval</span></span>
-<span><span class="co">#      GGDC10S[1:10, 1:10] 36.695 37.761 39.36820 38.2325 38.991 94.341   100</span></span>
-<span><span class="co">#  ss(GGDC10S, 1:10, 1:10)  2.050  2.132  2.45877  2.3370  2.460 10.414   100</span></span></code></pre></div>
+<span><span class="co">#                     expr    min     lq     mean median     uq    max neval</span></span>
+<span><span class="co">#      GGDC10S[1:10, 1:10] 36.367 36.982 38.14599 37.515 38.294 76.219   100</span></span>
+<span><span class="co">#  ss(GGDC10S, 1:10, 1:10)  1.886  2.050  2.30666  2.214  2.419  8.405   100</span></span></code></pre></div>
 <p>like <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">base::subset</a></code>, <code>fsubset</code> is S3 generic
 with methods for vectors, matrices and data frames. For certain classes
 such as factors, <code>fsubset.default</code> also improves upon
@@ -1366,12 +1370,12 @@ indicate descending sort.</p>
 <span><span class="co"># 1     ARG        LAM Latin America       VA 1950 5.887857e-07   0 3.53443e-06</span></span>
 <span><span class="co"># 2     ARG        LAM Latin America       VA 1951 9.165327e-07   0 4.77277e-06</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">-</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, </span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu">collapse</span><span class="fu">::</span><span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">-</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>,</span>
 <span>               dplyr <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">Variable</span><span class="op">)</span>, <span class="va">Country</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#      expr      min       lq      mean    median       uq      max neval</span></span>
-<span><span class="co">#  collapse  138.703  169.166  218.1356  195.3035  264.655  414.305   100</span></span>
-<span><span class="co">#     dplyr 1334.345 1395.763 1743.8243 1548.3240 1745.165 6355.533   100</span></span></code></pre></div>
+<span><span class="co">#      expr      min       lq      mean   median        uq      max neval</span></span>
+<span><span class="co">#  collapse  113.406  152.151  176.7567  165.722  183.0855  538.330   100</span></span>
+<span><span class="co">#     dplyr 1240.168 1299.372 1618.5869 1384.755 1507.8160 8350.552   100</span></span></code></pre></div>
 <p>In contrast to <code><a href="https://rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">data.table::setorder</a></code>,
 <code>roworder</code> creates a copy of the data frame (unless data are
 already sorted). If this copy is not required,
@@ -1400,7 +1404,7 @@ rows in a data frame:</p>
 <span><span class="co"># 2     ETH        SSA Sub-saharan Africa       VA 1961 4495.614 11.86979 109.616</span></span>
 <span></span>
 <span><span class="co"># pos = "exchange" arranges selected rows in the order they are passed, without affecting other rows</span></span>
-<span><span class="fu"><a href="../reference/roworder.html">roworderv</a></span><span class="op">(</span><span class="va">GGDC10S</span>, neworder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"GHA"</span><span class="op">)</span>, </span>
+<span><span class="fu"><a href="../reference/roworder.html">roworderv</a></span><span class="op">(</span><span class="va">GGDC10S</span>, neworder <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"GHA"</span><span class="op">)</span>,</span>
 <span>                                              <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"BWA"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>, pos <span class="op">=</span> <span class="st">"exchange"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
 <span><span class="co">#   Country Regioncode             Region Variable Year        AGR         MIN        MAN</span></span>
 <span><span class="co"># 1     GHA        SSA Sub-saharan Africa       VA 1960 0.03576160 0.005103683 0.01744687</span></span>
@@ -1459,7 +1463,7 @@ specific columns using a function:</p>
 <span><span class="co"># 5026 5.762045 7.935682 8.013090 7.624782 6.702869 8.636845  NA 10.00872</span></span>
 <span><span class="co"># 5027 5.783620 7.983166 8.042224 7.632888 6.724406 8.654452  NA 10.02272</span></span>
 <span></span>
-<span><span class="co"># Convert data to percentage terms </span></span>
+<span><span class="co"># Convert data to percentage terms</span></span>
 <span><span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/ftransform.html">ftransformv</a></span><span class="op">(</span><span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, <span class="va">`*`</span>, <span class="fl">100</span><span class="op">/</span><span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#      Country Regioncode                       Region Variable Year      AGR       MIN      MAN</span></span>
 <span><span class="co"># 5026     EGY       MENA Middle East and North Africa      EMP 2011 23.33961 0.1240535 10.68352</span></span>
@@ -1518,7 +1522,7 @@ be used to change the input data frame by reference:
 <span><span class="co"># 5026 1.431173 12.58029 13.59279 9.218680 3.666798 25.36308  NA 100</span></span>
 <span><span class="co"># 5027 1.442061 13.00871 13.80013 9.164534 3.694551 25.45482  NA 100</span></span>
 <span></span>
-<span><span class="co"># Same thing via replacement </span></span>
+<span><span class="co"># Same thing via replacement</span></span>
 <span><span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span><span class="va">GGDC10S</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">`*`</span>, <span class="fl">100</span><span class="op">/</span><span class="va">.</span><span class="op">$</span><span class="va">SUM</span><span class="op">)</span></span>
 <span><span class="co"># Or using double pipes</span></span>
 <span><span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/compound.html" class="external-link">%&lt;&gt;%</a></span> <span class="fu"><a href="../reference/ftransform.html">ftransformv</a></span><span class="op">(</span><span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, <span class="va">`*`</span>, <span class="fl">100</span><span class="op">/</span><span class="va">SUM</span><span class="op">)</span></span>
@@ -1594,7 +1598,7 @@ argument are preserved:</p>
 <span><span class="co"># 1  8.067331  6.954096</span></span>
 <span><span class="co"># 2  8.365638  6.962341</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,  <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log."</span><span class="op">)</span>, </span>
+<span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">wlddev</span>,  <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log."</span><span class="op">)</span>,</span>
 <span>                  <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">log10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log10."</span><span class="op">)</span>,</span>
 <span>         pos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10L</span>,<span class="fl">13L</span>,<span class="fl">16L</span>,<span class="fl">19L</span>,<span class="fl">22L</span>,<span class="fl">11L</span>,<span class="fl">14L</span>,<span class="fl">17L</span>,<span class="fl">20L</span>,<span class="fl">23L</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#       country iso3c       date year decade     region     income  OECD PCGDP log.PCGDP log10.PCGDP</span></span>
@@ -1611,9 +1615,9 @@ argument are preserved:</p>
 <span><span class="co"># [1] TRUE</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">wlddev</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                      expr    min     lq     mean  median      uq    max neval</span></span>
-<span><span class="co">#     cbind(wlddev, wlddev) 14.104 14.596 15.74113 14.8830 15.2725 67.240   100</span></span>
-<span><span class="co">#  add_vars(wlddev, wlddev)  3.362  3.608  4.15822  3.7925  4.0385 21.074   100</span></span></code></pre></div>
+<span><span class="co">#                      expr    min      lq     mean median      uq    max neval</span></span>
+<span><span class="co">#     cbind(wlddev, wlddev) 13.694 14.1040 15.72760 14.391 14.7600 57.072   100</span></span>
+<span><span class="co">#  add_vars(wlddev, wlddev)  3.280  3.6285  4.13567  3.813  4.0385 19.352   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="renaming-columns">2.6 Renaming Columns<a class="anchor" aria-label="anchor" href="#renaming-columns"></a>
@@ -1665,16 +1669,16 @@ personally kept scripts. A lazy person may also decide to code
 everything using shortcuts and then do ctrl+F replacement with the long
 names on the finished script.</p>
 <!--
-and to facilitate the avoidance of piped `%>%` expressions. Needless to say pipes `%>%` have become a very convenient feature of the R language and do a great job avoiding complex nested calls. They do however require reconstructing the entire call before evaluating it, and thus take out a lot of speed: 
+and to facilitate the avoidance of piped `%>%` expressions. Needless to say pipes `%>%` have become a very convenient feature of the R language and do a great job avoiding complex nested calls. They do however require reconstructing the entire call before evaluating it, and thus take out a lot of speed:
 
 
 ```r
 microbenchmark(standard = tfm(gv(wlddev, 9:12), ODA_GDP = ODA/PCGDP),
                piped = get_vars(wlddev, 9:12) %>% ftransform(ODA_GDP = ODA/PCGDP))
 # Unit: microseconds
-#      expr    min      lq     mean  median      uq     max neval
-#  standard 12.997 18.0605 23.79968 19.1265 25.7070 102.705   100
-#     piped 13.981 19.3315 24.39131 20.1925 26.5065  67.855   100
+#      expr    min     lq     mean  median      uq     max neval
+#  standard 12.177 18.860 20.82431 19.8850 20.8485 115.661   100
+#     piped 15.498 20.295 22.31794 21.1765 22.8985  71.873   100
 ```
 -->
 </div>
@@ -1691,9 +1695,9 @@ attributes of the data frame itself.</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="va">wlddev</span>, na.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                             expr     min      lq     mean  median       uq      max neval</span></span>
-<span><span class="co">#  na_omit(wlddev, na.attr = TRUE)  60.311  71.135  151.069  76.055  82.3690 3725.096   100</span></span>
-<span><span class="co">#                  na.omit(wlddev) 745.216 847.634 1072.509 882.402 961.4295 4411.805   100</span></span></code></pre></div>
+<span><span class="co">#                             expr     min      lq      mean   median       uq       max neval</span></span>
+<span><span class="co">#  na_omit(wlddev, na.attr = TRUE)  60.393  69.208   84.8126  79.9910   88.683   419.881   100</span></span>
+<span><span class="co">#                  na.omit(wlddev) 745.790 856.449 1721.5457 940.6015 1005.177 56344.414   100</span></span></code></pre></div>
 <p>Another added feature is the removal of cases missing on certain
 columns only:</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
@@ -1704,7 +1708,7 @@ columns only:</p>
 <span><span class="co">#          ODA      POP</span></span>
 <span><span class="co"># 1 1790479980 22600770</span></span>
 <span><span class="co"># 2 1972890015 23680871</span></span>
-<span><span class="co"># only removing missing data from numeric columns -&gt; same and slightly faster than na_omit(wlddev) </span></span>
+<span><span class="co"># only removing missing data from numeric columns -&gt; same and slightly faster than na_omit(wlddev)</span></span>
 <span><span class="fu"><a href="../reference/efficient-programming.html">na_omit</a></span><span class="op">(</span><span class="va">wlddev</span>, cols <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#   country iso3c       date year decade                region              income  OECD    PCGDP</span></span>
 <span><span class="co"># 1 Albania   ALB 1997-01-01 1996   1990 Europe &amp; Central Asia Upper middle income FALSE 1869.866</span></span>
@@ -1778,12 +1782,12 @@ lists of atomic objects). When called on a data frame,
 <code class="sourceCode R"><span><span class="co"># Efficient replacing missing values with 0</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/collapse-renamed.html">replace_NA</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                    expr    min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  replace_NA(GGDC10S, 0) 78.392 120.3145 459.6772 337.7785 550.1175 6176.363   100</span></span>
+<span><span class="co">#                    expr     min      lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  replace_NA(GGDC10S, 0) 109.757 141.163 203.4982 151.0235 163.0775 4579.085   100</span></span>
 <span></span>
 <span><span class="co"># Adding log-transformed sectoral data: Some NaN and Inf values generated</span></span>
-<span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">*</span><span class="fl">2</span><span class="op">-</span><span class="fl">5</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">replace_Inf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log."</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">6</span><span class="op">:</span><span class="fl">16</span><span class="op">*</span><span class="fl">2</span><span class="op">-</span><span class="fl">5</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">log</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">replace_Inf</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"log."</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co">#   Country Regioncode             Region Variable Year AGR log.AGR MIN log.MIN MAN log.MAN PU log.PU</span></span>
 <span><span class="co"># 1     BWA        SSA Sub-saharan Africa       VA 1960  NA      NA  NA      NA  NA      NA NA     NA</span></span>
@@ -1810,7 +1814,7 @@ expression matching implemented via <code><a href="https://rdrr.io/r/base/grep.h
 standard deviations with a value (default is <code>NA</code>).</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># replace all values below 2 and above 100 with NA</span></span>
-<span><span class="fu"><a href="../reference/recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>        </span>
+<span><span class="fu"><a href="../reference/recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#                mpg cyl disp hp drat    wt  qsec vs am gear carb</span></span>
 <span><span class="co"># Mazda RX4     21.0   6   NA NA 3.90 2.620 16.46 NA NA    4    4</span></span>
 <span><span class="co"># Mazda RX4 Wag 21.0   6   NA NA 3.90 2.875 17.02 NA NA    4    4</span></span>
@@ -1831,7 +1835,7 @@ standard deviations with a value (default is <code>NA</code>).</p>
 <span><span class="co"># Datsun 710    22.8   4   NA 93 3.85 2.320 18.61  1  1    4    1</span></span>
 <span></span>
 <span><span class="co"># replace all values above or below 3 column-standard-deviations from the column-mean with NA</span></span>
-<span><span class="fu"><a href="../reference/recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>                        </span>
+<span><span class="fu"><a href="../reference/recode-replace.html">replace_outliers</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#                mpg cyl disp  hp drat   wt qsec vs am gear carb</span></span>
 <span><span class="co"># Ferrari Dino  19.7   6  145 175 3.62 2.77 15.5  0  1    5    6</span></span>
 <span><span class="co"># Maserati Bora 15.0   8  301 335 3.54 3.57 14.6  0  1    5   NA</span></span>
@@ -1866,11 +1870,11 @@ to data.frame, <em>data.table</em> and <em>tibble</em> respectively.</p>
 <span><span class="co"># Efficient Conversion of data frames and matrices to data.table</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span>, <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                           expr    min       lq      mean   median       uq      max neval</span></span>
-<span><span class="co">#                    qDT(wlddev)  3.239   3.7310   4.67728   4.2640   5.2480   12.956   100</span></span>
-<span><span class="co">#            qDT(EuStockMarkets)  6.232   7.5440   9.48576   8.3845   9.8605   40.795   100</span></span>
-<span><span class="co">#          as.data.table(wlddev) 66.625 115.4970 233.13174 128.6785 147.0260 3632.887   100</span></span>
-<span><span class="co">#  as.data.frame(EuStockMarkets) 66.789  68.4495  77.06770  70.2535  74.9070  292.330   100</span></span>
+<span><span class="co">#                           expr    min      lq      mean   median       uq      max neval</span></span>
+<span><span class="co">#                    qDT(wlddev)  3.075   3.608   4.21439   3.8950   4.2640   12.546   100</span></span>
+<span><span class="co">#            qDT(EuStockMarkets)  6.765   8.733  12.09254  12.5050  14.1040   30.217   100</span></span>
+<span><span class="co">#          as.data.table(wlddev) 64.206 122.180 253.75023 143.2745 173.1635 3653.346   100</span></span>
+<span><span class="co">#  as.data.frame(EuStockMarkets) 64.247  70.971  82.25174  79.6835  84.8700  339.849   100</span></span>
 <span></span>
 <span><span class="co"># Converting a time series to data.frame</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDF</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span></span>
@@ -1923,18 +1927,18 @@ wise convert a matrix into a plain list, data.frame or
 <code class="sourceCode R"><span><span class="co"># This converts the matrix to a list of 1860 row-vectors of length 4.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">mrtl</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                  expr     min      lq  mean   median      uq     max neval</span></span>
-<span><span class="co">#  mrtl(EuStockMarkets) 125.419 128.617 137.3 133.6395 143.172 218.407   100</span></span></code></pre></div>
+<span><span class="co">#                  expr     min       lq     mean  median       uq     max neval</span></span>
+<span><span class="co">#  mrtl(EuStockMarkets) 139.728 151.4335 168.5522 155.841 164.6355 399.791   100</span></span></code></pre></div>
 <p>For the reverse operation, <code>qM</code> converts vectors,
 higher-dimensional arrays, data frames and suitable lists to matrix.</p>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Note: kit::psum is the most efficient way to do this</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="fu">kit</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kit/man/psum.html" class="external-link">psum</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: nanoseconds</span></span>
-<span><span class="co">#                 expr   min      lq     mean median      uq     max neval</span></span>
-<span><span class="co">#  rowSums(qM(mtcars))  5412  5760.5  8230.75   6068  6539.5  185730   100</span></span>
-<span><span class="co">#      rowSums(mtcars) 31078 31877.5 33694.62  32390 33271.5   66051   100</span></span>
-<span><span class="co">#    kit::psum(mtcars)   738   902.0 38831.92   1025  1148.0 3771344   100</span></span></code></pre></div>
+<span><span class="co">#                 expr   min      lq      mean  median      uq      max neval</span></span>
+<span><span class="co">#  rowSums(qM(mtcars))  5699  7933.5  12702.62  9122.5 11131.5   316315   100</span></span>
+<span><span class="co">#      rowSums(mtcars) 38868 41697.0  48003.21 44157.0 51496.0    95981   100</span></span>
+<span><span class="co">#    kit::psum(mtcars)   574   820.0 510905.51   943.0  1107.0 50967797   100</span></span></code></pre></div>
 <p>At last, <code>qF</code> converts vectors to factor and is quite a
 bit faster than <code>as.factor</code>:</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
@@ -1946,9 +1950,9 @@ bit faster than <code>as.factor</code>:</p>
 <span><span class="co"># [1] 216</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">country</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                       expr     min       lq      mean  median      uq      max neval</span></span>
-<span><span class="co">#         qF(wlddev$country)  67.445  68.5315  71.65898  70.643  73.226   92.701   100</span></span>
-<span><span class="co">#  as.factor(wlddev$country) 241.080 258.0540 297.90600 263.835 270.026 3495.701   100</span></span>
+<span><span class="co">#                       expr     min       lq      mean  median      uq     max neval</span></span>
+<span><span class="co">#         qF(wlddev$country)  70.192  71.1965  73.77376  72.160  74.784 107.256   100</span></span>
+<span><span class="co">#  as.factor(wlddev$country) 263.794 275.7660 282.21530 278.841 283.761 360.431   100</span></span>
 <span></span>
 <span><span class="co"># Converting from numeric</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span></span>
@@ -1958,9 +1962,9 @@ bit faster than <code>as.factor</code>:</p>
 <span><span class="co"># [1] 9470</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                     expr      min       lq      mean    median       uq       max neval</span></span>
-<span><span class="co">#         qF(wlddev$PCGDP)  425.293  450.467  500.4796  462.0085  478.183  3943.872   100</span></span>
-<span><span class="co">#  as.factor(wlddev$PCGDP) 9099.458 9287.976 9556.1000 9354.6010 9462.800 13344.721   100</span></span></code></pre></div>
+<span><span class="co">#                     expr      min       lq     mean   median        uq       max neval</span></span>
+<span><span class="co">#         qF(wlddev$PCGDP)  445.096  474.944  531.221  488.146  509.0765  3930.342   100</span></span>
+<span><span class="co">#  as.factor(wlddev$PCGDP) 9374.240 9546.132 9823.477 9633.196 9727.5165 13732.499   100</span></span></code></pre></div>
 <!-- by default `qF` converts vectors to ordered factor, regulated by the default argument `ordered = TRUE`. This behavior is the same as `as.factor`, but `as.factor` does not attach a class 'ordered'. `qF(x, ordered = FALSE)` will not sort the levels and is slightly faster. Another difference to `as.factor` is that `qF` always adds a `NA` level for missing values, however by default an integer missing value (`NA_integer_`) is provided as the value for that level (thus `qF` behaves identical to `as.factor` with exception of the added level). a slight modification of this behavior can be achieved with `qF(x, na.exclude = FALSE)`, which will still have the `NA` level but now also assigns a positive integer value to the level (implying that missing values can no longer be detected using `is.na`), and attaches an additional class 'na.included'. Factor generation using `qF(x, na.exclude = FALSE)` is advised when using factors to carry out grouped computations with *collapse*'s fast functions, as the class 'na.included' prevents *collapse* functions to execute a missing value check on the factor, and thus yields a performance improvement. -->
 </div>
 <div class="section level2">
@@ -2063,9 +2067,9 @@ vectors or lists of grouping vectors to the fast functions:</p>
 <span><span class="co"># 8.0.0 15.05000   8 357.6167 194.16667 3.120833 4.104083 17.14250  0  0 3.000000 3.083333</span></span>
 <span><span class="co"># 8.0.1 15.40000   8 326.0000 299.50000 3.880000 3.370000 14.55000  0  1 5.000000 6.000000</span></span>
 <span></span>
-<span><span class="co"># Getting column indices </span></span>
+<span><span class="co"># Getting column indices</span></span>
 <span><span class="va">ind</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, return <span class="op">=</span> <span class="st">"indices"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">-</span><span class="va">ind</span><span class="op">)</span>, <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">ind</span><span class="op">)</span><span class="op">)</span>  </span>
+<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">-</span><span class="va">ind</span><span class="op">)</span>, <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">ind</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#            mpg     disp        hp     drat       wt     qsec     gear     carb</span></span>
 <span><span class="co"># 4.0.1 26.00000 120.3000  91.00000 4.430000 2.140000 16.70000 5.000000 2.000000</span></span>
 <span><span class="co"># 4.1.0 22.90000 135.8667  84.66667 3.770000 2.935000 20.97000 3.666667 1.666667</span></span>
@@ -2107,8 +2111,8 @@ internally.</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">f</span><span class="op">)</span>, <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#          expr   min    lq    mean median    uq    max neval</span></span>
-<span><span class="co">#   fsd(dat, f) 5.658 5.740 5.86792 5.8015 5.945  8.323   100</span></span>
-<span><span class="co">#  fsd(dat, f2) 5.740 5.904 6.21519 5.9860 6.068 28.659   100</span></span></code></pre></div>
+<span><span class="co">#   fsd(dat, f) 6.027 6.232 6.51613 6.4165 6.601 11.152   100</span></span>
+<span><span class="co">#  fsd(dat, f2) 6.150 6.396 6.77771 6.5190 6.683 25.830   100</span></span></code></pre></div>
 <p>For programming purposes <em>GRP</em> objects are preferable over
 factors because they never require further checks and they provide
 additional information about the grouping (such as group sizes and the
@@ -2117,7 +2121,7 @@ creates grouping objects (of class <em>GRP</em>) from vectors or lists
 of columns. Grouping is done very efficiently via radix ordering in C
 (using the <code>radixorder</code> function):</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># This creates a 'GRP' object. </span></span>
+<code class="sourceCode R"><span><span class="co"># This creates a 'GRP' object.</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span><span class="op">)</span> <span class="co"># Using the formula interface, could also use c("cyl","vs","am") or c(2,8:9)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
 <span><span class="co"># Class 'GRP'  hidden list of 9</span></span>
@@ -2155,7 +2159,11 @@ the grouping:</p>
 <span><span class="co"># 4.0.1 4.1.0 4.1.1 6.0.1 6.1.0 8.0.0 8.0.1 </span></span>
 <span><span class="co">#     1     3     7     3     4    12     2</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-63-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/GRPplot-1.png" alt="plot of chunk GRPplot" width="100%"><p class="caption">
+plot of chunk GRPplot
+</p>
+</div>
 <p>The important elements of the <em>GRP</em> object are directly handed
 down to the compiled C++ code of the statistical functions, making
 repeated computations over the same groups very efficient.</p>
@@ -2173,9 +2181,9 @@ repeated computations over the same groups very efficient.</p>
 <span><span class="co"># Grouped computation with and without prior grouping</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span><span class="op">)</span>, <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">ind</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                             expr    min     lq     mean median     uq     max neval</span></span>
-<span><span class="co">#                      fsd(dat, g) 16.482 16.728 16.96047 16.892 17.138  18.573   100</span></span>
-<span><span class="co">#  fsd(dat, get_vars(mtcars, ind)) 26.117 26.691 28.14199 26.937 27.388 115.702   100</span></span></code></pre></div>
+<span><span class="co">#                             expr    min      lq     mean  median      uq     max neval</span></span>
+<span><span class="co">#                      fsd(dat, g) 19.065 21.1765 23.68447 22.9600 24.9690  38.909   100</span></span>
+<span><span class="co">#  fsd(dat, get_vars(mtcars, ind)) 31.611 35.2600 44.56823 37.3715 41.1845 327.877   100</span></span></code></pre></div>
 <!-- Note at this point that by default (`sort = TRUE`, `order = 1L`), groups are sorted in ascending order, corresponding to *data.table* grouping with `keyby`. The ordering can be reversed (`order = -1L`), or set individually for each of the 3 grouping columns (i.e. `order = c(1L, -1L, -1L)`). If `sort = FALSE`, the grouping is unordered corresponding to *data.table* grouping with `by`.  -->
 <p>Yet another possibility is creating a grouped data frame (class
 <em>grouped_df</em>). This can either be done using
@@ -2314,8 +2322,8 @@ very low:</p>
 <span>         <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmin_fmax.html">fmin</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="st">"min_"</span><span class="op">)</span>,</span>
 <span>         <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">g</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="st">"max_"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#  expr    min     lq     mean median      uq     max neval</span></span>
-<span><span class="co">#  call 27.429 27.798 29.17109 28.167 28.5565 110.003   100</span></span></code></pre></div>
+<span><span class="co">#  expr    min      lq     mean median     uq   max neval</span></span>
+<span><span class="co">#  call 27.388 28.1875 29.56428 28.823 29.356 97.58   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="transformations-using-the-tra-argument">4.4 Transformations Using the <code>TRA</code> Argument<a class="anchor" aria-label="anchor" href="#transformations-using-the-tra-argument"></a>
@@ -2383,7 +2391,7 @@ more complex:</p>
 <span>                      <span class="fu"><a href="../reference/fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>carb_wsd_vs_am <span class="op">=</span> <span class="va">carb</span>, mpg_wsd_vs_am <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">vs</span>, <span class="va">am</span><span class="op">)</span>, <span class="va">weights</span>, <span class="st">"replace"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Nested (Computing the weighted 3rd quartile of mpg, grouped by cyl and carb being greater than it's weighted median, grouped by vs)</span></span>
-<span><span class="fu"><a href="../reference/ftransform.html">settransform</a></span><span class="op">(</span><span class="va">mtcars</span>, </span>
+<span><span class="fu"><a href="../reference/ftransform.html">settransform</a></span><span class="op">(</span><span class="va">mtcars</span>,</span>
 <span> mpg_gwQ3_cyl <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fl">0.75</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">carb</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">carb</span>, <span class="va">vs</span>, <span class="va">weights</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span>, <span class="va">weights</span>, <span class="fl">1L</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
@@ -2440,7 +2448,7 @@ Functions</em>, but will also work with other functions.</p>
 simply need to type:</p>
 <!-- ^[One can also add a weight-argument `w = weights` here, but `fmin` and `fmax` don't support weights and all S3 methods in this package give errors when encountering unknown arguments. To do a weighted aggregation one would have to either only use `fmean` and `fsd`, or employ a named list of functions wrapping `fmin` and `fmax` in a way that additional arguments are silently swallowed.]: -->
 <div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/collap.html">collap</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">disp</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">fmean</span>, <span class="va">fsd</span>, <span class="va">fmin</span>, <span class="va">fmax</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/collap.html">collap</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">mpg</span> <span class="op">+</span> <span class="va">disp</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">vs</span> <span class="op">+</span> <span class="va">am</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">fmean</span>, <span class="va">fsd</span>, <span class="va">fmin</span>, <span class="va">fmax</span><span class="op">)</span>,</span>
 <span>       w <span class="op">=</span> <span class="va">weights</span>, keep.col.order <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#   cyl vs am  weights fmean.mpg fmean.disp   fsd.mpg fsd.disp fmin.mpg fmin.disp fmax.mpg fmax.disp</span></span>
 <span><span class="co"># 1   4  0  1 1.416054  26.00000  120.30000 0.0000000  0.00000     26.0     120.3     26.0     120.3</span></span>
@@ -2495,7 +2503,7 @@ retain all their attributes. To understand this result let us briefly
 examine the syntax of <code>collap</code>:</p>
 <div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/collap.html">collap</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">by</span>, FUN <span class="op">=</span> <span class="va">fmean</span>, catFUN <span class="op">=</span> <span class="va">fmode</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, w <span class="op">=</span> <span class="cn">NULL</span>, wFUN <span class="op">=</span> <span class="va">fsum</span>,</span>
-<span>       custom <span class="op">=</span> <span class="cn">NULL</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, keep.col.order <span class="op">=</span> <span class="cn">TRUE</span>, </span>
+<span>       custom <span class="op">=</span> <span class="cn">NULL</span>, keep.by <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, keep.col.order <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>       sort.row <span class="op">=</span> <span class="cn">TRUE</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, mc.cores <span class="op">=</span> <span class="fl">1L</span>,</span>
 <span>       return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"wide"</span>,<span class="st">"list"</span>,<span class="st">"long"</span>,<span class="st">"long_dupl"</span><span class="op">)</span>, give.names <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span> <span class="co"># , ...</span></span></code></pre></div>
 <p>It is clear that <code>X</code> is the data and <code>by</code>
@@ -2649,36 +2657,36 @@ and column-wise arithmetic operators for matrix-like objects:
 <span><span class="co"># [1] TRUE</span></span>
 <span></span>
 <span><span class="co"># Base R vs. efficient base R vs. collapse</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">/</span> <span class="va">v</span><span class="op">)</span>, <span class="va">X</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span>, <span class="va">v</span><span class="op">)</span>, <span class="va">X</span> <span class="op"><a href="../reference/arithmetic.html">%r/%</a></span> <span class="va">v</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">/</span> <span class="va">v</span><span class="op">)</span>, <span class="va">X</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/outer.html" class="external-link">outer</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span>, <span class="va">v</span><span class="op">)</span>, <span class="va">X</span> <span class="op"><a href="../reference/arithmetic.html">%r/%</a></span> <span class="va">v</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#                         expr     min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#                    t(t(X)/v) 193.069 224.4340 253.6367 229.2515 233.0645 2655.488   100</span></span>
-<span><span class="co">#  X/outer(rep(1, nrow(X)), v)  53.054  74.6405 127.7281  77.1620  81.3030 2628.141   100</span></span>
-<span><span class="co">#                     X %r/% v  11.726  32.3695  59.0154  35.1575  37.1255 2623.754   100</span></span>
+<span><span class="co">#                         expr     min       lq      mean   median       uq      max neval</span></span>
+<span><span class="co">#                    t(t(X)/v) 194.873 234.3560 358.13500 284.6425 298.0905 3244.043   100</span></span>
+<span><span class="co">#  X/outer(rep(1, nrow(X)), v)  55.555  83.5580 101.45696 108.5885 113.5495  137.637   100</span></span>
+<span><span class="co">#                     X %r/% v  11.685  37.2075  83.87657  63.2630  72.7135 2744.663   100</span></span>
 <span></span>
 <span><span class="co"># Data frame row operations</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">AGR</span><span class="op">:</span><span class="va">SUM</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%r/%</a></span> <span class="va">v</span>, <span class="co"># Same thing using mapply and collapse::copyAttrib </span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%r/%</a></span> <span class="va">v</span>, <span class="co"># Same thing using mapply and collapse::copyAttrib</span></span>
 <span>               <span class="fu"><a href="../reference/small-helpers.html">copyAttrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mapply.html" class="external-link">mapply</a></span><span class="op">(</span><span class="va">`/`</span>, <span class="va">dat</span>, <span class="va">v</span>, SIMPLIFY <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, <span class="va">dat</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#                                                    expr    min     lq      mean median      uq</span></span>
-<span><span class="co">#                                              dat %r/% v 15.375 28.823  42.70191 37.228 40.8360</span></span>
-<span><span class="co">#  copyAttrib(mapply(`/`, dat, v, SIMPLIFY = FALSE), dat) 39.360 61.623 138.09169 65.395 67.6295</span></span>
+<span><span class="co">#                                              dat %r/% v 15.129 37.187 143.03998 40.139 46.5555</span></span>
+<span><span class="co">#  copyAttrib(mapply(`/`, dat, v, SIMPLIFY = FALSE), dat) 59.204 64.124  71.98944 66.379 76.7315</span></span>
 <span><span class="co">#       max neval</span></span>
-<span><span class="co">#   170.560   100</span></span>
-<span><span class="co">#  3407.346   100</span></span>
+<span><span class="co">#  5089.289   100</span></span>
+<span><span class="co">#   110.003   100</span></span>
 <span></span>
 <span><span class="co"># Data frame column arithmetic is very slow</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">dat</span> <span class="op">/</span> <span class="va">dat</span><span class="op">$</span><span class="va">SUM</span>, <span class="va">dat</span> <span class="op">/</span> <span class="fl">5</span>, <span class="va">dat</span> <span class="op">/</span> <span class="va">dat</span>, </span>
-<span>               <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="va">dat</span><span class="op">$</span><span class="va">SUM</span>, <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="fl">5</span>, <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="va">dat</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">dat</span> <span class="op">/</span> <span class="va">dat</span><span class="op">$</span><span class="va">SUM</span>, <span class="va">dat</span> <span class="op">/</span> <span class="fl">5</span>, <span class="va">dat</span> <span class="op">/</span> <span class="va">dat</span>,</span>
+<span>               <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="va">dat</span><span class="op">$</span><span class="va">SUM</span>, <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="fl">5</span>, <span class="va">dat</span> <span class="op"><a href="../reference/arithmetic.html">%c/%</a></span> <span class="va">dat</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#              expr      min        lq       mean    median       uq      max neval</span></span>
-<span><span class="co">#       dat/dat$SUM 1213.272 1331.8235 1623.83903 1366.1405 1431.494 4878.221   100</span></span>
-<span><span class="co">#             dat/5  260.145  282.2850  328.29356  292.5350  299.546 3838.502   100</span></span>
-<span><span class="co">#           dat/dat  285.319  310.4520  343.87807  318.0370  325.335 2895.994   100</span></span>
-<span><span class="co">#  dat %c/% dat$SUM   17.999   27.2035   74.32644   43.2140   46.453 3357.941   100</span></span>
-<span><span class="co">#        dat %c/% 5   16.195   40.5285   74.50315   43.3575   47.519 3021.864   100</span></span>
-<span><span class="co">#      dat %c/% dat   18.737   40.0570   77.77249   44.7720   48.462 3455.644   100</span></span></code></pre></div>
+<span><span class="co">#              expr      min        lq       mean    median        uq       max neval</span></span>
+<span><span class="co">#       dat/dat$SUM 1275.264 1385.2260 1636.95411 1434.2825 1551.1940  5150.092   100</span></span>
+<span><span class="co">#             dat/5  276.012  295.4870 1181.83361  306.2905  327.4260 83176.208   100</span></span>
+<span><span class="co">#           dat/dat  295.323  320.1075  417.10858  330.5010  361.7020  3807.711   100</span></span>
+<span><span class="co">#  dat %c/% dat$SUM   20.295   45.4075  120.01479   48.5235   55.1245  3520.096   100</span></span>
+<span><span class="co">#        dat %c/% 5   17.179   44.5260   87.22996   48.7285   64.1035  3489.223   100</span></span>
+<span><span class="co">#      dat %c/% dat   20.459   46.2685   93.95601   51.0040   67.5065  3795.903   100</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="row-and-column-data-apply">6.1 Row and Column Data Apply<a class="anchor" aria-label="anchor" href="#row-and-column-data-apply"></a>
@@ -2727,7 +2735,7 @@ computation is a scalar.</p>
 <span><span class="co"># Valiant            0 1.8800 3.460 19.160  225</span></span>
 <span></span>
 <span><span class="co"># This is considerably more efficient than log(mtcars):</span></span>
-<span><span class="fu"><a href="../reference/dapply.html">dapply</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">log</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span> </span>
+<span><span class="fu"><a href="../reference/dapply.html">dapply</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">log</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
 <span><span class="co">#                        mpg      cyl     disp       hp     drat        wt     qsec   vs   am</span></span>
 <span><span class="co"># Mazda RX4         3.044522 1.791759 5.075174 4.700480 1.360977 0.9631743 2.800933 -Inf    0</span></span>
 <span><span class="co"># Mazda RX4 Wag     3.044522 1.791759 5.075174 4.700480 1.360977 1.0560527 2.834389 -Inf    0</span></span>
@@ -2890,7 +2898,7 @@ statistics and transformed data are required, or to sweep out statistics
 otherwise obtained (e.g. regression or correlation coefficients etc.).
 The code below computes the column means of the iris-matrix obtained
 above, and uses them to demean that matrix. <!--
-The code below shows 4 identical ways to center data in the *collapse* package. 
+The code below shows 4 identical ways to center data in the *collapse* package.
 
 For the very common centering and averaging tasks, *collapse* supplies 2 special functions `fwithin` and `fbetween` (discussed in section 6.5) which are slightly faster and more memory efficient than `fmean(..., TRA = "-")` and `fmean(..., TRA = "replace")`. --></p>
 <div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
@@ -2906,12 +2914,12 @@ For the very common centering and averaging tasks, *collapse* supplies 2 special
 <span>               <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">miris</span><span class="op">)</span><span class="op">)</span>               <span class="co"># fastest, fwithin is discussed in section 6.5</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#                                      expr    min      lq     mean  median      uq    max neval</span></span>
-<span><span class="co">#               sweep(miris, 2, stats, "-") 14.965 15.3135 16.39344 15.4980 15.8670 62.525   100</span></span>
-<span><span class="co">#  miris - outer(rep(1, nrow(iris)), stats)  4.633  5.2890  5.73262  5.5350  5.6785 23.001   100</span></span>
-<span><span class="co">#             TRA(miris, fmean(miris), "-")  3.321  3.5670  3.93477  3.6900  3.8540 14.350   100</span></span>
-<span><span class="co">#                   miris %r-% fmean(miris)  3.649  3.8540  4.33616  3.9565  4.1410 36.285   100</span></span>
-<span><span class="co">#                   fmean(miris, TRA = "-")  2.747  2.9520  3.38291  3.0750  3.2390 27.839   100</span></span>
-<span><span class="co">#                            fwithin(miris)  2.583  3.0750  4.07212  3.2390  3.5055 73.103   100</span></span>
+<span><span class="co">#               sweep(miris, 2, stats, "-") 15.457 16.2975 17.57711 17.0355 17.6915 53.505   100</span></span>
+<span><span class="co">#  miris - outer(rep(1, nrow(iris)), stats)  4.715  5.6375  6.36812  6.0270  6.6010 21.402   100</span></span>
+<span><span class="co">#             TRA(miris, fmean(miris), "-")  3.075  3.3210  3.98930  3.6080  4.4895 14.678   100</span></span>
+<span><span class="co">#                   miris %r-% fmean(miris)  3.362  3.8130  4.68425  4.0590  4.5305 42.066   100</span></span>
+<span><span class="co">#                   fmean(miris, TRA = "-")  2.583  2.8085  3.79496  2.9930  4.2640 29.848   100</span></span>
+<span><span class="co">#                            fwithin(miris)  3.321  3.6080  5.26768  3.8130  4.9815 78.474   100</span></span>
 <span></span>
 <span><span class="co"># Simple replacing [same as fmean(miris, TRA = "replace") or fbetween(miris)]</span></span>
 <span><span class="fu"><a href="../reference/TRA.html">TRA</a></span><span class="op">(</span><span class="va">miris</span>, <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">miris</span><span class="op">)</span>, <span class="st">"replace"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
@@ -3136,7 +3144,7 @@ country-id using the within-operator <code>W</code> as opposed to
 like the <em>Fast Statistical Functions</em>.</p>
 <div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Center 4 series in this dataset by country</span></span>
-<span><span class="fu"><a href="../reference/fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span>  </span>
+<span><span class="fu"><a href="../reference/fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">iso3c</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
 <span><span class="co">#   iso3c W.PCGDP  W.LIFEEX W.GINI       W.ODA</span></span>
 <span><span class="co"># 1   AFG      NA -16.75117     NA -1370778502</span></span>
 <span><span class="co"># 2   AFG      NA -16.23517     NA -1255468497</span></span>
@@ -3146,9 +3154,9 @@ like the <em>Fast Statistical Functions</em>.</p>
 <span><span class="co"># 6   AFG      NA -14.24917     NA -1145708502</span></span>
 <span></span>
 <span><span class="co"># Same thing done manually using fwithin...</span></span>
-<span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="st">"iso3c"</span><span class="op">)</span>,       </span>
-<span>         <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>         <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="fu"><a href="../reference/select_replace_vars.html">add_vars</a></span><span class="op">(</span><span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="st">"iso3c"</span><span class="op">)</span>,</span>
+<span>         <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>         <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>         <span class="fu"><a href="../reference/small-helpers.html">add_stub</a></span><span class="op">(</span><span class="st">"W."</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
 <span><span class="co">#   iso3c W.PCGDP  W.LIFEEX W.GINI       W.ODA</span></span>
 <span><span class="co"># 1   AFG      NA -16.75117     NA -1370778502</span></span>
@@ -3188,10 +3196,14 @@ option:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">iris</span>, <span class="op">~</span> <span class="va">Species</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, col <span class="op">=</span> <span class="va">iris</span><span class="op">$</span><span class="va">Species</span>, main <span class="op">=</span> <span class="st">"Simple Centering"</span><span class="op">)</span> <span class="co"># Simple centering</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">iris</span>, <span class="op">~</span> <span class="va">Species</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span>, col <span class="op">=</span> <span class="va">iris</span><span class="op">$</span><span class="va">Species</span>,     <span class="co"># Centering on overall mean: Preserves level of data</span></span>
 <span>     main <span class="op">=</span> <span class="st">"Added Overall Mean"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-94-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/BWplot-1.png" alt="plot of chunk BWplot" width="100%"><p class="caption">
+plot of chunk BWplot
+</p>
+</div>
 <div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">oldpar</span><span class="op">)</span></span></code></pre></div>
-<!-- 
+<!--
 # Note: This is not just slightly faster than fmean(x, g, TRA = "-+"), but if weights are used, fmean(x, g, w, "-+")
 # gives a wrong result: It subtracts weighted group means but then centers on the frequency-weighted average of those group means,
 # whereas fwithin(x, g, w, mean = "overall.mean") will also center on the properly weighted overall mean.
@@ -3314,10 +3326,10 @@ covariates.</p>
 <span><span class="co">#   (Intercept)        LIFEEX </span></span>
 <span><span class="co"># -7.257955e+05  8.938626e+00</span></span>
 <span></span>
-<span><span class="co"># Same using HDW </span></span>
+<span><span class="co"># Same using HDW</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">HDW.PCGDP</span> <span class="op">~</span> <span class="va">HDW.LIFEEX</span>, <span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span> <span class="op">*</span> <span class="va">year</span> <span class="op">+</span> <span class="va">ODA</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#   (Intercept)    HDW.LIFEEX </span></span>
-<span><span class="co"># -4.101204e-12  8.938626e+00</span></span>
+<span><span class="co">#  (Intercept)   HDW.LIFEEX </span></span>
+<span><span class="co"># 3.403288e-12 8.938626e+00</span></span>
 <span></span>
 <span><span class="co"># example of a simple continuous problem</span></span>
 <span><span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">iris</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>, <span class="va">iris</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
@@ -3362,7 +3374,11 @@ matrices or 3D-arrays from panel data.</p>
 <span><span class="co">#   ..$ : chr [1:61] "1960" "1961" "1962" "1963" ...</span></span>
 <span><span class="co">#  - attr(*, "transpose")= logi FALSE</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">mts</span><span class="op">)</span>, main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Log10"</span>, <span class="fu"><a href="../reference/small-helpers.html">vlabels</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">"Year"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-99-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/psmatplot-1.png" alt="plot of chunk psmatplot" width="100%"><p class="caption">
+plot of chunk psmatplot
+</p>
+</div>
 <p>Passing a data frame of panel series to <code>psmat</code> generates
 a 3D array:</p>
 <div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
@@ -3376,13 +3392,22 @@ a 3D array:</p>
 <span><span class="co">#   ..$ : chr [1:4] "PCGDP" "LIFEEX" "GINI" "ODA"</span></span>
 <span><span class="co">#  - attr(*, "transpose")= logi FALSE</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">psar</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-100-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/psarplot-1.png" alt="plot of chunk psarplot" width="100%"><p class="caption">
+plot of chunk psarplot
+</p>
+</div>
 <div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot array of Panel Series aggregated by region:</span></span>
-<span><span class="fu"><a href="../reference/collap.html">collap</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">region</span> <span class="op">+</span> <span class="va">year</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="fu"><a href="../reference/collap.html">collap</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">region</span> <span class="op">+</span> <span class="va">year</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span> <span class="op">~</span> <span class="va">region</span>, <span class="op">~</span> <span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>legend <span class="op">=</span> <span class="cn">TRUE</span>, labs <span class="op">=</span> <span class="fu"><a href="../reference/small-helpers.html">vlabels</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span><span class="op">[</span><span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-101-1.png" width="100%"><code>psmat</code> can also output a list of panel series matrices,
+<div class="figure">
+<img src="figure/psarplot2-1.png" alt="plot of chunk psarplot2" width="100%"><p class="caption">
+plot of chunk psarplot2
+</p>
+</div>
+<p><code>psmat</code> can also output a list of panel series matrices,
 which can be used among other things to reshape the data with
 <code>unlist2d</code> (discussed in more detail in List-Processing
 section).</p>
@@ -3422,19 +3447,35 @@ decomposition (as in <code><a href="https://rdrr.io/r/stats/acf.html" class="ext
 <div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Panel-ACF of GDP per Capita</span></span>
 <span><span class="fu"><a href="../reference/psacf.html">psacf</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-103-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/PSACF-1.png" alt="plot of chunk PSACF" width="100%"><p class="caption">
+plot of chunk PSACF
+</p>
+</div>
 <div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Panel-Partial-ACF of GDP per Capia</span></span>
 <span><span class="fu"><a href="../reference/psacf.html">pspacf</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-103-2.png" width="100%"></p>
+<div class="figure">
+<img src="figure/PSACF-2.png" alt="plot of chunk PSACF" width="100%"><p class="caption">
+plot of chunk PSACF
+</p>
+</div>
 <div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Panel- Cross-Correlation function of GDP per Capia and Life-Expectancy</span></span>
 <span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/exposition.html" class="external-link">%$%</a></span> <span class="fu"><a href="../reference/psacf.html">psccf</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span>, <span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-103-3.png" width="100%"></p>
+<div class="figure">
+<img src="figure/PSACF-3.png" alt="plot of chunk PSACF" width="100%"><p class="caption">
+plot of chunk PSACF
+</p>
+</div>
 <div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Multivariate Panel-auto and cross-correlation function of 3 variables:</span></span>
 <span><span class="fu"><a href="../reference/psacf.html">psacf</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">+</span> <span class="va">ODA</span> <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-103-4.png" width="100%"></p>
+<div class="figure">
+<img src="figure/PSACF-4.png" alt="plot of chunk PSACF" width="100%"><p class="caption">
+plot of chunk PSACF
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="fast-lags-and-leads">7.3 Fast Lags and Leads<a class="anchor" aria-label="anchor" href="#fast-lags-and-leads"></a>
@@ -3511,7 +3552,11 @@ are omitted.</p>
 <span></span>
 <span><span class="co"># There is some obvious seasonality</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stl</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">[</span>, <span class="st">"DAX"</span><span class="op">]</span>, <span class="va">freq</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">plot</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-105-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/mts-1.png" alt="plot of chunk mts" width="100%"><p class="caption">
+plot of chunk mts
+</p>
+</div>
 <div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># 1 annual lead and 1 annual lag</span></span>
@@ -3600,7 +3645,7 @@ that this panel data need not be ordered or balanced:</p>
 <span></span>
 <span><span class="co"># 1 lead and 2 lags of Life Expectancy</span></span>
 <span><span class="co"># after removing the 4th row, thus creating an unbalanced panel</span></span>
-<span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4L</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">wlddev</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="op">-</span><span class="fl">4L</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/flag.html">L</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">iso3c</span>, <span class="op">~</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
 <span><span class="co">#   iso3c year F1.LIFEEX LIFEEX L1.LIFEEX L2.LIFEEX</span></span>
 <span><span class="co"># 1   AFG 1960    32.962 32.446        NA        NA</span></span>
@@ -3630,7 +3675,7 @@ tryCatch(flag(1:6, 1, g, t = c(1,2,3,1,2,4)),
 # [1] NA  1  2 NA  4 NA
 ```
 
-Note that all of this does not require the panel to be balanced. `flag / L /F` works for unbalanced panel data as long as there are no gaps or repeated values in the time-variable for an individual. Since this sacrifices some functionality for speed and has been a requested feature, *collapse* 1.2.0 introduced the function `seqid`, which can be used to generate an new panel-id variable which identifies consecutive time-sequences at the sub-individual level, an thus enables the use of `flag / L /F` on irregular panels.  
+Note that all of this does not require the panel to be balanced. `flag / L /F` works for unbalanced panel data as long as there are no gaps or repeated values in the time-variable for an individual. Since this sacrifices some functionality for speed and has been a requested feature, *collapse* 1.2.0 introduced the function `seqid`, which can be used to generate an new panel-id variable which identifies consecutive time-sequences at the sub-individual level, an thus enables the use of `flag / L /F` on irregular panels.
 -->
 <p>One intended area of use, especially for the operators <code>L</code>
 and <code>F</code>, is to substantially facilitate the implementation of
@@ -3734,11 +3779,15 @@ the <code>Airpassengers</code> data, the seasonal decomposition shows
 significant seasonality:</p>
 <div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stl</a></span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="st">"periodic"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">plot</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-110-1.png" width="100%">
-We can test the statistical significance of this seasonality by jointly
-testing a set of monthly dummies regressed on the differenced series.
-Given that the seasonal fluctuations are increasing in magnitude, using
-growth rates for the test seems more appropriate:</p>
+<div class="figure">
+<img src="figure/stl-1.png" alt="plot of chunk stl" width="100%"><p class="caption">
+plot of chunk stl
+</p>
+</div>
+<p>We can test the statistical significance of this seasonality by
+jointly testing a set of monthly dummies regressed on the differenced
+series. Given that the seasonal fluctuations are increasing in
+magnitude, using growth rates for the test seems more appropriate:</p>
 <div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html" class="external-link">cycle</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fFtest.html">fFtest</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="va">f</span><span class="op">)</span></span>
@@ -3749,19 +3798,27 @@ variation in the growth rate of the series. We can plot the series
 together with the ordinary, seasonal (12-month) and deseasonalized
 monthly growth rate using:</p>
 <div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>W.G1 <span class="op">=</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="va">f</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>W.G1 <span class="op">=</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>, <span class="va">f</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"Growth Rate of Airpassengers"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-112-1.png" width="100%">
-It is evident that taking the annualized growth rate also removes the
+<div class="figure">
+<img src="figure/Gplot-1.png" alt="plot of chunk Gplot" width="100%"><p class="caption">
+plot of chunk Gplot
+</p>
+</div>
+<p>It is evident that taking the annualized growth rate also removes the
 periodic behavior. We can also compute second differences or growth
 rates of growth rates. Below a plot of the ordinary and annual first and
 second differences of the data:</p>
 <div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fdiff.html">D</a></span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">12</span><span class="op">)</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">plot</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-113-1.png" width="100%">
-In general, both <code>fdiff / D</code> and <code>fgrowth / G</code> can
-compute sequences of lagged / leaded and iterated differences / growth
-rates.</p>
+<div class="figure">
+<img src="figure/Dplot-1.png" alt="plot of chunk Dplot" width="100%"><p class="caption">
+plot of chunk Dplot
+</p>
+</div>
+<p>In general, both <code>fdiff / D</code> and <code>fgrowth / G</code>
+can compute sequences of lagged / leaded and iterated differences /
+growth rates.</p>
 <div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># sequence of leaded/lagged and iterated differences</span></span>
 <span><span class="va">y</span> <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span></span>
@@ -3982,13 +4039,17 @@ and harmonizing the data:
 <span><span class="co"># The 6 most important non-government sectors (see section 1)</span></span>
 <span><span class="va">sec</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AGR"</span>, <span class="st">"MAN"</span>, <span class="st">"WRT"</span>, <span class="st">"CON"</span>, <span class="st">"TRA"</span>, <span class="st">"FIRE"</span><span class="op">)</span></span>
 <span><span class="co"># This creates a data.frame containing the value added of the 6 most important non-government sectors</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="va">sec</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span> <span class="op">==</span> <span class="st">"VA"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Country"</span>, <span class="st">"Year"</span>, <span class="va">sec</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/efficient-programming.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="va">sec</span><span class="op">)</span></span>
 <span><span class="co"># Let's look at the log VA in agriculture across countries:</span></span>
 <span><span class="va">AGRmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">AGR</span> <span class="op">~</span> <span class="va">Country</span>, <span class="op">~</span> <span class="va">Year</span>, transpose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">log</span>   <span class="co"># Converting to panel series matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">AGRmat</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-121-1.png" width="100%">
-The plot shows quite some heterogeneity both in the levels (VA is in
+<div class="figure">
+<img src="figure/AGRmat-1.png" alt="plot of chunk AGRmat" width="100%"><p class="caption">
+plot of chunk AGRmat
+</p>
+</div>
+<p>The plot shows quite some heterogeneity both in the levels (VA is in
 local currency) and in trend growth rates. In the panel-VAR estimation
 we are only really interested in the sectoral relationships within
 countries. Thus we need to harmonize this sectoral data further. One way
@@ -4002,8 +4063,12 @@ specific cubic trend from the data in logs:</p>
 <span><span class="va">AGRmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dapply.html">dapply</a></span><span class="op">(</span><span class="va">AGRmat</span>, <span class="va">fhdwithin</span>, <span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="fu"><a href="../reference/efficient-programming.html">seq_row</a></span><span class="op">(</span><span class="va">AGRmat</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">AGRmat</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-122-1.png" width="100%">
-This seems to have done a decent job in curbing most of the
+<div class="figure">
+<img src="figure/AGRmatplot-1.png" alt="plot of chunk AGRmatplot" width="100%"><p class="caption">
+plot of chunk AGRmatplot
+</p>
+</div>
+<p>This seems to have done a decent job in curbing most of the
 heterogeneity. Some series however have a high variance around that
 cubic trend. Therefore a final step is to standardize the data to bring
 the variances in line:</p>
@@ -4011,7 +4076,11 @@ the variances in line:</p>
 <code class="sourceCode R"><span><span class="co"># Standardizing the cubic log-detrended data</span></span>
 <span><span class="va">AGRmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">AGRmat</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">AGRmat</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-123-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/AGRmatplot2-1.png" alt="plot of chunk AGRmatplot2" width="100%"><p class="caption">
+plot of chunk AGRmatplot2
+</p>
+</div>
 <p>Now this looks pretty good, and is about the most we can do in terms
 of harmonization without differencing the data. The code below applies
 these transformations to all sectors:</p>
@@ -4025,7 +4094,11 @@ these transformations to all sectors:</p>
 <span></span>
 <span><span class="co"># Check the plot</span></span>
 <span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span> <span class="va">Country</span>, <span class="op">~</span> <span class="va">Year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">plot</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-124-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/psmatplot2-1.png" alt="plot of chunk psmatplot2" width="100%"><p class="caption">
+plot of chunk psmatplot2
+</p>
+</div>
 <p>Since the data is annual, let us estimate the Panel-VAR with one
 lag:</p>
 <div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
@@ -4091,7 +4164,7 @@ purposes of this vignette this shall not bother us.</p>
 <span><span class="co">#   Portmanteau Test (asymptotic)</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># data:  Residuals of VAR object pVAR</span></span>
-<span><span class="co"># Chi-squared = 1678.5, df = 540, p-value &lt; 2.2e-16</span></span></code></pre></div>
+<span><span class="co"># Chi-squared = 1680.8, df = 540, p-value &lt; 2.2e-16</span></span></code></pre></div>
 <p>By default the VAR is identified using a Choleski ordering of the
 direct impact matrix in which the first variable (here Agriculture) is
 assumed to not be directly impacted by any other sector in the current
@@ -4173,42 +4246,42 @@ Choleski ordering.
 <span><span class="co"># </span></span>
 <span><span class="co"># Estimated A matrix:</span></span>
 <span><span class="co">#              STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
-<span><span class="co"># STD.HDW.AGR       1.0000    -0.41820      0.6285     0.00000     0.00000            0</span></span>
-<span><span class="co"># STD.HDW.MAN      -0.4781     1.00000     -0.1256    -0.01217    -0.33279            0</span></span>
-<span><span class="co"># STD.HDW.WRT       0.1970    -0.61805      1.0000    -0.50725     0.04714            0</span></span>
-<span><span class="co"># STD.HDW.CON       0.0000    -0.02461     -0.1146     1.00000     0.00000            0</span></span>
-<span><span class="co"># STD.HDW.TRA       0.0000     0.02680     -0.1269     0.00000     1.00000            0</span></span>
-<span><span class="co"># STD.HDW.FIRE      0.0000     0.00000      0.0000     0.00000     0.00000            1</span></span>
+<span><span class="co"># STD.HDW.AGR       1.0000    -0.59223     0.51301      0.0000     0.00000            0</span></span>
+<span><span class="co"># STD.HDW.MAN      -0.2547     1.00000    -0.07819     -0.1711     0.14207            0</span></span>
+<span><span class="co"># STD.HDW.WRT      -0.3924    -0.56875     1.00000     -0.0135    -0.01391            0</span></span>
+<span><span class="co"># STD.HDW.CON       0.0000     0.02595    -0.18541      1.0000     0.00000            0</span></span>
+<span><span class="co"># STD.HDW.TRA       0.0000    -0.03321    -0.05370      0.0000     1.00000            0</span></span>
+<span><span class="co"># STD.HDW.FIRE      0.0000     0.00000     0.00000      0.0000     0.00000            1</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># Estimated B matrix:</span></span>
 <span><span class="co">#              STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
-<span><span class="co"># STD.HDW.AGR       0.6675      0.0000      0.0000      0.0000      0.0000       0.0000</span></span>
-<span><span class="co"># STD.HDW.MAN       0.0000      0.5989      0.0000      0.0000      0.0000       0.0000</span></span>
-<span><span class="co"># STD.HDW.WRT       0.0000      0.0000      0.6435      0.0000      0.0000       0.0000</span></span>
-<span><span class="co"># STD.HDW.CON       0.0000      0.0000      0.0000      0.5355      0.0000       0.0000</span></span>
-<span><span class="co"># STD.HDW.TRA       0.0000      0.0000      0.0000      0.0000      0.4936       0.0000</span></span>
-<span><span class="co"># STD.HDW.FIRE      0.0000      0.0000      0.0000      0.0000      0.0000       0.6678</span></span></code></pre></div>
+<span><span class="co"># STD.HDW.AGR        0.678      0.0000      0.0000      0.0000      0.0000       0.0000</span></span>
+<span><span class="co"># STD.HDW.MAN        0.000      0.6248      0.0000      0.0000      0.0000       0.0000</span></span>
+<span><span class="co"># STD.HDW.WRT        0.000      0.0000      0.4155      0.0000      0.0000       0.0000</span></span>
+<span><span class="co"># STD.HDW.CON        0.000      0.0000      0.0000      0.5028      0.0000       0.0000</span></span>
+<span><span class="co"># STD.HDW.TRA        0.000      0.0000      0.0000      0.0000      0.5593       0.0000</span></span>
+<span><span class="co"># STD.HDW.FIRE       0.000      0.0000      0.0000      0.0000      0.0000       0.6475</span></span></code></pre></div>
 <p>Now this object is quite involved, which brings us to the actual
 subject of this section:</p>
 <div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># psVAR$var$varresult is a list containing the 6 linear models fitted above, it is not displayed in full here.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">pSVAR</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span>, max.level <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co"># List of 13</span></span>
-<span><span class="co">#  $ A      : num [1:6, 1:6] 1 -0.478 0.197 0 0 ...</span></span>
+<span><span class="co">#  $ A      : num [1:6, 1:6] 1 -0.255 -0.392 0 0 ...</span></span>
 <span><span class="co">#  $ Ase    : num [1:6, 1:6] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
-<span><span class="co">#  $ B      : num [1:6, 1:6] 0.667 0 0 0 0 ...</span></span>
+<span><span class="co">#  $ B      : num [1:6, 1:6] 0.678 0 0 0 0 ...</span></span>
 <span><span class="co">#  $ Bse    : num [1:6, 1:6] 0 0 0 0 0 0 0 0 0 0 ...</span></span>
 <span><span class="co">#  $ LRIM   : NULL</span></span>
-<span><span class="co">#  $ Sigma.U: num [1:6, 1:6] 87.29 35.87 -33.52 -14.05 -4.35 ...</span></span>
+<span><span class="co">#  $ Sigma.U: num [1:6, 1:6] 43.898 24.88 23.941 4.873 0.661 ...</span></span>
 <span><span class="co">#  $ LR     :List of 5</span></span>
-<span><span class="co">#   ..$ statistic: Named num 4070</span></span>
+<span><span class="co">#   ..$ statistic: Named num 1130</span></span>
 <span><span class="co">#   ..$ parameter: Named num 1</span></span>
 <span><span class="co">#   ..$ p.value  : Named num 0</span></span>
 <span><span class="co">#   ..$ method   : chr "LR overidentification"</span></span>
 <span><span class="co">#   ..$ data.name: symbol data</span></span>
 <span><span class="co">#  $ opt    :List of 5</span></span>
-<span><span class="co">#   ..$ par        : num [1:20] -0.4781 0.197 -0.4182 -0.6181 -0.0246 ...</span></span>
-<span><span class="co">#   ..$ value      : num 11938</span></span>
+<span><span class="co">#   ..$ par        : num [1:20] -0.2547 -0.3924 -0.5922 -0.5688 0.0259 ...</span></span>
+<span><span class="co">#   ..$ value      : num 10924</span></span>
 <span><span class="co">#   ..$ counts     : Named int [1:2] 501 NA</span></span>
 <span><span class="co">#   ..$ convergence: int 1</span></span>
 <span><span class="co">#   ..$ message    : NULL</span></span>
@@ -4305,31 +4378,39 @@ course works in a much broader range of contexts.&lt;/p&gt;"><sup>7</sup></a>.</
 <div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This is the path to the residuals from a single equation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">pSVAR</span><span class="op">$</span><span class="va">var</span><span class="op">$</span><span class="va">varresult</span><span class="op">$</span><span class="va">STD.HDW.AGR</span><span class="op">$</span><span class="va">residuals</span><span class="op">)</span></span>
-<span><span class="co">#  Named num [1:2060] -0.7218 -0.2029 -0.223 0.0833 -0.1512 ...</span></span>
+<span><span class="co">#  Named num [1:2060] -0.7234 -0.1962 -0.1993 0.0739 -0.1418 ...</span></span>
 <span><span class="co">#  - attr(*, "names")= chr [1:2060] "2" "3" "4" "5" ...</span></span>
 <span></span>
 <span><span class="co"># get_elem gets the residuals from all 6 equations and puts them in a top-level list</span></span>
 <span><span class="va">resid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_list.html">get_elem</a></span><span class="op">(</span><span class="va">pSVAR</span>, <span class="st">"residuals"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">resid</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co"># List of 6</span></span>
-<span><span class="co">#  $ STD.HDW.AGR : Named num [1:2060] -0.7218 -0.2029 -0.223 0.0833 -0.1512 ...</span></span>
-<span><span class="co">#  $ STD.HDW.MAN : Named num [1:2060] 0.362 -1.982 -1.144 -3.092 1.482 ...</span></span>
-<span><span class="co">#  $ STD.HDW.WRT : Named num [1:2060] 0.388 0.648 -3.065 -0.419 -0.428 ...</span></span>
-<span><span class="co">#  $ STD.HDW.CON : Named num [1:2060] 1.054 -1.071 -2.631 -0.627 2.26 ...</span></span>
-<span><span class="co">#  $ STD.HDW.TRA : Named num [1:2060] 0.167 -0.238 -2.247 0.847 -0.139 ...</span></span>
-<span><span class="co">#  $ STD.HDW.FIRE: Named num [1:2060] -0.0948 -0.3081 0.1083 -2.1211 -0.0563 ...</span></span>
+<span><span class="co">#  $ STD.HDW.AGR : Named num [1:2060] -0.7234 -0.1962 -0.1993 0.0739 -0.1418 ...</span></span>
+<span><span class="co">#  $ STD.HDW.MAN : Named num [1:2060] 0.363 -1.989 -1.167 -3.082 1.474 ...</span></span>
+<span><span class="co">#  $ STD.HDW.WRT : Named num [1:2060] 0.37 0.628 -3.054 -0.406 -0.384 ...</span></span>
+<span><span class="co">#  $ STD.HDW.CON : Named num [1:2060] 1.035 -1.093 -2.62 -0.611 2.307 ...</span></span>
+<span><span class="co">#  $ STD.HDW.TRA : Named num [1:2060] 0.1481 -0.2599 -2.2361 0.8619 -0.0915 ...</span></span>
+<span><span class="co">#  $ STD.HDW.FIRE: Named num [1:2060] -0.11396 -0.33092 0.11754 -2.10521 -0.00968 ...</span></span>
 <span></span>
 <span><span class="co"># Quick conversion to matrix and plotting</span></span>
 <span><span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">resid</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/plot.ts.html" class="external-link">plot.ts</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"Panel-VAR Residuals"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-134-1.png" width="100%">
-Similarly, we could pull out and plot the fitted values:</p>
+<div class="figure">
+<img src="figure/PVARplot-1.png" alt="plot of chunk PVARplot" width="100%"><p class="caption">
+plot of chunk PVARplot
+</p>
+</div>
+<p>Similarly, we could pull out and plot the fitted values:</p>
 <div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Regular expression search and retrieval of fitted values</span></span>
-<span><span class="fu"><a href="../reference/extract_list.html">get_elem</a></span><span class="op">(</span><span class="va">pSVAR</span>, <span class="st">"^fi"</span>, regex <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">qM</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="fu"><a href="../reference/extract_list.html">get_elem</a></span><span class="op">(</span><span class="va">pSVAR</span>, <span class="st">"^fi"</span>, regex <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">qM</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/stats/plot.ts.html" class="external-link">plot.ts</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"Panel-VAR Fitted Values"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-135-1.png" width="100%">
-Below the main quantities of interest in SVAR analysis are computed: The
-impulse response functions (IRF’s) and forecast error variance
+<div class="figure">
+<img src="figure/PVARfittedplot-1.png" alt="plot of chunk PVARfittedplot" width="100%"><p class="caption">
+plot of chunk PVARfittedplot
+</p>
+</div>
+<p>Below the main quantities of interest in SVAR analysis are computed:
+The impulse response functions (IRF’s) and forecast error variance
 decompositions (FEVD’s):</p>
 <div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This computes orthogonalized impulse response functions</span></span>
@@ -4344,26 +4425,26 @@ the object:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">pIRF</span>, give.attr <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co"># List of 11</span></span>
 <span><span class="co">#  $ irf       :List of 6</span></span>
-<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 0.767 0.495 0.332 0.231 0.166 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] -0.000553 0.038252 0.055844 0.060633 0.058292 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] -0.4907 -0.2925 -0.1799 -0.1153 -0.0774 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] -0.20715 -0.1018 -0.04488 -0.01524 -0.00064 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] 0.0176 0.0312 0.0338 0.0316 0.0275 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 0.0145 0.0176 0.0159 0.0127 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 0.611 0.399 0.268 0.185 0.132 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] 0.1774 0.1549 0.134 0.1142 0.0959 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] -0.1807 -0.1071 -0.0647 -0.0402 -0.0259 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] 0.0215 0.0383 0.0442 0.0438 0.0403 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] -0.02595 -0.01257 -0.00721 -0.00511 -0.00421 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 0.0122 0.0147 0.0132 0.0104 ...</span></span>
 <span><span class="co">#  $ Lower     :List of 6</span></span>
-<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 0.29462 0.16077 0.07894 0.0313 0.00737 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] -0.6107 -0.3679 -0.2109 -0.1208 -0.0696 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] -0.666 -0.41 -0.287 -0.208 -0.163 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] -0.6838 -0.4134 -0.2391 -0.1468 -0.0895 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] -0.422 -0.274 -0.184 -0.135 -0.103 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 -0.011 -0.0156 -0.0166 -0.0159 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 0.1137 -0.0144 -0.0393 -0.0446 -0.0439 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] -0.6474 -0.3434 -0.2069 -0.125 -0.0734 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] -0.659 -0.427 -0.311 -0.236 -0.189 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] -0.721 -0.417 -0.258 -0.183 -0.123 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] -0.4161 -0.2568 -0.169 -0.1231 -0.0894 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 -0.0157 -0.022 -0.0227 -0.0211 ...</span></span>
 <span><span class="co">#  $ Upper     :List of 6</span></span>
-<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 1.315 0.907 0.62 0.442 0.33 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] 0.939 0.602 0.428 0.321 0.242 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] 0.883 0.538 0.354 0.257 0.189 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] 0.653 0.447 0.307 0.224 0.193 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] 0.462 0.291 0.183 0.134 0.112 ...</span></span>
-<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 0.0381 0.0484 0.0464 0.0404 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.AGR : num [1:11, 1:6] 1.218 0.801 0.565 0.389 0.275 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.MAN : num [1:11, 1:6] 0.906 0.601 0.439 0.328 0.239 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.WRT : num [1:11, 1:6] 0.846 0.601 0.428 0.319 0.239 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.CON : num [1:11, 1:6] 0.716 0.514 0.4 0.305 0.234 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.TRA : num [1:11, 1:6] 0.2866 0.21 0.1591 0.1207 0.0899 ...</span></span>
+<span><span class="co">#   ..$ STD.HDW.FIRE: num [1:11, 1:6] 0 0.0363 0.0471 0.0461 0.0405 ...</span></span>
 <span><span class="co">#  $ response  : chr [1:6] "STD.HDW.AGR" "STD.HDW.MAN" "STD.HDW.WRT" "STD.HDW.CON" ...</span></span>
 <span><span class="co">#  $ impulse   : chr [1:6] "STD.HDW.AGR" "STD.HDW.MAN" "STD.HDW.WRT" "STD.HDW.CON" ...</span></span>
 <span><span class="co">#  $ ortho     : logi TRUE</span></span>
@@ -4411,24 +4492,24 @@ sectoral impulse and stores them in a data frame:</p>
 <span>  <span class="fu"><a href="../reference/rapply2d.html">rapply2d</a></span><span class="op">(</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="co"># Recursively apply the column-sums to coefficient matrices (could also use colSums)</span></span>
 <span>  <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Type"</span>, <span class="st">"Impulse"</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Recursively row-bind the result to a data.frame and add identifier columns</span></span>
 <span><span class="co">#     Type      Impulse STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
-<span><span class="co"># 1    irf  STD.HDW.AGR        2.42        1.85        1.41        0.92        0.86         0.83</span></span>
-<span><span class="co"># 2    irf  STD.HDW.MAN        0.43        1.92        1.77        0.87        0.72         0.87</span></span>
-<span><span class="co"># 3    irf  STD.HDW.WRT       -1.34       -0.96        1.13       -0.02        0.00        -0.27</span></span>
-<span><span class="co"># 4    irf  STD.HDW.CON       -0.33       -0.30        0.54        1.98        0.46         0.15</span></span>
-<span><span class="co"># 5    irf  STD.HDW.TRA        0.23        0.71        0.46        0.10        1.47         0.19</span></span>
-<span><span class="co"># 6    irf STD.HDW.FIRE        0.09       -0.08        0.02       -0.09       -0.05         1.90</span></span>
-<span><span class="co"># 7  Lower  STD.HDW.AGR        0.54       -1.13       -1.45       -1.14       -1.47        -0.49</span></span>
-<span><span class="co"># 8  Lower  STD.HDW.MAN       -1.48        0.60       -1.13       -1.32       -1.21         0.18</span></span>
-<span><span class="co"># 9  Lower  STD.HDW.WRT       -2.21       -2.64        0.00       -3.15       -3.09        -1.08</span></span>
-<span><span class="co"># 10 Lower  STD.HDW.CON       -1.77       -2.33       -2.13        0.60       -1.46        -0.49</span></span>
-<span><span class="co"># 11 Lower  STD.HDW.TRA       -1.40       -1.57       -1.19       -1.66        0.04        -0.67</span></span>
-<span><span class="co"># 12 Lower STD.HDW.FIRE       -0.12       -0.24       -0.16       -0.24       -0.19         0.99</span></span>
-<span><span class="co"># 13 Upper  STD.HDW.AGR        4.50        4.28        3.86        2.66        2.65         1.76</span></span>
-<span><span class="co"># 14 Upper  STD.HDW.MAN        3.25        4.45        3.46        3.97        3.67         1.90</span></span>
-<span><span class="co"># 15 Upper  STD.HDW.WRT        2.75        2.88        4.47        1.80        3.57         1.30</span></span>
-<span><span class="co"># 16 Upper  STD.HDW.CON        2.50        3.24        2.74        3.77        2.53         1.61</span></span>
-<span><span class="co"># 17 Upper  STD.HDW.TRA        1.49        2.45        2.06        2.32        3.00         0.83</span></span>
-<span><span class="co"># 18 Upper STD.HDW.FIRE        0.29        0.14        0.28        0.11        0.17         2.28</span></span></code></pre></div>
+<span><span class="co"># 1    irf  STD.HDW.AGR        1.92        1.08        1.68        0.83        0.72         0.54</span></span>
+<span><span class="co"># 2    irf  STD.HDW.MAN        0.98        2.22        2.12        1.09        0.97         1.05</span></span>
+<span><span class="co"># 3    irf  STD.HDW.WRT       -0.47       -0.27        0.65        0.17        0.03        -0.02</span></span>
+<span><span class="co"># 4    irf  STD.HDW.CON        0.33        0.39        0.34        2.00        0.55         0.38</span></span>
+<span><span class="co"># 5    irf  STD.HDW.TRA       -0.07       -0.11       -0.24       -0.30        1.31        -0.20</span></span>
+<span><span class="co"># 6    irf STD.HDW.FIRE        0.07       -0.07        0.02       -0.09       -0.06         1.84</span></span>
+<span><span class="co"># 7  Lower  STD.HDW.AGR       -0.18       -2.08       -3.14       -0.68       -2.46        -0.68</span></span>
+<span><span class="co"># 8  Lower  STD.HDW.MAN       -1.52        0.38       -1.30       -0.86       -1.82         0.12</span></span>
+<span><span class="co"># 9  Lower  STD.HDW.WRT       -2.38       -2.65       -0.22       -2.68       -2.01        -1.20</span></span>
+<span><span class="co"># 10 Lower  STD.HDW.CON       -2.01       -2.47       -2.16        0.53       -1.68        -0.80</span></span>
+<span><span class="co"># 11 Lower  STD.HDW.TRA       -1.32       -1.34       -1.17       -1.64        0.31        -0.69</span></span>
+<span><span class="co"># 12 Lower STD.HDW.FIRE       -0.16       -0.26       -0.16       -0.27       -0.20         0.96</span></span>
+<span><span class="co"># 13 Upper  STD.HDW.AGR        3.97        3.18        3.21        3.69        2.61         1.58</span></span>
+<span><span class="co"># 14 Upper  STD.HDW.MAN        3.19        3.85        3.00        3.60        3.05         1.78</span></span>
+<span><span class="co"># 15 Upper  STD.HDW.WRT        3.06        2.66        4.41        2.49        3.31         1.47</span></span>
+<span><span class="co"># 16 Upper  STD.HDW.CON        2.85        3.30        3.20        3.88        2.59         1.76</span></span>
+<span><span class="co"># 17 Upper  STD.HDW.TRA        1.08        1.93        1.76        0.72        2.82         0.63</span></span>
+<span><span class="co"># 18 Upper STD.HDW.FIRE        0.30        0.15        0.30        0.12        0.18         2.21</span></span></code></pre></div>
 <p>The function <code>rapply2d</code> used here is very similar to
 <code><a href="https://rdrr.io/r/base/rapply.html" class="external-link">base::rapply</a></code>, with the difference that the result is not
 simplified / unlisted by default and that <code>rapply2d</code> will
@@ -4464,17 +4545,17 @@ just use the impulses:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#        Impulse  Time STD.HDW.AGR STD.HDW.MAN STD.HDW.WRT STD.HDW.CON STD.HDW.TRA STD.HDW.FIRE</span></span>
 <span><span class="co">#         &lt;fctr&gt; &lt;int&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;       &lt;num&gt;        &lt;num&gt;</span></span>
-<span><span class="co"># 1: STD.HDW.AGR     1   0.7674084   0.3794286  0.09343315  0.02004176 0.001684801   0.00000000</span></span>
-<span><span class="co"># 2: STD.HDW.AGR     2   0.4954722   0.3485152  0.19223268  0.08376619 0.073368814   0.05906113</span></span>
-<span><span class="co"># 3: STD.HDW.AGR     3   0.3320304   0.2894427  0.21561045  0.11484981 0.107559380   0.09537181</span></span>
+<span><span class="co"># 1: STD.HDW.AGR     1   0.6113132   0.1896711   0.3488940  0.05976606  0.02503336   0.00000000</span></span>
+<span><span class="co"># 2: STD.HDW.AGR     2   0.3986337   0.1892803   0.3014961  0.09430567  0.07263670   0.03669857</span></span>
+<span><span class="co"># 3: STD.HDW.AGR     3   0.2676944   0.1654161   0.2491999  0.10769335  0.09330830   0.06042380</span></span>
 <span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>                   <span class="co"># Using data.table's melt</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#        Impulse  Time    variable     value</span></span>
 <span><span class="co">#         &lt;fctr&gt; &lt;int&gt;      &lt;fctr&gt;     &lt;num&gt;</span></span>
-<span><span class="co"># 1: STD.HDW.AGR     1 STD.HDW.AGR 0.7674084</span></span>
-<span><span class="co"># 2: STD.HDW.AGR     2 STD.HDW.AGR 0.4954722</span></span>
-<span><span class="co"># 3: STD.HDW.AGR     3 STD.HDW.AGR 0.3320304</span></span>
+<span><span class="co"># 1: STD.HDW.AGR     1 STD.HDW.AGR 0.6113132</span></span>
+<span><span class="co"># 2: STD.HDW.AGR     2 STD.HDW.AGR 0.3986337</span></span>
+<span><span class="co"># 3: STD.HDW.AGR     3 STD.HDW.AGR 0.2676944</span></span>
 <span></span>
 <span><span class="co"># Here comes the plot:</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Time</span>, y <span class="op">=</span> <span class="va">value</span>, color <span class="op">=</span> <span class="va">Impulse</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -4491,17 +4572,21 @@ just use the impulses:</p>
 <span>      strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, colour <span class="op">=</span> <span class="st">"grey30"</span><span class="op">)</span>,</span>
 <span>      axis.ticks <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_line</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>,</span>
 <span>      panel.border <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-140-1.png" width="100%">
-To round things off, below we do the same thing for the FEVD’s:</p>
+<div class="figure">
+<img src="figure/IRFplot-1.png" alt="plot of chunk IRFplot" width="100%"><p class="caption">
+plot of chunk IRFplot
+</p>
+</div>
+<p>To round things off, below we do the same thing for the FEVD’s:</p>
 <div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">pFEVD</span>, idcols <span class="op">=</span> <span class="st">"variable"</span>, row.names <span class="op">=</span> <span class="st">"Time"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span>, DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>            <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"Time"</span><span class="op">)</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span> </span>
+<code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">pFEVD</span>, idcols <span class="op">=</span> <span class="st">"variable"</span>, row.names <span class="op">=</span> <span class="st">"Time"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span>, DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>            <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"Time"</span><span class="op">)</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#       variable  Time      Sector     value</span></span>
 <span><span class="co">#         &lt;fctr&gt; &lt;int&gt;      &lt;fctr&gt;     &lt;num&gt;</span></span>
-<span><span class="co"># 1: STD.HDW.AGR     1 STD.HDW.AGR 0.6746685</span></span>
-<span><span class="co"># 2: STD.HDW.AGR     2 STD.HDW.AGR 0.6856382</span></span>
-<span><span class="co"># 3: STD.HDW.AGR     3 STD.HDW.AGR 0.6914554</span></span>
+<span><span class="co"># 1: STD.HDW.AGR     1 STD.HDW.AGR 0.8513029</span></span>
+<span><span class="co"># 2: STD.HDW.AGR     2 STD.HDW.AGR 0.8385913</span></span>
+<span><span class="co"># 3: STD.HDW.AGR     3 STD.HDW.AGR 0.8264789</span></span>
 <span></span>
 <span><span class="co"># Here comes the plot:</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Time</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">Sector</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -4515,9 +4600,13 @@ To round things off, below we do the same thing for the FEVD’s:</p>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
 <span>      strip.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"white"</span>, colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>,</span>
 <span>      strip.text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>face <span class="op">=</span> <span class="st">"bold"</span>, colour <span class="op">=</span> <span class="st">"grey30"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_intro_files/figure-html/unnamed-chunk-141-1.png" width="100%">
-Both the IRF’s and the FEVD’s show that Agriculture, Manufacturing and
-Wholesale and Retail Trade are broadly interlinked, even in the
+<div class="figure">
+<img src="figure/FEVDplot-1.png" alt="plot of chunk FEVDplot" width="100%"><p class="caption">
+plot of chunk FEVDplot
+</p>
+</div>
+<p>Both the IRF’s and the FEVD’s show that Agriculture, Manufacturing
+and Wholesale and Retail Trade are broadly interlinked, even in the
 short-run, and that Agriculture and Manufacturing explain some of the
 variation in Construction, Transport and Finance at longer horizons. Of
 course the identification strategy used for this example was not really

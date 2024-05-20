@@ -89,9 +89,9 @@
             <h3 data-toc-skip class="subtitle">Fast Manipulation of
 Simple Features Data Frames</h3>
                         <h4 data-toc-skip class="author">Sebastian
-Krantz, with a contribution by Grant McDermott</h4>
+Krantz and Grant McDermott</h4>
             
-            <h4 data-toc-skip class="date">2021-08-09</h4>
+            <h4 data-toc-skip class="date">2024-04-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/HEAD/vignettes/collapse_and_sf.Rmd" class="external-link"><code>vignettes/collapse_and_sf.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_and_sf.Rmd</code></div>
@@ -118,22 +118,15 @@ pre[class] {
 popular <em>sf</em> package by Edzer Pebesma. It shows that
 <em>collapse</em> supports easy manipulation of <em>sf</em> data frames,
 at computation speeds far above <em>dplyr</em>.</p>
-<p><em>collapse</em> is class-agnostic and can theoretically be used to
-manipulate any kind of list, matrix or data frame based object. Previous
-versions of <em>collapse</em> could manipulate <em>sf</em> data frames,
-but required users to manually include the geometry column when using
-functions like in <code>fselect</code> and <code>fsubset</code>, and
-exclude it in other functions like <code>qsu</code>.</p>
-<p>Version 1.6.0 of the package adds internal support for <em>sf</em>
-data frames where the geometry column is handled by most essential
-functions (<code>fselect</code>, <code>get_vars</code>,
-<code>num_vars</code>, <code>fsubset</code>, <code>ss</code>,
-<code>fgroup_by</code>, <code>qsu</code>, <code>descr</code>,
-<code>varying</code>, <code>funique</code>, <code>roworder</code>,
-<code>rsplit</code>, <code>fcompute</code>, …). This largely does not
-affect previously written code where the geometry column is explicitly
-selected. To demonstrate these features, we can load a test dataset
-provided by <em>sf</em>:</p>
+<p><em>collapse</em> v1.6.0 added internal support for <em>sf</em> data
+frames by having most essential functions (e.g.,
+<code>fselect/gv</code>, <code>fsubset/ss</code>,
+<code>fgroup_by</code>, <code>findex_by</code>, <code>qsu</code>,
+<code>descr</code>, <code>varying</code>, <code>funique</code>,
+<code>roworder</code>, <code>rsplit</code>, <code>fcompute</code>, …)
+internally handle the geometry column.</p>
+<p>To demonstrate this, we can load a test dataset provided by
+<em>sf</em>:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sebkrantz.github.io/collapse/">collapse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
@@ -158,17 +151,17 @@ provided by <em>sf</em>:</p>
 <div class="section level2">
 <h2 id="summarising-sf-data-frames">Summarising sf Data Frames<a class="anchor" aria-label="anchor" href="#summarising-sf-data-frames"></a>
 </h2>
-<p>The first thing that <em>collapse</em> 1.6.0 adds is summary
-statistics for <em>sf</em> data frames that automatically exclude the
-‘geometry’ column:</p>
+<p>Computing summary statistics on <em>sf</em> data frames automatically
+excludes the ‘geometry’ column:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Which columns have at least 2 non-missing distinct values</span></span>
 <span><span class="fu"><a href="../reference/varying.html">varying</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span> </span>
 <span><span class="co">#      AREA PERIMETER     CNTY_   CNTY_ID      NAME      FIPS    FIPSNO  CRESS_ID     BIR74     SID74 </span></span>
 <span><span class="co">#      TRUE      TRUE      TRUE      TRUE      TRUE      TRUE      TRUE      TRUE      TRUE      TRUE </span></span>
 <span><span class="co">#   NWBIR74     BIR79     SID79   NWBIR79 </span></span>
-<span><span class="co">#      TRUE      TRUE      TRUE      TRUE</span></span>
-<span></span>
+<span><span class="co">#      TRUE      TRUE      TRUE      TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Quick summary stats</span></span>
 <span><span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
 <span><span class="co">#              N     Mean         SD    Min    Max</span></span>
@@ -185,8 +178,9 @@ statistics for <em>sf</em> data frames that automatically exclude the
 <span><span class="co"># NWBIR74    100  1050.81  1432.9117      1   8027</span></span>
 <span><span class="co"># BIR79      100  4223.92  5179.4582    319  30757</span></span>
 <span><span class="co"># SID79      100     8.36     9.4319      0     57</span></span>
-<span><span class="co"># NWBIR79    100  1352.81  1975.9988      3  11631</span></span>
-<span></span>
+<span><span class="co"># NWBIR79    100  1352.81  1975.9988      3  11631</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Detailed statistics description of each column</span></span>
 <span><span class="fu"><a href="../reference/descr.html">descr</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
 <span><span class="co"># Dataset: nc, 14 Variables, N = 100</span></span>
@@ -343,9 +337,9 @@ statistics for <em>sf</em> data frames that automatically exclude the
 <div class="section level2">
 <h2 id="selecting-columns-and-subsetting">Selecting Columns and Subsetting<a class="anchor" aria-label="anchor" href="#selecting-columns-and-subsetting"></a>
 </h2>
-<p>We can now also easily select columns from the <em>sf</em> data frame
-without having to worry about taking along ‘geometry’:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>We can select columns from the <em>sf</em> data frame without having
+to worry about taking along ‘geometry’:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Selecting a sequence of columns</span></span>
 <span><span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 100 features and 4 fields</span></span>
@@ -357,8 +351,9 @@ without having to worry about taking along ‘geometry’:</p>
 <span><span class="co">#    AREA      NAME  FIPS FIPSNO                       geometry</span></span>
 <span><span class="co"># 1 0.114      Ashe 37009  37009 MULTIPOLYGON (((-81.47276 3...</span></span>
 <span><span class="co"># 2 0.061 Alleghany 37005  37005 MULTIPOLYGON (((-81.23989 3...</span></span>
-<span><span class="co"># 3 0.143     Surry 37171  37171 MULTIPOLYGON (((-80.45634 3...</span></span>
-<span></span>
+<span><span class="co"># 3 0.143     Surry 37171  37171 MULTIPOLYGON (((-80.45634 3...</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Same using standard evaluation (gv is a shorthand for get_vars())</span></span>
 <span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 100 features and 4 fields</span></span>
@@ -372,8 +367,8 @@ without having to worry about taking along ‘geometry’:</p>
 <span><span class="co"># 2 0.061 Alleghany 37005  37005 MULTIPOLYGON (((-81.23989 3...</span></span>
 <span><span class="co"># 3 0.143     Surry 37171  37171 MULTIPOLYGON (((-80.45634 3...</span></span></code></pre></div>
 <p>The same applies to subsetting rows (and columns):</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># A fast and enhanced version of base::subset, now also supporting sf data </span></span>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># A fast and enhanced version of base::subset</span></span>
 <span><span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 44 features and 4 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
@@ -384,8 +379,9 @@ without having to worry about taking along ‘geometry’:</p>
 <span><span class="co">#    AREA        NAME  FIPS FIPSNO                       geometry</span></span>
 <span><span class="co"># 1 0.143       Surry 37171  37171 MULTIPOLYGON (((-80.45634 3...</span></span>
 <span><span class="co"># 2 0.153 Northampton 37131  37131 MULTIPOLYGON (((-77.21767 3...</span></span>
-<span><span class="co"># 3 0.153  Rockingham 37157  37157 MULTIPOLYGON (((-79.53051 3...</span></span>
-<span></span>
+<span><span class="co"># 3 0.153  Rockingham 37157  37157 MULTIPOLYGON (((-79.53051 3...</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># A fast version of `[` (where i is used and optionally j)</span></span>
 <span><span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 10 features and 4 fields</span></span>
@@ -399,8 +395,9 @@ without having to worry about taking along ‘geometry’:</p>
 <span><span class="co"># 2 0.061 Alleghany 37005  37005 MULTIPOLYGON (((-81.23989 3...</span></span>
 <span><span class="co"># 3 0.143     Surry 37171  37171 MULTIPOLYGON (((-80.45634 3...</span></span></code></pre></div>
 <p>This is significantly faster than using <code>[</code>,
-<code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code><a href="https://rdrr.io/r/base/subset.html" class="external-link">base::subset()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">dplyr::select()</a></code> or
+<code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -410,39 +407,46 @@ without having to worry about taking along ‘geometry’:</p>
 <span>               collapse2 <span class="op">=</span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>               sf <span class="op">=</span> <span class="va">nc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#       expr     min      lq      mean   median       uq      max neval</span></span>
-<span><span class="co">#   collapse   3.075   4.428   6.28530   5.8015   7.0520   17.630   100</span></span>
-<span><span class="co">#      dplyr 434.067 456.248 598.61148 617.9725 646.3240 4208.896   100</span></span>
-<span><span class="co">#  collapse2   2.583   3.690   5.39724   5.2480   6.1295   12.710   100</span></span>
-<span><span class="co">#         sf 105.739 117.014 146.58074 144.8735 172.9585  197.087   100</span></span>
-<span><span class="co"># Subsetting</span></span>
+<span><span class="co">#       expr     min       lq      mean   median       uq       max neval</span></span>
+<span><span class="co">#   collapse   3.075   4.2640   6.13278   5.7810   7.0315    30.422   100</span></span>
+<span><span class="co">#      dplyr 438.167 472.0125 678.03914 485.7475 508.9330 12854.689   100</span></span>
+<span><span class="co">#  collapse2   2.542   3.6080   5.56698   4.8380   5.8220    22.427   100</span></span>
+<span><span class="co">#         sf 105.903 118.0185 126.41079 121.9955 129.2320   216.685   100</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Subsetting</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span>, </span>
-<span>               dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AREA</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>               dplyr <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">AREA</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>               collapse2 <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>               sf <span class="op">=</span> <span class="va">nc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#       expr     min       lq       mean    median        uq      max neval</span></span>
-<span><span class="co">#   collapse   9.922  11.9105   16.04617   15.2725   18.4910   28.003   100</span></span>
-<span><span class="co">#      dplyr 897.695 925.2880 1056.15426 1016.1235 1053.5155 4051.292   100</span></span>
-<span><span class="co">#  collapse2   2.829   3.5465    6.24963    5.2275    7.2365   47.191   100</span></span>
-<span><span class="co">#         sf 164.328 184.7665  202.10048  196.3285  213.8970  498.519   100</span></span></code></pre></div>
-<p>It needs to be noted that at this point <em>collapse</em> functions
-don’t subset the ‘agr’ attribute on selecting columns, which (if
-specified) relates columns (attributes) to the geometry, and also don’t
-modify the ‘bbox’ attribute giving the overall boundaries of a set of
-geometries when subsetting the <em>sf</em> data frame. Keeping the full
-‘agr’ attribute is not problematic for all practical purposes, but not
-changing ‘bbox’ upon subsetting may lead to too large margins when
-plotting the geometries of a subsetted <em>sf</em> data frame.</p>
+<span><span class="co">#       expr     min       lq       mean   median        uq      max neval</span></span>
+<span><span class="co">#   collapse   9.430  11.9310   17.34218  15.3750   20.3770   48.380   100</span></span>
+<span><span class="co">#      dplyr 887.363 911.6965 1193.77937 975.3285 1332.5000 4584.989   100</span></span>
+<span><span class="co">#  collapse2   2.829   3.5260    6.47349   5.2480    6.6830   20.582   100</span></span>
+<span><span class="co">#         sf 167.772 181.9990  203.76221 196.0620  207.3575  349.484   100</span></span></code></pre></div>
+<p>However, <em>collapse</em> functions don’t subset the ‘agr’ attribute
+on selecting columns, which (if specified) relates columns (attributes)
+to the geometry, and also don’t modify the ‘bbox’ attribute giving the
+overall boundaries of a set of geometries when subsetting the
+<em>sf</em> data frame. Keeping the full ‘agr’ attribute is not
+problematic for all practical purposes, but not changing ‘bbox’ upon
+subsetting may lead to too large margins when plotting the geometries of
+a subset <em>sf</em> data frame.</p>
+<p>One way to to change this is calling <code><a href="https://r-spatial.github.io/sf/reference/valid.html" class="external-link">st_make_valid()</a></code> on
+the subset frame; but <code><a href="https://r-spatial.github.io/sf/reference/valid.html" class="external-link">st_make_valid()</a></code> is very expensive,
+thus unless the subset frame is very small, it is better to use
+<code>[</code>, <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">base::subset()</a></code> or
+<code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code> in cases where the bounding box size
+matters.</p>
 </div>
 <div class="section level2">
 <h2 id="aggregation-and-grouping">Aggregation and Grouping<a class="anchor" aria-label="anchor" href="#aggregation-and-grouping"></a>
 </h2>
-<p>The flexibility and speed of <code>collap</code> for aggregation can
-be used on <em>sf</em> data frames. A separate method for <em>sf</em>
-objects was not considered necessary as one can simply aggregate the
-geometry column using <code>st_union</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>The flexibility and speed of <code><a href="../reference/collap.html">collap()</a></code> for aggregation
+can be used on <em>sf</em> data frames. A separate method for
+<em>sf</em> objects was not considered necessary as one can simply
+aggregate the geometry column using <code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">st_union()</a></code>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Aggregating by variable SID74 using the median for numeric and the mode for categorical columns</span></span>
 <span><span class="fu"><a href="../reference/collap.html">collap</a></span><span class="op">(</span><span class="va">nc</span>, <span class="op">~</span> <span class="va">SID74</span>, custom <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fmedian <span class="op">=</span> <span class="va">is.numeric</span>, </span>
 <span>                                  fmode <span class="op">=</span> <span class="va">is.character</span>, </span>
@@ -462,9 +466,9 @@ geometry column using <code>st_union</code>:</p>
 <span><span class="co"># 2     1     176 MULTIPOLYGON (((-80.02406 3...</span></span>
 <span><span class="co"># 3     2     452 MULTIPOLYGON (((-77.16129 3...</span></span></code></pre></div>
 <p><em>sf</em> data frames can also be grouped and then aggregated using
-<code>fsummarise</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">SID74</span><span class="op">)</span></span>
+<code><a href="../reference/fsummarise.html">fsummarise()</a></code>:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">nc</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">SID74</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 100 features and 14 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
 <span><span class="co"># Dimension:     XY</span></span>
@@ -480,9 +484,11 @@ geometry column using <code>st_union</code>:</p>
 <span><span class="co"># 2      12 MULTIPOLYGON (((-81.23989 3...</span></span>
 <span><span class="co"># 3     260 MULTIPOLYGON (((-80.45634 3...</span></span>
 <span><span class="co"># </span></span>
-<span><span class="co"># Grouped by:  SID74  [23 | 4 (4) 1-13]</span></span>
-<span></span>
-<span><span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">SID74</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="co"># Grouped by:  SID74  [23 | 4 (4) 1-13]</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">nc</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">SID74</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fsummarise.html">fsummarise</a></span><span class="op">(</span>AREA_Ag <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, </span>
 <span>             Perimeter_Ag <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PERIMETER</span><span class="op">)</span>,</span>
 <span>             geometry <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">st_union</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span></span>
@@ -496,16 +502,44 @@ geometry column using <code>st_union</code>:</p>
 <span><span class="co"># 1     0   1.103       1.3070 MULTIPOLYGON (((-83.69563 3...</span></span>
 <span><span class="co"># 2     1   0.914       1.2880 MULTIPOLYGON (((-80.02406 3...</span></span>
 <span><span class="co"># 3     2   1.047       1.6435 MULTIPOLYGON (((-77.16129 3...</span></span></code></pre></div>
-<p>It needs to be noted here that typically most of the time in
-aggregation is consumed by <code>st_union</code> so that the speed of
-<em>collapse</em> does not really become visible on most datasets. One
-exception is spatial panel data when aggregating over the time-dimension
-with identical geometries for each id over time. Such panels can quickly
-be aggregated using <code>ffirst</code> or <code>flast</code> to
-aggregate the geometry:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>Typically most of the time in aggregation is consumed by
+<code><a href="https://r-spatial.github.io/sf/reference/geos_combine.html" class="external-link">st_union()</a></code> so that the speed of <em>collapse</em> does not
+really become visible on most datasets. A faster alternative is to use
+<em>geos</em> (<em>sf</em> backend for planar geometries) or <em>s2</em>
+(<em>sf</em> backend for spherical geometries) directly:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Using s2 backend: sensible for larger tasks</span></span>
+<span><span class="va">nc</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/ftransform.html">fmutate</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/as_s2_geography.html" class="external-link">as_s2_geography</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">SID74</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/fsummarise.html">fsummarise</a></span><span class="op">(</span>AREA_Ag <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, </span>
+<span>             Perimeter_Ag <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PERIMETER</span><span class="op">)</span>,</span>
+<span>             geometry <span class="op">=</span> <span class="fu">s2</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/s2/reference/s2_boundary.html" class="external-link">s2_union_agg</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/ftransform.html">fmutate</a></span><span class="op">(</span>geometry <span class="op">=</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">st_as_sfc</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Simple feature collection with 23 features and 3 fields</span></span>
+<span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
+<span><span class="co"># Dimension:     XY</span></span>
+<span><span class="co"># Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span></span>
+<span><span class="co"># Geodetic CRS:  WGS 84</span></span>
+<span><span class="co"># First 3 features:</span></span>
+<span><span class="co">#   SID74 AREA_Ag Perimeter_Ag                       geometry</span></span>
+<span><span class="co"># 1     0   1.103       1.3070 MULTIPOLYGON (((-83.69563 3...</span></span>
+<span><span class="co"># 2     1   0.914       1.2880 MULTIPOLYGON (((-80.02406 3...</span></span>
+<span><span class="co"># 3     2   1.047       1.6435 MULTIPOLYGON (((-77.16129 3...</span></span></code></pre></div>
+<p>In general, also upon aggregation with <em>collapse</em>, functions
+<code><a href="https://r-spatial.github.io/sf/reference/st_as_sfc.html" class="external-link">st_as_sfc()</a></code>, <code><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf()</a></code>, or, in the worst
+case, <code><a href="https://r-spatial.github.io/sf/reference/valid.html" class="external-link">st_make_valid()</a></code>, may need to be invoked to ensure
+valid <em>sf</em> object output. Functions <code><a href="../reference/collap.html">collap()</a></code> and
+<code><a href="../reference/fsummarise.html">fsummarise()</a></code> are attribute preserving but do not give
+special regard to geometry columns.</p>
+<p>One exception that both avoids the high cost of spatial functions in
+aggregation and any need for ex-post conversion/validation is
+aggregating spatial panel data over the time-dimension. Such panels can
+quickly be aggregated using <code><a href="../reference/ffirst_flast.html">ffirst()</a></code> or
+<code><a href="../reference/ffirst_flast.html">flast()</a></code> to aggregate the geometry:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Creating a panel-dataset by simply duplicating nc for 2 different years</span></span>
-<span><span class="va">pnc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>`2000` <span class="op">=</span> <span class="va">nc</span>, `2001` <span class="op">=</span> <span class="va">nc</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="st">"Year"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">copyMostAttrib</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
+<span><span class="va">pnc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/rowbind.html">rowbind</a></span><span class="op">(</span>`2000` <span class="op">=</span> <span class="va">nc</span>, `2001` <span class="op">=</span> <span class="va">nc</span>, idcol <span class="op">=</span> <span class="st">"Year"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/quick-conversion.html">as_integer_factor</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">pnc</span> </span>
 <span><span class="co"># Simple feature collection with 200 features and 15 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
@@ -520,8 +554,9 @@ aggregate the geometry:</p>
 <span><span class="co">#   SID79 NWBIR79                       geometry</span></span>
 <span><span class="co"># 1     0      19 MULTIPOLYGON (((-81.47276 3...</span></span>
 <span><span class="co"># 2     3      12 MULTIPOLYGON (((-81.23989 3...</span></span>
-<span><span class="co"># 3     6     260 MULTIPOLYGON (((-80.45634 3...</span></span>
-<span></span>
+<span><span class="co"># 3     6     260 MULTIPOLYGON (((-80.45634 3...</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Aggregating by NAME, using the last value for all categorical data</span></span>
 <span><span class="fu"><a href="../reference/collap.html">collap</a></span><span class="op">(</span><span class="va">pnc</span>, <span class="op">~</span> <span class="va">NAME</span>, <span class="va">fmedian</span>, catFUN <span class="op">=</span> <span class="va">flast</span>, cols <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 100 features and 15 fields</span></span>
@@ -537,28 +572,74 @@ aggregate the geometry:</p>
 <span><span class="co">#   SID79 NWBIR79                       geometry</span></span>
 <span><span class="co"># 1    11    1397 MULTIPOLYGON (((-79.24619 3...</span></span>
 <span><span class="co"># 2     2     150 MULTIPOLYGON (((-81.10889 3...</span></span>
-<span><span class="co"># 3     3      12 MULTIPOLYGON (((-81.23989 3...</span></span>
-<span></span>
+<span><span class="co"># 3     3      12 MULTIPOLYGON (((-81.23989 3...</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># Using fsummarise to aggregate just two variables and the geometry</span></span>
-<span><span class="va">pnc_ag</span> <span class="op">&lt;-</span> <span class="va">pnc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">NAME</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">pnc_ag</span> <span class="op">&lt;-</span> <span class="va">pnc</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">NAME</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/fsummarise.html">fsummarise</a></span><span class="op">(</span>AREA_Ag <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, </span>
 <span>             Perimeter_Ag <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">PERIMETER</span><span class="op">)</span>,</span>
 <span>             geometry <span class="op">=</span> <span class="fu"><a href="../reference/ffirst_flast.html">flast</a></span><span class="op">(</span><span class="va">geometry</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># The geometry is still valid...</span></span>
+<span><span class="co"># The geometry is still valid... (slt = shorthand for fselect)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">slt</a></span><span class="op">(</span><span class="va">pnc_ag</span>, <span class="va">AREA_Ag</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_and_sf_files/figure-html/unnamed-chunk-10-1.png" width="100%"></p>
+<p><img src="collapse_and_sf_files/figure-html/unnamed-chunk-11-1.png" width="100%"></p>
+</div>
+<div class="section level2">
+<h2 id="indexing">Indexing<a class="anchor" aria-label="anchor" href="#indexing"></a>
+</h2>
+<p><em>sf</em> data frames can also become <a href="https://sebkrantz.github.io/collapse/reference/indexing.html"><em>indexed
+frames</em></a> (spatio-temporal panels):</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pnc</span> <span class="op">&lt;-</span> <span class="va">pnc</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/indexing.html">findex_by</a></span><span class="op">(</span><span class="va">CNTY_ID</span>, <span class="va">Year</span><span class="op">)</span></span>
+<span><span class="va">pnc</span> </span>
+<span><span class="co"># Simple feature collection with 200 features and 15 fields</span></span>
+<span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
+<span><span class="co"># Dimension:     XY</span></span>
+<span><span class="co"># Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span></span>
+<span><span class="co"># Geodetic CRS:  NAD27</span></span>
+<span><span class="co"># First 3 features:</span></span>
+<span><span class="co">#   Year  AREA PERIMETER CNTY_ CNTY_ID      NAME  FIPS FIPSNO CRESS_ID BIR74 SID74 NWBIR74 BIR79</span></span>
+<span><span class="co"># 1 2000 0.114     1.442  1825    1825      Ashe 37009  37009        5  1091     1      10  1364</span></span>
+<span><span class="co"># 2 2000 0.061     1.231  1827    1827 Alleghany 37005  37005        3   487     0      10   542</span></span>
+<span><span class="co"># 3 2000 0.143     1.630  1828    1828     Surry 37171  37171       86  3188     5     208  3616</span></span>
+<span><span class="co">#   SID79 NWBIR79                       geometry</span></span>
+<span><span class="co"># 1     0      19 MULTIPOLYGON (((-81.47276 3...</span></span>
+<span><span class="co"># 2     3      12 MULTIPOLYGON (((-81.23989 3...</span></span>
+<span><span class="co"># 3     6     260 MULTIPOLYGON (((-80.45634 3...</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># Indexed by:  CNTY_ID [100] | Year [2]</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">pnc</span><span class="op">$</span><span class="va">AREA</span><span class="op">)</span></span>
+<span><span class="co">#          N/T    Mean      SD     Min     Max</span></span>
+<span><span class="co"># Overall  200  0.1263  0.0491   0.042   0.241</span></span>
+<span><span class="co"># Between  100  0.1263  0.0492   0.042   0.241</span></span>
+<span><span class="co"># Within     2  0.1263       0  0.1263  0.1263</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ftransform.html">settransform</a></span><span class="op">(</span><span class="va">pnc</span>, AREA_diff <span class="op">=</span> <span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">pnc</span><span class="op">$</span><span class="va">AREA_diff</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#      2000 2001</span></span>
+<span><span class="co"># 1825   NA    0</span></span>
+<span><span class="co"># 1827   NA    0</span></span>
+<span><span class="co"># 1828   NA    0</span></span>
+<span><span class="co"># 1831   NA    0</span></span>
+<span><span class="co"># 1832   NA    0</span></span>
+<span><span class="co"># 1833   NA    0</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">pnc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/indexing.html">unindex</a></span><span class="op">(</span><span class="va">pnc</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="unique-values-ordering-splitting-binding">Unique Values, Ordering, Splitting, Binding<a class="anchor" aria-label="anchor" href="#unique-values-ordering-splitting-binding"></a>
 </h2>
-<p>Functions <code>funique</code> and <code>roworder(v)</code> work on
-sf data frames and ignore the geometry column for determining the unique
-values / order of rows. <code>rsplit</code> can be used to (recursively)
-split an <em>sf</em> data frame into multiple chunks.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>Functions <code><a href="../reference/funique.html">funique()</a></code> and <code>roworder[v]()</code>
+ignore the ‘geometry’ column in determining the unique values / order of
+rows when applied to <em>sf</em> data frames. <code><a href="../reference/rsplit.html">rsplit()</a></code> can
+be used to (recursively) split an <em>sf</em> data frame into multiple
+chunks.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Splitting by SID74</span></span>
-<span><span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="va">nc</span>, <span class="op">~</span> <span class="va">SID74</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="va">nc</span>, <span class="op">~</span> <span class="va">SID74</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="co"># $`0`</span></span>
 <span><span class="co"># Simple feature collection with 13 features and 13 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
@@ -590,14 +671,13 @@ split an <em>sf</em> data frame into multiple chunks.</p>
 <span><span class="co"># 1 MULTIPOLYGON (((-81.47276 3...</span></span>
 <span><span class="co"># 2 MULTIPOLYGON (((-76.00897 3...</span></span>
 <span><span class="co"># 3 MULTIPOLYGON (((-80.02567 3...</span></span></code></pre></div>
-<p>It should be noted here that the default in <code>rsplit</code> for
-data frames is <code>simplify = TRUE</code>, which for a single LHS
-variable would just split the column-vector. This does not apply to
-<em>sf</em> data frames as the ‘geometry’ column is always selected as
-well.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>The default in <code><a href="../reference/rsplit.html">rsplit()</a></code> for data frames is
+<code>simplify = TRUE</code>, which, for a single LHS variable, would
+just split the column-vector. This does not apply to <em>sf</em> data
+frames as the ‘geometry’ column is always selected as well.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Only splitting Area</span></span>
-<span><span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span> <span class="op">~</span> <span class="va">SID74</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span> <span class="op">~</span> <span class="va">SID74</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co"># $`0`</span></span>
 <span><span class="co"># Simple feature collection with 13 features and 1 field</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
@@ -608,15 +688,16 @@ well.</p>
 <span><span class="co">#    AREA                       geometry</span></span>
 <span><span class="co"># 1 0.061 MULTIPOLYGON (((-81.23989 3...</span></span>
 <span><span class="co"># 2 0.062 MULTIPOLYGON (((-76.00897 3...</span></span>
-<span><span class="co"># 3 0.091 MULTIPOLYGON (((-76.56251 3...</span></span>
-<span></span>
+<span><span class="co"># 3 0.091 MULTIPOLYGON (((-76.56251 3...</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
 <span><span class="co"># For data frames the default simplify = TRUE drops the data frame structure</span></span>
-<span><span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDF</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, <span class="va">AREA</span> <span class="op">~</span> <span class="va">SID74</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDF</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, <span class="va">AREA</span> <span class="op">~</span> <span class="va">SID74</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co"># $`0`</span></span>
 <span><span class="co">#  [1] 0.061 0.062 0.091 0.064 0.059 0.080 0.066 0.099 0.094 0.078 0.131 0.167 0.051</span></span></code></pre></div>
 <p><em>sf</em> data frames can be combined using <code><a href="../reference/rowbind.html">rowbind()</a></code>,
-which will preserve the attributes of the first object.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+which, by default, preserves the attributes of the first object.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Splitting by each row and recombining</span></span>
 <span><span class="va">nc_combined</span> <span class="op">&lt;-</span> <span class="va">nc</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/rsplit.html">rsplit</a></span><span class="op">(</span><span class="fu"><a href="../reference/efficient-programming.html">seq_row</a></span><span class="op">(</span><span class="va">.</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/rowbind.html">rowbind</a></span><span class="op">(</span><span class="op">)</span> </span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">nc_combined</span><span class="op">)</span></span>
@@ -625,51 +706,49 @@ which will preserve the attributes of the first object.</p>
 <div class="section level2">
 <h2 id="transformations">Transformations<a class="anchor" aria-label="anchor" href="#transformations"></a>
 </h2>
-<p>For transforming and computing columns, <code>ftransform(v)</code>
-and <code>settransform(v)</code> apply as to any other data frame.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ftransform.html">ftransform</a></span><span class="op">(</span><span class="va">nc</span>, scaled_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, </span>
-<span>               gsum_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span>, <span class="va">SID74</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co"># Simple feature collection with 100 features and 16 fields</span></span>
+<p>For transforming and computing columns, <code><a href="../reference/ftransform.html">fmutate()</a></code> and
+<code>ftransform[v]()</code> apply as to any other data frame.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ftransform.html">fmutate</a></span><span class="op">(</span><span class="va">nc</span>, gsum_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span>, <span class="va">SID74</span>, TRA <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Simple feature collection with 6 features and 15 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
 <span><span class="co"># Dimension:     XY</span></span>
-<span><span class="co"># Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span></span>
+<span><span class="co"># Bounding box:  xmin: -81.74107 ymin: 36.07282 xmax: -75.77316 ymax: 36.58965</span></span>
 <span><span class="co"># Geodetic CRS:  NAD27</span></span>
 <span><span class="co"># First 3 features:</span></span>
 <span><span class="co">#    AREA PERIMETER CNTY_ CNTY_ID      NAME  FIPS FIPSNO CRESS_ID BIR74 SID74 NWBIR74 BIR79 SID79</span></span>
 <span><span class="co"># 1 0.114     1.442  1825    1825      Ashe 37009  37009        5  1091     1      10  1364     0</span></span>
 <span><span class="co"># 2 0.061     1.231  1827    1827 Alleghany 37005  37005        3   487     0      10   542     3</span></span>
 <span><span class="co"># 3 0.143     1.630  1828    1828     Surry 37171  37171       86  3188     5     208  3616     6</span></span>
-<span><span class="co">#   NWBIR79                       geometry scaled_AREA gsum_AREA</span></span>
-<span><span class="co"># 1      19 MULTIPOLYGON (((-81.47276 3...  -0.2491860     0.914</span></span>
-<span><span class="co"># 2      12 MULTIPOLYGON (((-81.23989 3...  -1.3264176     1.103</span></span>
-<span><span class="co"># 3     260 MULTIPOLYGON (((-80.45634 3...   0.3402426     1.380</span></span>
-<span></span>
-<span><span class="co"># settransform materializes the change, same as nc &lt;- ftransform(nc, ...)</span></span>
-<span><span class="fu"><a href="../reference/ftransform.html">settransform</a></span><span class="op">(</span><span class="va">nc</span>, scaled_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, </span>
-<span>                 gsum_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span>, <span class="va">SID74</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">nc</span></span>
-<span><span class="co"># Simple feature collection with 100 features and 16 fields</span></span>
+<span><span class="co">#   NWBIR79                       geometry gsum_AREA</span></span>
+<span><span class="co"># 1      19 MULTIPOLYGON (((-81.47276 3...     0.914</span></span>
+<span><span class="co"># 2      12 MULTIPOLYGON (((-81.23989 3...     1.103</span></span>
+<span><span class="co"># 3     260 MULTIPOLYGON (((-80.45634 3...     1.380</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Same thing, more expensive</span></span>
+<span><span class="va">nc</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">SID74</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/ftransform.html">fmutate</a></span><span class="op">(</span>gsum_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/GRP.html">fungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Simple feature collection with 6 features and 15 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
 <span><span class="co"># Dimension:     XY</span></span>
-<span><span class="co"># Bounding box:  xmin: -84.32385 ymin: 33.88199 xmax: -75.45698 ymax: 36.58965</span></span>
+<span><span class="co"># Bounding box:  xmin: -81.74107 ymin: 36.07282 xmax: -75.77316 ymax: 36.58965</span></span>
 <span><span class="co"># Geodetic CRS:  NAD27</span></span>
 <span><span class="co"># First 3 features:</span></span>
 <span><span class="co">#    AREA PERIMETER CNTY_ CNTY_ID      NAME  FIPS FIPSNO CRESS_ID BIR74 SID74 NWBIR74 BIR79 SID79</span></span>
 <span><span class="co"># 1 0.114     1.442  1825    1825      Ashe 37009  37009        5  1091     1      10  1364     0</span></span>
 <span><span class="co"># 2 0.061     1.231  1827    1827 Alleghany 37005  37005        3   487     0      10   542     3</span></span>
 <span><span class="co"># 3 0.143     1.630  1828    1828     Surry 37171  37171       86  3188     5     208  3616     6</span></span>
-<span><span class="co">#   NWBIR79                       geometry scaled_AREA gsum_AREA</span></span>
-<span><span class="co"># 1      19 MULTIPOLYGON (((-81.47276 3...  -0.2491860     0.914</span></span>
-<span><span class="co"># 2      12 MULTIPOLYGON (((-81.23989 3...  -1.3264176     1.103</span></span>
-<span><span class="co"># 3     260 MULTIPOLYGON (((-80.45634 3...   0.3402426     1.380</span></span></code></pre></div>
+<span><span class="co">#   NWBIR79                       geometry gsum_AREA</span></span>
+<span><span class="co"># 1      19 MULTIPOLYGON (((-81.47276 3...     0.914</span></span>
+<span><span class="co"># 2      12 MULTIPOLYGON (((-81.23989 3...     1.103</span></span>
+<span><span class="co"># 3     260 MULTIPOLYGON (((-80.45634 3...     1.380</span></span></code></pre></div>
 <p>Special attention to <em>sf</em> data frames is afforded by
-<code>fcompute</code>, which can be used to compute new columns dropping
-existing ones - except for the geometry column and any columns selected
-through the <code>keep</code> argument.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code><a href="../reference/ftransform.html">fcompute()</a></code>, which can be used to compute new columns
+dropping existing ones - except for the geometry column and any columns
+selected through the <code>keep</code> argument.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ftransform.html">fcompute</a></span><span class="op">(</span><span class="va">nc</span>, scaled_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, </span>
-<span>             gsum_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span>, <span class="va">SID74</span>, TRA <span class="op">=</span> <span class="st">"replace_fill"</span><span class="op">)</span>, </span>
+<span>             gsum_AREA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">AREA</span>, <span class="va">SID74</span>, TRA <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span>, </span>
 <span>         keep <span class="op">=</span> <span class="fu"><a href="../reference/small-helpers.html">.c</a></span><span class="op">(</span><span class="va">AREA</span>, <span class="va">SID74</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 100 features and 4 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
@@ -685,15 +764,16 @@ through the <code>keep</code> argument.</p>
 <div class="section level2">
 <h2 id="conversion-to-and-from-sf">Conversion to and from <em>sf</em><a class="anchor" aria-label="anchor" href="#conversion-to-and-from-sf"></a>
 </h2>
-<p>The quick converters <code>qDF</code>, <code>qDT</code> and
-<code>qTBL</code> can be used to very efficiently convert <em>sf</em>
-data frames to standard data frames, <em>data.table</em>’s or
+<p>The quick converters <code><a href="../reference/quick-conversion.html">qDF()</a></code>, <code><a href="../reference/quick-conversion.html">qDT()</a></code>, and
+<code><a href="../reference/quick-conversion.html">qTBL()</a></code> can be used to efficiently convert <em>sf</em> data
+frames to standard data frames, <em>data.table</em>’s or
 <em>tibbles</em>, and the result can be converted back to the original
-<em>sf</em> data frame using <code>setAttrib</code>,
-<code>copyAttrib</code> or <code>copyMostAttrib</code>.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<em>sf</em> data frame using <code><a href="../reference/small-helpers.html">setAttrib()</a></code>,
+<code><a href="../reference/small-helpers.html">copyAttrib()</a></code> or <code><a href="../reference/small-helpers.html">copyMostAttrib()</a></code>.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>roll_AREA <span class="op">=</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/froll.html" class="external-link">frollmean</a></span><span class="op">(</span><span class="va">AREA</span>, <span class="fl">2</span><span class="op">)</span>, <span class="va">geometry</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">SID74</span><span class="op">]</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/small-helpers.html">copyMostAttrib</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
+<span><span class="co"># Create a data.table on the fly to do an fast grouped rolling mean and back to sf</span></span>
+<span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>roll_AREA <span class="op">=</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/froll.html" class="external-link">frollmean</a></span><span class="op">(</span><span class="va">AREA</span>, <span class="fl">2</span><span class="op">)</span>, <span class="va">geometry</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">SID74</span><span class="op">]</span> <span class="op">|&gt;</span> <span class="fu"><a href="../reference/small-helpers.html">copyMostAttrib</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span></span>
 <span><span class="co"># Simple feature collection with 100 features and 2 fields</span></span>
 <span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
 <span><span class="co"># Dimension:     XY</span></span>
@@ -704,13 +784,97 @@ data frames to standard data frames, <em>data.table</em>’s or
 <span><span class="co"># 1     1        NA MULTIPOLYGON (((-81.47276 3...</span></span>
 <span><span class="co"># 2     1     0.092 MULTIPOLYGON (((-76.00897 3...</span></span>
 <span><span class="co"># 3     1     0.097 MULTIPOLYGON (((-80.02567 3...</span></span></code></pre></div>
+<p>The easiest way to strip a geometry column off an <em>sf</em> data
+frame is via the function <code><a href="../reference/extract_list.html">atomic_elem()</a></code>, which removes
+list-like columns and, by default, also the class attribute. For
+example, we can create a <em>data.table</em> without list column
+using</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="../reference/extract_list.html">atomic_elem</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#     AREA PERIMETER CNTY_ CNTY_ID        NAME   FIPS FIPSNO CRESS_ID BIR74 SID74 NWBIR74 BIR79 SID79</span></span>
+<span><span class="co">#    &lt;num&gt;     &lt;num&gt; &lt;num&gt;   &lt;num&gt;      &lt;char&gt; &lt;char&gt;  &lt;num&gt;    &lt;int&gt; &lt;num&gt; &lt;num&gt;   &lt;num&gt; &lt;num&gt; &lt;num&gt;</span></span>
+<span><span class="co"># 1: 0.114     1.442  1825    1825        Ashe  37009  37009        5  1091     1      10  1364     0</span></span>
+<span><span class="co"># 2: 0.061     1.231  1827    1827   Alleghany  37005  37005        3   487     0      10   542     3</span></span>
+<span><span class="co"># 3: 0.143     1.630  1828    1828       Surry  37171  37171       86  3188     5     208  3616     6</span></span>
+<span><span class="co"># 4: 0.070     2.968  1831    1831   Currituck  37053  37053       27   508     1     123   830     2</span></span>
+<span><span class="co"># 5: 0.153     2.206  1832    1832 Northampton  37131  37131       66  1421     9    1066  1606     3</span></span>
+<span><span class="co"># 6: 0.097     1.670  1833    1833    Hertford  37091  37091       46  1452     7     954  1838     5</span></span>
+<span><span class="co">#    NWBIR79</span></span>
+<span><span class="co">#      &lt;num&gt;</span></span>
+<span><span class="co"># 1:      19</span></span>
+<span><span class="co"># 2:      12</span></span>
+<span><span class="co"># 3:     260</span></span>
+<span><span class="co"># 4:     145</span></span>
+<span><span class="co"># 5:    1197</span></span>
+<span><span class="co"># 6:    1237</span></span></code></pre></div>
+<p>This is also handy for other functions such as <code><a href="../reference/join.html">join()</a></code>
+and <code><a href="../reference/pivot.html">pivot()</a></code>, which are class agnostic like all of
+<em>collapse</em>, but do not have any built-in logic to deal with the
+<em>sf</em> column.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Use atomic_elem() to strip geometry off y in left join</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="../reference/join.html">join</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="../reference/extract_list.html">atomic_elem</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span>, overid <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># left join: nc[AREA, PERIMETER, CNTY_, CNTY_ID, NAME, FIPS, FIPSNO, CRESS_ID, BIR74, SID74, NWBIR74, BIR79, SID79, NWBIR79] 100/100 (100%) &lt;m:m&gt; y[AREA, PERIMETER, CNTY_, CNTY_ID, NAME, FIPS, FIPSNO, CRESS_ID, BIR74, SID74, NWBIR74, BIR79, SID79, NWBIR79] 100/100 (100%)</span></span>
+<span><span class="co"># [1] TRUE</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># In pivot: presently need to specify what to do with geometry column</span></span>
+<span><span class="fu"><a href="../reference/pivot.html">pivot</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"CNTY_ID"</span>, <span class="st">"geometry"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Simple feature collection with 6 features and 3 fields</span></span>
+<span><span class="co"># Geometry type: MULTIPOLYGON</span></span>
+<span><span class="co"># Dimension:     XY</span></span>
+<span><span class="co"># Bounding box:  xmin: -81.74107 ymin: 36.07282 xmax: -75.77316 ymax: 36.58965</span></span>
+<span><span class="co"># Geodetic CRS:  NAD27</span></span>
+<span><span class="co"># First 3 features:</span></span>
+<span><span class="co">#   CNTY_ID                       geometry variable value</span></span>
+<span><span class="co"># 1    1825 MULTIPOLYGON (((-81.47276 3...     AREA 0.114</span></span>
+<span><span class="co"># 2    1827 MULTIPOLYGON (((-81.23989 3...     AREA 0.061</span></span>
+<span><span class="co"># 3    1828 MULTIPOLYGON (((-80.45634 3...     AREA 0.143</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Or use</span></span>
+<span><span class="fu"><a href="../reference/pivot.html">pivot</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="../reference/extract_list.html">atomic_elem</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span><span class="op">)</span>, <span class="st">"CNTY_ID"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#    CNTY_ID variable  value</span></span>
+<span><span class="co">#      &lt;num&gt;   &lt;fctr&gt; &lt;char&gt;</span></span>
+<span><span class="co"># 1:    1825     AREA  0.114</span></span>
+<span><span class="co"># 2:    1827     AREA  0.061</span></span>
+<span><span class="co"># 3:    1828     AREA  0.143</span></span>
+<span><span class="co"># 4:    1831     AREA   0.07</span></span>
+<span><span class="co"># 5:    1832     AREA  0.153</span></span>
+<span><span class="co"># 6:    1833     AREA  0.097</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="support-for-units">Support for <em>units</em><a class="anchor" aria-label="anchor" href="#support-for-units"></a>
+</h2>
+<p>Since v2.0.13, <em>collapse</em> explicitly supports/preserves
+<em>units</em> objects through dedicated methods that preserve the
+‘units’ class wherever sensible.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">nc_dist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_unary.html" class="external-link">st_centroid</a></span><span class="op">(</span><span class="va">nc</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/geos_measures.html" class="external-link">st_distance</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">nc_dist</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span></span>
+<span><span class="co"># Units: [m]</span></span>
+<span><span class="co">#          [,1]     [,2]     [,3]</span></span>
+<span><span class="co"># [1,]     0.00 34020.35 72728.02</span></span>
+<span><span class="co"># [2,] 34020.35     0.00 40259.55</span></span>
+<span><span class="co"># [3,] 72728.02 40259.55     0.00</span></span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">nc_dist</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Units: [m]</span></span>
+<span><span class="co"># [1] 250543.9 237040.0 217941.5 337016.5 250380.2 269604.6</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">nc_dist</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># [1] 100 100 100 100 100 100</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
 </h2>
 <p><em>collapse</em> provides no deep integration with the <em>sf</em>
-ecosystem, but sufficient features and flexibility to painlessly
-manipulate <em>sf</em> data frames with much greater performance.</p>
+ecosystem and cannot perform spatial operations, but offers sufficient
+features and flexibility to painlessly manipulate <em>sf</em> data
+frames at much greater speeds than <em>dplyr</em>.</p>
+<p>This requires a bit of care by the user though to ensure that the
+returned <em>sf</em> objects are valid, especially following aggregation
+and subsetting.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

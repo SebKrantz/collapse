@@ -113,7 +113,7 @@ pre[class] {
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
 
 1. To facilitate complex data transformation, exploration and computing tasks in R.
-2. To help make R code fast, flexible, parsimonious and programmer friendly. 
+2. To help make R code fast, flexible, parsimonious and programmer friendly.
 --><p>This vignette focuses on the integration of <em>collapse</em> and the
 popular <em>plm</em> (‘Linear Models for Panel Data’) package by Yves
 Croissant, Giovanni Millo and Kevin Tappe. It will demonstrate the
@@ -274,7 +274,7 @@ all values in each group with the group mean (hence overwriting or
 ‘filling up’ missing values):</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This preserves missing values in the output</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span>              </span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span></span>
 <span><span class="co"># ABW-1960 ABW-1961 ABW-1962 ABW-1963 ABW-1964 ABW-1965 ABW-1966 ABW-1967 ABW-1968 ABW-1969 ABW-1970 </span></span>
 <span><span class="co">#       NA       NA       NA       NA       NA       NA       NA       NA       NA       NA       NA </span></span>
 <span><span class="co"># ABW-1971 ABW-1972 ABW-1973 ABW-1974 ABW-1975 ABW-1976 ABW-1977 ABW-1978 ABW-1979 ABW-1980 ABW-1981 </span></span>
@@ -283,7 +283,7 @@ all values in each group with the group mean (hence overwriting or
 <span><span class="co">#       NA       NA       NA       NA 25413.84 25413.84 25413.84 25413.84</span></span>
 <span></span>
 <span><span class="co"># This replaces all individuals with the group mean</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">PCGDP</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">PCGDP</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span></span>
 <span><span class="co"># ABW-1960 ABW-1961 ABW-1962 ABW-1963 ABW-1964 ABW-1965 ABW-1966 ABW-1967 ABW-1968 ABW-1969 ABW-1970 </span></span>
 <span><span class="co"># 25413.84 25413.84 25413.84 25413.84 25413.84 25413.84 25413.84 25413.84 25413.84 25413.84 25413.84 </span></span>
 <span><span class="co"># ABW-1971 ABW-1972 ABW-1973 ABW-1974 ABW-1975 ABW-1976 ABW-1977 ABW-1978 ABW-1979 ABW-1980 ABW-1981 </span></span>
@@ -300,12 +300,12 @@ preserve the level of the data (and will only change the intercept when
 employed in a regression):</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This performed standard grouped centering</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span>                          </span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#  ABW-1960  ABW-1961  ABW-1962  ABW-1963  ABW-1964  ABW-1965 </span></span>
 <span><span class="co"># -6.744533 -6.332533 -5.962533 -5.619533 -5.293533 -4.971533</span></span>
 <span></span>
 <span><span class="co"># This adds the overall average Life-Expectancy (across countries) to the country-demeaned series</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">LIFEEX</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">)</span>  </span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">LIFEEX</span>, mean <span class="op">=</span> <span class="st">"overall.mean"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># ABW-1960 ABW-1961 ABW-1962 ABW-1963 ABW-1964 ABW-1965 </span></span>
 <span><span class="co"># 57.55177 57.96377 58.33377 58.67677 59.00277 59.32477</span></span></code></pre></div>
 <p><code>fbetween</code> and <code>fwithin</code> can also be applied to
@@ -434,12 +434,12 @@ however rather simple, as they simply simultaneously center
 panel-vectors on various panel-identifiers in the index (which can be
 more than 2, the default is to center on all identifiers):</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># This simultaneously averages Life-Expectancy across countries and years </span></span>
+<code class="sourceCode R"><span><span class="co"># This simultaneously averages Life-Expectancy across countries and years</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDB</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span> <span class="co"># (same as running a regression on country and year dummies and taking the fitted values)</span></span>
 <span><span class="co"># ABW-1960 ABW-1961 ABW-1962 ABW-1963 ABW-1964 ABW-1965 </span></span>
 <span><span class="co"># 62.36179 62.85981 63.24258 63.65245 64.11774 64.52503</span></span>
 <span></span>
-<span><span class="co"># This simultaneously centers Life-Expectenacy on countries and years </span></span>
+<span><span class="co"># This simultaneously centers Life-Expectenacy on countries and years</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span> <span class="co"># (same as running a regression on country and year dummies and taking the residuals)</span></span>
 <span><span class="co"># ABW-1960 ABW-1961 ABW-1962 ABW-1963 ABW-1964 ABW-1965 </span></span>
 <span><span class="co"># 3.300210 3.214193 3.201424 3.134554 2.995255 2.909975</span></span></code></pre></div>
@@ -456,7 +456,7 @@ The <em>collapse</em> default <code>na.rm = TRUE</code> again ensures
 that only complete cases are used for the computation:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Missing values are preserved in the output when fill = TRUE (the default)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDB</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span>  </span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDB</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span>, <span class="fl">30</span><span class="op">)</span></span>
 <span><span class="co"># ABW-1960 ABW-1961 ABW-1962 ABW-1963 ABW-1964 ABW-1965 ABW-1966 ABW-1967 ABW-1968 ABW-1969 ABW-1970 </span></span>
 <span><span class="co">#       NA       NA       NA       NA       NA       NA       NA       NA       NA       NA       NA </span></span>
 <span><span class="co"># ABW-1971 ABW-1972 ABW-1973 ABW-1974 ABW-1975 ABW-1976 ABW-1977 ABW-1978 ABW-1979 ABW-1980 ABW-1981 </span></span>
@@ -474,8 +474,8 @@ that only complete cases are used for the computation:</p>
 <span><span class="co"># ABW-2008 ABW-2009 ABW-2010 ABW-2011 ABW-2012 ABW-2013 ABW-2014 ABW-2015 </span></span>
 <span><span class="co"># 27769.52 27002.95 27218.84 27424.18 27471.49 27660.92 27889.34 28107.78</span></span>
 <span></span>
-<span><span class="co"># This results in a shorter panel-vector </span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">nofill</span><span class="op">)</span>   </span>
+<span><span class="co"># This results in a shorter panel-vector</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">nofill</span><span class="op">)</span></span>
 <span><span class="co"># [1] 9470</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span></span>
 <span><span class="co"># [1] 13176</span></span>
@@ -576,7 +576,7 @@ an arbitrary dimension. The architecture is identical to that of
 <code class="sourceCode R"><span><span class="co"># This standardizes GDP per capita in each country</span></span>
 <span><span class="va">STD_PCGDP</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fscale.html">STD</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Checks: </span></span>
+<span><span class="co"># Checks:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">STD_PCGDP</span>, <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/index.html" class="external-link">index</a></span><span class="op">(</span><span class="va">STD_PCGDP</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#           ABW           AFG           AGO           ALB           AND           ARE </span></span>
 <span><span class="co"># -1.422473e-15  2.528841e-16 -6.189493e-16 -2.275957e-16 -9.281464e-16 -6.661338e-17</span></span>
@@ -587,7 +587,7 @@ an arbitrary dimension. The architecture is identical to that of
 <span><span class="co"># This standardizes GDP per capita in each year</span></span>
 <span><span class="va">STD_PCGDP_T</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fscale.html">STD</a></span><span class="op">(</span><span class="va">PCGDP</span>, effect <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Checks: </span></span>
+<span><span class="co"># Checks:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">STD_PCGDP_T</span>, <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/index.html" class="external-link">index</a></span><span class="op">(</span><span class="va">STD_PCGDP_T</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#          1960          1961          1962          1963          1964          1965 </span></span>
 <span><span class="co">#  9.882205e-17  3.496021e-16  1.889741e-17 -2.185013e-16 -1.724389e-16  2.616954e-16</span></span>
@@ -691,7 +691,7 @@ data.</p>
 to lag or lead <em>pseries</em>:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># A panel-lag</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span>      </span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># ABW-1960 ABW-1961 ABW-1962 ABW-1963 ABW-1964 ABW-1965 </span></span>
 <span><span class="co">#       NA   65.662   66.074   66.444   66.787   67.113</span></span>
 <span></span>
@@ -856,7 +856,7 @@ iterated differences, log-differences and growth rates:</p>
 <span><span class="co"># ABW-1964 -0.322  0.005 67.113 0.326 -0.017 0.669 -0.113 1.039   NA</span></span>
 <span><span class="co"># ABW-1965 -0.327  0.006 67.435 0.322 -0.004 0.648 -0.065 0.991   NA</span></span>
 <span></span>
-<span><span class="co"># Same with Log-differences </span></span>
+<span><span class="co"># Same with Log-differences</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">Dlog</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#                FDlog1        FDlog2       --       Dlog1         Dlog2    L2Dlog1      L2Dlog2</span></span>
 <span><span class="co"># ABW-1960 -0.006254955 -6.707929e-04 4.184520          NA            NA         NA           NA</span></span>
@@ -921,7 +921,7 @@ be specified with the <code>rho</code> argument to <code>fdiff</code>,
 <span><span class="co">#      -12.93       -91.97</span></span>
 <span></span>
 <span><span class="co"># In this case rho is almost 1, so we might as well just difference the untransformed data and go with that</span></span>
-<span><span class="co"># We also need to bootstrap this for proper standard errors. </span></span></code></pre></div>
+<span><span class="co"># We also need to bootstrap this for proper standard errors.</span></span></code></pre></div>
 <!-- compared to `plm::lag` or `plm::diff`  -->
 <p>A final important advantage of the <em>collapse</em> functions is
 that the panel-identifiers are preserved, even if a matrix of lags /
@@ -1014,11 +1014,11 @@ and <em>pdata.frame</em>’s to a 3D array:</p>
 <span><span class="co">#  - attr(*, "transpose")= logi TRUE</span></span>
 <span></span>
 <span><span class="co"># Same as plm::as.matrix.pseries, apart from attributes</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span>,        </span>
-<span>          <span class="fu"><a href="../reference/small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>          <span class="fu"><a href="../reference/small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">LIFEEX</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># [1] TRUE</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">LIFEEX</span>, transpose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>, </span>
-<span>          <span class="fu"><a href="../reference/small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">LIFEEX</span>, idbyrow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">LIFEEX</span>, transpose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>          <span class="fu"><a href="../reference/small-helpers.html">unattrib</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">LIFEEX</span>, idbyrow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># [1] TRUE</span></span></code></pre></div>
 <p>Applying <code>psmat</code> to a <em>pdata.frame</em> yields a 3D
 array:</p>
@@ -1156,117 +1156,117 @@ on which these benchmarks were run has a 2x 2.2 GHZ Intel i5 processor,
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/pseries.html" class="external-link">Between</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#                             expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  Between(LIFEEX_l, na.rm = TRUE) 21.55862 22.09441 26.27058 22.76031 25.82012 48.38705    10</span></span>
+<span><span class="co">#  Between(LIFEEX_l, na.rm = TRUE) 17.73594 18.71248 21.84342 20.13574 22.35853 37.94689    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#                expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fbetween(LIFEEX_l) 5.920441 5.936103 6.022322 6.005393 6.096044 6.153567    10</span></span>
+<span><span class="co">#  fbetween(LIFEEX_l) 4.408771 4.639519 4.705529 4.718424 4.771498 4.908684    10</span></span>
 <span></span>
 <span><span class="co"># Within Transformations</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/pseries.html" class="external-link">Within</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                            expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  Within(LIFEEX_l, na.rm = TRUE) 10.48017 10.88915 11.46662 11.56284 11.75523 12.83743    10</span></span>
+<span><span class="co">#                            expr      min       lq     mean  median       uq      max neval</span></span>
+<span><span class="co">#  Within(LIFEEX_l, na.rm = TRUE) 10.17887 10.74663 10.91092 10.8766 11.24224 11.37664    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#               expr      min      lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fwithin(LIFEEX_l) 5.082401 5.17461 5.421397 5.390045 5.643732 5.787642    10</span></span>
+<span><span class="co">#               expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fwithin(LIFEEX_l) 4.522218 4.550303 4.735344 4.644296 4.696017 5.297036    10</span></span>
 <span></span>
 <span><span class="co"># Higher-Dimenional Between and Within Transformations</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">fhdbetween</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                  expr      min       lq    mean   median      uq      max neval</span></span>
-<span><span class="co">#  fhdbetween(LIFEEX_l) 55.16796 61.96859 70.5174 69.12715 75.4976 91.92069    10</span></span>
+<span><span class="co">#                  expr    min       lq    mean   median       uq      max neval</span></span>
+<span><span class="co">#  fhdbetween(LIFEEX_l) 56.916 57.29971 66.0179 58.13864 76.50108 84.10625    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                 expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fhdwithin(LIFEEX_l) 55.33446 62.07416 70.06667 68.03509 80.74802 90.61443    10</span></span>
+<span><span class="co">#                 expr      min      lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fhdwithin(LIFEEX_l) 55.55906 56.2372 62.31852 56.56555 75.78784 77.20657    10</span></span>
 <span></span>
 <span><span class="co"># Single Lag</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#           expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  lag(LIFEEX_l) 9.352838 9.595066 10.62877 9.950495 11.85056 13.10282    10</span></span>
+<span><span class="co">#  lag(LIFEEX_l) 7.967776 8.144896 8.542879 8.632468 8.840092 8.949357    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#            expr      min       lq    mean   median       uq      max neval</span></span>
-<span><span class="co">#  flag(LIFEEX_l) 8.832589 9.094948 9.35497 9.226107 9.621265 10.11876    10</span></span>
+<span><span class="co">#            expr      min       lq     mean   median       uq     max neval</span></span>
+<span><span class="co">#  flag(LIFEEX_l) 7.994057 8.038747 8.337862 8.180484 8.603481 9.12086    10</span></span>
 <span></span>
 <span><span class="co"># Sequence of Lags / Leads</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lag.html" class="external-link">lag</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                 expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  lag(LIFEEX_l, -1:3) 23.93416 24.64936 44.45769 47.61853 55.53003 82.91446    10</span></span>
+<span><span class="co">#                 expr     min       lq     mean   median       uq     max neval</span></span>
+<span><span class="co">#  lag(LIFEEX_l, -1:3) 18.7525 19.29476 28.61876 27.95813 38.11081 39.5329    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                  expr      min      lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  flag(LIFEEX_l, -1:3) 15.88717 17.0332 22.12409 18.62909 20.22817 41.17122    10</span></span>
+<span><span class="co">#                  expr     min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  flag(LIFEEX_l, -1:3) 15.5415 15.64335 21.10042 15.83998 33.37699 34.10265    10</span></span>
 <span></span>
 <span><span class="co"># Single difference</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#            expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  diff(LIFEEX_l) 9.760747 10.16755 14.25446 10.91539 13.91954 38.84639    10</span></span>
+<span><span class="co">#            expr     min      lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  diff(LIFEEX_l) 8.00525 8.16884 8.370421 8.368776 8.554404 8.733697    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#             expr    min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fdiff(LIFEEX_l) 8.0852 10.05681 10.46266 10.80024 11.41301 11.85441    10</span></span>
+<span><span class="co">#             expr      min       lq   mean median       uq     max neval</span></span>
+<span><span class="co">#  fdiff(LIFEEX_l) 7.937805 8.020502 8.3458 8.2451 8.426238 9.34923    10</span></span>
 <span></span>
 <span><span class="co"># Iterated Difference</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, diff <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#                       expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fdiff(LIFEEX_l, diff = 2) 12.02674 12.47208 12.71178 12.87593 12.98745 13.12205    10</span></span>
+<span><span class="co">#  fdiff(LIFEEX_l, diff = 2) 10.20129 10.62786 10.72184 10.77488 10.82326 11.21805    10</span></span>
 <span></span>
 <span><span class="co"># Sequence of Lagged / Leaded and iterated differences</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                        expr      min       lq     mean   median       uq     max neval</span></span>
-<span><span class="co">#  fdiff(LIFEEX_l, -1:3, 1:2) 59.86303 63.23848 69.13984 65.37153 68.16611 89.2757    10</span></span>
+<span><span class="co">#                        expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fdiff(LIFEEX_l, -1:3, 1:2) 45.90159 52.22494 66.83236 53.21347 57.53222 187.8582    10</span></span>
 <span></span>
 <span><span class="co"># Single Growth Rate</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#               expr      min       lq     mean   median       uq     max neval</span></span>
-<span><span class="co">#  fgrowth(LIFEEX_l) 8.008981 8.061215 9.080988 8.255514 10.75627 11.4324    10</span></span>
+<span><span class="co">#               expr      min       lq    mean   median       uq      max neval</span></span>
+<span><span class="co">#  fgrowth(LIFEEX_l) 8.222304 8.357153 8.69059 8.727158 8.884167 9.436683    10</span></span>
 <span></span>
 <span><span class="co"># Single Log-Difference</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">LIFEEX_l</span>, log <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                         expr     min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fdiff(LIFEEX_l, log = TRUE) 14.7689 14.98698 18.14391 15.27609 18.32241 38.16879    10</span></span>
+<span><span class="co">#                         expr      min      lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fdiff(LIFEEX_l, log = TRUE) 12.41394 12.8583 15.06961 13.17156 13.61659 32.51989    10</span></span>
 <span></span>
 <span><span class="co"># Panel Series to Matrix Conversion</span></span>
 <span><span class="co"># system.time(as.matrix(LIFEEX_l))  This takes about 3 minutes to compute</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#             expr      min       lq     mean   median       uq    max neval</span></span>
-<span><span class="co">#  psmat(LIFEEX_l) 1.885959 1.972018 2.131016 2.027983 2.162299 3.0012    10</span></span></code></pre></div>
+<span><span class="co">#             expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  psmat(LIFEEX_l) 1.482478 1.500149 1.628028 1.520813 1.553941 2.438639    10</span></span></code></pre></div>
 <!-- The results show that I did not promise too much in the introduction. A speed gain of 20-40x is the norm, and for certain operations such as the sequence of lags and leads the speed gain is about 100x, and for the panel series to matrix conversion a 300x speed gain by using *collapse* vs. native *plm*.  -->
 <p>This shows a comparison between flag and <em>data.table</em>’s
 shift:</p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">L</a></span><span class="op">(</span><span class="va">data</span>, cols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                 expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  L(data, cols = 3:6) 14.63815 15.71009 20.93309 16.85783 17.96915 41.22484    10</span></span>
+<span><span class="co">#                 expr      min       lq     mean median       uq      max neval</span></span>
+<span><span class="co">#  L(data, cols = 3:6) 14.13692 14.43877 20.88276 18.865 19.73141 37.06244    10</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-datatable.com" class="external-link">data.table</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/setDT.html" class="external-link">setDT</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="co"># 'Improper' panel-lag</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/shift.html" class="external-link">shift</a></span><span class="op">(</span><span class="va">.SD</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">iso3c</span>, .SDcols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                                           expr    min       lq     mean  median       uq      max</span></span>
-<span><span class="co">#  data[, shift(.SD), by = iso3c, .SDcols = 3:6] 196.35 211.5265 236.0534 216.591 240.6788 384.4224</span></span>
+<span><span class="co">#                                           expr      min       lq     mean   median      uq      max</span></span>
+<span><span class="co">#  data[, shift(.SD), by = iso3c, .SDcols = 3:6] 176.5308 199.9415 215.6897 204.0719 230.089 268.9992</span></span>
 <span><span class="co">#  neval</span></span>
 <span><span class="co">#     10</span></span>
 <span></span>
 <span><span class="co"># This does what L is actually doing (without sorting the data)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/shift.html" class="external-link">shift</a></span><span class="op">(</span><span class="va">.SD</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">iso3c</span>, .SDcols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> </span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/shift.html" class="external-link">shift</a></span><span class="op">(</span><span class="va">.SD</span><span class="op">)</span>, by <span class="op">=</span> <span class="va">iso3c</span>, .SDcols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                                                      expr      min       lq    mean   median</span></span>
-<span><span class="co">#  data[order(year), shift(.SD), by = iso3c, .SDcols = 3:6] 201.4524 219.8761 246.634 235.5844</span></span>
+<span><span class="co">#                                                      expr      min       lq     mean   median</span></span>
+<span><span class="co">#  data[order(year), shift(.SD), by = iso3c, .SDcols = 3:6] 193.9684 210.7025 213.7664 213.0727</span></span>
 <span><span class="co">#        uq      max neval</span></span>
-<span><span class="co">#  269.2452 359.6967    10</span></span></code></pre></div>
+<span><span class="co">#  221.9783 226.3685    10</span></span></code></pre></div>
 <p>The above dataset has 1 million obs in 20 thousand groups, but what
 about 10 million obs and 1 million groups? Do <em>collapse</em>
 functions scale efficiently as data and the number of groups grows
@@ -1278,32 +1278,32 @@ large? Here is a simple benchmark:</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#            expr      min      lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fbetween(x, g) 49.91242 51.6254 82.98564 69.41308 77.20464 168.6079    10</span></span>
+<span><span class="co">#            expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fbetween(x, g) 51.66189 53.60693 91.00168 62.54655 73.87835 233.3696    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#           expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fwithin(x, g) 50.93791 51.58181 78.98965 52.01826 69.49074 175.4605    10</span></span>
+<span><span class="co">#           expr      min       lq    mean   median       uq      max neval</span></span>
+<span><span class="co">#  fwithin(x, g) 43.46291 44.03954 77.0216 45.33919 58.65132 196.7248    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#              expr      min       lq     mean   median       uq     max neval</span></span>
-<span><span class="co">#  flag(x, 1, g, t) 50.70359 62.76604 88.72126 67.26263 74.72984 186.957    10</span></span>
+<span><span class="co">#              expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  flag(x, 1, g, t) 42.65382 55.05332 87.72527 59.55935 80.86143 210.8074    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/flag.html">flag</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                 expr      min      lq     mean   median       uq     max neval</span></span>
-<span><span class="co">#  flag(x, -1:1, g, t) 75.61515 90.2786 99.19237 102.3862 104.2236 124.963    10</span></span>
+<span><span class="co">#                 expr      min      lq     mean  median       uq      max neval</span></span>
+<span><span class="co">#  flag(x, -1:1, g, t) 92.19842 92.5559 162.8994 166.736 228.6354 239.6953    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                  expr     min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fdiff(x, 1, 1, g, t) 48.1297 50.11578 60.37847 53.19703 73.89258 77.51345    10</span></span>
+<span><span class="co">#                  expr      min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fdiff(x, 1, 1, g, t) 42.51778 46.29306 82.27838 53.85735 67.54295 205.0114    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">x</span>, <span class="fl">1</span>, <span class="fl">2</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                  expr      min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  fdiff(x, 1, 2, g, t) 63.72355 68.93978 86.50423 72.65559 88.81481 178.5128    10</span></span>
+<span><span class="co">#                  expr     min       lq     mean   median       uq      max neval</span></span>
+<span><span class="co">#  fdiff(x, 1, 2, g, t) 59.9363 62.11689 84.42818 69.85072 75.38506 217.1431    10</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/fdiff.html">fdiff</a></span><span class="op">(</span><span class="va">x</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">g</span>, <span class="va">t</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#                       expr      min       lq     mean   median      uq      max neval</span></span>
-<span><span class="co">#  fdiff(x, -1:1, 1:2, g, t) 179.1015 181.8993 233.5435 200.4743 302.638 322.4079    10</span></span></code></pre></div>
+<span><span class="co">#                       expr      min       lq     mean  median       uq      max neval</span></span>
+<span><span class="co">#  fdiff(x, -1:1, 1:2, g, t) 163.5046 182.9127 246.2855 250.664 301.4046 339.1415    10</span></span></code></pre></div>
 <p>The results show that <em>collapse</em> functions perform very well
 even as the number of groups grows large.</p>
 <!-- in fact tests show that the large sample performance for aggregations with *collapse* is similar to *data.table*, and *collapse* grouped transformations like the ones shown here are generally faster than what can be done with *data.table*.  -->
@@ -1334,20 +1334,20 @@ panel-dimensions different variable have variation. When passed a
 <em>pdata.frame</em>, <code>varying</code> by default takes the first
 identifier and checks for variation <em>within</em> that dimension.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># This checks for any variation within "iso3c", the first index variable: TRUE means data vary within country i.e. over time. </span></span>
+<code class="sourceCode R"><span><span class="co"># This checks for any variation within "iso3c", the first index variable: TRUE means data vary within country i.e. over time.</span></span>
 <span><span class="fu"><a href="../reference/varying.html">varying</a></span><span class="op">(</span><span class="va">pwlddev</span><span class="op">)</span></span>
 <span><span class="co"># country    date    year  decade  region  income    OECD   PCGDP  LIFEEX    GINI     ODA     POP </span></span>
 <span><span class="co">#   FALSE    TRUE    TRUE    TRUE   FALSE   FALSE   FALSE    TRUE    TRUE    TRUE    TRUE    TRUE</span></span></code></pre></div>
 <p>Alternatively any index variable or combination of index variables
 can be specified:</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># This checks any variation within time variable, i.e. cross-sectional variation. </span></span>
+<code class="sourceCode R"><span><span class="co"># This checks any variation within time variable, i.e. cross-sectional variation.</span></span>
 <span><span class="fu"><a href="../reference/varying.html">varying</a></span><span class="op">(</span><span class="va">pwlddev</span>, effect <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span>
 <span><span class="co"># country   iso3c    date  decade  region  income    OECD   PCGDP  LIFEEX    GINI     ODA     POP </span></span>
 <span><span class="co">#    TRUE    TRUE   FALSE   FALSE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE    TRUE</span></span></code></pre></div>
 <p>Another possibility is checking for variation within each group:</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># This checks cross-sectional variation within each year for 4 indicators. </span></span>
+<code class="sourceCode R"><span><span class="co"># This checks cross-sectional variation within each year for 4 indicators.</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/varying.html">varying</a></span><span class="op">(</span><span class="va">pwlddev</span>, effect <span class="op">=</span> <span class="st">"year"</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span>, any_group <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#      PCGDP LIFEEX GINI  ODA</span></span>
 <span><span class="co"># 1960  TRUE   TRUE   NA TRUE</span></span>
@@ -1554,7 +1554,7 @@ computation of statistics is very efficient:</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/qsu.html">qsu</a></span><span class="op">(</span><span class="va">LIFEEX_l</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#           expr     min       lq     mean   median       uq      max neval</span></span>
-<span><span class="co">#  qsu(LIFEEX_l) 10.5443 11.71684 13.71966 12.05271 12.61892 82.96247   100</span></span></code></pre></div>
+<span><span class="co">#  qsu(LIFEEX_l) 9.49355 10.25679 11.07317 10.37214 10.78839 50.22574   100</span></span></code></pre></div>
 <p>Using the transformation functions and the functions
 <code>pwcor</code> and <code>pwcov</code>, we can also easily explore
 the correlation structure of the data:</p>
@@ -1613,30 +1613,46 @@ it further:
 <span></span>
 <span><span class="co"># plot the matrix (it will plot correctly no matter how the matrix is transposed)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tGDPmat</span>, main <span class="op">=</span> <span class="st">"GDP per Capita"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_and_plm_files/figure-html/unnamed-chunk-52-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/PLMGDPmat-1.png" alt="plot of chunk PLMGDPmat" width="100%"><p class="caption">
+plot of chunk PLMGDPmat
+</p>
+</div>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Taking series with more than 20 observation</span></span>
 <span><span class="va">suffsamp</span> <span class="op">&lt;-</span> <span class="va">tGDPmat</span><span class="op">[</span>, <span class="fu"><a href="../reference/fnobs.html">fnobs</a></span><span class="op">(</span><span class="va">tGDPmat</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">20</span><span class="op">]</span></span>
 <span></span>
-<span><span class="co"># Minimum pairwise observations between any two series: </span></span>
+<span><span class="co"># Minimum pairwise observations between any two series:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="../reference/pwcor_pwcov_pwnobs.html">pwnobs</a></span><span class="op">(</span><span class="va">suffsamp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># [1] 16</span></span>
 <span></span>
 <span><span class="co"># We can use the pairwise-correlations of the annual growth rates to hierarchically cluster the economies:</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/hclust.html" class="external-link">hclust</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">as.dist</a></span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fu"><a href="../reference/pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">suffsamp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_and_plm_files/figure-html/unnamed-chunk-52-2.png" width="100%"></p>
+<div class="figure">
+<img src="figure/PLMGDPmat-2.png" alt="plot of chunk PLMGDPmat" width="100%"><p class="caption">
+plot of chunk PLMGDPmat
+</p>
+</div>
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Finally we could do PCA on the growth rates:</span></span>
 <span><span class="va">eig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eigen.html" class="external-link">eigen</a></span><span class="op">(</span><span class="fu"><a href="../reference/pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="../reference/fgrowth.html">G</a></span><span class="op">(</span><span class="va">suffsamp</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/efficient-programming.html">seq_col</a></span><span class="op">(</span><span class="va">suffsamp</span><span class="op">)</span>, <span class="va">eig</span><span class="op">$</span><span class="va">values</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">eig</span><span class="op">$</span><span class="va">values</span><span class="op">)</span><span class="op">*</span><span class="fl">100</span>, xlab <span class="op">=</span> <span class="st">"Number of Principal Components"</span>, ylab <span class="op">=</span> <span class="st">"% Variance Explained"</span>, main <span class="op">=</span> <span class="st">"Screeplot"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_and_plm_files/figure-html/unnamed-chunk-52-3.png" width="100%"></p>
+<div class="figure">
+<img src="figure/PLMGDPmat-3.png" alt="plot of chunk PLMGDPmat" width="100%"><p class="caption">
+plot of chunk PLMGDPmat
+</p>
+</div>
 <p>There is also a nice plot-method applied to panel series arrays
 returned when <code>psmat</code> is applied to a panel data.frame:</p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">pwlddev</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, legend <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_and_plm_files/figure-html/unnamed-chunk-53-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/pwlddev_plot-1.png" alt="plot of chunk pwlddev_plot" width="100%"><p class="caption">
+plot of chunk pwlddev_plot
+</p>
+</div>
 <!-- Returning a list of panel series matrices allows efficient unlisting to data.frame, although of course there are other ways to reshape data in this way (i.e. `reshape2`, `tidyr`): -->
 <!-- ```{r, eval = NCRAN} -->
 <!-- # head(unlist2d(psmat(pwlddev, cols = 9:12, array = FALSE), idcols = "Variable", row.names = "Country Code")) -->
@@ -1655,7 +1671,11 @@ and panel data.frames. Below we compute the panel series autocorrelation
 function of the data:</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/psacf.html">psacf</a></span><span class="op">(</span><span class="va">pwlddev</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_and_plm_files/figure-html/unnamed-chunk-54-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/plm_psacf-1.png" alt="plot of chunk plm_psacf" width="100%"><p class="caption">
+plot of chunk plm_psacf
+</p>
+</div>
 <p>The computation is conducted by first scaling and centering
 (i.e. standardizing) the panel-vectors by groups (using
 <code>fscale</code>, default argument <code>gscale = TRUE</code>), and
@@ -1668,12 +1688,20 @@ Yule-Walker decomposition on the ACF, as in
 <code><a href="https://rdrr.io/r/stats/acf.html" class="external-link">stats::pacf</a></code>),</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/psacf.html">pspacf</a></span><span class="op">(</span><span class="va">pwlddev</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_and_plm_files/figure-html/unnamed-chunk-55-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/plm_pspacf-1.png" alt="plot of chunk plm_pspacf" width="100%"><p class="caption">
+plot of chunk plm_pspacf
+</p>
+</div>
 <p>and the panel-cross-correlation function between GDP per capita and
 life expectancy (which is already contained in the ACF plot above):</p>
 <div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/psacf.html">psccf</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span></span></code></pre></div>
-<p><img src="collapse_and_plm_files/figure-html/unnamed-chunk-56-1.png" width="100%"></p>
+<div class="figure">
+<img src="figure/plm_psccf-1.png" alt="plot of chunk plm_psccf" width="100%"><p class="caption">
+plot of chunk plm_psccf
+</p>
+</div>
 </div>
 <div class="section level3">
 <h3 id="testing-for-individual-specific-and-time-effects">2.5 Testing for Individual Specific and Time-Effects<a class="anchor" aria-label="anchor" href="#testing-for-individual-specific-and-time-effects"></a>
@@ -1846,16 +1874,16 @@ follows:</p>
 <!-- X <- do.call(cbind, c(ln(X1, "X1"), ln(X2, "X2"), ln(Z1, "Z1"), ln(Z2, "Z2")))  --></p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">HT_est</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span>, <span class="va">X1</span>, <span class="va">Z2</span>, <span class="va">X2</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">Z1</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">time.FE</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Create matrix of independent variables</span></span>
 <span>  <span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>Intercept <span class="op">=</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">X1</span>, <span class="va">X2</span>, <span class="va">Z1</span>, <span class="va">Z2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="co"># Create instrument matrix: if time.FE, higher-order demean X1 and X2, else normal demeaning</span></span>
-<span>  <span class="va">IVS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>Intercept <span class="op">=</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">cbind</span>, </span>
-<span>               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="kw">if</span><span class="op">(</span><span class="va">time.FE</span><span class="op">)</span> <span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span><span class="va">X1</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="kw">else</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">X1</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, </span>
+<span>  <span class="va">IVS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>Intercept <span class="op">=</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">cbind</span>,</span>
+<span>               <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="kw">if</span><span class="op">(</span><span class="va">time.FE</span><span class="op">)</span> <span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span><span class="va">X1</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="kw">else</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">X1</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>                 <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">X2</span><span class="op">)</span><span class="op">)</span> <span class="va">X2</span> <span class="kw">else</span> <span class="kw">if</span><span class="op">(</span><span class="va">time.FE</span><span class="op">)</span> <span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span><span class="va">X2</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="kw">else</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">X2</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
 <span>                 <span class="va">Z1</span>, <span class="fu"><a href="../reference/fbetween_fwithin.html">fbetween</a></span><span class="op">(</span><span class="va">X1</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="kw">if</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">IVS</span><span class="op">)</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span> <span class="co"># The IV estimator case</span></span>
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/drop.html" class="external-link">drop</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/solve.html" class="external-link">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/crossprod.html" class="external-link">crossprod</a></span><span class="op">(</span><span class="va">IVS</span>, <span class="va">X</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/crossprod.html" class="external-link">crossprod</a></span><span class="op">(</span><span class="va">IVS</span>, <span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span> <span class="co"># The 2SLS case</span></span>
@@ -1909,14 +1937,14 @@ might be correlated with the unobserved individual effects, and which
 model would be most appropriate.</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># This tests whether each of the covariates is correlated with alpha_i</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/phtest.html" class="external-link">phtest</a></span><span class="op">(</span><span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">PCGDP</span>, <span class="va">dat</span><span class="op">)</span>  <span class="co"># Likely correlated </span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/phtest.html" class="external-link">phtest</a></span><span class="op">(</span><span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">PCGDP</span>, <span class="va">dat</span><span class="op">)</span>  <span class="co"># Likely correlated</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co">#   Hausman Test</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># data:  LIFEEX ~ PCGDP</span></span>
 <span><span class="co"># chisq = 17.495, df = 1, p-value = 2.881e-05</span></span>
 <span><span class="co"># alternative hypothesis: one model is inconsistent</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/phtest.html" class="external-link">phtest</a></span><span class="op">(</span><span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">ODA</span>, <span class="va">dat</span><span class="op">)</span>    <span class="co"># Likely correlated </span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/phtest.html" class="external-link">phtest</a></span><span class="op">(</span><span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">ODA</span>, <span class="va">dat</span><span class="op">)</span>    <span class="co"># Likely correlated</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co">#   Hausman Test</span></span>
 <span><span class="co"># </span></span>
@@ -1969,7 +1997,7 @@ we need to use the Hausman and Taylor (1981) estimator. Below I suggest
 <span><span class="co"># sample estimates:</span></span>
 <span><span class="co">#       cor </span></span>
 <span><span class="co"># 0.2038109</span></span>
-<span> </span>
+<span></span>
 <span><span class="co"># Getting the fixed-effects (estimates of alpha_i) from the model (i.e. accounting for the other covariates)</span></span>
 <span><span class="va">fe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/nlme/man/fixed.effects.html" class="external-link">fixef</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">ODA</span> <span class="op">+</span> <span class="va">GINI</span>, <span class="va">dat</span>, model <span class="op">=</span> <span class="st">"within"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mODA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">ODA</span>, <span class="va">dat</span><span class="op">$</span><span class="va">iso3c</span><span class="op">)</span></span>
@@ -2010,10 +2038,10 @@ instrument is very weak indeed, rubbish to be precise, thus the
 implementation of the HT estimator below is also a rubbish example, but
 it is still good for illustration purposes:</p>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">HT_est</span><span class="op">(</span>y <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">LIFEEX</span>, </span>
-<span>       X1 <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">"GINI"</span><span class="op">)</span>, </span>
+<code class="sourceCode R"><span><span class="fu">HT_est</span><span class="op">(</span>y <span class="op">=</span> <span class="va">dat</span><span class="op">$</span><span class="va">LIFEEX</span>,</span>
+<span>       X1 <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">"GINI"</span><span class="op">)</span>,</span>
 <span>       Z2 <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">dat</span>, <span class="st">"OECD"</span><span class="op">)</span>,</span>
-<span>       X2 <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PCGDP"</span>,<span class="st">"ODA"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> </span>
+<span>       X2 <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PCGDP"</span>,<span class="st">"ODA"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#    Intercept         GINI        PCGDP          ODA         OECD </span></span>
 <span><span class="co">#  3.638486969 -0.035596160  0.120981946  0.005744747 -5.862368476</span></span></code></pre></div>
 <p>Now a central questions is of course: How computationally efficient
@@ -2042,9 +2070,9 @@ benchmark in Part 1:</p>
 <span>                      X2 <span class="op">=</span> <span class="fu"><a href="../reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">dat</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PCGDP"</span>,<span class="st">"ODA"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>                      time.FE <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
-<span><span class="co">#        expr       min        lq      mean    median        uq      max neval</span></span>
-<span><span class="co">#      HT_est  7.709312  8.549668  9.734791  9.062886  9.399189 37.39889   100</span></span>
-<span><span class="co">#  HT_est_TFE 26.950817 29.127404 32.005119 30.502811 31.274574 75.43959   100</span></span></code></pre></div>
+<span><span class="co">#        expr       min       lq      mean    median        uq      max neval</span></span>
+<span><span class="co">#      HT_est  7.919437  8.46937  9.761301  8.869612  9.508597 45.08717   100</span></span>
+<span><span class="co">#  HT_est_TFE 22.501128 23.18640 25.387041 23.469835 24.490612 85.96462   100</span></span></code></pre></div>
 <p>At around 100,000 obs and 13,000 groups in an unbalanced panel, the
 computation involving 3 grouped centering and 1 grouped averaging task
 as well as 2 list-to matrix conversions and an IV-procedure took about
