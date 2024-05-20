@@ -407,11 +407,11 @@ to worry about taking along ‘geometry’:</p>
 <span>               collapse2 <span class="op">=</span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>               sf <span class="op">=</span> <span class="va">nc</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#       expr     min       lq      mean   median       uq       max neval</span></span>
-<span><span class="co">#   collapse   3.075   4.2640   6.13278   5.7810   7.0315    30.422   100</span></span>
-<span><span class="co">#      dplyr 438.167 472.0125 678.03914 485.7475 508.9330 12854.689   100</span></span>
-<span><span class="co">#  collapse2   2.542   3.6080   5.56698   4.8380   5.8220    22.427   100</span></span>
-<span><span class="co">#         sf 105.903 118.0185 126.41079 121.9955 129.2320   216.685   100</span></span></code></pre></div>
+<span><span class="co">#       expr     min       lq      mean   median       uq      max neval</span></span>
+<span><span class="co">#   collapse   3.280   3.9975   6.09834   6.0680   6.9700   16.892   100</span></span>
+<span><span class="co">#      dplyr 428.040 450.9180 568.44942 534.3940 569.8590 5520.527   100</span></span>
+<span><span class="co">#  collapse2   2.542   3.4440   4.95116   5.1455   5.8425   11.275   100</span></span>
+<span><span class="co">#         sf 103.853 114.8820 133.90272 137.2680 147.5795  166.173   100</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Subsetting</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span>collapse <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">nc</span>, <span class="va">AREA</span> <span class="op">&gt;</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">AREA</span><span class="op">)</span>, <span class="va">AREA</span>, <span class="va">NAME</span><span class="op">:</span><span class="va">FIPSNO</span><span class="op">)</span>, </span>
@@ -419,11 +419,11 @@ to worry about taking along ‘geometry’:</p>
 <span>               collapse2 <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="va">nc</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">)</span>, </span>
 <span>               sf <span class="op">=</span> <span class="va">nc</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"AREA"</span>, <span class="st">"NAME"</span>, <span class="st">"FIPS"</span>, <span class="st">"FIPSNO"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
-<span><span class="co">#       expr     min       lq       mean   median        uq      max neval</span></span>
-<span><span class="co">#   collapse   9.430  11.9310   17.34218  15.3750   20.3770   48.380   100</span></span>
-<span><span class="co">#      dplyr 887.363 911.6965 1193.77937 975.3285 1332.5000 4584.989   100</span></span>
-<span><span class="co">#  collapse2   2.829   3.5260    6.47349   5.2480    6.6830   20.582   100</span></span>
-<span><span class="co">#         sf 167.772 181.9990  203.76221 196.0620  207.3575  349.484   100</span></span></code></pre></div>
+<span><span class="co">#       expr     min       lq       mean   median       uq      max neval</span></span>
+<span><span class="co">#   collapse   9.471  11.8285   16.15359  15.6825   17.794   46.207   100</span></span>
+<span><span class="co">#      dplyr 883.837 908.9495 1048.25602 951.4255 1022.704 3799.306   100</span></span>
+<span><span class="co">#  collapse2   2.870   3.3825    5.60183   5.2275    6.560   19.926   100</span></span>
+<span><span class="co">#         sf 167.649 180.1950  197.47691 193.4175  202.212  346.163   100</span></span></code></pre></div>
 <p>However, <em>collapse</em> functions don’t subset the ‘agr’ attribute
 on selecting columns, which (if specified) relates columns (attributes)
 to the geometry, and also don’t modify the ‘bbox’ attribute giving the
