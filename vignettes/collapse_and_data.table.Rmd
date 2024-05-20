@@ -13,7 +13,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{css, echo=FALSE}
+<style type="text/css">
 pre {
   max-height: 500px;
   overflow-y: auto;
@@ -22,34 +22,10 @@ pre {
 pre[class] {
   max-height: 500px;
 }
-```
+</style>
 
 
-```{r, echo = FALSE, message = FALSE, warning=FALSE}
-library(data.table)
-library(microbenchmark)
-library(collapse)
-knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
-                      comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
-                      fig.width = 8, fig.height = 5, 
-                      out.width = '100%')
 
-# knitr::opts_chunk$set(
-#   comment = "#",
-#     error = FALSE,
-#      tidy = FALSE,
-#     cache = FALSE,
-#  collapse = TRUE,
-#  fig.width = 8, 
-#  fig.height= 5,
-#  out.width='100%'
-# )
-
-RUNBENCH <- identical(Sys.getenv("RUNBENCH"), "TRUE")
-
-oldopts <- options(width = 100L)
-set.seed(101)
-```
 <!--
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
 
@@ -77,7 +53,8 @@ Thus you don't need to choose between these two. I created *collapse* because I 
 
 Applying *collapse* functions to a data.table always gives a data.table back e.g. 
 
-```{r}
+
+```r
 library(collapse)
 library(magrittr)
 library(data.table)
@@ -86,58 +63,170 @@ DT <- qDT(wlddev) # collapse::qDT converts objects to data.table using a shallow
 
 
 DT %>% gby(country) %>% gv(9:13) %>% fmean
+#                    country      PCGDP   LIFEEX     GINI        ODA         POP
+#                     <char>      <num>    <num>    <num>      <num>       <num>
+#   1:           Afghanistan   483.8351 49.19717       NA 1487548499 18362258.22
+#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:               Algeria  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4:        American Samoa 10071.0659       NA       NA         NA    43115.10
+#   5:               Andorra 40083.0911       NA       NA         NA    51547.35
+#  ---                                                                          
+# 212: Virgin Islands (U.S.) 35629.7336 73.71292       NA         NA    92238.53
+# 213:    West Bank and Gaza  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:           Yemen, Rep.  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:                Zambia  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:              Zimbabwe  1219.4360 54.53360 45.93333  397104997  9402160.33
 
 # Same thing, but notice that fmean give's NA's for missing countries
 DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:13]
+# Key: <country>
+#                    country      PCGDP   LIFEEX     GINI        ODA         POP
+#                     <char>      <num>    <num>    <num>      <num>       <num>
+#   1:           Afghanistan   483.8351 49.19717      NaN 1487548499 18362258.22
+#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:               Algeria  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4:        American Samoa 10071.0659      NaN      NaN        NaN    43115.10
+#   5:               Andorra 40083.0911      NaN      NaN        NaN    51547.35
+#  ---                                                                          
+# 212: Virgin Islands (U.S.) 35629.7336 73.71292      NaN        NaN    92238.53
+# 213:    West Bank and Gaza  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:           Yemen, Rep.  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:                Zambia  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:              Zimbabwe  1219.4360 54.53360 45.93333  397104997  9402160.33
 
 # This also works without magrittr pipes with the collap() function
 collap(DT, ~ country, fmean, cols = 9:13)
-
+#                    country      PCGDP   LIFEEX     GINI        ODA         POP
+#                     <char>      <num>    <num>    <num>      <num>       <num>
+#   1:           Afghanistan   483.8351 49.19717       NA 1487548499 18362258.22
+#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:               Algeria  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4:        American Samoa 10071.0659       NA       NA         NA    43115.10
+#   5:               Andorra 40083.0911       NA       NA         NA    51547.35
+#  ---                                                                          
+# 212: Virgin Islands (U.S.) 35629.7336 73.71292       NA         NA    92238.53
+# 213:    West Bank and Gaza  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:           Yemen, Rep.  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:                Zambia  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:              Zimbabwe  1219.4360 54.53360 45.93333  397104997  9402160.33
 ```
 
 By default, *collapse* orders groups in aggregations, which is equivalent to using `keyby` with *data.table*. `gby / fgroup_by` has an argument `sort = FALSE` to yield an unordered grouping equivalent to *data.table*'s `by` on character data^[Grouping on numeric variables in *collapse* is always ordered.]. 
 
 At this data size *collapse* outperforms *data.table* (which might reverse as data size grows, depending in your computer, the number of *data.table* threads used, and the function in question):
 
-```{r}
+
+```r
 library(microbenchmark)
 
 microbenchmark(collapse = DT %>% gby(country) %>% get_vars(9:13) %>% fmean,
                data.table = DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:13])
-
+# Unit: microseconds
+#        expr     min       lq     mean   median       uq      max neval
+#    collapse 203.073 212.7285 223.4156 217.1565 225.6230  475.559   100
+#  data.table 758.623 777.4010 929.5450 793.1655 854.4605 2292.515   100
 ```
 
 It is critical to never do something like this:
 
-```{r}
+
+```r
 DT[, lapply(.SD, fmean), keyby = country, .SDcols = 9:13]
+# Key: <country>
+#                    country      PCGDP   LIFEEX     GINI        ODA         POP
+#                     <char>      <num>    <num>    <num>      <num>       <num>
+#   1:           Afghanistan   483.8351 49.19717       NA 1487548499 18362258.22
+#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:               Algeria  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4:        American Samoa 10071.0659       NA       NA         NA    43115.10
+#   5:               Andorra 40083.0911       NA       NA         NA    51547.35
+#  ---                                                                          
+# 212: Virgin Islands (U.S.) 35629.7336 73.71292       NA         NA    92238.53
+# 213:    West Bank and Gaza  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:           Yemen, Rep.  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:                Zambia  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:              Zimbabwe  1219.4360 54.53360 45.93333  397104997  9402160.33
 ```
 The reason is that *collapse* functions are S3 generic with methods for vectors, matrices and data frames among others. So you incur a method-dispatch for every column and every group the function is applied to.
 
-```{r}
+
+```r
 fmean
+# function (x, ...) 
+# UseMethod("fmean")
+# <bytecode: 0x10fb58540>
+# <environment: namespace:collapse>
 methods(fmean)
+# [1] fmean.data.frame* fmean.default*    fmean.grouped_df* fmean.list*       fmean.matrix*    
+# [6] fmean.units*      fmean.zoo*       
+# see '?methods' for accessing help and source code
 ```
 
 You may now contend that `base::mean` is also S3 generic, but in this `DT[, lapply(.SD, mean, na.rm = TRUE), by = country, .SDcols = 9:13]` code *data.table* does not use `base::mean`, but `data.table:::gmean`, an internal optimized mean function which is efficiently applied over those groups (see `?data.table::GForce`). `fmean` works similar, and includes this functionality explicitly. 
 
-```{r}
+
+```r
 args(fmean.data.frame)
+# function (x, g = NULL, w = NULL, TRA = NULL, na.rm = .op[["na.rm"]], 
+#     use.g.names = TRUE, drop = TRUE, nthreads = .op[["nthreads"]], 
+#     ...) 
+# NULL
 ```
 
 Here we can see the `x` argument for the data, the `g` argument for grouping vectors, a weight vector `w`, different options `TRA` to transform the original data using the computed means, and some functionality regarding missing values (default: removed / skipped), group names (which are added as row-names to a data frame, but not to a *data.table*) etc. So we can also do
 
-```{r}
+
+```r
 fmean(gv(DT, 9:13), DT$country)
+#           PCGDP   LIFEEX     GINI        ODA         POP
+#           <num>    <num>    <num>      <num>       <num>
+#   1:   483.8351 49.19717       NA 1487548499 18362258.22
+#   2:  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4: 10071.0659       NA       NA         NA    43115.10
+#   5: 40083.0911       NA       NA         NA    51547.35
+#  ---                                                    
+# 212: 35629.7336 73.71292       NA         NA    92238.53
+# 213:  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:  1219.4360 54.53360 45.93333  397104997  9402160.33
 
 # Or
 g <- GRP(DT, "country")
 add_vars(g[["groups"]], fmean(gv(DT, 9:13), g))
+#                    country      PCGDP   LIFEEX     GINI        ODA         POP
+#                     <char>      <num>    <num>    <num>      <num>       <num>
+#   1:           Afghanistan   483.8351 49.19717       NA 1487548499 18362258.22
+#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:               Algeria  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4:        American Samoa 10071.0659       NA       NA         NA    43115.10
+#   5:               Andorra 40083.0911       NA       NA         NA    51547.35
+#  ---                                                                          
+# 212: Virgin Islands (U.S.) 35629.7336 73.71292       NA         NA    92238.53
+# 213:    West Bank and Gaza  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:           Yemen, Rep.  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:                Zambia  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:              Zimbabwe  1219.4360 54.53360 45.93333  397104997  9402160.33
 ```
 To give us the same result obtained through the high-level functions `gby / fgroup_by` or `collap`. This is however not what *data.table* is doing in `DT[, lapply(.SD, fmean), by = country, .SDcols = 9:13]`. Since `fmean` is not a function it recognizes and is able to optimize, it does something like this,
 
-```{r}
+
+```r
 BY(gv(DT, 9:13), g, fmean) # using collapse::BY
+#           PCGDP   LIFEEX     GINI        ODA         POP
+#           <num>    <num>    <num>      <num>       <num>
+#   1:   483.8351 49.19717       NA 1487548499 18362258.22
+#   2:  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4: 10071.0659       NA       NA         NA    43115.10
+#   5: 40083.0911       NA       NA         NA    51547.35
+#  ---                                                    
+# 212: 35629.7336 73.71292       NA         NA    92238.53
+# 213:  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:  1219.4360 54.53360 45.93333  397104997  9402160.33
 ```
 which applies `fmean` to every group in every column of the data. 
 
@@ -148,8 +237,13 @@ More generally, it is very important to understand that *collapse* is not based 
 
 The full set of optimized grouped statistical and transformation functions in *collapse* is: 
 
-```{r}
+
+```r
 .FAST_FUN
+#  [1] "fmean"      "fmedian"    "fmode"      "fsum"       "fprod"      "fsd"        "fvar"      
+#  [8] "fmin"       "fmax"       "fnth"       "ffirst"     "flast"      "fnobs"      "fndistinct"
+# [15] "fcumsum"    "fscale"     "fbetween"   "fwithin"    "fhdbetween" "fhdwithin"  "flag"      
+# [22] "fdiff"      "fgrowth"
 ```
 
 Additional optimized grouped functions include `TRA`, `qsu`, `varying`, `fFtest`, `psmat`, `psacf`, `pspacf`, `psccf`.  
@@ -160,22 +254,56 @@ The nice thing about those GForce (fast) functions provided by *collapse* is tha
 
 So if we would want to use `fmean` inside the *data.table*, we should do something like this:
 
-```{r}
+
+```r
 # This does not save the grouping columns, we are simply passing a grouping vector to g
 # and aggregating the subset of the data table (.SD).
 DT[, fmean(.SD, country), .SDcols = 9:13]
+#           PCGDP   LIFEEX     GINI        ODA         POP
+#           <num>    <num>    <num>      <num>       <num>
+#   1:   483.8351 49.19717       NA 1487548499 18362258.22
+#   2:  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4: 10071.0659       NA       NA         NA    43115.10
+#   5: 40083.0911       NA       NA         NA    51547.35
+#  ---                                                    
+# 212: 35629.7336 73.71292       NA         NA    92238.53
+# 213:  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:  1219.4360 54.53360 45.93333  397104997  9402160.33
 
 # If we want to keep the grouping columns, we need to group .SD first.
 DT[, fmean(gby(.SD, country)), .SDcols = c(1L, 9:13)]
+#                    country      PCGDP   LIFEEX     GINI        ODA         POP
+#                     <char>      <num>    <num>    <num>      <num>       <num>
+#   1:           Afghanistan   483.8351 49.19717       NA 1487548499 18362258.22
+#   2:               Albania  2819.2400 71.68027 31.41111  312928126  2708297.17
+#   3:               Algeria  3532.2714 63.56290 34.36667  612238500 25305290.68
+#   4:        American Samoa 10071.0659       NA       NA         NA    43115.10
+#   5:               Andorra 40083.0911       NA       NA         NA    51547.35
+#  ---                                                                          
+# 212: Virgin Islands (U.S.) 35629.7336 73.71292       NA         NA    92238.53
+# 213:    West Bank and Gaza  2388.4348 71.60780 34.52500 1638581462  3312289.13
+# 214:           Yemen, Rep.  1069.6596 52.53707 35.46667  859950996 13741375.82
+# 215:                Zambia  1318.8627 51.09263 52.68889  734624330  8614972.38
+# 216:              Zimbabwe  1219.4360 54.53360 45.93333  397104997  9402160.33
 ```
 Needless to say this kind of programming seems a bit arcane, so there is actually not that great of a scope to use collapse's *Fast Statistical Functions* for aggregations inside *data.table*. I drive this point home with a benchmark:
-```{r}
+
+```r
 microbenchmark(collapse = DT %>% gby(country) %>% get_vars(9:13) %>% fmean,
                data.table = DT[, lapply(.SD, mean, na.rm = TRUE), keyby = country, .SDcols = 9:13],
                data.table_base = DT[, lapply(.SD, base::mean, na.rm = TRUE), keyby = country, .SDcols = 9:13],
                hybrid_bad = DT[, lapply(.SD, fmean), keyby = country, .SDcols = 9:13],
                hybrid_ok = DT[, fmean(gby(.SD, country)), .SDcols = c(1L, 9:13)])
-
+# Unit: microseconds
+#             expr      min        lq      mean    median        uq       max neval
+#         collapse  207.419  234.9915  322.3994  255.6760  283.6790  1685.305   100
+#       data.table  755.630  845.7685 1029.9024  904.6650  962.1060  2409.529   100
+#  data.table_base 2795.257 3148.4310 4034.2081 3349.8025 3561.9570 37919.916   100
+#       hybrid_bad 2198.994 2481.3815 3737.1102 2650.5680 2909.4215 62158.747   100
+#        hybrid_ok  374.699  451.1025  564.6873  484.9275  542.8605  2082.554   100
 ```
 
 It is evident that *data.table* has some overhead, so there is absolutely no need to do this kind of syntax manipulation. 
@@ -186,7 +314,8 @@ Note that `:=` operations (transformations) are not GForce optimized in *data.ta
 
 Below some basic examples:
 
-```{r}
+
+```r
 # Computing a column containing the sum of ODA received by country
 DT[, sum_ODA := sum(ODA, na.rm = TRUE), by = country]
 # Same using fsum; "replace_fill" overwrites missing values, "replace" keeps the
@@ -205,13 +334,17 @@ The `TRA` argument is available to all *Fast Statistical Functions* (see the mac
 
 Similarly, we can use the following vector valued functions 
 
-```{r}
+
+```r
 setdiff(.FAST_FUN, .FAST_STAT_FUN)
+# [1] "fcumsum"    "fscale"     "fbetween"   "fwithin"    "fhdbetween" "fhdwithin"  "flag"      
+# [8] "fdiff"      "fgrowth"
 ```
 
 for very efficient data transformations:
 
-```{r}
+
+```r
 # Centering GDP
 DT[, demean_PCGDP := PCGDP - mean(PCGDP, na.rm = TRUE), by = country]
 DT[, demean_PCGDP := fwithin(PCGDP, country)]
@@ -235,7 +368,30 @@ DT %<>% tfm(gv(., 9:13) %>% fgrowth(1L, 1L, country, year) %>% add_stub("growth_
 settfmv(DT, 9:13, G, 1L, 1L, country, year, apply = FALSE)
 
 head(DT)
-
+#        country  iso3c       date  year decade     region     income   OECD PCGDP LIFEEX  GINI
+#         <char> <fctr>     <Date> <int>  <int>     <fctr>     <fctr> <lgcl> <num>  <num> <num>
+# 1: Afghanistan    AFG 1961-01-01  1960   1960 South Asia Low income  FALSE    NA 32.446    NA
+# 2: Afghanistan    AFG 1962-01-01  1961   1960 South Asia Low income  FALSE    NA 32.962    NA
+# 3: Afghanistan    AFG 1963-01-01  1962   1960 South Asia Low income  FALSE    NA 33.471    NA
+# 4: Afghanistan    AFG 1964-01-01  1963   1960 South Asia Low income  FALSE    NA 33.971    NA
+# 5: Afghanistan    AFG 1965-01-01  1964   1960 South Asia Low income  FALSE    NA 34.463    NA
+# 6: Afghanistan    AFG 1966-01-01  1965   1960 South Asia Low income  FALSE    NA 34.948    NA
+#          ODA     POP     sum_ODA perc_c_ODA perc_y_ODA demean_PCGDP lag_PCGDP growth_PCGDP
+#        <num>   <num>       <num>      <num>      <num>        <num>     <num>        <num>
+# 1: 116769997 8996973 89252909923  0.1308305  0.4441407           NA        NA           NA
+# 2: 232080002 9169410 89252909923  0.2600251  0.7356654           NA        NA           NA
+# 3: 112839996 9351441 89252909923  0.1264272  0.3494956           NA        NA           NA
+# 4: 237720001 9543205 89252909923  0.2663443  0.7003399           NA        NA           NA
+# 5: 295920013 9744781 89252909923  0.3315522  0.8570540           NA        NA           NA
+# 6: 341839996 9956320 89252909923  0.3830015  0.8992630           NA        NA           NA
+#    growth_LIFEEX growth_GINI growth_ODA growth_POP G1.PCGDP G1.LIFEEX G1.GINI    G1.ODA   G1.POP
+#            <num>       <num>      <num>      <num>    <num>     <num>   <num>     <num>    <num>
+# 1:            NA          NA         NA         NA       NA        NA      NA        NA       NA
+# 2:      1.590335          NA   98.74969   1.916611       NA  1.590335      NA  98.74969 1.916611
+# 3:      1.544202          NA  -51.37884   1.985199       NA  1.544202      NA -51.37884 1.985199
+# 4:      1.493830          NA  110.66998   2.050636       NA  1.493830      NA 110.66998 2.050636
+# 5:      1.448294          NA   24.48259   2.112246       NA  1.448294      NA  24.48259 2.112246
+# 6:      1.407306          NA   15.51770   2.170793       NA  1.407306      NA  15.51770 2.170793
 ```
 <!--
 # av(DT) <- DT %>% gby(country) %>% slt(year, 9:13) %>% 
@@ -243,7 +399,8 @@ head(DT)
 -->
 Since transformations (`:=` operations) are not highly optimized in *data.table*, *collapse* will be faster in most circumstances. <!-- even on very large data with a strong computer. -->  Also time series functionality in *collapse* is significantly faster as it does not require data to be ordered or balanced to compute. For example `flag` computes an ordered lag without sorting the entire data first. 
 
-```{r}
+
+```r
 # Lets generate a large dataset and benchmark this stuff
 DT_large <- replicate(1000, qDT(wlddev), simplify = FALSE) %>% 
     lapply(tfm, country = paste(country, rnorm(1))) %>%
@@ -251,6 +408,7 @@ DT_large <- replicate(1000, qDT(wlddev), simplify = FALSE) %>%
 
 # 12.7 million Obs
 fdim(DT_large)
+# [1] 13176000       13
 
 microbenchmark(
   S1 = DT_large[, sum_ODA := sum(ODA, na.rm = TRUE), by = country],
@@ -264,37 +422,89 @@ microbenchmark(
   L4 = DT_large[, lag_PCGDP := flag(PCGDP, 1L, country)], # Not ordered
   times = 5
 )
+# Unit: milliseconds
+#  expr        min         lq      mean     median        uq       max neval
+#    S1  343.03396  347.18443  391.7494  364.51431  379.7866  524.2279     5
+#    S2  100.52544  101.72645  165.8369  128.76042  153.6818  344.4906     5
+#    S3   98.48249  104.80830  120.3499  114.20591  127.0192  157.2335     5
+#    W1  913.00883 1009.29930 1071.0633 1035.74446 1104.7680 1292.4957     5
+#    W2   99.48199   99.69654  110.0907  113.95884  118.5229  118.7931     5
+#    L1 1812.59987 1822.58026 1896.8809 1905.67377 1942.9434 2000.6074     5
+#    L2  110.36056  128.45845  135.0995  133.80219  139.1405  163.7357     5
+#    L3  611.28392  665.22123  768.0616  718.38679  803.7170 1041.6991     5
+#    L4   64.26369   66.99006  105.7952   84.26537  106.1809  207.2758     5
 
 rm(DT_large)
 gc()
+#           used  (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)
+# Ncells 3113072 166.3    8413097  449.4         NA   8413097  449.4
+# Vcells 7897587  60.3  324289364 2474.2      16384 405361681 3092.7
 ```
 
 ## Further *collapse* features supporting *data.table*'s
 
 As mentioned, `qDT` is a flexible and very fast function to create / column-wise convert R objects to *data.table*'s. You can also row-wise convert a matrix to data.table using `mrtl`:
 
-```{r}
+
+```r
 # Creating a matrix from mtcars
 m <- qM(mtcars) 
 str(m)
+#  num [1:32, 1:11] 21 21 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 ...
+#  - attr(*, "dimnames")=List of 2
+#   ..$ : chr [1:32] "Mazda RX4" "Mazda RX4 Wag" "Datsun 710" "Hornet 4 Drive" ...
+#   ..$ : chr [1:11] "mpg" "cyl" "disp" "hp" ...
 
 # Demonstrating another nice feature of qDT
 qDT(m, row.names.col = "car") %>% head
+#                  car   mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
+#               <char> <num> <num> <num> <num> <num> <num> <num> <num> <num> <num> <num>
+# 1:         Mazda RX4  21.0     6   160   110  3.90 2.620 16.46     0     1     4     4
+# 2:     Mazda RX4 Wag  21.0     6   160   110  3.90 2.875 17.02     0     1     4     4
+# 3:        Datsun 710  22.8     4   108    93  3.85 2.320 18.61     1     1     4     1
+# 4:    Hornet 4 Drive  21.4     6   258   110  3.08 3.215 19.44     1     0     3     1
+# 5: Hornet Sportabout  18.7     8   360   175  3.15 3.440 17.02     0     0     3     2
+# 6:           Valiant  18.1     6   225   105  2.76 3.460 20.22     1     0     3     1
 
 # Row-wise conversion to data.table
 mrtl(m, names = TRUE, return = "data.table") %>% head(2)
-
+#    Mazda RX4 Mazda RX4 Wag Datsun 710 Hornet 4 Drive Hornet Sportabout Valiant Duster 360 Merc 240D
+#        <num>         <num>      <num>          <num>             <num>   <num>      <num>     <num>
+# 1:        21            21       22.8           21.4              18.7    18.1       14.3      24.4
+# 2:         6             6        4.0            6.0               8.0     6.0        8.0       4.0
+#    Merc 230 Merc 280 Merc 280C Merc 450SE Merc 450SL Merc 450SLC Cadillac Fleetwood
+#       <num>    <num>     <num>      <num>      <num>       <num>              <num>
+# 1:     22.8     19.2      17.8       16.4       17.3        15.2               10.4
+# 2:      4.0      6.0       6.0        8.0        8.0         8.0                8.0
+#    Lincoln Continental Chrysler Imperial Fiat 128 Honda Civic Toyota Corolla Toyota Corona
+#                  <num>             <num>    <num>       <num>          <num>         <num>
+# 1:                10.4              14.7     32.4        30.4           33.9          21.5
+# 2:                 8.0               8.0      4.0         4.0            4.0           4.0
+#    Dodge Challenger AMC Javelin Camaro Z28 Pontiac Firebird Fiat X1-9 Porsche 914-2 Lotus Europa
+#               <num>       <num>      <num>            <num>     <num>         <num>        <num>
+# 1:             15.5        15.2       13.3             19.2      27.3            26         30.4
+# 2:              8.0         8.0        8.0              8.0       4.0             4          4.0
+#    Ford Pantera L Ferrari Dino Maserati Bora Volvo 142E
+#             <num>        <num>         <num>      <num>
+# 1:           15.8         19.7            15       21.4
+# 2:            8.0          6.0             8        4.0
 ```
 
 The computational efficiency of these functions makes them very useful to use in *data.table* based workflows. 
 
-```{r}
+
+```r
 # Benchmark
 microbenchmark(qDT(m, "car"), mrtl(m, TRUE, "data.table"))
+# Unit: microseconds
+#                         expr   min    lq    mean median    uq    max neval
+#                qDT(m, "car") 4.838 5.043 6.16230 5.3300 6.437 20.049   100
+#  mrtl(m, TRUE, "data.table") 3.608 3.854 4.23981 3.9975 4.182 15.908   100
 ```
 For example we could regress the growth rate of GDP per capita on the Growth rate of life expectancy in each country and save results in a *data.table*:
 
-```{r}
+
+```r
 library(lmtest)
 
 wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
@@ -305,11 +515,20 @@ wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
   qDT %>% 
   # Run estimations by country using data.table
   .[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX))), "Coef"), keyby = country] %>% head
-
+# Key: <country>
+#    country        Coef   Estimate Std. Error    t value    Pr(>|t|)
+#     <char>      <char>      <num>      <num>      <num>       <num>
+# 1: Albania (Intercept) -3.6146411   2.371885 -1.5239527 0.136023086
+# 2: Albania   G(LIFEEX) 22.1596308   7.288971  3.0401591 0.004325856
+# 3: Algeria (Intercept)  0.5973329   1.740619  0.3431726 0.732731107
+# 4: Algeria   G(LIFEEX)  0.8412547   1.689221  0.4980134 0.620390703
+# 5:  Angola (Intercept) -3.3793976   1.540330 -2.1939445 0.034597175
+# 6:  Angola   G(LIFEEX)  4.2362895   1.402380  3.0207852 0.004553260
 ```
 If we only need the coefficients, not the standard errors, we can also use `collapse::flm` together with `mrtl`:
 
-```{r}
+
+```r
 wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
   na_omit(cols = -1L) %>% 
   fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
@@ -318,11 +537,20 @@ wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
                cbind(Intercept = 1, 
                      LIFEEX = fgrowth(LIFEEX)[-1L])), TRUE), 
     keyby = country] %>% head
-
+# Key: <country>
+#                country   Intercept     LIFEEX
+#                 <char>       <num>      <num>
+# 1:             Albania -3.61464113 22.1596308
+# 2:             Algeria  0.59733291  0.8412547
+# 3:              Angola -3.37939760  4.2362895
+# 4: Antigua and Barbuda -3.11880717 18.8700870
+# 5:           Argentina  1.14613567 -0.2896305
+# 6:             Armenia  0.08178344 11.5523992
 ```
 
 ... which provides a significant speed gain here: 
-```{r}
+
+```r
 
 microbenchmark(
   
@@ -341,23 +569,151 @@ B = wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
                      LIFEEX = fgrowth(LIFEEX)[-1L])), TRUE), 
     keyby = country]
 )
-
+# Unit: milliseconds
+#  expr       min        lq      mean    median        uq        max neval
+#     A 58.914253 60.063381 68.770933 60.865217 73.507813 241.594509   100
+#     B  3.145766  3.293715  3.463643  3.377006  3.503983   5.378995   100
 ```
 
 Another feature to highlight at this point are *collapse*'s list processing functions, in particular `rsplit`, `rapply2d`, `get_elem` and `unlist2d`. `rsplit` is an efficient recursive generalization of `split`: 
 
-```{r}
+
+```r
 DT_list <- rsplit(DT, country + year + PCGDP + LIFEEX ~ region + income) 
 
 # Note: rsplit(DT, year + PCGDP + LIFEEX ~ region + income, flatten = TRUE) 
 # would yield a simple list with interacted categories (like split) 
 
 str(DT_list, give.attr = FALSE)
+# List of 7
+#  $ East Asia & Pacific       :List of 3
+#   ..$ High income        :Classes 'data.table' and 'data.frame':	793 obs. of  4 variables:
+#   .. ..$ country: chr [1:793] "Australia" "Australia" "Australia" "Australia" ...
+#   .. ..$ year   : int [1:793] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:793] 19378 19469 19246 20053 21036 ...
+#   .. ..$ LIFEEX : num [1:793] 70.8 71 70.9 70.9 70.9 ...
+#   ..$ Lower middle income:Classes 'data.table' and 'data.frame':	793 obs. of  4 variables:
+#   .. ..$ country: chr [1:793] "Cambodia" "Cambodia" "Cambodia" "Cambodia" ...
+#   .. ..$ year   : int [1:793] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:793] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:793] 41.2 41.4 41.5 41.7 41.9 ...
+#   ..$ Upper middle income:Classes 'data.table' and 'data.frame':	610 obs. of  4 variables:
+#   .. ..$ country: chr [1:610] "American Samoa" "American Samoa" "American Samoa" "American Samoa" ...
+#   .. ..$ year   : int [1:610] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:610] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:610] NA NA NA NA NA NA NA NA NA NA ...
+#  $ Europe & Central Asia     :List of 4
+#   ..$ High income        :Classes 'data.table' and 'data.frame':	2257 obs. of  4 variables:
+#   .. ..$ country: chr [1:2257] "Andorra" "Andorra" "Andorra" "Andorra" ...
+#   .. ..$ year   : int [1:2257] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:2257] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:2257] NA NA NA NA NA NA NA NA NA NA ...
+#   ..$ Low income         :Classes 'data.table' and 'data.frame':	61 obs. of  4 variables:
+#   .. ..$ country: chr [1:61] "Tajikistan" "Tajikistan" "Tajikistan" "Tajikistan" ...
+#   .. ..$ year   : int [1:61] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:61] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:61] 50.6 50.9 51.2 51.5 51.9 ...
+#   ..$ Lower middle income:Classes 'data.table' and 'data.frame':	244 obs. of  4 variables:
+#   .. ..$ country: chr [1:244] "Kyrgyz Republic" "Kyrgyz Republic" "Kyrgyz Republic" "Kyrgyz Republic" ...
+#   .. ..$ year   : int [1:244] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:244] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:244] 56.1 56.6 57 57.4 57.9 ...
+#   ..$ Upper middle income:Classes 'data.table' and 'data.frame':	976 obs. of  4 variables:
+#   .. ..$ country: chr [1:976] "Albania" "Albania" "Albania" "Albania" ...
+#   .. ..$ year   : int [1:976] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:976] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:976] 62.3 63.3 64.2 64.9 65.5 ...
+#  $ Latin America & Caribbean :List of 4
+#   ..$ High income        :Classes 'data.table' and 'data.frame':	1037 obs. of  4 variables:
+#   .. ..$ country: chr [1:1037] "Antigua and Barbuda" "Antigua and Barbuda" "Antigua and Barbuda" "Antigua and Barbuda" ...
+#   .. ..$ year   : int [1:1037] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:1037] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:1037] 62 62.5 63 63.5 64 ...
+#   ..$ Low income         :Classes 'data.table' and 'data.frame':	61 obs. of  4 variables:
+#   .. ..$ country: chr [1:61] "Haiti" "Haiti" "Haiti" "Haiti" ...
+#   .. ..$ year   : int [1:61] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:61] 1512 1439 1523 1466 1414 ...
+#   .. ..$ LIFEEX : num [1:61] 41.8 42.2 42.6 43 43.4 ...
+#   ..$ Lower middle income:Classes 'data.table' and 'data.frame':	244 obs. of  4 variables:
+#   .. ..$ country: chr [1:244] "Bolivia" "Bolivia" "Bolivia" "Bolivia" ...
+#   .. ..$ year   : int [1:244] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:244] 1005 1007 1042 1091 1112 ...
+#   .. ..$ LIFEEX : num [1:244] 41.8 42.1 42.5 42.8 43.2 ...
+#   ..$ Upper middle income:Classes 'data.table' and 'data.frame':	1220 obs. of  4 variables:
+#   .. ..$ country: chr [1:1220] "Argentina" "Argentina" "Argentina" "Argentina" ...
+#   .. ..$ year   : int [1:1220] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:1220] 5643 5853 5711 5323 5773 ...
+#   .. ..$ LIFEEX : num [1:1220] 65.1 65.2 65.3 65.3 65.4 ...
+#  $ Middle East & North Africa:List of 4
+#   ..$ High income        :Classes 'data.table' and 'data.frame':	488 obs. of  4 variables:
+#   .. ..$ country: chr [1:488] "Bahrain" "Bahrain" "Bahrain" "Bahrain" ...
+#   .. ..$ year   : int [1:488] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:488] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:488] 51.9 53.2 54.6 55.9 57.2 ...
+#   ..$ Low income         :Classes 'data.table' and 'data.frame':	122 obs. of  4 variables:
+#   .. ..$ country: chr [1:122] "Syrian Arab Republic" "Syrian Arab Republic" "Syrian Arab Republic" "Syrian Arab Republic" ...
+#   .. ..$ year   : int [1:122] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:122] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:122] 52 52.6 53.2 53.8 54.4 ...
+#   ..$ Lower middle income:Classes 'data.table' and 'data.frame':	305 obs. of  4 variables:
+#   .. ..$ country: chr [1:305] "Djibouti" "Djibouti" "Djibouti" "Djibouti" ...
+#   .. ..$ year   : int [1:305] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:305] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:305] 44 44.5 44.9 45.3 45.7 ...
+#   ..$ Upper middle income:Classes 'data.table' and 'data.frame':	366 obs. of  4 variables:
+#   .. ..$ country: chr [1:366] "Algeria" "Algeria" "Algeria" "Algeria" ...
+#   .. ..$ year   : int [1:366] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:366] 2481 2091 1638 2146 2214 ...
+#   .. ..$ LIFEEX : num [1:366] 46.1 46.6 47.1 47.5 48 ...
+#  $ North America             :List of 1
+#   ..$ High income:Classes 'data.table' and 'data.frame':	183 obs. of  4 variables:
+#   .. ..$ country: chr [1:183] "Bermuda" "Bermuda" "Bermuda" "Bermuda" ...
+#   .. ..$ year   : int [1:183] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:183] 33363 34080 34763 34324 37202 ...
+#   .. ..$ LIFEEX : num [1:183] NA NA NA NA NA ...
+#  $ South Asia                :List of 3
+#   ..$ Low income         :Classes 'data.table' and 'data.frame':	122 obs. of  4 variables:
+#   .. ..$ country: chr [1:122] "Afghanistan" "Afghanistan" "Afghanistan" "Afghanistan" ...
+#   .. ..$ year   : int [1:122] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:122] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:122] 32.4 33 33.5 34 34.5 ...
+#   ..$ Lower middle income:Classes 'data.table' and 'data.frame':	244 obs. of  4 variables:
+#   .. ..$ country: chr [1:244] "Bangladesh" "Bangladesh" "Bangladesh" "Bangladesh" ...
+#   .. ..$ year   : int [1:244] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:244] 372 384 394 381 411 ...
+#   .. ..$ LIFEEX : num [1:244] 45.4 46 46.6 47.1 47.6 ...
+#   ..$ Upper middle income:Classes 'data.table' and 'data.frame':	122 obs. of  4 variables:
+#   .. ..$ country: chr [1:122] "Maldives" "Maldives" "Maldives" "Maldives" ...
+#   .. ..$ year   : int [1:122] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:122] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:122] 37.3 37.9 38.6 39.2 39.9 ...
+#  $ Sub-Saharan Africa        :List of 4
+#   ..$ High income        :Classes 'data.table' and 'data.frame':	61 obs. of  4 variables:
+#   .. ..$ country: chr [1:61] "Seychelles" "Seychelles" "Seychelles" "Seychelles" ...
+#   .. ..$ year   : int [1:61] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:61] 2830 2617 2763 2966 3064 ...
+#   .. ..$ LIFEEX : num [1:61] NA NA NA NA NA NA NA NA NA NA ...
+#   ..$ Low income         :Classes 'data.table' and 'data.frame':	1464 obs. of  4 variables:
+#   .. ..$ country: chr [1:1464] "Benin" "Benin" "Benin" "Benin" ...
+#   .. ..$ year   : int [1:1464] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:1464] 712 724 689 710 745 ...
+#   .. ..$ LIFEEX : num [1:1464] 37.3 37.7 38.2 38.7 39.1 ...
+#   ..$ Lower middle income:Classes 'data.table' and 'data.frame':	1037 obs. of  4 variables:
+#   .. ..$ country: chr [1:1037] "Angola" "Angola" "Angola" "Angola" ...
+#   .. ..$ year   : int [1:1037] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:1037] NA NA NA NA NA NA NA NA NA NA ...
+#   .. ..$ LIFEEX : num [1:1037] 37.5 37.8 38.1 38.4 38.8 ...
+#   ..$ Upper middle income:Classes 'data.table' and 'data.frame':	366 obs. of  4 variables:
+#   .. ..$ country: chr [1:366] "Botswana" "Botswana" "Botswana" "Botswana" ...
+#   .. ..$ year   : int [1:366] 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 ...
+#   .. ..$ PCGDP  : num [1:366] 408 425 444 460 480 ...
+#   .. ..$ LIFEEX : num [1:366] 49.2 49.7 50.2 50.6 51.1 ...
 ```
 
 We can use `rapply2d` to apply a function to each data frame / data.table in an arbitrary nested structure:
 
-```{r}
+
+```r
 # This runs region-income level regressions, with country fixed effects
 # following Mundlak (1978)
 lm_summary_list <- DT_list %>% 
@@ -367,29 +723,372 @@ lm_summary_list <- DT_list %>%
 
 # This is a nested list of linear model summaries
 str(lm_summary_list, give.attr = FALSE)
+# List of 7
+#  $ East Asia & Pacific       :List of 3
+#   ..$ High income        :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:441] -1.64 -2.59 2.75 3.45 2.48 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 0.531 2.494 3.83 0.706 0.759 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 4.59
+#   .. ..$ df           : int [1:3] 3 438 3
+#   .. ..$ r.squared    : num 0.0525
+#   .. ..$ adj.r.squared: num 0.0481
+#   .. ..$ fstatistic   : Named num [1:3] 12.1 2 438
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.02361 -0.00158 -0.04895 -0.00158 0.02728 ...
+#   .. ..$ na.action    : 'omit' Named int [1:352] 1 61 62 63 64 65 66 67 68 69 ...
+#   ..$ Lower middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:549] -39.6968 3.6618 -0.0944 -1.8261 -1.0491 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 1.348 0.524 0.949 0.701 0.757 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 5.4
+#   .. ..$ df           : int [1:3] 3 546 3
+#   .. ..$ r.squared    : num 0.00471
+#   .. ..$ adj.r.squared: num 0.00106
+#   .. ..$ fstatistic   : Named num [1:3] 1.29 2 546
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.016821 0.000511 -0.022767 0.000511 0.01965 ...
+#   .. ..$ na.action    : 'omit' Named int [1:244] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Upper middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:312] -32.29 -11.61 2.91 11.23 10.28 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 1.507 -0.547 4.816 0.428 0.478 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 4.39
+#   .. ..$ df           : int [1:3] 3 309 3
+#   .. ..$ r.squared    : num 0.103
+#   .. ..$ adj.r.squared: num 0.0976
+#   .. ..$ fstatistic   : Named num [1:3] 17.8 2 309
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.009471 0.000492 -0.013551 0.000492 0.011842 ...
+#   .. ..$ na.action    : 'omit' Named int [1:298] 1 2 3 4 5 6 7 8 9 10 ...
+#  $ Europe & Central Asia     :List of 4
+#   ..$ High income        :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:1355] 2.706 -0.548 1.001 3.034 0.257 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 3.254 -0.172 -2.506 0.407 0.227 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 3.3
+#   .. ..$ df           : int [1:3] 3 1352 3
+#   .. ..$ r.squared    : num 0.00257
+#   .. ..$ adj.r.squared: num 0.00109
+#   .. ..$ fstatistic   : Named num [1:3] 1.74 2 1352
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.015254 -0.000863 -0.05461 -0.000863 0.004722 ...
+#   .. ..$ na.action    : 'omit' Named int [1:902] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Low income         :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:34] 0.166 -1.804 15.949 -0.778 7.165 ...
+#   .. ..$ coefficients : num [1:2, 1:4] -5.31 9.36 2.03 2.56 -2.61 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE TRUE
+#   .. ..$ sigma        : num 8.43
+#   .. ..$ df           : int [1:3] 2 32 3
+#   .. ..$ r.squared    : num 0.295
+#   .. ..$ adj.r.squared: num 0.273
+#   .. ..$ fstatistic   : Named num [1:3] 13.4 1 32
+#   .. ..$ cov.unscaled : num [1:2, 1:2] 0.0582 -0.0514 -0.0514 0.092
+#   .. ..$ na.action    : 'omit' Named int [1:27] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Lower middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:121] -1.626 8.745 -14.47 0.298 -11.886 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 0.106 4.631 1.499 1.315 0.938 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 6.02
+#   .. ..$ df           : int [1:3] 3 118 3
+#   .. ..$ r.squared    : num 0.178
+#   .. ..$ adj.r.squared: num 0.164
+#   .. ..$ fstatistic   : Named num [1:3] 12.7 2 118
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.047775 -0.000927 -0.142782 -0.000927 0.024298 ...
+#   .. ..$ na.action    : 'omit' Named int [1:123] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Upper middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:511] 0.761 -2.153 -4.091 -6.476 -3.43 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 2.983 4.147 -3.351 0.698 0.779 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 8.28
+#   .. ..$ df           : int [1:3] 3 508 3
+#   .. ..$ r.squared    : num 0.0531
+#   .. ..$ adj.r.squared: num 0.0493
+#   .. ..$ fstatistic   : Named num [1:3] 14.2 2 508
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 7.11e-03 4.52e-05 -1.45e-02 4.52e-05 8.85e-03 ...
+#   .. ..$ na.action    : 'omit' Named int [1:465] 1 2 3 4 5 6 7 8 9 10 ...
+#  $ Latin America & Caribbean :List of 4
+#   ..$ High income        :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:487] 2.39 6.02 6.1 1.71 -2.27 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 1.015 0.483 2.613 0.677 0.952 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 4.71
+#   .. ..$ df           : int [1:3] 3 484 3
+#   .. ..$ r.squared    : num 0.00592
+#   .. ..$ adj.r.squared: num 0.00181
+#   .. ..$ fstatistic   : Named num [1:3] 1.44 2 484
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.02062 0.00155 -0.05714 0.00155 0.04082 ...
+#   .. ..$ na.action    : 'omit' Named int [1:550] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Low income         :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:59] -5.667 5.091 -4.46 -4.224 -0.526 ...
+#   .. ..$ coefficients : num [1:2, 1:4] -3.18 4.02 1.73 2.28 -1.83 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE TRUE
+#   .. ..$ sigma        : num 3.79
+#   .. ..$ df           : int [1:3] 2 57 3
+#   .. ..$ r.squared    : num 0.0516
+#   .. ..$ adj.r.squared: num 0.0349
+#   .. ..$ fstatistic   : Named num [1:3] 3.1 1 57
+#   .. ..$ cov.unscaled : num [1:2, 1:2] 0.209 -0.265 -0.265 0.364
+#   .. ..$ na.action    : 'omit' Named int [1:2] 1 61
+#   ..$ Lower middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:231] -1.386 2.029 3.213 0.413 1.334 ...
+#   .. ..$ coefficients : num [1:3, 1:4] -1.678 -0.479 3.896 2.26 0.709 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 3.96
+#   .. ..$ df           : int [1:3] 3 228 3
+#   .. ..$ r.squared    : num 0.0081
+#   .. ..$ adj.r.squared: num -0.000602
+#   .. ..$ fstatistic   : Named num [1:3] 0.931 2 228
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.3264 0.005 -0.4084 0.005 0.0321 ...
+#   .. ..$ na.action    : 'omit' Named int [1:13] 1 61 62 63 64 65 66 67 122 123 ...
+#   ..$ Upper middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:1065] 1.97 -4.16 -8.5 6.72 7.17 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 1.681 0.583 -0.124 0.353 0.512 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 4.22
+#   .. ..$ df           : int [1:3] 3 1062 3
+#   .. ..$ r.squared    : num 0.0016
+#   .. ..$ adj.r.squared: num -0.000283
+#   .. ..$ fstatistic   : Named num [1:3] 0.85 2 1062
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.006982 0.000348 -0.013936 0.000348 0.014734 ...
+#   .. ..$ na.action    : 'omit' Named int [1:155] 1 61 62 122 123 183 184 244 245 305 ...
+#  $ Middle East & North Africa:List of 4
+#   ..$ High income        :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:334] -10.728 -11.988 2.151 0.985 -8.618 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 1.929 3.963 -3.533 1.102 0.996 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 8.36
+#   .. ..$ df           : int [1:3] 3 331 3
+#   .. ..$ r.squared    : num 0.0456
+#   .. ..$ adj.r.squared: num 0.0399
+#   .. ..$ fstatistic   : Named num [1:3] 7.91 2 331
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.01738 0.00101 -0.02441 0.00101 0.01419 ...
+#   .. ..$ na.action    : 'omit' Named int [1:154] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Low income         :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:29] 0.468 3.424 0.415 3.842 3.342 ...
+#   .. ..$ coefficients : num [1:2, 1:4] -6.91 11.38 2.11 3.64 -3.27 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE TRUE
+#   .. ..$ sigma        : num 6.05
+#   .. ..$ df           : int [1:3] 2 27 3
+#   .. ..$ r.squared    : num 0.266
+#   .. ..$ adj.r.squared: num 0.239
+#   .. ..$ fstatistic   : Named num [1:3] 9.81 1 27
+#   .. ..$ cov.unscaled : num [1:2, 1:2] 0.122 -0.178 -0.178 0.361
+#   .. ..$ na.action    : 'omit' Named int [1:93] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Lower middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:191] -0.95 -2.047 4.541 5.594 -0.723 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 2.238 1.271 -0.647 1.002 0.599 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 3.94
+#   .. ..$ df           : int [1:3] 3 188 3
+#   .. ..$ r.squared    : num 0.0244
+#   .. ..$ adj.r.squared: num 0.014
+#   .. ..$ fstatistic   : Named num [1:3] 2.35 2 188
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.06471 -0.00043 -0.07801 -0.00043 0.02309 ...
+#   .. ..$ na.action    : 'omit' Named int [1:114] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Upper middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:263] -18.068 -23.976 28.692 0.858 1.141 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 2.663 0.718 -1.19 3.538 1.318 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 13.8
+#   .. ..$ df           : int [1:3] 3 260 3
+#   .. ..$ r.squared    : num 0.00119
+#   .. ..$ adj.r.squared: num -0.00649
+#   .. ..$ fstatistic   : Named num [1:3] 0.155 2 260
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.065741 0.000795 -0.084456 0.000795 0.009122 ...
+#   .. ..$ na.action    : 'omit' Named int [1:103] 1 61 62 122 123 124 125 126 127 128 ...
+#  $ North America             :List of 1
+#   ..$ High income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:137] 4.6986 -3.1098 1.8243 0.5643 0.0176 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 6.542 -1.461 -19.53 2.272 0.662 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 2.49
+#   .. ..$ df           : int [1:3] 3 134 3
+#   .. ..$ r.squared    : num 0.0657
+#   .. ..$ adj.r.squared: num 0.0518
+#   .. ..$ fstatistic   : Named num [1:3] 4.71 2 134
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 8.36e-01 1.59e-17 -3.60 1.59e-17 7.10e-02 ...
+#   .. ..$ na.action    : 'omit' Named int [1:46] 1 2 3 4 5 6 7 8 9 10 ...
+#  $ South Asia                :List of 3
+#   ..$ Low income         :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:76] 0.544 -6.17 3.951 -0.964 7.829 ...
+#   .. ..$ coefficients : num [1:3, 1:4] -108.62 -1.72 96.06 174.19 1.25 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 3.7
+#   .. ..$ df           : int [1:3] 3 73 3
+#   .. ..$ r.squared    : num 0.0494
+#   .. ..$ adj.r.squared: num 0.0233
+#   .. ..$ fstatistic   : Named num [1:3] 1.9 2 73
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 2210.639 -6.979 -1875.261 -6.979 0.114 ...
+#   .. ..$ na.action    : 'omit' Named int [1:46] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Lower middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:216] 0.294 -0.293 -6.067 4.954 -4.164 ...
+#   .. ..$ coefficients : num [1:3, 1:4] -2.232 0.238 5.972 1.074 0.493 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 3.44
+#   .. ..$ df           : int [1:3] 3 213 3
+#   .. ..$ r.squared    : num 0.111
+#   .. ..$ adj.r.squared: num 0.103
+#   .. ..$ fstatistic   : Named num [1:3] 13.3 2 213
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.09757 -0.00201 -0.10483 -0.00201 0.02054 ...
+#   .. ..$ na.action    : 'omit' Named int [1:28] 1 61 62 63 64 65 66 67 68 69 ...
+#   ..$ Upper middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:82] 3.262 3.976 3.128 1.67 -0.901 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 3.859 -0.577 -0.476 1.036 1.365 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 4.25
+#   .. ..$ df           : int [1:3] 3 79 3
+#   .. ..$ r.squared    : num 0.00622
+#   .. ..$ adj.r.squared: num -0.0189
+#   .. ..$ fstatistic   : Named num [1:3] 0.247 2 79
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.0595 -0.028 -0.0473 -0.028 0.1034 ...
+#   .. ..$ na.action    : 'omit' Named int [1:40] 1 2 3 4 5 6 7 8 9 10 ...
+#  $ Sub-Saharan Africa        :List of 4
+#   ..$ High income        :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:39] -11.33 -5.041 -3.158 0.585 7.81 ...
+#   .. ..$ coefficients : num [1:2, 1:4] 2.551 -0.644 0.775 0.55 3.293 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE TRUE
+#   .. ..$ sigma        : num 4.8
+#   .. ..$ df           : int [1:3] 2 37 3
+#   .. ..$ r.squared    : num 0.0357
+#   .. ..$ adj.r.squared: num 0.00959
+#   .. ..$ fstatistic   : Named num [1:3] 1.37 1 37
+#   .. ..$ cov.unscaled : num [1:2, 1:2] 0.026 -0.00217 -0.00217 0.01312
+#   .. ..$ na.action    : 'omit' Named int [1:22] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Low income         :List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:1085] 0.694 -5.869 2.069 3.855 2.415 ...
+#   .. ..$ coefficients : num [1:3, 1:4] -0.0756 0.5308 0.5124 0.8887 0.137 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 5.88
+#   .. ..$ df           : int [1:3] 3 1082 3
+#   .. ..$ r.squared    : num 0.0146
+#   .. ..$ adj.r.squared: num 0.0128
+#   .. ..$ fstatistic   : Named num [1:3] 8.01 2 1082
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.022858 -0.000025 -0.025534 -0.000025 0.000543 ...
+#   .. ..$ na.action    : 'omit' Named int [1:379] 1 61 62 122 123 183 184 244 245 305 ...
+#   ..$ Lower middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:891] -8.2839 -4.0289 0.0449 1.8231 -0.5267 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 2.352 0.782 -2.616 0.608 0.169 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 5.27
+#   .. ..$ df           : int [1:3] 3 888 3
+#   .. ..$ r.squared    : num 0.0277
+#   .. ..$ adj.r.squared: num 0.0255
+#   .. ..$ fstatistic   : Named num [1:3] 12.7 2 888
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 1.33e-02 -1.13e-05 -2.00e-02 -1.13e-05 1.02e-03 ...
+#   .. ..$ na.action    : 'omit' Named int [1:146] 1 2 3 4 5 6 7 8 9 10 ...
+#   ..$ Upper middle income:List of 12
+#   .. ..$ call         : language FUN(formula = ..1, data = y)
+#   .. ..$ terms        :Classes 'terms', 'formula'  language G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)
+#   .. ..$ residuals    : Named num [1:298] 0.7659 0.9133 0.0921 0.996 0.0765 ...
+#   .. ..$ coefficients : num [1:3, 1:4] 0.584 0.456 4.112 2.472 0.652 ...
+#   .. ..$ aliased      : Named logi [1:3] FALSE FALSE FALSE
+#   .. ..$ sigma        : num 11.4
+#   .. ..$ df           : int [1:3] 3 295 3
+#   .. ..$ r.squared    : num 0.00658
+#   .. ..$ adj.r.squared: num -0.000152
+#   .. ..$ fstatistic   : Named num [1:3] 0.977 2 295
+#   .. ..$ cov.unscaled : num [1:3, 1:3] 0.047213 0.000438 -0.070778 0.000438 0.003285 ...
+#   .. ..$ na.action    : 'omit' Named int [1:68] 1 61 62 63 64 65 66 67 68 69 ...
 ```
 
 We can turn this list into a *data.table* again by calling first `get_elem` to recursively extract the coefficient matrices and then `unlist2d` to recursively bind them to a new *data.table*: 
 
-```{r}
+
+```r
 lm_summary_list %>%
   get_elem("coefficients") %>% 
   unlist2d(idcols = .c(Region, Income), 
            row.names = "Coef", 
            DT = TRUE) %>% head
+#                 Region              Income                  Coef  Estimate Std. Error   t value
+#                 <char>              <char>                <char>     <num>      <num>     <num>
+# 1: East Asia & Pacific         High income           (Intercept) 0.5313479  0.7058550 0.7527720
+# 2: East Asia & Pacific         High income             G(LIFEEX) 2.4935584  0.7586943 3.2866443
+# 3: East Asia & Pacific         High income B(G(LIFEEX), country) 3.8297123  1.6916770 2.2638554
+# 4: East Asia & Pacific Lower middle income           (Intercept) 1.3476602  0.7008556 1.9228785
+# 5: East Asia & Pacific Lower middle income             G(LIFEEX) 0.5238856  0.7574904 0.6916069
+# 6: East Asia & Pacific Lower middle income B(G(LIFEEX), country) 0.9494439  1.2031228 0.7891496
+#       Pr(>|t|)
+#          <num>
+# 1: 0.451991327
+# 2: 0.001095466
+# 3: 0.024071386
+# 4: 0.055015131
+# 5: 0.489478164
+# 6: 0.430367103
 ```
 
 The fact that this is a nested list of matrices, and that we can save both the names of the lists at each level of nesting and the row- and column- names of the matrices make `unlist2d` a significant generalization of `rbindlist`^[`unlist2d` can similarly bind nested lists of arrays, data frames or *data.table*'s]. 
 
 But why do all this fuzz if we could have simply done:?
 
-```{r}
+
+```r
 DT[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country))), "Coef"), 
    keyby = .(region, income)] %>% head
+# Key: <region, income>
+#                 region              income                  Coef  Estimate Std. Error   t value
+#                 <fctr>              <fctr>                <char>     <num>      <num>     <num>
+# 1: East Asia & Pacific         High income           (Intercept) 0.5313479  0.7058550 0.7527720
+# 2: East Asia & Pacific         High income             G(LIFEEX) 2.4935584  0.7586943 3.2866443
+# 3: East Asia & Pacific         High income B(G(LIFEEX), country) 3.8297123  1.6916770 2.2638554
+# 4: East Asia & Pacific Lower middle income           (Intercept) 1.3476602  0.7008556 1.9228785
+# 5: East Asia & Pacific Lower middle income             G(LIFEEX) 0.5238856  0.7574904 0.6916069
+# 6: East Asia & Pacific Lower middle income B(G(LIFEEX), country) 0.9494439  1.2031228 0.7891496
+#       Pr(>|t|)
+#          <num>
+# 1: 0.451991327
+# 2: 0.001095466
+# 3: 0.024071386
+# 4: 0.055015131
+# 5: 0.489478164
+# 6: 0.430367103
 ```
 
 Well we might want to do more things with that list of linear models first before tidying it, so this is a more general workflow. We might also be interested in additional statistics like the R-squared or the F-statistic:
-```{r}
+
+```r
 DT_sum <- lm_summary_list %>%
 get_elem("coef|r.sq|fstat", regex = TRUE) %>% 
   unlist2d(idcols = .c(Region, Income, Statistic), 
@@ -397,18 +1096,90 @@ get_elem("coef|r.sq|fstat", regex = TRUE) %>%
            DT = TRUE)
 
 head(DT_sum)
+#                 Region      Income     Statistic                  Coef  Estimate Std. Error
+#                 <char>      <char>        <char>                <char>     <num>      <num>
+# 1: East Asia & Pacific High income  coefficients           (Intercept) 0.5313479  0.7058550
+# 2: East Asia & Pacific High income  coefficients             G(LIFEEX) 2.4935584  0.7586943
+# 3: East Asia & Pacific High income  coefficients B(G(LIFEEX), country) 3.8297123  1.6916770
+# 4: East Asia & Pacific High income     r.squared                  <NA>        NA         NA
+# 5: East Asia & Pacific High income adj.r.squared                  <NA>        NA         NA
+# 6: East Asia & Pacific High income    fstatistic                  <NA>        NA         NA
+#     t value    Pr(>|t|)         V1    value numdf dendf
+#       <num>       <num>      <num>    <num> <num> <num>
+# 1: 0.752772 0.451991327         NA       NA    NA    NA
+# 2: 3.286644 0.001095466         NA       NA    NA    NA
+# 3: 2.263855 0.024071386         NA       NA    NA    NA
+# 4:       NA          NA 0.05245359       NA    NA    NA
+# 5:       NA          NA 0.04812690       NA    NA    NA
+# 6:       NA          NA         NA 12.12325     2   438
 
 # Reshaping to long form: 
 DT_sum %>%
   melt(1:4, na.rm = TRUE) %>%
   roworderv(1:2) %>% head(20)
+#                  Region              Income     Statistic                  Coef   variable
+#                  <char>              <char>        <char>                <char>     <fctr>
+#  1: East Asia & Pacific         High income  coefficients           (Intercept)   Estimate
+#  2: East Asia & Pacific         High income  coefficients             G(LIFEEX)   Estimate
+#  3: East Asia & Pacific         High income  coefficients B(G(LIFEEX), country)   Estimate
+#  4: East Asia & Pacific         High income  coefficients           (Intercept) Std. Error
+#  5: East Asia & Pacific         High income  coefficients             G(LIFEEX) Std. Error
+#  6: East Asia & Pacific         High income  coefficients B(G(LIFEEX), country) Std. Error
+#  7: East Asia & Pacific         High income  coefficients           (Intercept)    t value
+#  8: East Asia & Pacific         High income  coefficients             G(LIFEEX)    t value
+#  9: East Asia & Pacific         High income  coefficients B(G(LIFEEX), country)    t value
+# 10: East Asia & Pacific         High income  coefficients           (Intercept)   Pr(>|t|)
+# 11: East Asia & Pacific         High income  coefficients             G(LIFEEX)   Pr(>|t|)
+# 12: East Asia & Pacific         High income  coefficients B(G(LIFEEX), country)   Pr(>|t|)
+# 13: East Asia & Pacific         High income     r.squared                  <NA>         V1
+# 14: East Asia & Pacific         High income adj.r.squared                  <NA>         V1
+# 15: East Asia & Pacific         High income    fstatistic                  <NA>      value
+# 16: East Asia & Pacific         High income    fstatistic                  <NA>      numdf
+# 17: East Asia & Pacific         High income    fstatistic                  <NA>      dendf
+# 18: East Asia & Pacific Lower middle income  coefficients           (Intercept)   Estimate
+# 19: East Asia & Pacific Lower middle income  coefficients             G(LIFEEX)   Estimate
+# 20: East Asia & Pacific Lower middle income  coefficients B(G(LIFEEX), country)   Estimate
+#                  Region              Income     Statistic                  Coef   variable
+#            value
+#            <num>
+#  1: 5.313479e-01
+#  2: 2.493558e+00
+#  3: 3.829712e+00
+#  4: 7.058550e-01
+#  5: 7.586943e-01
+#  6: 1.691677e+00
+#  7: 7.527720e-01
+#  8: 3.286644e+00
+#  9: 2.263855e+00
+# 10: 4.519913e-01
+# 11: 1.095466e-03
+# 12: 2.407139e-02
+# 13: 5.245359e-02
+# 14: 4.812690e-02
+# 15: 1.212325e+01
+# 16: 2.000000e+00
+# 17: 4.380000e+02
+# 18: 1.347660e+00
+# 19: 5.238856e-01
+# 20: 9.494439e-01
+#            value
 ```
 
 As a final example of this kind, lets suppose we are interested in the within-country correlations of all these variables by region and income group:
 
-```{r}
+
+```r
 DT[, qDT(pwcor(W(.SD, country)), "Variable"), 
    keyby = .(region, income), .SDcols = PCGDP:ODA] %>% head
+# Key: <region, income>
+#                 region              income Variable    W.PCGDP   W.LIFEEX    W.GINI       W.ODA
+#                 <fctr>              <fctr>   <char>      <num>      <num>     <num>       <num>
+# 1: East Asia & Pacific         High income  W.PCGDP  1.0000000  0.7562668 0.6253844 -0.25258496
+# 2: East Asia & Pacific         High income W.LIFEEX  0.7562668  1.0000000 0.3191255 -0.33611662
+# 3: East Asia & Pacific         High income   W.GINI  0.6253844  0.3191255 1.0000000          NA
+# 4: East Asia & Pacific         High income    W.ODA -0.2525850 -0.3361166        NA  1.00000000
+# 5: East Asia & Pacific Lower middle income  W.PCGDP  1.0000000  0.4685618 0.4428879 -0.02508852
+# 6: East Asia & Pacific Lower middle income W.LIFEEX  0.4685618  1.0000000 0.3231520  0.09356733
 ```
 
 In summary: The list processing features, statistical capabilities and efficient converters of *collapse* and the flexibility of *data.table* work well together, facilitating more complex workflows. 
@@ -427,8 +1198,6 @@ Mundlak, Yair. 1978. “On the Pooling of Time Series and Cross Section Data.”
 
 
 
-```{r, echo=FALSE}
-options(oldopts)
-```
+
 
 

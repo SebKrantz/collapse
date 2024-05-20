@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
 Version: 2.0.14
-Date: 2024-05-01
+Date: 2024-05-19
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch", 
@@ -28,7 +28,7 @@ Description: A C/C++ based package for advanced data transformation and
     (grouped, weighted) summary statistics, powerful tools to work with nested data, 
     fast data object conversions, functions for memory efficient R programming, and 
     helpers to effectively deal with variable labels, attributes, and missing data. 
-    It is well integrated with base R classes, 'dplyr'/'tibble', 'data.table', 'sf', 
+    It is well integrated with base R classes, 'dplyr'/'tibble', 'data.table', 'sf', 'units', 
     'plm' (panel-series and data frames), and 'xts'/'zoo'.
 URL: https://sebkrantz.github.io/collapse/,  
      https://github.com/SebKrantz/collapse,

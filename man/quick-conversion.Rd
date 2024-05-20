@@ -8,6 +8,7 @@
 \alias{mctl}
 \alias{mrtl}
 \alias{as_numeric_factor}
+\alias{as_integer_factor}
 \alias{as_character_factor}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Quick Data Conversion}
@@ -18,7 +19,7 @@ Fast, flexible and precise conversion of common data objects, without method dis
 \item \code{qM} converts vectors, higher-dimensional arrays, data frames and suitable lists to matrix.
 \item \code{mctl} and \code{mrtl} column- or row-wise convert a matrix to list, data frame or \emph{data.table}. They are used internally by \code{qDF/qDT/qTBL}, \code{\link{dapply}}, \code{\link{BY}}, etc\dots
 \item \code{\link{qF}} converts atomic vectors to factor (documented on a separate page).
-\item \code{as_numeric_factor} and \code{as_character_factor} convert factors, or all factor columns in a data frame / list, to character or numeric (by converting the levels).
+\item \code{as_numeric_factor}, \code{as_integer_factor}, and \code{as_character_factor} convert factors, or all factor columns in a data frame / list, to character or numeric (by converting the levels).
 }
 }
 \usage{
@@ -37,12 +38,13 @@ mrtl(X, names = FALSE, return = "list")
 # Converting factors or factor columns
 
   as_numeric_factor(X, keep.attr = TRUE)
+  as_integer_factor(X, keep.attr = TRUE)
 as_character_factor(X, keep.attr = TRUE)
 
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{X}{a vector, factor, matrix, higher-dimensional array, data frame or list. \code{mctl} and \code{mrtl} only accept matrices, \code{as_numeric_factor} and \code{as_character_factor} only accept factors, data frames or lists.}
+  \item{X}{a vector, factor, matrix, higher-dimensional array, data frame or list. \code{mctl} and \code{mrtl} only accept matrices, \code{as_numeric_factor}, \code{as_integer_factor} and \code{as_character_factor} only accept factors, data frames or lists.}
   \item{row.names.col}{can be used to add an column saving names or row.names when converting objects to data frame using \code{qDF/qDT/qTBL}. \code{TRUE} will add a column \code{"row.names"}, or you can supply a name e.g. \code{row.names.col = "variable"}. With \code{qM}, the argument has the opposite meaning, and can be used to select one or more columns in a data frame/list which will be used to create the rownames of the matrix e.g. \code{qM(iris, row.names.col = "Species")}. In this case the column(s) can be specified using names, indices, a logical vector or a selector function. See Examples.}
   \item{keep.attr}{logical. \code{FALSE} (default) yields a \emph{hard} / \emph{thorough} object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / \emph{data.table}. \code{FALSE} yields a \emph{soft} / \emph{minimal} object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also \code{class}.}
   \item{class}{if a vector of classes is passed here, the converted object will be assigned these classes. If \code{NULL} is passed, the default classes are assigned: \code{qM} assigns no class, \code{qDF} a class \code{"data.frame"}, and \code{qDT} a class \code{c("data.table", "data.frame")}. If \code{keep.attr = TRUE} and \code{class = NULL} and the object already inherits the default classes, further inherited classes are preserved. See Details and the Example. }
@@ -77,7 +79,8 @@ The default \code{keep.attr = FALSE} ensures \emph{hard} conversions so that all
 \code{qM} - returns a matrix\cr
 \code{mctl}, \code{mrtl} - return a list, data frame or \emph{data.table} \cr
 \code{qF} - returns a factor\cr
-\code{as_numeric_factor} - returns X with factors converted to numeric variables\cr
+\code{as_numeric_factor} - returns X with factors converted to numeric (double) variables\cr
+\code{as_integer_factor} - returns X with factors converted to integer variables\cr
 \code{as_character_factor} - returns X with factors converted to character variables
 }
 % \note{
