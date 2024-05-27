@@ -19,6 +19,7 @@ pivot(data,               # Summary of Documentation:
       check.dups = FALSE, # detect duplicate 'ids'+'names' combinations
 
       # Only apply if how = "wider" or "recast"
+      fun.aggregate = "last",       # aggregation function (fast internal version)
       nthreads = .op[["nthreads"]], # minor gains as grouping remains serial
       fill = NULL,        # value to insert for unbalanced data (default NA/NULL)
       drop = TRUE,        # drop unused levels (=columns) if 'names' is factor
@@ -61,6 +62,9 @@ character. Whether to generate new 'names' and/or 'labels' columns as factor var
 }
   \item{check.dups}{
 logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading effectively to the last value being chosen i.e. the data is aggregated using the last value. See Details.
+}
+  \item{fun.aggregate}{
+character. The function to aggregate duplicate values. At present, a single function string: \code{"first"}, \code{"last"}, \code{"nobs"}, \code{"sum"}, \code{"mean"}, \code{"min"}, or \code{"max"}. If \code{na.rm = TRUE}, missing values are skipped. Using \code{"nobs"}, \code{"sum"}, or \code{"mean"} forces \code{fill = 0}.
 }
 \item{nthreads}{
   integer. if \code{how = "wider"|"recast"}: number of threads to use with OpenMP (default \code{get_collapse("nthreads")}, initialized to 1). Only the distribution of values to columns with \code{how = "wider"|"recast"} is multithreaded here. Since grouping id columns on a long data frame is expensive and serial, the gains are minor. With \code{how = "long"}, multithreading does not make much sense as the most expensive operation is allocating the long results vectors. The rest is a couple of \code{memset()}'s in C to copy the values.

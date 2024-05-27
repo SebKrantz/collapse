@@ -133,6 +133,7 @@ pivot <- function(data,
                   na.rm = FALSE,
                   factor = c("names", "labels"),
                   check.dups = FALSE,
+                  fun.aggregate = "last",
                   nthreads = .op[["nthreads"]],
                   fill = NULL, # Fill is for pivot_wider
                   drop = TRUE, # Same as with dcast()
@@ -293,13 +294,15 @@ pivot <- function(data,
         if(length(values) > 1L) { # Multiple columns, as in dcast... TODO: check pivot_wider
           namv <- names(data)[values]
           attributes(data) <- NULL
-          value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads))
+          if(!is.character(fun.aggregate)) stop("Custom fun.aggregate yet to be implemented")
+          value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, fun.aggregate, na.rm))
           if(length(labels)) value_cols <- lapply(value_cols, add_labels, labels)
           value_cols <- unlist(if(transpose[1L]) t_list2(value_cols) else value_cols, FALSE, FALSE)
           namv_res <- if(transpose[2L]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
           names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)
         } else {
-          value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill, nthreads)
+          if(!is.character(fun.aggregate)) stop("Custom fun.aggregate yet to be implemented")
+          value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill, nthreads, fun.aggregate, na.rm)
           names(value_cols) <- names
           if(length(labels)) vlabels(value_cols) <- labels
         }
@@ -375,7 +378,8 @@ pivot <- function(data,
           namv <- names(vd)
           attributes(vd) <- NULL
         }
-        value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads))
+        if(!is.character(fun.aggregate)) stop("Custom fun.aggregate yet to be implemented")
+        value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, fun.aggregate, na.rm))
         if(length(id_cols)) id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols)), FALSE, FALSE, NULL)
         value_cols <- .Call(C_rbindlist, value_cols, FALSE, FALSE, names[[2L]]) # Final column is "variable" name
 
