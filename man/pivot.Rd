@@ -19,7 +19,8 @@ pivot(data,               # Summary of Documentation:
       check.dups = FALSE, # detect duplicate 'ids'+'names' combinations
 
       # Only apply if how = "wider" or "recast"
-      fun.aggregate = "last",       # aggregation function
+      FUN = "last",       # aggregation function (internal or external)
+      FUN.args = NULL,    # list of arguments passed to aggregation function
       nthreads = .op[["nthreads"]], # minor gains as grouping remains serial
       fill = NULL,        # value to insert for unbalanced data (default NA/NULL)
       drop = TRUE,        # drop unused levels (=columns) if 'names' is factor
@@ -61,12 +62,13 @@ logical. \code{TRUE} will remove missing values such that in the reshaped data t
 character. Whether to generate new 'names' and/or 'labels' columns as factor variables. This is generally recommended as factors are more memory efficient than character vectors and also faster in subsequent filtering and grouping. Internally, this argument is evaluated as \code{factor <- c("names", "labels") \%in\% factor}, so passing anything other than \code{"names"} and/or \code{"labels"} will disable it.
 }
   \item{check.dups}{
-logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading effectively to the \code{fun.aggregate} option to be executed (default last value). See Details.
+logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading effectively to the \code{FUN} option to be executed (default last value). See Details.
 }
-  \item{fun.aggregate}{
-function to aggregate duplicate values. At present, only a single function is allowed. \link[=fast-statistical-functions]{Fast Statistical Functions} receive vectorized execution. For maximum efficiency, a set of internal functions are provided: \code{"first"}, \code{"last"}, \code{"count"}, \code{"sum"}, \code{"mean"}, \code{"min"}, or \code{"max"}. In options \code{"first"/"last"/"count"} setting \code{na.rm = TRUE} skips missing values. In options \code{"sum"/"mean"/"min"/"max"} missing values are always skipped (see Details why). The \code{fill} argument is ignored in \code{"count"/"sum"/"mean"/"min"/"max"} (\code{"count"/"sum"} force \code{fill = 0} else \code{NA} is used).
-
-% Using \code{"count"} or \code{"sum"} forces \code{fill = 0} (the \code{fill} argument cannot be used). For \code{"mean"}, \code{0} or \code{NA}, and for \code{"min"/"max"}, \code{Inf/-Inf} or \code{NA} are the only acceptible \code{fill} values.
+  \item{FUN}{
+function to aggregate values. At present, only a single function is allowed. \link[=fast-statistical-functions]{Fast Statistical Functions} receive vectorized execution. For maximum efficiency, a small set of internal functions is provided: \code{"first"}, \code{"last"}, \code{"count"}, \code{"sum"}, \code{"mean"}, \code{"min"}, or \code{"max"}. In options \code{"first"/"last"/"count"} setting \code{na.rm = TRUE} skips missing values. In options \code{"sum"/"mean"/"min"/"max"} missing values are always skipped (see Details why). The \code{fill} argument is ignored in \code{"count"/"sum"/"mean"/"min"/"max"} (\code{"count"/"sum"} force \code{fill = 0} else \code{NA} is used).
+}
+\item{FUN.args}{
+(optional) list of arguments passed to \code{FUN} (if using an external function). Data-length arguments such as weight vectors are supported.
 }
 \item{nthreads}{
   integer. if \code{how = "wider"|"recast"}: number of threads to use with OpenMP (default \code{get_collapse("nthreads")}, initialized to 1). Only the distribution of values to columns with \code{how = "wider"|"recast"} is multithreaded here. Since grouping id columns on a long data frame is expensive and serial, the gains are minor. With \code{how = "long"}, multithreading does not make much sense as the most expensive operation is allocating the long results vectors. The rest is a couple of \code{memset()}'s in C to copy the values.
@@ -87,14 +89,14 @@ logical. if \code{how = "wider"|"recast"} and 'names' is a single factor variabl
 \details{
 Pivot wider essentially works as follows: compute \code{g_rows = group(ids)} and also \code{g_cols = group(names)} (using \code{\link{group}} if \code{sort = FALSE}). \code{g_rows} gives the row-numbers of the wider data frame and \code{g_cols} the column numbers.
 
-Then, a C function generates a wide data frame and runs through each long column ('values'), assigning each value to the corresponding row and column in the wide frame. In this process \code{fun.aggregate} is always applied. The default, \code{"last"}, does nothing at all, i.e., if there are duplicates, some values are overwritten. \code{"first"} works similarly just that the C-loop is executed the other way around. The other hard-coded options count, sum, average, or compare observations on the fly. Missing values are internally skipped for statistical functions as there is no way to distinguish an incoming \code{NA} from an initial \code{NA} - apart from counting occurrences using an internal structure of the same size as the result data frame which is costly and thus not implemented.
+Then, a C function generates a wide data frame and runs through each long column ('values'), assigning each value to the corresponding row and column in the wide frame. In this process \code{FUN} is always applied. The default, \code{"last"}, does nothing at all, i.e., if there are duplicates, some values are overwritten. \code{"first"} works similarly just that the C-loop is executed the other way around. The other hard-coded options count, sum, average, or compare observations on the fly. Missing values are internally skipped for statistical functions as there is no way to distinguish an incoming \code{NA} from an initial \code{NA} - apart from counting occurrences using an internal structure of the same size as the result data frame which is costly and thus not implemented.
 
-When passing an R-function to \code{fun.aggregate}, the data is grouped using \code{g_full = group(list(g_rows, g_cols))}, aggregated by groups, and expended again to full length using \code{\link{TRA}} before entering the reshaping algorithm. Thus, this is significantly more expensive than the optimized internal functions. With \link[=fast-statistical-functions]{Fast Statistical Functions} the aggregation is vectorized across groups, other functions are applied using \code{\link{BY}} - by far the slowest option.
+When passing an R-function to \code{FUN}, the data is grouped using \code{g_full = group(list(g_rows, g_cols))}, aggregated by groups, and expended again to full length using \code{\link{TRA}} before entering the reshaping algorithm. Thus, this is significantly more expensive than the optimized internal functions. With \link[=fast-statistical-functions]{Fast Statistical Functions} the aggregation is vectorized across groups, other functions are applied using \code{\link{BY}} - by far the slowest option.
 % Since the algorithm runs through the data from first to last row, this amounts to removing duplicates by taking the last value for each set of 'ids' - in first-appearance order.
 
 If \code{check.dups = TRUE}, a check of the form  \code{fnunique(list(g_rows, g_cols)) < fnrow(data)} is run, and an informative warning is issued if duplicates are found.
 
-Recast pivoting works similarly. In long pivots \code{fun.aggregate} is ignored and the check simply amounts to \code{fnunique(ids) < fnrow(data)}. % Making this check optional ensures greater performance, but also requires the user to exercise discretion i.e. know your data or invoke the check.
+Recast pivoting works similarly. In long pivots \code{FUN} is ignored and the check simply amounts to \code{fnunique(ids) < fnrow(data)}. % Making this check optional ensures greater performance, but also requires the user to exercise discretion i.e. know your data or invoke the check.
 }
 \value{
 A reshaped data frame with the same class and attributes (except for 'names'/'row-names') as the input frame.

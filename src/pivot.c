@@ -136,7 +136,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
 }
 
 int aggFUNtI(SEXP x) {
-  if(TYPEOF(x) != STRSXP) error("fun.aggregate must be a character string");
+  if(TYPEOF(x) != STRSXP) error("Internal FUN must be a character string");
   const char * r = CHAR(STRING_ELT(x, 0)); // translateCharUTF8()
   if(strcmp(r, "last") == 0) return 1;
   if(strcmp(r, "first") == 0) return 2;
@@ -145,7 +145,7 @@ int aggFUNtI(SEXP x) {
   if(strcmp(r, "mean") == 0) return 5;
   if(strcmp(r, "min") == 0) return 6;
   if(strcmp(r, "max") == 0) return 7;
-  error("Unsupported internal fun.aggregate: %s", r);
+  error("Unsupported internal FUN: %s", r);
 }
 
 // Implementation for categorical functions
