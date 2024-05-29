@@ -275,8 +275,8 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
   SEXP out1;
   if(aggfun < 3 || aggfun > 4) {
     SEXP fill_val;
-    if(fill == R_NilValue) {
-      fill_val = tx == REALSXP || aggfun == 5 ? ScalarReal(NA_REAL) : tx == INTSXP ? ScalarInteger(NA_INTEGER) :
+    if(fill == R_NilValue || aggfun > 4) {
+      fill_val = tx == REALSXP ? ScalarReal(NA_REAL) : tx == INTSXP ? ScalarInteger(NA_INTEGER) :
       tx == LGLSXP ? ScalarLogical(NA_LOGICAL) : tx == STRSXP ? ScalarString(NA_STRING) :
       tx == CPLXSXP ? ScalarComplex(asComplex(ScalarReal(NA_REAL))) : tx == RAWSXP ? ScalarRaw(0) : R_NilValue;
     } else if(TYPEOF(fill) == tx) {
