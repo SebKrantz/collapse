@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.14" id="collapse-2014">collapse 2.0.14<a class="anchor" aria-label="anchor" href="#collapse-2014"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.15" id="collapse-2015">collapse 2.0.15<a class="anchor" aria-label="anchor" href="#collapse-2015"></a></h2>
+<ul><li>
+<code><a href="../reference/pivot.html">pivot()</a></code> has a new arguments <code>FUN = "last"</code> and <code>FUN.args = NULL</code>, allowing wide and recast pivots with aggregation (default last value as before). <code>FUN</code> currently supports a single function returning a scalar value. <em>Fast Statistical Functions</em> receive vectorized execution. <code>FUN.args</code> can be used to supply a list of function arguments, including data-length arguments such as weights. There are also a couple of internal functions callable using function strings: <code>"first"</code>, <code>"last"</code>, <code>"count"</code>, <code>"sum"</code>, <code>"mean"</code>, <code>"min"</code>, or <code>"max"</code>. These are built into the reshaping C-code and thus extremely fast. Thanks <a href="https://github.com/AdrianAntico" class="external-link">@AdrianAntico</a> for the request (<a href="https://github.com/SebKrantz/collapse/issues/582" class="external-link">#582</a>).</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.14" id="collapse-2014">collapse 2.0.14<a class="anchor" aria-label="anchor" href="#collapse-2014"></a></h2><p class="text-muted">CRAN release: 2024-05-24</p>
 <ul><li><p>Updated ‘<em>collapse</em> and <em>sf</em>’ vignette to reflect the recent support for <em>units</em> objects, and added a few more examples.</p></li>
 <li><p>Fixed a bug in <code><a href="../reference/join.html">join()</a></code> where a full join silently became a left join if there are no matches between the tables (<a href="https://github.com/SebKrantz/collapse/issues/574" class="external-link">#574</a>). Thanks <a href="https://github.com/D3SL" class="external-link">@D3SL</a> for reporting.</p></li>
 <li><p>Added function <code><a href="../reference/GRP.html">group_by_vars()</a></code>: A standard evaluation version of <code><a href="../reference/GRP.html">fgroup_by()</a></code> that is slimmer and safer for programming, e.g. <code>data |&gt; group_by_vars(ind1) |&gt; collapg(custom = list(fmean = ind2, fsum = ind3))</code>. Or, using <em>magrittr</em>:</p></li>

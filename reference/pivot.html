@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.14</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,6 +74,8 @@
 <span>      check.dups <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># detect duplicate 'ids'+'names' combinations</span></span>
 <span></span>
 <span>      <span class="co"># Only apply if how = "wider" or "recast"</span></span>
+<span>      FUN <span class="op">=</span> <span class="st">"last"</span>,       <span class="co"># aggregation function (internal or external)</span></span>
+<span>      FUN.args <span class="op">=</span> <span class="cn">NULL</span>,    <span class="co"># list of arguments passed to aggregation function</span></span>
 <span>      nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="co"># minor gains as grouping remains serial</span></span>
 <span>      fill <span class="op">=</span> <span class="cn">NULL</span>,        <span class="co"># value to insert for unbalanced data (default NA/NULL)</span></span>
 <span>      drop <span class="op">=</span> <span class="cn">TRUE</span>,        <span class="co"># drop unused levels (=columns) if 'names' is factor</span></span>
@@ -111,7 +113,13 @@
 <dd><p>character. Whether to generate new 'names' and/or 'labels' columns as factor variables. This is generally recommended as factors are more memory efficient than character vectors and also faster in subsequent filtering and grouping. Internally, this argument is evaluated as <code>factor &lt;- c("names", "labels") %in% factor</code>, so passing anything other than <code>"names"</code> and/or <code>"labels"</code> will disable it.</p></dd>
 
   <dt>check.dups</dt>
-<dd><p>logical. <code>TRUE</code> checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default <code>FALSE</code> implies that the algorithm just runs through the data, leading effectively to the last value being chosen i.e. the data is aggregated using the last value. See Details.</p></dd>
+<dd><p>logical. <code>TRUE</code> checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default <code>FALSE</code> implies that the algorithm just runs through the data, leading effectively to the <code>FUN</code> option to be executed (default last value). See Details.</p></dd>
+
+  <dt>FUN</dt>
+<dd><p>function to aggregate values. At present, only a single function is allowed. <a href="fast-statistical-functions.html">Fast Statistical Functions</a> receive vectorized execution. For maximum efficiency, a small set of internal functions is provided: <code>"first"</code>, <code>"last"</code>, <code>"count"</code>, <code>"sum"</code>, <code>"mean"</code>, <code>"min"</code>, or <code>"max"</code>. In options <code>"first"/"last"/"count"</code> setting <code>na.rm = TRUE</code> skips missing values. In options <code>"sum"/"mean"/"min"/"max"</code> missing values are always skipped (see Details why). The <code>fill</code> argument is ignored in <code>"count"/"sum"/"mean"/"min"/"max"</code> (<code>"count"/"sum"</code> force <code>fill = 0</code> else <code>NA</code> is used).</p></dd>
+
+<dt>FUN.args</dt>
+<dd><p>(optional) list of arguments passed to <code>FUN</code> (if using an external function). Data-length arguments such as weight vectors are supported.</p></dd>
 
 <dt>nthreads</dt>
 <dd><p>integer. if <code>how = "wider"|"recast"</code>: number of threads to use with OpenMP (default <code>get_collapse("nthreads")</code>, initialized to 1). Only the distribution of values to columns with <code>how = "wider"|"recast"</code> is multithreaded here. Since grouping id columns on a long data frame is expensive and serial, the gains are minor. With <code>how = "long"</code>, multithreading does not make much sense as the most expensive operation is allocating the long results vectors. The rest is a couple of <code>memset()</code>'s in C to copy the values.</p></dd>
@@ -132,7 +140,11 @@
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Pivot wider essentially works as follows: compute <code>g_rows = group(ids)</code> and also <code>g_cols = group(names)</code> (using <code><a href="group.html">group</a></code> if <code>sort = FALSE</code>). <code>g_rows</code> gives the row-numbers of the wider data frame and <code>g_cols</code> the column numbers. Then, a C function generates a wide data frame and runs through each long column ('values'), assigning each value to the corresponding row and column in the wide frame. If there are duplicates, some observations will be assigned to the same slot the new data frame, overwriting the value already set. Since the algorithm runs through the data from first to last row, this amounts to removing duplicates by taking the last value for each set of 'ids' - in first-appearance order. If <code>check.dups = TRUE</code>, a check of the form  <code>fnunique(list(g_rows, g_cols)) &lt; fnrow(data)</code> is run, and an informative warning is issued if duplicates are found. Recast pivoting works similarly, and in long pivoting the check simply amounts to <code>fnunique(ids) &lt; fnrow(data)</code>. Making this check optional ensures greater performance, but also requires the user to exercise discretion i.e. know your data or invoke the check.</p>
+    <p>Pivot wider essentially works as follows: compute <code>g_rows = group(ids)</code> and also <code>g_cols = group(names)</code> (using <code><a href="group.html">group</a></code> if <code>sort = FALSE</code>). <code>g_rows</code> gives the row-numbers of the wider data frame and <code>g_cols</code> the column numbers.</p>
+<p>Then, a C function generates a wide data frame and runs through each long column ('values'), assigning each value to the corresponding row and column in the wide frame. In this process <code>FUN</code> is always applied. The default, <code>"last"</code>, does nothing at all, i.e., if there are duplicates, some values are overwritten. <code>"first"</code> works similarly just that the C-loop is executed the other way around. The other hard-coded options count, sum, average, or compare observations on the fly. Missing values are internally skipped for statistical functions as there is no way to distinguish an incoming <code>NA</code> from an initial <code>NA</code> - apart from counting occurrences using an internal structure of the same size as the result data frame which is costly and thus not implemented.</p>
+<p>When passing an R-function to <code>FUN</code>, the data is grouped using <code>g_full = group(list(g_rows, g_cols))</code>, aggregated by groups, and expended again to full length using <code><a href="TRA.html">TRA</a></code> before entering the reshaping algorithm. Thus, this is significantly more expensive than the optimized internal functions. With <a href="fast-statistical-functions.html">Fast Statistical Functions</a> the aggregation is vectorized across groups, other functions are applied using <code><a href="BY.html">BY</a></code> - by far the slowest option.</p>
+<p>If <code>check.dups = TRUE</code>, a check of the form  <code>fnunique(list(g_rows, g_cols)) &lt; fnrow(data)</code> is run, and an informative warning is issued if duplicates are found.</p>
+<p>Recast pivoting works similarly. In long pivots <code>FUN</code> is ignored and the check simply amounts to <code>fnunique(ids) &lt; fnrow(data)</code>. <!-- % Making this check optional ensures greater performance, but also requires the user to exercise discretion i.e. know your data or invoke the check. --></p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -143,7 +155,7 @@
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p>Leaving either 'ids' or 'values' empty will assign all other columns (except for <code>"variable"</code> if <code>how = "wider"|"recast"</code>) to the non-specified argument. It is also possible to leave both empty, e.g. for complete melting if <code>how = "wider"</code> or data transposition if <code>how = "recast"</code> (similar to <code><a href="https://rdatatable.gitlab.io/data.table/reference/transpose.html" class="external-link">data.table::transpose</a></code> but supporting multiple names columns and variable labels). See Examples.</p>
-<p><code>pivot</code> currently does not support concurrently melting/pivoting longer to multiple columns. See <code><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">data.table::melt</a></code> or <code>pivot_longer</code> from <em>tidyr</em> or <em>tidytable</em> for an efficient alternative with this feature. It is also possible to achieve this with just a little bit of programming. An example is provided below. Currently I don't see a 'complete' (like <code>pivot_longer</code>) way of including this feature in the API, and in general I don't see this as a very well-defined operation. But I am open to suggestions.</p>
+<p><code>pivot</code> currently does not support concurrently melting/pivoting longer to multiple columns. See <code><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">data.table::melt</a></code> or <code>pivot_longer</code> from <em>tidyr</em> or <em>tidytable</em> for an efficient alternative with this feature. It is also possible to achieve this with just a little bit of programming. An example is provided below. <!-- % Currently I don't see a 'complete' (like \code{pivot_longer}) way of including this feature in the API, and in general I don't see this as a very well-defined operation. But I am open to suggestions. --></p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
