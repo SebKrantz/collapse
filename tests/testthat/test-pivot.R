@@ -40,14 +40,37 @@ test_that("long pivots work properly", {
 })
 
 
-# test_that("wide pivots work properly", {
-#
-#   pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider")
-#   pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
-#
-#   pivot(wlddev, "iso3c", "PCGDP", "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
-#   pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
-#
-#   pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"), transpose = c("cols", "names"))
-#
-# })
+test_that("wide pivots work properly", {
+
+  # 1 column
+  expect_identical(qDF(dcast(wldDT, iso3c ~ year, value.var = "PCGDP")),
+                   qDF(pivot(wldDT, "iso3c", "PCGDP", "year", how = "wider", sort = "ids")))
+  expect_identical(qDF(dcast(wldDT, country ~ year, value.var = "PCGDP")),
+                   qDF(pivot(wldDT, "country", "PCGDP", "year", how = "wider")))
+
+  # 2 columns
+  expect_identical(qDF(dcast(wldDT, iso3c ~ year, value.var = c("PCGDP", "LIFEEX"))),
+                   qDF(pivot(wldDT, "iso3c", c("PCGDP", "LIFEEX"), "year", how = "wider", sort = "ids")))
+  expect_identical(qDF(dcast(wldDT, country ~ year, value.var = c("PCGDP", "LIFEEX"))),
+                   qDF(pivot(wldDT, "country", c("PCGDP", "LIFEEX"), "year", how = "wider")))
+
+  # pivot(wlddev, "iso3c", "PCGDP", "year", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+  # pivot(wlddev, "iso3c", "PCGDP", "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+  # pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"))
+  # pivot(wlddev, "iso3c", c("PCGDP", "LIFEEX"), "year", "decade", how = "wider", check.dups = TRUE, na.rm = TRUE, sort = c("ids", "names"), transpose = c("cols", "names"))
+
+  # 1 column: sum, mean, min, max
+  for (f in .c(sum, mean, min, max)) {
+    expect_equal(dapply(dcast(wldDT[is.finite(PCGDP)], income ~ year, value.var = "PCGDP", fun = match.fun(f)), unattrib, return = "data.frame"),
+                 dapply(pivot(wldDT, "income", "PCGDP", "year", how = "wider", FUN = f, na.rm = TRUE, sort = TRUE), unattrib, return = "data.frame"))
+  }
+  for (f in .c(sum, mean, min, max)) {
+    expect_equal(dapply(dcast(wldDT[is.finite(PCGDP)], income ~ year, value.var = "PCGDP", fun = match.fun(f)), unattrib, return = "data.frame"),
+                 dapply(pivot(wldDT, "income", "PCGDP", "year", how = "wider", FUN = match.fun(f), na.rm = TRUE, sort = TRUE), unattrib, return = "data.frame"))
+  }
+  for (f in .c(sum, mean, min, max)) {
+    expect_equal(dapply(dcast(wldDT[is.finite(PCGDP)], income ~ year, value.var = "PCGDP", fun = match.fun(f)), unattrib, return = "data.frame"),
+                 dapply(pivot(wldDT, "income", "PCGDP", "year", how = "wider", FUN = match.fun(paste0("f", f)), na.rm = TRUE, sort = TRUE), unattrib, return = "data.frame"))
+  }
+
+})
