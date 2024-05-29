@@ -140,7 +140,7 @@ int aggFUNtI(SEXP x) {
   const char * r = CHAR(STRING_ELT(x, 0)); // translateCharUTF8()
   if(strcmp(r, "last") == 0) return 1;
   if(strcmp(r, "first") == 0) return 2;
-  if(strcmp(r, "nobs") == 0) return 3;
+  if(strcmp(r, "count") == 0) return 3;
   if(strcmp(r, "sum") == 0) return 4;
   if(strcmp(r, "mean") == 0) return 5;
   if(strcmp(r, "min") == 0) return 6;
@@ -170,7 +170,7 @@ switch(aggfun) {                                                                
       for(int i = l; i--; ) TYPEACC(pout[pid[i]])[pix[i]-1] = pc[i];                         \
     }                                                                                        \
   } break;                                                                                   \
-  case 3: { /* nobs: no multithreading because possible race condition */                    \
+  case 3: { /* count: no multithreading because possible race condition */                    \
     if(narm) {                                                                               \
     for(int i = 0; i != l; ++i) INTEGER(pout[pid[i]])[pix[i]-1] += NONMISSCHECK;             \
     } else {                                                                                 \
@@ -256,7 +256,7 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
     SET_VECTOR_ELT(out, 0, out1 = falloc(fill_val, ScalarInteger(nr), ScalarLogical(1)));
     UNPROTECT(1);
   } else {
-    if(aggfun == 3) { // nobs
+    if(aggfun == 3) { // count
       SET_VECTOR_ELT(out, 0, out1 = allocVector(INTSXP, nr));
       memset(INTEGER(out1), 0, nr*sizeof(int));
     } else { // sum
