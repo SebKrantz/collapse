@@ -180,7 +180,7 @@ switch(aggfun) {                                                                
 }
 
 // Implementation for numeric functions
-#define AGGFUN_SWITCH_NUM(tdef, TYPEACC, NONMISSCHECK)                                     \
+#define AGGFUN_SWITCH_NUM(tdef, TYPEACC, NONMISSCHECK, ISMISS)                             \
 switch(aggfun) {                                                                           \
   case 4: { /* sum: no multithreading because possible race condition */                   \
     if(narm) {                                                                             \
@@ -196,12 +196,22 @@ switch(aggfun) {                                                                
       for(int i = 0; i != l; ++i) {                                                        \
         if(NONMISSCHECK) {                                                                 \
           meani = TYPEACC(pout[pid[i]])-1;                                                 \
+          if(ISMISS(meani[pix[i]])) {                                                      \
+            meani[pix[i]] = pc[i];                                                         \
+            ++count[pid[i]*nr+pix[i]];                                                     \
+            continue;                                                                      \
+          }                                                                                \
           meani[pix[i]] += (pc[i] - meani[pix[i]]) / ++count[pid[i]*nr+pix[i]];            \
         }                                                                                  \
       }                                                                                    \
     } else {                                                                               \
       for(int i = 0; i != l; ++i) {                                                        \
         meani = TYPEACC(pout[pid[i]])-1;                                                   \
+        if(ISMISS(meani[pix[i]])) {                                                        \
+          meani[pix[i]] = pc[i];                                                           \
+          ++count[pid[i]*nr+pix[i]];                                                       \
+          continue;                                                                        \
+        }                                                                                  \
         meani[pix[i]] += (pc[i] - meani[pix[i]]) / ++count[pid[i]*nr+pix[i]];              \
       }                                                                                    \
     }                                                                                      \
@@ -213,13 +223,13 @@ switch(aggfun) {                                                                
       for(int i = 0; i != l; ++i) {                                                        \
         if(NONMISSCHECK) {                                                                 \
           mini = TYPEACC(pout[pid[i]])-1;                                                  \
-          if(pc[i] < mini[pix[i]]) mini[pix[i]] = pc[i];                                   \
+          if(pc[i] < mini[pix[i]] || ISMISS(mini[pix[i]])) mini[pix[i]] = pc[i];           \
         }                                                                                  \
       }                                                                                    \
     } else {                                                                               \
       for(int i = 0; i != l; ++i) {                                                        \
         mini = TYPEACC(pout[pid[i]])-1;                                                    \
-        if(pc[i] < mini[pix[i]]) mini[pix[i]] = pc[i];                                     \
+        if(pc[i] < mini[pix[i]] || ISMISS(mini[pix[i]])) mini[pix[i]] = pc[i];             \
       }                                                                                    \
     }                                                                                      \
   } break;                                                                                 \
@@ -229,17 +239,19 @@ switch(aggfun) {                                                                
       for(int i = 0; i != l; ++i) {                                                        \
         if(NONMISSCHECK) {                                                                 \
           maxi = TYPEACC(pout[pid[i]])-1;                                                  \
-          if(pc[i] > maxi[pix[i]]) maxi[pix[i]] = pc[i];                                   \
+          if(pc[i] > maxi[pix[i]] || ISMISS(maxi[pix[i]])) maxi[pix[i]] = pc[i];           \
         }                                                                                  \
       }                                                                                    \
     } else {                                                                               \
       for(int i = 0; i != l; ++i) {                                                        \
         maxi = TYPEACC(pout[pid[i]])-1;                                                    \
-        if(pc[i] > maxi[pix[i]]) maxi[pix[i]] = pc[i];                                     \
+        if(pc[i] > maxi[pix[i]] || ISMISS(maxi[pix[i]])) maxi[pix[i]] = pc[i];             \
       }                                                                                    \
     }                                                                                      \
   } break;                                                                                 \
 }
+
+#define ISMISS_INTDBL(x) ((x) == NA_INTEGER || (x) != (x))
 
 
 // TODO: How to check for duplicate rows?
@@ -261,10 +273,10 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
   SEXP out = PROTECT(allocVector(VECSXP, nc)), *restrict pout = SEXPPTR(out)-1;
 
   SEXP out1;
-  if(aggfun < 3 || aggfun > 5) {
+  if(aggfun < 3 || aggfun > 4) {
     SEXP fill_val;
     if(fill == R_NilValue) {
-      fill_val = tx == REALSXP ? ScalarReal(NA_REAL) : tx == INTSXP ? ScalarInteger(NA_INTEGER) :
+      fill_val = tx == REALSXP || aggfun == 5 ? ScalarReal(NA_REAL) : tx == INTSXP ? ScalarInteger(NA_INTEGER) :
       tx == LGLSXP ? ScalarLogical(NA_LOGICAL) : tx == STRSXP ? ScalarString(NA_STRING) :
       tx == CPLXSXP ? ScalarComplex(asComplex(ScalarReal(NA_REAL))) : tx == RAWSXP ? ScalarRaw(0) : R_NilValue;
     } else if(TYPEOF(fill) == tx) {
@@ -277,7 +289,7 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
     if(aggfun == 3) { // nobs
       SET_VECTOR_ELT(out, 0, out1 = allocVector(INTSXP, nr));
       memset(INTEGER(out1), 0, nr*sizeof(int));
-    } else { // sum or mean
+    } else { // sum
       SET_VECTOR_ELT(out, 0, out1 = allocVector(REALSXP, nr));
       memset(REAL(out1), 0, nr*sizeof(double));
     }
@@ -295,7 +307,7 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
       if(aggfun <= 3) {
         AGGFUN_SWITCH_CAT(INTEGER, pc[i] != NA_INTEGER);
       } else {
-        AGGFUN_SWITCH_NUM(int, INTEGER, pc[i] != NA_INTEGER);
+        AGGFUN_SWITCH_NUM(int, INTEGER, pc[i] != NA_INTEGER, ISMISS_INTDBL);
       }
       break;
     }
@@ -310,7 +322,7 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
       if(aggfun <= 3) {
         AGGFUN_SWITCH_CAT(REAL, NISNAN(pc[i]));
       } else {
-        AGGFUN_SWITCH_NUM(double, REAL, NISNAN(pc[i]));
+        AGGFUN_SWITCH_NUM(double, REAL, NISNAN(pc[i]), ISNAN);
       }
       break;
     }
