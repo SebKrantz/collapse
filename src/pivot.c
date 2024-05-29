@@ -183,29 +183,13 @@ switch(aggfun) {                                                                
 #define AGGFUN_SWITCH_NUM(tdef, TYPEACC, NONMISSCHECK, ISMISS)                             \
 switch(aggfun) {                                                                           \
   case 4: { /* sum: no multithreading because possible race condition */                   \
-    if(narm) {                                                                             \
       for(int i = 0; i != l; ++i) if(NONMISSCHECK) TYPEACC(pout[pid[i]])[pix[i]-1] += pc[i]; \
-    } else {                                                                               \
-      for(int i = 0; i != l; ++i) TYPEACC(pout[pid[i]])[pix[i]-1] += pc[i];                \
-    }                                                                                      \
   } break;                                                                                 \
   case 5: { /* mean: no multithreading because possible race condition */                  \
     int *restrict count = (int*)Calloc(nr*nc+1, int);                                      \
     tdef *meani = TYPEACC(pout[1]);                                                        \
-    if(narm) {                                                                             \
-      for(int i = 0; i != l; ++i) {                                                        \
-        if(NONMISSCHECK) {                                                                 \
-          meani = TYPEACC(pout[pid[i]])-1;                                                 \
-          if(ISMISS(meani[pix[i]])) {                                                      \
-            meani[pix[i]] = pc[i];                                                         \
-            ++count[pid[i]*nr+pix[i]];                                                     \
-            continue;                                                                      \
-          }                                                                                \
-          meani[pix[i]] += (pc[i] - meani[pix[i]]) / ++count[pid[i]*nr+pix[i]];            \
-        }                                                                                  \
-      }                                                                                    \
-    } else {                                                                               \
-      for(int i = 0; i != l; ++i) {                                                        \
+    for(int i = 0; i != l; ++i) {                                                          \
+      if(NONMISSCHECK) {                                                                   \
         meani = TYPEACC(pout[pid[i]])-1;                                                   \
         if(ISMISS(meani[pix[i]])) {                                                        \
           meani[pix[i]] = pc[i];                                                           \
@@ -219,15 +203,8 @@ switch(aggfun) {                                                                
   } break;                                                                                 \
   case 6: { /* min: no multithreading because possible race condition */                   \
     tdef *mini = TYPEACC(pout[1]);                                                         \
-    if(narm) {                                                                             \
-      for(int i = 0; i != l; ++i) {                                                        \
-        if(NONMISSCHECK) {                                                                 \
-          mini = TYPEACC(pout[pid[i]])-1;                                                  \
-          if(pc[i] < mini[pix[i]] || ISMISS(mini[pix[i]])) mini[pix[i]] = pc[i];           \
-        }                                                                                  \
-      }                                                                                    \
-    } else {                                                                               \
-      for(int i = 0; i != l; ++i) {                                                        \
+    for(int i = 0; i != l; ++i) {                                                          \
+      if(NONMISSCHECK) {                                                                   \
         mini = TYPEACC(pout[pid[i]])-1;                                                    \
         if(pc[i] < mini[pix[i]] || ISMISS(mini[pix[i]])) mini[pix[i]] = pc[i];             \
       }                                                                                    \
@@ -235,15 +212,8 @@ switch(aggfun) {                                                                
   } break;                                                                                 \
   case 7: { /* max: no multithreading because possible race condition */                   \
     tdef *maxi = TYPEACC(pout[1]);                                                         \
-    if(narm) {                                                                             \
-      for(int i = 0; i != l; ++i) {                                                        \
-        if(NONMISSCHECK) {                                                                 \
-          maxi = TYPEACC(pout[pid[i]])-1;                                                  \
-          if(pc[i] > maxi[pix[i]] || ISMISS(maxi[pix[i]])) maxi[pix[i]] = pc[i];           \
-        }                                                                                  \
-      }                                                                                    \
-    } else {                                                                               \
-      for(int i = 0; i != l; ++i) {                                                        \
+    for(int i = 0; i != l; ++i) {                                                          \
+      if(NONMISSCHECK) {                                                                   \
         maxi = TYPEACC(pout[pid[i]])-1;                                                    \
         if(pc[i] > maxi[pix[i]] || ISMISS(maxi[pix[i]])) maxi[pix[i]] = pc[i];             \
       }                                                                                    \
