@@ -11,7 +11,7 @@
  [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://app.codecov.io/gh/SebKrantz/collapse?branch=master)
 [![minimal R version](https://img.shields.io/badge/R%3E%3D-3.3.0-6666ff.svg)](https://cran.r-project.org/)
-[![status](https://tinyverse.netlify.com/badge/collapse)](https://CRAN.R-project.org/package=collapse)
+[![dependencies](https://tinyverse.netlify.app/badge/collapse)](https://CRAN.R-project.org/package=collapse)
 [![DOI](https://zenodo.org/badge/172910283.svg)](https://zenodo.org/badge/latestdoi/172910283)
 [![arXiv](https://img.shields.io/badge/arXiv-2403.05038-0969DA.svg)](https://arxiv.org/abs/2403.05038)
 <!-- badges: end -->

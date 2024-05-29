@@ -1,3 +1,7 @@
+# collapse 2.0.15
+
+* `pivot()` has a new arguments `FUN = "last"` and `FUN.args = NULL`, allowing wide and recast pivots with aggregation (default last value as before). `FUN` currently supports a single function returning a scalar value. *Fast Statistical Functions* receive vectorized execution. `FUN.args` can be used to supply a list of function arguments, including data-length arguments such as weights. There are also a couple of internal functions callable using function strings: `"first"`, `"last"`, `"count"`, `"sum"`, `"mean"`, `"min"`, or `"max"`. These are built into the reshaping C-code and thus extremely fast. Thanks @AdrianAntico for the request (#582).
+
 # collapse 2.0.14
 
 * Updated '*collapse* and *sf*' vignette to reflect the recent support for *units* objects, and added a few more examples.

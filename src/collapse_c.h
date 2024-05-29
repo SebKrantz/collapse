@@ -98,7 +98,7 @@ SEXP all_funs(SEXP x);
 SEXP unlock_collapse_namespace(SEXP env);
 void writeValueByIndex(SEXP target, SEXP source, const int from, SEXP index);
 SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol);
-SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads);
+SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEXP Raggfun, SEXP Rnarm);
 SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count);
 SEXP replace_outliers(SEXP x, SEXP limits, SEXP value, SEXP single_limit, SEXP set);
 SEXP na_locf(SEXP x, SEXP Rset);
