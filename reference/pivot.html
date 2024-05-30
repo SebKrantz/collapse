@@ -107,7 +107,7 @@
 <dd><p>character. The pivoting method: one of <code>"longer"</code>, <code>"wider"</code> or <code>"recast"</code>. These can be abbreviated by the first letter i.e. <code>"l"/"w"/"r"</code>.</p></dd>
 
   <dt>na.rm</dt>
-<dd><p>logical. <code>TRUE</code> will remove missing values such that in the reshaped data there is no row missing all data columns - selected through 'values'.</p></dd>
+<dd><p>logical. <code>TRUE</code> will remove missing values such that in the reshaped data there is no row missing all data columns - selected through 'values'. For wide/recast pivots using internal <code>FUN</code>'s <code>"first"/"last"/"count"</code>, this also toggles skipping of missing values.</p></dd>
 
   <dt>factor</dt>
 <dd><p>character. Whether to generate new 'names' and/or 'labels' columns as factor variables. This is generally recommended as factors are more memory efficient than character vectors and also faster in subsequent filtering and grouping. Internally, this argument is evaluated as <code>factor &lt;- c("names", "labels") %in% factor</code>, so passing anything other than <code>"names"</code> and/or <code>"labels"</code> will disable it.</p></dd>
