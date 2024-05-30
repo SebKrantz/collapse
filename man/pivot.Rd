@@ -56,7 +56,7 @@ names of columns to generate, or retrieve variable labels from:
   character. The pivoting method: one of \code{"longer"}, \code{"wider"} or \code{"recast"}. These can be abbreviated by the first letter i.e. \code{"l"/"w"/"r"}.
 }
   \item{na.rm}{
-logical. \code{TRUE} will remove missing values such that in the reshaped data there is no row missing all data columns - selected through 'values'.
+logical. \code{TRUE} will remove missing values such that in the reshaped data there is no row missing all data columns - selected through 'values'. For wide/recast pivots using internal \code{FUN}'s \code{"first"/"last"/"count"}, this also toggles skipping of missing values.
 }
   \item{factor}{
 character. Whether to generate new 'names' and/or 'labels' columns as factor variables. This is generally recommended as factors are more memory efficient than character vectors and also faster in subsequent filtering and grouping. Internally, this argument is evaluated as \code{factor <- c("names", "labels") \%in\% factor}, so passing anything other than \code{"names"} and/or \code{"labels"} will disable it.
