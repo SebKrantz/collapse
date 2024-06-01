@@ -7,7 +7,8 @@
 \description{
 With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{fnth}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fnobs}} and \code{\link{fndistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on vectors, matrices and data frames, with special support for grouped data frames / tibbles (\emph{dplyr}) and \emph{data.table}'s.
 }
-\section{Usage}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{
+\section{Usage}{
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{
 ## All functions (FUN) follow a common syntax in 4 methods:
 FUN(x, ...)
 
@@ -75,7 +76,8 @@ Please see the documentation of individual functions.
 \seealso{
 \link[=collapse-documentation]{Collapse Overview}, \link[=data-transformations]{Data Transformations}, \link[=time-series-panel-series]{Time Series and Panel Series}
 }
-\section{Examples}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{
+\section{Examples}{
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{
 ## default vector method
 mpg <- mtcars$mpg
 fsum(mpg)                         # Simple sum
@@ -117,7 +119,8 @@ mtcars |> fgroup_by(cyl,vs,am) |> fmean(hp, keep.group_vars = FALSE)
 }
 }\if{html}{\out{</div>}}
 }
-\section{Benchmark}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{
+\section{Benchmark}{
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{
 ## This compares fsum with data.table (2 threads) and base::rowsum
 # Starting with small data
 mtcDT <- qDT(mtcars)
