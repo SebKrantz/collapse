@@ -37,5 +37,16 @@ pre {
   color: #cccccc;
 }
 small.nav-text.text-muted {
-  color: #8e8c84 !important; /* #999a9c; -> Same as navbar */
+  color: #999a9c !important; /* #8e8c84 #999a9c; -> Same as navbar */
+}
+
+.form-control,
+.form-control::placeholder {
+  color: #999a9c !important;
+}
+
+[data-bs-theme="dark"] {
+  --bs-body-color: #cccccc !important;
+  --bs-secondary-color: #cccccc !important;
+  --bs-tertiary-color: #999a9c !important;
 }
