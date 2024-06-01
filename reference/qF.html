@@ -119,9 +119,9 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf</span><span class="op">)</span>, <span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min     lq     mean median     uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 88.970 89.380 90.38368 89.626 89.995 109.921   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 84.501 85.034 85.99586 85.198 85.608 113.119   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min      lq     mean median      uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 89.216 89.6465 91.31602 89.954 90.6305 125.706   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 84.583 84.8700 85.96921 85.116 85.5670 115.251   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>  <span class="co"># Interacting two variables (can be factors)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0 6.0 4.1 6.1 8.0 6.1 8.0 4.1 4.1 6.1 6.1 8.0 8.0 8.0 8.0 8.0 8.0 4.1 4.1</span>
