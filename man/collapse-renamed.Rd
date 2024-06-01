@@ -47,7 +47,7 @@ Renamed Functions
 \description{
 These functions were renamed (mostly during v1.6.0 update) to make the namespace more consistent. Except for the S3 generics of \code{fNobs}, \code{fNdistinct}, \code{fHDbetween} and \code{fHDwithin}, and functions \code{replace_NA} and \code{replace_Inf}, I intend to remove all of these functions by end of 2023. %The S3 generics and the other functions will be depreciated in 2023 for the earliest. These all now give a message reminding you not to use them in fresh code.
 }
-\section{Renaming}{\preformatted{
+\section{Renaming}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{
 fNobs -> fnobs
 fNdistinct -> fndistinct
 pwNobs -> pwnobs
@@ -66,5 +66,5 @@ Date_vars -> date_vars
 `Date_vars<-` -> `date_vars<-`
 replace_NA -> replace_na
 replace_Inf -> replace_inf
-}
+}\if{html}{\out{</div>}}
 }
