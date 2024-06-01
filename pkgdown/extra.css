@@ -48,4 +48,5 @@ small.nav-text.text-muted {
 [data-bs-theme="dark"] {
   --bs-body-color: #cccccc !important;
   --bs-secondary-color: #cccccc !important;
+  --bs-tertiary-color: #999a9c !important;
 }
