@@ -11,9 +11,11 @@ vignette: >
   %\VignetteIndexEntry{collapse and dplyr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+params:
+  cache: true
 ---
 
-```{css, echo=FALSE}
+<style type="text/css">
 pre {
   max-height: 500px;
   overflow-y: auto;
@@ -22,26 +24,11 @@ pre {
 pre[class] {
   max-height: 500px;
 }
-```
+</style>
 
-```{r, echo=FALSE}
-NCRAN <- identical(Sys.getenv("NCRAN"), "TRUE")
-RUNBENCH <- NCRAN && identical(Sys.getenv("RUNBENCH"), "TRUE")
 
-oldopts <- options(width = 100L)
-```
 
-```{r, echo = FALSE, message = FALSE, warning=FALSE, eval=NCRAN}
-library(dplyr)
-library(microbenchmark)
-library(collapse)
-knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
-                      comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
-                      fig.width = 8, fig.height = 5, 
-                      out.width = '100%')
 
-set.seed(101)
-```
 
 <!--
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
@@ -67,7 +54,8 @@ This vignette focuses on the integration of *collapse* and the popular *dplyr* p
 
 A key feature of *collapse* is it's broad set of *Fast Statistical Functions* (`fsum, fprod, fmean, fmedian, fmode, fvar, fsd, fmin, fmax, fnth, ffirst, flast, fnobs, fndistinct`) which are able to substantially speed-up column-wise, grouped and weighted computations on vectors, matrices or data frames. The functions are S3 generic, with a default (vector), matrix and data frame method, as well as a grouped_df method for grouped tibbles used by *dplyr*. The grouped tibble method has the following arguments:  
 
-```{r eval=FALSE}
+
+```r
 FUN.grouped_df(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
                use.g.names = FALSE, keep.group_vars = TRUE, [keep.w = TRUE,] ...)
 ```
@@ -80,9 +68,24 @@ With that in mind, let's consider some straightforward applications.
 
 Consider the Groningen Growth and Development Center 10-Sector Database included in *collapse* and introduced in the main vignette:
 
-```{r, eval=NCRAN}
+
+```r
 library(collapse)
 head(GGDC10S)
+#   Country Regioncode             Region Variable Year      AGR      MIN       MAN        PU
+# 1     BWA        SSA Sub-saharan Africa       VA 1960       NA       NA        NA        NA
+# 2     BWA        SSA Sub-saharan Africa       VA 1961       NA       NA        NA        NA
+# 3     BWA        SSA Sub-saharan Africa       VA 1962       NA       NA        NA        NA
+# 4     BWA        SSA Sub-saharan Africa       VA 1963       NA       NA        NA        NA
+# 5     BWA        SSA Sub-saharan Africa       VA 1964 16.30154 3.494075 0.7365696 0.1043936
+# 6     BWA        SSA Sub-saharan Africa       VA 1965 15.72700 2.495768 1.0181992 0.1350976
+#         CON      WRT      TRA     FIRE      GOV      OTH      SUM
+# 1        NA       NA       NA       NA       NA       NA       NA
+# 2        NA       NA       NA       NA       NA       NA       NA
+# 3        NA       NA       NA       NA       NA       NA       NA
+# 4        NA       NA       NA       NA       NA       NA       NA
+# 5 0.6600454 6.243732 1.658928 1.119194 4.822485 2.341328 37.48229
+# 6 1.3462312 7.064825 1.939007 1.246789 5.695848 2.678338 39.34710
 
 # Summarize the Data: 
 # descr(GGDC10S, cols = is_categorical)
@@ -94,24 +97,68 @@ GGDC10S <- qTBL(GGDC10S)
 
 Simple column-wise computations using the fast functions and pipe operators are performed as follows:
 
-```{r, eval=NCRAN}
+
+```r
 library(dplyr)
 
 GGDC10S %>% fnobs                       # Number of Observations
+#    Country Regioncode     Region   Variable       Year        AGR        MIN        MAN         PU 
+#       5027       5027       5027       5027       5027       4364       4355       4355       4354 
+#        CON        WRT        TRA       FIRE        GOV        OTH        SUM 
+#       4355       4355       4355       4355       3482       4248       4364
 GGDC10S %>% fndistinct                  # Number of distinct values
+#    Country Regioncode     Region   Variable       Year        AGR        MIN        MAN         PU 
+#         43          6          6          2         67       4353       4224       4353       4237 
+#        CON        WRT        TRA       FIRE        GOV        OTH        SUM 
+#       4339       4344       4334       4349       3470       4238       4364
 GGDC10S %>% select_at(6:16) %>% fmedian # Median
+#        AGR        MIN        MAN         PU        CON        WRT        TRA       FIRE        GOV 
+#  4394.5194   173.2234  3718.0981   167.9500  1473.4470  3773.6430  1174.8000   960.1251  3928.5127 
+#        OTH        SUM 
+#  1433.1722 23186.1936
 GGDC10S %>% select_at(6:16) %>% fmean   # Mean
+#        AGR        MIN        MAN         PU        CON        WRT        TRA       FIRE        GOV 
+#  2526696.5  1867908.9  5538491.4   335679.5  1801597.6  3392909.5  1473269.7  1657114.8  1712300.3 
+#        OTH        SUM 
+#  1684527.3 21566436.8
 GGDC10S %>% fmode                       # Mode
+#            Country         Regioncode             Region           Variable               Year 
+#              "USA"              "ASI"             "Asia"              "EMP"             "2010" 
+#                AGR                MIN                MAN                 PU                CON 
+# "171.315882316326"                "0" "4645.12507642586"                "0" "1.34623115930777" 
+#                WRT                TRA               FIRE                GOV                OTH 
+# "21.8380052682527" "8.97743416914571" "40.0701608636442"                "0" "3626.84423577048" 
+#                SUM 
+# "37.4822945751317"
 GGDC10S %>% fmode(drop = FALSE)         # Keep data structure intact
+# # A tibble: 1 × 16
+#   Country Regioncode Region Variable  Year   AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV
+# * <chr>   <chr>      <chr>  <chr>    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 USA     ASI        Asia   EMP       2010  171.     0 4645.     0  1.35  21.8  8.98  40.1     0
+# # ℹ 2 more variables: OTH <dbl>, SUM <dbl>
 ```
 
 Moving on to grouped statistics, we can compute the average value added and employment by sector and country using:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% 
   group_by(Variable, Country) %>%
   select_at(6:16) %>% fmean
-
+# # A tibble: 85 × 13
+#    Variable Country     AGR     MIN     MAN     PU    CON    WRT    TRA   FIRE     GOV    OTH    SUM
+#    <chr>    <chr>     <dbl>   <dbl>   <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>  <dbl>  <dbl>
+#  1 EMP      ARG       1420.   52.1   1932.  1.02e2 7.42e2 1.98e3 6.49e2  628.   2043.  9.92e2 1.05e4
+#  2 EMP      BOL        964.   56.0    235.  5.35e0 1.23e2 2.82e2 1.15e2   44.6    NA   3.96e2 2.22e3
+#  3 EMP      BRA      17191.  206.    6991.  3.65e2 3.52e3 8.51e3 2.05e3 4414.   5307.  5.71e3 5.43e4
+#  4 EMP      BWA        188.   10.5     18.1 3.09e0 2.53e1 3.63e1 8.36e0   15.3    61.1 2.76e1 3.94e2
+#  5 EMP      CHL        702.  101.     625.  2.94e1 2.96e2 6.95e2 2.58e2  272.     NA   1.00e3 3.98e3
+#  6 EMP      CHN     287744. 7050.   67144.  1.61e3 2.09e4 2.89e4 1.39e4 4929.  22669.  3.10e4 4.86e5
+#  7 EMP      COL       3091.  145.    1175.  3.39e1 5.24e2 2.07e3 4.70e2  649.     NA   1.73e3 9.89e3
+#  8 EMP      CRI        231.    1.70   136.  1.43e1 5.76e1 1.57e2 4.24e1   54.9   128.  6.51e1 8.87e2
+#  9 EMP      DEW       2490.  407.    8473.  2.26e2 2.09e3 4.44e3 1.48e3 1689.   3945.  9.99e2 2.62e4
+# 10 EMP      DNK        236.    8.03   507.  1.38e1 1.71e2 4.55e2 1.61e2  181.    549.  1.11e2 2.39e3
+# # ℹ 75 more rows
 ```
 
 Similarly we can aggregate using any other of the above functions.
@@ -139,16 +186,49 @@ To better explain this point it is perhaps good to shed some light on what is ha
 <!-- The efficiency of that process depends on the efficiency of the grouping, splitting, the function(s) applied and the recombining.  -->
 This modus operandi is evident in the grouping mechanism of *dplyr*. When a data.frame is passed through *group_by*, a 'groups' attribute is attached: 
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% group_by(Variable, Country) %>% attr("groups")
+# # A tibble: 85 × 3
+#    Variable Country       .rows
+#    <chr>    <chr>   <list<int>>
+#  1 EMP      ARG            [62]
+#  2 EMP      BOL            [61]
+#  3 EMP      BRA            [62]
+#  4 EMP      BWA            [52]
+#  5 EMP      CHL            [63]
+#  6 EMP      CHN            [62]
+#  7 EMP      COL            [61]
+#  8 EMP      CRI            [62]
+#  9 EMP      DEW            [61]
+# 10 EMP      DNK            [64]
+# # ℹ 75 more rows
 ```
 
 This object is a data.frame giving the unique groups and in the third (last) column vectors containing the indices of the rows belonging to that group. A command like `summarize` uses this information to split the data.frame into groups which are then passed sequentially to the function used and later recombined. These steps are also done in C++ which makes *dplyr* quite efficient.  
 
 Now *collapse* is based around one-pass grouped computations at the C++ level using its own grouped statistical functions. In other words the data is not split and recombined at all but the entire computation is performed in a single C++ loop running through that data and completing the computations for each group simultaneously. This modus operandi is also evident in *collapse* grouping objects. The method `GRP.grouped_df` takes a *dplyr* grouping object from a grouped tibble and efficiently converts it to a *collapse* grouping object: 
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% group_by(Variable, Country) %>% GRP %>% str
+# Class 'GRP'  hidden list of 9
+#  $ N.groups    : int 85
+#  $ group.id    : int [1:5027] 46 46 46 46 46 46 46 46 46 46 ...
+#  $ group.sizes : int [1:85] 62 61 62 52 63 62 61 62 61 64 ...
+#  $ groups      :List of 2
+#   ..$ Variable: chr [1:85] "EMP" "EMP" "EMP" "EMP" ...
+#   .. ..- attr(*, "label")= chr "Variable"
+#   .. ..- attr(*, "format.stata")= chr "%9s"
+#   ..$ Country : chr [1:85] "ARG" "BOL" "BRA" "BWA" ...
+#   .. ..- attr(*, "label")= chr "Country"
+#   .. ..- attr(*, "format.stata")= chr "%9s"
+#  $ group.vars  : chr [1:2] "Variable" "Country"
+#  $ ordered     : Named logi [1:2] TRUE FALSE
+#   ..- attr(*, "names")= chr [1:2] "ordered" "sorted"
+#  $ order       : NULL
+#  $ group.starts: NULL
+#  $ call        : language GRP.grouped_df(X = .)
 ```
 
 This object is a list where the first three elements give the number of groups, the group-id to which each row belongs and a vector of group-sizes. A function like `fsum` uses this information to (for each column) create a result vector of size 'N.groups' and the run through the column using the 'group.id' vector to add the i'th data point to the 'group.id[i]'th element of the result vector. When the loop is finished, the grouped computation is also finished. 
@@ -163,20 +243,43 @@ It is obvious that *collapse* is faster than *dplyr* since it's method of comput
 
 Another improvement comes from replacing the *dplyr* verb `select` with `collapse::fselect`, and, for selection using column names, indices or functions use `collapse::get_vars` instead of `select_at` or `select_if`. Next to `get_vars`, *collapse* also introduces the predicates `num_vars`, `cat_vars`, `char_vars`, `fact_vars`, `logi_vars` and `date_vars` to efficiently select columns by type.
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fmedian
+# # A tibble: 85 × 13
+#    Variable Country     AGR     MIN     MAN     PU    CON    WRT    TRA   FIRE     GOV    OTH    SUM
+#    <chr>    <chr>     <dbl>   <dbl>   <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>  <dbl>  <dbl>
+#  1 EMP      ARG       1325.   47.4   1988.  1.05e2 7.82e2 1.85e3 5.80e2  464.   1739.   866.  9.74e3
+#  2 EMP      BOL        943.   53.5    167.  4.46e0 6.60e1 1.32e2 9.70e1   15.3    NA    384.  1.84e3
+#  3 EMP      BRA      17481.  225.    7208.  3.76e2 4.05e3 6.45e3 1.58e3 4355.   4450.  4479.  5.19e4
+#  4 EMP      BWA        175.   12.2     13.1 3.71e0 1.90e1 2.11e1 6.75e0   10.4    53.8   31.2 3.61e2
+#  5 EMP      CHL        690.   93.9    607.  2.58e1 2.30e2 4.84e2 2.05e2  106.     NA    900.  3.31e3
+#  6 EMP      CHN     293915  8150.   61761.  1.14e3 1.06e4 1.70e4 9.56e3 4328.  19468.  9954.  4.45e5
+#  7 EMP      COL       3006.   84.0   1033.  3.71e1 4.19e2 1.55e3 3.91e2  655.     NA   1430.  8.63e3
+#  8 EMP      CRI        216.    1.49   114.  7.92e0 5.50e1 8.98e1 2.55e1   19.6   122.    60.6 7.19e2
+#  9 EMP      DEW       2178   320.    8459.  2.47e2 2.10e3 4.45e3 1.53e3 1656    3700    900   2.65e4
+# 10 EMP      DNK        187.    3.75   508.  1.36e1 1.65e2 4.61e2 1.61e2  169.    642.   104.  2.42e3
+# # ℹ 75 more rows
 
 microbenchmark(collapse = GGDC10S %>% fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fmedian,
                hybrid = GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% fmedian,
                dplyr = GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% summarise_all(median, na.rm = TRUE))
+# Unit: microseconds
+#      expr       min         lq      mean     median        uq       max neval
+#  collapse   236.406   263.6095   303.309   295.9175   337.061   419.635   100
+#    hybrid  2699.317  2894.9690  3573.611  2998.3505  3119.772 56249.212   100
+#     dplyr 15923.908 16297.8280 18810.943 16742.5140 18578.105 71125.939   100
 ```
 Benchmarks on the different components of this code and with larger data are provided under 'Benchmarks'. Note that a grouped tibble created with `fgroup_by` can no longer be used for grouped computations with *dplyr* verbs like `mutate` or `summarize`.
 `fgroup_by` first assigns the class *GDP_df* which is for printing grouping information and subsetting, then the object classes (*tbl_df*, *data.table* or whatever else), followed by classes *grouped_df* and *data.frame*, and adds the grouping object in a 'groups' attribute. Since *tbl_df* is assigned before *grouped_df*, the object is treated by the *dplyr* ecosystem like a normal tibble.
 
-```{r, eval=NCRAN}
+
+```r
 class(group_by(GGDC10S, Variable, Country))
+# [1] "grouped_df" "tbl_df"     "tbl"        "data.frame"
 
 class(fgroup_by(GGDC10S, Variable, Country))
+# [1] "GRP_df"     "tbl_df"     "tbl"        "grouped_df" "data.frame"
 ```
 
  The function `fungroup` removes classes 'GDP_df' and 'grouped_df' and the 'groups' attribute (and can thus also be used for grouped tibbles created with `dplyr::group_by`). 
@@ -185,47 +288,133 @@ class(fgroup_by(GGDC10S, Variable, Country))
 
 The print method shown below reports the grouping variables, and then in square brackets the information `[number of groups | average group size (standard-deviation of group sizes)]`:
 
-```{r, eval=NCRAN}
+
+```r
 fgroup_by(GGDC10S, Variable, Country)
+# # A tibble: 5,027 × 16
+#    Country Regioncode Region Variable  Year   AGR   MIN    MAN     PU    CON   WRT   TRA  FIRE   GOV
+#    <chr>   <chr>      <chr>  <chr>    <dbl> <dbl> <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>
+#  1 BWA     SSA        Sub-s… VA        1960  NA   NA    NA     NA     NA     NA    NA    NA    NA   
+#  2 BWA     SSA        Sub-s… VA        1961  NA   NA    NA     NA     NA     NA    NA    NA    NA   
+#  3 BWA     SSA        Sub-s… VA        1962  NA   NA    NA     NA     NA     NA    NA    NA    NA   
+#  4 BWA     SSA        Sub-s… VA        1963  NA   NA    NA     NA     NA     NA    NA    NA    NA   
+#  5 BWA     SSA        Sub-s… VA        1964  16.3  3.49  0.737  0.104  0.660  6.24  1.66  1.12  4.82
+#  6 BWA     SSA        Sub-s… VA        1965  15.7  2.50  1.02   0.135  1.35   7.06  1.94  1.25  5.70
+#  7 BWA     SSA        Sub-s… VA        1966  17.7  1.97  0.804  0.203  1.35   8.27  2.15  1.36  6.37
+#  8 BWA     SSA        Sub-s… VA        1967  19.1  2.30  0.938  0.203  0.897  4.31  1.72  1.54  7.04
+#  9 BWA     SSA        Sub-s… VA        1968  21.1  1.84  0.750  0.203  1.22   5.17  2.44  1.03  5.03
+# 10 BWA     SSA        Sub-s… VA        1969  21.9  5.24  2.14   0.578  3.47   5.75  2.72  1.23  5.59
+# # ℹ 5,017 more rows
+# # ℹ 2 more variables: OTH <dbl>, SUM <dbl>
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 Note further that `fselect` and `get_vars` are not full drop-in replacements for `select` because they do not have a grouped_df method:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% tail(3)
+# # A tibble: 3 × 13
+# # Groups:   Variable, Country [1]
+#   Variable Country   AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV   OTH    SUM
+#   <chr>    <chr>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
+# 1 EMP      EGY     5206.  29.0 2436.  307. 2733. 2977. 1992.  801. 5539.    NA 22020.
+# 2 EMP      EGY     5186.  27.6 2374.  318. 2795. 3020. 2048.  815. 5636.    NA 22219.
+# 3 EMP      EGY     5161.  24.8 2348.  325. 2931. 3110. 2065.  832. 5736.    NA 22533.
 GGDC10S %>% group_by(Variable, Country) %>% get_vars(6:16) %>% tail(3)
+# # A tibble: 3 × 11
+#     AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV   OTH    SUM
+#   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
+# 1 5206.  29.0 2436.  307. 2733. 2977. 1992.  801. 5539.    NA 22020.
+# 2 5186.  27.6 2374.  318. 2795. 3020. 2048.  815. 5636.    NA 22219.
+# 3 5161.  24.8 2348.  325. 2931. 3110. 2065.  832. 5736.    NA 22533.
 ```
 
 Since by default `keep.group_vars = TRUE` in the *Fast Statistical Functions*, the end result is nevertheless the same:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% group_by(Variable, Country) %>% select_at(6:16) %>% fmean %>% tail(3)
+# # A tibble: 3 × 13
+#   Variable Country      AGR      MIN    MAN     PU    CON    WRT    TRA   FIRE     GOV    OTH    SUM
+#   <chr>    <chr>      <dbl>    <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>  <dbl>  <dbl>
+# 1 VA       VEN        6860.   35478. 1.96e4 1.06e3 1.17e4 1.93e4 8.03e3 5.60e3 NA      19986. 1.28e5
+# 2 VA       ZAF       16419.   42928. 8.76e4 1.38e4 1.64e4 6.83e4 4.53e4 6.64e4  7.58e4 30167. 4.63e5
+# 3 VA       ZMB     1268849. 1006099. 9.00e5 2.19e5 8.66e5 2.10e6 7.05e5 9.10e5  1.10e6 81871. 9.16e6
 GGDC10S %>% group_by(Variable, Country) %>% get_vars(6:16) %>% fmean %>% tail(3)
+# # A tibble: 3 × 13
+#   Variable Country      AGR      MIN    MAN     PU    CON    WRT    TRA   FIRE     GOV    OTH    SUM
+#   <chr>    <chr>      <dbl>    <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>  <dbl>  <dbl>
+# 1 VA       VEN        6860.   35478. 1.96e4 1.06e3 1.17e4 1.93e4 8.03e3 5.60e3 NA      19986. 1.28e5
+# 2 VA       ZAF       16419.   42928. 8.76e4 1.38e4 1.64e4 6.83e4 4.53e4 6.64e4  7.58e4 30167. 4.63e5
+# 3 VA       ZMB     1268849. 1006099. 9.00e5 2.19e5 8.66e5 2.10e6 7.05e5 9.10e5  1.10e6 81871. 9.16e6
 ```
 
 Another useful verb introduced by *collapse* is `fgroup_vars`, which can be used to efficiently obtain the grouping columns or grouping variables from a grouped tibble:
 
-```{r, eval=NCRAN}
+
+```r
 # fgroup_by fully supports grouped tibbles created with group_by or fgroup_by: 
 GGDC10S %>% group_by(Variable, Country) %>% fgroup_vars %>% head(3)
+# # A tibble: 3 × 2
+#   Variable Country
+#   <chr>    <chr>  
+# 1 VA       BWA    
+# 2 VA       BWA    
+# 3 VA       BWA
 GGDC10S %>% fgroup_by(Variable, Country) %>% fgroup_vars %>% head(3)
+# # A tibble: 3 × 2
+#   Variable Country
+#   <chr>    <chr>  
+# 1 VA       BWA    
+# 2 VA       BWA    
+# 3 VA       BWA
 
 # The other possibilities:
 GGDC10S %>% group_by(Variable, Country) %>% fgroup_vars("unique") %>% head(3)
+# # A tibble: 3 × 2
+#   Variable Country
+#   <chr>    <chr>  
+# 1 EMP      ARG    
+# 2 EMP      BOL    
+# 3 EMP      BRA
 GGDC10S %>% group_by(Variable, Country) %>% fgroup_vars("names")
+# [1] "Variable" "Country"
 GGDC10S %>% group_by(Variable, Country) %>% fgroup_vars("indices")
+# [1] 4 1
 GGDC10S %>% group_by(Variable, Country) %>% fgroup_vars("named_indices")
+# Variable  Country 
+#        4        1
 GGDC10S %>% group_by(Variable, Country) %>% fgroup_vars("logical")
+#  [1]  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
 GGDC10S %>% group_by(Variable, Country) %>% fgroup_vars("named_logical")
+#    Country Regioncode     Region   Variable       Year        AGR        MIN        MAN         PU 
+#       TRUE      FALSE      FALSE       TRUE      FALSE      FALSE      FALSE      FALSE      FALSE 
+#        CON        WRT        TRA       FIRE        GOV        OTH        SUM 
+#      FALSE      FALSE      FALSE      FALSE      FALSE      FALSE      FALSE
 ```
 
 Another *collapse* verb to mention here is `fsubset`, a faster alternative to `dplyr::filter` which also provides an option to flexibly subset columns after the select argument:
 
-```{r, eval=NCRAN}
+
+```r
 # Two equivalent calls, the first is substantially faster
 GGDC10S %>% fsubset(Variable == "VA" & Year > 1990, Country, Year, AGR:GOV) %>% head(3)
+# # A tibble: 3 × 11
+#   Country  Year   AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV
+#   <chr>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 BWA      1991  303. 2647.  473.  161.  580.  807.  233.  433. 1073.
+# 2 BWA      1992  333. 2691.  537.  178.  679.  725.  285.  517. 1234.
+# 3 BWA      1993  405. 2625.  567.  219.  634.  772.  350.  673. 1487.
 
 GGDC10S %>% filter(Variable == "VA" & Year > 1990) %>% select(Country, Year, AGR:GOV) %>% head(3)
+# # A tibble: 3 × 11
+#   Country  Year   AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV
+#   <chr>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 BWA      1991  303. 2647.  473.  161.  580.  807.  233.  433. 1073.
+# 2 BWA      1992  333. 2691.  537.  178.  679.  725.  285.  517. 1234.
+# 3 BWA      1993  405. 2625.  567.  219.  634.  772.  350.  673. 1487.
 ```
 
 *collapse* also offers `roworder`, `frename`, `colorder` and `ftransform`/`TRA` as fast replacements for `dplyr::arrange`, `dplyr::rename`, `dplyr::relocate` and `dplyr::mutate`. 
@@ -234,13 +423,26 @@ GGDC10S %>% filter(Variable == "VA" & Year > 1990) %>% select(Country, Year, AGR
 
 One can also aggregate with multiple functions at the same time. For such operations it is often necessary to use curly braces `{` to prevent first argument injection so that `%>% cbind(FUN1(.), FUN2(.))` does not evaluate as `%>% cbind(., FUN1(.), FUN2(.))`:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>%
   fgroup_by(Variable, Country) %>%
   get_vars(6:16) %>% {
     cbind(fmedian(.),
           add_stub(fmean(., keep.group_vars = FALSE), "mean_"))
     } %>% head(3)
+#   Variable Country        AGR       MIN       MAN         PU        CON      WRT        TRA
+# 1      EMP     ARG  1324.5255  47.35255 1987.5912 104.738825  782.40283 1854.612  579.93982
+# 2      EMP     BOL   943.1612  53.53538  167.1502   4.457895   65.97904  132.225   96.96828
+# 3      EMP     BRA 17480.9810 225.43693 7207.7915 375.851832 4054.66103 6454.523 1580.81120
+#         FIRE      GOV       OTH       SUM   mean_AGR  mean_MIN  mean_MAN    mean_PU  mean_CON
+# 1  464.39920 1738.836  866.1119  9743.223  1419.8013  52.08903 1931.7602 101.720936  742.4044
+# 2   15.34259       NA  384.0678  1842.055   964.2103  56.03295  235.0332   5.346433  122.7827
+# 3 4354.86210 4449.942 4478.6927 51881.110 17191.3529 206.02389 6991.3710 364.573404 3524.7384
+#    mean_WRT  mean_TRA  mean_FIRE mean_GOV  mean_OTH  mean_SUM
+# 1 1982.1775  648.5119  627.79291 2043.471  992.4475 10542.177
+# 2  281.5164  115.4728   44.56442       NA  395.5650  2220.524
+# 3 8509.4612 2054.3731 4413.54448 5307.280 5710.2665 54272.985
 ```
 
 The function `add_stub` used above is a *collapse* function adding a prefix (default) or suffix to variables names. The *collapse* predicate `add_vars` provides a more efficient alternative to `cbind.data.frame`. The idea here is 'adding' variables to the data.frame in the first argument i.e. the attributes of the first argument are preserved, so the expression below still gives a tibble instead of a data.frame:
@@ -249,7 +451,8 @@ The function `add_stub` used above is a *collapse* function adding a prefix (def
 <!-- A slightly more elegant solution to such multi-function aggregations can be found using `get_vars`, a collapse predicate to efficiently select variables. In contrast to `select_at`, `get_vars` does not automatically add the grouping columns to the selection. -->
 
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>%
   fgroup_by(Variable, Country) %>% {
    add_vars(get_vars(., "Reg", regex = TRUE) %>% ffirst, # Regular expression matching column names
@@ -257,11 +460,21 @@ GGDC10S %>%
             fselect(., PU:TRA) %>% fmedian(keep.group_vars = FALSE) %>% add_stub("median_"), 
             fselect(., PU:CON) %>% fmin(keep.group_vars = FALSE) %>% add_stub("min_"))      
   } %>% head(3)
+# # A tibble: 3 × 22
+#   Variable Country Regioncode Region  mean_Year mean_AGR mean_MIN mean_MAN mean_PU mean_CON mean_WRT
+#   <chr>    <chr>   <chr>      <chr>       <dbl>    <dbl>    <dbl>    <dbl>   <dbl>    <dbl>    <dbl>
+# 1 EMP      ARG     LAM        Latin …     1980.    1420.     52.1    1932.  102.       742.    1982.
+# 2 EMP      BOL     LAM        Latin …     1980      964.     56.0     235.    5.35     123.     282.
+# 3 EMP      BRA     LAM        Latin …     1980.   17191.    206.     6991.  365.      3525.    8509.
+# # ℹ 11 more variables: mean_TRA <dbl>, mean_FIRE <dbl>, mean_GOV <dbl>, mean_OTH <dbl>,
+# #   mean_SUM <dbl>, median_PU <dbl>, median_CON <dbl>, median_WRT <dbl>, median_TRA <dbl>,
+# #   min_PU <dbl>, min_CON <dbl>
 ```
 
 Another nice feature of `add_vars` is that it can also very efficiently reorder columns i.e. bind columns in a different order than they are passed. This can be done by simply specifying the positions the added columns should have in the final data frame, and then `add_vars` shifts the first argument columns to the right to fill in the gaps.
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>%
   fsubset(Variable == "VA", Country, AGR, SUM) %>% 
   fgroup_by(Country) %>% {
@@ -270,40 +483,90 @@ GGDC10S %>%
             fsd(., keep.group_vars = FALSE) %>% add_stub("sd_"), 
             pos = c(2,4,3,5))
   } %>% head(3)
+# # A tibble: 3 × 5
+#   Country mean_AGR sd_AGR mean_SUM  sd_SUM
+#   <chr>      <dbl>  <dbl>    <dbl>   <dbl>
+# 1 ARG       14951. 33061.  152534. 301316.
+# 2 BOL        3300.  4456.   22619.  33173.
+# 3 BRA       76870. 59442. 1200563. 976963.
 ```
 
 A much more compact solution to multi-function and multi-type aggregation is offered by the function *collapg*:
 
-```{r, eval=NCRAN}
+
+```r
 # This aggregates numeric colums using the mean (fmean) and categorical columns with the mode (fmode)
 GGDC10S %>% fgroup_by(Variable, Country) %>% collapg %>% head(3)
+# # A tibble: 3 × 16
+#   Variable Country Regioncode Region   Year    AGR   MIN   MAN     PU   CON   WRT   TRA   FIRE   GOV
+#   <chr>    <chr>   <chr>      <chr>   <dbl>  <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl>
+# 1 EMP      ARG     LAM        Latin … 1980.  1420.  52.1 1932. 102.    742. 1982.  649.  628.  2043.
+# 2 EMP      BOL     LAM        Latin … 1980    964.  56.0  235.   5.35  123.  282.  115.   44.6   NA 
+# 3 EMP      BRA     LAM        Latin … 1980. 17191. 206.  6991. 365.   3525. 8509. 2054. 4414.  5307.
+# # ℹ 2 more variables: OTH <dbl>, SUM <dbl>
 ```
 
 By default it aggregates numeric columns using the `fmean` and categorical columns using `fmode`, and preserves the order of all columns. Changing these defaults is very easy:
 
-```{r, eval=NCRAN}
+
+```r
 # This aggregates numeric colums using the median and categorical columns using the first value
 GGDC10S %>% fgroup_by(Variable, Country) %>% collapg(fmedian, flast) %>% head(3)
+# # A tibble: 3 × 16
+#   Variable Country Regioncode Region       Year    AGR   MIN   MAN     PU    CON   WRT    TRA   FIRE
+#   <chr>    <chr>   <chr>      <chr>       <dbl>  <dbl> <dbl> <dbl>  <dbl>  <dbl> <dbl>  <dbl>  <dbl>
+# 1 EMP      ARG     LAM        Latin Amer… 1980.  1325.  47.4 1988. 105.    782.  1855.  580.   464. 
+# 2 EMP      BOL     LAM        Latin Amer… 1980    943.  53.5  167.   4.46   66.0  132.   97.0   15.3
+# 3 EMP      BRA     LAM        Latin Amer… 1980. 17481. 225.  7208. 376.   4055.  6455. 1581.  4355. 
+# # ℹ 3 more variables: GOV <dbl>, OTH <dbl>, SUM <dbl>
 ```
 
 One can apply multiple functions to both numeric and/or categorical data:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% fgroup_by(Variable, Country) %>%
   collapg(list(fmean, fmedian), list(first, fmode, flast)) %>% head(3)
+# # A tibble: 3 × 32
+#   Variable Country first.Regioncode fmode.Regioncode flast.Regioncode first.Region  fmode.Region 
+#   <chr>    <chr>   <chr>            <chr>            <chr>            <chr>         <chr>        
+# 1 EMP      ARG     LAM              LAM              LAM              Latin America Latin America
+# 2 EMP      BOL     LAM              LAM              LAM              Latin America Latin America
+# 3 EMP      BRA     LAM              LAM              LAM              Latin America Latin America
+# # ℹ 25 more variables: flast.Region <chr>, fmean.Year <dbl>, fmedian.Year <dbl>, fmean.AGR <dbl>,
+# #   fmedian.AGR <dbl>, fmean.MIN <dbl>, fmedian.MIN <dbl>, fmean.MAN <dbl>, fmedian.MAN <dbl>,
+# #   fmean.PU <dbl>, fmedian.PU <dbl>, fmean.CON <dbl>, fmedian.CON <dbl>, fmean.WRT <dbl>,
+# #   fmedian.WRT <dbl>, fmean.TRA <dbl>, fmedian.TRA <dbl>, fmean.FIRE <dbl>, fmedian.FIRE <dbl>,
+# #   fmean.GOV <dbl>, fmedian.GOV <dbl>, fmean.OTH <dbl>, fmedian.OTH <dbl>, fmean.SUM <dbl>,
+# #   fmedian.SUM <dbl>
 ```
 
 Applying multiple functions to only numeric (or only categorical) data allows return in a long format:
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% fgroup_by(Variable, Country) %>%
   collapg(list(fmean, fmedian), cols = is.numeric, return = "long") %>% head(3)
+# # A tibble: 3 × 15
+#   Function Variable Country  Year    AGR   MIN   MAN     PU   CON   WRT   TRA   FIRE   GOV   OTH
+#   <chr>    <chr>    <chr>   <dbl>  <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl> <dbl>
+# 1 fmean    EMP      ARG     1980.  1420.  52.1 1932. 102.    742. 1982.  649.  628.  2043.  992.
+# 2 fmean    EMP      BOL     1980    964.  56.0  235.   5.35  123.  282.  115.   44.6   NA   396.
+# 3 fmean    EMP      BRA     1980. 17191. 206.  6991. 365.   3525. 8509. 2054. 4414.  5307. 5710.
+# # ℹ 1 more variable: SUM <dbl>
 ```
 
 Finally, `collapg` also makes it very easy to apply aggregator functions to certain columns only:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% fgroup_by(Variable, Country) %>%
   collapg(custom = list(fmean = 6:8, fmedian = 10:12)) %>% head(3)
+# # A tibble: 3 × 8
+#   Variable Country    AGR   MIN   MAN    CON   WRT    TRA
+#   <chr>    <chr>    <dbl> <dbl> <dbl>  <dbl> <dbl>  <dbl>
+# 1 EMP      ARG      1420.  52.1 1932.  782.  1855.  580. 
+# 2 EMP      BOL       964.  56.0  235.   66.0  132.   97.0
+# 3 EMP      BRA     17191. 206.  6991. 4055.  6455. 1581.
 ```
  To understand more about `collapg`, look it up in the documentation (`?collapg`).
 
@@ -312,16 +575,29 @@ GGDC10S %>% fgroup_by(Variable, Country) %>%
 Weighted aggregations are possible with the functions `fsum, fprod, fmean, fmedian, fnth, fmode, fvar` and `fsd`. The implementation is such that by default (option `keep.w = TRUE`) these functions also aggregate the weights, so that further weighted computations can be performed on the aggregated data. `fprod` saves the product of the weights, whereas the other functions save the sum of the weights in a column next to the grouping variables. If `na.rm = TRUE` (the default), rows with missing weights are omitted from the computation. 
 
 
-```{r, eval=NCRAN}
+
+```r
 # This computes a frequency-weighted grouped standard-deviation, taking the total EMP / VA as weight
 GGDC10S %>%
   fgroup_by(Variable, Country) %>%
   fselect(AGR:SUM) %>% fsd(SUM) %>% head(3)
+# # A tibble: 3 × 13
+#   Variable Country  sum.SUM    AGR   MIN   MAN    PU   CON   WRT    TRA   FIRE   GOV   OTH
+#   <chr>    <chr>      <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>  <dbl> <dbl> <dbl>
+# 1 EMP      ARG      653615.  225.   22.2  176. 20.5   285.  856.  195.   493.  1123.  506.
+# 2 EMP      BOL      135452.   99.7  17.1  168.  4.87  123.  324.   98.1   69.8   NA   258.
+# 3 EMP      BRA     3364925. 1587.   73.8 2952. 93.8  1861. 6285. 1306.  3003.  3621. 4257.
 
 # This computes a weighted grouped mode, taking the total EMP / VA as weight
 GGDC10S %>%
   fgroup_by(Variable, Country) %>%
   fselect(AGR:SUM) %>% fmode(SUM) %>% head(3)
+# # A tibble: 3 × 13
+#   Variable Country  sum.SUM    AGR   MIN    MAN    PU   CON    WRT   TRA   FIRE    GOV    OTH
+#   <chr>    <chr>      <dbl>  <dbl> <dbl>  <dbl> <dbl> <dbl>  <dbl> <dbl>  <dbl>  <dbl>  <dbl>
+# 1 EMP      ARG      653615.  1162. 127.   2164. 152.  1415.  3768. 1060.  1748.  4336.  1999.
+# 2 EMP      BOL      135452.   819.  37.6   604.  10.8  433.   893.  333.   321.    NA   1057.
+# 3 EMP      BRA     3364925. 16451. 313.  11841. 388.  8154. 21860. 5169. 12011. 12149. 14235.
 ```
 
 The weighted variance / standard deviation is currently only implemented with frequency weights. 
@@ -329,11 +605,19 @@ The weighted variance / standard deviation is currently only implemented with fr
 
 Weighted aggregations may also be performed with `collapg`. By default `fsum` is used to compute a sum of the weights, but it is also possible here to aggregate the weights with other functions:
 
-```{r, eval=NCRAN}
+
+```r
 # This aggregates numeric colums using the weighted mean (the default) and categorical columns using the weighted mode (the default).
 # Weights (column SUM) are aggregated using both the sum and the maximum. 
 GGDC10S %>% group_by(Variable, Country) %>% 
   collapg(w = SUM, wFUN = list(fsum, fmax)) %>% head(3)
+# # A tibble: 3 × 17
+#   Variable Country fsum.SUM fmax.SUM Regioncode Region   Year    AGR   MIN   MAN     PU   CON    WRT
+#   <chr>    <chr>      <dbl>    <dbl> <chr>      <chr>   <dbl>  <dbl> <dbl> <dbl>  <dbl> <dbl>  <dbl>
+# 1 EMP      ARG      653615.   17929. LAM        Latin … 1985.  1361.  56.5 1935. 105.    811.  2217.
+# 2 EMP      BOL      135452.    4508. LAM        Latin … 1987.   977.  57.9  296.   7.07  167.   400.
+# 3 EMP      BRA     3364925.  102572. LAM        Latin … 1989. 17746. 238.  8466. 389.   4436. 11376.
+# # ℹ 4 more variables: TRA <dbl>, FIRE <dbl>, GOV <dbl>, OTH <dbl>
 ```
 
 <!-- Thus to aggregate the entire data and save the weights one would need to opt for a manual solution: -->
@@ -359,37 +643,80 @@ GGDC10S %>% group_by(Variable, Country) %>%
 ### 2.1 Fast Transform and Compute Variables
 The function `ftransform` can be used to manipulate columns in the same ways as `mutate`:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% fsubset(Variable == "VA", Country, Year, AGR, SUM) %>%
   ftransform(AGR_perc = AGR / SUM * 100,  # Computing % of VA in Agriculture
              AGR_mean = fmean(AGR),       # Average Agricultural VA
              AGR = NULL, SUM = NULL) %>%  # Deleting columns AGR and SUM
              head
+# # A tibble: 6 × 4
+#   Country  Year AGR_perc AGR_mean
+#   <chr>   <dbl>    <dbl>    <dbl>
+# 1 BWA      1960     NA   5137561.
+# 2 BWA      1961     NA   5137561.
+# 3 BWA      1962     NA   5137561.
+# 4 BWA      1963     NA   5137561.
+# 5 BWA      1964     43.5 5137561.
+# 6 BWA      1965     40.0 5137561.
 ```
 
 The modification brought by `ftransformv` enables transformations of groups of columns like `dplyr::mutate_at` and `dplyr::mutate_if`:
 
-```{r, eval=NCRAN}
+
+```r
 # This replaces variables mpg, carb and wt by their log (.c turns expressions into character vectors)
 mtcars %>% ftransformv(.c(mpg, carb, wt), log) %>% head
+#                        mpg cyl disp  hp drat        wt  qsec vs am gear      carb
+# Mazda RX4         3.044522   6  160 110 3.90 0.9631743 16.46  0  1    4 1.3862944
+# Mazda RX4 Wag     3.044522   6  160 110 3.90 1.0560527 17.02  0  1    4 1.3862944
+# Datsun 710        3.126761   4  108  93 3.85 0.8415672 18.61  1  1    4 0.0000000
+# Hornet 4 Drive    3.063391   6  258 110 3.08 1.1678274 19.44  1  0    3 0.0000000
+# Hornet Sportabout 2.928524   8  360 175 3.15 1.2354715 17.02  0  0    3 0.6931472
+# Valiant           2.895912   6  225 105 2.76 1.2412686 20.22  1  0    3 0.0000000
 
 # Logging numeric variables
 iris %>% ftransformv(is.numeric, log) %>% head
+#   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+# 1     1.629241    1.252763    0.3364722  -1.6094379  setosa
+# 2     1.589235    1.098612    0.3364722  -1.6094379  setosa
+# 3     1.547563    1.163151    0.2623643  -1.6094379  setosa
+# 4     1.526056    1.131402    0.4054651  -1.6094379  setosa
+# 5     1.609438    1.280934    0.3364722  -1.6094379  setosa
+# 6     1.686399    1.360977    0.5306283  -0.9162907  setosa
 ```
 
 Instead of `column = value` type arguments, it is also possible to pass a single list of transformed variables to `ftransform`, which will be regarded in the same way as an evaluated list of `column = value` arguments. It can be used for more complex transformations:
 
-```{r, eval=NCRAN}
+
+```r
 # Logging values and replacing generated Inf values
 mtcars %>% ftransform(fselect(., mpg, cyl, vs:gear) %>% lapply(log) %>% replace_Inf) %>% head
+#                        mpg      cyl disp  hp drat    wt  qsec vs am     gear carb
+# Mazda RX4         3.044522 1.791759  160 110 3.90 2.620 16.46 NA  0 1.386294    4
+# Mazda RX4 Wag     3.044522 1.791759  160 110 3.90 2.875 17.02 NA  0 1.386294    4
+# Datsun 710        3.126761 1.386294  108  93 3.85 2.320 18.61  0  0 1.386294    1
+# Hornet 4 Drive    3.063391 1.791759  258 110 3.08 3.215 19.44  0 NA 1.098612    1
+# Hornet Sportabout 2.928524 2.079442  360 175 3.15 3.440 17.02 NA NA 1.098612    2
+# Valiant           2.895912 1.791759  225 105 2.76 3.460 20.22  0 NA 1.098612    1
 ```
 
 If only the computed columns need to be returned, `fcompute` provides an efficient alternative:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% fsubset(Variable == "VA", Country, Year, AGR, SUM) %>%
   fcompute(AGR_perc = AGR / SUM * 100,
            AGR_mean = fmean(AGR)) %>% head
+# # A tibble: 6 × 2
+#   AGR_perc AGR_mean
+#      <dbl>    <dbl>
+# 1     NA   5137561.
+# 2     NA   5137561.
+# 3     NA   5137561.
+# 4     NA   5137561.
+# 5     43.5 5137561.
+# 6     40.0 5137561.
 ```
 
 `ftransform` and `fcompute` are an order of magnitude faster than `mutate`, but they do not support grouped computations using arbitrary functions. We will see that this is hardly a limitation as *collapse* provides very efficient and elegant alternative programming mechanisms...
@@ -422,12 +749,31 @@ All statistical (scalar-valued) functions in the collapse package (`fsum, fprod,
 <!-- For functions supporting weights (`fsum, fprod, fmean, fmode, fvar` and `fsd`) the `TRA` argument is in the third position following the data and weight vector (in the *grouped_df* method), whereas functions not supporting weights have the argument in the second position. -->
 
 Simple transformations are again straightforward to specify:
-```{r, eval=NCRAN}
+
+```r
 # This subtracts the median value from all data points i.e. centers on the median
 GGDC10S %>% num_vars %>% fmedian(TRA = "-") %>% head
+# # A tibble: 6 × 12
+#    Year    AGR   MIN    MAN    PU    CON    WRT    TRA  FIRE    GOV    OTH     SUM
+#   <dbl>  <dbl> <dbl>  <dbl> <dbl>  <dbl>  <dbl>  <dbl> <dbl>  <dbl>  <dbl>   <dbl>
+# 1   -22    NA    NA     NA    NA     NA     NA     NA    NA     NA     NA      NA 
+# 2   -21    NA    NA     NA    NA     NA     NA     NA    NA     NA     NA      NA 
+# 3   -20    NA    NA     NA    NA     NA     NA     NA    NA     NA     NA      NA 
+# 4   -19    NA    NA     NA    NA     NA     NA     NA    NA     NA     NA      NA 
+# 5   -18 -4378. -170. -3717. -168. -1473. -3767. -1173. -959. -3924. -1431. -23149.
+# 6   -17 -4379. -171. -3717. -168. -1472. -3767. -1173. -959. -3923. -1430. -23147.
 
 # This replaces all data points with the mode
 GGDC10S %>% char_vars %>% fmode(TRA = "replace") %>% head
+# # A tibble: 6 × 4
+#   Country Regioncode Region Variable
+#   <chr>   <chr>      <chr>  <chr>   
+# 1 USA     ASI        Asia   EMP     
+# 2 USA     ASI        Asia   EMP     
+# 3 USA     ASI        Asia   EMP     
+# 4 USA     ASI        Asia   EMP     
+# 5 USA     ASI        Asia   EMP     
+# 6 USA     ASI        Asia   EMP
 ```
 
 Similarly for grouped transformations: 
@@ -437,18 +783,33 @@ Similarly for grouped transformations:
 <!-- ^[100% being the median of all annual VA/EMP values in a given sector and country across all years, not the sectoral output share which would have to be obtained using `sweep(GGDC10S[6:16], 1, GGDC10S$SUM, "/")`] -->
 
 
-```{r, eval=NCRAN}
+
+```r
 # Replacing data with the 2nd quartile (25%)
 GGDC10S %>%
   fselect(Variable, Country, AGR:SUM) %>% 
    fgroup_by(Variable, Country) %>% fnth(0.25, TRA = "replace_fill") %>% head(3)
+# # A tibble: 3 × 13
+#   Variable Country   AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV   OTH   SUM
+#   <chr>    <chr>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 VA       BWA      63.5  33.1  27.3  7.36  26.8  31.1  13.2  12.0  33.6  11.5  262.
+# 2 VA       BWA      63.5  33.1  27.3  7.36  26.8  31.1  13.2  12.0  33.6  11.5  262.
+# 3 VA       BWA      63.5  33.1  27.3  7.36  26.8  31.1  13.2  12.0  33.6  11.5  262.
 
 # Scaling sectoral data by Variable and Country
 GGDC10S %>%
   fselect(Variable, Country, AGR:SUM) %>% 
    fgroup_by(Variable, Country) %>% fsd(TRA = "/") %>% head
-
-
+# # A tibble: 6 × 13
+#   Variable Country     AGR       MIN       MAN       PU      CON      WRT      TRA     FIRE      GOV
+#   <chr>    <chr>     <dbl>     <dbl>     <dbl>    <dbl>    <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+# 1 VA       BWA     NA      NA        NA        NA       NA       NA       NA       NA       NA      
+# 2 VA       BWA     NA      NA        NA        NA       NA       NA       NA       NA       NA      
+# 3 VA       BWA     NA      NA        NA        NA       NA       NA       NA       NA       NA      
+# 4 VA       BWA     NA      NA        NA        NA       NA       NA       NA       NA       NA      
+# 5 VA       BWA      0.0270  0.000556  0.000523  3.88e-4  5.11e-4  0.00194  0.00154  5.23e-4  0.00134
+# 6 VA       BWA      0.0260  0.000397  0.000723  5.03e-4  1.04e-3  0.00220  0.00180  5.83e-4  0.00158
+# # ℹ 2 more variables: OTH <dbl>, SUM <dbl>
 ```
 <!-- # Normalizing Data by expressing them in percentages of the median value within each country and sector (i.e. the median is 100%) -->
 <!-- GGDC10S %>% -->
@@ -457,31 +818,52 @@ GGDC10S %>%
 
 The benchmarks below will demonstrate that these internal sweeping and replacement operations fully performed in C++ compute significantly faster than using `dplyr::mutate`, especially as the number of groups grows large. The S3 generic nature of the *Fast Statistical Functions* further allows us to perform grouped mutations on the fly (together with `ftransform` or `fcompute`), without the need of first creating a grouped tibble:
 
-```{r, eval=NCRAN}
+
+```r
 # AGR_gmed = TRUE if AGR is greater than it's median value, grouped by Variable and Country
 # Note: This calls fmedian.default
 settransform(GGDC10S, AGR_gmed = AGR > fmedian(AGR, list(Variable, Country), TRA = "replace"))
 tail(GGDC10S, 3)
+# # A tibble: 3 × 17
+#   Country Regioncode Region     Variable  Year   AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV
+#   <chr>   <chr>      <chr>      <chr>    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 EGY     MENA       Middle Ea… EMP       2010 5206.  29.0 2436.  307. 2733. 2977. 1992.  801. 5539.
+# 2 EGY     MENA       Middle Ea… EMP       2011 5186.  27.6 2374.  318. 2795. 3020. 2048.  815. 5636.
+# 3 EGY     MENA       Middle Ea… EMP       2012 5161.  24.8 2348.  325. 2931. 3110. 2065.  832. 5736.
+# # ℹ 3 more variables: OTH <dbl>, SUM <dbl>, AGR_gmed <lgl>
 
 # Dividing (scaling) the sectoral data (columns 6 through 16) by their grouped standard deviation
 settransformv(GGDC10S, 6:16, fsd, list(Variable, Country), TRA = "/", apply = FALSE)
 tail(GGDC10S, 3)
+# # A tibble: 3 × 17
+#   Country Regioncode Region     Variable  Year   AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV
+#   <chr>   <chr>      <chr>      <chr>    <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 EGY     MENA       Middle Ea… EMP       2010  8.41  2.28  4.32  3.56  3.62  3.75  3.75  3.14  3.80
+# 2 EGY     MENA       Middle Ea… EMP       2011  8.38  2.17  4.21  3.68  3.70  3.81  3.86  3.19  3.86
+# 3 EGY     MENA       Middle Ea… EMP       2012  8.34  1.95  4.17  3.76  3.88  3.92  3.89  3.26  3.93
+# # ℹ 3 more variables: OTH <dbl>, SUM <dbl>, AGR_gmed <lgl>
 rm(GGDC10S)
-
 ```
 
-```{r, echo=FALSE, eval=NCRAN}
-GGDC10S <- qTBL(GGDC10S)
-```
+
 
 Weights are easily added to any grouped transformation:
 
-```{r, eval=NCRAN}
+
+```r
 # This subtracts weighted group means from the data, using SUM column as weights.. 
 GGDC10S %>%
   fselect(Variable, Country, AGR:SUM) %>% 
    fgroup_by(Variable, Country) %>% fmean(SUM, "-") %>% head
-
+# # A tibble: 6 × 13
+#   Variable Country   SUM    AGR     MIN    MAN    PU    CON    WRT    TRA   FIRE    GOV    OTH
+#   <chr>    <chr>   <dbl>  <dbl>   <dbl>  <dbl> <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+# 1 VA       BWA      NA      NA      NA     NA    NA     NA     NA     NA     NA     NA     NA 
+# 2 VA       BWA      NA      NA      NA     NA    NA     NA     NA     NA     NA     NA     NA 
+# 3 VA       BWA      NA      NA      NA     NA    NA     NA     NA     NA     NA     NA     NA 
+# 4 VA       BWA      NA      NA      NA     NA    NA     NA     NA     NA     NA     NA     NA 
+# 5 VA       BWA      37.5 -1301. -13317. -2965. -529. -2746. -6540. -2157. -4431. -7551. -2613.
+# 6 VA       BWA      39.3 -1302. -13318. -2964. -529. -2745. -6540. -2156. -4431. -7550. -2613.
 ```
 <!-- # Weighted scaling, weighted by SUM -->
 <!-- GGDC10S %>% -->
@@ -513,28 +895,55 @@ GGDC10S %>%
 <!--     select_at(6:16) %>% fmean(TRA = "-+") -->
 <!-- ``` -->
 Sequential operations are also easily performed:
-```{r, eval=NCRAN}
+
+```r
 # This scales and then subtracts the median
 GGDC10S %>%
   fselect(Variable, Country, AGR:SUM) %>% 
    fgroup_by(Variable, Country) %>% fsd(TRA = "/") %>% fmedian(TRA = "-")
+# # A tibble: 5,027 × 13
+#    Variable Country    AGR    MIN    MAN     PU    CON     WRT     TRA    FIRE    GOV     OTH    SUM
+#  * <chr>    <chr>    <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>   <dbl>   <dbl>  <dbl>   <dbl>  <dbl>
+#  1 VA       BWA     NA     NA     NA     NA     NA     NA      NA      NA      NA     NA      NA    
+#  2 VA       BWA     NA     NA     NA     NA     NA     NA      NA      NA      NA     NA      NA    
+#  3 VA       BWA     NA     NA     NA     NA     NA     NA      NA      NA      NA     NA      NA    
+#  4 VA       BWA     NA     NA     NA     NA     NA     NA      NA      NA      NA     NA      NA    
+#  5 VA       BWA     -0.182 -0.235 -0.183 -0.245 -0.118 -0.0820 -0.0724 -0.0661 -0.108 -0.0848 -0.146
+#  6 VA       BWA     -0.183 -0.235 -0.183 -0.245 -0.117 -0.0817 -0.0722 -0.0660 -0.108 -0.0846 -0.146
+#  7 VA       BWA     -0.180 -0.235 -0.183 -0.245 -0.117 -0.0813 -0.0720 -0.0659 -0.107 -0.0843 -0.145
+#  8 VA       BWA     -0.177 -0.235 -0.183 -0.245 -0.117 -0.0826 -0.0724 -0.0659 -0.107 -0.0841 -0.146
+#  9 VA       BWA     -0.174 -0.235 -0.183 -0.245 -0.117 -0.0823 -0.0717 -0.0661 -0.108 -0.0848 -0.146
+# 10 VA       BWA     -0.173 -0.234 -0.182 -0.243 -0.115 -0.0821 -0.0715 -0.0660 -0.108 -0.0846 -0.145
+# # ℹ 5,017 more rows
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 Of course it is also possible to combine multiple functions as in the aggregation section, or to add variables to existing data:
 
-```{r, eval=NCRAN}
+
+```r
 # This adds a groupwise observation count next to each column
 add_vars(GGDC10S, seq(7,27,2)) <- GGDC10S %>%
     fgroup_by(Variable, Country) %>% fselect(AGR:SUM) %>%
     fnobs("replace_fill") %>% add_stub("N_")
 
 head(GGDC10S)
+# # A tibble: 6 × 27
+#   Country Regioncode Region  Variable  Year   AGR N_AGR   MIN N_MIN    MAN N_MAN     PU  N_PU    CON
+#   <chr>   <chr>      <chr>   <chr>    <dbl> <dbl> <int> <dbl> <int>  <dbl> <int>  <dbl> <int>  <dbl>
+# 1 BWA     SSA        Sub-sa… VA        1960  NA      47 NA       47 NA        47 NA        47 NA    
+# 2 BWA     SSA        Sub-sa… VA        1961  NA      47 NA       47 NA        47 NA        47 NA    
+# 3 BWA     SSA        Sub-sa… VA        1962  NA      47 NA       47 NA        47 NA        47 NA    
+# 4 BWA     SSA        Sub-sa… VA        1963  NA      47 NA       47 NA        47 NA        47 NA    
+# 5 BWA     SSA        Sub-sa… VA        1964  16.3    47  3.49    47  0.737    47  0.104    47  0.660
+# 6 BWA     SSA        Sub-sa… VA        1965  15.7    47  2.50    47  1.02     47  0.135    47  1.35 
+# # ℹ 13 more variables: N_CON <int>, WRT <dbl>, N_WRT <int>, TRA <dbl>, N_TRA <int>, FIRE <dbl>,
+# #   N_FIRE <int>, GOV <dbl>, N_GOV <int>, OTH <dbl>, N_OTH <int>, SUM <dbl>, N_SUM <int>
 rm(GGDC10S)
 ```
 
-```{r, echo=FALSE, eval=NCRAN}
-GGDC10S <- qTBL(GGDC10S)
-```
+
 There are lots of other examples one could construct using the 10 operations and 14 functions listed above, the examples provided just outline the suggested programming basics. Performance considerations make it very much worthwhile to spend some time and think how complex operations can be implemented in this programming framework, before defining some function in R and applying it to data using `dplyr::mutate`. 
 
 <!-- ***could add add_vars example again*** -->
@@ -548,33 +957,75 @@ Fundamentally, `TRA` is a generalization of `base::sweep` for column-wise groupe
 
 The two operations below are equivalent, although the first is slightly more efficient as it only requires one method dispatch and one check of the inputs:
 
-```{r, eval=NCRAN}
+
+```r
 # This divides by the product
 GGDC10S %>%
   fgroup_by(Variable, Country) %>%
     get_vars(6:16) %>% fprod(TRA = "/") %>% head
+# # A tibble: 6 × 11
+#          AGR        MIN        MAN        PU        CON        WRT       TRA      FIRE        GOV
+#        <dbl>      <dbl>      <dbl>     <dbl>      <dbl>      <dbl>     <dbl>     <dbl>      <dbl>
+# 1 NA         NA         NA         NA        NA         NA         NA        NA        NA        
+# 2 NA         NA         NA         NA        NA         NA         NA        NA        NA        
+# 3 NA         NA         NA         NA        NA         NA         NA        NA        NA        
+# 4 NA         NA         NA         NA        NA         NA         NA        NA        NA        
+# 5  1.29e-105  2.81e-127  1.40e-101  4.44e-74  4.19e-102  3.97e-113  6.91e-92  1.01e-97  2.51e-117
+# 6  1.24e-105  2.00e-127  1.94e-101  5.75e-74  8.55e-102  4.49e-113  8.08e-92  1.13e-97  2.96e-117
+# # ℹ 2 more variables: OTH <dbl>, SUM <dbl>
 
 # Same thing
 GGDC10S %>%
   fgroup_by(Variable, Country) %>%
     get_vars(6:16) %>% 
      TRA(fprod(., keep.group_vars = FALSE), "/") %>% head # [same as TRA(.,fprod(., keep.group_vars = FALSE),"/")]
+# # A tibble: 6 × 11
+#          AGR        MIN        MAN        PU        CON        WRT       TRA      FIRE        GOV
+#        <dbl>      <dbl>      <dbl>     <dbl>      <dbl>      <dbl>     <dbl>     <dbl>      <dbl>
+# 1 NA         NA         NA         NA        NA         NA         NA        NA        NA        
+# 2 NA         NA         NA         NA        NA         NA         NA        NA        NA        
+# 3 NA         NA         NA         NA        NA         NA         NA        NA        NA        
+# 4 NA         NA         NA         NA        NA         NA         NA        NA        NA        
+# 5  1.29e-105  2.81e-127  1.40e-101  4.44e-74  4.19e-102  3.97e-113  6.91e-92  1.01e-97  2.51e-117
+# 6  1.24e-105  2.00e-127  1.94e-101  5.75e-74  8.55e-102  4.49e-113  8.08e-92  1.13e-97  2.96e-117
+# # ℹ 2 more variables: OTH <dbl>, SUM <dbl>
 ```
 
 `TRA.grouped_df` was designed such that it matches the columns of the statistics (aggregated columns) to those of the original data, and only transforms matching columns while returning the whole data frame. Thus it is easily possible to only apply a transformation to the first two sectors:
 
-```{r, eval=NCRAN}
+
+```r
 # This only demeans Agriculture (AGR) and Mining (MIN)
 GGDC10S %>%
   fgroup_by(Variable, Country) %>%
     TRA(fselect(., AGR, MIN) %>% fmean(keep.group_vars = FALSE), "-") %>% head
+# # A tibble: 6 × 16
+#   Country Regioncode Region Variable  Year   AGR    MIN    MAN     PU    CON   WRT   TRA  FIRE   GOV
+#   <chr>   <chr>      <chr>  <chr>    <dbl> <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 BWA     SSA        Sub-s… VA        1960   NA     NA  NA     NA     NA     NA    NA    NA    NA   
+# 2 BWA     SSA        Sub-s… VA        1961   NA     NA  NA     NA     NA     NA    NA    NA    NA   
+# 3 BWA     SSA        Sub-s… VA        1962   NA     NA  NA     NA     NA     NA    NA    NA    NA   
+# 4 BWA     SSA        Sub-s… VA        1963   NA     NA  NA     NA     NA     NA    NA    NA    NA   
+# 5 BWA     SSA        Sub-s… VA        1964 -446. -4505.  0.737  0.104  0.660  6.24  1.66  1.12  4.82
+# 6 BWA     SSA        Sub-s… VA        1965 -446. -4506.  1.02   0.135  1.35   7.06  1.94  1.25  5.70
+# # ℹ 2 more variables: OTH <dbl>, SUM <dbl>
 ```
 Since `TRA` is already built into all *Fast Statistical Functions* as an argument, it is best used in computations where grouped statistics are computed using some other function.
 
-```{r, eval=NCRAN}
+
+```r
 # Same as above, with one line of code using fmean.data.frame and ftransform...
 GGDC10S %>% ftransform(fmean(list(AGR = AGR, MIN = MIN), list(Variable, Country), TRA = "-")) %>% head
-
+# # A tibble: 6 × 16
+#   Country Regioncode Region Variable  Year   AGR    MIN    MAN     PU    CON   WRT   TRA  FIRE   GOV
+#   <chr>   <chr>      <chr>  <chr>    <dbl> <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 BWA     SSA        Sub-s… VA        1960   NA     NA  NA     NA     NA     NA    NA    NA    NA   
+# 2 BWA     SSA        Sub-s… VA        1961   NA     NA  NA     NA     NA     NA    NA    NA    NA   
+# 3 BWA     SSA        Sub-s… VA        1962   NA     NA  NA     NA     NA     NA    NA    NA    NA   
+# 4 BWA     SSA        Sub-s… VA        1963   NA     NA  NA     NA     NA     NA    NA    NA    NA   
+# 5 BWA     SSA        Sub-s… VA        1964 -446. -4505.  0.737  0.104  0.660  6.24  1.66  1.12  4.82
+# 6 BWA     SSA        Sub-s… VA        1965 -446. -4506.  1.02   0.135  1.35   7.06  1.94  1.25  5.70
+# # ℹ 2 more variables: OTH <dbl>, SUM <dbl>
 ```
 
 <!-- # Get grouped tibble -->
@@ -586,16 +1037,36 @@ GGDC10S %>% ftransform(fmean(list(AGR = AGR, MIN = MIN), list(Variable, Country)
 
 Another potential use of `TRA` is to do computations in two- or more steps, for example if both aggregated and transformed data are needed, or if computations are more complex and involve other manipulations in-between the aggregating and sweeping part:
 
-```{r, eval=NCRAN}
+
+```r
 # Get grouped tibble
 gGGDC <- GGDC10S %>% fgroup_by(Variable, Country)
 
 # Get aggregated data
 gsumGGDC <- gGGDC %>% fselect(AGR:SUM) %>% fsum
 head(gsumGGDC)
+# # A tibble: 6 × 13
+#   Variable Country       AGR     MIN    MAN     PU    CON    WRT    TRA   FIRE     GOV    OTH    SUM
+#   <chr>    <chr>       <dbl>   <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>   <dbl>  <dbl>  <dbl>
+# 1 EMP      ARG        88028.   3230. 1.20e5  6307. 4.60e4 1.23e5 4.02e4 3.89e4  1.27e5 6.15e4 6.54e5
+# 2 EMP      BOL        58817.   3418. 1.43e4   326. 7.49e3 1.72e4 7.04e3 2.72e3 NA      2.41e4 1.35e5
+# 3 EMP      BRA      1065864.  12773. 4.33e5 22604. 2.19e5 5.28e5 1.27e5 2.74e5  3.29e5 3.54e5 3.36e6
+# 4 EMP      BWA         8839.    493. 8.49e2   145. 1.19e3 1.71e3 3.93e2 7.21e2  2.87e3 1.30e3 1.85e4
+# 5 EMP      CHL        44220.   6389. 3.94e4  1850. 1.86e4 4.38e4 1.63e4 1.72e4 NA      6.32e4 2.51e5
+# 6 EMP      CHN     17264654. 422972. 4.03e6 96364. 1.25e6 1.73e6 8.36e5 2.96e5  1.36e6 1.86e6 2.91e7
 
 # Get transformed (scaled) data
 head(TRA(gGGDC, gsumGGDC, "/"))
+# # A tibble: 6 × 16
+#   Country Regioncode Region     Variable  Year      AGR      MIN      MAN       PU      CON      WRT
+#   <chr>   <chr>      <chr>      <chr>    <dbl>    <dbl>    <dbl>    <dbl>    <dbl>    <dbl>    <dbl>
+# 1 BWA     SSA        Sub-sahar… VA        1960 NA       NA       NA       NA       NA       NA      
+# 2 BWA     SSA        Sub-sahar… VA        1961 NA       NA       NA       NA       NA       NA      
+# 3 BWA     SSA        Sub-sahar… VA        1962 NA       NA       NA       NA       NA       NA      
+# 4 BWA     SSA        Sub-sahar… VA        1963 NA       NA       NA       NA       NA       NA      
+# 5 BWA     SSA        Sub-sahar… VA        1964  7.50e-4  1.65e-5  1.66e-5  1.03e-5  1.57e-5  6.82e-5
+# 6 BWA     SSA        Sub-sahar… VA        1965  7.24e-4  1.18e-5  2.30e-5  1.33e-5  3.20e-5  7.72e-5
+# # ℹ 5 more variables: TRA <dbl>, FIRE <dbl>, GOV <dbl>, OTH <dbl>, SUM <dbl>
 ```
 
 
@@ -613,23 +1084,46 @@ Although both steps are efficiently done in C++, it would be even more efficient
 
 The functions `fbetween` and `fwithin` are slightly more memory efficient implementations of `fmean` invoked with different `TRA` options:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% # Same as ... %>% fmean(TRA = "replace")
   fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fbetween %>% tail(2)
+# # A tibble: 2 × 11
+#     AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV   OTH    SUM
+#   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
+# 1 4444.  34.9 1614.  131.  997. 1307.  799.  320. 2958.    NA 12605.
+# 2 4444.  34.9 1614.  131.  997. 1307.  799.  320. 2958.    NA 12605.
 
 GGDC10S %>% # Same as ... %>% fmean(TRA = "replace_fill")
   fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fbetween(fill = TRUE) %>% tail(2)
+# # A tibble: 2 × 11
+#     AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV   OTH    SUM
+#   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>  <dbl>
+# 1 4444.  34.9 1614.  131.  997. 1307.  799.  320. 2958.    NA 12605.
+# 2 4444.  34.9 1614.  131.  997. 1307.  799.  320. 2958.    NA 12605.
 
 GGDC10S %>% # Same as ... %>% fmean(TRA = "-")
   fgroup_by(Variable, Country) %>% get_vars(6:16) %>% fwithin %>% tail(2)
+# # A tibble: 2 × 11
+#     AGR    MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV   OTH   SUM
+#   <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1  742.  -7.35  760.  187. 1798. 1713. 1249.  495. 2678.    NA 9614.
+# 2  717. -10.1   734.  194. 1934. 1803. 1266.  512. 2778.    NA 9928.
 ```
 
 Apart from higher speed, `fwithin` has a `mean` argument to assign an arbitrary mean to centered data, the default being `mean = 0`. A very common choice for such an added mean is just the overall mean of the data, which can be added in by invoking `mean = "overall.mean"`: 
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% 
   fgroup_by(Variable, Country) %>% 
     fselect(Country, Variable, AGR:SUM) %>% fwithin(mean = "overall.mean") %>% tail(3)
+# # A tibble: 3 × 13
+#   Country Variable      AGR      MIN      MAN     PU    CON    WRT    TRA   FIRE    GOV   OTH    SUM
+#   <chr>   <chr>       <dbl>    <dbl>    <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <dbl>  <dbl>
+# 1 EGY     EMP      2527458. 1867903. 5539313. 3.36e5 1.80e6 3.39e6 1.47e6 1.66e6 1.71e6    NA 2.16e7
+# 2 EGY     EMP      2527439. 1867902. 5539251. 3.36e5 1.80e6 3.39e6 1.47e6 1.66e6 1.71e6    NA 2.16e7
+# 3 EGY     EMP      2527413. 1867899. 5539226. 3.36e5 1.80e6 3.39e6 1.47e6 1.66e6 1.72e6    NA 2.16e7
 ```
 <!-- in particular, which regards the joint use of weights and the `mean = "overall.mean"` option: `... %>% fmean(w = SUM, TRA = "-+")` will not properly group-center the data on the overall weighted mean. Instead, it will group-center data on a frequency weighted average of the weighted group-means, thus not taking into account different aggregated weights attached to those weighted group-means themselves. The reason for this shortcoming is simply that `TRA` was not designed to take a separate weight vector as input. `fwithin(w = SUM, mean = "overall.mean")` does a better job and properly centers data on the weighted overall mean after subtracting out weighted group means: -->
 
@@ -643,26 +1137,51 @@ GGDC10S %>%
 
 This can also be done using weights. The code below uses the `SUM` column as weights, and then for each variable and each group subtracts out the weighted mean, and then adds the overall weighted column mean back to the centered columns. The `SUM` column is just kept as it is and added after the grouping columns.  
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>% 
   fgroup_by(Variable, Country) %>% 
     fselect(Country, Variable, AGR:SUM) %>% fwithin(SUM, mean = "overall.mean") %>% tail(3)
+# # A tibble: 3 × 13
+#   Country Variable    SUM        AGR      MIN    MAN     PU    CON    WRT    TRA   FIRE    GOV   OTH
+#   <chr>   <chr>     <dbl>      <dbl>    <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl> <dbl>
+# 1 EGY     EMP      22020. 429066006.   3.70e8 7.38e8 2.73e7 2.83e8 4.33e8 1.97e8 1.55e8 2.10e8    NA
+# 2 EGY     EMP      22219. 429065986.   3.70e8 7.38e8 2.73e7 2.83e8 4.33e8 1.97e8 1.55e8 2.10e8    NA
+# 3 EGY     EMP      22533. 429065961.   3.70e8 7.38e8 2.73e7 2.83e8 4.33e8 1.97e8 1.55e8 2.10e8    NA
 ```
 Another argument to `fwithin` is the `theta` parameter, allowing partial- or quasi-demeaning operations, e.g. `fwithin(gdata, theta = theta)` is equal to `gdata - theta * fbetween(gdata)`. This is particularly useful to prepare data for variance components (also known as 'random-effects') estimation.
 
 
 Apart from `fbetween` and `fwithin`, the function `fscale` exists to efficiently scale and center data, to avoid sequential calls such as `... %>% fsd(TRA = "/") %>% fmean(TRA = "-")`.  
 
-```{r, eval=NCRAN}
+
+```r
 # This efficiently scales and centers (i.e. standardizes) the data
 GGDC10S %>%
   fgroup_by(Variable, Country) %>%
     fselect(Country, Variable, AGR:SUM) %>% fscale
+# # A tibble: 5,027 × 13
+#    Country Variable    AGR    MIN    MAN     PU    CON    WRT    TRA   FIRE    GOV    OTH    SUM
+#  * <chr>   <chr>     <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+#  1 BWA     VA       NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA    
+#  2 BWA     VA       NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA    
+#  3 BWA     VA       NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA    
+#  4 BWA     VA       NA     NA     NA     NA     NA     NA     NA     NA     NA     NA     NA    
+#  5 BWA     VA       -0.738 -0.717 -0.668 -0.805 -0.692 -0.603 -0.589 -0.635 -0.656 -0.596 -0.676
+#  6 BWA     VA       -0.739 -0.717 -0.668 -0.805 -0.692 -0.603 -0.589 -0.635 -0.656 -0.596 -0.676
+#  7 BWA     VA       -0.736 -0.717 -0.668 -0.805 -0.692 -0.603 -0.589 -0.635 -0.656 -0.595 -0.676
+#  8 BWA     VA       -0.734 -0.717 -0.668 -0.805 -0.692 -0.604 -0.589 -0.635 -0.655 -0.595 -0.676
+#  9 BWA     VA       -0.730 -0.717 -0.668 -0.805 -0.692 -0.604 -0.588 -0.635 -0.656 -0.596 -0.676
+# 10 BWA     VA       -0.729 -0.716 -0.667 -0.803 -0.690 -0.603 -0.588 -0.635 -0.656 -0.596 -0.675
+# # ℹ 5,017 more rows
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 `fscale` also has additional `mean` and `sd` arguments allowing the user to (group-) scale data to an arbitrary mean and standard deviation. Setting `mean = FALSE` just scales the data but preserves the means, and is thus different from `fsd(..., TRA = "/")` which simply divides all values by the standard deviation:
 
-```{r, eval=NCRAN}
+
+```r
 # Saving grouped tibble
 gGGDC <- GGDC10S %>%
   fgroup_by(Variable, Country) %>%
@@ -670,15 +1189,43 @@ gGGDC <- GGDC10S %>%
 
 # Original means
 head(fmean(gGGDC)) 
+# # A tibble: 6 × 13
+#   Variable Country     AGR    MIN     MAN      PU     CON    WRT    TRA   FIRE     GOV    OTH    SUM
+#   <chr>    <chr>     <dbl>  <dbl>   <dbl>   <dbl>   <dbl>  <dbl>  <dbl>  <dbl>   <dbl>  <dbl>  <dbl>
+# 1 EMP      ARG       1420.   52.1  1932.   102.     742.  1.98e3 6.49e2  628.   2043.  9.92e2 1.05e4
+# 2 EMP      BOL        964.   56.0   235.     5.35   123.  2.82e2 1.15e2   44.6    NA   3.96e2 2.22e3
+# 3 EMP      BRA      17191.  206.   6991.   365.    3525.  8.51e3 2.05e3 4414.   5307.  5.71e3 5.43e4
+# 4 EMP      BWA        188.   10.5    18.1    3.09    25.3 3.63e1 8.36e0   15.3    61.1 2.76e1 3.94e2
+# 5 EMP      CHL        702.  101.    625.    29.4    296.  6.95e2 2.58e2  272.     NA   1.00e3 3.98e3
+# 6 EMP      CHN     287744. 7050.  67144.  1606.   20852.  2.89e4 1.39e4 4929.  22669.  3.10e4 4.86e5
 
 # Mean Preserving Scaling
 head(fmean(fscale(gGGDC, mean = FALSE)))
+# # A tibble: 6 × 13
+#   Variable Country     AGR    MIN     MAN      PU     CON    WRT    TRA   FIRE     GOV    OTH    SUM
+#   <chr>    <chr>     <dbl>  <dbl>   <dbl>   <dbl>   <dbl>  <dbl>  <dbl>  <dbl>   <dbl>  <dbl>  <dbl>
+# 1 EMP      ARG       1420.   52.1  1932.   102.     742.  1.98e3 6.49e2  628.   2043.  9.92e2 1.05e4
+# 2 EMP      BOL        964.   56.0   235.     5.35   123.  2.82e2 1.15e2   44.6    NA   3.96e2 2.22e3
+# 3 EMP      BRA      17191.  206.   6991.   365.    3525.  8.51e3 2.05e3 4414.   5307.  5.71e3 5.43e4
+# 4 EMP      BWA        188.   10.5    18.1    3.09    25.3 3.63e1 8.36e0   15.3    61.1 2.76e1 3.94e2
+# 5 EMP      CHL        702.  101.    625.    29.4    296.  6.95e2 2.58e2  272.     NA   1.00e3 3.98e3
+# 6 EMP      CHN     287744. 7050.  67144.  1606.   20852.  2.89e4 1.39e4 4929.  22669.  3.10e4 4.86e5
 head(fsd(fscale(gGGDC, mean = FALSE)))
+# # A tibble: 6 × 13
+#   Variable Country   AGR   MIN   MAN    PU   CON   WRT   TRA  FIRE   GOV   OTH   SUM
+#   <chr>    <chr>   <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 EMP      ARG      1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00
+# 2 EMP      BOL      1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00 NA     1.00  1.00
+# 3 EMP      BRA      1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00
+# 4 EMP      BWA      1.00  1.00  1.00  1     1.00  1.00  1.00  1     1.00  1.00  1.00
+# 5 EMP      CHL      1.00  1     1.00  1.00  1.00  1.00  1.00  1.00 NA     1.00  1.00
+# 6 EMP      CHN      1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00
 ```
 
 One can also set `mean = "overall.mean"`, which group-centers columns on the overall mean as illustrated with `fwithin`. Another interesting option is setting `sd = "within.sd"`. This group-scales data such that every group has a standard deviation equal to the within-standard deviation of the data:
 
-```{r, eval=NCRAN}
+
+```r
 # Just using VA data for this example
 gGGDC <- GGDC10S %>%
   fsubset(Variable == "VA", Country, AGR:SUM) %>% 
@@ -686,10 +1233,27 @@ gGGDC <- GGDC10S %>%
 
 # This calculates the within- standard deviation for all columns
 fsd(num_vars(ungroup(fwithin(gGGDC))))
+#       AGR       MIN       MAN        PU       CON       WRT       TRA      FIRE       GOV       OTH 
+#  45046972  40122220  75608708   3062688  30811572  44125207  20676901  16030868  20358973  18780869 
+#       SUM 
+# 306429102
 
 # This scales all groups to take on the within- standard deviation while preserving group means 
 fsd(fscale(gGGDC, mean = FALSE, sd = "within.sd"))
-
+# # A tibble: 43 × 12
+#    Country       AGR       MIN       MAN       PU     CON    WRT    TRA   FIRE     GOV    OTH    SUM
+#    <chr>       <dbl>     <dbl>     <dbl>    <dbl>   <dbl>  <dbl>  <dbl>  <dbl>   <dbl>  <dbl>  <dbl>
+#  1 ARG     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7  2.04e7 1.88e7 3.06e8
+#  2 BOL     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7 NA      1.88e7 3.06e8
+#  3 BRA     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7  2.04e7 1.88e7 3.06e8
+#  4 BWA     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7  2.04e7 1.88e7 3.06e8
+#  5 CHL     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7 NA      1.88e7 3.06e8
+#  6 CHN     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7  2.04e7 1.88e7 3.06e8
+#  7 COL     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7 NA      1.88e7 3.06e8
+#  8 CRI     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7  2.04e7 1.88e7 3.06e8
+#  9 DEW     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7  2.04e7 1.88e7 3.06e8
+# 10 DNK     45046972. 40122220. 75608708. 3062688.  3.08e7 4.41e7 2.07e7 1.60e7  2.04e7 1.88e7 3.06e8
+# # ℹ 33 more rows
 ```
 
 A grouped scaling operation with both `mean = "overall.mean"` and `sd = "within.sd"` thus efficiently achieves a harmonization of all groups in the first two moments without changing the fundamental properties (in terms of level and scale) of the data. 
@@ -702,41 +1266,141 @@ A grouped scaling operation with both `mean = "overall.mean"` and `sd = "within.
 This section introduces 3 further powerful *collapse* functions: `flag`, `fdiff` and `fgrowth`. The first function, `flag`, efficiently computes sequences of fully identified lags and leads on time series and panel data. The following code computes 1 fully-identified panel-lag and 1 fully identified panel-lead of each variable in the data:
 
 <!-- In addition: None of these functions require the data to be sorted, they can carry out fast computations on completely unordered data as long as a time-variable is supplied that uniquely identifies the data. -->
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>%
   fselect(-Region, -Regioncode) %>% 
     fgroup_by(Variable, Country) %>% flag(-1:1, Year)
+# # A tibble: 5,027 × 36
+#    Country Variable  Year F1.AGR   AGR L1.AGR F1.MIN   MIN L1.MIN F1.MAN    MAN L1.MAN  F1.PU     PU
+#  * <chr>   <chr>    <dbl>  <dbl> <dbl>  <dbl>  <dbl> <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+#  1 BWA     VA        1960   NA    NA     NA    NA    NA     NA    NA     NA     NA     NA     NA    
+#  2 BWA     VA        1961   NA    NA     NA    NA    NA     NA    NA     NA     NA     NA     NA    
+#  3 BWA     VA        1962   NA    NA     NA    NA    NA     NA    NA     NA     NA     NA     NA    
+#  4 BWA     VA        1963   16.3  NA     NA     3.49 NA     NA     0.737 NA     NA      0.104 NA    
+#  5 BWA     VA        1964   15.7  16.3   NA     2.50  3.49  NA     1.02   0.737 NA      0.135  0.104
+#  6 BWA     VA        1965   17.7  15.7   16.3   1.97  2.50   3.49  0.804  1.02   0.737  0.203  0.135
+#  7 BWA     VA        1966   19.1  17.7   15.7   2.30  1.97   2.50  0.938  0.804  1.02   0.203  0.203
+#  8 BWA     VA        1967   21.1  19.1   17.7   1.84  2.30   1.97  0.750  0.938  0.804  0.203  0.203
+#  9 BWA     VA        1968   21.9  21.1   19.1   5.24  1.84   2.30  2.14   0.750  0.938  0.578  0.203
+# 10 BWA     VA        1969   23.1  21.9   21.1  10.2   5.24   1.84  4.15   2.14   0.750  1.12   0.578
+# # ℹ 5,017 more rows
+# # ℹ 22 more variables: L1.PU <dbl>, F1.CON <dbl>, CON <dbl>, L1.CON <dbl>, F1.WRT <dbl>, WRT <dbl>,
+# #   L1.WRT <dbl>, F1.TRA <dbl>, TRA <dbl>, L1.TRA <dbl>, F1.FIRE <dbl>, FIRE <dbl>, L1.FIRE <dbl>,
+# #   F1.GOV <dbl>, GOV <dbl>, L1.GOV <dbl>, F1.OTH <dbl>, OTH <dbl>, L1.OTH <dbl>, F1.SUM <dbl>,
+# #   SUM <dbl>, L1.SUM <dbl>
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 If the time-variable passed does not exactly identify the data (i.e. because of repeated values in each group), all 3 functions will issue appropriate error messages. `flag`, `fdiff` and `fgrowth` support irregular time series and unbalanced panels. <!-- with different start and end periods and duration of coverage for each individual, but not irregular panels. A workaround for such panels exists with the function `seqid` which generates a new panel-id identifying consecutive time-sequences at the sub-individual level, see `?seqid`. -->
 
 It is also possible to omit the time-variable if one is certain that the data is sorted:
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>%
   fselect(Variable, Country,AGR:SUM) %>% 
     fgroup_by(Variable, Country) %>% flag
+# # A tibble: 5,027 × 13
+#    Variable Country   AGR   MIN    MAN     PU    CON   WRT   TRA  FIRE   GOV   OTH   SUM
+#  * <chr>    <chr>   <dbl> <dbl>  <dbl>  <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#  1 VA       BWA      NA   NA    NA     NA     NA     NA    NA    NA    NA    NA     NA  
+#  2 VA       BWA      NA   NA    NA     NA     NA     NA    NA    NA    NA    NA     NA  
+#  3 VA       BWA      NA   NA    NA     NA     NA     NA    NA    NA    NA    NA     NA  
+#  4 VA       BWA      NA   NA    NA     NA     NA     NA    NA    NA    NA    NA     NA  
+#  5 VA       BWA      NA   NA    NA     NA     NA     NA    NA    NA    NA    NA     NA  
+#  6 VA       BWA      16.3  3.49  0.737  0.104  0.660  6.24  1.66  1.12  4.82  2.34  37.5
+#  7 VA       BWA      15.7  2.50  1.02   0.135  1.35   7.06  1.94  1.25  5.70  2.68  39.3
+#  8 VA       BWA      17.7  1.97  0.804  0.203  1.35   8.27  2.15  1.36  6.37  2.99  43.1
+#  9 VA       BWA      19.1  2.30  0.938  0.203  0.897  4.31  1.72  1.54  7.04  3.31  41.4
+# 10 VA       BWA      21.1  1.84  0.750  0.203  1.22   5.17  2.44  1.03  5.03  2.36  41.1
+# # ℹ 5,017 more rows
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 `fdiff` computes sequences of lagged-leaded and iterated differences as well as quasi-differences and log-differences on time series and panel data. The code below computes the 1 and 10 year first and second differences of each variable in the data:
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>%
   fselect(-Region, -Regioncode) %>% 
     fgroup_by(Variable, Country) %>% fdiff(c(1, 10), 1:2, Year)
+# # A tibble: 5,027 × 47
+#    Country Variable  Year D1.AGR D2.AGR L10D1.AGR L10D2.AGR D1.MIN D2.MIN L10D1.MIN L10D2.MIN D1.MAN
+#  * <chr>   <chr>    <dbl>  <dbl>  <dbl>     <dbl>     <dbl>  <dbl>  <dbl>     <dbl>     <dbl>  <dbl>
+#  1 BWA     VA        1960 NA     NA            NA        NA NA     NA            NA        NA NA    
+#  2 BWA     VA        1961 NA     NA            NA        NA NA     NA            NA        NA NA    
+#  3 BWA     VA        1962 NA     NA            NA        NA NA     NA            NA        NA NA    
+#  4 BWA     VA        1963 NA     NA            NA        NA NA     NA            NA        NA NA    
+#  5 BWA     VA        1964 NA     NA            NA        NA NA     NA            NA        NA NA    
+#  6 BWA     VA        1965 -0.575 NA            NA        NA -0.998 NA            NA        NA  0.282
+#  7 BWA     VA        1966  1.95   2.53         NA        NA -0.525  0.473        NA        NA -0.214
+#  8 BWA     VA        1967  1.47  -0.488        NA        NA  0.328  0.854        NA        NA  0.134
+#  9 BWA     VA        1968  1.95   0.488        NA        NA -0.460 -0.788        NA        NA -0.188
+# 10 BWA     VA        1969  0.763 -1.19         NA        NA  3.41   3.87         NA        NA  1.39 
+# # ℹ 5,017 more rows
+# # ℹ 35 more variables: D2.MAN <dbl>, L10D1.MAN <dbl>, L10D2.MAN <dbl>, D1.PU <dbl>, D2.PU <dbl>,
+# #   L10D1.PU <dbl>, L10D2.PU <dbl>, D1.CON <dbl>, D2.CON <dbl>, L10D1.CON <dbl>, L10D2.CON <dbl>,
+# #   D1.WRT <dbl>, D2.WRT <dbl>, L10D1.WRT <dbl>, L10D2.WRT <dbl>, D1.TRA <dbl>, D2.TRA <dbl>,
+# #   L10D1.TRA <dbl>, L10D2.TRA <dbl>, D1.FIRE <dbl>, D2.FIRE <dbl>, L10D1.FIRE <dbl>,
+# #   L10D2.FIRE <dbl>, D1.GOV <dbl>, D2.GOV <dbl>, L10D1.GOV <dbl>, L10D2.GOV <dbl>, D1.OTH <dbl>,
+# #   D2.OTH <dbl>, L10D1.OTH <dbl>, L10D2.OTH <dbl>, D1.SUM <dbl>, D2.SUM <dbl>, L10D1.SUM <dbl>, …
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 Log-differences of the form $log(x_t) - log(x_{t-s})$ are also easily computed. 
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>%
   fselect(-Region, -Regioncode) %>% 
     fgroup_by(Variable, Country) %>% fdiff(c(1, 10), 1, Year, log = TRUE)
+# # A tibble: 5,027 × 25
+#    Country Variable  Year Dlog1.AGR L10Dlog1.AGR Dlog1.MIN L10Dlog1.MIN Dlog1.MAN L10Dlog1.MAN
+#  * <chr>   <chr>    <dbl>     <dbl>        <dbl>     <dbl>        <dbl>     <dbl>        <dbl>
+#  1 BWA     VA        1960   NA                NA    NA               NA    NA               NA
+#  2 BWA     VA        1961   NA                NA    NA               NA    NA               NA
+#  3 BWA     VA        1962   NA                NA    NA               NA    NA               NA
+#  4 BWA     VA        1963   NA                NA    NA               NA    NA               NA
+#  5 BWA     VA        1964   NA                NA    NA               NA    NA               NA
+#  6 BWA     VA        1965   -0.0359           NA    -0.336           NA     0.324           NA
+#  7 BWA     VA        1966    0.117            NA    -0.236           NA    -0.236           NA
+#  8 BWA     VA        1967    0.0796           NA     0.154           NA     0.154           NA
+#  9 BWA     VA        1968    0.0972           NA    -0.223           NA    -0.223           NA
+# 10 BWA     VA        1969    0.0355           NA     1.05            NA     1.05            NA
+# # ℹ 5,017 more rows
+# # ℹ 16 more variables: Dlog1.PU <dbl>, L10Dlog1.PU <dbl>, Dlog1.CON <dbl>, L10Dlog1.CON <dbl>,
+# #   Dlog1.WRT <dbl>, L10Dlog1.WRT <dbl>, Dlog1.TRA <dbl>, L10Dlog1.TRA <dbl>, Dlog1.FIRE <dbl>,
+# #   L10Dlog1.FIRE <dbl>, Dlog1.GOV <dbl>, L10Dlog1.GOV <dbl>, Dlog1.OTH <dbl>, L10Dlog1.OTH <dbl>,
+# #   Dlog1.SUM <dbl>, L10Dlog1.SUM <dbl>
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 Finally, it is also possible to compute quasi-differences and quasi-log-differences of the form $x_t - \rho x_{t-s}$ or $log(x_t) - \rho log(x_{t-s})$:
 
-```{r, eval=NCRAN}
+
+```r
 GGDC10S %>%
   fselect(-Region, -Regioncode) %>% 
     fgroup_by(Variable, Country) %>% fdiff(t = Year, rho = 0.95)
+# # A tibble: 5,027 × 14
+#    Country Variable  Year    AGR    MIN    MAN      PU     CON    WRT    TRA   FIRE    GOV    OTH
+#  * <chr>   <chr>    <dbl>  <dbl>  <dbl>  <dbl>   <dbl>   <dbl>  <dbl>  <dbl>  <dbl>  <dbl>  <dbl>
+#  1 BWA     VA        1960 NA     NA     NA     NA      NA      NA     NA     NA     NA     NA    
+#  2 BWA     VA        1961 NA     NA     NA     NA      NA      NA     NA     NA     NA     NA    
+#  3 BWA     VA        1962 NA     NA     NA     NA      NA      NA     NA     NA     NA     NA    
+#  4 BWA     VA        1963 NA     NA     NA     NA      NA      NA     NA     NA     NA     NA    
+#  5 BWA     VA        1964 NA     NA     NA     NA      NA      NA     NA     NA     NA     NA    
+#  6 BWA     VA        1965  0.241 -0.824  0.318  0.0359  0.719   1.13   0.363  0.184  1.11   0.454
+#  7 BWA     VA        1966  2.74  -0.401 -0.163  0.0743  0.0673  1.56   0.312  0.174  0.955  0.449
+#  8 BWA     VA        1967  2.35   0.427  0.174  0.0101 -0.381  -3.55  -0.323  0.246  0.988  0.465
+#  9 BWA     VA        1968  2.91  -0.345 -0.141  0.0101  0.365   1.08   0.804 -0.427 -1.66  -0.780
+# 10 BWA     VA        1969  1.82   3.50   1.43   0.385   2.32    0.841  0.397  0.252  0.818  0.385
+# # ℹ 5,017 more rows
+# # ℹ 1 more variable: SUM <dbl>
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 The quasi-differencing feature was added to `fdiff` to facilitate the preparation of time series and panel data for least-squares estimations suffering from serial correlation following Cochrane & Orcutt (1949). 
@@ -744,25 +1408,88 @@ The quasi-differencing feature was added to `fdiff` to facilitate the preparatio
 <!-- and `fgrowth` computes lagged-leaded and iterated growth-rates obtained via the exact computation method or through log-differencing.  -->
 
 Finally, `fgrowth` computes growth rates in the same way. By default exact growth rates are computed in percentage terms using $(x_t-x_{t-s}) / x_{t-s} \times 100$ (the default argument is `scale = 100`). The user can also request growth rates obtained by log-differencing using $log(x_t/ x_{t-s}) \times 100$. 
-```{r, eval=NCRAN}
+
+```r
 # Exact growth rates, computed as: (x/lag(x) - 1) * 100
 GGDC10S %>%
   fselect(-Region, -Regioncode) %>% 
     fgroup_by(Variable, Country) %>% fgrowth(c(1, 10), 1, Year)
+# # A tibble: 5,027 × 25
+#    Country Variable  Year G1.AGR L10G1.AGR G1.MIN L10G1.MIN G1.MAN L10G1.MAN G1.PU L10G1.PU G1.CON
+#  * <chr>   <chr>    <dbl>  <dbl>     <dbl>  <dbl>     <dbl>  <dbl>     <dbl> <dbl>    <dbl>  <dbl>
+#  1 BWA     VA        1960  NA           NA   NA          NA   NA          NA  NA         NA   NA  
+#  2 BWA     VA        1961  NA           NA   NA          NA   NA          NA  NA         NA   NA  
+#  3 BWA     VA        1962  NA           NA   NA          NA   NA          NA  NA         NA   NA  
+#  4 BWA     VA        1963  NA           NA   NA          NA   NA          NA  NA         NA   NA  
+#  5 BWA     VA        1964  NA           NA   NA          NA   NA          NA  NA         NA   NA  
+#  6 BWA     VA        1965  -3.52        NA  -28.6        NA   38.2        NA  29.4       NA  104. 
+#  7 BWA     VA        1966  12.4         NA  -21.1        NA  -21.1        NA  50         NA    0  
+#  8 BWA     VA        1967   8.29        NA   16.7        NA   16.7        NA   0         NA  -33.3
+#  9 BWA     VA        1968  10.2         NA  -20          NA  -20          NA   0         NA   35.7
+# 10 BWA     VA        1969   3.61        NA  185.         NA  185.         NA 185.        NA  185. 
+# # ℹ 5,017 more rows
+# # ℹ 13 more variables: L10G1.CON <dbl>, G1.WRT <dbl>, L10G1.WRT <dbl>, G1.TRA <dbl>,
+# #   L10G1.TRA <dbl>, G1.FIRE <dbl>, L10G1.FIRE <dbl>, G1.GOV <dbl>, L10G1.GOV <dbl>, G1.OTH <dbl>,
+# #   L10G1.OTH <dbl>, G1.SUM <dbl>, L10G1.SUM <dbl>
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 
 # Log-difference growth rates, computed as: log(x / lag(x)) * 100
 GGDC10S %>%
   fselect(-Region, -Regioncode) %>% 
     fgroup_by(Variable, Country) %>% fgrowth(c(1, 10), 1, Year, logdiff = TRUE)
+# # A tibble: 5,027 × 25
+#    Country Variable  Year Dlog1.AGR L10Dlog1.AGR Dlog1.MIN L10Dlog1.MIN Dlog1.MAN L10Dlog1.MAN
+#  * <chr>   <chr>    <dbl>     <dbl>        <dbl>     <dbl>        <dbl>     <dbl>        <dbl>
+#  1 BWA     VA        1960     NA              NA      NA             NA      NA             NA
+#  2 BWA     VA        1961     NA              NA      NA             NA      NA             NA
+#  3 BWA     VA        1962     NA              NA      NA             NA      NA             NA
+#  4 BWA     VA        1963     NA              NA      NA             NA      NA             NA
+#  5 BWA     VA        1964     NA              NA      NA             NA      NA             NA
+#  6 BWA     VA        1965     -3.59           NA     -33.6           NA      32.4           NA
+#  7 BWA     VA        1966     11.7            NA     -23.6           NA     -23.6           NA
+#  8 BWA     VA        1967      7.96           NA      15.4           NA      15.4           NA
+#  9 BWA     VA        1968      9.72           NA     -22.3           NA     -22.3           NA
+# 10 BWA     VA        1969      3.55           NA     105.            NA     105.            NA
+# # ℹ 5,017 more rows
+# # ℹ 16 more variables: Dlog1.PU <dbl>, L10Dlog1.PU <dbl>, Dlog1.CON <dbl>, L10Dlog1.CON <dbl>,
+# #   Dlog1.WRT <dbl>, L10Dlog1.WRT <dbl>, Dlog1.TRA <dbl>, L10Dlog1.TRA <dbl>, Dlog1.FIRE <dbl>,
+# #   L10Dlog1.FIRE <dbl>, Dlog1.GOV <dbl>, L10Dlog1.GOV <dbl>, Dlog1.OTH <dbl>, L10Dlog1.OTH <dbl>,
+# #   Dlog1.SUM <dbl>, L10Dlog1.SUM <dbl>
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 `fdiff` and `fgrowth` can also perform leaded (forward) differences and growth rates (i.e. `... %>% fgrowth(-c(1, 10), 1:2, Year)` would compute one and 10-year leaded first and second differences). Again it is possible to perform sequential operations:
 
-```{r, eval=NCRAN}
+
+```r
 # This computes the 1 and 10-year growth rates, for the current period and lagged by one period
 GGDC10S %>%
   fselect(-Region, -Regioncode) %>% 
     fgroup_by(Variable, Country) %>% fgrowth(c(1, 10), 1, Year) %>% flag(0:1, Year)
+# # A tibble: 5,027 × 47
+#    Country Variable  Year G1.AGR L1.G1.AGR L10G1.AGR L1.L10G1.AGR G1.MIN L1.G1.MIN L10G1.MIN
+#  * <chr>   <chr>    <dbl>  <dbl>     <dbl>     <dbl>        <dbl>  <dbl>     <dbl>     <dbl>
+#  1 BWA     VA        1960  NA        NA           NA           NA   NA        NA          NA
+#  2 BWA     VA        1961  NA        NA           NA           NA   NA        NA          NA
+#  3 BWA     VA        1962  NA        NA           NA           NA   NA        NA          NA
+#  4 BWA     VA        1963  NA        NA           NA           NA   NA        NA          NA
+#  5 BWA     VA        1964  NA        NA           NA           NA   NA        NA          NA
+#  6 BWA     VA        1965  -3.52     NA           NA           NA  -28.6      NA          NA
+#  7 BWA     VA        1966  12.4      -3.52        NA           NA  -21.1     -28.6        NA
+#  8 BWA     VA        1967   8.29     12.4         NA           NA   16.7     -21.1        NA
+#  9 BWA     VA        1968  10.2       8.29        NA           NA  -20        16.7        NA
+# 10 BWA     VA        1969   3.61     10.2         NA           NA  185.      -20          NA
+# # ℹ 5,017 more rows
+# # ℹ 37 more variables: L1.L10G1.MIN <dbl>, G1.MAN <dbl>, L1.G1.MAN <dbl>, L10G1.MAN <dbl>,
+# #   L1.L10G1.MAN <dbl>, G1.PU <dbl>, L1.G1.PU <dbl>, L10G1.PU <dbl>, L1.L10G1.PU <dbl>,
+# #   G1.CON <dbl>, L1.G1.CON <dbl>, L10G1.CON <dbl>, L1.L10G1.CON <dbl>, G1.WRT <dbl>,
+# #   L1.G1.WRT <dbl>, L10G1.WRT <dbl>, L1.L10G1.WRT <dbl>, G1.TRA <dbl>, L1.G1.TRA <dbl>,
+# #   L10G1.TRA <dbl>, L1.L10G1.TRA <dbl>, G1.FIRE <dbl>, L1.G1.FIRE <dbl>, L10G1.FIRE <dbl>,
+# #   L1.L10G1.FIRE <dbl>, G1.GOV <dbl>, L1.G1.GOV <dbl>, L10G1.GOV <dbl>, L1.L10G1.GOV <dbl>, …
+# 
+# Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]
 ```
 
 ## 3. Benchmarks
@@ -776,9 +1503,24 @@ All benchmarks are run on a Windows 8.1 laptop with a 2x 2.2 GHZ Intel i5 proces
 ### 3.1 Data 
 Benchmarks are run on the original `GGDC10S` data used throughout this vignette and a larger dataset with approx. 1 million observations, obtained by replicating and row-binding `GGDC10S` 200 times while maintaining unique groups.
 
-```{r, eval=RUNBENCH}
+
+```r
 # This shows the groups in GGDC10S
 GRP(GGDC10S, ~ Variable + Country)
+# collapse grouping object of length 5027 with 85 ordered groups
+# 
+# Call: GRP.default(X = GGDC10S, by = ~Variable + Country), X is unsorted
+# 
+# Distribution of group sizes: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#    4.00   53.00   62.00   59.14   63.00   65.00 
+# 
+# Groups with sizes: 
+# EMP.ARG EMP.BOL EMP.BRA EMP.BWA EMP.CHL EMP.CHN 
+#      62      61      62      52      63      62 
+#   ---
+# VA.TWN VA.TZA VA.USA VA.VEN VA.ZAF VA.ZMB 
+#     63     52     65     63     52     52
 
 # This replicates the data 200 times 
 data <- replicate(200, GGDC10S, simplify = FALSE) 
@@ -787,61 +1529,120 @@ uniquify <- function(x, i) ftransform(x, lapply(unclass(x)[c(1,4)], paste0, i))
 # Making datasets unique and row-binding them
 data <- unlist2d(Map(uniquify, data, as.list(1:200)), idcols = FALSE)
 fdim(data)
+# [1] 1005400      16
 
 # This shows the groups in the replicated data
 GRP(data, ~ Variable + Country)
+# collapse grouping object of length 1005400 with 17000 ordered groups
+# 
+# Call: GRP.default(X = data, by = ~Variable + Country), X is unsorted
+# 
+# Distribution of group sizes: 
+#    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+#    4.00   53.00   62.00   59.14   63.00   65.00 
+# 
+# Groups with sizes: 
+# EMP1.ARG1 EMP1.BOL1 EMP1.BRA1 EMP1.BWA1 EMP1.CHL1 EMP1.CHN1 
+#        62        61        62        52        63        62 
+#   ---
+# VA99.TWN99 VA99.TZA99 VA99.USA99 VA99.VEN99 VA99.ZAF99 VA99.ZMB99 
+#         63         52         65         63         52         52
 
 gc()
+#            used  (Mb) gc trigger   (Mb) limit (Mb)  max used   (Mb)
+# Ncells  3184710 170.1    8862174  473.3         NA   8862174  473.3
+# Vcells 23965820 182.9  147787078 1127.6      16384 445825141 3401.4
 ```
 
 ### 3.1 Selecting, Subsetting, Ordering and Grouping
 
-```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
+
+```r
 ## Selecting columns
 # Small
 microbenchmark(dplyr = select(GGDC10S, Country, Variable, AGR:SUM),
                collapse = fselect(GGDC10S, Country, Variable, AGR:SUM))
+# Unit: microseconds
+#      expr     min       lq      mean  median      uq     max neval
+#     dplyr 400.775 410.7585 425.43117 416.396 424.637 820.041   100
+#  collapse   2.911   3.4645   4.59856   4.469   5.412  15.293   100
 
 # Large
 microbenchmark(dplyr = select(data, Country, Variable, AGR:SUM),
                collapse = fselect(data, Country, Variable, AGR:SUM))
+# Unit: microseconds
+#      expr     min      lq      mean   median       uq     max neval
+#     dplyr 388.926 396.429 412.67730 402.9890 411.0455 728.734   100
+#  collapse   2.870   3.280   4.44686   3.8335   5.3300  12.669   100
 
 ## Subsetting columns 
 # Small
 microbenchmark(dplyr = filter(GGDC10S, Variable == "VA"),
                collapse = fsubset(GGDC10S, Variable == "VA"))
+# Unit: microseconds
+#      expr     min       lq      mean   median       uq     max neval
+#     dplyr 374.084 394.4405 409.23986 401.0005 414.3050 716.475   100
+#  collapse  39.278  48.2775  55.85307  55.5550  60.4545 103.320   100
 
 # Large
 microbenchmark(dplyr = filter(data, Variable == "VA"),
                collapse = fsubset(data, Variable == "VA"))
+# Unit: milliseconds
+#      expr      min       lq     mean   median       uq       max neval
+#     dplyr 4.487409 5.242752 8.352270 5.653223 6.434048 159.13658   100
+#  collapse 2.840808 3.082359 3.469128 3.163478 3.302714  16.56047   100
 
 ## Ordering rows
 # Small
 microbenchmark(dplyr = arrange(GGDC10S, desc(Country), Variable, Year),
                collapse = roworder(GGDC10S, -Country, Variable, Year))
+# Unit: microseconds
+#      expr      min        lq      mean   median        uq      max neval
+#     dplyr 1715.112 1867.4270 1983.4726 2015.109 2080.7500 2367.791   100
+#  collapse  192.495  232.4085  256.3878  247.968  258.7715 1055.381   100
 
 # Large
 microbenchmark(dplyr = arrange(data, desc(Country), Variable, Year),
                collapse = roworder(data, -Country, Variable, Year), times = 2)
+# Unit: milliseconds
+#      expr      min       lq      mean    median        uq       max neval
+#     dplyr 89.37512 89.37512 101.05180 101.05180 112.72848 112.72848     2
+#  collapse 66.46703 66.46703  67.45254  67.45254  68.43806  68.43806     2
 
 
 ## Grouping 
 # Small
 microbenchmark(dplyr = group_by(GGDC10S, Country, Variable),
                collapse = fgroup_by(GGDC10S, Country, Variable))
+# Unit: microseconds
+#      expr     min       lq     mean   median       uq      max neval
+#     dplyr 778.713 815.1825 911.3484 874.2225 960.3840 1529.874   100
+#  collapse 146.534 157.6245 198.5921 165.0660 177.3455 1484.241   100
 
 # Large
 microbenchmark(dplyr = group_by(data, Country, Variable),
                collapse = fgroup_by(data, Country, Variable), times = 10)
+# Unit: milliseconds
+#      expr      min       lq     mean   median       uq      max neval
+#     dplyr 34.20294 34.62839 34.88041 34.88432 35.07821 35.48279    10
+#  collapse 27.89972 28.03211 28.55175 28.36954 29.32283 29.54206    10
 
 ## Computing a new column 
 # Small
 microbenchmark(dplyr = mutate(GGDC10S, NEW = AGR+1),
                collapse = ftransform(GGDC10S, NEW = AGR+1))
+# Unit: microseconds
+#      expr     min       lq      mean   median       uq     max neval
+#     dplyr 317.463 321.7270 333.38822 324.9660 333.7810 631.564   100
+#  collapse   8.897  11.0495  12.95354  12.4435  14.2065  38.991   100
 
 # Large
 microbenchmark(dplyr = mutate(data, NEW = AGR+1),
                collapse = ftransform(data, NEW = AGR+1))
+# Unit: microseconds
+#      expr     min       lq     mean    median        uq      max neval
+#     dplyr 637.878 1084.225 1330.006 1164.6665 1291.2335 15869.05   100
+#  collapse 210.740  657.025 1021.434  698.3735  781.7675 16725.09   100
 
 ## All combined with pipes 
 # Small
@@ -854,6 +1655,10 @@ microbenchmark(dplyr = filter(GGDC10S, Variable == "VA") %>%
                        roworder(-Country, Year) %>%
                        ftransform(NEW = AGR+1) %>%
                        fgroup_by(Country))
+# Unit: microseconds
+#      expr      min       lq      mean   median       uq      max neval
+#     dplyr 2982.340 3416.325 3525.7983 3538.464 3668.516 5034.021   100
+#  collapse  136.858  186.632  214.4681  211.683  243.130  314.470   100
 
 # Large
 microbenchmark(dplyr = filter(data, Variable == "VA") %>% 
@@ -865,14 +1670,22 @@ microbenchmark(dplyr = filter(data, Variable == "VA") %>%
                        roworder(-Country, Year) %>%
                        ftransform(NEW = AGR+1) %>%
                        fgroup_by(Country), times = 10)
+# Unit: milliseconds
+#      expr      min       lq     mean   median       uq      max neval
+#     dplyr 7.917182 7.997378 8.142653 8.109943 8.292291 8.423163    10
+#  collapse 3.080289 3.104028 3.150153 3.140969 3.188365 3.251259    10
 
 gc()
+#            used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
+# Ncells  3184728 170.1    8862174 473.3         NA   8862174  473.3
+# Vcells 23970594 182.9   75772825 578.2      16384 445825141 3401.4
 ```
 
 
 ### 3.1 Aggregation
 
-```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
+
+```r
 ## Grouping the data
 cgGGDC10S <- fgroup_by(GGDC10S, Variable, Country) %>% fselect(-Region, -Regioncode)
 gGGDC10S <- group_by(GGDC10S, Variable, Country) %>% fselect(-Region, -Regioncode)
@@ -880,80 +1693,148 @@ cgdata <- fgroup_by(data, Variable, Country) %>% fselect(-Region, -Regioncode)
 gdata <- group_by(data, Variable, Country) %>% fselect(-Region, -Regioncode)
 rm(data, GGDC10S) 
 gc()
+#            used (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
+# Ncells  3201723  171    8862174 473.3         NA   8862174  473.3
+# Vcells 23589381  180   75772825 578.2      16384 445825141 3401.4
 
 ## Conversion of Grouping object: This time would be required extra in all hybrid calls 
 ## i.e. when calling collapse functions on data grouped with dplyr::group_by
 # Small
 microbenchmark(GRP(gGGDC10S))
+# Unit: microseconds
+#           expr   min     lq     mean median     uq    max neval
+#  GRP(gGGDC10S) 8.692 9.2455 10.16021 9.4915 10.086 39.196   100
 
 # Large
 microbenchmark(GRP(gdata))
+# Unit: microseconds
+#        expr     min       lq     mean   median       uq      max neval
+#  GRP(gdata) 885.641 1160.915 1248.258 1237.236 1323.234 1651.398   100
 
 
 ## Sum 
 # Small
 microbenchmark(dplyr = summarise_all(gGGDC10S, sum, na.rm = TRUE),
                collapse = fsum(cgGGDC10S))
+# Unit: microseconds
+#      expr      min        lq      mean    median       uq       max neval
+#     dplyr 3017.723 3354.1895 3733.4739 3620.9560 3738.441 22135.736   100
+#  collapse  218.120  227.3655  236.7693  235.1965  244.852   270.805   100
 
 # Large
 microbenchmark(dplyr = summarise_all(gdata, sum, na.rm = TRUE),
                collapse = fsum(cgdata), times = 10)
+# Unit: milliseconds
+#      expr      min        lq      mean    median        uq       max neval
+#     dplyr 272.9737 279.91024 305.02067 283.59737 303.57122 448.07629    10
+#  collapse  41.5330  41.63214  41.88717  41.77062  41.96059  42.78662    10
 
 ## Mean
 # Small
 microbenchmark(dplyr = summarise_all(gGGDC10S, mean.default, na.rm = TRUE),
                collapse = fmean(cgGGDC10S))
+# Unit: microseconds
+#      expr      min        lq      mean   median       uq       max neval
+#     dplyr 4360.104 4596.6740 5125.4194 4754.791 5005.710 37144.852   100
+#  collapse  169.084  174.3935  185.4594  183.434  194.832   221.933   100
 
 # Large
 microbenchmark(dplyr = summarise_all(gdata, mean.default, na.rm = TRUE),
                collapse = fmean(cgdata), times = 10)
+# Unit: milliseconds
+#      expr      min        lq      mean    median        uq       max neval
+#     dplyr 623.5123 642.83748 704.39836 681.32260 786.82731 829.74435    10
+#  collapse  31.7636  31.88037  32.00222  31.99445  32.08209  32.43875    10
 
 ## Median
 # Small
 microbenchmark(dplyr = summarise_all(gGGDC10S, median, na.rm = TRUE),
                collapse = fmedian(cgGGDC10S))
+# Unit: microseconds
+#      expr       min        lq       mean     median        uq       max neval
+#     dplyr 14399.118 14849.933 16170.3500 14982.5685 15145.892 33613.235   100
+#  collapse   137.596   164.902   189.2056   178.1245   214.676   248.624   100
 
 # Large
 microbenchmark(dplyr = summarise_all(gdata, median, na.rm = TRUE),
                collapse = fmedian(cgdata), times = 2)
+# Unit: milliseconds
+#      expr        min         lq       mean     median         uq        max neval
+#     dplyr 2826.83036 2826.83036 2828.12912 2828.12912 2829.42788 2829.42788     2
+#  collapse   19.95564   19.95564   19.98524   19.98524   20.01485   20.01485     2
 
 ## Standard Deviation
 # Small
 microbenchmark(dplyr = summarise_all(gGGDC10S, sd, na.rm = TRUE),
                collapse = fsd(cgGGDC10S))
+# Unit: microseconds
+#      expr      min        lq      mean   median       uq       max neval
+#     dplyr 8332.635 8612.5215 9365.1216 8712.766 8989.086 25087.982   100
+#  collapse  242.228  251.0225  269.7849  273.552  282.326   321.891   100
 
 # Large
 microbenchmark(dplyr = summarise_all(gdata, sd, na.rm = TRUE),
                collapse = fsd(cgdata), times = 2)
+# Unit: milliseconds
+#      expr        min         lq       mean     median         uq        max neval
+#     dplyr 1375.80363 1375.80363 1409.60358 1409.60358 1443.40352 1443.40352     2
+#  collapse   46.21713   46.21713   56.88205   56.88205   67.54697   67.54697     2
 
 ## Maximum
 # Small
 microbenchmark(dplyr = summarise_all(gGGDC10S, max, na.rm = TRUE),
                collapse = fmax(cgGGDC10S))
+# Unit: microseconds
+#      expr       min         lq        mean    median         uq       max neval
+#     dplyr 39964.504 41008.8560 43577.92707 41448.273 44195.1095 58816.550   100
+#  collapse    68.798    74.7225    87.83389    77.572   100.9215   129.519   100
 
 # Large
 microbenchmark(dplyr = summarise_all(gdata, max, na.rm = TRUE),
                collapse = fmax(cgdata), times = 10)
+# Unit: milliseconds
+#      expr       min       lq     mean    median        uq       max neval
+#     dplyr 480.83804 490.9982 540.7374 517.86136 533.85723 687.14713    10
+#  collapse  11.40116  11.7745  11.9366  11.85156  11.94908  13.18318    10
 
 ## First Value
 # Small
 microbenchmark(dplyr = summarise_all(gGGDC10S, first),
                collapse = ffirst(cgGGDC10S, na.rm = FALSE))
+# Unit: microseconds
+#      expr      min       lq       mean   median       uq       max neval
+#     dplyr 4147.888 4242.249 4801.88966 4383.248 4701.532 19254.215   100
+#  collapse   11.685   14.227   26.25476   24.764   35.301   137.514   100
 
 # Large
 microbenchmark(dplyr = summarise_all(gdata, first),
                collapse = ffirst(cgdata, na.rm = FALSE), times = 10)
+# Unit: microseconds
+#      expr       min         lq       mean    median         uq        max neval
+#     dplyr 530327.66 558767.393 637499.226 596503.08 672801.103 969373.660    10
+#  collapse    872.89    999.088   1087.845   1068.87   1204.416   1289.327    10
 
 ## Number of Distinct Values
 # Small
 microbenchmark(dplyr = summarise_all(gGGDC10S, n_distinct, na.rm = TRUE),
                collapse = fndistinct(cgGGDC10S))
+# Unit: microseconds
+#      expr       min        lq       mean    median        uq       max neval
+#     dplyr 11316.574 11600.847 12573.1010 11759.435 11939.487 31659.667   100
+#  collapse   189.051   205.164   226.0933   235.422   239.604   443.661   100
 
 # Large
 microbenchmark(dplyr = summarise_all(gdata, n_distinct, na.rm = TRUE),
                collapse = fndistinct(cgdata), times = 5)
+# Unit: milliseconds
+#      expr        min         lq       mean     median         uq        max neval
+#     dplyr 2044.13376 2110.16926 2133.91960 2138.07456 2154.39797 2222.82246     5
+#  collapse   30.65443   30.94582   31.51081   31.17123   31.17972   33.60286     5
 
 gc()
+#            used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
+# Ncells  3972309 212.2    8862174 473.3         NA   8862174  473.3
+# Vcells 24857303 189.7   75772825 578.2      16384 445825141 3401.4
 ```
 
 <!-- The benchmarks show that at this data size efficient primitives like `base::sum` or `base::max` can still deliver very decent performance with `summarize`. Less optimized base functions like `mean`, `median` and `sd` however take multiple seconds to compute, and here `collapse` fast functions really prove to be very useful complements to the *dplyr* system. -->
@@ -969,77 +1850,138 @@ gc()
 
 Below are some additional benchmarks for weighted aggregations and aggregations using the statistical mode, which cannot easily or efficiently be performed with *dplyr*. 
 
-```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
+
+```r
 ## Weighted Mean
 # Small
 microbenchmark(fmean(cgGGDC10S, SUM)) 
+# Unit: microseconds
+#                   expr     min       lq     mean   median       uq     max neval
+#  fmean(cgGGDC10S, SUM) 195.488 200.4285 218.2836 211.1295 218.8375 444.276   100
 
 # Large 
 microbenchmark(fmean(cgdata, SUM), times = 10) 
+# Unit: milliseconds
+#                expr      min       lq     mean   median       uq      max neval
+#  fmean(cgdata, SUM) 34.73516 35.28276 35.66689 35.32257 36.44802 36.80722    10
 
 ## Weighted Standard-Deviation
 # Small
 microbenchmark(fsd(cgGGDC10S, SUM)) 
+# Unit: microseconds
+#                 expr     min      lq     mean   median      uq   max neval
+#  fsd(cgGGDC10S, SUM) 243.048 244.606 249.2181 246.9635 249.444 323.9   100
 
 # Large 
 microbenchmark(fsd(cgdata, SUM), times = 10) 
+# Unit: milliseconds
+#              expr    min       lq     mean   median       uq      max neval
+#  fsd(cgdata, SUM) 44.905 44.93116 45.15391 45.01095 45.22677 46.14689    10
 
 ## Statistical Mode
 # Small
 microbenchmark(fmode(cgGGDC10S)) 
+# Unit: microseconds
+#              expr     min       lq     mean   median       uq     max neval
+#  fmode(cgGGDC10S) 245.098 248.3575 253.4809 250.6945 253.9335 420.619   100
 
 # Large 
 microbenchmark(fmode(cgdata), times = 10) 
+# Unit: milliseconds
+#           expr      min       lq     mean   median      uq     max neval
+#  fmode(cgdata) 40.26151 41.82082 41.63019 41.88382 42.0232 42.0587    10
 
 ## Weighted Statistical Mode
 # Small
 microbenchmark(fmode(cgGGDC10S, SUM)) 
+# Unit: microseconds
+#                   expr     min      lq     mean   median       uq     max neval
+#  fmode(cgGGDC10S, SUM) 330.993 333.535 337.7744 334.5395 337.3685 447.187   100
 
 # Large 
 microbenchmark(fmode(cgdata, SUM), times = 10) 
+# Unit: milliseconds
+#                expr      min       lq     mean   median       uq      max neval
+#  fmode(cgdata, SUM) 57.69815 57.78466 57.98187 57.84567 58.09942 58.81835    10
 
 gc()
+#            used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
+# Ncells  3971768 212.2    8862174 473.3         NA   8862174  473.3
+# Vcells 24853915 189.7   75772825 578.2      16384 445825141 3401.4
 ```
 
 ### 3.2 Transformation
 
-```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
+
+```r
 
 ## Replacing with group sum
 # Small
 microbenchmark(dplyr = mutate_all(gGGDC10S, sum, na.rm = TRUE),
                collapse = fsum(cgGGDC10S, TRA = "replace_fill"))
+# Unit: microseconds
+#      expr       min        lq       mean     median       uq       max neval
+#     dplyr 13088.102 13223.340 14388.9000 13359.7680 14380.05 29060.554   100
+#  collapse   238.456   273.757   292.1693   293.9905   312.01   388.106   100
 
 # Large
 microbenchmark(dplyr = mutate_all(gdata, sum, na.rm = TRUE),
                collapse = fsum(cgdata, TRA = "replace_fill"), times = 10)
+# Unit: milliseconds
+#      expr       min        lq      mean    median       uq      max neval
+#     dplyr 391.63618 679.62609 662.91807 716.40975 729.7527 749.4973    10
+#  collapse  49.63788  50.24189  61.77658  55.18416  63.4596 111.6039    10
 
 ## Dividing by group sum
 # Small
 microbenchmark(dplyr = mutate_all(gGGDC10S, function(x) x/sum(x, na.rm = TRUE)),
                collapse = fsum(cgGGDC10S, TRA = "/"))
+# Unit: microseconds
+#      expr       min         lq       mean   median        uq       max neval
+#     dplyr 13058.992 13203.8450 14294.3733 13321.41 13880.796 42300.028   100
+#  collapse   242.884   268.5295   278.8541   274.29   294.585   330.255   100
 
 # Large
 microbenchmark(dplyr = mutate_all(gdata, function(x) x/sum(x, na.rm = TRUE)),
                collapse = fsum(cgdata, TRA = "/"), times = 10)
+# Unit: milliseconds
+#      expr      min       lq      mean    median        uq      max neval
+#     dplyr 474.9046 654.6199 796.14248 907.32863 942.32567 999.2501    10
+#  collapse  49.3542  50.9056  84.66647  52.05635  74.51705 325.4319    10
 
 ## Centering
 # Small
 microbenchmark(dplyr = mutate_all(gGGDC10S, function(x) x-mean.default(x, na.rm = TRUE)),
                collapse = fwithin(cgGGDC10S))
+# Unit: microseconds
+#      expr      min         lq       mean    median        uq       max neval
+#     dplyr 14460.04 14769.4095 15977.4942 14859.815 15013.421 37113.077   100
+#  collapse   203.77   229.7845   246.5043   242.638   266.664   293.191   100
 
 # Large
 microbenchmark(dplyr = mutate_all(gdata, function(x) x-mean.default(x, na.rm = TRUE)),
                collapse = fwithin(cgdata), times = 10)
+# Unit: milliseconds
+#      expr       min        lq      mean     median       uq       max neval
+#     dplyr 893.06503 925.50231 1217.2225 1259.34620 1445.254 1545.5490    10
+#  collapse  43.90731  56.97093  143.4797   73.39498  152.872  429.3341    10
 
 ## Centering and Scaling (Standardizing)
 # Small
 microbenchmark(dplyr = mutate_all(gGGDC10S, function(x) (x-mean.default(x, na.rm = TRUE))/sd(x, na.rm = TRUE)),
                collapse = fscale(cgGGDC10S))
+# Unit: microseconds
+#      expr       min        lq       mean    median         uq       max neval
+#     dplyr 20275.033 21145.524 24976.1242 22214.190 25194.0285 79869.435   100
+#  collapse   277.775   304.958   323.3613   314.388   338.2705   437.388   100
 
 # Large
 microbenchmark(dplyr = mutate_all(gdata, function(x) (x-mean.default(x, na.rm = TRUE))/sd(x, na.rm = TRUE)),
                collapse = fscale(cgdata), times = 2)
+# Unit: milliseconds
+#      expr        min         lq      mean    median         uq        max neval
+#     dplyr 2118.97696 2118.97696 2315.9282 2315.9282 2512.87938 2512.87938     2
+#  collapse   60.17144   60.17144   60.6284   60.6284   61.08537   61.08537     2
 
 ## Lag
 # Small
@@ -1047,54 +1989,102 @@ microbenchmark(dplyr_unordered = mutate(gGGDC10S, across(everything(), dplyr::la
                collapse_unordered = flag(cgGGDC10S),
                dplyr_ordered = mutate(gGGDC10S, across(everything(), \(x) dplyr::lag(x, order_by = Year))),
                collapse_ordered = flag(cgGGDC10S, t = Year))
+# Unit: microseconds
+#                expr       min        lq        mean     median         uq       max neval
+#     dplyr_unordered 14495.386 14796.101 17579.85413 15265.3250 15889.7550 49137.721   100
+#  collapse_unordered    48.544    75.071    90.29225    86.6330   109.6545   225.377   100
+#       dplyr_ordered 24893.437 25327.607 27521.59809 25904.9275 27136.2190 51312.074   100
+#    collapse_ordered    80.196   107.953   120.85160   117.5675   131.6715   189.051   100
 
 # Large
 microbenchmark(dplyr_unordered = mutate(gdata, across(everything(), dplyr::lag)),
                collapse_unordered = flag(cgdata),
                dplyr_ordered = mutate(gdata, across(everything(), \(x) dplyr::lag(x, order_by = Year))),
                collapse_ordered = flag(cgdata, t = Year), times = 2)
+# Unit: milliseconds
+#                expr        min         lq       mean     median         uq        max neval
+#     dplyr_unordered 3461.11500 3461.11500 3471.95821 3471.95821 3482.80142 3482.80142     2
+#  collapse_unordered   13.71897   13.71897  211.59809  211.59809  409.47721  409.47721     2
+#       dplyr_ordered 5786.57522 5786.57522 6291.90389 6291.90389 6797.23256 6797.23256     2
+#    collapse_ordered   25.14399   25.14399   35.36102   35.36102   45.57806   45.57806     2
 
 ## First-Difference (unordered)
 # Small
 microbenchmark(dplyr_unordered = mutate_all(gGGDC10S, function(x) x - dplyr::lag(x)),
                collapse_unordered = fdiff(cgGGDC10S))
+# Unit: microseconds
+#                expr       min         lq        mean     median        uq       max neval
+#     dplyr_unordered 25613.274 25878.0725 27951.41954 26257.3225 27226.808 43048.893   100
+#  collapse_unordered    56.539    72.3035    95.72147    91.6965   102.664   254.077   100
 
 # Large
 microbenchmark(dplyr_unordered = mutate_all(gdata, function(x) x - dplyr::lag(x)),
                collapse_unordered = fdiff(cgdata), times = 2)
+# Unit: milliseconds
+#                expr        min         lq       mean     median       uq      max neval
+#     dplyr_unordered 3287.88487 3287.88487 3425.69703 3425.69703 3563.509 3563.509     2
+#  collapse_unordered   16.58971   16.58971   23.36885   23.36885   30.148   30.148     2
 
 gc()
+#            used  (Mb) gc trigger  (Mb) limit (Mb)  max used   (Mb)
+# Ncells  3978800 212.5    8862175 473.3         NA   8862175  473.3
+# Vcells 24870572 189.8   72805912 555.5      16384 445825141 3401.4
 ```
 
 Below again some benchmarks for transformations not easily of efficiently performed with *dplyr*, such as centering on the overall mean, mean-preserving scaling, weighted scaling and centering, sequences of lags / leads, (iterated) panel-differences and growth rates. 
 
-```{r, eval=RUNBENCH, warning=FALSE, message=FALSE}
+
+```r
 # Centering on overall mean
 microbenchmark(fwithin(cgdata, mean = "overall.mean"), times = 10)
+# Unit: milliseconds
+#                                    expr      min       lq     mean   median       uq      max neval
+#  fwithin(cgdata, mean = "overall.mean") 44.66782 48.03445 52.04073 50.07953 53.67134 71.13221    10
 
 # Weighted Centering
 microbenchmark(fwithin(cgdata, SUM), times = 10)
+# Unit: milliseconds
+#                  expr      min       lq     mean   median       uq      max neval
+#  fwithin(cgdata, SUM) 40.45204 42.86833 46.55326 46.18277 47.28202 57.82673    10
 microbenchmark(fwithin(cgdata, SUM, mean = "overall.mean"), times = 10)
+# Unit: milliseconds
+#                                         expr      min       lq    mean   median       uq      max
+#  fwithin(cgdata, SUM, mean = "overall.mean") 39.99279 40.32256 43.0638 40.60269 41.34366 54.45542
+#  neval
+#     10
 
 # Weighted Scaling and Standardizing
 microbenchmark(fsd(cgdata, SUM, TRA = "/"), times = 10)
+# Unit: milliseconds
+#                         expr      min      lq     mean   median       uq      max neval
+#  fsd(cgdata, SUM, TRA = "/") 50.19536 50.9145 55.12553 53.23862 56.27094 67.46816    10
 microbenchmark(fscale(cgdata, SUM), times = 10)
+# Unit: milliseconds
+#                 expr      min       lq     mean   median       uq      max neval
+#  fscale(cgdata, SUM) 54.14792 57.64584 60.83251 59.88025 61.16425 72.31928    10
 
 # Sequence of lags and leads
 microbenchmark(flag(cgdata, -1:1), times = 10)
+# Unit: milliseconds
+#                expr      min       lq     mean   median       uq      max neval
+#  flag(cgdata, -1:1) 26.03902 48.02695 194.8518 257.0652 264.5479 276.5348    10
 
 # Iterated difference
 microbenchmark(fdiff(cgdata, 1, 2), times = 10)
+# Unit: milliseconds
+#                 expr      min       lq     mean   median       uq      max neval
+#  fdiff(cgdata, 1, 2) 38.76001 39.83896 44.93731 41.08887 48.98348 63.42528    10
 
 # Growth Rate
 microbenchmark(fgrowth(cgdata,1), times = 10)
+# Unit: milliseconds
+#                expr      min       lq     mean   median       uq      max neval
+#  fgrowth(cgdata, 1) 11.58627 13.81528 18.05776 14.03489 22.34279 31.15811    10
 ```
 
 <!-- Again the benchmarks show stunning performance gains using *collapse* functions. -->
 
-```{r, echo=FALSE}
-options(oldopts)
-```
+
 
 
 ## References

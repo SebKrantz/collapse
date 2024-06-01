@@ -19,6 +19,8 @@ pivot(data,               # Summary of Documentation:
       check.dups = FALSE, # detect duplicate 'ids'+'names' combinations
 
       # Only apply if how = "wider" or "recast"
+      FUN = "last",       # aggregation function (internal or external)
+      FUN.args = NULL,    # list of arguments passed to aggregation function
       nthreads = .op[["nthreads"]], # minor gains as grouping remains serial
       fill = NULL,        # value to insert for unbalanced data (default NA/NULL)
       drop = TRUE,        # drop unused levels (=columns) if 'names' is factor
@@ -54,13 +56,19 @@ names of columns to generate, or retrieve variable labels from:
   character. The pivoting method: one of \code{"longer"}, \code{"wider"} or \code{"recast"}. These can be abbreviated by the first letter i.e. \code{"l"/"w"/"r"}.
 }
   \item{na.rm}{
-logical. \code{TRUE} will remove missing values such that in the reshaped data there is no row missing all data columns - selected through 'values'.
+logical. \code{TRUE} will remove missing values such that in the reshaped data there is no row missing all data columns - selected through 'values'. For wide/recast pivots using internal \code{FUN}'s \code{"first"/"last"/"count"}, this also toggles skipping of missing values.
 }
   \item{factor}{
 character. Whether to generate new 'names' and/or 'labels' columns as factor variables. This is generally recommended as factors are more memory efficient than character vectors and also faster in subsequent filtering and grouping. Internally, this argument is evaluated as \code{factor <- c("names", "labels") \%in\% factor}, so passing anything other than \code{"names"} and/or \code{"labels"} will disable it.
 }
   \item{check.dups}{
-logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading effectively to the last value being chosen i.e. the data is aggregated using the last value. See Details.
+logical. \code{TRUE} checks for duplicate 'ids'+'names' combinations, and, if 'labels' are specified, also for duplicate 'names'+'labels' combinations. The default \code{FALSE} implies that the algorithm just runs through the data, leading effectively to the \code{FUN} option to be executed (default last value). See Details.
+}
+  \item{FUN}{
+function to aggregate values. At present, only a single function is allowed. \link[=fast-statistical-functions]{Fast Statistical Functions} receive vectorized execution. For maximum efficiency, a small set of internal functions is provided: \code{"first"}, \code{"last"}, \code{"count"}, \code{"sum"}, \code{"mean"}, \code{"min"}, or \code{"max"}. In options \code{"first"/"last"/"count"} setting \code{na.rm = TRUE} skips missing values. In options \code{"sum"/"mean"/"min"/"max"} missing values are always skipped (see Details why). The \code{fill} argument is ignored in \code{"count"/"sum"/"mean"/"min"/"max"} (\code{"count"/"sum"} force \code{fill = 0} else \code{NA} is used).
+}
+\item{FUN.args}{
+(optional) list of arguments passed to \code{FUN} (if using an external function). Data-length arguments such as weight vectors are supported.
 }
 \item{nthreads}{
   integer. if \code{how = "wider"|"recast"}: number of threads to use with OpenMP (default \code{get_collapse("nthreads")}, initialized to 1). Only the distribution of values to columns with \code{how = "wider"|"recast"} is multithreaded here. Since grouping id columns on a long data frame is expensive and serial, the gains are minor. With \code{how = "long"}, multithreading does not make much sense as the most expensive operation is allocating the long results vectors. The rest is a couple of \code{memset()}'s in C to copy the values.
@@ -79,7 +87,16 @@ logical. if \code{how = "wider"|"recast"} and 'names' is a single factor variabl
 
 }
 \details{
-Pivot wider essentially works as follows: compute \code{g_rows = group(ids)} and also \code{g_cols = group(names)} (using \code{\link{group}} if \code{sort = FALSE}). \code{g_rows} gives the row-numbers of the wider data frame and \code{g_cols} the column numbers. Then, a C function generates a wide data frame and runs through each long column ('values'), assigning each value to the corresponding row and column in the wide frame. If there are duplicates, some observations will be assigned to the same slot the new data frame, overwriting the value already set. Since the algorithm runs through the data from first to last row, this amounts to removing duplicates by taking the last value for each set of 'ids' - in first-appearance order. If \code{check.dups = TRUE}, a check of the form  \code{fnunique(list(g_rows, g_cols)) < fnrow(data)} is run, and an informative warning is issued if duplicates are found. Recast pivoting works similarly, and in long pivoting the check simply amounts to \code{fnunique(ids) < fnrow(data)}. Making this check optional ensures greater performance, but also requires the user to exercise discretion i.e. know your data or invoke the check.
+Pivot wider essentially works as follows: compute \code{g_rows = group(ids)} and also \code{g_cols = group(names)} (using \code{\link{group}} if \code{sort = FALSE}). \code{g_rows} gives the row-numbers of the wider data frame and \code{g_cols} the column numbers.
+
+Then, a C function generates a wide data frame and runs through each long column ('values'), assigning each value to the corresponding row and column in the wide frame. In this process \code{FUN} is always applied. The default, \code{"last"}, does nothing at all, i.e., if there are duplicates, some values are overwritten. \code{"first"} works similarly just that the C-loop is executed the other way around. The other hard-coded options count, sum, average, or compare observations on the fly. Missing values are internally skipped for statistical functions as there is no way to distinguish an incoming \code{NA} from an initial \code{NA} - apart from counting occurrences using an internal structure of the same size as the result data frame which is costly and thus not implemented.
+
+When passing an R-function to \code{FUN}, the data is grouped using \code{g_full = group(list(g_rows, g_cols))}, aggregated by groups, and expanded again to full length using \code{\link{TRA}} before entering the reshaping algorithm. Thus, this is significantly more expensive than the optimized internal functions. With \link[=fast-statistical-functions]{Fast Statistical Functions} the aggregation is vectorized across groups, other functions are applied using \code{\link{BY}} - by far the slowest option.
+% Since the algorithm runs through the data from first to last row, this amounts to removing duplicates by taking the last value for each set of 'ids' - in first-appearance order.
+
+If \code{check.dups = TRUE}, a check of the form  \code{fnunique(list(g_rows, g_cols)) < fnrow(data)} is run, and an informative warning is issued if duplicates are found.
+
+Recast pivoting works similarly. In long pivots \code{FUN} is ignored and the check simply amounts to \code{fnunique(ids) < fnrow(data)}. % Making this check optional ensures greater performance, but also requires the user to exercise discretion i.e. know your data or invoke the check.
 }
 \value{
 A reshaped data frame with the same class and attributes (except for 'names'/'row-names') as the input frame.
@@ -88,7 +105,7 @@ A reshaped data frame with the same class and attributes (except for 'names'/'ro
 \note{
 Leaving either 'ids' or 'values' empty will assign all other columns (except for \code{"variable"} if \code{how = "wider"|"recast"}) to the non-specified argument. It is also possible to leave both empty, e.g. for complete melting if \code{how = "wider"} or data transposition if \code{how = "recast"} (similar to \code{data.table::transpose} but supporting multiple names columns and variable labels). See Examples.
 
-\code{pivot} currently does not support concurrently melting/pivoting longer to multiple columns. See \code{data.table::melt} or \code{pivot_longer} from \emph{tidyr} or \emph{tidytable} for an efficient alternative with this feature. It is also possible to achieve this with just a little bit of programming. An example is provided below. Currently I don't see a 'complete' (like \code{pivot_longer}) way of including this feature in the API, and in general I don't see this as a very well-defined operation. But I am open to suggestions.
+\code{pivot} currently does not support concurrently melting/pivoting longer to multiple columns. See \code{data.table::melt} or \code{pivot_longer} from \emph{tidyr} or \emph{tidytable} for an efficient alternative with this feature. It is also possible to achieve this with just a little bit of programming. An example is provided below. % Currently I don't see a 'complete' (like \code{pivot_longer}) way of including this feature in the API, and in general I don't see this as a very well-defined operation. But I am open to suggestions.
 }
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~

@@ -26,3 +26,8 @@ man/figures
 _cache$
 _snaps
 ^CITATION\.cff$
+^\.DS_Store$
+^revdep$
+\.orig$
+
+

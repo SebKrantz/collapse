@@ -582,6 +582,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     } else error("Unsupported types: %s and %s", type2char(t1), type2char(t2));
   }
 
+  Free(h);
   UNPROTECT(nprotect);
   return ans;
 }

@@ -100,6 +100,16 @@ add_labels <- function(l, labs) {
   .Call(C_setvlabels, l, "label", labs, NULL)
 }
 
+apply_external_FUN <- function(data, g, FUN, args, name) {
+  FUN <- match.fun(FUN)
+  if(is.null(args)) {
+    if(any(name == .FAST_STAT_FUN)) return(FUN(data, g = g, TRA = "fill"))
+    return(TRA(data, BY(data, g, FUN, use.g.names = FALSE, reorder = FALSE), "fill", g))
+  }
+  if(any(name == .FAST_STAT_FUN)) return(do.call(FUN, c(list(x = data, g = g, TRA = "fill"), args)))
+  TRA(data, do.call(BY, c(list(x = data, g = g, FUN = FUN, use.g.names = FALSE, reorder = FALSE), args)), "fill", g)
+}
+
 # TODO: Think about: values could be list input, names only atomic. that would make more sense...
 # Or: allow for both options... needs to be consistent with "labels" though...
 
@@ -133,6 +143,8 @@ pivot <- function(data,
                   na.rm = FALSE,
                   factor = c("names", "labels"),
                   check.dups = FALSE,
+                  FUN = "last",
+                  FUN.args = NULL,
                   nthreads = .op[["nthreads"]],
                   fill = NULL, # Fill is for pivot_wider
                   drop = TRUE, # Same as with dcast()
@@ -293,13 +305,21 @@ pivot <- function(data,
         if(length(values) > 1L) { # Multiple columns, as in dcast... TODO: check pivot_wider
           namv <- names(data)[values]
           attributes(data) <- NULL
-          value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads))
+          if(!is.character(FUN)) {
+            data[values] <- apply_external_FUN(data[values], group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+            FUN <- "last"
+          }
+          value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, FUN, na.rm))
           if(length(labels)) value_cols <- lapply(value_cols, add_labels, labels)
           value_cols <- unlist(if(transpose[1L]) t_list2(value_cols) else value_cols, FALSE, FALSE)
           namv_res <- if(transpose[2L]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
           names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)
         } else {
-          value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill, nthreads)
+          if(!is.character(FUN)) {
+            data[[values]] <- apply_external_FUN(data[[values]], group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+            FUN <- "last"
+          }
+          value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill, nthreads, FUN, na.rm)
           names(value_cols) <- names
           if(length(labels)) vlabels(value_cols) <- labels
         }
@@ -375,7 +395,11 @@ pivot <- function(data,
           namv <- names(vd)
           attributes(vd) <- NULL
         }
-        value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads))
+        if(!is.character(FUN)) {
+          vd <- apply_external_FUN(vd, group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+          FUN <- "last"
+        }
+        value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, FUN, na.rm))
         if(length(id_cols)) id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols)), FALSE, FALSE, NULL)
         value_cols <- .Call(C_rbindlist, value_cols, FALSE, FALSE, names[[2L]]) # Final column is "variable" name
 

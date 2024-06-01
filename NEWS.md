@@ -1,4 +1,12 @@
+# collapse 2.0.15
+
+* `pivot()` has new arguments `FUN = "last"` and `FUN.args = NULL`, allowing wide and recast pivots with aggregation (default last value as before). `FUN` currently supports a single function returning a scalar value. *Fast Statistical Functions* receive vectorized execution. `FUN.args` can be used to supply a list of function arguments, including data-length arguments such as weights. There are also a couple of internal functions callable using function strings: `"first"`, `"last"`, `"count"`, `"sum"`, `"mean"`, `"min"`, or `"max"`. These are built into the reshaping C-code and thus extremely fast. Thanks @AdrianAntico for the request (#582).
+
 # collapse 2.0.14
+
+* Updated '*collapse* and *sf*' vignette to reflect the recent support for *units* objects, and added a few more examples.
+
+* Fixed a bug in `join()` where a full join silently became a left join if there are no matches between the tables (#574). Thanks @D3SL for reporting. 
 
 * Added function `group_by_vars()`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> group_by_vars(ind1) |> collapg(custom = list(fmean = ind2, fsum = ind3))`. Or, using *magrittr*: 
 ```r 
@@ -15,7 +23,12 @@ data %>%
 }
 ```
 
+* Added function `as_integer_factor()` to turn factors/factor columns into integer vectors. `as_numeric_factor()` already exists, but is memory inefficient for most factors where levels can be integers. 
+
+* `join()` now internally checks if the rows of the joined datasets match exactly. This check, using `identical(m, seq_row(y))`, is inexpensive, but, if `TRUE`, saves a full subset and deep copy of `y`. Thus `join()` now inherits the intelligence already present in functions like `fsubset()`, `roworder()` and `funique()` - a key for efficient data manipulation is simply doing less.  
+
 * In `join()`, if `attr = TRUE`, the `count` option to `fmatch()` is always invoked, so that the attribute attached always has the same form, regardless of `verbose` or `validate` settings. 
+
 
 * `roworder[v]()` has optional setting `verbose = 2L` to indicate if `x` is already sorted, making the call to `roworder[v]()` redundant. 
 
