@@ -95,15 +95,15 @@
 <span class="r-in"><span>  <span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, nthreads <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min        lq     mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y)  979.982  997.9195 1010.193 1003.044 1014.442</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2)  961.655  997.6325 1006.007 1004.623 1012.761</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 2736.750 3093.7575 3843.381 3186.171 3287.934</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: milliseconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min       lq     mean   median       uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y) 1.006099 1.024959 1.050196 1.036849 1.052777</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2) 1.004295 1.021884 1.042020 1.035127 1.051916</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 2.684762 3.294125 4.047816 3.421614 3.532048</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1242.997   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1045.295   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  16173.516   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   2.071607   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.231025   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  21.167480   100</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
