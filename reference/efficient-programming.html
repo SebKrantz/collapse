@@ -35,22 +35,22 @@
 <span><span class="fu">whichv</span><span class="op">(</span><span class="va">x</span>, <span class="va">value</span>,            <span class="co"># Faster than which(x == value)</span></span>
 <span>       invert <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>      <span class="co"># or which(x != value). See also Note (3)</span></span>
 <span><span class="fu">whichNA</span><span class="op">(</span><span class="va">x</span>, invert <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># Faster than which((!)is.na(x))</span></span>
-<span><span class="va">x</span> <span class="op">%==%</span> <span class="va">value</span>                <span class="co"># Infix for whichv(v, value, FALSE), use e.g. in fsubset()</span></span>
-<span><span class="va">x</span> <span class="op">%!=%</span> <span class="va">value</span>                <span class="co"># Infix for whichv(v, value, TRUE). See also Note (3)</span></span>
+<span><span class="va">x</span> <span class="op">%==%</span> <span class="va">value</span></span>
+<span><span class="va">x</span> <span class="op">%!=%</span> <span class="va">value</span></span>
 <span><span class="fu">alloc</span><span class="op">(</span><span class="va">value</span>, <span class="va">n</span>,             <span class="co"># Fast rep_len(value, n) or replicate(n, value).</span></span>
 <span>      simplify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># simplify only works if length(value) == 1. See Details.</span></span>
 <span><span class="fu">copyv</span><span class="op">(</span><span class="va">X</span>, <span class="va">v</span>, <span class="va">R</span>, <span class="va">...</span>, invert  <span class="co"># Fast replace(X, v, R), replace(X, X (!/=)= v, R) or</span></span>
-<span>    <span class="op">=</span> <span class="cn">FALSE</span>, vind1 <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># replace(X, (!)v, R`[`(!)v]). See Details and Note (4).</span></span>
+<span>    <span class="op">=</span> <span class="cn">FALSE</span>, vind1 <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># replace(X, (!)v, R[(!)v]). See Details and Note (4).</span></span>
 <span>    xlist <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># For multi-replacement see also kit::vswitch()</span></span>
 <span><span class="fu">setv</span><span class="op">(</span><span class="va">X</span>, <span class="va">v</span>, <span class="va">R</span>, <span class="va">...</span>, invert   <span class="co"># Same for X[v] &lt;- r, X[x (!/=)= v] &lt;- r or</span></span>
-<span>    <span class="op">=</span> <span class="cn">FALSE</span>, vind1 <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># x`[`(!)v] &lt;- r`[`(!)v]. Modifies X by reference, fastest.</span></span>
+<span>    <span class="op">=</span> <span class="cn">FALSE</span>, vind1 <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># x[(!)v] &lt;- r[(!)v]. Modifies X by reference, fastest.</span></span>
 <span>    xlist <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># X/R/V can also be lists/DFs. See Details and Examples.</span></span>
 <span><span class="fu">setop</span><span class="op">(</span><span class="va">X</span>, <span class="va">op</span>, <span class="va">V</span>, <span class="va">...</span>,        <span class="co"># Faster than X &lt;- X +\-\*\/ V (modifies by reference)</span></span>
 <span>      rowwise <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>      <span class="co"># optionally can also add v to rows of a matrix or list</span></span>
-<span><span class="va">X</span> <span class="op">%+=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "+", V). See also Note (2)</span></span>
-<span><span class="va">X</span> <span class="op">%-=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "-", V). See also Note (2)</span></span>
-<span><span class="va">X</span> <span class="op">%*=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "*", V). See also Note (2)</span></span>
-<span><span class="va">X</span> <span class="op">%/=%</span> <span class="va">V</span>                    <span class="co"># Infix for setop(X, "/", V). See also Note (2)</span></span>
+<span><span class="va">X</span> <span class="op">%+=%</span> <span class="va">V</span></span>
+<span><span class="va">X</span> <span class="op">%-=%</span> <span class="va">V</span></span>
+<span><span class="va">X</span> <span class="op">%*=%</span> <span class="va">V</span></span>
+<span><span class="va">X</span> <span class="op">%/=%</span> <span class="va">V</span></span>
 <span><span class="fu">na_rm</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                    <span class="co"># Fast: if(anyNA(x)) x[!is.na(x)] else x, last</span></span>
 <span><span class="fu">na_locf</span><span class="op">(</span><span class="va">x</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>     <span class="co"># obs. carried forward and first obs. carried back.</span></span>
 <span><span class="fu">na_focb</span><span class="op">(</span><span class="va">x</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>     <span class="co"># (by reference). These also support lists (NULL/empty)</span></span>
