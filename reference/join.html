@@ -59,7 +59,7 @@
   <dt id="arg-validate">validate<a class="anchor" aria-label="anchor" href="#arg-validate"></a></dt>
 <dd><p>character. (Optional) check if join is of specified type. One of <code>"1:1"</code>, <code>"1:m"</code>, <code>"m:1"</code> or <code>"m:m"</code>. The default <code>"m:m"</code> does not perform any checks. Checks are done before the actual join step and failure results in an error. <em>Note</em> that this argument does not affect the result, it only triggers a check.</p></dd>
   <dt id="arg-multiple">multiple<a class="anchor" aria-label="anchor" href="#arg-multiple"></a></dt>
-<dd><p>logical. Handling of rows in <code>x</code> with multiple matches in <code>y</code>. The default <code>FALSE</code> takes the first match in <code>y</code>. <code>TRUE</code> returns every match in <code>y</code>, increasing the size of the joined table.</p></dd>
+<dd><p>logical. Handling of rows in <code>x</code> with multiple matches in <code>y</code>. The default <code>FALSE</code> takes the first match in <code>y</code>. <code>TRUE</code> returns every match in <code>y</code> (a full cartesian product), increasing the size of the joined table. If <code>verbose &gt; 0</code>, the approximate order of the join will be displayed. See Details.</p></dd>
   <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
 <dd><p>logical. <code>TRUE</code> implements a sort-merge-join: a completely separate join algorithm that sorts both datasets on the join columns using <code><a href="radixorder.html">radixorder</a></code> and then matches the rows without hashing. <em>Note</em> that in this case the result will be sorted by the join columns, whereas <code>sort = FALSE</code> preserves the order of rows in <code>x</code>.</p></dd>
   <dt id="arg-keep-col-order">keep.col.order<a class="anchor" aria-label="anchor" href="#arg-keep-col-order"></a></dt>
@@ -67,14 +67,19 @@
   <dt id="arg-drop-dup-cols">drop.dup.cols<a class="anchor" aria-label="anchor" href="#arg-drop-dup-cols"></a></dt>
 <dd><p>instead of renaming duplicate columns in <code>x</code> and <code>y</code> using <code>suffix</code>, this option simply drops them: <code>TRUE</code> or <code>"y"</code> drops them from <code>y</code>, <code>"x"</code> from <code>x</code>.</p></dd>
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
-<dd><p>integer. Prints information about the join. One of 0 (off), 1 (default) or 2 (additionally prints the classes of the <code>on</code> columns). <em>Note:</em> <code>verbose &gt; 0</code> or <code>validate != "m:m"</code> invoke the <code>count</code> argument to <code><a href="fmatch.html">fmatch</a></code>, so <code>verbose = 0</code> is slightly more efficient.</p></dd>
+<dd><p>integer. Prints information about the join. One of 0 (off), 1 (default, see Details) or 2 (additionally prints the classes of the <code>on</code> columns). <em>Note:</em> <code>verbose &gt; 0</code> or <code>validate != "m:m"</code> invoke the <code>count</code> argument to <code><a href="fmatch.html">fmatch</a></code>, so <code>verbose = 0</code> is slightly more efficient.</p></dd>
     <dt id="arg-column">column<a class="anchor" aria-label="anchor" href="#arg-column"></a></dt>
 <dd><p>(optional) name for an extra column to generate in the output indicating which dataset a record came from. <code>TRUE</code> calls this column <code>".join"</code> (inspired by STATA's '_merge' column). By default this column is generated as the last column, but, if <code>keep.col.order = FALSE</code>, it is placed after the 'on' columns. The column is a factor variable with levels corresponding to the dataset names (inferred from the input) or <code>"matched"</code> for matched records. Alternatively, it is possible to specify a list of 2, where the first element is the column name, and the second a length 3 (!) vector of levels e.g. <code>column = list("joined", c("x", "y", "x_y"))</code>, where <code>"x_y"</code> replaces <code>"matched"</code>. The column has an additional attribute <code>"on.cols"</code> giving the join columns corresponding to the factor levels. See Examples.</p></dd>
   <dt id="arg-attr">attr<a class="anchor" aria-label="anchor" href="#arg-attr"></a></dt>
-<dd><p>(optional) name for attribute providing information about the join performed (including the output of <code><a href="fmatch.html">fmatch</a></code>) to the result. <code>TRUE</code> calls this attribute <code>"join.match"</code>.</p></dd>
+<dd><p>(optional) name for attribute providing information about the join performed (including the output of <code><a href="fmatch.html">fmatch</a></code>) to the result. <code>TRUE</code> calls this attribute <code>"join.match"</code>. <em>Note:</em> this also invokes the <code>count</code> argument to <code><a href="fmatch.html">fmatch</a></code>.</p></dd>
     <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>further arguments to <code><a href="fmatch.html">fmatch</a></code> (if <code>sort = FALSE</code>). Notably, <code>overid</code> can bet set to 0 or 2 (default 1) to control the matching process if the join condition more than identifies the records.</p></dd>
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>If <code>verbose &gt; 0</code>, <code>join</code> prints a compact summary of the join operation using <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></code>. If the names of <code>x</code> and <code>y</code> can be extracted (i.e., if <code>as.character(substitute(x))</code> yields a single string) they will be displayed (otherwise 'x' and 'y' are used) followed by the respective join keys in square brackets. This is followed by a summary of the records used from each table. If <code>multiple = FALSE</code>, only the first matches from <code>y</code> are used and counted here. Also, if <code>multiple = FALSE</code>, the <code>validate</code> setting is simply printed between the two tables - by default <code>"&lt;m:m&gt;"</code>.</p>
+<p>If <code>multiple = TRUE</code>, <code>join</code> performs a full cartesian product matching every value in <code>x</code> to every matching value in <code>y</code>. This can considerably increase the size of the table, and no memory checks are performed (your system will simply run out of memory; usually this should not terminate R). If <code>verbose &gt; 0</code>, <code>join</code> will also determine the approximate order of the join as the number of records used from each table divided by the number of unique matches, and display it between the two tables at up to 3 significant digits. For example <code>"&lt;4:1.5&gt;"</code> means that on average 4 records from <code>x</code> match 1.5 records from <code>y</code>, implying on average <code>4*1.5 = 6</code> records generated per unique match. <em>Note</em> that an order of '1' on either table must not imply that the key is unique as this value is generated from <code>signif(value, 3)</code>. To be sure about a keys uniqueness use the <code>validate</code> argument.</p>
+    </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
 <p>A data frame-like object of the same type and attributes as <code>x</code>. <code>"row.names"</code> of <code>x</code> are only preserved in left-join operations.</p>
@@ -133,6 +138,51 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> anti join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   b Jane  28</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># With multiple matches</span></span></span>
+<span class="r-in"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l"</span>,<span class="st">"i"</span>,<span class="st">"r"</span>,<span class="st">"f"</span>,<span class="st">"s"</span>,<span class="st">"a"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu">join</span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, on <span class="op">=</span> <span class="st">"id2"</span>, how <span class="op">=</span> <span class="va">i</span>, multiple <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> left join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> inner join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> right join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  NA   e &lt;NA&gt;  NA       3  80000        IT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  NA   e &lt;NA&gt;  NA       3  80000        IT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> semi join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> anti join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] id1  id2  name age </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Adding join column: useful esp. for full join</span></span></span>
 <span class="r-in"><span><span class="fu">join</span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, how <span class="op">=</span> <span class="st">"f"</span>, column <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
