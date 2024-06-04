@@ -29,5 +29,8 @@ _snaps
 ^\.DS_Store$
 ^revdep$
 \.orig$
+vignettes/figure
+vignettes/cache
+
 
 
