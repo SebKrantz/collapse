@@ -2,6 +2,20 @@
 
 * `pivot()` has new arguments `FUN = "last"` and `FUN.args = NULL`, allowing wide and recast pivots with aggregation (default last value as before). `FUN` currently supports a single function returning a scalar value. *Fast Statistical Functions* receive vectorized execution. `FUN.args` can be used to supply a list of function arguments, including data-length arguments such as weights. There are also a couple of internal functions callable using function strings: `"first"`, `"last"`, `"count"`, `"sum"`, `"mean"`, `"min"`, or `"max"`. These are built into the reshaping C-code and thus extremely fast. Thanks @AdrianAntico for the request (#582).
 
+* `join()` now provides enhanced verbosity if `multiple = TRUE`, indicating the (approximate) order of the join, e.g.
+  ``` r
+  join(data.frame(id = c(1, 2, 2, 4)), data.frame(id = c(rep(1,4), 2:3)), multiple = TRUE)
+  #> left join: x[id] 3/4 (75%) <1.5:2.5> y[id] 5/6 (83.3%)
+  #>   id
+  #> 1  1
+  #> 2  1
+  #> 3  1
+  #> 4  1
+  #> 5  2
+  #> 6  2
+  #> 7  4
+  ```
+
 # collapse 2.0.14
 
 * Updated '*collapse* and *sf*' vignette to reflect the recent support for *units* objects, and added a few more examples.
@@ -9,19 +23,19 @@
 * Fixed a bug in `join()` where a full join silently became a left join if there are no matches between the tables (#574). Thanks @D3SL for reporting. 
 
 * Added function `group_by_vars()`: A standard evaluation version of `fgroup_by()` that is slimmer and safer for programming, e.g. `data |> group_by_vars(ind1) |> collapg(custom = list(fmean = ind2, fsum = ind3))`. Or, using *magrittr*: 
-```r 
-library(magrittr)
-set_collapse(mask = "manip") # for fgroup_vars -> group_vars
-
-data %>% 
-  group_by_vars(ind1) %>% {
-  add_vars(
-    group_vars(., "unique"),
-    get_vars(., ind2) %>% fmean(keep.g = FALSE) %>% add_stub("mean_"),
-    get_vars(., ind3) %>% fsum(keep.g = FALSE) %>% add_stub("sum_")
-  ) 
-}
-```
+  ```r 
+  library(magrittr)
+  set_collapse(mask = "manip") # for fgroup_vars -> group_vars
+  
+  data %>% 
+    group_by_vars(ind1) %>% {
+    add_vars(
+      group_vars(., "unique"),
+      get_vars(., ind2) %>% fmean(keep.g = FALSE) %>% add_stub("mean_"),
+      get_vars(., ind3) %>% fsum(keep.g = FALSE) %>% add_stub("sum_")
+    ) 
+  }
+  ```
 
 * Added function `as_integer_factor()` to turn factors/factor columns into integer vectors. `as_numeric_factor()` already exists, but is memory inefficient for most factors where levels can be integers. 
 

@@ -47,7 +47,7 @@ Its aim is not to create a faster *tidyverse*, i.e., it does not implements all 
 
 ## Namespace and Global Options
 
-*collapse* data manipulation functions familiar to *tidyverse* users include `fselect`, `fgroup_by`, `fsummarise`, `fmutate`, `across`, `frename`, and `fcount`. Other functions like `fsubset`, `ftransform`, and `get_vars` are inspired by base R, while again other functions like `join`, `pivot`, `roworder`, `colorder`, `rowbind`, etc. are inspired by other data manipulation libraries such das *data.table* and *polars*. 
+*collapse* data manipulation functions familiar to *tidyverse* users include `fselect`, `fgroup_by`, `fsummarise`, `fmutate`, `across`, `frename`, and `fcount`. Other functions like `fsubset`, `ftransform`, and `get_vars` are inspired by base R, while again other functions like `join`, `pivot`, `roworder`, `colorder`, `rowbind`, etc. are inspired by other data manipulation libraries such as *data.table* and *polars*. 
 
 By virtue of the f- prefixes, the *collapse* namespace has no conflicts with the *tidyverse*, and these functions can easily be substituted in a *tidyverse* workflow. 
 

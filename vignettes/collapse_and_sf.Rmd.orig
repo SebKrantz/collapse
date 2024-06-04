@@ -1,0 +1,293 @@
+---
+title: "collapse and sf"
+subtitle: "Fast Manipulation of Simple Features Data Frames"
+author: "Sebastian Krantz and Grant McDermott"
+date: "2024-04-19"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+
+vignette: >
+  %\VignetteIndexEntry{collapse and sf}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{css, echo=FALSE}
+pre {
+  max-height: 900px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 900px;
+}
+```
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+
+NMAC <- nchar(system.file("shape/nc.shp", package = "sf")) > 1 # Sys.getenv("NMAC") == "TRUE"
+
+if(NMAC) library(sf)
+library(microbenchmark)
+library(collapse)
+knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
+                      comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
+                      fig.width = 8, fig.height = 5, 
+                      out.width = '100%')
+
+oldopts <- options(width = 100L)
+set.seed(101)
+```
+<!--
+*collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
+
+1. To facilitate complex data transformation, exploration and computing tasks in R.
+2. To help make R code fast, flexible, parsimonious and programmer friendly. 
+-->
+This short vignette focuses on using *collapse* with the popular *sf* package by Edzer Pebesma. It shows that *collapse* supports easy manipulation of *sf* data frames, at computation speeds far above *dplyr*.
+
+*collapse* v1.6.0 added internal support for *sf* data frames by having most essential functions (e.g., `fselect/gv`, `fsubset/ss`, `fgroup_by`, `findex_by`, `qsu`, `descr`, `varying`, `funique`, `roworder`, `rsplit`, `fcompute`, ...) internally handle the geometry column. 
+
+To demonstrate this, we can load a test dataset provided by *sf*:
+
+```{r, eval=NMAC}
+library(collapse)
+library(sf)
+
+nc <- st_read(system.file("shape/nc.shp", package = "sf"), quiet = TRUE)
+options(sf_max_print = 3)
+nc
+```
+
+## Summarising sf Data Frames
+
+Computing summary statistics on *sf* data frames automatically excludes the 'geometry' column:
+
+```{r, eval=NMAC}
+# Which columns have at least 2 non-missing distinct values
+varying(nc) 
+
+# Quick summary stats
+qsu(nc)
+
+# Detailed statistics description of each column
+descr(nc)
+```
+
+
+## Selecting Columns and Subsetting
+
+We can select columns from the *sf* data frame without having to worry about taking along 'geometry':
+
+```{r, eval=NMAC}
+# Selecting a sequence of columns
+fselect(nc, AREA, NAME:FIPSNO)
+
+# Same using standard evaluation (gv is a shorthand for get_vars())
+gv(nc, c("AREA", "NAME", "FIPS", "FIPSNO"))
+```
+
+The same applies to subsetting rows (and columns):
+
+```{r, eval=NMAC}
+# A fast and enhanced version of base::subset
+fsubset(nc, AREA > fmean(AREA), AREA, NAME:FIPSNO)
+
+# A fast version of `[` (where i is used and optionally j)
+ss(nc, 1:10, c("AREA", "NAME", "FIPS", "FIPSNO"))
+```
+
+This is significantly faster than using `[`, `base::subset()`, `dplyr::select()` or `dplyr::filter()`: 
+
+```{r, eval=NMAC}
+library(microbenchmark)
+library(dplyr)
+
+# Selecting columns
+microbenchmark(collapse = fselect(nc, AREA, NAME:FIPSNO), 
+               dplyr = select(nc, AREA, NAME:FIPSNO),
+               collapse2 = gv(nc, c("AREA", "NAME", "FIPS", "FIPSNO")), 
+               sf = nc[c("AREA", "NAME", "FIPS", "FIPSNO")])
+# Subsetting
+microbenchmark(collapse = fsubset(nc, AREA > fmean(AREA), AREA, NAME:FIPSNO), 
+               dplyr = select(nc, AREA, NAME:FIPSNO) |> filter(AREA > fmean(AREA)),
+               collapse2 = ss(nc, 1:10, c("AREA", "NAME", "FIPS", "FIPSNO")), 
+               sf = nc[1:10, c("AREA", "NAME", "FIPS", "FIPSNO")])
+
+```
+
+However, *collapse* functions don't subset the 'agr' attribute on selecting columns, which (if specified) relates columns (attributes) to the geometry, and also don't modify the 'bbox' attribute giving the overall boundaries of a set of geometries when subsetting the *sf* data frame. Keeping the full 'agr' attribute is not problematic for all practical purposes, but not changing 'bbox' upon subsetting may lead to too large margins when plotting the geometries of a subset *sf* data frame. 
+
+One way to to change this is calling `st_make_valid()` on the subset frame; but `st_make_valid()` is very expensive, thus unless the subset frame is very small, it is better to use `[`, `base::subset()` or `dplyr::filter()` in cases where the bounding box size matters. 
+
+## Aggregation and Grouping
+
+The flexibility and speed of `collap()` for aggregation can be used on *sf* data frames. A separate method for *sf* objects was not considered necessary as one can simply aggregate the geometry column using `st_union()`:
+
+```{r, eval=NMAC}
+# Aggregating by variable SID74 using the median for numeric and the mode for categorical columns
+collap(nc, ~ SID74, custom = list(fmedian = is.numeric, 
+                                  fmode = is.character, 
+                                  st_union = "geometry")) # or use is.list to fetch the geometry
+```
+
+*sf* data frames can also be grouped and then aggregated using `fsummarise()`:
+
+```{r, eval=NMAC}
+nc |> fgroup_by(SID74)
+
+nc |> 
+  fgroup_by(SID74) |>
+  fsummarise(AREA_Ag = fsum(AREA), 
+             Perimeter_Ag = fmedian(PERIMETER),
+             geometry = st_union(geometry))
+```
+
+Typically most of the time in aggregation is consumed by `st_union()` so that the speed of *collapse* does not really become visible on most datasets. A faster alternative is to use *geos* (*sf* backend for planar geometries) or *s2* (*sf* backend for spherical geometries) directly:
+
+```{r, eval=NMAC}
+# Using s2 backend: sensible for larger tasks
+nc |> 
+  fmutate(geometry = s2::as_s2_geography(geometry)) |>
+  fgroup_by(SID74) |>
+  fsummarise(AREA_Ag = fsum(AREA), 
+             Perimeter_Ag = fmedian(PERIMETER),
+             geometry = s2::s2_union_agg(geometry)) |>
+  fmutate(geometry = st_as_sfc(geometry))
+```
+
+In general, also upon aggregation with *collapse*, functions `st_as_sfc()`, `st_as_sf()`, or, in the worst case, `st_make_valid()`, may need to be invoked to ensure valid *sf* object output. Functions `collap()` and `fsummarise()` are attribute preserving but do not give special regard to geometry columns. 
+
+One exception that both avoids the high cost of spatial functions in aggregation and any need for ex-post conversion/validation is aggregating spatial panel data over the time-dimension. Such panels can quickly be aggregated using `ffirst()` or `flast()` to aggregate the geometry:
+
+```{r AREA_Ag, eval=NMAC}
+# Creating a panel-dataset by simply duplicating nc for 2 different years
+pnc <- rowbind(`2000` = nc, `2001` = nc, idcol = "Year") |> as_integer_factor()
+pnc 
+
+# Aggregating by NAME, using the last value for all categorical data
+collap(pnc, ~ NAME, fmedian, catFUN = flast, cols = -1L)
+
+# Using fsummarise to aggregate just two variables and the geometry
+pnc_ag <- pnc |> 
+  fgroup_by(NAME) |>
+  fsummarise(AREA_Ag = fsum(AREA), 
+             Perimeter_Ag = fmedian(PERIMETER),
+             geometry = flast(geometry))
+
+# The geometry is still valid... (slt = shorthand for fselect)
+plot(slt(pnc_ag, AREA_Ag))
+
+```
+
+## Indexing
+
+*sf* data frames can also become [*indexed frames*](https://sebkrantz.github.io/collapse/reference/indexing.html) (spatio-temporal panels):
+
+```{r, eval=NMAC}
+pnc <- pnc |> findex_by(CNTY_ID, Year)
+pnc 
+qsu(pnc$AREA)
+settransform(pnc, AREA_diff = fdiff(AREA)) 
+psmat(pnc$AREA_diff) |> head()
+pnc <- unindex(pnc)
+```
+
+## Unique Values, Ordering, Splitting, Binding
+
+Functions `funique()` and `roworder[v]()` ignore the 'geometry' column in determining the unique values / order of rows when applied to *sf* data frames. `rsplit()` can be used to (recursively) split an *sf* data frame into multiple chunks. 
+
+```{r, eval=NMAC}
+# Splitting by SID74
+rsplit(nc, ~ SID74) |> head(2)
+```
+
+The default in `rsplit()` for data frames is `simplify = TRUE`, which, for a single LHS variable, would just split the column-vector. This does not apply to *sf* data frames as the 'geometry' column is always selected as well.
+
+```{r, eval=NMAC}
+# Only splitting Area
+rsplit(nc, AREA ~ SID74) |> head(1)
+
+# For data frames the default simplify = TRUE drops the data frame structure
+rsplit(qDF(nc), AREA ~ SID74) |> head(1)
+```
+
+*sf* data frames can be combined using `rowbind()`, which, by default, preserves the attributes of the first object.
+
+```{r, eval=NMAC}
+# Splitting by each row and recombining
+nc_combined <- nc %>% rsplit(seq_row(.)) %>% rowbind() 
+identical(nc, nc_combined)
+```
+
+## Transformations
+
+For transforming and computing columns, `fmutate()` and `ftransform[v]()` apply as to any other data frame. 
+```{r, eval=NMAC}
+fmutate(nc, gsum_AREA = fsum(AREA, SID74, TRA = "fill")) |> head()
+
+# Same thing, more expensive
+nc |> fgroup_by(SID74) |> fmutate(gsum_AREA = fsum(AREA)) |> fungroup() |> head()
+```
+
+Special attention to *sf* data frames is afforded by `fcompute()`, which can be used to compute new columns dropping existing ones - except for the geometry column and any columns selected through the `keep` argument. 
+
+```{r, eval=NMAC}
+fcompute(nc, scaled_AREA = fscale(AREA), 
+             gsum_AREA = fsum(AREA, SID74, TRA = "fill"), 
+         keep = .c(AREA, SID74))
+```
+
+## Conversion to and from *sf*
+
+The quick converters `qDF()`, `qDT()`, and `qTBL()` can be used to efficiently convert *sf* data frames to standard data frames, *data.table*'s or *tibbles*, and the result can be converted back to the original *sf* data frame using `setAttrib()`, `copyAttrib()` or `copyMostAttrib()`. 
+
+```{r, eval=NMAC}
+library(data.table)
+# Create a data.table on the fly to do an fast grouped rolling mean and back to sf
+qDT(nc)[, list(roll_AREA = frollmean(AREA, 2), geometry), by = SID74] |> copyMostAttrib(nc)
+```
+
+The easiest way to strip a geometry column off an *sf* data frame is via the function `atomic_elem()`, which removes list-like columns and, by default, also the class attribute. For example, we can create a *data.table* without list column using
+
+```{r, eval=NMAC}
+qDT(atomic_elem(nc)) |> head()
+```
+
+This is also handy for other functions such as `join()` and `pivot()`, which are class agnostic like all of *collapse*, but do not have any built-in logic to deal with the *sf* column. 
+
+```{r, eval=NMAC}
+# Use atomic_elem() to strip geometry off y in left join
+identical(nc, join(nc, atomic_elem(nc), overid = 2))
+
+# In pivot: presently need to specify what to do with geometry column
+pivot(nc, c("CNTY_ID", "geometry")) |> head()
+# Or use
+pivot(qDT(atomic_elem(nc)), "CNTY_ID") |> head()
+```
+
+## Support for *units*
+
+Since v2.0.13, *collapse* explicitly supports/preserves *units* objects through dedicated methods that preserve the 'units' class wherever sensible. 
+
+```{r, eval=NMAC}
+nc_dist <- st_centroid(nc) |> st_distance()
+nc_dist[1:3, 1:3]
+
+fmean(nc_dist) |> head()
+fndistinct(nc_dist) |> head()
+```
+
+## Conclusion
+
+*collapse* provides no deep integration with the *sf* ecosystem and cannot perform spatial operations, but offers sufficient features and flexibility to painlessly manipulate *sf* data frames at much greater speeds than *dplyr*. 
+
+This requires a bit of care by the user though to ensure that the returned *sf* objects are valid, especially following aggregation and subsetting. 
+
+
+```{r, echo=FALSE}
+options(oldopts)
+```
+
+
