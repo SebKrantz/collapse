@@ -106,7 +106,8 @@
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+    <p></p>
+<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a numeric vector, matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').</p></dd>
   <dt id="arg-g">g<a class="anchor" aria-label="anchor" href="#arg-g"></a></dt>
 <dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, or atomic vector / list of vectors (internally grouped with <code><a href="group.html">group</a></code>) used to group <code>x</code>.</p></dd>
@@ -145,7 +146,7 @@
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p><code>fbetween</code>/<code>B</code> returns <code>x</code> with every element replaced by its (groupwise) mean (<code>xi.</code>). Missing values are preserved if <code>fill = FALSE</code> (the default). <code>fwithin/W</code> returns <code>x</code> where every element was subtracted its (groupwise) mean (<code>x - theta * xi. + mean</code> or, if <code>mean = "overall.mean"</code>, <code>x - theta * xi. + theta * x..</code>). See Details.</p>
+    <p><code>fbetween</code>/<code>B</code> returns <code>x</code> with every element replaced by its (groupwise) mean (<code>xi.</code>). Missing values are preserved if <code>fill = FALSE</code> (the default). <code>fwithin/W</code> returns <code>x</code> where every element was subtracted its (groupwise) mean (<code>x - theta * xi. + mean</code> or, if <code>mean = "overall.mean"</code>, <code>x - theta * xi. + theta * x..</code>). See Details.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -318,7 +319,7 @@
 <span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"within"</span><span class="op">)</span>   <span class="co"># "Proof"..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x130291070&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x11ae6ac38&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     carb </span>
@@ -408,7 +409,7 @@
 <span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x130291070&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x11ae6ac38&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)        carb </span>

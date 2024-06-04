@@ -37,7 +37,8 @@
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+    <p></p>
+<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a data frame or list-like object, including 'grouped_df' or 'indexed_frame'. Atomic vectors or matrices can also be passed, but will be sent through <code><a href="quick-conversion.html">qDF</a></code>.</p></dd>
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>for <code>fcount</code>: names or sequences of columns to count cases by - passed to <code><a href="select_replace_vars.html">fselect</a></code>. For <code>fcountv</code>: further arguments passed to <code><a href="GRP.html">GRP</a></code> (such as <code>decreasing</code>, <code>na.last</code>, <code>method</code>, <code>effect</code> etc.). Leaving this empty will count on all columns.</p></dd>
@@ -54,7 +55,7 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>If <code>x</code> is a list, an object of the same type as <code>x</code> with a column (<code>name</code>) added at the end giving the count. Otherwise, if <code>x</code> is atomic, a data frame returned from <code><a href="quick-conversion.html">qDF(x)</a></code> with the count column added. By default (<code>add = FALSE</code>) only the unique rows of <code>x</code> of the columns used for counting are returned.</p>
+    <p>If <code>x</code> is a list, an object of the same type as <code>x</code> with a column (<code>name</code>) added at the end giving the count. Otherwise, if <code>x</code> is atomic, a data frame returned from <code><a href="quick-conversion.html">qDF(x)</a></code> with the count column added. By default (<code>add = FALSE</code>) only the unique rows of <code>x</code> of the columns used for counting are returned.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

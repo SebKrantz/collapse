@@ -36,7 +36,8 @@
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg--cols">.cols<a class="anchor" aria-label="anchor" href="#arg--cols"></a></dt>
+    <p></p>
+<dl><dt id="arg--cols">.cols<a class="anchor" aria-label="anchor" href="#arg--cols"></a></dt>
 <dd><p>select columns using column names and expressions (e.g. <code>a:b</code> or <code>c(a, b, c:f)</code>), column indices, logical vectors, or functions yielding a logical value e.g. <code>is.numeric</code>. <code>NULL</code> applies functions to all columns except for grouping columns.</p></dd>
   <dt id="arg--fns">.fns<a class="anchor" aria-label="anchor" href="#arg--fns"></a></dt>
 <dd><p>A function, character vector of functions or list of functions. Vectors / lists can be named to yield alternative names in the result (see <code>.names</code>). This argument is evaluated inside <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute()</a></code>, and the content (not the names of vectors/lists) is checked against <code>.FAST_FUN</code> and <code>.OPERATOR_FUN</code>. Matching functions receive vectorized execution, other functions are applied to the data in a standard way.</p></dd>

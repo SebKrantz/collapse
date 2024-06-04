@@ -33,7 +33,8 @@
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+    <p></p>
+<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a numeric vector or matrix. Data frames/lists can be passed but will be converted to matrix using <code><a href="quick-conversion.html">qM</a></code>. Non-numeric (double) inputs will be coerced.</p></dd>
   <dt id="arg-v">v<a class="anchor" aria-label="anchor" href="#arg-v"></a></dt>
 <dd><p>an (optional) numeric (double) vector such that <code>length(v) == NCOL(x)</code>, to compute distances with (the rows of) <code>x</code>. Other vector types will be coerced.</p></dd>
@@ -46,7 +47,7 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p>If <code>v = NULL</code>, a full lower-triangular distance matrix between the rows of <code>x</code> is computed and returned as a 'dist' object (all methods apply, see <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></code>). Otherwise, a numeric vector of distances of each row of <code>x</code> with <code>v</code> is returned. See Examples.</p>
+    <p>If <code>v = NULL</code>, a full lower-triangular distance matrix between the rows of <code>x</code> is computed and returned as a 'dist' object (all methods apply, see <code><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></code>). Otherwise, a numeric vector of distances of each row of <code>x</code> with <code>v</code> is returned. See Examples.</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
@@ -96,14 +97,14 @@
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min        lq      mean    median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y)  926.723  934.1440  967.5541  966.8005  992.979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2)  925.329  936.9525  963.6890  957.9855  984.246</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 2641.671 2741.2600 3507.3897 2844.1905 2984.759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min        lq      mean    median        uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y)  926.313  928.0145  944.4104  933.0575  942.0775</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2)  925.042  927.0510  935.9812  928.5065  937.1575</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 2292.474 2678.8170 3849.6536 2738.1440 2923.3000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1127.090   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1045.623   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  19330.967   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1150.542   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1007.329   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  21095.812   100</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

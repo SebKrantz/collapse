@@ -65,7 +65,8 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
     </div>
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt id="arg-x">X<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+    <p></p>
+<dl><dt id="arg-x">X<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a vector, factor, matrix, higher-dimensional array, data frame or list. <code>mctl</code> and <code>mrtl</code> only accept matrices, <code>as_numeric_factor</code>, <code>as_integer_factor</code> and <code>as_character_factor</code> only accept factors, data frames or lists.</p></dd>
   <dt id="arg-row-names-col">row.names.col<a class="anchor" aria-label="anchor" href="#arg-row-names-col"></a></dt>
 <dd><p>can be used to add an column saving names or row.names when converting objects to data frame using <code>qDF/qDT/qTBL</code>. <code>TRUE</code> will add a column <code>"row.names"</code>, or you can supply a name e.g. <code>row.names.col = "variable"</code>. With <code>qM</code>, the argument has the opposite meaning, and can be used to select one or more columns in a data frame/list which will be used to create the rownames of the matrix e.g. <code>qM(iris, row.names.col = "Species")</code>. In this case the column(s) can be specified using names, indices, a logical vector or a selector function. See Examples.</p></dd>
@@ -90,17 +91,7 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-<p><code>qDF</code> - returns a data.frame<br></p>
-<p><code>qDT</code> - returns a <em>data.table</em><br></p>
-<p><code>qTBL</code> - returns a <em>tibble</em><br></p>
-<p><code>qM</code> - returns a matrix<br></p>
-<p><code>mctl</code>, <code>mrtl</code> - return a list, data frame or <em>data.table</em></p>
-<p></p>
-<p><br></p>
-<p><code>qF</code> - returns a factor<br></p>
-<p><code>as_numeric_factor</code> - returns X with factors converted to numeric (double) variables<br></p>
-<p><code>as_integer_factor</code> - returns X with factors converted to integer variables<br></p>
-<p><code>as_character_factor</code> - returns X with factors converted to character variables</p>
+    <p><code>qDF</code> - returns a data.frame<br><code>qDT</code> - returns a <em>data.table</em><br><code>qTBL</code> - returns a <em>tibble</em><br><code>qM</code> - returns a matrix<br><code>mctl</code>, <code>mrtl</code> - return a list, data frame or <em>data.table</em> <br><code>qF</code> - returns a factor<br><code>as_numeric_factor</code> - returns X with factors converted to numeric (double) variables<br><code>as_integer_factor</code> - returns X with factors converted to integer variables<br><code>as_character_factor</code> - returns X with factors converted to character variables</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
