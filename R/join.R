@@ -136,7 +136,7 @@ join <- function(x, y,
         "m:m" = paste0(signif(nx / attr(mi, "N.distinct"), 3), ":", signif(ny / attr(mi, "N.distinct"), 3)))
     }
     if(rjoin) {
-      validate <- paste(strsplit(validate, ":", TRUE)[[1L]][2:1], collapse = ":")
+      if(multiple) validate <- paste(strsplit(validate, ":", TRUE)[[1L]][2:1], collapse = ":")
       tmp <- ystat
       ystat <- xstat
       xstat <- tmp
