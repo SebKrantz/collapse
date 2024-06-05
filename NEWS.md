@@ -2,7 +2,7 @@
 
 * `pivot()` has new arguments `FUN = "last"` and `FUN.args = NULL`, allowing wide and recast pivots with aggregation (default last value as before). `FUN` currently supports a single function returning a scalar value. *Fast Statistical Functions* receive vectorized execution. `FUN.args` can be used to supply a list of function arguments, including data-length arguments such as weights. There are also a couple of internal functions callable using function strings: `"first"`, `"last"`, `"count"`, `"sum"`, `"mean"`, `"min"`, or `"max"`. These are built into the reshaping C-code and thus extremely fast. Thanks @AdrianAntico for the request (#582).
 
-* `join()` now provides enhanced verbosity, indicating the (approximate) order of the join between the two tables, e.g.
+* `join()` now provides enhanced verbosity, indicating the average order of the join between the two tables, e.g.
   ``` r
   join(data.frame(id = c(1, 2, 2, 4)), data.frame(id = c(rep(1,4), 2:3)))
   #> left join: x[id] 3/4 (75%) <1.5:1st> y[id] 2/6 (33.3%)

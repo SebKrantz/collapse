@@ -107,6 +107,7 @@ join <- function(x, y,
     m <- multi_match(m, g)
     if(is.list(m)) {
       multiple <- 2L
+      # TODO: Optimize if drop.dup.cols
       if(rjoin) y <- .Call(C_subsetDT, y, m[[1L]], seq_along(y), FALSE)
       else x <- .Call(C_subsetDT, x, m[[1L]], seq_along(x), FALSE)
       m <- m[[2L]]
@@ -136,15 +137,15 @@ join <- function(x, y,
     if(multiple) {
       validate <- switch(validate,
         "1:1" = "1:1",
-        "1:m" = paste0("1:", signif((if(rjoin) nx else ny) / attr(mi, "N.distinct"), 3)),
-        "m:1" = paste0(signif((if(rjoin) ny else nx) / attr(mi, "N.distinct"), 3), ":1"),
-        "m:m" = paste(signif(c(nx, ny)[if(rjoin) 2:1 else 1:2] / attr(mi, "N.distinct"), 3), collapse = ":"))
+        "1:m" = paste0("1:", round((if(rjoin) nx else ny) / attr(mi, "N.distinct"), 3)),
+        "m:1" = paste0(round((if(rjoin) ny else nx) / attr(mi, "N.distinct"), 3), ":1"),
+        "m:m" = paste(round(c(nx, ny)[if(rjoin) 2:1 else 1:2] / attr(mi, "N.distinct"), 3), collapse = ":"))
     } else {
       validate <- switch(validate,
         "1:1" = "1:1",
-        "1:m" = paste0("1:", if(rjoin) signif(nx / ny, 3) else "1st"),
-        "m:1" = paste0(if(rjoin) "1st" else signif(nx / ny, 3), ":1"),
-        "m:m" = paste(c(signif(nx / ny, 3), "1st")[if(rjoin) 2:1 else 1:2], collapse = ":"))
+        "1:m" = paste0("1:", if(rjoin) round(nx / ny, 3) else "1st"),
+        "m:1" = paste0(if(rjoin) "1st" else round(nx / ny, 3), ":1"),
+        "m:m" = paste(c(round(nx / ny, 3), "1st")[if(rjoin) 2:1 else 1:2], collapse = ":"))
     }
     cat(how, " join: ",
         x_name, "[", paste(cin_x, collapse = ", "), "] ",
