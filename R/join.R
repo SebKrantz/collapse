@@ -128,18 +128,23 @@ join <- function(x, y,
     }
     xstat <- paste0(nx, "/", Nx, " (", signif(nx/Nx*100, 3), "%)")
     ystat <- paste0(ny, "/", Ny, " (", signif(ny/Ny*100, 3), "%)")
-    if(multiple) {
-      validate <- switch(validate,
-        "1:1" = "1:1",
-        "1:m" = paste0("1:", signif(ny / attr(mi, "N.distinct"), 3)),
-        "m:1" = paste0(signif(nx / attr(mi, "N.distinct"), 3), ":1"),
-        "m:m" = paste0(signif(nx / attr(mi, "N.distinct"), 3), ":", signif(ny / attr(mi, "N.distinct"), 3)))
-    }
     if(rjoin) {
-      if(multiple) validate <- paste(strsplit(validate, ":", TRUE)[[1L]][2:1], collapse = ":")
       tmp <- ystat
       ystat <- xstat
       xstat <- tmp
+    }
+    if(multiple) {
+      validate <- switch(validate,
+        "1:1" = "1:1",
+        "1:m" = paste0("1:", signif((if(rjoin) nx else ny) / attr(mi, "N.distinct"), 3)),
+        "m:1" = paste0(signif((if(rjoin) ny else nx) / attr(mi, "N.distinct"), 3), ":1"),
+        "m:m" = paste(signif(c(nx, ny)[if(rjoin) 2:1 else 1:2] / attr(mi, "N.distinct"), 3), collapse = ":"))
+    } else {
+      validate <- switch(validate,
+        "1:1" = "1:1",
+        "1:m" = paste0("1:", if(rjoin) signif(nx / ny, 3) else "1st"),
+        "m:1" = paste0(if(rjoin) "1st" else signif(nx / ny, 3), ":1"),
+        "m:m" = paste(c(signif(nx / ny, 3), "1st")[if(rjoin) 2:1 else 1:2], collapse = ":"))
     }
     cat(how, " join: ",
         x_name, "[", paste(cin_x, collapse = ", "), "] ",
