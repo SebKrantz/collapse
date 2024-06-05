@@ -60,7 +60,7 @@
   <dt id="arg-validate">validate<a class="anchor" aria-label="anchor" href="#arg-validate"></a></dt>
 <dd><p>character. (Optional) check if join is of specified type. One of <code>"1:1"</code>, <code>"1:m"</code>, <code>"m:1"</code> or <code>"m:m"</code>. The default <code>"m:m"</code> does not perform any checks. Checks are done before the actual join step and failure results in an error. <em>Note</em> that this argument does not affect the result, it only triggers a check.</p></dd>
   <dt id="arg-multiple">multiple<a class="anchor" aria-label="anchor" href="#arg-multiple"></a></dt>
-<dd><p>logical. Handling of rows in <code>x</code> with multiple matches in <code>y</code>. The default <code>FALSE</code> takes the first match in <code>y</code>. <code>TRUE</code> returns every match in <code>y</code> (a full cartesian product), increasing the size of the joined table. If <code>verbose &gt; 0</code>, the approximate order of the join will be displayed. See Details.</p></dd>
+<dd><p>logical. Handling of rows in <code>x</code> with multiple matches in <code>y</code>. The default <code>FALSE</code> takes the first match in <code>y</code>. <code>TRUE</code> returns every match in <code>y</code> (a full cartesian product), increasing the size of the joined table.</p></dd>
   <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
 <dd><p>logical. <code>TRUE</code> implements a sort-merge-join: a completely separate join algorithm that sorts both datasets on the join columns using <code><a href="radixorder.html">radixorder</a></code> and then matches the rows without hashing. <em>Note</em> that in this case the result will be sorted by the join columns, whereas <code>sort = FALSE</code> preserves the order of rows in <code>x</code>.</p></dd>
   <dt id="arg-keep-col-order">keep.col.order<a class="anchor" aria-label="anchor" href="#arg-keep-col-order"></a></dt>
@@ -78,8 +78,9 @@
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>If <code>verbose &gt; 0</code>, <code>join</code> prints a compact summary of the join operation using <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></code>. If the names of <code>x</code> and <code>y</code> can be extracted (i.e., if <code>as.character(substitute(x))</code> yields a single string) they will be displayed (otherwise 'x' and 'y' are used) followed by the respective join keys in square brackets. This is followed by a summary of the records used from each table. If <code>multiple = FALSE</code>, only the first matches from <code>y</code> are used and counted here. Also, if <code>multiple = FALSE</code>, the <code>validate</code> setting is simply printed between the two tables - by default <code>"&lt;m:m&gt;"</code>.</p>
-<p>If <code>multiple = TRUE</code>, <code>join</code> performs a full cartesian product matching every value in <code>x</code> to every matching value in <code>y</code>. This can considerably increase the size of the table, and no memory checks are performed (your system will simply run out of memory; usually this should not terminate R). If <code>verbose &gt; 0</code>, <code>join</code> will also determine the approximate order of the join as the number of records used from each table divided by the number of unique matches, and display it between the two tables at up to 3 significant digits. For example <code>"&lt;4:1.5&gt;"</code> means that on average 4 records from <code>x</code> match 1.5 records from <code>y</code>, implying on average <code>4*1.5 = 6</code> records generated per unique match. <em>Note</em> that an order of '1' on either table must not imply that the key is unique as this value is generated from <code>signif(value, 3)</code>. To be sure about a keys uniqueness use the <code>validate</code> argument.</p>
+    <p>If <code>verbose &gt; 0</code>, <code>join</code> prints a compact summary of the join operation using <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></code>. If the names of <code>x</code> and <code>y</code> can be extracted (if <code>as.character(substitute(x))</code> yields a single string) they will be displayed (otherwise 'x' and 'y' are used) followed by the respective join keys in brackets. This is followed by a summary of the records used from each table. If <code>multiple = FALSE</code>, only the first matches from <code>y</code> are used and counted here (or the first matches of <code>x</code> if <code>how = "right"</code>). <em>Note</em> that if <code>how = "full"</code> any further matches are simply appended to the results table, thus it may make more sense to use <code>multiple = TRUE</code> with the full join when suspecting multiple matches.</p>
+<p>If <code>multiple = TRUE</code>, <code>join</code> performs a full cartesian product matching every key in <code>x</code> to every matching key in <code>y</code>. This can considerably increase the size of the resulting table. No memory checks are performed (your system will simply run out of memory; usually this should not terminate R).</p>
+<p>In both cases, <code>join</code> will also determine the approximate order of the join as the number of records used from each table divided by the number of unique matches and display it between the two tables at up to 3 significant digits. For example <code>"&lt;4:1.5&gt;"</code> means that on average 4 records from <code>x</code> match 1.5 records from <code>y</code>, implying on average <code>4*1.5 = 6</code> records generated per unique match. If <code>multiple = FALSE</code> <code>"1st"</code> will be displayed for the using table (<code>y</code> unless <code>how = "right"</code>), indicating that there could be multiple matches but only the first is retained. <em>Note</em> that an order of '1' on either table must not imply that the key is unique as this value is generated from <code>signif(v, 3)</code>. To be sure about a keys uniqueness employ the <code>validate</code> argument.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -107,36 +108,36 @@
 <span class="r-in"><span><span class="co"># Different types of joins</span></span></span>
 <span class="r-in"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l"</span>,<span class="st">"i"</span>,<span class="st">"r"</span>,<span class="st">"f"</span>,<span class="st">"s"</span>,<span class="st">"a"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="fu">join</span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, how <span class="op">=</span> <span class="va">i</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> left join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> left join: df1[id1, id2] 3/4 (75%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age salary      dept</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35  60000        IT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28     NA      &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50  70000     Sales</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> inner join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> inner join: df1[id1, id2] 3/4 (75%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age salary      dept</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35  60000        IT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   2   b  Bob  42  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   3   c Carl  50  70000     Sales</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> right join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> right join: df1[id1, id2] 3/4 (75%) &lt;1st:1&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age salary      dept</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35  60000        IT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   2   b  Bob  42  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   3   c Carl  50  70000     Sales</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   e &lt;NA&gt;  NA  80000        IT</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id1, id2] 3/4 (75%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age salary      dept</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35  60000        IT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28     NA      &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50  70000     Sales</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   3   e &lt;NA&gt;  NA  80000        IT</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> semi join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> semi join: df1[id1, id2] 3/4 (75%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   2   b  Bob  42</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   3   c Carl  50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> anti join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> anti join: df1[id1, id2] 3/4 (75%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   b Jane  28</span>
 <span class="r-in"><span></span></span>
@@ -187,7 +188,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Adding join column: useful esp. for full join</span></span></span>
 <span class="r-in"><span><span class="fu">join</span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, how <span class="op">=</span> <span class="st">"f"</span>, column <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id1, id2] 3/4 (75%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age salary      dept   .join</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35  60000        IT matched</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28     NA      &lt;NA&gt;     df1</span>
@@ -196,7 +197,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5   3   e &lt;NA&gt;  NA  80000        IT     df2</span>
 <span class="r-in"><span><span class="co"># Custom column + rearranging</span></span></span>
 <span class="r-in"><span><span class="fu">join</span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, how <span class="op">=</span> <span class="st">"f"</span>, column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"join"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"x_y"</span><span class="op">)</span><span class="op">)</span>, keep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id1, id2] 3/4 (75%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 join name age salary      dept</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a  x_y John  35  60000        IT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b    x Jane  28     NA      &lt;NA&gt;</span>
@@ -206,7 +207,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Attaching match attribute</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="fu">join</span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> left join: df1[id1, id2] 3/4 (75%) &lt;m:m&gt; df2[id1, id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> left join: df1[id1, id2] 3/4 (75%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 'data.frame':	4 obs. of  6 variables:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ id1   : num  1 1 2 3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  $ id2   : chr  "a" "b" "b" "c"</span>
