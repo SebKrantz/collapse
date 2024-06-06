@@ -80,7 +80,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>If <code>verbose &gt; 0</code>, <code>join</code> prints a compact summary of the join operation using <code><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></code>. If the names of <code>x</code> and <code>y</code> can be extracted (if <code>as.character(substitute(x))</code> yields a single string) they will be displayed (otherwise 'x' and 'y' are used) followed by the respective join keys in brackets. This is followed by a summary of the records used from each table. If <code>multiple = FALSE</code>, only the first matches from <code>y</code> are used and counted here (or the first matches of <code>x</code> if <code>how = "right"</code>). <em>Note</em> that if <code>how = "full"</code> any further matches are simply appended to the results table, thus it may make more sense to use <code>multiple = TRUE</code> with the full join when suspecting multiple matches.</p>
 <p>If <code>multiple = TRUE</code>, <code>join</code> performs a full cartesian product matching every key in <code>x</code> to every matching key in <code>y</code>. This can considerably increase the size of the resulting table. No memory checks are performed (your system will simply run out of memory; usually this should not terminate R).</p>
-<p>In both cases, <code>join</code> will also determine the average order of the join as the number of records used from each table divided by the number of unique matches and display it between the two tables at up to 3 digits. For example <code>"&lt;4:1.5&gt;"</code> means that on average 4 records from <code>x</code> match 1.5 records from <code>y</code>, implying on average <code>4*1.5 = 6</code> records generated per unique match. If <code>multiple = FALSE</code> <code>"1st"</code> will be displayed for the using table (<code>y</code> unless <code>how = "right"</code>), indicating that there could be multiple matches but only the first is retained. <em>Note</em> that an order of '1' on either table must not imply that the key is unique as this value is generated from <code>round(v, 3)</code>. To be sure about a keys uniqueness employ the <code>validate</code> argument.</p>
+<p>In both cases, <code>join</code> will also determine the average order of the join as the number of records used from each table divided by the number of unique matches and display it between the two tables at up to 2 digits. For example <code>"&lt;4:1.5&gt;"</code> means that on average 4 records from <code>x</code> match 1.5 records from <code>y</code>, implying on average <code>4*1.5 = 6</code> records generated per unique match. If <code>multiple = FALSE</code> <code>"1st"</code> will be displayed for the using table (<code>y</code> unless <code>how = "right"</code>), indicating that there could be multiple matches but only the first is retained. <em>Note</em> that an order of '1' on either table must not imply that the key is unique as this value is generated from <code>round(v, 2)</code>. To be sure about a keys uniqueness employ the <code>validate</code> argument.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -144,29 +144,21 @@
 <span class="r-in"><span><span class="co"># With multiple matches</span></span></span>
 <span class="r-in"><span><span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l"</span>,<span class="st">"i"</span>,<span class="st">"r"</span>,<span class="st">"f"</span>,<span class="st">"s"</span>,<span class="st">"a"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="fu">join</span><span class="op">(</span><span class="va">df1</span>, <span class="va">df2</span>, on <span class="op">=</span> <span class="st">"id2"</span>, how <span class="op">=</span> <span class="va">i</span>, multiple <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> left join: df1[id2] 4/4 (100%) &lt;1.333:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> left join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28       2  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> inner join: df1[id2] 4/4 (100%) &lt;1.333:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> inner join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28       2  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> right join: df1[id2] 4/4 (100%) &lt;1.333:1&gt; df2[id2] 3/4 (75%)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28       2  55000 Marketing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  NA   e &lt;NA&gt;  NA       3  80000        IT</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id2] 4/4 (100%) &lt;1.333:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> right join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
@@ -174,14 +166,22 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  NA   e &lt;NA&gt;  NA       3  80000        IT</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> semi join: df1[id2] 4/4 (100%) &lt;1.333:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> full join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age id1_df2 salary      dept</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35       1  60000        IT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42       2  55000 Marketing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50       3  70000     Sales</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  NA   e &lt;NA&gt;  NA       3  80000        IT</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> semi join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id1 id2 name age</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   1   a John  35</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2   1   b Jane  28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3   2   b  Bob  42</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4   3   c Carl  50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> anti join: df1[id2] 4/4 (100%) &lt;1.333:1&gt; df2[id2] 3/4 (75%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> anti join: df1[id2] 4/4 (100%) &lt;1.33:1&gt; df2[id2] 3/4 (75%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> duplicate columns: id1 =&gt; renamed using suffix '_df2' for y</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] id1  id2  name age </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;0 rows&gt; (or 0-length row.names)</span>
