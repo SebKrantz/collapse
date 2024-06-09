@@ -23,7 +23,7 @@
   #> 7  4
   ```
   
-  * In `collap()`, with multiple functions passed to `FUN` or `catFUN` and `return = "long"`, the `"Function"` column is now generated as a factor variable instead of character (which is more efficient). 
+* In `collap()`, with multiple functions passed to `FUN` or `catFUN` and `return = "long"`, the `"Function"` column is now generated as a factor variable instead of character (which is more efficient). 
 
 # collapse 2.0.14
 
