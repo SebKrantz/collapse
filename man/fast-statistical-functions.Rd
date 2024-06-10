@@ -7,7 +7,7 @@
 \description{
 With \code{\link{fsum}}, \code{\link{fprod}}, \code{\link{fmean}}, \code{\link{fmedian}}, \code{\link{fmode}}, \code{\link{fvar}}, \code{\link{fsd}}, \code{\link{fmin}}, \code{\link{fmax}}, \code{\link{fnth}}, \code{\link{ffirst}}, \code{\link{flast}}, \code{\link{fnobs}} and \code{\link{fndistinct}}, \emph{collapse} presents a coherent set of extremely fast and flexible statistical functions (S3 generics) to perform column-wise, grouped and weighted computations on vectors, matrices and data frames, with special support for grouped data frames / tibbles (\emph{dplyr}) and \emph{data.table}'s.
 }
-\section{Usage}{\preformatted{
+\section{Usage}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{
 ## All functions (FUN) follow a common syntax in 4 methods:
 FUN(x, ...)
 
@@ -27,7 +27,7 @@ FUN(x, g = NULL, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
 FUN(x, [w = NULL,] TRA = NULL, [na.rm = TRUE,]
     use.g.names = FALSE, keep.group_vars = TRUE,
     [keep.w = TRUE,] [stub = TRUE,] [nthreads = 1L,] ...)
-}
+}\if{html}{\out{</div>}}
 }
 \section{Arguments}{
 \tabular{lll}{
@@ -75,7 +75,7 @@ Please see the documentation of individual functions.
 \seealso{
 \link[=collapse-documentation]{Collapse Overview}, \link[=data-transformations]{Data Transformations}, \link[=time-series-panel-series]{Time Series and Panel Series}
 }
-\section{Examples}{\preformatted{
+\section{Examples}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{
 ## default vector method
 mpg <- mtcars$mpg
 fsum(mpg)                         # Simple sum
@@ -106,7 +106,7 @@ fmode(wlddev, wlddev$income)             # Grouped statistical modes ..
 m <- qM(mtcars)
 fsum(m)
 fsum(m, g) # ..
-\donttest{ % The tidyverse regularly causes havoc to CRAN tests in other packages, therefore this is not tested
+
 ## method for grouped data frames - created with dplyr::group_by or fgroup_by
 library(dplyr)
 mtcars |> group_by(cyl,vs,am) |> select(mpg,carb) |> fsum()
@@ -114,10 +114,9 @@ mtcars |> fgroup_by(cyl,vs,am) |> fselect(mpg,carb) |> fsum() # equivalent and f
 mtcars |> fgroup_by(cyl,vs,am) |> fsum(TRA = "\%")
 mtcars |> fgroup_by(cyl,vs,am) |> fmean(hp)         # weighted grouped mean, save sum of weights
 mtcars |> fgroup_by(cyl,vs,am) |> fmean(hp, keep.group_vars = FALSE)
+}\if{html}{\out{</div>}}
 }
-}
-}
-\section{Benchmark}{\preformatted{
+\section{Benchmark}{\if{html}{\out{<div class="sourceCode r">}}\preformatted{
 ## This compares fsum with data.table (2 threads) and base::rowsum
 # Starting with small data
 mtcDT <- qDT(mtcars)
@@ -128,10 +127,10 @@ microbenchmark(mtcDT[, lapply(.SD, sum), by = f],
                rowsum(mtcDT, f, reorder = FALSE),
                fsum(mtcDT, f, na.rm = FALSE), unit = "relative")
 
-                              expr        min         lq      mean    median        uq       max neval cld
- mtcDT[, lapply(.SD, sum), by = f] 145.436928 123.542134 88.681111 98.336378 71.880479 85.217726   100   c
- rowsum(mtcDT, f, reorder = FALSE)   2.833333   2.798203  2.489064  2.937889  2.425724  2.181173   100  b
-     fsum(mtcDT, f, na.rm = FALSE)   1.000000   1.000000  1.000000  1.000000  1.000000  1.000000   100 a
+#                              expr        min         lq      mean    median        uq       max neval cld
+# mtcDT[, lapply(.SD, sum), by = f] 145.436928 123.542134 88.681111 98.336378 71.880479 85.217726   100   c
+# rowsum(mtcDT, f, reorder = FALSE)   2.833333   2.798203  2.489064  2.937889  2.425724  2.181173   100  b
+#     fsum(mtcDT, f, na.rm = FALSE)   1.000000   1.000000  1.000000  1.000000  1.000000  1.000000   100 a
 
 # Now larger data
 tdata <- qDT(replicate(100, rnorm(1e5), simplify = FALSE)) # 100 columns with 100.000 obs
@@ -141,11 +140,11 @@ microbenchmark(tdata[, lapply(.SD, sum), by = f],
                rowsum(tdata, f, reorder = FALSE),
                fsum(tdata, f, na.rm = FALSE), unit = "relative")
 
-                              expr      min       lq     mean   median       uq       max neval cld
- tdata[, lapply(.SD, sum), by = f] 2.646992 2.975489 2.834771 3.081313 3.120070 1.2766475   100   c
- rowsum(tdata, f, reorder = FALSE) 1.747567 1.753313 1.629036 1.758043 1.839348 0.2720937   100  b
-     fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000   100 a
-}
+#                              expr      min       lq     mean   median       uq       max neval cld
+# tdata[, lapply(.SD, sum), by = f] 2.646992 2.975489 2.834771 3.081313 3.120070 1.2766475   100   c
+# rowsum(tdata, f, reorder = FALSE) 1.747567 1.753313 1.629036 1.758043 1.839348 0.2720937   100  b
+#     fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000 1.0000000   100 a
+}\if{html}{\out{</div>}}
 }
 
 \keyword{univar}

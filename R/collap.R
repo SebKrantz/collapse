@@ -79,6 +79,14 @@ applyfuns_internal <- function(data, by, FUN, fFUN, parallel, cores, ...) {
   return(list(BY.data.frame(data, by, FUN, ..., use.g.names = FALSE, reorder = FALSE, return = "data.frame"))) # return(list(lapply(data, copysplaplfun, by, FUN, ...)))
 }
 
+rbindlist_factor <- function(l, idcol = "Function") {
+  nam <- names(l)
+  names(l) <- NULL
+  res <- .Call(C_rbindlist, l, TRUE, TRUE, idcol)
+  attr(res[[1L]], "levels") <- if (length(nam)) nam else as.character(seq_along(l))
+  oldClass(res[[1L]]) <- "factor"
+  res
+}
 
 
 # NOTE: CUSTOM SEPARATOR doesn't work because of unlist() !
@@ -284,8 +292,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
           condalcSA(c(res[[1L]], e), ax, DTl) }))
       } else {
         if(return != 4L) {
-          res <- if(!keep.by) .Call(C_rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
-            .Call(C_rbindlist, lapply(res[-1L], function(e) c(res[[1L]], e)), TRUE, TRUE, "Function")
+          if(keep.by) res <- lapply(res[-1L], function(e) c(res[[1L]], e))
         } else {
           if(!ncustoml || !(nul && nnul)) stop("long_dupl is only meaningful for aggregations with both numeric and categorical data, and multiple functions used for only one of the two data types!")
           mFUN <- length(FUN) > 1L
@@ -295,8 +302,8 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
               lapply(res[-nid], function(e) c(res[[nid]], e))
           } else res <- if(mFUN) lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], e, res[[nid]])) else
             lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
-          res <- .Call(C_rbindlist, res, FALSE, FALSE, "Function")
         }
+        res <- rbindlist_factor(res)
         if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu)) else c(1L, o + 1L)
       }
     # } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
@@ -475,8 +482,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
           condalcSA(c(res[[1L]], e), ax, DTl) }))
       } else {
         if(return != 4L) {
-          res <- if(!keep.by) .Call(C_rbindlist, res, TRUE, TRUE, "Function") else # data.table:::Crbindlist
-            .Call(C_rbindlist, lapply(res[-1L], function(e) c(res[[1L]], e)), TRUE, TRUE, "Function")
+          if(keep.by) res <- lapply(res[-1L], function(e) c(res[[1L]], e))
         } else {
           if(!ncustoml || !(nul && nnul)) stop("long_dupl is only meaningful for aggregations with both numeric and categorical data, and multiple functions used for only one of the two data types!")
           mFUN <- length(FUN) > 1L
@@ -486,8 +492,8 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
               lapply(res[-nid], function(e) c(res[[nid]], e))
           } else res <- if(mFUN) lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], e, res[[nid]])) else
             lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
-          res <- .Call(C_rbindlist, res, FALSE, FALSE, "Function")
         }
+        res <- rbindlist_factor(res)
         if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(!keep.by) NULL else numby, nu, nnu)) else c(1L, o + 1L)
       }
     # } else message("return options other than 'wide' are only meaningful if multiple functions are used!")

@@ -4,7 +4,7 @@
 \alias{flm.formula}
 
 \title{
-Fast (Weighted) Linear Model Fitting % Sparse,
+Fast (Weighted) Linear Model Fitting
 }
 \description{
 \code{flm} is a fast linear model command that (by default) only returns a coefficient matrix. 6 different efficient fitting methods are implemented: 4 using base R linear algebra, and 2 utilizing the \emph{RcppArmadillo} and \emph{RcppEigen} packages. The function itself only has an overhead of 5-10 microseconds, and is thus well suited as a bootstrap workhorse.
@@ -12,12 +12,11 @@ Fast (Weighted) Linear Model Fitting % Sparse,
 \usage{
 flm(...)  # Internal method dispatch: default if is.atomic(..1)
 
-\method{flm}{default}(y, X, w = NULL, add.icpt = FALSE, return.raw = FALSE, % sparse = FALSE
+\method{flm}{default}(y, X, w = NULL, add.icpt = FALSE, return.raw = FALSE,
     method = c("lm", "solve", "qr", "arma", "chol", "eigen"),
     eigen.method = 3L, ...)
 
 \method{flm}{formula}(formula, data = NULL, weights = NULL, add.icpt = TRUE, ...)
-
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
