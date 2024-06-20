@@ -341,7 +341,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnthrea
   } else {
     if(l != length(w)) error("length(w) must match length(x)");
     if(TYPEOF(w) != REALSXP) {
-      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weigths must be double or integer");
+      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weights must be double or integer");
       w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
     }
     if(tx != REALSXP) {
@@ -446,7 +446,7 @@ SEXP fsummC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
   } else {
     if(l != length(w)) error("length(w) must match nrow(x)");
     if(TYPEOF(w) != REALSXP) {
-      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weigths must be double or integer");
+      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weights must be double or integer");
       w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
     }
     if(tx != REALSXP) {
@@ -627,7 +627,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
   if(!nwl) {
     if(length(VECTOR_ELT(x, 0)) != length(w)) error("length(w) must match nrow(x)");
     if(TYPEOF(w) != REALSXP) {
-      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weigths must be double or integer");
+      if(TYPEOF(w) != INTSXP && TYPEOF(w) != LGLSXP) error("weights must be double or integer");
       w = PROTECT(coerceVector(w, REALSXP)); ++nprotect;
     }
   }
@@ -788,7 +788,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
 //     SEXP xr, wr;
 //     double *px, *pw, *pout = REAL(out);
 //     if(tw != REALSXP) {
-//       if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
+//       if(tw != INTSXP && tw != LGLSXP) error("weights must be double or integer");
 //       wr = PROTECT(coerceVector(w, REALSXP));
 //       pw = REAL(wr);
 //       ++nprotect;

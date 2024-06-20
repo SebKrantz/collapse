@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// Note: More comments are in fvar.cpp (C++ folder, not on Github)
+// Note: More comments are in fvar.cpp (C++ folder, not on GitHub)
 
 // [[Rcpp::export]]
 NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, const SEXP& gs = R_NilValue,
