@@ -3,6 +3,7 @@
 // #ifndef USE_RINTERNALS
 // #define USE_RINTERNALS
 // #endif
+#include "base_radixsort.h"
 #include <math.h>
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
@@ -564,10 +565,14 @@ SEXP fnrowC(SEXP x) {
   return ScalarInteger(INTEGER(dim)[0]);
 }
 
+
+#define MYEFL(x) (((SEXPREC_partial *)(x))->sxpinfo.gp)
+#define MYSEFL(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.gp)=(v))
+
 // Taken from: https://github.com/r-lib/rlang/blob/main/src/internal/env.c
 #define CLP_FRAME_LOCK_MASK (1 << 14)
-#define CLP_FRAME_IS_LOCKED(e) (ENVFLAGS(e) & CLP_FRAME_LOCK_MASK)
-#define CLP_UNLOCK_FRAME(e) SET_ENVFLAGS(e, ENVFLAGS(e) & (~CLP_FRAME_LOCK_MASK))
+#define CLP_FRAME_IS_LOCKED(e) (MYEFL(e) & CLP_FRAME_LOCK_MASK)
+#define CLP_UNLOCK_FRAME(e) MYSEFL(e, MYEFL(e) & (~CLP_FRAME_LOCK_MASK))
 
 SEXP unlock_collapse_namespace(SEXP env) {
   if(TYPEOF(env) != ENVSXP) error("Unsupported object passed to C_unlock_collapse_namespace: %s", type2char(TYPEOF(env)));
