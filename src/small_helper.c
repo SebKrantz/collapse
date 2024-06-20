@@ -564,10 +564,32 @@ SEXP fnrowC(SEXP x) {
   return ScalarInteger(INTEGER(dim)[0]);
 }
 
+// Taken from: https://github.com/wch/r-source/blob/0196c9d7cef6c21cad02eed747f11acef036743e/src/include/Defn.h#L529#
+
+// Partial definition of the SEXPREC structure to access sxpinfo.gp
+typedef struct {
+  struct {
+    unsigned int type          : 5;
+    unsigned int scalar        : 1;
+    unsigned int obj           : 1;
+    unsigned int alt           : 1;
+    unsigned int gp            : 16; // This is the field we are interested in
+    unsigned int mark          : 1;
+    unsigned int debug         : 1;
+    unsigned int trace :  1;  /* functions and memory tracing */
+    unsigned int spare :  1;  /* used on closures and when REFCNT is defined */
+    unsigned int gcgen :  1;  /* old generation number */
+    unsigned int gccls :  3;  /* node class */
+  } sxpinfo;
+} SEXPREC_partial;
+
+#define MYEFL(x) (((SEXPREC_partial *)(x))->sxpinfo.gp)
+#define MYSEFL(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.gp)=(v))
+
 // Taken from: https://github.com/r-lib/rlang/blob/main/src/internal/env.c
 #define CLP_FRAME_LOCK_MASK (1 << 14)
-#define CLP_FRAME_IS_LOCKED(e) (ENVFLAGS(e) & CLP_FRAME_LOCK_MASK)
-#define CLP_UNLOCK_FRAME(e) SET_ENVFLAGS(e, ENVFLAGS(e) & (~CLP_FRAME_LOCK_MASK))
+#define CLP_FRAME_IS_LOCKED(e) (MYEFL(e) & CLP_FRAME_LOCK_MASK)
+#define CLP_UNLOCK_FRAME(e) MYSEFL(e, MYEFL(e) & (~CLP_FRAME_LOCK_MASK))
 
 SEXP unlock_collapse_namespace(SEXP env) {
   if(TYPEOF(env) != ENVSXP) error("Unsupported object passed to C_unlock_collapse_namespace: %s", type2char(TYPEOF(env)));
