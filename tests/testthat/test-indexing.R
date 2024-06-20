@@ -19,10 +19,9 @@ test_that("unindexing and reindexing work well", {
 
 })
 
-if(requireNamespace("magrittr", quietly = TRUE)) {
-library(magrittr)
-
+require(magrittr) # attach here for next two tests
 test_that("subsetting works well", {
+  skip_if_not_installed("magrittr")
 
   expect_equal(fsubset(wldi, iso3c %in% c("KEN", "USA", "CHN")),
                findex_by(fsubset(wlddev, iso3c %in% c("KEN", "USA", "CHN")), country, year))
@@ -43,12 +42,12 @@ test_that("subsetting works well", {
 
 })
 
-if(requireNamespace("data.table", quietly = TRUE)) {
-library(data.table)
-wlddt <- qDT(wlddev)
-wldidt <- wlddt %>% findex_by(iso3c, year)
-
 test_that("indexed data.table works well", {
+  skip_if_not_installed("magrittr")
+  skip_if_not_installed("data.table")
+  library(data.table)
+  wlddt <- qDT(wlddev)
+  wldidt <- wlddt %>% findex_by(iso3c, year)
 
   expect_equal(unindex(wldidt[1:1000]), wlddt[1:1000])
   expect_equal(unindex(wldidt[year > 2000]), wlddt[year > 2000])
@@ -75,8 +74,6 @@ test_that("indexed data.table works well", {
                unclass(wlddt[, .c(PCGDP_growth_5Y, LIFEEX_growth_5Y) := lapply(slt(.SD, PCGDP, LIFEEX), G, 5, 1, iso3c, year, power = 1/5)]))
 
 })
-}
-}
 
 test_that("data selection by type works well", {
   for (FUN in list(num_vars, cat_vars, char_vars, logi_vars, fact_vars, date_vars))
