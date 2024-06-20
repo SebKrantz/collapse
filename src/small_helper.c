@@ -567,9 +567,11 @@ SEXP fnrowC(SEXP x) {
 // Taken from: https://github.com/wch/r-source/blob/0196c9d7cef6c21cad02eed747f11acef036743e/src/include/Defn.h#L529#
 
 // Partial definition of the SEXPREC structure to access sxpinfo.gp
+#define NAMED_BITS 16
+
 typedef struct {
   struct {
-    unsigned int type          : 5;
+    SEXPTYPE type          : TYPE_BITS;
     unsigned int scalar        : 1;
     unsigned int obj           : 1;
     unsigned int alt           : 1;
@@ -580,6 +582,8 @@ typedef struct {
     unsigned int spare :  1;  /* used on closures and when REFCNT is defined */
     unsigned int gcgen :  1;  /* old generation number */
     unsigned int gccls :  3;  /* node class */
+    unsigned int named : NAMED_BITS;
+    unsigned int extra : 32 - NAMED_BITS; /* used for immediate bindings */
   } sxpinfo;
 } SEXPREC_partial;
 

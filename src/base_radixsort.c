@@ -26,7 +26,8 @@
 
 #include "base_radixsort.h"
 
-#define IS_ASCII(x) (LEVELS(x) & 64) // from data.table.h
+#define MYLEV(x)	(((SEXPREC_partial *)(x))->sxpinfo.gp)
+#define IS_ASCII(x) (MYLEV(x) & 64) // from data.table.h
 
 // NOTE: All of this is copied from Defn.h: https://github.com/wch/r-source/blob/28de75af0541f93832c5899139b969d290bf422e/src/include/Defn.h
 // to avoid checking for ALTREP in TRUELENGTH, which slows down the code unnecessarily...
@@ -67,6 +68,10 @@ typedef struct VECTOR_SEXPREC {
   SEXPREC_HEADER;
   struct vecsxp_struct vecsxp;
 } VECTOR_SEXPREC, *VECSEXP;
+
+typedef struct {
+  SEXPREC_HEADER;
+} SEXPREC_partial;
 
 
 // gs = groupsizes e.g.23, 12, 87, 2, 1, 34,...
