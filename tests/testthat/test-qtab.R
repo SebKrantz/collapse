@@ -1,6 +1,6 @@
 context("qtab")
 
-
+withr::local_locale(c(LC_COLLATE = "C"))
 
 set.seed(101)
 wldNA <- na_insert(wlddev)

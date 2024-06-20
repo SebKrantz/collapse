@@ -91,6 +91,7 @@ expect_identical(lapply(rc, function(x) unattrib(radixorderv(gv(wldNA, x), decre
 
 
 test_that("GRP works as intended", {
+ withr::local_locale(c(LC_COLLATE = "C"))
 
  expect_visible(GRP(unname(as.list(mtcars))))
  expect_visible(GRP(unname(as.list(mtcars)), 8:9))
