@@ -11,15 +11,15 @@ test_that("fmatch works well", {
 # Proper Systematic Testing
 ###########################
 
-library(kit) # count()
 fmatch_base <- function(x, table, nomatch = NA_integer_, count = FALSE) {
+  if (count) skip_if_not_installed("kit")
   if(is.list(x)) {
     x <- do.call(paste0, x)
     table <- do.call(paste0, table)
   }
   res <- match(x, table, nomatch)
   if(count) {
-    attr(res, "N.nomatch") <- count(res, nomatch)
+    attr(res, "N.nomatch") <- kit::count(res, nomatch)
     attr(res, "N.groups") <- length(table)
     attr(res, "N.distinct") <- if(is.na(nomatch))
         fndistinct.default(res) else fndistinct.default(res) - anyv(res, nomatch)
