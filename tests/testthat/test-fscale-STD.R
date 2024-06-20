@@ -30,7 +30,7 @@ bscale <- function(x, na.rm = FALSE, mean = 0, sd = 1) {
   if(na.rm || !anyNA(x)) `attributes<-`(drop(base::scale(x)), NULL) * sd + mean else
     rep(NA_real_, length(x))
 }
-# NOTE: This is what fscale currently does: If missing values, compute weighted mean and sd on available obs, and scale x using it. but don't insert aditional missing values in x for missing weights ..
+# NOTE: This is what fscale currently does: If missing values, compute weighted mean and sd on available obs, and scale x using it. but don't insert additional missing values in x for missing weights ..
 wbscale <- function(x, w, na.rm = FALSE, mean = 0, sd = 1) {
   if(na.rm) {
     x2 <- x

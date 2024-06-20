@@ -142,7 +142,7 @@ SEXP fprodC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
     SEXP xr, wr;
     double *px, *pw;
     if(tw != REALSXP) {
-      if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
+      if(tw != INTSXP && tw != LGLSXP) error("weights must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
       pw = REAL(wr);
       ++nprotect;
@@ -196,7 +196,7 @@ SEXP fprodmC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
     SEXP xr, wr;
     double *px, *pw;
     if(tw != REALSXP) {
-      if(tw != INTSXP && tw != LGLSXP) error("weigths must be double or integer");
+      if(tw != INTSXP && tw != LGLSXP) error("weights must be double or integer");
       wr = PROTECT(coerceVector(w, REALSXP));
       pw = REAL(wr);
       ++nprotect;

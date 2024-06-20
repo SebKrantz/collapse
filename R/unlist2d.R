@@ -78,7 +78,7 @@ unlist2d <- function(l, idcols = ".id", row.names = FALSE, recursive = TRUE, id.
         x <- `names<-`(c(list(if(is.null(dn[[1L]])) seq_len(d[1L]) else dn[[1L]]), .Call(Cpp_mctl, x, FALSE, 0L)), c(row.names, dn[[2L]]))
       } else x <- .Call(Cpp_mctl, x, TRUE, 0L)
     } else x <- as.vector(x, "list")
-    if (is.null(names(x))) names(x) <- paste0("V", seq_along(x))     # it seems this is not yet working for all (i.e. model objects..), also perhaps not start at V1, depending on what other columsn there are.. i.e start at the right position ?
+    if (is.null(names(x))) names(x) <- paste0("V", seq_along(x))     # it seems this is not yet working for all (i.e. model objects..), also perhaps not start at V1, depending on what other columsn there are.. i.e. start at the right position ?
     return(x)
   }
   ul2d <- function(y) {

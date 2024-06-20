@@ -169,7 +169,7 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
   // 1 - x is classed (factor, date, time series), xAG is not classed. i.e. vector of fnobs, fmean etc.
   //    -> Sallow replacing, removing class and levels attributes from x, discard attributes of xAG (if any)
   //    -> or (if type matches i.e. double for date or time series), copy attributes of x unless x is a factor
-  // 2 - x is not classed, xAG is classed (factor, date, time series). - an unusual situation should not occurr - copy attributes of xAG, discard attributes of x
+  // 2 - x is not classed, xAG is classed (factor, date, time series). - an unusual situation should not occur - copy attributes of xAG, discard attributes of x
   // 3 - xAG and x are classed - same as above, keep attributes of xAG, discard attributes of x
   // 4 - neither x nor xAG are classed - preserve attributes of x, discard attributes of xAG (if any)
   //
