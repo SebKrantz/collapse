@@ -8,7 +8,7 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.14
+version: 2.0.15
 abstract: A C/C++ based package for advanced data transformation and statistical computing
   in R that is extremely fast, class-agnostic, robust and programmer friendly. Core
   functionality includes a rich set of S3 generic grouped and weighted statistical
@@ -21,8 +21,8 @@ abstract: A C/C++ based package for advanced data transformation and statistical
   statistics, powerful tools to work with nested data, fast data object conversions,
   functions for memory efficient R programming, and helpers to effectively deal with
   variable labels, attributes, and missing data. It is well integrated with base R
-  classes, 'dplyr'/'tibble', 'data.table', 'sf', 'plm' (panel-series and data frames),
-  and 'xts'/'zoo'.
+  classes, 'dplyr'/'tibble', 'data.table', 'sf', 'units', 'plm' (panel-series and
+  data frames), and 'xts'/'zoo'.
 authors:
 - family-names: Krantz
   given-names: Sebastian
@@ -42,7 +42,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2024-04-30'
+date-released: '2024-05-30'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -73,7 +73,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
   year: '2024'
-  notes: R package version 2.0.14
+  notes: R package version 2.0.15
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
@@ -489,6 +489,30 @@ references:
     given-names: Richard
     email: rich@posit.co
     orcid: https://orcid.org/0000-0003-3925-190X
+  year: '2024'
+- type: software
+  title: withr
+  abstract: 'withr: Run Code ''With'' Temporarily Modified Global State'
+  notes: Suggests
+  url: https://withr.r-lib.org
+  repository: https://CRAN.R-project.org/package=withr
+  authors:
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@posit.co
+  - family-names: Müller
+    given-names: Kirill
+    email: krlmlr+r@mailbox.org
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevinushey@gmail.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Chang
+    given-names: Winston
   year: '2024'
 identifiers:
 - type: url

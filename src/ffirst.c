@@ -215,7 +215,7 @@ SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm) {
   int l = length(x), *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm), nprotect = 1;
   if(ng > 0 && !narm) {
     if(length(gst) != ng) {
-    // Cant use integer array here because apparently it is removed by the garbage collector when passed to a new function
+    // Can't use integer array here because apparently it is removed by the garbage collector when passed to a new function
     SEXP gl = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
     int *pg = INTEGER(g), lg = length(g); // gl[ng],
     pgl = INTEGER(gl); // pgl = &gl[0];

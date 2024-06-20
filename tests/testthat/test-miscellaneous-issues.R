@@ -125,9 +125,9 @@ test_that("Using a factor with unused levels does not pose a problem to statisti
     }
 })
 
-if(requireNamespace("magrittr", quietly = TRUE)) {
-library(magrittr)
 test_that("Testing grouped_df methods", {
+  skip_if_not_installed("magrittr")
+  library(magrittr)
   for(sortg in c(TRUE, FALSE)) {
     for(retgrp in c(TRUE, FALSE)) {
       gdf <- wlddev %>% fsubset(year > 1990, region, income, PCGDP:ODA) %>% fgroup_by(region, income, return.groups = retgrp, sort = sortg)
@@ -219,7 +219,6 @@ test_that("Testing grouped_df methods", {
     }
   }
 })
-}
 
 # Also better not run on CRAN...
 test_that("0-length vectors give expected output", {
@@ -433,27 +432,26 @@ test_that("issue with integer followed by NA #432", {
       if(f %!in% c("fmode", "ffirst")) expect_equal(match.fun(f)(c(10, NA), g = rep(1L, 2), na.rm = FALSE, use.g.names = FALSE), NA_real_)
       if(f != "flast") expect_equal(match.fun(f)(c(NA, 10), g = rep(1L, 2), na.rm = FALSE, use.g.names = FALSE), NA_real_)
     }
-  if(Sys.getenv("OMP") == "TRUE") {
-    for (f in c("fsum", "fmean", "fmode", "fnth", "fmedian")) {
-      expect_equal(match.fun(f)(c(10L, rep(NA_integer_, 1e5)), nthreads = 2L), 10L)
-      expect_equal(match.fun(f)(c(rep(NA_integer_, 1e5), 10L), nthreads = 2L), 10L)
-      expect_equal(match.fun(f)(c(10, rep(NA_real_, 1e5)), nthreads = 2L), 10)
-      expect_equal(match.fun(f)(c(rep(NA_real_, 1e5), 10), nthreads = 2L), 10)
-      expect_equal(match.fun(f)(c(10L, rep(NA_integer_, 1e5)), g = rep(1L, 1e5+1), nthreads = 2L, use.g.names = FALSE), 10L)
-      expect_equal(match.fun(f)(c(rep(NA_integer_, 1e5), 10L), g = rep(1L, 1e5+1), nthreads = 2L, use.g.names = FALSE), 10L)
-      expect_equal(match.fun(f)(c(10, rep(NA_real_, 1e5)), g = rep(1L, 1e5+1), nthreads = 2L, use.g.names = FALSE), 10)
-      expect_equal(match.fun(f)(c(rep(NA_real_, 1e5), 10), g = rep(1L, 1e5+1), nthreads = 2L, use.g.names = FALSE), 10)
-      # na.rm = FALSE
-      expect_equal(match.fun(f)(c(10L, rep(NA_integer_, 1e5)), na.rm = FALSE, nthreads = 2L), NA_integer_)
-      expect_equal(match.fun(f)(c(rep(NA_integer_, 1e5), 10L), na.rm = FALSE, nthreads = 2L), NA_integer_)
-      expect_equal(match.fun(f)(c(10, rep(NA_real_, 1e5)), na.rm = FALSE, nthreads = 2L), NA_real_)
-      expect_equal(match.fun(f)(c(rep(NA_real_, 1e5), 10), na.rm = FALSE, nthreads = 2L), NA_real_)
-      # Some functions are optimized and don't check here
-      # expect_equal(match.fun(f)(c(10L, rep(NA_integer_, 1e5)), g = rep(1L, 1e5+1), na.rm = FALSE, nthreads = 2L, use.g.names = FALSE), NA_integer_)
-      # expect_equal(match.fun(f)(c(rep(NA_integer_, 1e5), 10L), g = rep(1L, 1e5+1), na.rm = FALSE, nthreads = 2L, use.g.names = FALSE), NA_integer_)
-      expect_equal(match.fun(f)(c(10, rep(NA_real_, 1e5)), g = rep(1L, 1e5+1), na.rm = FALSE, nthreads = 2L, use.g.names = FALSE), NA_real_)
-      expect_equal(match.fun(f)(c(rep(NA_real_, 1e5), 10), g = rep(1L, 1e5+1), na.rm = FALSE, nthreads = 2L, use.g.names = FALSE), NA_real_)
-    }
+  skip_if_not(Sys.getenv("OMP") == "TRUE")
+  for (f in c("fsum", "fmean", "fmode", "fnth", "fmedian")) {
+    expect_equal(match.fun(f)(c(10L, rep(NA_integer_, 1e5)), nthreads = 2L), 10L)
+    expect_equal(match.fun(f)(c(rep(NA_integer_, 1e5), 10L), nthreads = 2L), 10L)
+    expect_equal(match.fun(f)(c(10, rep(NA_real_, 1e5)), nthreads = 2L), 10)
+    expect_equal(match.fun(f)(c(rep(NA_real_, 1e5), 10), nthreads = 2L), 10)
+    expect_equal(match.fun(f)(c(10L, rep(NA_integer_, 1e5)), g = rep(1L, 1e5+1), nthreads = 2L, use.g.names = FALSE), 10L)
+    expect_equal(match.fun(f)(c(rep(NA_integer_, 1e5), 10L), g = rep(1L, 1e5+1), nthreads = 2L, use.g.names = FALSE), 10L)
+    expect_equal(match.fun(f)(c(10, rep(NA_real_, 1e5)), g = rep(1L, 1e5+1), nthreads = 2L, use.g.names = FALSE), 10)
+    expect_equal(match.fun(f)(c(rep(NA_real_, 1e5), 10), g = rep(1L, 1e5+1), nthreads = 2L, use.g.names = FALSE), 10)
+    # na.rm = FALSE
+    expect_equal(match.fun(f)(c(10L, rep(NA_integer_, 1e5)), na.rm = FALSE, nthreads = 2L), NA_integer_)
+    expect_equal(match.fun(f)(c(rep(NA_integer_, 1e5), 10L), na.rm = FALSE, nthreads = 2L), NA_integer_)
+    expect_equal(match.fun(f)(c(10, rep(NA_real_, 1e5)), na.rm = FALSE, nthreads = 2L), NA_real_)
+    expect_equal(match.fun(f)(c(rep(NA_real_, 1e5), 10), na.rm = FALSE, nthreads = 2L), NA_real_)
+    # Some functions are optimized and don't check here
+    # expect_equal(match.fun(f)(c(10L, rep(NA_integer_, 1e5)), g = rep(1L, 1e5+1), na.rm = FALSE, nthreads = 2L, use.g.names = FALSE), NA_integer_)
+    # expect_equal(match.fun(f)(c(rep(NA_integer_, 1e5), 10L), g = rep(1L, 1e5+1), na.rm = FALSE, nthreads = 2L, use.g.names = FALSE), NA_integer_)
+    expect_equal(match.fun(f)(c(10, rep(NA_real_, 1e5)), g = rep(1L, 1e5+1), na.rm = FALSE, nthreads = 2L, use.g.names = FALSE), NA_real_)
+    expect_equal(match.fun(f)(c(rep(NA_real_, 1e5), 10), g = rep(1L, 1e5+1), na.rm = FALSE, nthreads = 2L, use.g.names = FALSE), NA_real_)
   }
 })
 

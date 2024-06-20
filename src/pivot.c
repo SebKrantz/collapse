@@ -68,7 +68,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
 
   if(!isNull(ind)) {
     if(TYPEOF(ind) != VECSXP) error("pivot_long with missing value removal: list of indices of type '%s', but needs to be a list", type2char(TYPEOF(ind)));
-    if(length(ind) != l) error("length(data) must match lenth(indlist)");
+    if(length(ind) != l) error("length(data) must match length(indlist)");
     pind = SEXPPTR_RO(ind);
   }
 

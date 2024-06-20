@@ -151,7 +151,7 @@ test_that("collap using 2-sided formula or cols performs as intended", {
 
 })
 
-test_that("collap multi-function aggreagtion performs as intended", {
+test_that("collap multi-function aggregation performs as intended", {
   expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fmedian), keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:13)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:13)), g, use.g.names = FALSE),
                      fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE))))
@@ -168,7 +168,7 @@ test_that("collap multi-function aggreagtion performs as intended", {
                       fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:13,4,9:13,2:3,6:8,2:3,6:8))]))
 })
 
-test_that("collap custom aggreagtion performs as intended", {
+test_that("collap custom aggregation performs as intended", {
   expect_equal(unname(oa(collap(wlddev, ~ country + decade,
                       custom = list(fmean = 9:13, fsd = 9:10, fmode = 7:8), keep.col.order = FALSE))),
                unname(oa(cbind(g$groups, fmean(wlddev[9:13], g, use.g.names = FALSE),
@@ -249,7 +249,7 @@ test_that("collap weighted aggregations work as intended", {
 })
 
 if(Sys.getenv("NCRAN") == "TRUE")
-test_that("collap multi-function aggreagtion with weights performs as intended", {
+test_that("collap multi-function aggregation with weights performs as intended", {
 
   expect_equal(oa(collap(wlddev, ~ country + decade, list(fmean, fsd), w = ~ POP, keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fsum(get_vars(wlddev, 13), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),
@@ -455,7 +455,7 @@ test_that("collapv using cols performs as intended", {
 
 })
 
-test_that("collapv multi-function aggreagtion performs as intended", {
+test_that("collapv multi-function aggregation performs as intended", {
 
   expect_equal(oa(collapv(wlddev, v, list(fmean, fmedian), keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fmean(get_vars(wlddev, c(4,9:13)), g, use.g.names = FALSE), fmedian(get_vars(wlddev, c(4,9:13)), g, use.g.names = FALSE),
@@ -472,7 +472,7 @@ test_that("collapv multi-function aggreagtion performs as intended", {
                             fmode(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE), flast(get_vars(wlddev, c(2:3,6:8)), g, use.g.names = FALSE)))[order(c(1,5,4,9:13,4,9:13,2:3,6:8,2:3,6:8))]))
 })
 
-test_that("collapv custom aggreagtion performs as intended", {
+test_that("collapv custom aggregation performs as intended", {
   expect_equal(unname(oa(collapv(wlddev, v,
                              custom = list(fmean = 9:13, fsd = 9:10, fmode = 7:8), keep.col.order = FALSE))),
                unname(oa(cbind(g$groups, fmean(wlddev[9:13], g, use.g.names = FALSE),
@@ -549,7 +549,7 @@ test_that("collapv weighted aggregations work as intended", {
 })
 
 if(Sys.getenv("NCRAN") == "TRUE")
-test_that("collapv multi-function aggreagtion with weights performs as intended", {
+test_that("collapv multi-function aggregation with weights performs as intended", {
 
   expect_equal(oa(collapv(wlddev, v, list(fmean, fsd), w = "POP", keep.col.order = FALSE, give.names = FALSE)),
                oa(cbind(g$groups, fsum(get_vars(wlddev, 13), g, use.g.names = FALSE), fmean(get_vars(wlddev, c(4,9:12)), g, wlddev$POP, use.g.names = FALSE),

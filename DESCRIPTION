@@ -42,6 +42,6 @@ Imports: Rcpp (>= 1.0.1)
 LinkingTo: Rcpp
 Suggests: fastverse, data.table, magrittr, kit, xts, zoo, plm, fixest, vars, 
           RcppArmadillo, RcppEigen, tibble, dplyr, ggplot2, scales, microbenchmark, 
-          testthat, covr, knitr, rmarkdown
+          testthat, covr, knitr, rmarkdown, withr
 VignetteBuilder: knitr
 

@@ -298,7 +298,7 @@ static void icount(int *x, int *o, int n)
   int napos = range; // NA's always counted in last bin
   // static is IMPORTANT, counting sort is called repetitively.
   static unsigned int counts[N_RANGE + 1] = { 0 };
-  /* counts are set back to 0 at the end efficiently. 1e5 = 0.4MB i.e
+  /* counts are set back to 0 at the end efficiently. 1e5 = 0.4MB i.e.
    tiny. We'll only use the front part of it, as large as range. So it's
    just reserving space, not using it. Have defined N_RANGE to be 100000.*/
   if (range > N_RANGE)
@@ -1223,7 +1223,7 @@ static void csort(SEXP * x, int *o, int n)
   }
   // all i* push onto stack. Using their counts may be faster here
   // than thrashing SEXP fetches over several passes as cgroup does
-  // (but cgroup needs that to keep orginal order, and cgroup saves
+  // (but cgroup needs that to keep original order, and cgroup saves
   // the sort in csort_pre).
 }
 

@@ -279,7 +279,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   unsigned int l = 0;
 
   for(int i = 0; i < np; ++i) {
-    if(probs[i] < 0.0 || probs[i] > 1.0) error("probabilities need to be in in range [0, 1]");
+    if(probs[i] < 0.0 || probs[i] > 1.0) error("probabilities need to be in range [0, 1]");
     if(i > 0 && probs[i] < probs[i-1]) error("probabilities need to be passed in ascending order");
   }
 
@@ -1294,7 +1294,7 @@ if(isNull(ord)) {                                                               
 /*
    Function for atomic vectors: has extra arguments o and checko for passing external ordering vector.
    This is meant to speed up computation of several (grouped) quantiles on the same data.
-   Note that for grouped execution the ordering vector needs to take into account the grouping e.g radixorder(GRPid(), myvar).
+   Note that for grouped execution the ordering vector needs to take into account the grouping e.g. radixorder(GRPid(), myvar).
  */
 SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads, SEXP o, SEXP checko) {
 
@@ -1622,7 +1622,7 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
   if(l < 1 || (l == 1 && nullw)) {
     if(TYPEOF(x) == REALSXP || TYPEOF(x) == INTSXP || TYPEOF(x) == LGLSXP) return x;
-    error("Unsopported SEXP type: '%s'", type2char(TYPEOF(x)));
+    error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
   }
 
   double *restrict pw = &Q, h = DBL_MIN;

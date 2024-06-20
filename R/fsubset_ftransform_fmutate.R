@@ -408,7 +408,7 @@ acr_get_funs <- function(.fnsexp, .fns, ...) {
     names(.fns) <- .fns
     .fns <- lapply(.fns, ...) # lapply(.fns, match.fun())
     if(is.null(namfun)) namfun <- names(.fns)
-  } else stop(".fns must be a fucntion, list of functions or character vector of function names")
+  } else stop(".fns must be a function, list of functions or character vector of function names")
 
   return(list(namfun = namfun, funs = .fns))
 }
@@ -643,7 +643,7 @@ mutate_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
 do_grouped_expr <- function(ei, nfun, .data, g, pe) {
   v <- all.vars(ei) # unique = FALSE -> not needed anymore... can turn expressions into functions...
   if(length(v) > 1L) {
-    # Could include global environemntal variables e.g. fmutate(data, new = mean(var) + q)
+    # Could include global environmental variables e.g. fmutate(data, new = mean(var) + q)
     namd <- names(.data)
     if(length(wv <- na_rm(match(v, namd))) > 1L) return(unlist(gsplit_multi_apply(.data[wv], g, ei, pe), FALSE, FALSE))
     return(gsplit_single_apply(.data[[wv]], g, ei, namd[wv], pe))

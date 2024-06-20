@@ -55,7 +55,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       }
       PROTECT(x	= coerceVector(x,	tt)); ++nprotect; // Coercing to largest common type
     } else { // x has a larger type than table...
-      if(tt == INTSXP-1) { // There could be a complicated shorthand involving matching x against the levels and then replacing this by the first occurence index
+      if(tt == INTSXP-1) { // There could be a complicated shorthand involving matching x against the levels and then replacing this by the first occurrence index
         PROTECT(table = asCharacterFactor(table)); ++nprotect;
         if(tx != STRSXP) { // Worst case: need to coerce x as well to make the match
           PROTECT(x = coerceVector(x, STRSXP)); ++nprotect;
@@ -65,7 +65,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       }
     }
   } else if(tx == INTSXP-1 && tt == INTSXP-1) { // Both factors
-    SEXP x_lev = PROTECT(getAttrib(x, R_LevelsSymbol)); ++nprotect; // Unecessary but appeases RCHK
+    SEXP x_lev = PROTECT(getAttrib(x, R_LevelsSymbol)); ++nprotect; // Unnecessary but appeases RCHK
     if(!R_compute_identical(x_lev, getAttrib(table, R_LevelsSymbol), 0)) {
       // This is the inefficient way: coercing both to character
       // PROTECT(x = asCharacterFactor(x)); ++nprotect;
