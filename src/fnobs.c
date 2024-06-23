@@ -18,7 +18,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x);
+        SEXP *px = SEXPPTR(x);
         for(int i = 0; i != l; ++i) if(px[i] != NA_STRING) ++n;
         break;
       }
@@ -48,7 +48,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x);
+        SEXP *px = SEXPPTR(x);
         for(int i = 0; i != l; ++i) if(px[i] != NA_STRING) ++pn[pg[i]];
         break;
       }
@@ -102,7 +102,7 @@ SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x);
+        SEXP *px = SEXPPTR(x);
         for(int j = 0; j != col; ++j) {
           int nj = 0, end = l * j + l;
           for(int i = l * j; i != end; ++i) if(px[i] != NA_STRING) ++nj;
@@ -145,7 +145,7 @@ SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x)-l;
+        SEXP *px = SEXPPTR(x)-l;
         for(int j = 0; j != col; ++j) {
           pn += ng; px += l;
           for(int i = 0; i != l; ++i) if(px[i] != NA_STRING) ++pn[pg[i]];

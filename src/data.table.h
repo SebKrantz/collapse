@@ -3,10 +3,9 @@
  and licensed under a Mozilla Public License 2.0 (MPL-2.0) license.
 */
 
-#include <R.h>
 #define USE_RINTERNALS
-#include <Rinternals.h>
-#include <stdint.h> // for uint64_t rather than unsigned long long
+#include "base_radixsort.h"
+// #include <stdint.h> // for uint64_t rather than unsigned long long
 #include <stdbool.h>
 // #include "types.h"
 

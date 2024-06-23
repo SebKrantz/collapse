@@ -66,7 +66,7 @@ SEXP falloc(SEXP value, SEXP n, SEXP simplify)  {
       break;
     }
     case STRSXP: {
-      SEXP val = asChar(value), *pout = STRING_PTR(out);
+      SEXP val = asChar(value), *pout = SEXPPTR(out);
       for(int i = 0; i != l; ++i) pout[i] = val;
       break;
     }
@@ -169,7 +169,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
     return R_NilValue;
   }
   if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
-  SEXP *plhs = STRING_PTR(lhs);
+  SEXP *plhs = SEXPPTR(lhs);
   switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, installChar does the same now, but also is available on older systems.
     case REALSXP: {
       double *prhs = REAL(rhs);
@@ -188,7 +188,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
       break;
     }
     case STRSXP: {
-      SEXP *prhs = STRING_PTR(rhs);
+      SEXP *prhs = SEXPPTR(rhs);
       for(int i = 0; i < n; ++i) {
         SEXP nam = installChar(plhs[i]);
         defineVar(nam, ScalarString(prhs[i]), envir);
@@ -235,7 +235,7 @@ SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam) {
     return labx;
   }
   SEXP res = PROTECT(allocVector(STRSXP, l));
-  SEXP *pres = STRING_PTR(res);
+  SEXP *pres = SEXPPTR(res);
   const SEXP *px = SEXPPTR_RO(x);
   for(int i = 0; i < l; ++i) {
     SEXP labxi = getAttrib(px[i], sym_attrn);

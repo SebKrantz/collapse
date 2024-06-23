@@ -8,6 +8,8 @@
 // #define IS_ASCII(x) ((x)->sxpinfo.gp & ASCII_MASK)
 // #define IS_ASCII(x) (LEVELS(x) & ASCII_MASK)
 
+#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // Replacing STRING_PTR
+
 // NOTE: All of this is copied from Defn.h: https://github.com/wch/r-source/blob/28de75af0541f93832c5899139b969d290bf422e/src/include/Defn.h
 // to avoid checking for ALTREP in TRUELENGTH, which slows down the code unnecessarily...
 
