@@ -12,7 +12,7 @@
 // #endif
 #include <Rinternals.h>
 // #include <stdlib.h>
-#include <stdint.h> // needed for intptr_t on linux
+#include <stdint.h> // needed for uintptr_t on linux
 // #include <stdbool.h>
 // #ifdef _OPENMP
 // #include<omp.h>
@@ -45,6 +45,7 @@
 // #define SEXP_T ScalarLogical(TRUE)
 #define NOGE(x, l) ((x < 0) || (x >= l))
 #define HASH(key, K)  (3141592653U * (unsigned int)(key) >> (32 - (K)))
+#define HASHK(key, K)  (3141592653U * (unsigned int)(key) >> (K))
 #define N_ISNAN(x, y) (!ISNAN(x) && !ISNAN(y))
 #define B_IsNA(x, y)  (R_IsNA(x) && R_IsNA(y))
 #define B_IsNaN(x, y) (R_IsNaN(x) && R_IsNaN(y))
@@ -54,6 +55,7 @@
 #define C_ISNAN(x, y) (B_ISNAN(x, y) || (N_ISNAN(x, y) && x == y))
 #define REQUAL(x, y)  (N_ISNAN(x, y) ? (x == y) : (B_IsNA(x, y) || B_IsNaN(x, y)))
 #define CEQUAL(x, y) ((N_ISNAN(x.r, x.i) && N_ISNAN(y.r, y.i)) ? (x.r == y.r && x.i == y.i) : (C_IsNA(x) ? C_IsNA(y) : (C_IsNA(y) ? 0 : (C_ISNAN(x.r, y.r) && C_ISNAN(x.i, y.i)))))
+#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // To replace STRING_PTR
 // #define STR_DF mkString("data.frame")
 // #define MAX(a,b) (((a)>(b))?(a):(b))
 // #define IS_LOGICAL(x) (isLogical(x) && LENGTH(x)==1)

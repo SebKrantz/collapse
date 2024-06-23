@@ -90,9 +90,9 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case STRSXP: {
-        const SEXP *px = STRING_PTR(x);
+        const SEXP *px = SEXPPTR(x);
         for(int j = 0, gsj; j != ng; ++j) {
-          SEXP *pgj = STRING_PTR(pres[j]);
+          SEXP *pgj = SEXPPTR(pres[j]);
           gsj = pgs[j];
           for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
         }
@@ -160,9 +160,9 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x);
+        SEXP *px = SEXPPTR(x);
         for(int i = 0; i != ng; ++i) {
-          SEXP *pri = STRING_PTR(pres[i]);
+          SEXP *pri = SEXPPTR(pres[i]);
           for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; ++j) pri[k++] = px[po[j]-1];
         }
         break;
@@ -229,10 +229,10 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case STRSXP: {
-        const SEXP *px = STRING_PTR(x);
+        const SEXP *px = SEXPPTR(x);
         for(int i = 0, gi; i != l; ++i) {
           gi = pg[i]-1;
-          STRING_PTR(pres[gi])[count[gi]++] = px[i];
+          SEXPPTR(pres[gi])[count[gi]++] = px[i];
         }
         break;
       }
@@ -305,7 +305,7 @@ SEXP greorder(SEXP x, SEXP gobj) {
       break;
     }
     case STRSXP: {
-      SEXP *px = STRING_PTR(x), *pr = STRING_PTR(res);
+      SEXP *px = SEXPPTR(x), *pr = SEXPPTR(res);
       for(int i = 0, k = 0; i != ng; ++i) {
         for(int j = ps[i]-1, end = ps[i]+pgs[i]-1; j < end; ++j) pr[po[j]-1] = px[k++];
       }
@@ -355,7 +355,7 @@ SEXP greorder(SEXP x, SEXP gobj) {
       break;
     }
     case STRSXP: {
-      SEXP *px = STRING_PTR(x), *pr = STRING_PTR(res);
+      SEXP *px = SEXPPTR(x), *pr = SEXPPTR(res);
       for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
       break;
     }

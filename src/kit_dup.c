@@ -175,7 +175,7 @@ SEXP dupVecIndex(SEXP x) {
     }
   } break;
   case STRSXP: {
-    const SEXP *restrict px = STRING_PTR(x);
+    const SEXP *restrict px = SEXPPTR(x);
     for (int i = 0; i != n; ++i) {
       id = HASH(((uintptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
@@ -338,7 +338,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     }
   } break;
   case STRSXP: {
-    const SEXP *restrict px = STRING_PTR(x);
+    const SEXP *restrict px = SEXPPTR(x);
     for (int i = 0; i != n; ++i) {
       if(px[i] == NA_STRING) {
         pans_i[i] = NA_INTEGER;
@@ -452,7 +452,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
           }
         } break;
         case STRSXP: {
-          const SEXP *restrict px = STRING_PTR_RO(x), *restrict py = STRING_PTR_RO(y);
+          const SEXP *restrict px = SEXPPTR_RO(x), *restrict py = SEXPPTR_RO(y);
           for (int i = 0; i != n; ++i) {
             id = HASH(64988430769U * ((uintptr_t)px[i] & 0xffffffff) + ((uintptr_t)py[i] & 0xffffffff), K); // Best combination it seems
             while(h[id]) {
@@ -513,7 +513,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         }
         // Second case: real and string
       } else if ((tx == REALSXP && ty == STRSXP) || (tx == STRSXP && ty == REALSXP)) {
-        const SEXP *restrict ps = STRING_PTR_RO(tx == STRSXP ? x : y);
+        const SEXP *restrict ps = SEXPPTR_RO(tx == STRSXP ? x : y);
         const double *restrict pr = REAL_RO(tx == REALSXP ? x : y);
         union uno tpv;
         for (int i = 0; i != n; ++i) {
@@ -534,7 +534,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
         // Third case: integer and string
       } else if((tx == INTSXP && ty == STRSXP) || (tx == STRSXP && ty == INTSXP)) {
         const int *restrict pi = INTEGER_RO(tx == INTSXP ? x : y);
-        const SEXP *restrict ps = STRING_PTR_RO(tx == STRSXP ? x : y);
+        const SEXP *restrict ps = SEXPPTR_RO(tx == STRSXP ? x : y);
         for (int i = 0; i != n; ++i) {
           id = HASH(pi[i] * ((uintptr_t)ps[i] & 0xffffffff), K);
           while(h[id]) {
@@ -702,7 +702,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
     }
   } break;
   case STRSXP: {
-    const SEXP *restrict px = STRING_PTR(x);
+    const SEXP *restrict px = SEXPPTR(x);
     const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
     for (int i = 0; i != n; ++i) {
       id = (pidx[i]*mult) ^ HASH(((uintptr_t) px[i] & 0xffffffff), K); // HASH(((uintptr_t) px[i] & 0xffffffff) ^ pidx[i], K) + pidx[i];
@@ -984,7 +984,7 @@ SEXP funiqueC(SEXP x) {
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   case STRSXP: {
-    const SEXP *restrict px = STRING_PTR(x);
+    const SEXP *restrict px = SEXPPTR(x);
     for (int i = 0; i != n; ++i) {
       id = HASH(((uintptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
@@ -1001,7 +1001,7 @@ SEXP funiqueC(SEXP x) {
       return x;
     }
     PROTECT(res = allocVector(STRSXP, g)); ++nprotect;
-    SEXP *restrict pres = STRING_PTR(res);
+    SEXP *restrict pres = SEXPPTR(res);
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   }

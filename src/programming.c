@@ -31,11 +31,11 @@ SEXP Cna_rm(SEXP x) {
     return out;
   }
   case STRSXP: {
-    const SEXP *xd = STRING_PTR(x);
+    const SEXP *xd = SEXPPTR(x);
     for (int i = 0; i != n; ++i) if(xd[i] == NA_STRING) ++k;
     if(k == 0) return x;
     SEXP out = PROTECT(allocVector(STRSXP, n - k));
-    SEXP *pout = STRING_PTR(out);
+    SEXP *pout = SEXPPTR(out);
     k = 0;
     for (int i = 0; i != n; ++i) if(xd[i] != NA_STRING) pout[k++] = xd[i];
     copyMostAttrib(x, out);
@@ -60,7 +60,7 @@ SEXP Cna_rm(SEXP x) {
 
 // Helper function to find a single string in factor levels
 int fchmatch(SEXP x, SEXP val, int nomatch) {
-  const SEXP *px = STRING_PTR(x), v = asChar(val);
+  const SEXP *px = SEXPPTR(x), v = asChar(val);
   for(int i = 0, l = length(x); i != l; ++i) if(px[i] == v) return i + 1;
   return nomatch;
 }
@@ -109,8 +109,8 @@ if(length(val) == n && n > 1) {
   }
   case STRSXP:
   {
-    const SEXP *px = STRING_PTR(x);
-    const SEXP *pv = STRING_PTR(val);
+    const SEXP *px = SEXPPTR(x);
+    const SEXP *pv = SEXPPTR(val);
     WHICHVLOOPLX
     break;
   }
@@ -155,7 +155,7 @@ if(length(val) == n && n > 1) {
   }
   case STRSXP:
   {
-    const SEXP *px = STRING_PTR(x);
+    const SEXP *px = SEXPPTR(x);
     const SEXP v = PROTECT(asChar(val));
     WHICHVLOOP
     UNPROTECT(1);
@@ -216,7 +216,7 @@ case REALSXP:
 }
 case STRSXP:
 {
-  const SEXP *px = STRING_PTR(x);
+  const SEXP *px = SEXPPTR(x);
   const SEXP v = asChar(val);
   ALLANYVLOOP
   break;
@@ -387,7 +387,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   }
   case STRSXP:
   {
-    SEXP *restrict px = set ? STRING_PTR(x) : STRING_PTR(ans);
+    SEXP *restrict px = set ? SEXPPTR(x) : SEXPPTR(ans);
     if(lv == 1 && ind1 == 0) {
       const SEXP v = PROTECT(asChar(val));
       if(lr == 1) {
@@ -395,7 +395,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
         setcopyvLOOP(r)
         UNPROTECT(1);
       } else {
-        const SEXP *restrict pr = STRING_PTR(rep);
+        const SEXP *restrict pr = SEXPPTR(rep);
         setcopyvLOOP(pr[i])
       }
       UNPROTECT(1);
@@ -406,7 +406,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
         setcopyvLOOPLVEC1
         UNPROTECT(1);
       } else {
-        const SEXP *restrict pr = STRING_PTR(rep);
+        const SEXP *restrict pr = SEXPPTR(rep);
         setcopyvLOOPLVEC
       }
     }
@@ -760,7 +760,7 @@ SEXP na_locf(SEXP x, SEXP Rset) {
   }
   case STRSXP:
   {
-    SEXP *data = STRING_PTR(x);
+    SEXP *data = SEXPPTR(x);
     SEXP last = data[0];
     for (int i = 0; i < n; i++) {
       if (data[i] == NA_STRING) {
@@ -826,7 +826,7 @@ SEXP na_focb(SEXP x, SEXP Rset) {
   }
   case STRSXP:
   {
-    SEXP *data = STRING_PTR(x);
+    SEXP *data = SEXPPTR(x);
     SEXP last = data[0];
     for (int i = n; i--; ) {
       if (data[i] == NA_STRING) {

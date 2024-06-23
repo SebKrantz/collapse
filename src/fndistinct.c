@@ -242,7 +242,7 @@ int ndistinct_impl_int(SEXP x, int narm) {
       return isFactor(x) ? ndistinct_fct(INTEGER(x), &l, l, nlevels(x), 1, narm) :
                            ndistinct_int(INTEGER(x), &l, l, 1, narm);
     case LGLSXP: return ndistinct_logi(LOGICAL(x), &l, l, 1, narm);
-    case STRSXP: return ndistinct_string(STRING_PTR(x), &l, l, 1, narm);
+    case STRSXP: return ndistinct_string(SEXPPTR(x), &l, l, 1, narm);
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
@@ -291,7 +291,7 @@ SEXP ndistinct_g_impl(SEXP x, const int ng, const int *restrict pgs, const int *
         break;
       }
       case STRSXP: {
-        const SEXP *px = STRING_PTR(x);
+        const SEXP *px = SEXPPTR(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_string(px + pst[gr]-1, po, pgs[gr], 1, narm);
@@ -330,7 +330,7 @@ SEXP ndistinct_g_impl(SEXP x, const int ng, const int *restrict pgs, const int *
         break;
       }
       case STRSXP: {
-        const SEXP *px = STRING_PTR(x);
+        const SEXP *px = SEXPPTR(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_string(px, po + pst[gr]-1, pgs[gr], 0, narm);
@@ -484,7 +484,7 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x);
+        SEXP *px = SEXPPTR(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < col; ++j)
           pres[j] = ndistinct_string(px + j*l, &l, l, 1, narm);
@@ -555,7 +555,7 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           break;
         }
         case STRSXP: {
-          SEXP *px = STRING_PTR(x);
+          SEXP *px = SEXPPTR(x);
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
@@ -602,7 +602,7 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           break;
         }
         case STRSXP: {
-          SEXP *px = STRING_PTR(x);
+          SEXP *px = SEXPPTR(x);
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;

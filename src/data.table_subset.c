@@ -102,8 +102,8 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   SEXP names = PROTECT(getAttrib(dt, R_NamesSymbol)); protecti++;
   SEXP newnames = PROTECT(allocVector(STRSXP, n)); protecti++;
 
-  const SEXP *pdt = SEXPPTR_RO(dt), *pnam = STRING_PTR(names);
-  SEXP *pnewdt = SEXPPTR(newdt), *pnnam = STRING_PTR(newnames);
+  const SEXP *pdt = SEXPPTR_RO(dt), *pnam = SEXPPTR(names);
+  SEXP *pnewdt = SEXPPTR(newdt), *pnnam = SEXPPTR(newnames);
 
   const int l = isNull(cols) ? LENGTH(dt) : length(cols);
   if (isNull(cols)) {
@@ -215,7 +215,7 @@ void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // TODO - discuss with Luke Tierney. Produce benchmarks on integer/double to see if it's worth making a safe
     //        API interface for package use for STRSXP.
     // Aside: setkey() is a separate special case (a permutation) and does do this in parallel without using SET_*.
-    SEXP *restrict sp = STRING_PTR(source)-1, *restrict ap = STRING_PTR(ans);
+    SEXP *restrict sp = SEXPPTR(source)-1, *restrict ap = SEXPPTR(ans);
     PARLOOP(NA_STRING);
   } break;
   case VECSXP : {
@@ -423,7 +423,7 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   // sf data frames: Need to add sf_column
   if(oxl && asLogical(checksf) && INHERITS(x, char_sf)) {
     int sfcoln = NA_INTEGER, sf_col_sel = 0;
-    SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+    SEXP *pnam = SEXPPTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
     for(int i = l; i--; ) {
       if(pnam[i] == sfcol) {
         sfcoln = i + 1;
@@ -511,7 +511,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
       if(oxl && INHERITS(x, char_sf)) {
         int sfcoln = NA_INTEGER, sf_col_sel = 0;
         SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
-        SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+        SEXP *pnam = SEXPPTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
         for(int i = l; i--; ) {
           if(pnam[i] == sfcol) {
             sfcoln = i + 1;

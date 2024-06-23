@@ -119,7 +119,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
         pid += end; ++v;
       }
     } else {
-      SEXP *restrict pid = STRING_PTR(id_column), *pnam = STRING_PTR(names);
+      SEXP *restrict pid = SEXPPTR(id_column), *pnam = SEXPPTR(names);
       for (int j = 0, end = 0; j != l; ++j) {
         SEXP namj = pnam[j];
         end = length(pind[j]); // SIMD??
@@ -314,9 +314,9 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
       break;
     }
     case STRSXP: {
-      const SEXP *restrict pc = STRING_PTR_RO(column);
+      const SEXP *restrict pc = SEXPPTR_RO(column);
       if(aggfun > 3) error("Cannot aggregate character column with sum, mean, min, or max.");
-      AGGFUN_SWITCH_CAT(STRING_PTR, pc[i] != NA_STRING);
+      AGGFUN_SWITCH_CAT(SEXPPTR, pc[i] != NA_STRING);
       break;
     }
     case VECSXP:
