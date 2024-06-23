@@ -179,7 +179,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
       }
     }
     if(count) {
-      SET_TYPEOF(ans, INTSXP);
+      SETTOF(ans, INTSXP);
     } else {
       // This computes the result
       if(prop < 1.0) {
