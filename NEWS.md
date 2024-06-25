@@ -1,5 +1,7 @@
 # collapse 2.0.15
 
+* Some changes on the C-side to move the package closer to C API compliance (demanded by R-Core). One notable change is that `gsplit()` no longer supports S4 objects (because `SET_S4_OBJECT` is not part of the API and `asS4()` is too expensive for tight loops). I cannot think of a single example where it would be necessary to split an S4 object, but if you do have applications please file an issue. 
+
 * `pivot()` has new arguments `FUN = "last"` and `FUN.args = NULL`, allowing wide and recast pivots with aggregation (default last value as before). `FUN` currently supports a single function returning a scalar value. *Fast Statistical Functions* receive vectorized execution. `FUN.args` can be used to supply a list of function arguments, including data-length arguments such as weights. There are also a couple of internal functions callable using function strings: `"first"`, `"last"`, `"count"`, `"sum"`, `"mean"`, `"min"`, or `"max"`. These are built into the reshaping C-code and thus extremely fast. Thanks @AdrianAntico for the request (#582).
 
 * `join()` now provides enhanced verbosity, indicating the average order of the join between the two tables, e.g.

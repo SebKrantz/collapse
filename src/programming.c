@@ -1,4 +1,5 @@
 #include "collapse_c.h"
+#include "base_radixsort.h"
 
 SEXP Cna_rm(SEXP x) {
   const int n = LENGTH(x);
@@ -894,20 +895,20 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         pans[i] = is_num;
       }
     }
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
     }
   case 2: // is.factor
     for(int i = 0; i != n; ++i) pans[i] = (int)isFactor(px[i]);
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 3: // is.list, needed for list processing functions
     for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP;
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 4: // is.sublist, needed for list processing functions
     for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !isFrame(px[i]);
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 7: // is.atomic(x), needed in atomic_elem()
     // is.atomic: do_is with op = 200:  https://github.com/wch/r-source/blob/9f9033e193071f256e21a181cb053cba983ed4a9/src/main/coerce.c
@@ -927,7 +928,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         pans[i] = 0;
       }
     }
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 5: // is.atomic(x) || is.list(x), needed in reg_elem() and irreg_elem()
     for(int i = 0; i != n; ++i) {
@@ -949,7 +950,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         pans[i] = 0;
       }
     }
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 6:
     // Faster object type identification, needed in unlist2d:

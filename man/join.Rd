@@ -29,7 +29,7 @@ join(x, y,
 
   \item{y}{a data frame-like object to join with \code{x}.}
 
-  \item{on}{character. vector of columns to join on. \code{NULL} uses \code{union(names(x), names(y))}. Use a named vector to match columns named differently in \code{x} and \code{y}, e.g. \code{c("x_id" = "y_id")}.}
+  \item{on}{character. vector of columns to join on. \code{NULL} uses \code{intersect(names(x), names(y))}. Use a named vector to match columns named differently in \code{x} and \code{y}, e.g. \code{c("x_id" = "y_id")}.}
 
   \item{how}{character. Join type: \code{"left"}, \code{"right"}, \code{"inner"}, \code{"full"}, \code{"semi"} or \code{"anti"}. The first letter suffices. }
 

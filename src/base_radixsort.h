@@ -8,7 +8,7 @@
 // #define IS_ASCII(x) ((x)->sxpinfo.gp & ASCII_MASK)
 // #define IS_ASCII(x) (LEVELS(x) & ASCII_MASK)
 
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // Replacing STRING_PTR
+#define SEXPPTR(x) ((SEXP *)DATAPTR(x))
 
 // NOTE: All of this is copied from Defn.h: https://github.com/wch/r-source/blob/28de75af0541f93832c5899139b969d290bf422e/src/include/Defn.h
 // to avoid checking for ALTREP in TRUELENGTH, which slows down the code unnecessarily...
@@ -24,6 +24,8 @@
 
 #define MYLEV(x)	(((SEXPREC_partial *)(x))->sxpinfo.gp)
 #define IS_ASCII(x) (MYLEV(x) & 64) // from data.table.h
+
+#define SETTOF(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.type)=(v))
 
 // NOTE: All of this is copied from Defn.h: https://github.com/wch/r-source/blob/28de75af0541f93832c5899139b969d290bf422e/src/include/Defn.h
 // to avoid checking for ALTREP in TRUELENGTH, which slows down the code unnecessarily...
