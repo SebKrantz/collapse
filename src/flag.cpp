@@ -1,6 +1,9 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
+LogicalVector intToLogical(IntegerVector x) {
+  return LogicalVector(x.begin(), x.end());
+}
 
 // 7th version: Irregular time series and panels supported !
 template <int RTYPE>
@@ -569,8 +572,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               while(i != np) outjp[i++] = ff;
               for( ; i != row; ++i) outjp[i] = column[i - np];
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
-              out[pos] = outjp;
+              out[pos] = txj == LGLSXP ? intToLogical(outjp) : outjp;
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(row);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
@@ -578,8 +580,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
               while(i != st) outjp[--i] = ff;
               for( ; i--; ) outjp[i] = column[i - np];
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
-              out[pos] = outjp;
+              out[pos] = txj == LGLSXP ? intToLogical(outjp) : outjp;
             } else {
               if(names) nam[pos] = na[j];
               out[pos] = x[j];
@@ -702,8 +703,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
-              out[pos] = outjp;
+              out[pos] = txj == LGLSXP ? intToLogical(outjp) : outjp;
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(os);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
@@ -715,8 +715,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
-              out[pos] = outjp;
+              out[pos] = txj == LGLSXP ? intToLogical(outjp) : outjp;
             } else {
               if(names) nam[pos] = na[j];
               out[pos] = x[j];
@@ -840,8 +839,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
-              out[pos] = outjp;
+              out[pos] = txj == LGLSXP ? intToLogical(outjp) : outjp;
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
@@ -855,8 +853,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
-              out[pos] = outjp;
+              out[pos] = txj == LGLSXP ? intToLogical(outjp) : outjp;
             } else {
               if(names) nam[pos] = na[j];
               out[pos] = x[j];
@@ -1009,8 +1006,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
-              out[pos] = outjp;
+              out[pos] = txj == LGLSXP ? intToLogical(outjp) : outjp;
             } else if(np<0) {
               IntegerVector outjp = no_init_vector(gss);
               if(names) nam[pos] = "F" + nc[p] + "." + na[j];
@@ -1022,8 +1018,7 @@ List flagleadlCpp(const List& x, const IntegerVector& n = 1, const SEXP& fill = 
                 }
               }
               SHALLOW_DUPLICATE_ATTRIB(outjp, column);
-              if(txj == LGLSXP) SET_TYPEOF(outjp, LGLSXP);
-              out[pos] = outjp;
+              out[pos] = txj == LGLSXP ? intToLogical(outjp) : outjp;
             } else {
               if(names) nam[pos] = na[j];
               out[pos] = x[j];
