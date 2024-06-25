@@ -3,12 +3,19 @@
 It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method generalized from Welford's Algorithm. Statistics can be computed weighted, by groups, and also within-and between entities (for panel data, see Details)."><meta property="og:description" content="qsu, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software.
 It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method generalized from Welford's Algorithm. Statistics can be computed weighted, by groups, and also within-and between entities (for panel data, see Details)."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,17 +26,22 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast (Grouped, Weighted) Summary Statistics for Cross-Sectional and Panel Data</h1>
+
       <div class="d-none name"><code>qsu.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>qsu</code>, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software.</p>
 <p>It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method generalized from Welford's Algorithm. Statistics can be computed weighted, by groups, and also within-and between entities (for panel data, see Details).</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qsu</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -74,47 +86,68 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, digits <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"digits"</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fl">2L</span>, nonsci.digits <span class="op">=</span> <span class="fl">9</span>, na.print <span class="op">=</span> <span class="st">"-"</span>,</span>
 <span>      return <span class="op">=</span> <span class="cn">FALSE</span>, print.gap <span class="op">=</span> <span class="fl">2</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a vector, matrix, data frame, 'indexed_series' ('pseries') or 'indexed_frame' ('pdata.frame').</p></dd>
+
   <dt id="arg-g">g<a class="anchor" aria-label="anchor" href="#arg-g"></a></dt>
 <dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href="GRP.html">GRP</a></code> object) used to group <code>x</code>.</p></dd>
+
   <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
 <dd><p><em>(p)data.frame method</em>: Same as <code>g</code>, but also allows one- or two-sided formulas i.e. <code>~ group1 + group2</code> or <code>var1 + var2 ~ group1 + group2</code>. See Examples.</p></dd>
+
   <dt id="arg-pid">pid<a class="anchor" aria-label="anchor" href="#arg-pid"></a></dt>
 <dd><p>same input as <code>g/by</code>: Specify a panel-identifier to also compute statistics on between- and within- transformed data. Data frame method also supports one- or two-sided formulas, grouped_df method supports expressions evaluated in the data environment. Transformations are taken independently from grouping with <code>g/by</code> (grouped statistics are computed on the transformed data if <code>g/by</code> is also used). However, passing any LHS variables to <code>pid</code> will overwrite any <code>LHS</code> variables passed to <code>by</code>.</p></dd>
+
   <dt id="arg-w">w<a class="anchor" aria-label="anchor" href="#arg-w"></a></dt>
 <dd><p>a vector of (non-negative) weights. Adding weights will compute the weighted mean, sd, skewness and kurtosis, and transform the data using weighted individual means if <code>pid</code> is used. Data frame method supports formula, grouped_df method supports expression.</p></dd>
+
   <dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
 <dd><p>select columns to summarize using column names, indices, a logical vector or a function (e.g. <code>is.numeric</code>). Two-sided formulas passed to <code>by</code> or <code>pid</code> overwrite <code>cols</code>.</p></dd>
+
+
   <dt id="arg-higher">higher<a class="anchor" aria-label="anchor" href="#arg-higher"></a></dt>
 <dd><p>logical. Add higher moments (skewness and kurtosis).</p></dd>
+
   <dt id="arg-array">array<a class="anchor" aria-label="anchor" href="#arg-array"></a></dt>
 <dd><p>logical. If computations have more than 2 dimensions (up to a maximum of 4D: variables, statistics, groups and panel-decomposition) <code>TRUE</code> returns an array, while <code>FALSE</code> returns a (nested) list of matrices.</p></dd>
+
   <dt id="arg-stable-algo">stable.algo<a class="anchor" aria-label="anchor" href="#arg-stable-algo"></a></dt>
 <dd><p>logical. <code>FALSE</code> uses a faster but less stable method to calculate the standard deviation (see Details of <code><a href="fvar_fsd.html">fsd</a></code>). Only available if <code>w = NULL</code> and <code>higher = FALSE</code>.</p></dd>
+
   <dt id="arg-labels">labels<a class="anchor" aria-label="anchor" href="#arg-labels"></a></dt>
 <dd><p>logical <code>TRUE</code> or a function: to display variable labels in the summary. See Details.</p></dd>
+
   <dt id="arg-effect">effect<a class="anchor" aria-label="anchor" href="#arg-effect"></a></dt>
 <dd><p><em>plm</em> methods: Select which panel identifier should be used for between and within transformations of the data. 1L takes the first variable in the <a href="indexing.html">index</a>, 2L the second etc.. Index variables can also be called by name using a character string. More than one variable can be supplied.</p></dd>
+
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>arguments to be passed to or from other methods.</p></dd>
+
   <dt id="arg-gid">gid<a class="anchor" aria-label="anchor" href="#arg-gid"></a></dt>
 <dd><p>character. Name assigned to the group-id column, when summarising variables by groups.</p></dd>
+
   <dt id="arg-stringsasfactors">stringsAsFactors<a class="anchor" aria-label="anchor" href="#arg-stringsasfactors"></a></dt>
 <dd><p>logical. Make factors from dimension names of 'qsu' array. Same as option to <code><a href="https://rdrr.io/r/base/table.html" class="external-link">as.data.frame.table</a></code>.</p></dd>
+
   <dt id="arg-digits">digits<a class="anchor" aria-label="anchor" href="#arg-digits"></a></dt>
 <dd><p>the number of digits to print after the comma/dot.</p></dd>
+
   <dt id="arg-nonsci-digits">nonsci.digits<a class="anchor" aria-label="anchor" href="#arg-nonsci-digits"></a></dt>
 <dd><p>the number of digits to print before resorting to scientific notation (default is to print out numbers with up to 9 digits and print larger numbers scientifically).</p></dd>
+
   <dt id="arg-na-print">na.print<a class="anchor" aria-label="anchor" href="#arg-na-print"></a></dt>
 <dd><p>character string to substitute for missing values.</p></dd>
+
   <dt id="arg-return">return<a class="anchor" aria-label="anchor" href="#arg-return"></a></dt>
 <dd><p>logical. Don't print but instead return the formatted object.</p></dd>
+
   <dt id="arg-print-gap">print.gap<a class="anchor" aria-label="anchor" href="#arg-print-gap"></a></dt>
 <dd><p>integer. Spacing between printed columns. Passed to <code>print.default</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -148,6 +181,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="descr.html">descr</a></code>, <a href="summary-statistics.html">Summary Statistics</a>, <a href="fast-statistical-functions.html">Fast Statistical Functions</a>, <a href="collapse-documentation.html">Collapse Overview</a>  <!-- %% ~~objects to See Also as \code{\link{help}}, ~~~ --></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
@@ -918,12 +952,21 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

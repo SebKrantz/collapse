@@ -3,12 +3,19 @@
 The TRA argument can further be used to transform x using its (grouped, weighted) mean."><meta property="og:description" content="fmean is a generic function that computes the (column-wise) mean of x, (optionally) grouped by g and/or weighted by w.
 The TRA argument can further be used to transform x using its (grouped, weighted) mean."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,17 +26,22 @@ The TRA argument can further be used to transform x using its (grouped, weighted
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast (Grouped, Weighted) Mean for Matrix-Like Objects</h1>
+
       <div class="d-none name"><code>fmean.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>fmean</code> is a generic function that computes the (column-wise) mean of <code>x</code>, (optionally) grouped by <code>g</code> and/or weighted by <code>w</code>.
 The <code><a href="TRA.html">TRA</a></code> argument can further be used to transform <code>x</code> using its (grouped, weighted) mean.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fmean</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -51,37 +63,70 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span>      use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>      keep.w <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a numeric vector, matrix, data frame or grouped data frame (class 'grouped_df').</p></dd>
+
+
 <dt id="arg-g">g<a class="anchor" aria-label="anchor" href="#arg-g"></a></dt>
 <dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href="GRP.html">GRP</a></code> object) used to group <code>x</code>.</p></dd>
+
+
 <dt id="arg-w">w<a class="anchor" aria-label="anchor" href="#arg-w"></a></dt>
 <dd><p>a numeric vector of (non-negative) weights, may contain missing values.</p></dd>
+
+
 <dt id="arg-tra">TRA<a class="anchor" aria-label="anchor" href="#arg-tra"></a></dt>
 <dd><p>an integer or quoted operator indicating the transformation to perform:
 0 - "na"     |     1 - "fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "%"     |     7 - "+"     |     8 - "*"     |     9 - "%%"     |     10 - "-%%". See <code><a href="TRA.html">TRA</a></code>.</p></dd>
+
+
+
 <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
 <dd><p>logical. Skip missing values in <code>x</code>. Defaults to <code>TRUE</code> and implemented at very little computational cost. If <code>na.rm = FALSE</code> a <code>NA</code> is returned when encountered.</p></dd>
+
+
 <dt id="arg-use-g-names">use.g.names<a class="anchor" aria-label="anchor" href="#arg-use-g-names"></a></dt>
 <dd><p>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s.</p></dd>
+
+
 <dt id="arg-nthreads">nthreads<a class="anchor" aria-label="anchor" href="#arg-nthreads"></a></dt>
 <dd><p>integer. The number of threads to utilize. See Details of <code><a href="fsum.html">fsum</a></code>.</p></dd>
+
+
 <dt id="arg-drop">drop<a class="anchor" aria-label="anchor" href="#arg-drop"></a></dt>
 <dd><p><em>matrix and data.frame method:</em> Logical. <code>TRUE</code> drops dimensions and returns an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</p></dd>
+
+
 <dt id="arg-keep-group-vars">keep.group_vars<a class="anchor" aria-label="anchor" href="#arg-keep-group-vars"></a></dt>
 <dd><p><em>grouped_df method:</em> Logical. <code>FALSE</code> removes grouping variables after computation.</p></dd>
+
+
 <dt id="arg-keep-w">keep.w<a class="anchor" aria-label="anchor" href="#arg-keep-w"></a></dt>
 <dd><p><em>grouped_df method:</em> Logical. Retain summed weighting variable after computation (if contained in <code>grouped_df</code>).</p></dd>
+
+
 <dt id="arg-stub">stub<a class="anchor" aria-label="anchor" href="#arg-stub"></a></dt>
 <dd><p>character. If <code>keep.w = TRUE</code> and <code>stub = TRUE</code> (default), the summed weights column is prefixed by <code>"sum."</code>. Users can specify a different prefix through this argument, or set it to <code>FALSE</code> to avoid prefixing.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>arguments to be passed to or from other methods. If <code>TRA</code> is used, passing <code>set = TRUE</code> will transform data by reference and return the result invisibly.</p></dd>
+
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+
+
+
 <p>The weighted mean is computed as <code>sum(x * w) / sum(w)</code>, using a single pass in C. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
+
+
 <p>For further computational details see <code><a href="fsum.html">fsum</a></code>, which works equivalently.</p>
     </div>
     <div class="section level2">
@@ -92,6 +137,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="fnth_fmedian.html">fmedian</a></code>, <code><a href="fmode.html">fmode</a></code>, <a href="fast-statistical-functions.html">Fast Statistical Functions</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## default vector method</span></span></span>
@@ -320,12 +366,21 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

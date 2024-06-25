@@ -3,12 +3,19 @@
 fsummarize and fsummarise are synonyms."><meta property="og:description" content="fsummarise is a much faster version of dplyr::summarise, when used together with the Fast Statistical Functions.
 fsummarize and fsummarise are synonyms."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,34 +26,44 @@ fsummarize and fsummarise are synonyms."><meta property="og:image" content="http
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Summarise</h1>
+
       <div class="d-none name"><code>fsummarise.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>fsummarise</code> is a much faster version of <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">dplyr::summarise</a></code>, when used together with the <a href="fast-statistical-functions.html">Fast Statistical Functions</a>.</p>
 <p><code>fsummarize</code> and <code>fsummarise</code> are synonyms.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fsummarise</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, .cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu">fsummarize</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, .cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/fsummarise.html">smr</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, .cols <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>        <span class="co"># Shorthand</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg--data">.data<a class="anchor" aria-label="anchor" href="#arg--data"></a></dt>
 <dd><p>a (grouped) data frame or named list of columns. Grouped data can be created with <code><a href="GRP.html">fgroup_by</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by</a></code>.</p></dd>
+
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>name-value pairs of summary functions, <code><a href="across.html">across</a></code> statements, or arbitrary expressions resulting in a list. See Examples. For fast performance use the <a href="fast-statistical-functions.html">Fast Statistical Functions</a>. <!-- % The name will be the name of the variable in the result. Functions when applied to a vector need to return a scalar. --></p></dd>
+
   <dt id="arg-keep-group-vars">keep.group_vars<a class="anchor" aria-label="anchor" href="#arg-keep-group-vars"></a></dt>
 <dd><p>logical. <code>FALSE</code> removes grouping variables after computation.</p></dd>
+
   <dt id="arg--cols">.cols<a class="anchor" aria-label="anchor" href="#arg--cols"></a></dt>
 <dd><p>for expressions involving <code>.data</code>, <code>.cols</code> can be used to subset columns, e.g. <code>mtcars |&gt; gby(cyl) |&gt; smr(mctl(cor(.data), TRUE), .cols = 5:7)</code>. Can pass column names, indices, a logical vector or a selector function (e.g. <code>is.numericr</code>).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -60,6 +77,7 @@ fsummarize and fsummarise are synonyms."><meta property="og:image" content="http
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="across.html">across</a></code>, <code><a href="collap.html">collap</a></code>, <a href="fast-data-manipulation.html">Data Frame Manipulation</a>, <a href="fast-statistical-functions.html">Fast Statistical Functions</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Since v1.7, fsummarise supports arbitrary expressions, and expressions</span></span></span>
@@ -239,12 +257,21 @@ fsummarize and fsummarise are synonyms."><meta property="og:image" content="http
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

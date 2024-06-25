@@ -3,12 +3,19 @@
 The TRA argument can further be used to transform x using its (grouped, weighted) mode. Ties between multiple possible modes can be resolved by taking the minimum, maximum, (default) first or last occurring mode."><meta property="og:description" content="fmode is a generic function and returns the (column-wise) statistical mode i.e. the most frequent value of x, (optionally) grouped by g and/or weighted by w.
 The TRA argument can further be used to transform x using its (grouped, weighted) mode. Ties between multiple possible modes can be resolved by taking the minimum, maximum, (default) first or last occurring mode."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,17 +26,22 @@ The TRA argument can further be used to transform x using its (grouped, weighted
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast (Grouped, Weighted) Statistical Mode for Matrix-Like Objects</h1>
+
       <div class="d-none name"><code>fmode.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>fmode</code> is a generic function and returns the (column-wise) statistical mode i.e. the most frequent value of <code>x</code>, (optionally) grouped by <code>g</code> and/or weighted by <code>w</code>.
 The <code><a href="TRA.html">TRA</a></code> argument can further be used to transform <code>x</code> using its (grouped, weighted) mode. Ties between multiple possible modes can be resolved by taking the minimum, maximum, (default) first or last occurring mode.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fmode</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -51,36 +63,66 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <span>      use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>      ties <span class="op">=</span> <span class="st">"first"</span>, nthreads <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"nthreads"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
+
+
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a vector, matrix, data frame or grouped data frame (class 'grouped_df').</p></dd>
+
+
 <dt id="arg-g">g<a class="anchor" aria-label="anchor" href="#arg-g"></a></dt>
 <dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a <code><a href="GRP.html">GRP</a></code> object) used to group <code>x</code>.</p></dd>
+
+
 <dt id="arg-w">w<a class="anchor" aria-label="anchor" href="#arg-w"></a></dt>
 <dd><p>a numeric vector of (non-negative) weights, may contain missing values.</p></dd>
+
+
 <dt id="arg-tra">TRA<a class="anchor" aria-label="anchor" href="#arg-tra"></a></dt>
 <dd><p>an integer or quoted operator indicating the transformation to perform:
 0 - "na"     |     1 - "fill"     |     2 - "replace"     |     3 - "-"     |     4 - "-+"     |     5 - "/"     |     6 - "%"     |     7 - "+"     |     8 - "*"     |     9 - "%%"     |     10 - "-%%". See <code><a href="TRA.html">TRA</a></code>.</p></dd>
+
+
+
 <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
 <dd><p>logical. Skip missing values in <code>x</code>. Defaults to <code>TRUE</code> and implemented at very little computational cost. If <code>na.rm = FALSE</code>, <code>NA</code> is treated as any other value.</p></dd>
+
+
 <dt id="arg-use-g-names">use.g.names<a class="anchor" aria-label="anchor" href="#arg-use-g-names"></a></dt>
 <dd><p>logical. Make group-names and add to the result as names (default method) or row-names (matrix and data frame methods). No row-names are generated for <em>data.table</em>'s.</p></dd>
+
+
 <dt id="arg-ties">ties<a class="anchor" aria-label="anchor" href="#arg-ties"></a></dt>
 <dd><p>an integer or character string specifying the method to resolve ties between multiple possible modes i.e. multiple values with the maximum frequency or sum of weights:</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td>"first"</td><td></td><td>take the first occurring mode.</td></tr><tr><td>2</td><td></td><td>"min"</td><td></td><td>take the smallest of the possible modes.</td></tr><tr><td>3</td><td></td><td>"max"</td><td></td><td>take the largest of the possible modes.</td></tr><tr><td>4</td><td></td><td>"last"</td><td></td><td>take the last occurring mode.</td></tr></table><p><em>Note:</em> <code>"min"/"max"</code> don't work with character data. <!-- % For logical data \code{TRUE} will be chosen unless \code{ties = "min"}. -->
         See also Details.</p></dd>
+
+
   <dt id="arg-nthreads">nthreads<a class="anchor" aria-label="anchor" href="#arg-nthreads"></a></dt>
 <dd><p>integer. The number of threads to utilize. Parallelism is across groups for grouped computations and at the column-level otherwise.</p></dd>
+
+
 <dt id="arg-drop">drop<a class="anchor" aria-label="anchor" href="#arg-drop"></a></dt>
 <dd><p><em>matrix and data.frame method:</em> Logical. <code>TRUE</code> drops dimensions and returns an atomic vector if <code>g = NULL</code> and <code>TRA = NULL</code>.</p></dd>
+
+
 <dt id="arg-keep-group-vars">keep.group_vars<a class="anchor" aria-label="anchor" href="#arg-keep-group-vars"></a></dt>
 <dd><p><em>grouped_df method:</em> Logical. <code>FALSE</code> removes grouping variables after computation.</p></dd>
+
+
 <dt id="arg-keep-w">keep.w<a class="anchor" aria-label="anchor" href="#arg-keep-w"></a></dt>
 <dd><p><em>grouped_df method:</em> Logical. Retain <code>sum</code> of weighting variable after computation (if contained in <code>grouped_df</code>).</p></dd>
+
+
 <dt id="arg-stub">stub<a class="anchor" aria-label="anchor" href="#arg-stub"></a></dt>
 <dd><p>character. If <code>keep.w = TRUE</code> and <code>stub = TRUE</code> (default), the summed weights column is prefixed by <code>"sum."</code>. Users can specify a different prefix through this argument, or set it to <code>FALSE</code> to avoid prefixing.</p></dd>
+
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>arguments to be passed to or from other methods. If <code>TRA</code> is used, passing <code>set = TRUE</code> will transform data by reference and return the result invisibly.</p></dd>
+
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -88,6 +130,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
 <p>If <code>na.rm = FALSE</code>, <code>NA</code> is not removed but treated as any other value (i.e. its frequency is counted). If all values are <code>NA</code>, <code>NA</code> is always returned.</p>
 <p>The weighted mode is computed by summing up the weights for all distinct values and choosing the value with the largest sum. If <code>na.rm = TRUE</code>, missing values will be removed from both <code>x</code> and <code>w</code> i.e. utilizing only <code>x[complete.cases(x,w)]</code> and <code>w[complete.cases(x,w)]</code>.</p>
 <p>It is possible that multiple values have the same mode (the maximum frequency or sum of weights). Typical cases are simply when all values are either all the same or all distinct. In such cases, the default option <code>ties = "first"</code> returns the first occurring value in the data reaching the maximum frequency count or sum of weights. For example in a sample <code>x = c(1, 3, 2, 2, 4, 4, 1, 7)</code>, the first mode is 2 as <code>fmode</code> goes through the data from left to right. <code>ties = "last"</code> on the other hand gives 1. It is also possible to take the minimum or maximum mode, i.e. <code>fmode(x, ties = "min")</code> returns 1, and <code>fmode(x, ties = "max")</code> returns 4. It should be noted that options <code>ties = "min"</code> and <code>ties = "max"</code> give unintuitive results for character data (no strict alphabetic sorting, similar to using <code>&lt;</code> and <code>&gt;</code> to compare character values in R). These options are also best avoided if missing values are counted (<code>na.rm = FALSE</code>) since no proper logical comparison with missing values is possible: With numeric data it depends, since in C++ any comparison with <code>NA_real_</code> evaluates to <code>FALSE</code>, <code>NA_real_</code> is chosen as the min or max mode only if it is also the first mode, and never otherwise. For integer data, <code>NA_integer_</code> is stored as the smallest integer in C++, so it will always be chosen as the min mode and never as the max mode. For character data, <code>NA_character_</code> is stored as the string <code>"NA"</code> in C++ and thus the behavior depends on the other character content. <!-- % \code{fmode} also implements a fast method for logical values which does not support the options \code{"first"/"last"} i.e. \code{TRUE} is returned unless \code{ties = "min"}. --></p>
+
 <p><code>fmode</code> preserves all the attributes of the objects it is applied to (apart from names or row-names which are adjusted as necessary in grouped operations). If a data frame is passed to <code>fmode</code> and <code>drop = TRUE</code> (the default), <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></code> will be called on the result, which might not be sensible depending on the data at hand.</p>
     </div>
     <div class="section level2">
@@ -98,6 +141,7 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="fmean.html">fmean</a></code>, <code><a href="fnth_fmedian.html">fmedian</a></code>, <a href="fast-statistical-functions.html">Fast Statistical Functions</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">3</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">4</span>, <span class="fl">1</span>, <span class="fl">7</span>, <span class="cn">NA</span>, <span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span></span></span>
@@ -218,12 +262,21 @@ The <code><a href="TRA.html">TRA</a></code> argument can further be used to tran
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

@@ -3,12 +3,19 @@
  The methods also provide enhanced functionality compared to subset. The function ss provides an (internal generic) programmers alternative to [ that does not drop dimensions and is significantly faster than [ for data frames."><meta property="og:description" content="fsubset returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the data.table package.
  The methods also provide enhanced functionality compared to subset. The function ss provides an (internal generic) programmers alternative to [ that does not drop dimensions and is significantly faster than [ for data frames."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,17 +26,22 @@
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Subsetting Matrix-Like Objects</h1>
+
       <div class="d-none name"><code>fsubset.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>fsubset</code> returns subsets of vectors, matrices or data frames which meet conditions. It is programmed very efficiently and uses C source code from the <em>data.table</em> package. <!-- %Especially for data frames it is significantly (4-5 times) faster than \code{\link{subset}} or \code{dplyr::filter}. -->
  The methods also provide enhanced functionality compared to <code><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></code>. The function <code>ss</code> provides an (internal generic) programmers alternative to <code>[</code> that does not drop dimensions and is significantly faster than <code>[</code> for data frames.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fsubset</span><span class="op">(</span><span class="va">.x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -56,28 +68,38 @@
 <span><span class="co"># Fast subsetting (replaces `[` with drop = FALSE, programmers choice)</span></span>
 <span><span class="fu">ss</span><span class="op">(</span><span class="va">x</span>, <span class="va">i</span>, <span class="va">j</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg--x">.x<a class="anchor" aria-label="anchor" href="#arg--x"></a></dt>
 <dd><p>object to be subsetted according to different methods.</p></dd>
+
   <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a data frame / list, matrix or vector/array (only <code>i</code>).</p></dd>
+
   <dt id="arg-subset">subset<a class="anchor" aria-label="anchor" href="#arg-subset"></a></dt>
 <dd><p>logical expression indicating elements or rows to keep:
     missing values are taken as <code>FALSE</code>. The default, matrix and pseries methods only support logical vectors or row-indices (or a character vector of rownames if the matrix has rownames).</p></dd>
+
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>For the matrix or data frame method: multiple comma-separated expressions indicating columns to select. Otherwise: further arguments to be passed to or from other methods.</p></dd>
+
   <dt id="arg-drop">drop<a class="anchor" aria-label="anchor" href="#arg-drop"></a></dt>
 <dd><p>passed on to <code>[</code> indexing operator. Only available for the matrix method.</p></dd>
+
   <dt id="arg-i">i<a class="anchor" aria-label="anchor" href="#arg-i"></a></dt>
 <dd><p>positive or negative row-indices or a logical vector to subset the rows of <code>x</code>.</p></dd>
+
   <dt id="arg-j">j<a class="anchor" aria-label="anchor" href="#arg-j"></a></dt>
 <dd><p>a vector of column names, positive or negative indices or a suitable logical vector to subset the columns of <code>x</code>. <em>Note:</em> Negative indices are converted to positive ones using <code>j &lt;- seq_along(x)[j]</code>.</p></dd>
+
   <dt id="arg-check">check<a class="anchor" aria-label="anchor" href="#arg-check"></a></dt>
 <dd><p>logical. <code>FALSE</code> skips checks on <code>i</code> and <code>j</code>, e.g. whether indices are negative. This offers a speedup to programmers, but can terminate R if zero or negative indices are passed.</p></dd>
+
  <dt id="arg-drop-index-levels">drop.index.levels<a class="anchor" aria-label="anchor" href="#arg-drop-index-levels"></a></dt>
 <dd><p>character. Either <code>"id"</code>, <code>"time"</code>, <code>"all"</code> or <code>"none"</code>. See <a href="indexing.html">indexing</a>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -108,6 +130,7 @@
   <code><a href="ftransform.html">ftransform</a></code>,
 <a href="fast-data-manipulation.html">Data Frame Manipulation</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">fsubset</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">Temp</span> <span class="op">&gt;</span> <span class="fl">90</span>, <span class="va">Ozone</span>, <span class="va">Temp</span><span class="op">)</span></span></span>
@@ -205,12 +228,21 @@
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

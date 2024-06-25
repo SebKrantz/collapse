@@ -3,12 +3,19 @@
 Use data.table::setorder(v) to sort a data frame without creating a copy. "><meta property="og:description" content="A fast substitute for dplyr::arrange, based on radixorder(v) and inspired by data.table::setorder(v). It returns a sorted copy of the data frame, unless the data is already sorted in which case no copy is made. In addition, rows can be manually re-ordered. roworderv is a programmers version that takes vectors/variables as input.
 Use data.table::setorder(v) to sort a data frame without creating a copy. "><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,17 +26,22 @@ Use data.table::setorder(v) to sort a data frame without creating a copy. "><met
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Reordering of Data Frame Rows</h1>
+
       <div class="d-none name"><code>roworder.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p>A fast substitute for <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">dplyr::arrange</a></code>, based on <code><a href="radixorder.html">radixorder(v)</a></code> and inspired by <code>data.table::setorder(v)</code>. It returns a sorted copy of the data frame, unless the data is already sorted in which case no copy is made. In addition, rows can be manually re-ordered. <code>roworderv</code> is a programmers version that takes vectors/variables as input.</p>
 <p>Use <code>data.table::setorder(v)</code> to sort a data frame without creating a copy. <!-- %\code{roworder} also does not support grouped tibbles or pdata.frame's, i.e. every data frame is treated the same. --></p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">roworder</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span>, na.last <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"verbose"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
@@ -37,25 +49,35 @@ Use data.table::setorder(v) to sort a data frame without creating a copy. "><met
 <span><span class="fu">roworderv</span><span class="op">(</span><span class="va">X</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, neworder <span class="op">=</span> <span class="cn">NULL</span>, decreasing <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>          na.last <span class="op">=</span> <span class="cn">TRUE</span>, pos <span class="op">=</span> <span class="st">"front"</span>, verbose <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"verbose"</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-x">X<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a data frame or list of equal-length columns.</p></dd>
+
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>comma-separated columns of <code>X</code> to sort by e.g. <code>var1, var2</code>. Negatives i.e. <code>-var1, var2</code> can be used to sort in decreasing order of <code>var1</code>. Internally all expressions are turned into strings and <code>startsWith(expr, "-")</code> is used to detect this, thus it does not negate the actual values (which may as well be strings), and you cannot apply any other functions to columns inside <code>roworder()</code> to induce different sorting behavior.</p></dd>
+
   <dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
 <dd><p>select columns to sort by using a function, column names, indices or a logical vector. The default <code>NULL</code> sorts by all columns in order of occurrence (from left to right).</p></dd>
+
   <dt id="arg-na-last">na.last<a class="anchor" aria-label="anchor" href="#arg-na-last"></a></dt>
 <dd><p>logical. If <code>TRUE</code>, missing values in the sorting columns are placed last; if <code>FALSE</code>, they are placed first; if <code>NA</code> they are removed (argument passed to <code><a href="radixorder.html">radixorderv</a></code>).</p></dd>
+
   <dt id="arg-decreasing">decreasing<a class="anchor" aria-label="anchor" href="#arg-decreasing"></a></dt>
 <dd><p>logical. Should the sort order be increasing or decreasing? Can also be a vector of length equal to the number of arguments in <code>cols</code> (argument passed to <code><a href="radixorder.html">radixorderv</a></code>).</p></dd>
+
   <dt id="arg-neworder">neworder<a class="anchor" aria-label="anchor" href="#arg-neworder"></a></dt>
 <dd><p>an ordering vector, can be <code>&lt; nrow(X)</code>. if <code>pos = "front"</code> or <code>pos = "end"</code>, a logical vector can also be supplied. This argument overwrites <code>cols</code>.</p></dd>
+
     <dt id="arg-pos">pos<a class="anchor" aria-label="anchor" href="#arg-pos"></a></dt>
 <dd><p>integer or character. Different arrangement options if <code>!is.null(neworder) &amp;&amp; length(neworder) &lt; nrow(X)</code>.</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td>"front"</td><td></td><td>move rows in <code>neworder</code> to the front (top) of <code>X</code> (the default).</td></tr><tr><td>2</td><td></td><td>"end"</td><td></td><td>move rows in <code>neworder</code> to the end (bottom) of <code>X</code>.</td></tr><tr><td>3</td><td></td><td>"exchange"</td><td></td><td>just exchange the order of rows in <code>neworder</code>, other rows remain in the same position.</td></tr><tr><td>4</td><td></td><td>"after"</td><td></td><td>place all further selected rows behind the first selected row.</td></tr></table><p></p></dd>
+
   <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>logical. <code>1L</code> (default) prints a message when ordering a grouped or indexed frame, indicating that this is not efficient and encouraging reordering the data prior to the grouping/indexing step. Users can also set <code>verbose = 2L</code> to also toggle a message if <code>x</code> is already sorted, implying that no copy was made and the call to <code>roworder(v)</code> is redundant.</p></dd>
+
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -70,6 +92,7 @@ Use data.table::setorder(v) to sort a data frame without creating a copy. "><met
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="colorder.html">colorder</a></code>, <a href="fast-data-manipulation.html">Data Frame Manipulation</a>, <a href="fast-grouping-ordering.html">Fast Grouping and Ordering</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">roworder</span><span class="op">(</span><span class="va">airquality</span>, <span class="va">Month</span>, <span class="op">-</span><span class="va">Ozone</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -136,12 +159,21 @@ Use data.table::setorder(v) to sort a data frame without creating a copy. "><met
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

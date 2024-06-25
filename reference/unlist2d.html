@@ -3,12 +3,19 @@
 It is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. For simple row-wise combining lists/data.frame's use the non-recursive rowbind function.   "><meta property="og:description" content="unlist2d efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list through recursive flattening and intelligent row-binding operations. It is a full 2-dimensional generalization of unlist, and best understood as a recursive generalization of do.call(rbind, ...).
 It is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. For simple row-wise combining lists/data.frame's use the non-recursive rowbind function.   "><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,37 +26,49 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Recursive Row-Binding / Unlisting in 2D - to Data Frame</h1>
+
       <div class="d-none name"><code>unlist2d.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>unlist2d</code> efficiently unlists lists of regular R objects (objects built up from atomic elements) and creates a data frame representation of the list through recursive flattening and intelligent row-binding operations. It is a full 2-dimensional generalization of <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></code>, and best understood as a recursive generalization of <code>do.call(rbind, ...)</code>.</p>
 <p>It is a powerful tool to create a tidy data frame representation from (nested) lists of vectors, data frames, matrices, arrays or heterogeneous objects. For simple row-wise combining lists/data.frame's use the non-recursive <code><a href="rowbind.html">rowbind</a></code> function.   <!-- % (i.e. unlisting happens via recursive flattening and intelligent row-binding of objects, see Details and Examples). --></p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">unlist2d</span><span class="op">(</span><span class="va">l</span>, idcols <span class="op">=</span> <span class="st">".id"</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>         id.factor <span class="op">=</span> <span class="cn">FALSE</span>, DT <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-l">l<a class="anchor" aria-label="anchor" href="#arg-l"></a></dt>
 <dd><p>a unlistable list (with atomic elements in all final nodes, see <code><a href="is_unlistable.html">is_unlistable</a></code>).</p></dd>
+
   <dt id="arg-idcols">idcols<a class="anchor" aria-label="anchor" href="#arg-idcols"></a></dt>
 <dd><p>a character stub or a vector of names for id-columns automatically added - one for each level of nesting in <code>l</code>. By default the stub is <code>".id"</code>, so columns will be of the form <code>".id.1", ".id.2",</code> etc... . if <code>idcols = TRUE</code>, the stub is also set to <code>".id"</code>. If <code>idcols = FALSE</code>, id-columns are omitted. The content of the id columns are the list names, or (if missing) integers for the list elements. Missing elements in asymmetric nested structures are filled up with <code>NA</code>. See Examples.</p></dd>
+
   <dt id="arg-row-names">row.names<a class="anchor" aria-label="anchor" href="#arg-row-names"></a></dt>
 <dd><p><code>TRUE</code> extracts row names from all the objects in <code>l</code> (where available) and adds them to the output in a column named <code>"row.names"</code>. Alternatively, a column name i.e. <code>row.names = "variable"</code> can be supplied. For plain matrices in <code>l</code>, integer row names are generated.</p></dd>
+
   <dt id="arg-recursive">recursive<a class="anchor" aria-label="anchor" href="#arg-recursive"></a></dt>
 <dd><p>logical. if <code>FALSE</code>, only process the lowest (deepest) level of <code>l</code>. See Details.</p></dd>
+
   <dt id="arg-id-factor">id.factor<a class="anchor" aria-label="anchor" href="#arg-id-factor"></a></dt>
 <dd><p>if <code>TRUE</code> and <code>!isFALSE(idcols)</code>, create id columns as factors instead of character or integer vectors. Alternatively it is possible to specify <code>id.factor = "ordered"</code> to generate ordered factor id's. This is <b>strongly recommended</b> when binding lists of larger data frames, as factors are much more memory efficient than character vectors and also speed up subsequent grouping operations on these columns.</p></dd>
+
   <dt id="arg-dt">DT<a class="anchor" aria-label="anchor" href="#arg-dt"></a></dt>
 <dd><p>logical. <code>TRUE</code> returns a <em>data.table</em>, not a data.frame.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -72,6 +91,7 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="rowbind.html">rowbind</a></code>, <code><a href="rsplit.html">rsplit</a></code>, <code><a href="rapply2d.html">rapply2d</a></code>, <a href="list-processing.html">List Processing</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Basic Examples:</span></span></span>
@@ -339,12 +359,21 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

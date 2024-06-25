@@ -9,12 +9,19 @@ fduplicated is an alternative to duplicated (or duplicated.data.table, kit::fdup
 The collapse versions are versatile and highly competitive.
 any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vectors, anyDuplicated is currently more efficient if there are duplicates at the beginning of the vector."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -25,13 +32,17 @@ any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vecto
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Unique Elements / Rows</h1>
+
       <div class="d-none name"><code>funique.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>funique</code> is an efficient alternative to <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">unique</a></code> (or <code>unique.data.table, kit::funique, dplyr::distinct</code>).</p>
 <p><code>fnunique</code> is an alternative to <code>NROW(unique(x))</code> (or <code>data.table::uniqueN, kit::uniqLen, dplyr::n_distinct</code>).</p>
@@ -39,6 +50,7 @@ any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vecto
 <p>The <em>collapse</em> versions are versatile and highly competitive. <!-- % on data frames. --></p>
 <p><code>any_duplicated(x)</code> is faster than <code>any(fduplicated(x))</code>. <em>Note</em> that for atomic vectors, <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">anyDuplicated</a></code> is currently more efficient if there are duplicates at the beginning of the vector.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">funique</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -65,23 +77,31 @@ any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vecto
 <span><span class="fu">fduplicated</span><span class="op">(</span><span class="va">x</span>, all <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># Fast duplicated(x), for vectors and lists</span></span>
 <span><span class="fu">any_duplicated</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>            <span class="co"># Simple logical TRUE|FALSE duplicates check</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a atomic vector or data frame / list of equal-length columns.</p></dd>
+
   <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
 <dd><p>logical. <code>TRUE</code> orders the unique elements / rows. <code>FALSE</code> returns unique values in order of first occurrence.</p></dd>
+
    <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>an integer or character string specifying the method of computation:</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td>"auto"</td><td></td><td>automatic selection: hash if <code>sort = FALSE</code> else radix.</td></tr><tr><td>2</td><td></td><td>"radix"</td><td></td><td>use radix ordering to determine unique values. Supports <code>sort = FALSE</code> but only for character data.</td></tr><tr><td>3</td><td></td><td>"hash"</td><td></td><td>use index hashing to determine unique values. Supports <code>sort = TRUE</code> but only for atomic vectors (default method).</td></tr></table><p></p></dd>
+
 <dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
 <dd><p>compute unique rows according to a subset of columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. <code>is.character</code>). <em>Note:</em> All columns are returned.</p></dd>
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>arguments passed to <code><a href="radixorder.html">radixorderv</a></code>, e.g. <code>decreasing</code> or <code>na.last</code>. Only applicable if <code>method = "radix"</code>.</p></dd>
+
 <dt id="arg-drop-index-levels">drop.index.levels<a class="anchor" aria-label="anchor" href="#arg-drop-index-levels"></a></dt>
 <dd><p>character. Either <code>"id"</code>, <code>"time"</code>, <code>"all"</code> or <code>"none"</code>. See <a href="indexing.html">indexing</a>.</p></dd>
+
 <dt id="arg-all">all<a class="anchor" aria-label="anchor" href="#arg-all"></a></dt>
 <dd><p>logical. <code>TRUE</code> returns all duplicated values, including the first occurrence.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -103,6 +123,7 @@ any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vecto
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="fndistinct.html">fndistinct</a></code>, <code><a href="group.html">group</a></code>, <a href="fast-grouping-ordering.html">Fast Grouping and Ordering</a>, <a href="collapse-documentation.html">Collapse Overview</a>.</p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">funique</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span></span>
@@ -143,12 +164,21 @@ any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vecto
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

@@ -7,12 +7,19 @@ qG, shorthand for 'quick-group', generates a kind of factor-light without the le
 finteraction generates a factor or 'qG' object by interacting multiple vectors or factors. In that process missing values are always replaced with a level and unused levels/combinations are always dropped.
 collapse internally makes optimal use of factors and 'qG' objects when passed as grouping vectors to statistical functions (g/by, or t arguments) i.e. typically no further grouping or ordering is performed and objects are used directly by statistical C/C++ code."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -23,19 +30,24 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Factor Generation, Interactions and Vector Grouping</h1>
+
       <div class="d-none name"><code>qF.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>qF</code>, shorthand for 'quick-factor' implements very fast factor generation from atomic vectors using either radix ordering or index hashing followed by sorting.</p>
 <p><code>qG</code>, shorthand for 'quick-group', generates a kind of factor-light without the levels attribute but instead an attribute providing the number of levels. Optionally the levels / groups can be attached, but without converting them to character (which can have large performance implications). Objects have a class 'qG'.</p>
 <p><code>finteraction</code> generates a factor or 'qG' object by interacting multiple vectors or factors. In that process missing values are always replaced with a level and unused levels/combinations are always dropped.</p>
 <p><em>collapse</em> internally makes optimal use of factors and 'qG' objects when passed as grouping vectors to statistical functions (<code>g/by</code>, or <code>t</code> arguments) i.e. typically no further grouping or ordering is performed and objects are used directly by statistical C/C++ code.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">qF</span><span class="op">(</span><span class="va">x</span>, ordered <span class="op">=</span> <span class="cn">FALSE</span>, na.exclude <span class="op">=</span> <span class="cn">TRUE</span>, sort <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"sort"</span><span class="op">]</span><span class="op">]</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -52,31 +64,43 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <span>             method <span class="op">=</span> <span class="st">"auto"</span>, sep <span class="op">=</span> <span class="st">"."</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/qF.html">itn</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="co"># Shorthand for finteraction</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a atomic vector, factor or quick-group.</p></dd>
+
   <dt id="arg-ordered">ordered<a class="anchor" aria-label="anchor" href="#arg-ordered"></a></dt>
 <dd><p>logical. Adds a class 'ordered'.</p></dd>
+
   <dt id="arg-na-exclude">na.exclude<a class="anchor" aria-label="anchor" href="#arg-na-exclude"></a></dt>
 <dd><p>logical. <code>TRUE</code> preserves missing values (i.e. no level is generated for <code>NA</code>). <code>FALSE</code> attaches an additional class <code>"na.included"</code> which is used to skip missing value checks performed before sending objects to C/C++. See Details.</p></dd>
+
   <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
 <dd><p>logical. <code>TRUE</code> sorts the levels in ascending order (like <code><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></code>); <code>FALSE</code> provides the levels in order of first appearance, which can be significantly faster. Note that if a factor is passed as input, only <code>sort = FALSE</code> takes effect and unused levels will be dropped (as factors usually have sorted levels and checking sortedness can be expensive).</p></dd>
+
   <dt id="arg-drop">drop<a class="anchor" aria-label="anchor" href="#arg-drop"></a></dt>
 <dd><p>logical. If <code>x</code> is a factor, <code>TRUE</code> efficiently drops unused factor levels beforehand using <code><a href="fdroplevels.html">fdroplevels</a></code>.</p></dd>
+
   <dt id="arg-keep-attr">keep.attr<a class="anchor" aria-label="anchor" href="#arg-keep-attr"></a></dt>
 <dd><p>logical. If <code>TRUE</code> and <code>x</code> has additional attributes apart from 'levels' and 'class', these are preserved in the conversion to factor.</p></dd>
+
   <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>an integer or character string specifying the method of computation:</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td>"auto"</td><td></td><td>automatic selection: <code>if(is.double(x) &amp;&amp; sort) "radix" else if(sort &amp;&amp; length(x) &lt; 1e5) "rcpp_hash" else "hash"</code>.</td></tr><tr><td>2</td><td></td><td>"radix"</td><td></td><td>use radix ordering to generate factors. Supports <code>sort = FALSE</code> only for character vectors. See Details.</td></tr><tr><td>3</td><td></td><td>"hash"</td><td></td><td>use hashing to generate factors. Since v1.8.3 this is a fast hybrid implementation using <code><a href="group.html">group</a></code> and radix ordering applied to the unique elements. See Details.</td></tr><tr><td>4</td><td></td><td>"rcpp_hash"</td><td></td><td>the previous "hash" algorithm prior to v1.8.3: uses <code>Rcpp::sugar::sort_unique</code> and <code>Rcpp::sugar::match</code>. Only supports <code>sort = TRUE</code>.</td></tr></table><p>Note that for <code>finteraction</code>, <code>method = "hash"</code> is always unsorted and <code>method = "rcpp_hash"</code> is not available.</p></dd>
+
 <dt id="arg-return-groups">return.groups<a class="anchor" aria-label="anchor" href="#arg-return-groups"></a></dt>
 <dd><p>logical. <code>TRUE</code> returns the unique elements / groups / levels of <code>x</code> in an attribute called <code>"groups"</code>. Unlike <code>qF</code>, they are not converted to character.</p></dd>
+
 <dt id="arg-factor">factor<a class="anchor" aria-label="anchor" href="#arg-factor"></a></dt>
 <dd><p>logical. <code>TRUE</code> returns an factor, <code>FALSE</code> returns a 'qG' object.</p></dd>
+
   <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
 <dd><p>character. The separator passed to <code><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></code> when creating factor levels from multiple grouping variables.</p></dd>
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>multiple atomic vectors or factors, or a single list of equal-length vectors or factors. See Details.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -101,6 +125,7 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="group.html">group</a></code>, <code><a href="groupid.html">groupid</a></code>, <code><a href="GRP.html">GRP</a></code>, <a href="fast-grouping-ordering.html">Fast Grouping and Ordering</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">cylF</span> <span class="op">&lt;-</span> <span class="fu">qF</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span>     <span class="co"># Factor from atomic vector</span></span></span>
@@ -120,9 +145,9 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf</span><span class="op">)</span>, <span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min     lq      mean  median      uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 95.202 96.391 100.14045 97.4775 100.450 160.146   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 90.610 91.348  96.17616 92.7830  96.022 204.426   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min      lq     mean median      uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 89.011 89.3595 90.32423 89.544 89.8105  97.457   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 84.132 84.5830 86.13034 84.829 85.7925 112.094   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>  <span class="co"># Interacting two variables (can be factors)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0 6.0 4.1 6.1 8.0 6.1 8.0 4.1 4.1 6.1 6.1 8.0 8.0 8.0 8.0 8.0 8.0 4.1 4.1</span>
@@ -154,12 +179,21 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

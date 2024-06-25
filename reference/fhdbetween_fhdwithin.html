@@ -3,12 +3,19 @@
 The corresponding operators HDB and HDW additionally allow to predict / partial out full lm() formulas with interactions between variables."><meta property="og:description" content="fhdbetween is a generalization of fbetween to efficiently predict with multiple factors and linear models (i.e. predict with vectors/factors, matrices, or data frames/lists where the latter may contain multiple factor variables). Similarly, fhdwithin is a generalization of fwithin to center on multiple factors and partial-out linear models.
 The corresponding operators HDB and HDW additionally allow to predict / partial out full lm() formulas with interactions between variables."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,17 +26,22 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Higher-Dimensional Centering and Linear Prediction</h1>
+
       <div class="d-none name"><code>fhdbetween_fhdwithin.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>fhdbetween</code> is a generalization of <code>fbetween</code> to efficiently predict with multiple factors and linear models (i.e. predict with vectors/factors, matrices, or data frames/lists where the latter may contain multiple factor variables). Similarly, <code>fhdwithin</code> is a generalization of <code>fwithin</code> to center on multiple factors and partial-out linear models.</p>
 <p>The corresponding operators <code>HDB</code> and <code>HDW</code> additionally allow to predict / partial out full <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code> formulas with interactions between variables.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fhdbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -94,31 +106,44 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
 <span><span class="fu">HDW</span><span class="op">(</span><span class="va">x</span>, effect <span class="op">=</span> <span class="st">"all"</span>, w <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="va">is.numeric</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>    fill <span class="op">=</span> <span class="cn">TRUE</span>, variable.wise <span class="op">=</span> <span class="cn">TRUE</span>, stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a numeric vector, matrix, data frame, 'indexed_series' ('pseries') or 'indexed_frame' ('pdata.frame').</p></dd>
+
   <dt id="arg-fl">fl<a class="anchor" aria-label="anchor" href="#arg-fl"></a></dt>
 <dd><p>a numeric vector, factor, matrix, data frame or list (which may or may not contain factors). In the <code>HDW/HDB</code> data frame method <code>fl</code> can also be a one-or two sided <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code> formula with variables contained in <code>x</code>. Interactions <code>(:)</code> and full interactions <code>(*)</code> are supported. See Examples and the Note.</p></dd>
+
   <dt id="arg-w">w<a class="anchor" aria-label="anchor" href="#arg-w"></a></dt>
 <dd><p>a vector of (non-negative) weights.</p></dd>
+
   <dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
 <dd><p><em>data.frame methods</em>: Select columns to center (partial-out) or predict using column names, indices, a logical vector or a function. Unless specified otherwise all numeric columns are selected. If <code>NULL</code>, all columns are selected.</p></dd>
+
   <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
 <dd><p>remove missing values from both <code>x</code> and <code>fl</code>. by default rows with missing values in <code>x</code> or <code>fl</code> are removed. In that case an attribute "na.rm" is attached containing the rows removed.</p></dd>
+
   <dt id="arg-fill">fill<a class="anchor" aria-label="anchor" href="#arg-fill"></a></dt>
 <dd><p>If <code>na.rm = TRUE</code>, <code>fill = TRUE</code> will not remove rows with missing values in <code>x</code> or <code>fl</code>, but fill them with <code>NA</code>'s.</p></dd>
+
   <dt id="arg-variable-wise">variable.wise<a class="anchor" aria-label="anchor" href="#arg-variable-wise"></a></dt>
 <dd><p><em>(p)data.frame methods</em>: Setting <code>variable.wise = TRUE</code> will process each column individually i.e. use all non-missing cases in each column and in <code>fl</code> (<code>fl</code> is only checked for missing values if <code>na.rm = TRUE</code>). This is a lot less efficient but uses all data available in each column.</p></dd>
+
 <dt id="arg-effect">effect<a class="anchor" aria-label="anchor" href="#arg-effect"></a></dt>
 <dd><p><em>plm</em> methods: Select which panel identifiers should be used for centering. 1L takes the first variable in the <a href="indexing.html">index</a>, 2L the second etc.. Index variables can also be called by name using a character vector. The keyword <code>"all"</code> uses all identifiers.</p></dd>
+
   <dt id="arg-stub">stub<a class="anchor" aria-label="anchor" href="#arg-stub"></a></dt>
 <dd><p>character. A prefix/stub to add to the names of all transformed columns. <code>TRUE</code> (default) uses <code>"HDW."/"HDB."</code>, <code>FALSE</code> will not rename columns.</p></dd>
+
 <dt id="arg-lm-method">lm.method<a class="anchor" aria-label="anchor" href="#arg-lm-method"></a></dt>
 <dd><p>character. The linear fitting method. Supported are <code>"chol"</code> and <code>"qr"</code>. See <code><a href="flm.html">flm</a></code>.</p></dd>
+
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>further arguments passed to <code><a href="https://lrberge.github.io/fixest/reference/demean.html" class="external-link">fixest::demean</a></code> (other than <code>notes</code> and <code>im_confident</code>) and <code><a href="https://rdrr.io/r/base/chol.html" class="external-link">chol</a></code> / <code><a href="https://rdrr.io/r/base/qr.html" class="external-link">qr</a></code>. Possible choices are <code>tol</code> to set a uniform numerical tolerance for the entire fitting process, or <code>nthreads</code> and <code>iter</code> to govern the higher-order centering process.</p></dd>
+
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -130,13 +155,18 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+
+
+
 <div class="section">
 <h3 id="on-the-differences-between-fhdwithin-hdw-and-fwithin-w-">On the differences between <code>fhdwithin/HDW</code>... and <code>fwithin/W</code>...:<a class="anchor" aria-label="anchor" href="#on-the-differences-between-fhdwithin-hdw-and-fwithin-w-"></a></h3>
+
 <ul><li><p><code>fhdwithin/HDW</code> can center data on multiple factors and also partial out continuous variables and factor-continuous interactions while <code>fwithin/W</code> only centers on one factor or the interaction of a set of factors, and does that very efficiently.</p></li>
 <li><p><code>HDW(data, ~ qF(group1) + qF(group2))</code> simultaneously centers numeric variables in data on <code>group1</code> and <code>group2</code>, while <code>W(data, ~ group1 + group2)</code> centers data on the interaction of <code>group1</code> and <code>group2</code>. The equivalent operation in <code>HDW</code> would be: <code>HDW(data, ~ qF(group1):qF(group2))</code>.</p></li>
 <li><p><code>W</code> always does computations on the variable-wise complete observations (in both matrices and data frames), whereas by default <code>HDW</code> removes all cases missing in either <code>x</code> or <code>fl</code>. In short, <code>W(data, ~ group1 + group2)</code> is actually equivalent to <code>HDW(data, ~ qF(group1):qF(group2), variable.wise = TRUE)</code>. <code>HDW(data, ~ qF(group1):qF(group2))</code> would remove any missing cases.</p></li>
 <li><p><code>fbetween/B</code> and <code>fwithin/W</code> have options to fill missing cases using group-averages and to add the overall mean back to group-demeaned data. These options are not available in <code>fhdbetween/HDB</code> and <code>fhdwithin/HDW</code>. Since <code>HDB</code> and <code>HDW</code> by default remove missing cases, they also don't have options to keep grouping-columns as in <code>B</code> and <code>W</code>.</p></li>
 </ul></div>
+
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -146,6 +176,7 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="fbetween_fwithin.html">fbetween, fwithin</a></code>, <code><a href="fscale.html">fscale</a></code>, <code><a href="TRA.html">TRA</a></code>, <code><a href="flm.html">flm</a></code>, <code><a href="fFtest.html">fFtest</a></code>, <a href="data-transformations.html">Data Transformations</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">HDW</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">carb</span><span class="op">)</span>                   <span class="co"># Simple regression problems</span></span></span>
@@ -355,12 +386,21 @@ The corresponding operators HDB and HDW additionally allow to predict / partial 
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

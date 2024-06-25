@@ -5,20 +5,29 @@ qM converts vectors, higher-dimensional arrays, data frames and suitable lists t
 mctl and mrtl column- or row-wise convert a matrix to list, data frame or data.table. They are used internally by qDF/qDT/qTBL, dapply, BY, etc...
 qF converts atomic vectors to factor (documented on a separate page).
 as_numeric_factor, as_integer_factor, and as_character_factor convert factors, or all factor columns in a data frame / list, to character or numeric (by converting the levels).
+
 "><meta property="og:description" content="Fast, flexible and precise conversion of common data objects, without method dispatch and extensive checks:
 qDF, qDT and qTBL convert vectors, matrices, higher-dimensional arrays and suitable lists to data frame, data.table and tibble, respectively.
 qM converts vectors, higher-dimensional arrays, data frames and suitable lists to matrix.
 mctl and mrtl column- or row-wise convert a matrix to list, data frame or data.table. They are used internally by qDF/qDT/qTBL, dapply, BY, etc...
 qF converts atomic vectors to factor (documented on a separate page).
 as_numeric_factor, as_integer_factor, and as_character_factor convert factors, or all factor columns in a data frame / list, to character or numeric (by converting the levels).
+
 "><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -29,13 +38,17 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Quick Data Conversion</h1>
+
       <div class="d-none name"><code>quick-conversion.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p>Fast, flexible and precise conversion of common data objects, without method dispatch and extensive checks:</p><ul><li><p><code>qDF</code>, <code>qDT</code> and <code>qTBL</code> convert vectors, matrices, higher-dimensional arrays and suitable lists to data frame, <em>data.table</em> and <em>tibble</em>, respectively.</p></li>
 <li><p><code>qM</code> converts vectors, higher-dimensional arrays, data frames and suitable lists to matrix.</p></li>
@@ -43,6 +56,7 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
 <li><p><code><a href="qF.html">qF</a></code> converts atomic vectors to factor (documented on a separate page).</p></li>
 <li><p><code>as_numeric_factor</code>, <code>as_integer_factor</code>, and <code>as_character_factor</code> convert factors, or all factor columns in a data frame / list, to character or numeric (by converting the levels).</p></li>
 </ul></div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># Converting between matrices, data frames / tables / tibbles</span></span>
@@ -63,23 +77,33 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
 <span>  <span class="fu">as_integer_factor</span><span class="op">(</span><span class="va">X</span>, keep.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu">as_character_factor</span><span class="op">(</span><span class="va">X</span>, keep.attr <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-x">X<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a vector, factor, matrix, higher-dimensional array, data frame or list. <code>mctl</code> and <code>mrtl</code> only accept matrices, <code>as_numeric_factor</code>, <code>as_integer_factor</code> and <code>as_character_factor</code> only accept factors, data frames or lists.</p></dd>
+
   <dt id="arg-row-names-col">row.names.col<a class="anchor" aria-label="anchor" href="#arg-row-names-col"></a></dt>
 <dd><p>can be used to add an column saving names or row.names when converting objects to data frame using <code>qDF/qDT/qTBL</code>. <code>TRUE</code> will add a column <code>"row.names"</code>, or you can supply a name e.g. <code>row.names.col = "variable"</code>. With <code>qM</code>, the argument has the opposite meaning, and can be used to select one or more columns in a data frame/list which will be used to create the rownames of the matrix e.g. <code>qM(iris, row.names.col = "Species")</code>. In this case the column(s) can be specified using names, indices, a logical vector or a selector function. See Examples.</p></dd>
+
   <dt id="arg-keep-attr">keep.attr<a class="anchor" aria-label="anchor" href="#arg-keep-attr"></a></dt>
 <dd><p>logical. <code>FALSE</code> (default) yields a <em>hard</em> / <em>thorough</em> object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / <em>data.table</em>. <code>FALSE</code> yields a <em>soft</em> / <em>minimal</em> object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also <code>class</code>.</p></dd>
+
   <dt id="arg-class">class<a class="anchor" aria-label="anchor" href="#arg-class"></a></dt>
 <dd><p>if a vector of classes is passed here, the converted object will be assigned these classes. If <code>NULL</code> is passed, the default classes are assigned: <code>qM</code> assigns no class, <code>qDF</code> a class <code>"data.frame"</code>, and <code>qDT</code> a class <code>c("data.table", "data.frame")</code>. If <code>keep.attr = TRUE</code> and <code>class = NULL</code> and the object already inherits the default classes, further inherited classes are preserved. See Details and the Example.</p></dd>
+
   <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
 <dd><p>character. Separator used for interacting multiple variables selected through <code>row.names.col</code>.</p></dd>
+
+
+
   <dt id="arg-names">names<a class="anchor" aria-label="anchor" href="#arg-names"></a></dt>
 <dd><p>logical. Should the list be named using row/column names from the matrix?</p></dd>
+
     <dt id="arg-return">return<a class="anchor" aria-label="anchor" href="#arg-return"></a></dt>
 <dd><p>an integer or string specifying what to return. The options are:</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td>"list"</td><td></td><td>returns a plain list</td></tr><tr><td>2</td><td></td><td>"data.frame"</td><td></td><td>returns a plain data.frame</td></tr><tr><td>3</td><td></td><td>"data.table"</td><td></td><td>returns a plain <em>data.table</em></td></tr></table><p></p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -97,6 +121,7 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="qF.html">qF</a></code>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Basic Examples</span></span></span>
@@ -217,12 +242,21 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

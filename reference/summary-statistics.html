@@ -5,20 +5,29 @@ qtab, shorthand for quick-table, is a faster and more versatile alternative to t
 descr computes a concise and detailed description of a data frame, including (sorted) frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by Hmisc::describe, but about 10x faster.
 pwcor, pwcov and pwnobs compute (weighted) pairwise correlations, covariances and observation counts on matrices and data frames. Pairwise correlations and covariances can be computed together with observation counts and p-values. The elaborate print method displays all of these statistics in a single correlation table.
 varying very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers). A variable is variant if it has at least 2 distinct non-missing data points.
+
 "><meta property="og:description" content="collapse provides the following functions to efficiently summarize and examine data:
 qsu, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software. It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method. Statistics can be computed weighted, by groups, and also within-and between entities (for multilevel / panel data).
 qtab, shorthand for quick-table, is a faster and more versatile alternative to table. Notably, it also supports tabulations with frequency weights, as well as computing a statistic over combinations of variables. 'qtab's inherit the 'table' class, allowing for seamless application of 'table' methods.
 descr computes a concise and detailed description of a data frame, including (sorted) frequency tables for categorical variables and various statistics and quantiles for numeric variables. It is inspired by Hmisc::describe, but about 10x faster.
 pwcor, pwcov and pwnobs compute (weighted) pairwise correlations, covariances and observation counts on matrices and data frames. Pairwise correlations and covariances can be computed together with observation counts and p-values. The elaborate print method displays all of these statistics in a single correlation table.
 varying very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers). A variable is variant if it has at least 2 distinct non-missing data points.
+
 "><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -29,13 +38,17 @@ varying very efficiently checks for the presence of any variation in data (optio
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Summary Statistics</h1>
+
       <div class="d-none name"><code>summary-statistics.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><em>collapse</em> provides the following functions to efficiently summarize and examine data:</p><ul><li><p><code><a href="qsu.html">qsu</a></code>, shorthand for quick-summary, is an extremely fast summary command inspired by the (xt)summarize command in the STATA statistical software. It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtosis) using a numerically stable one-pass method. Statistics can be computed weighted, by groups, and also within-and between entities (for multilevel / panel data).</p></li>
 <li><p><code><a href="qtab.html">qtab</a></code>, shorthand for quick-table, is a faster and more versatile alternative to <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></code>. Notably, it also supports tabulations with frequency weights, as well as computing a statistic over combinations of variables. 'qtab's inherit the 'table' class, allowing for seamless application of 'table' methods.</p></li>
@@ -43,6 +56,8 @@ varying very efficiently checks for the presence of any variation in data (optio
 <li><p><code><a href="pwcor_pwcov_pwnobs.html">pwcor</a></code>, <code><a href="pwcor_pwcov_pwnobs.html">pwcov</a></code> and <code><a href="pwcor_pwcov_pwnobs.html">pwnobs</a></code> compute (weighted) pairwise correlations, covariances and observation counts on matrices and data frames. Pairwise correlations and covariances can be computed together with observation counts and p-values. The elaborate print method displays all of these statistics in a single correlation table.</p></li>
 <li><p><code><a href="varying.html">varying</a></code> very efficiently checks for the presence of any variation in data (optionally) within groups (such as panel-identifiers). A variable is variant if it has at least 2 distinct non-missing data points.</p></li>
 </ul></div>
+
+
     <div class="section level2">
     <h2 id="table-of-functions">Table of Functions<a class="anchor" aria-label="anchor" href="#table-of-functions"></a></h2>
     <p></p><table class="table table"><tr><td><em> Function / S3 Generic </em></td><td></td><td><em> Methods </em></td><td></td><td><em> Description </em></td></tr><tr><td><code><a href="qsu.html">qsu</a></code></td><td></td><td><code>default, matrix, data.frame, grouped_df, pseries, pdata.frame, sf</code></td><td></td><td>Fast (grouped, weighted, panel-decomposed) summary statistics</td></tr><tr><td><code><a href="qtab.html">qtab</a></code></td><td></td><td>No methods, for data frames or vectors</td><td></td><td>Fast (weighted) cross tabulation</td></tr><tr><td><code><a href="descr.html">descr</a></code></td><td></td><td><code>default, grouped_df</code>  (default method handles most objects)</td><td></td><td>Detailed statistical description of data frame</td></tr><tr><td><code><a href="pwcor_pwcov_pwnobs.html">pwcor</a></code></td><td></td><td>No methods, for matrices or data frames</td><td></td><td>Pairwise (weighted) correlations</td></tr><tr><td><code><a href="pwcor_pwcov_pwnobs.html">pwcov</a></code></td><td></td><td>No methods, for matrices or data frames</td><td></td><td>Pairwise (weighted) covariances</td></tr><tr><td><code><a href="pwcor_pwcov_pwnobs.html">pwnobs</a></code></td><td></td><td>No methods, for matrices or data frames</td><td></td><td>Pairwise observation counts</td></tr><tr><td><code><a href="varying.html">varying</a></code></td><td></td><td><code>default, matrix, data.frame, pseries, pdata.frame, grouped_df</code></td><td></td><td>Fast variation check</td></tr></table></div>
@@ -50,14 +65,24 @@ varying very efficiently checks for the presence of any variation in data (optio
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><a href="collapse-documentation.html">Collapse Overview</a>, <a href="fast-statistical-functions.html">Fast Statistical Functions</a></p></div>
     </div>
+
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

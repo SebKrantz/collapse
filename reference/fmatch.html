@@ -5,12 +5,19 @@ This is a much faster replacement for match that works
 This is a much faster replacement for match that works
   with atomic vectors and data frames / lists of equal-length vectors. It is the workhorse function of join."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -21,18 +28,23 @@ This is a much faster replacement for match that works
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Matching</h1>
+
       <div class="d-none name"><code>fmatch.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p>Fast matching of elements/rows in <code>x</code> to elements/rows in <code>table</code>.</p>
 <p>This is a much faster replacement for <code><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></code> that works
   with atomic vectors and data frames / lists of equal-length vectors. It is the workhorse function of <code><a href="join.html">join</a></code>.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fmatch</span><span class="op">(</span><span class="va">x</span>, <span class="va">table</span>, nomatch <span class="op">=</span> <span class="cn">NA_integer_</span>,</span>
@@ -49,30 +61,38 @@ This is a much faster replacement for match that works
 <span><span class="co"># Use set_collapse(mask = "%in%") to replace %in% with</span></span>
 <span><span class="co"># a much faster version based on fmatch()</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a vector, list or data frame whose elements are matched against <code>table</code>. If a list/data frame, matches are found by comparing rows, unlike <code><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></code> which compares columns.</p></dd>
+
   <dt id="arg-table">table<a class="anchor" aria-label="anchor" href="#arg-table"></a></dt>
 <dd><p>a vector, list or data frame to match against.</p></dd>
+
   <dt id="arg-nomatch">nomatch<a class="anchor" aria-label="anchor" href="#arg-nomatch"></a></dt>
 <dd><p>integer. Value to be returned in the case when no match is found. Default is <code>NA_integer_</code>.</p></dd>
+
   <dt id="arg-count">count<a class="anchor" aria-label="anchor" href="#arg-count"></a></dt>
 <dd><p>logical. Counts number of (unique) matches and attaches 4 attributes:</p><ul><li><p><code>"N.nomatch"</code>: The number of elements in <code>x</code> not matched <code>= sum(result == nomatch)</code>.</p></li>
 <li><p><code>"N.groups"</code>: The size of the table <code> = NROW(table)</code>.</p></li>
 <li><p><code>"N.distinct"</code>: The number of unique matches <code> = fndistinct(result[result != nomatch])</code>.</p></li>
 <li><p><code>"class"</code>: The <code><a href="qF.html">"qG"</a></code> class: needed for optimized computations on the results object (e.g. <code>funique(result)</code>, which is needed for a full join).</p></li>
 </ul><p><em>Note</em> that computing these attributes requires an extra pass through the matching vector. Also note that these attributes contain no general information about whether either <code>x</code> or <code>table</code> are unique, except for two special cases when N.groups = N.distinct (table is unique) or length(result) = N.distinct (x is unique). Otherwise use <code><a href="funique.html">any_duplicated</a></code> to check x/table.</p></dd>
+
   <dt id="arg-overid">overid<a class="anchor" aria-label="anchor" href="#arg-overid"></a></dt>
 <dd><p>integer. If <code>x/table</code> are lists/data frames, <code>fmatch</code> compares the rows incrementally, starting with the first two columns, and matching further columns as necessary (see Details). Overidentification corresponds to the case when a subset of the columns uniquely identify the data. In this case this argument controls the behavior:</p><ul><li><p><code>0</code>: Early termination: stop matching additional columns. Most efficient.</p></li>
 <li><p><code>1</code>: Continue matching columns and issue a warning that the data is overidentified.</p></li>
 <li><p><code>2</code>: Continue matching columns without warning.</p></li>
 </ul><p></p></dd>
+
 <dt id="arg-e">e<a class="anchor" aria-label="anchor" href="#arg-e"></a></dt>
 <dd><p>the error message thrown by <code>ckmatch</code> for non-matched elements. The message is followed by the comma-separated non-matched elements.</p></dd>
+
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>further arguments to <code>fmatch</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -86,6 +106,7 @@ This is a much faster replacement for match that works
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="join.html">join</a></code>, <code><a href="funique.html">funique</a></code>, <code><a href="group.html">group</a></code>, <a href="fast-grouping-ordering.html">Fast Grouping and Ordering</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b"</span>, <span class="st">"c"</span>, <span class="st">"a"</span>, <span class="st">"e"</span>, <span class="st">"f"</span>, <span class="st">"ff"</span><span class="op">)</span></span></span>
@@ -145,12 +166,21 @@ This is a much faster replacement for match that works
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

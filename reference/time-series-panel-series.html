@@ -7,6 +7,7 @@ Similarly, fdiff, fgrowth, and the operators D, Dlog and G are S3 generics to ef
 fcumsum is an S3 generic to efficiently compute cumulative sums on time series and panel data. In contrast to cumsum, it can handle missing values and supports both grouped and indexed / ordered computations.
 psmat is an S3 generic to efficiently convert panel-vectors / 'indexed_series' and data frames / 'indexed_frame's to panel series matrices and 3D arrays, respectively (where time, individuals and variables receive different dimensions, allowing for fast indexation, visualization, and computations).
 psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors / 'indexed_series', and multivariate versions for data frames / 'indexed_frame's.
+
 "><meta property="og:description" content="collapse provides a flexible and powerful set of functions and classes to work with time-dependent data:
 findex_by/iby creates an 'indexed_frame': a flexible structure that can be imposed upon any data-frame like object and facilitates indexed (time-aware) computations on time series and panel data. Indexed frames are composed of 'indexed_series', which can also be created from vector and matrix-based objects using the reindex function. Further functions findex/ix, unindex, is_irregular and to_plm help operate these classes, check for irregularity, and ensure plm compatibility. Methods are defined for various time series, data transformation and data manipulation functions in collapse.
 timeid efficiently converts numeric time sequences, such as 'Date' or 'POSIXct' vectors, to a time-factor / integer id, where a unit-step represents the greatest common divisor of the underlying sequence.
@@ -15,14 +16,22 @@ Similarly, fdiff, fgrowth, and the operators D, Dlog and G are S3 generics to ef
 fcumsum is an S3 generic to efficiently compute cumulative sums on time series and panel data. In contrast to cumsum, it can handle missing values and supports both grouped and indexed / ordered computations.
 psmat is an S3 generic to efficiently convert panel-vectors / 'indexed_series' and data frames / 'indexed_frame's to panel series matrices and 3D arrays, respectively (where time, individuals and variables receive different dimensions, allowing for fast indexation, visualization, and computations).
 psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, partial auto- and cross- correlation or covariance functions for panel-vectors / 'indexed_series', and multivariate versions for data frames / 'indexed_frame's.
+
 "><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -33,13 +42,17 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Time Series and Panel Series</h1>
+
       <div class="d-none name"><code>time-series-panel-series.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><em>collapse</em> provides a flexible and powerful set of functions and classes to work with time-dependent data:</p><ul><li><p><code><a href="indexing.html">findex_by/iby</a></code> creates an 'indexed_frame': a flexible structure that can be imposed upon any data-frame like object and facilitates <b>indexed (time-aware) computations on time series and panel data</b>. Indexed frames are composed of 'indexed_series', which can also be created from vector and matrix-based objects using the <code>reindex</code> function. Further functions <code>findex/ix</code>, <code>unindex</code>, <code>is_irregular</code> and <code>to_plm</code> help operate these classes, check for irregularity, and ensure <em>plm</em> compatibility. Methods are defined for various time series, data transformation and data manipulation functions in <em>collapse</em>.</p></li>
 <li><p><code><a href="timeid.html">timeid</a></code> efficiently converts numeric time sequences, such as 'Date' or 'POSIXct' vectors, to a <b>time-factor / integer id</b>, where a unit-step represents the greatest common divisor of the underlying sequence.</p></li>
@@ -49,6 +62,8 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
 <li><p><code><a href="psmat.html">psmat</a></code> is an S3 generic to efficiently convert panel-vectors / 'indexed_series' and data frames / 'indexed_frame's to <b>panel series matrices and 3D arrays</b>, respectively (where time, individuals and variables receive different dimensions, allowing for fast indexation, visualization, and computations).</p></li>
 <li><p><code><a href="psacf.html">psacf</a></code>, <code><a href="psacf.html">pspacf</a></code> and <code><a href="psacf.html">psccf</a></code> are S3 generics to compute estimates of the <b>auto-, partial auto- and cross- correlation or covariance functions</b> for panel-vectors / 'indexed_series', and multivariate versions for data frames / 'indexed_frame's.</p></li>
 </ul></div>
+
+
     <div class="section level2">
     <h2 id="table-of-functions">Table of Functions<a class="anchor" aria-label="anchor" href="#table-of-functions"></a></h2>
     <p></p><table class="table table"><tr><td><em> S3 Generic </em></td><td></td><td><em> Methods </em></td><td></td><td><em> Description </em></td></tr><tr><td><!-- % \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} \Sexpr{"\u200B"} -->
@@ -57,14 +72,24 @@ psacf, pspacf and psccf are S3 generics to compute estimates of the auto-, parti
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><a href="collapse-documentation.html">Collapse Overview</a>, <a href="data-transformations.html">Data Transformations</a></p></div>
     </div>
+
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

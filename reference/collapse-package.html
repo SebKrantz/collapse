@@ -7,12 +7,19 @@ To facilitate complex data transformation, exploration and computing tasks in R.
 To help make R code fast, flexible, parsimonious and programmer friendly.
 It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and the plm approach to panel data."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -23,18 +30,24 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1><!-- % \code{collapse:} --> Advanced and Fast Data Transformation</h1>
+
       <div class="d-none name"><code>collapse-package.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><em>collapse</em> is a C/C++ based package for data transformation and statistical computing in R. Its aims are:</p><ul><li><p>To facilitate complex data transformation, exploration and computing tasks in R.</p></li>
 <li><p>To help make R code fast, flexible, parsimonious and programmer friendly. <!-- % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter, --></p></li>
 </ul><p>It is made compatible with the <em>tidyverse</em>, <em>data.table</em>, <em>sf</em>, <em>units</em>, <em>xts/zoo</em>, and the <em>plm</em> approach to panel data.</p>
     </div>
+
+
     <div class="section level2">
     <h2 id="getting-started">Getting Started<a class="anchor" aria-label="anchor" href="#getting-started"></a></h2>
     <p>Read the short <a href="https://sebkrantz.github.io/collapse/articles/collapse_documentation.html">vignette</a> on documentation resources, and check out the built in <a href="collapse-documentation.html">documentation</a>.  <!-- % A careful consideration of the \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{cheat sheet} is recommended for quick starters. --></p>
@@ -47,13 +60,25 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 <li><p>A flexible and generic approach supporting and preserving many R objects. <!-- % standard  % (S3 generic statistical functions, class/attribute preservation). % , compatibility with \emph{dplyr}, \emph{plm} and \emph{data.table} --></p></li>
 <li><p>Optimized programming in standard and non-standard evaluation.</p></li>
 </ul><p>The statistical functions in <em>collapse</em> are S3 generic with core methods for vectors, matrices and data frames, and internally support grouped and weighted computations carried out in C/C++. <!-- %Thus functions need only be called once for column-wise and/or grouped computations, providing a lot of extra speed and full support for sampling weights. --></p>
+
+
+
+
 <p><!-- %The function \code{fgroup_by} can be used to efficiently create a grouped tibble inside dplyr-like chained calls (constructed with \emph{magrittr} pipes, fast manipulation functions like \code{fselect}, \code{fsubset}, \code{ftransform} and fast statistical functions). Thus \emph{collapse} enables optimized programming in both standard and non-standard evaluation. --></p>
+
+
 <p>Additional methods and C-level features enable broad based compatibility with <em>dplyr</em> (grouped tibble), <em>data.table</em>, <em>sf</em> and <em>plm</em> panel data classes. Functions and core methods seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes). See also the <a href="https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html">vignette</a> on <em>collapse</em>'s handling of R objects.</p>
 <p>Missing values are efficiently skipped at C/C++ level. The package default is <code>na.rm = TRUE</code>. This can be changed using <code><a href="collapse-options.html">set_collapse(na.rm = FALSE)</a></code>. Missing weights are generally supported. <!-- % Core functionality and all statistical functions / computations are tested with &gt; 20,000 unit tests for Base R equivalence, exempting some improvements (e.g. \code{fsum(NA, na.rm = TRUE)} evaluates to \code{NA}, not 0 (unless \code{fill = TRUE}), similarly for \code{fmin} and \code{fmax}; no \code{NaN} values are generated from computations involving \code{NA} values). %Generic functions provide some \link[=collapse-options]{security} against silent swallowing of arguments. --></p>
 <p><!-- %Hence they also handle various date and time series classes etc., and can easily be integreated into most approaches to data transformation. --></p>
 <p><!-- %A global \code{option("collapse_unused_arg_action")} can be set to regulate the behavior when unused arguments are passed to a generic function. The default is to issue a warning. --></p>
+
 <p><em>collapse</em> installs with a built-in hierarchical <a href="collapse-documentation.html">documentation</a> facilitating the use of the package. <!-- % The \href{https://sebkrantz.github.io/collapse/articles/index.html}{vignettes} are complimentary and also follow a more structured approach. % and \code{base/stats}. % extra methods warrant, provide ? --></p>
+
+
+
 <p>The package is coded both in C and C++ and built with <em>Rcpp</em>, but also uses C/C++ functions from <em>data.table</em>, <em>kit</em>, <em>fixest</em>, <em>weights</em>, <em>stats</em> and <em>RcppArmadillo / RcppEigen</em>. <!-- % For the moment \emph{collapse} does not utilize low-level parallelism (such as OpenMP). --></p>
+
+
     </div>
     <div class="section level2">
     <h2 id="author-s-">Author(s)<a class="anchor" aria-label="anchor" href="#author-s-"></a></h2>
@@ -69,9 +94,11 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
     </div>
     <div class="section level2">
     <h2 id="developing-bug-reporting">Developing / Bug Reporting<a class="anchor" aria-label="anchor" href="#developing-bug-reporting"></a></h2>
+
 <ul><li><p>Please report issues at <a href="https://github.com/SebKrantz/collapse/issues" class="external-link">https://github.com/SebKrantz/collapse/issues</a>.</p></li>
 <li><p>Please send pull-requests to the 'development' branch of the repository.</p></li>
 </ul></div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Note: this set of examples is is certainly non-exhaustive and does not</span></span></span>
@@ -503,8 +530,8 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f1</span><span class="op">)</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># A minor difference, larger on larger data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               expr   min     lq    mean median    uq    max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 4.018 4.2025 4.63013 4.3050 4.387 28.372   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.854 4.0180 4.13854 4.1205 4.223  4.756   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.854 4.0180 4.34354 4.0795 4.141 26.732   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.690 3.8745 3.94502 3.8950 3.977  4.715   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Efficient interactions of vectors and/or factors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0</span>
@@ -590,12 +617,12 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">2</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># A remarkable performance gain..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min      lq      mean  median       uq     max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.132   2.460   3.57438   2.993   3.6695  15.949</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 303.113 314.183 334.40379 328.041 344.5845 512.213</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq      mean   median       uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.173   2.7470   4.66088   3.4235   4.5715</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 320.210 333.9655 529.17429 351.7185 392.4725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     20.623   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  11419.853   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sds</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span></span></span>
@@ -1867,12 +1894,21 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

@@ -3,12 +3,19 @@
 Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar functionality i.e. arguments are evaluated sequentially, computation on grouped data is done by groups, and functions can be applied to multiple columns using across. See also the Details."><meta property="og:description" content="ftransform is a much faster version of transform for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. settransform does all of that by reference. fcompute computes and returns new columns. These functions evaluate all arguments simultaneously, allow list-input (nested pipelines) and disregard grouped data.
 Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar functionality i.e. arguments are evaluated sequentially, computation on grouped data is done by groups, and functions can be applied to multiple columns using across. See also the Details."><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,17 +26,22 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Transform and Compute Columns on a Data Frame</h1>
+
       <div class="d-none name"><code>ftransform.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>ftransform</code> is a much faster version of <code><a href="https://rdatatable.gitlab.io/data.table/reference/transform.data.table.html" class="external-link">transform</a></code> for data frames. It returns the data frame with new columns computed and/or existing columns modified or deleted. <code>settransform</code> does all of that by reference. <code>fcompute</code> computes and returns new columns. These functions evaluate all arguments simultaneously, allow list-input (nested pipelines) and disregard grouped data.</p>
 <p>Catering to the <em>tidyverse</em> user, v1.7.0 introduced <code>fmutate</code>, providing familiar functionality i.e. arguments are evaluated sequentially, computation on grouped data is done by groups, and functions can be applied to multiple columns using <code><a href="across.html">across</a></code>. See also the Details.</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># dplyr-style mutate (sequential evaluation + across() feature)</span></span>
@@ -56,28 +68,39 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span><span class="fu">fcompute</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, keep <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="fu">fcomputev</span><span class="op">(</span><span class="va">.data</span>, <span class="va">vars</span>, <span class="va">FUN</span>, <span class="va">...</span>, apply <span class="op">=</span> <span class="cn">TRUE</span>, keep <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg--data">.data<a class="anchor" aria-label="anchor" href="#arg--data"></a></dt>
 <dd><p>a data frame or named list of columns.</p></dd>
+
     <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>further arguments of the form <code>column = value</code>. The <code>value</code> can be a combination of other columns, a scalar value, or <code>NULL</code>, which deletes <code>column</code>. Alternatively it is also possible to place a single list here, which will be treated like a list of <code>column = value</code> arguments. For <code>ftransformv</code> and <code>fcomputev</code>, <code>...</code> can be used to pass further arguments to <code>FUN</code>. The ellipsis (<code>...</code>) is always evaluated within the data frame (<code>.data</code>) environment. See Examples.
 <code>fmutate</code> additionally supports <code><a href="across.html">across</a></code> statements, and evaluates tagged vector expressions sequentially. With grouped execution, <code>dots</code> can also contain arbitrary expressions that result in a list of data-length columns. See Examples.</p></dd>
+
     <dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
 <dd><p>variables to be transformed by applying <code>FUN</code> to them: select using names, indices, a logical vector or a selector function (e.g. <code>is.numeric</code>). Since v1.7 <code>vars</code> is evaluated within the <code>.data</code> environment, permitting expressions on columns e.g. <code>c(col1, col3:coln)</code>.</p></dd>
+
     <dt id="arg-fun">FUN<a class="anchor" aria-label="anchor" href="#arg-fun"></a></dt>
 <dd><p>a single function yielding a result of length <code>NROW(.data)</code> or 1. See also <code>apply</code>.</p></dd>
+
     <dt id="arg-apply">apply<a class="anchor" aria-label="anchor" href="#arg-apply"></a></dt>
 <dd><p>logical. <code>TRUE</code> (default) will apply <code>FUN</code> to each column selected in <code>vars</code>; <code>FALSE</code> will apply <code>FUN</code> to the subsetted data frame i.e. <code>FUN(get_vars(.data, vars), ...)</code>. The latter is useful for <em>collapse</em> functions with data frame or grouped / panel data frame methods, yielding performance gains and enabling grouped transformations. See Examples.</p></dd>
+
     <dt id="arg-value">value<a class="anchor" aria-label="anchor" href="#arg-value"></a></dt>
 <dd><p>a named list of replacements, it will be treated like an evaluated list of <code>column = value</code> arguments.</p></dd>
+
     <dt id="arg-keep">keep<a class="anchor" aria-label="anchor" href="#arg-keep"></a></dt>
 <dd><p>select columns to preserve using column names, indices or a function (e.g. <code>is.numeric</code>). By default computed columns are added after the preserved ones, unless they are assigned the same name in which case the preserved columns will be replaced in order.</p></dd>
+
    <dt id="arg--keep">.keep<a class="anchor" aria-label="anchor" href="#arg--keep"></a></dt>
 <dd><p>either one of <code>"all", "used", "unused"</code> or <code>"none"</code> (see <code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></code>), or columns names/indices/function as <code>keep</code>. <em>Note</em> that this does not work well with <code><a href="across.html">across()</a></code> or other expressions supported since v1.9.0. The only sensible option you have there is to supply a character vector of all columns in the final dataset that you want to keep.</p></dd>
+
+
    <dt id="arg--cols">.cols<a class="anchor" aria-label="anchor" href="#arg--cols"></a></dt>
 <dd><p>for expressions involving <code>.data</code>, <code>.cols</code> can be used to subset columns, e.g. <code>mtcars |&gt; gby(cyl) |&gt; mtt(broom::augment(lm(mpg ~., .data)), .cols = 1:7)</code>. Can pass column names, indices, a logical vector or a selector function (e.g. <code>is.numericr</code>).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -107,6 +130,7 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="across.html">across</a></code>, <code><a href="fsummarise.html">fsummarise</a></code>, <a href="fast-data-manipulation.html">Data Frame Manipulation</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
@@ -589,12 +613,21 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

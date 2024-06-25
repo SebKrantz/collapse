@@ -14,6 +14,7 @@ finteraction is a fast alternative to interaction implemented as a wrapper aroun
 groupid is a generalization of data.table::rleid providing a run-length type group-id from atomic vectors. It is generalization as it also supports passing an ordering vector and skipping missing values. For example qF and qG with method = &quot;radix&quot; are essentially implemented using groupid(x, radixorder(x)).
 seqid is a specialized function which creates a group-id from sequences of integer values. For any regular panel dataset groupid(id, order(id, time)) and seqid(time, order(id, time)) provide the same id variable. seqid is especially useful for identifying discontinuities in time-sequences.
 timeid is a specialized function to convert integer or double vectors representing time (such as 'Date', 'POSIXct' etc.) to factor or 'qG' object based on the greatest common divisor of elements (thus preserving gaps in time intervals).
+
 "><meta property="og:description" content="collapse provides the following functions to efficiently group and order data:
 radixorder, provides fast radix-ordering through direct access to the method order(..., method = &quot;radix&quot;), as well as the possibility to return some attributes very useful for grouping data and finding unique elements. radixorderv exists as a programmers alternative. The function roworder(v) efficiently reorders a data frame based on an ordering computed by radixorderv.
 group provides fast grouping in first-appearance order of rows, based on a hashing algorithm in C. Objects have class 'qG', see below.
@@ -29,14 +30,22 @@ finteraction is a fast alternative to interaction implemented as a wrapper aroun
 groupid is a generalization of data.table::rleid providing a run-length type group-id from atomic vectors. It is generalization as it also supports passing an ordering vector and skipping missing values. For example qF and qG with method = &quot;radix&quot; are essentially implemented using groupid(x, radixorder(x)).
 seqid is a specialized function which creates a group-id from sequences of integer values. For any regular panel dataset groupid(id, order(id, time)) and seqid(time, order(id, time)) provide the same id variable. seqid is especially useful for identifying discontinuities in time-sequences.
 timeid is a specialized function to convert integer or double vectors representing time (such as 'Date', 'POSIXct' etc.) to factor or 'qG' object based on the greatest common divisor of elements (thus preserving gaps in time intervals).
+
 "><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -47,13 +56,17 @@ timeid is a specialized function to convert integer or double vectors representi
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Grouping and Ordering</h1>
+
       <div class="d-none name"><code>fast-grouping-ordering.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><em>collapse</em> provides the following functions to efficiently group and order data:</p><ul><li><p><code><a href="radixorder.html">radixorder</a></code>, provides fast radix-ordering through direct access to the method <code><a href="https://rdrr.io/r/base/order.html" class="external-link">order(..., method = "radix")</a></code>, as well as the possibility to return some attributes very useful for grouping data and finding unique elements. <code><a href="radixorder.html">radixorderv</a></code> exists as a programmers alternative. The function <code><a href="roworder.html">roworder(v)</a></code> efficiently reorders a data frame based on an ordering computed by <code><a href="radixorder.html">radixorderv</a></code>. <!-- %The source code for both \code{\link{radixorder}} and \code{\link{order(\dots, method = "radix")}, comes from \code{data.table:::forder}. --></p></li>
 <li><p><code><a href="group.html">group</a></code> provides fast grouping in first-appearance order of rows, based on a hashing algorithm in C. Objects have class 'qG', see below.</p></li>
@@ -70,6 +83,8 @@ timeid is a specialized function to convert integer or double vectors representi
 <li><p><code><a href="seqid.html">seqid</a></code> is a specialized function which creates a group-id from sequences of integer values. For any regular panel dataset <code>groupid(id, order(id, time))</code> and <code>seqid(time, order(id, time))</code> provide the same id variable. <code><a href="seqid.html">seqid</a></code> is especially useful for identifying discontinuities in time-sequences.</p></li>
 <li><p><code><a href="timeid.html">timeid</a></code> is a specialized function to convert integer or double vectors representing time (such as 'Date', 'POSIXct' etc.) to factor or 'qG' object based on the greatest common divisor of elements (thus preserving gaps in time intervals).</p></li>
 </ul></div>
+
+
     <div class="section level2">
     <h2 id="table-of-functions">Table of Functions<a class="anchor" aria-label="anchor" href="#table-of-functions"></a></h2>
     <p></p><table class="table table"><tr><td><em> Function / S3 Generic </em></td><td></td><td><em> Methods </em></td><td></td><td><em> Description </em></td></tr><tr><td><code><a href="radixorder.html">radixorder(v)</a></code></td><td></td><td>No methods, for data frames and vectors</td><td></td><td>Radix-based ordering + grouping information</td></tr><tr><td><code><a href="roworder.html">roworder(v)</a></code></td><td></td><td>No methods, for data frames incl. pdata.frame</td><td></td><td>Row sorting/reordering</td></tr><tr><td><code><a href="group.html">group</a></code></td><td></td><td>No methods, for data frames and vectors</td><td></td><td>Hash-based grouping + grouping information</td></tr><tr><td><code><a href="GRP.html">GRP</a></code></td><td></td><td><code>default, GRP, factor, qG, grouped_df, pseries, pdata.frame</code></td><td></td><td>Fast grouping and a flexible grouping object</td></tr><tr><td><code><a href="GRP.html">fgroup_by</a></code></td><td></td><td>No methods, for data frames</td><td></td><td>Fast grouped data frame</td></tr><tr><td><code><a href="fmatch.html">fmatch</a></code></td><td></td><td>No methods, for vectors and data frames</td><td></td><td>Fast matching</td></tr><tr><td><code><a href="funique.html">funique</a></code>, <code><a href="funique.html">fnunique</a></code>, <code><a href="funique.html">fduplicated</a></code>, <code><a href="funique.html">any_duplicated</a></code></td><td></td><td><code>default, data.frame, sf, pseries, pdata.frame, list</code></td><td></td><td>Fast (number of) unique values/rows</td></tr><tr><td><code><a href="fcount.html">fcount(v)</a></code></td><td></td><td>Internal generic, supports vectors, matrices, data.frames, lists, grouped_df and pdata.frame</td><td></td><td>Fast group counts</td></tr><tr><td><code><a href="qF.html">qF</a></code></td><td></td><td>No methods, for vectors</td><td></td><td>Quick factor generation</td></tr><tr><td><code><a href="qF.html">qG</a></code></td><td></td><td>No methods, for vectors</td><td></td><td>Quick grouping of vectors and a 'factor-light' class</td></tr><tr><td><code><a href="fdroplevels.html">fdroplevels</a></code></td><td></td><td><code>factor, data.frame, list</code></td><td></td><td>Fast removal of unused factor levels</td></tr><tr><td><code><a href="qF.html">finteraction</a></code></td><td></td><td>No methods, for data frames and vectors</td><td></td><td>Fast interactions</td></tr><tr><td><code><a href="groupid.html">groupid</a></code></td><td></td><td>No methods, for vectors</td><td></td><td>Run-length type group-id</td></tr><tr><td><code><a href="seqid.html">seqid</a></code></td><td></td><td>No methods, for integer vectors</td><td></td><td>Run-length type integer sequence-id</td></tr><tr><td><code><a href="timeid.html">timeid</a></code></td><td></td><td>No methods, for integer or double vectors</td><td></td><td>Integer-id from time/date sequences</td></tr></table></div>
@@ -77,14 +92,24 @@ timeid is a specialized function to convert integer or double vectors representi
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><a href="collapse-documentation.html">Collapse Overview</a>, <a href="fast-data-manipulation.html">Data Frame Manipulation</a>, <a href="time-series-panel-series.html">Time Series and Panel Series</a></p></div>
     </div>
+
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 

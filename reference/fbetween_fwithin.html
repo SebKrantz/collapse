@@ -3,12 +3,19 @@
 (B / W provide more flexibility than fbetween / fwithin when applied to data frames (i.e.  column subsetting, formula input, auto-renaming and id-variable-preservation capabilities...), but are otherwise identical.)"><meta property="og:description" content="fbetween and fwithin are S3 generics to efficiently obtain between-transformed (averaged) or (quasi-)within-transformed (demeaned) data. These operations can be performed groupwise and/or weighted. B and W are wrappers around fbetween and fwithin representing the 'between-operator' and the 'within-operator'.
 (B / W provide more flexibility than fbetween / fwithin when applied to data frames (i.e.  column subsetting, formula input, auto-renaming and id-variable-preservation capabilities...), but are otherwise identical.)"><meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+
+
     <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
+
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
+
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Documentation</a></li>
 <li class="nav-item"><a class="nav-link" href="../articles/index.html">Vignettes</a></li>
@@ -19,17 +26,22 @@
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
+
+
   </div>
 </nav><div class="container template-reference-topic">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fast Between (Averaging) and (Quasi-)Within (Centering) Transformations</h1>
+
       <div class="d-none name"><code>fbetween_fwithin.Rd</code></div>
     </div>
+
     <div class="ref-description section level2">
     <p><code>fbetween</code> and <code>fwithin</code> are S3 generics to efficiently obtain between-transformed (averaged) or (quasi-)within-transformed (demeaned) data. These operations can be performed groupwise and/or weighted. <code>B</code> and <code>W</code> are wrappers around <code>fbetween</code> and <code>fwithin</code> representing the 'between-operator' and the 'within-operator'.</p>
 <p>(<code>B</code> / <code>W</code> provide more flexibility than <code>fbetween</code> / <code>fwithin</code> when applied to data frames (i.e.  column subsetting, formula input, auto-renaming and id-variable-preservation capabilities...), but are otherwise identical.)</p>
     </div>
+
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fbetween</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
@@ -104,37 +116,52 @@
 <span><span class="fu">W</span><span class="op">(</span><span class="va">x</span>, w <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, mean <span class="op">=</span> <span class="fl">0</span>, theta <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  stub <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"stub"</span><span class="op">]</span><span class="op">]</span>, keep.group_vars <span class="op">=</span> <span class="cn">TRUE</span>, keep.w <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
+
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>a numeric vector, matrix, data frame, 'indexed_series' ('pseries'), 'indexed_frame' ('pdata.frame') or grouped data frame ('grouped_df').</p></dd>
+
   <dt id="arg-g">g<a class="anchor" aria-label="anchor" href="#arg-g"></a></dt>
 <dd><p>a factor, <code><a href="GRP.html">GRP</a></code> object, or atomic vector / list of vectors (internally grouped with <code><a href="group.html">group</a></code>) used to group <code>x</code>.</p></dd>
+
   <dt id="arg-by">by<a class="anchor" aria-label="anchor" href="#arg-by"></a></dt>
 <dd><p><em>B and W data.frame method</em>: Same as g, but also allows one- or two-sided formulas i.e. <code>~ group1</code> or <code>var1 + var2 ~ group1 + group2</code>. See Examples.</p></dd>
+
   <dt id="arg-w">w<a class="anchor" aria-label="anchor" href="#arg-w"></a></dt>
 <dd><p>a numeric vector of (non-negative) weights. <code>B</code>/<code>W</code> data frame and <code>pdata.frame</code> methods also allow a one-sided formula i.e. <code>~ weightcol</code>. The <code>grouped_df</code> (<em>dplyr</em>) method supports lazy-evaluation. See Examples.</p></dd>
+
     <dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
 <dd><p><em>B/W (p)data.frame methods</em>: Select columns to scale using a function, column names, indices or a logical vector. Default: All numeric columns. <em>Note</em>: <code>cols</code> is ignored if a two-sided formula is passed to <code>by</code>.</p></dd>
+
   <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
 <dd><p>logical. Skip missing values in <code>x</code> and <code>w</code> when computing averages. If <code>na.rm = FALSE</code> and a <code>NA</code> or <code>NaN</code> is encountered, the average for that group will be <code>NA</code>, and all data points belonging to that group in the output vector will also be <code>NA</code>.</p></dd>
+
       <dt id="arg-effect">effect<a class="anchor" aria-label="anchor" href="#arg-effect"></a></dt>
 <dd><p><em>plm</em> methods: Select which panel identifier should be used as grouping variable. 1L takes the first variable in the <a href="indexing.html">index</a>, 2L the second etc. Index variables can also be called by name using a character string. If more than one variable is supplied, the corresponding index-factors are interacted.</p></dd>
+
   <dt id="arg-stub">stub<a class="anchor" aria-label="anchor" href="#arg-stub"></a></dt>
 <dd><p>character. A prefix/stub to add to the names of all transformed columns. <code>TRUE</code> (default) uses <code>"W."/"B."</code>, <code>FALSE</code> will not rename columns.</p></dd>
+
   <dt id="arg-fill">fill<a class="anchor" aria-label="anchor" href="#arg-fill"></a></dt>
 <dd><p><em>option to <code>fbetween</code>/<code>B</code></em>: Logical. <code>TRUE</code> will overwrite missing values in <code>x</code> with the respective average. By default missing values in <code>x</code> are preserved.</p></dd>
+
   <dt id="arg-mean">mean<a class="anchor" aria-label="anchor" href="#arg-mean"></a></dt>
 <dd><p><em>option to <code>fwithin</code>/<code>W</code></em>: The mean to center on, default is 0, but a different mean can be supplied and will be added to the data after the centering is performed. A special option when performing grouped centering is <code>mean = "overall.mean"</code>. In that case the overall mean of the data will be added after subtracting out group means.</p></dd>
+
   <dt id="arg-theta">theta<a class="anchor" aria-label="anchor" href="#arg-theta"></a></dt>
 <dd><p><em>option to <code>fwithin</code>/<code>W</code></em>: Double. An optional scalar parameter for quasi-demeaning i.e. <code>x - theta * xi.</code>. This is useful for variance components ('random-effects') estimators. see Details.</p></dd>
+
   <dt id="arg-keep-by-keep-ids-keep-group-vars">keep.by, keep.ids, keep.group_vars<a class="anchor" aria-label="anchor" href="#arg-keep-by-keep-ids-keep-group-vars"></a></dt>
 <dd><p><em>B and W data.frame, pdata.frame and grouped_df methods</em>: Logical. Retain grouping / panel-identifier columns in the output. For data frames this only works if grouping variables were passed in a formula.</p></dd>
+
   <dt id="arg-keep-w">keep.w<a class="anchor" aria-label="anchor" href="#arg-keep-w"></a></dt>
 <dd><p><em>B and W data.frame, pdata.frame and grouped_df methods</em>: Logical. Retain column containing the weights in the output. Only works if <code>w</code> is passed as formula / lazy-expression.</p></dd>
+
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>arguments to be passed to or from other methods.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -156,6 +183,7 @@
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="fhdbetween_fhdwithin.html">fhdbetween/HDB and fhdwithin/HDW</a></code>, <code><a href="fscale.html">fscale/STD</a></code>, <code><a href="TRA.html">TRA</a></code>, <a href="data-transformations.html">Data Transformations</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
+
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## Simple centering and averaging</span></span></span>
@@ -319,7 +347,7 @@
 <span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"within"</span><span class="op">)</span>   <span class="co"># "Proof"..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x147bc79a0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x132350620&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     carb </span>
@@ -409,7 +437,7 @@
 <span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">~</span> <span class="va">carb</span>, <span class="va">mtcars</span>, index <span class="op">=</span> <span class="st">"cyl"</span>, model <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: mpg ~ carb</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x147bc79a0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x132350620&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)        carb </span>
@@ -419,12 +447,21 @@
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
+
+
     <footer><div class="pkgdown-footer-left">
   <p>Developed by Sebastian Krantz.</p>
 </div>
+
 <div class="pkgdown-footer-right">
   <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.9000.</p>
 </div>
+
     </footer></div>
+
+
+
+
+
   </body></html>
 
