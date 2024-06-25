@@ -24,12 +24,12 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
     int ox = OBJECT(x);
     // FAZIT: Need to use SET_VECTOR_ELT!! pres[i] = allocVector() doesn't work!!
     if(TYPEOF(ax) != NILSXP && ox != 0) {
-      for(int i = 0, s4o = IS_S4_OBJECT(x); i != ng; ++i) {
+      for(int i = 0; i != ng; ++i) { // , s4o = IS_S4_OBJECT(x)
         SEXP resi;
         SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
         SET_ATTRIB(resi, ax);
         SET_OBJECT(resi, ox);
-        if(s4o) SET_S4_OBJECT(resi);
+        // if(s4o) SET_S4_OBJECT(resi);
       }
     } else if(TYPEOF(ax) != NILSXP) {
       for(int i = 0; i != ng; ++i) {
@@ -38,11 +38,11 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         SET_ATTRIB(resi, ax);
       }
     } else if(ox != 0) { // Is this even possible? Object bits but no attributes?
-      for(int i = 0, s4o = IS_S4_OBJECT(x); i != ng; ++i) {
+      for(int i = 0; i != ng; ++i) { // , s4o = IS_S4_OBJECT(x)
         SEXP resi;
         SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
         SET_OBJECT(resi, ox);
-        if(s4o) SET_S4_OBJECT(resi);
+        // if(s4o) SET_S4_OBJECT(resi);
       }
     } else {
       for(int i = 0; i != ng; ++i) SET_VECTOR_ELT(res, i, allocVector(tx, pgs[i]));
