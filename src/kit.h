@@ -55,7 +55,7 @@
 #define C_ISNAN(x, y) (B_ISNAN(x, y) || (N_ISNAN(x, y) && x == y))
 #define REQUAL(x, y)  (N_ISNAN(x, y) ? (x == y) : (B_IsNA(x, y) || B_IsNaN(x, y)))
 #define CEQUAL(x, y) ((N_ISNAN(x.r, x.i) && N_ISNAN(y.r, y.i)) ? (x.r == y.r && x.i == y.i) : (C_IsNA(x) ? C_IsNA(y) : (C_IsNA(y) ? 0 : (C_ISNAN(x.r, y.r) && C_ISNAN(x.i, y.i)))))
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // To replace STRING_PTR
+#define SEXPPTR(x) ((SEXP *)DATAPTR(x))
 // #define STR_DF mkString("data.frame")
 // #define MAX(a,b) (((a)>(b))?(a):(b))
 // #define IS_LOGICAL(x) (isLogical(x) && LENGTH(x)==1)
