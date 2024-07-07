@@ -118,7 +118,7 @@ do_collapse_restore_exports <- function(clpns) {
 .onLoad <- function(libname, pkgname) {
 
   res <- .Call(C_collapse_init, "init.success")
-  if(!is.character(res) || res != "init.success") stop("collapse not succesfully loaded!")
+  if(!is.character(res) || res != "init.success") stop("collapse not successfully loaded!")
 
   # https://stackoverflow.com/questions/12598242/global-variables-in-packages-in-r
   # https://stackoverflow.com/questions/49056642/r-how-to-make-variable-available-to-namespace-at-loading-time?noredirect=1&lq=1

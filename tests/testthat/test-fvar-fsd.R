@@ -45,7 +45,7 @@ wvar <- function(x, w, na.rm = FALSE) {
 }
 
 
-# fvar using Welford's Algoritm (default)
+# fvar using Welford's Algorithm (default)
 
 test_that("fvar performs like base::var", {
   expect_equal(fvar(NA), bvar(NA))
@@ -434,7 +434,7 @@ test_that("fvar with direct algorithm performs like base::var", {
   # expect_equal(fvar(mtcNA, g, stable.algo = FALSE), BY(mtcNA, g, bvar, na.rm = TRUE)) # failed on arch i386 CMD check and patched-solaris-x86
 })
 
-test_that("fvar with with direct algorithm and weights performs as intended (unbiased)", {
+test_that("fvar with direct algorithm and weights performs as intended (unbiased)", {
   expect_equal(fvar(c(2,2,4,5,5,5), stable.algo = FALSE), fvar(c(2,4,5), w = c(2,1,3), stable.algo = FALSE))
   expect_equal(fvar(c(2,2,4,5,5,5), na.rm = FALSE, stable.algo = FALSE), fvar(c(2,4,5), w = c(2,1,3), na.rm = FALSE), stable.algo = FALSE)
   expect_equal(fvar(c(2.456,2.456,4.123,5.009,5.009,5.009), stable.algo = FALSE), fvar(c(2.456,4.123,5.009), w = c(2,1,3), stable.algo = FALSE))
@@ -604,7 +604,7 @@ test_that("fvar with direct algorithm performs numerically stable", {
   expect_true(all_obj_equal(replicate(50, fvar(mtcNA, g, stable.algo = FALSE), simplify = FALSE)))
 })
 
-test_that("fvar with with direct algorithm and complete weights performs numerically stable", {
+test_that("fvar with direct algorithm and complete weights performs numerically stable", {
   expect_true(all_obj_equal(replicate(50, fvar(1, w = 1, stable.algo = FALSE), simplify = FALSE)))
   expect_true(all_obj_equal(replicate(50, fvar(NA, w = 1, stable.algo = FALSE), simplify = FALSE)))
   expect_true(all_obj_equal(replicate(50, fvar(NA, w = 1, na.rm = FALSE, stable.algo = FALSE), simplify = FALSE)))
@@ -634,7 +634,7 @@ test_that("fvar with with direct algorithm and complete weights performs numeric
   expect_true(all_obj_equal(replicate(50, fvar(mtcNA, g, wdat, stable.algo = FALSE), simplify = FALSE)))
 })
 
-test_that("fvar with with direct algorithm and missing weights performs numerically stable", {
+test_that("fvar with direct algorithm and missing weights performs numerically stable", {
   expect_true(all_obj_equal(replicate(50, fvar(1, w = NA, stable.algo = FALSE), simplify = FALSE)))
   expect_true(all_obj_equal(replicate(50, fvar(NA, w = NA, stable.algo = FALSE), simplify = FALSE)))
   expect_true(all_obj_equal(replicate(50, fvar(NA, w = NA, na.rm = FALSE, stable.algo = FALSE), simplify = FALSE)))
@@ -689,7 +689,7 @@ test_that("fvar with direct algorithm handles special values in the right way", 
   expect_equal(fvar(c(FALSE,FALSE), na.rm = FALSE, stable.algo = FALSE), 0)
 })
 
-test_that("fvar with with direct algorithm and weights handles special values in the right way", {
+test_that("fvar with direct algorithm and weights handles special values in the right way", {
   expect_equal(fvar(NA, w = 1, stable.algo = FALSE), NA_real_)
   expect_equal(fvar(NaN, w = 1, stable.algo = FALSE), NA_real_)
   expect_equal(fvar(Inf, w = 1, stable.algo = FALSE), NA_real_)

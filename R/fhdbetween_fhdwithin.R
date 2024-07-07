@@ -79,7 +79,7 @@ getfl <- function(mf) {
       if(lsf) fctdat <- mf[singlefct] # unattrib() -> wrap around at the end... Nah, better with names...
       if(lff) fctdat <- c(fctdat, lapply(intterms[fctfct], finteract, TRUE, mf))
 
-      # Any heterogenous slopes
+      # Any heterogeneous slopes
       if(lff != length(intterms)) {
         intslope <- intterms[!fctfct]
         slflag <- integer(lsf)

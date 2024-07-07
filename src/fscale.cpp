@@ -4,7 +4,7 @@ using namespace Rcpp;
 // Notes:
 // for mean there are 2 options: "overall.mean" = R_NegInf adds the overall mean. default is centering on 0, or centering on a mean provided, or FALSE = R_PosInf -> no centering, scaling preserves mean
 // for sd there is "within.sd" = R_NegInf, scaling by the frequency weighted within-group sd, default is 1, or scaling by a sd provided.
-// All other comments are in fvar.cpp (in C++ folder, not on Github)
+// All other comments are in fvar.cpp (in C++ folder, not on GitHub)
 
 // [[Rcpp::export]]
 NumericVector fscaleCpp(const NumericVector& x, int ng = 0, const IntegerVector& g = 0, const SEXP& w = R_NilValue,

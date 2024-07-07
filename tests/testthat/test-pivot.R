@@ -1,5 +1,6 @@
 context("pivot")
 
+skip_if_not_installed("data.table")
 library(data.table)
 mtcDT <- qDT(mtcars)
 mtcnaDT <- qDT(na_insert(mtcars))

@@ -55,7 +55,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       }
       PROTECT(x	= coerceVector(x,	tt)); ++nprotect; // Coercing to largest common type
     } else { // x has a larger type than table...
-      if(tt == INTSXP-1) { // There could be a complicated shorthand involving matching x against the levels and then replacing this by the first occurence index
+      if(tt == INTSXP-1) { // There could be a complicated shorthand involving matching x against the levels and then replacing this by the first occurrence index
         PROTECT(table = asCharacterFactor(table)); ++nprotect;
         if(tx != STRSXP) { // Worst case: need to coerce x as well to make the match
           PROTECT(x = coerceVector(x, STRSXP)); ++nprotect;
@@ -65,7 +65,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       }
     }
   } else if(tx == INTSXP-1 && tt == INTSXP-1) { // Both factors
-    SEXP x_lev = PROTECT(getAttrib(x, R_LevelsSymbol)); ++nprotect; // Unecessary but appeases RCHK
+    SEXP x_lev = PROTECT(getAttrib(x, R_LevelsSymbol)); ++nprotect; // Unnecessary but appeases RCHK
     if(!R_compute_identical(x_lev, getAttrib(table, R_LevelsSymbol), 0)) {
       // This is the inefficient way: coercing both to character
       // PROTECT(x = asCharacterFactor(x)); ++nprotect;
@@ -250,7 +250,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     }
   } break;
   case STRSXP: {
-    const SEXP *restrict px = STRING_PTR(x), *restrict pt = STRING_PTR(table);
+    const SEXP *restrict px = SEXPPTR(x), *restrict pt = SEXPPTR(table);
     // fill hash table with indices of 'table'
     for (int i = 0; i != nt; ++i) {
       id = HASH(((uintptr_t) pt[i] & 0xffffffff), K);
@@ -428,8 +428,8 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
         }
       } break;
       case STRSXP: {
-        const SEXP *restrict px1 = STRING_PTR(pc1[0]), *restrict px2 = STRING_PTR(pc2[0]),
-                   *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
+        const SEXP *restrict px1 = SEXPPTR(pc1[0]), *restrict px2 = SEXPPTR(pc2[0]),
+                   *restrict pt1 = SEXPPTR(pc1[1]), *restrict pt2 = SEXPPTR(pc2[1]);
         // fill hash table with indices of 'table'
         for (int i = 0; i != nt; ++i) {
           id = HASH(64988430769U * ((uintptr_t)pt1[i] & 0xffffffff) + ((uintptr_t)pt2[i] & 0xffffffff), K);
@@ -523,7 +523,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     } else if ((t1 == REALSXP && t2 == STRSXP) || (t1 == STRSXP && t2 == REALSXP)) {
       const int rev = t1 == STRSXP;
       const double *restrict pxr = REAL(VECTOR_ELT(pc[rev], 0)), *restrict ptr = REAL(VECTOR_ELT(pc[rev], 1));
-      const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
+      const SEXP *restrict pxs = SEXPPTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR(VECTOR_ELT(pc[1-rev], 1));
       union uno tpv;
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -554,7 +554,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     } else if((t1 == INTSXP && t2 == STRSXP) || (t1 == STRSXP && t2 == INTSXP)) {
       const int rev = t1 == STRSXP;
       const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
-      const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
+      const SEXP *restrict pxs = SEXPPTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR(VECTOR_ELT(pc[1-rev], 1));
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -643,8 +643,8 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       }
     } break;
     case STRSXP: {
-      const SEXP *restrict px1 = STRING_PTR(pc1[0]), *restrict px2 = STRING_PTR(pc2[0]),
-                 *restrict pt1 = STRING_PTR(pc1[1]), *restrict pt2 = STRING_PTR(pc2[1]);
+      const SEXP *restrict px1 = SEXPPTR(pc1[0]), *restrict px2 = SEXPPTR(pc2[0]),
+                 *restrict pt1 = SEXPPTR(pc1[1]), *restrict pt2 = SEXPPTR(pc2[1]);
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         id = HASH(64988430769U * ((uintptr_t)pt1[i] & 0xffffffff) + ((uintptr_t)pt2[i] & 0xffffffff), K);
@@ -747,7 +747,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
     } else if ((t1 == REALSXP && t2 == STRSXP) || (t1 == STRSXP && t2 == REALSXP)) {
       const int rev = t1 == STRSXP;
       const double *restrict pxr = REAL(VECTOR_ELT(pc[rev], 0)), *restrict ptr = REAL(VECTOR_ELT(pc[rev], 1));
-      const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
+      const SEXP *restrict pxs = SEXPPTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR(VECTOR_ELT(pc[1-rev], 1));
       union uno tpv;
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -781,7 +781,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
     } else if((t1 == INTSXP && t2 == STRSXP) || (t1 == STRSXP && t2 == INTSXP)) {
       const int rev = t1 == STRSXP;
       const int *restrict pxi = INTEGER(VECTOR_ELT(pc[rev], 0)), *restrict pti = INTEGER(VECTOR_ELT(pc[rev], 1));
-      const SEXP *restrict pxs = STRING_PTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = STRING_PTR(VECTOR_ELT(pc[1-rev], 1));
+      const SEXP *restrict pxs = SEXPPTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR(VECTOR_ELT(pc[1-rev], 1));
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -871,7 +871,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
       }
     } break;
     case STRSXP: {
-      const SEXP *restrict px = STRING_PTR(pcj[0]), *restrict pt = STRING_PTR(pcj[1]);
+      const SEXP *restrict px = SEXPPTR(pcj[0]), *restrict pt = SEXPPTR(pcj[1]);
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         if(ptab_copy[i] == nmv) {
@@ -964,7 +964,7 @@ void match_rest(const SEXP *pcj, const int nmv, const int n, const int nt, int *
       }
     } break;
     case STRSXP: {
-      const SEXP *restrict px = STRING_PTR(pcj[0]), *restrict pt = STRING_PTR(pcj[1])-1;
+      const SEXP *restrict px = SEXPPTR(pcj[0]), *restrict pt = SEXPPTR(pcj[1])-1;
       for (int i = 0; i != n; ++i) {
         if(pans[i] == nmv) continue;
         if(px[i] != pt[pans[i]]) pans[i] = nmv;

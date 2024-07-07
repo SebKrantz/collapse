@@ -160,7 +160,7 @@ void R_init_collapse(DllInfo *dll) {
      recommend you contact me if you want to use a C function in a package. I am always happy to answer questions
      regarding the arguments and use of certain C functions. */
 
-  // Funtions that fully operate on R vectors (SEXP)                           // Corresponding R function(s)
+  // Functions that fully operate on R vectors (SEXP)                           // Corresponding R function(s)
   R_RegisterCCallable("collapse", "cp_TRA", (DL_FUNC) &TRAC);                  // TRA.default()
   R_RegisterCCallable("collapse", "cp_setop", (DL_FUNC) &setop);               // setop()
   R_RegisterCCallable("collapse", "cp_range", (DL_FUNC) &frange);              // frange()

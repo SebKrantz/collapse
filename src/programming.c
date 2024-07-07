@@ -1,4 +1,5 @@
 #include "collapse_c.h"
+#include "base_radixsort.h"
 
 SEXP Cna_rm(SEXP x) {
   const int n = LENGTH(x);
@@ -31,11 +32,11 @@ SEXP Cna_rm(SEXP x) {
     return out;
   }
   case STRSXP: {
-    const SEXP *xd = STRING_PTR(x);
+    const SEXP *xd = SEXPPTR(x);
     for (int i = 0; i != n; ++i) if(xd[i] == NA_STRING) ++k;
     if(k == 0) return x;
     SEXP out = PROTECT(allocVector(STRSXP, n - k));
-    SEXP *pout = STRING_PTR(out);
+    SEXP *pout = SEXPPTR(out);
     k = 0;
     for (int i = 0; i != n; ++i) if(xd[i] != NA_STRING) pout[k++] = xd[i];
     copyMostAttrib(x, out);
@@ -60,7 +61,7 @@ SEXP Cna_rm(SEXP x) {
 
 // Helper function to find a single string in factor levels
 int fchmatch(SEXP x, SEXP val, int nomatch) {
-  const SEXP *px = STRING_PTR(x), v = asChar(val);
+  const SEXP *px = SEXPPTR(x), v = asChar(val);
   for(int i = 0, l = length(x); i != l; ++i) if(px[i] == v) return i + 1;
   return nomatch;
 }
@@ -109,8 +110,8 @@ if(length(val) == n && n > 1) {
   }
   case STRSXP:
   {
-    const SEXP *px = STRING_PTR(x);
-    const SEXP *pv = STRING_PTR(val);
+    const SEXP *px = SEXPPTR(x);
+    const SEXP *pv = SEXPPTR(val);
     WHICHVLOOPLX
     break;
   }
@@ -155,7 +156,7 @@ if(length(val) == n && n > 1) {
   }
   case STRSXP:
   {
-    const SEXP *px = STRING_PTR(x);
+    const SEXP *px = SEXPPTR(x);
     const SEXP v = PROTECT(asChar(val));
     WHICHVLOOP
     UNPROTECT(1);
@@ -216,7 +217,7 @@ case REALSXP:
 }
 case STRSXP:
 {
-  const SEXP *px = STRING_PTR(x);
+  const SEXP *px = SEXPPTR(x);
   const SEXP v = asChar(val);
   ALLANYVLOOP
   break;
@@ -387,7 +388,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
   }
   case STRSXP:
   {
-    SEXP *restrict px = set ? STRING_PTR(x) : STRING_PTR(ans);
+    SEXP *restrict px = set ? SEXPPTR(x) : SEXPPTR(ans);
     if(lv == 1 && ind1 == 0) {
       const SEXP v = PROTECT(asChar(val));
       if(lr == 1) {
@@ -395,7 +396,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
         setcopyvLOOP(r)
         UNPROTECT(1);
       } else {
-        const SEXP *restrict pr = STRING_PTR(rep);
+        const SEXP *restrict pr = SEXPPTR(rep);
         setcopyvLOOP(pr[i])
       }
       UNPROTECT(1);
@@ -406,7 +407,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
         setcopyvLOOPLVEC1
         UNPROTECT(1);
       } else {
-        const SEXP *restrict pr = STRING_PTR(rep);
+        const SEXP *restrict pr = SEXPPTR(rep);
         setcopyvLOOPLVEC
       }
     }
@@ -760,7 +761,7 @@ SEXP na_locf(SEXP x, SEXP Rset) {
   }
   case STRSXP:
   {
-    SEXP *data = STRING_PTR(x);
+    SEXP *data = SEXPPTR(x);
     SEXP last = data[0];
     for (int i = 0; i < n; i++) {
       if (data[i] == NA_STRING) {
@@ -826,7 +827,7 @@ SEXP na_focb(SEXP x, SEXP Rset) {
   }
   case STRSXP:
   {
-    SEXP *data = STRING_PTR(x);
+    SEXP *data = SEXPPTR(x);
     SEXP last = data[0];
     for (int i = n; i--; ) {
       if (data[i] == NA_STRING) {
@@ -894,20 +895,20 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         pans[i] = is_num;
       }
     }
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
     }
   case 2: // is.factor
     for(int i = 0; i != n; ++i) pans[i] = (int)isFactor(px[i]);
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 3: // is.list, needed for list processing functions
     for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP;
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 4: // is.sublist, needed for list processing functions
     for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !isFrame(px[i]);
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 7: // is.atomic(x), needed in atomic_elem()
     // is.atomic: do_is with op = 200:  https://github.com/wch/r-source/blob/9f9033e193071f256e21a181cb053cba983ed4a9/src/main/coerce.c
@@ -927,7 +928,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         pans[i] = 0;
       }
     }
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 5: // is.atomic(x) || is.list(x), needed in reg_elem() and irreg_elem()
     for(int i = 0; i != n; ++i) {
@@ -949,7 +950,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         pans[i] = 0;
       }
     }
-    SET_TYPEOF(ans, LGLSXP);
+    SETTOF(ans, LGLSXP);
     break;
   case 6:
     // Faster object type identification, needed in unlist2d:

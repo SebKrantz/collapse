@@ -82,7 +82,7 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   SEXP newdt = PROTECT(allocVector(VECSXP, n)); protecti++;   // to do, use growVector here?
   SET_ATTRIB(newdt, shallow_duplicate(ATTRIB(dt)));
   SET_OBJECT(newdt, OBJECT(dt));
-  IS_S4_OBJECT(dt) ? SET_S4_OBJECT(newdt) : UNSET_S4_OBJECT(newdt);  // To support S4 objects that incude data.table
+  if(IS_S4_OBJECT(dt)) newdt = asS4(newdt, TRUE, 1);  // To support S4 objects that include data.table
   //SHALLOW_DUPLICATE_ATTRIB(newdt, dt);  // SHALLOW_DUPLICATE_ATTRIB would be a bit neater but is only available from R 3.3.0
 
   // TO DO: keepattr() would be faster, but can't because shallow isn't merely a shallow copy. It
@@ -102,8 +102,8 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   SEXP names = PROTECT(getAttrib(dt, R_NamesSymbol)); protecti++;
   SEXP newnames = PROTECT(allocVector(STRSXP, n)); protecti++;
 
-  const SEXP *pdt = SEXPPTR_RO(dt), *pnam = STRING_PTR(names);
-  SEXP *pnewdt = SEXPPTR(newdt), *pnnam = STRING_PTR(newnames);
+  const SEXP *pdt = SEXPPTR_RO(dt), *pnam = SEXPPTR(names);
+  SEXP *pnewdt = SEXPPTR(newdt), *pnnam = SEXPPTR(newnames);
 
   const int l = isNull(cols) ? LENGTH(dt) : length(cols);
   if (isNull(cols)) {
@@ -189,7 +189,7 @@ void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
   }
   // For small n such as 2,3,4 etc we hope OpenMP will be sensible inside it and not create a team with each thread doing just one item. Otherwise,
   // call overhead would be too high for highly iterated calls on very small subests. Timings were tested in #3175
-  // Futher, we desire (currently at least) to stress-test the threaded code (especially in latest R-devel) on small data to reduce chance that bugs
+  // Further, we desire (currently at least) to stress-test the threaded code (especially in latest R-devel) on small data to reduce chance that bugs
   // arise only over a threshold of n.
 
   switch(TYPEOF(source)) {
@@ -215,7 +215,7 @@ void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // TODO - discuss with Luke Tierney. Produce benchmarks on integer/double to see if it's worth making a safe
     //        API interface for package use for STRSXP.
     // Aside: setkey() is a separate special case (a permutation) and does do this in parallel without using SET_*.
-    SEXP *restrict sp = STRING_PTR(source)-1, *restrict ap = STRING_PTR(ans);
+    SEXP *restrict sp = SEXPPTR(source)-1, *restrict ap = SEXPPTR(ans);
     PARLOOP(NA_STRING);
   } break;
   case VECSXP : {
@@ -244,7 +244,7 @@ void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
 
 static const char *check_idx(SEXP idx, int max, bool *anyNA_out) // , bool *orderedSubset_out) Not needed
 // set anyNA for branchless subsetVectorRaw
-// error if any negatives, zeros or >max since they should have been dealt with by convertNegAndZeroIdx() called ealier at R level.
+// error if any negatives, zeros or >max since they should have been dealt with by convertNegAndZeroIdx() called earlier at R level.
 // single cache efficient sweep with prefetch, so very low priority to go parallel
 {
   if (!isInteger(idx)) error("Internal error. 'idx' is type '%s' not 'integer'", type2char(TYPEOF(idx))); // # nocov
@@ -423,7 +423,7 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   // sf data frames: Need to add sf_column
   if(oxl && asLogical(checksf) && INHERITS(x, char_sf)) {
     int sfcoln = NA_INTEGER, sf_col_sel = 0;
-    SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+    SEXP *pnam = SEXPPTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
     for(int i = l; i--; ) {
       if(pnam[i] == sfcol) {
         sfcoln = i + 1;
@@ -511,7 +511,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
       if(oxl && INHERITS(x, char_sf)) {
         int sfcoln = NA_INTEGER, sf_col_sel = 0;
         SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
-        SEXP *pnam = STRING_PTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+        SEXP *pnam = SEXPPTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
         for(int i = l; i--; ) {
           if(pnam[i] == sfcol) {
             sfcoln = i + 1;

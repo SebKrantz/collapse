@@ -302,8 +302,8 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
         break;
       case STRSXP:
         checkEncodings(pci[0]); checkEncodings(pci[1]);
-        if(i == 0) sort_merge_join_string(STRING_PTR_RO(pci[0]), STRING_PTR_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);
-        else sort_merge_join_string_second(STRING_PTR_RO(pci[0]), STRING_PTR_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);
+        if(i == 0) sort_merge_join_string(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);
+        else sort_merge_join_string_second(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);
         break;
       case CPLXSXP:
         if(i == 0) sort_merge_join_complex(COMPLEX_RO(pci[0]), COMPLEX_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);

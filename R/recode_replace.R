@@ -346,7 +346,7 @@ replace_outliers <- function(X, limits, value = NA,
    if(sl == 5L || sl == 7L) ignore.groups <- TRUE
   } else sl <- 0L
 
-  if(sl > 3L) { # Outliers according to standard deviation or MAD threashold
+  if(sl > 3L) { # Outliers according to standard deviation or MAD threshold
     if(is.list(X)) {
       if(!ignore.groups && inherits(X, c("grouped_df", "pdata.frame"))) {
         if(is.character(value)) stop("clipping is not yet supported with grouped/panel data and SDs/MADs thresholds.")

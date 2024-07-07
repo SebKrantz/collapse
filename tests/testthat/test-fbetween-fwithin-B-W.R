@@ -590,7 +590,7 @@ test_that("fwithin with custom mean performs like within (defined above)", {
   expect_equal(fwithin(mtcNA, g, mean = 4.8456), BY(mtcNA, g, within, na.rm = TRUE, use.g.names = FALSE, mean = 4.8456))
 })
 
-test_that("Centering on overall mean performs as indended", {
+test_that("Centering on overall mean performs as intended", {
   expect_equal(fwithin(x, f, mean = "overall.mean"), BY(x, f, within, na.rm = TRUE, use.g.names = FALSE) + ave(x))
   expect_equal(fwithin(x, f, na.rm = FALSE, mean = "overall.mean"), BY(x, f, within, use.g.names = FALSE) + ave(x))
   # expect_equal(fwithin(xNA, f, na.rm = FALSE, mean = "overall.mean"), BY(xNA, f, within, use.g.names = FALSE) + B(xNA)) # Not the same !!
@@ -766,7 +766,7 @@ test_that("fwithin with custom mean and weights performs like wwithin (defined a
   expect_equal(fwithin(mtcNA, g, wdatNA, mean = 4.8456), BY(mtcNA, g, wwithin, wdatNA, na.rm = TRUE, mean = 4.8456))
 })
 
-test_that("Weighted centering on overall weighted mean performs as indended", {
+test_that("Weighted centering on overall weighted mean performs as intended", {
   # complete weights
   expect_equal(fwithin(x, f, w, mean = "overall.mean"), as.numeric(mapply(wwithin, split(x, f), split(w, f), na.rm = TRUE)) + B(x, w = w))
   expect_equal(fwithin(x, f, w, na.rm = FALSE, mean = "overall.mean"), as.numeric(mapply(wwithin, split(x, f), split(w, f))) + B(x, w = w))

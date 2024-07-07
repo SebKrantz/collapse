@@ -25,7 +25,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
           break;
         }
         case STRSXP: {
-          SEXP *px = STRING_PTR(x);
+          SEXP *px = SEXPPTR(x);
           while(px[j] == NA_STRING && j != end) ++j;
           SET_STRING_ELT(out, 0, px[j]);
           break;
@@ -86,7 +86,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pout = STRING_PTR(out);
+        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = NA_STRING;
         --pout;
         for(int i = 0; i != l; ++i) {
@@ -156,7 +156,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         break;
       }
       case STRSXP:{
-        SEXP *px = STRING_PTR(x)-1, *pout = STRING_PTR(out);
+        SEXP *px = SEXPPTR(x)-1, *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = gl[i] == NA_INTEGER ? NA_STRING : px[gl[i]];
         break;
       }
@@ -215,7 +215,7 @@ SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm) {
   int l = length(x), *pgl, ng = asInteger(Rng), narm = asLogical(Rnarm), nprotect = 1;
   if(ng > 0 && !narm) {
     if(length(gst) != ng) {
-    // Cant use integer array here because apparently it is removed by the garbage collector when passed to a new function
+    // Can't use integer array here because apparently it is removed by the garbage collector when passed to a new function
     SEXP gl = PROTECT(allocVector(INTSXP, ng)); ++nprotect;
     int *pg = INTEGER(g), lg = length(g); // gl[ng],
     pgl = INTEGER(gl); // pgl = &gl[0];
@@ -255,7 +255,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pout = STRING_PTR(out);
+        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
         for(int j = 0, i = 0; j != col; ++j) {
           while(px[i] == NA_STRING && i != end) ++i;
           pout[j] = px[i]; px += l; i = 0;
@@ -326,7 +326,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pout = STRING_PTR(out);
+        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
         for(int i = ng * col; i--; ) pout[i] = NA_STRING;
         --pout;
         for(int j = 0; j != col; ++j) {
@@ -389,7 +389,7 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x)-1, *pout = STRING_PTR(out);
+        SEXP *px = SEXPPTR(x)-1, *pout = SEXPPTR(out);
         for(int j = 0; j != col; ++j) {
           for(int i = ng; i--; ) pout[i] = pgl[i] == NA_INTEGER ? NA_STRING : px[pgl[i]];
           px += l; pout += ng;

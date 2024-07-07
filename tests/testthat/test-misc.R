@@ -102,6 +102,7 @@ test_that("adding and removing stubs works", {
 })
 
 test_that("zoo dispatch works well", {
+  skip_if_not_installed("zoo")
 
   tsm <- zoo::as.zoo(EuStockMarkets)
   set.seed(101)

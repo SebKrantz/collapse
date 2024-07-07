@@ -271,7 +271,7 @@ list_extract_names <- function(l, nam, ret, keep.tree = FALSE, nkeep_class = TRU
      if(nkeep_class && is.object(x)) oldClass(x) <- NULL
      if(any(subl <- .Call(C_vtypes, x, ret))) {
        matches <- names(x) %in% nam
-       wres <- which(matches) # match(nam, names(x), 0L) # better bcause gives integer(0) -> necessary as cannot do l[[0L]]
+       wres <- which(matches) # match(nam, names(x), 0L) # better because gives integer(0) -> necessary as cannot do l[[0L]]
        wnressubl <- which(if(length(wres)) subl & !matches else subl) # fsetdiff(which(subl), wres)  # old solution: faster but does not work well if parent list is unnamed ! (i.e. l = list(lm1, lm1))
        if(length(wnressubl)) {
          a <- lapply(x[wnressubl], regsearch)
@@ -282,7 +282,7 @@ list_extract_names <- function(l, nam, ret, keep.tree = FALSE, nkeep_class = TRU
        } else if(keep.tree || length(wres) != 1L) return(x[wres]) else return(x[[wres]])
      } else {
        matches <- which(names(x) %in% nam)
-       if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=, because interger(0) goes in first..
+       if(keep.tree || length(matches) != 1L) return(x[matches]) else return(x[[matches]]) # needs to be !=, because integer(0) goes in first..
      }
    }
  }
@@ -303,7 +303,7 @@ list_extract_ind <- function(l, ind, is.subl, keep.tree = FALSE, nkeep_class = T
 }
 
 # Note: all functions currently remove empty list elements !
-# keep.tree argument still issues wih xlevels
+# keep.tree argument still issues with xlevels
 
 get_elem <- function(l, elem, recursive = TRUE, DF.as.list = FALSE,
                      keep.tree = FALSE, keep.class = FALSE,

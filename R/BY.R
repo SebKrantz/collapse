@@ -167,7 +167,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"
       if(length(res1) == g[[1L]]) rn <- GRPnames(g)
       else if(matl) {
         rn <- if(length(res1) == n && is.character(rownam) && rownam[1L] != "1" && (reorder || isTRUE(g$ordered[2L]))) rownam else NULL
-      } else {  # Important to check lenth(rn) below (simply keeps ax[["row.names"]])
+      } else {  # Important to check length(rn) below (simply keeps ax[["row.names"]])
         rn <- if(length(res1) != n || !(reorder || isTRUE(g$ordered[2L]))) .set_row_names(length(res1)) else NULL
       }
     }

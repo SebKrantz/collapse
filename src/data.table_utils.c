@@ -16,7 +16,7 @@ SEXP setnames(SEXP x, SEXP nam) {
       return x;
     }
     SEXP newnam = PROTECT(allocVector(STRSXP, n)),
-      *pnn = STRING_PTR(newnam), *pn = STRING_PTR(nam);
+      *pnn = SEXPPTR(newnam), *pn = SEXPPTR(nam);
     for(int i = 0; i < l; ++i) pnn[i] = pn[i];
     SETLENGTH(newnam, l);
     SET_TRUELENGTH(newnam, n);
@@ -58,7 +58,7 @@ bool allNA(SEXP x, bool errorForBadType) {
     }
     return true;
   case STRSXP: {
-    const SEXP *xd = STRING_PTR(x);
+    const SEXP *xd = SEXPPTR(x);
     for (int i=0; i != n; ++i)    if (xd[i]!=NA_STRING) {
       return false;
     }
@@ -159,7 +159,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
         for (int j=0; j != n; ++j) ians[j] += (iv[j] == NA_INTEGER);
       } break;
       case STRSXP: {
-        const SEXP *sv = STRING_PTR(v);
+        const SEXP *sv = SEXPPTR(v);
         for (int j=0; j != n; ++j) ians[j] += (sv[j] == NA_STRING);
       } break;
       case REALSXP: {
@@ -179,7 +179,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
       }
     }
     if(count) {
-      SET_TYPEOF(ans, INTSXP);
+      SETTOF(ans, INTSXP);
     } else {
       // This computes the result
       if(prop < 1.0) {
@@ -204,7 +204,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
         for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_INTEGER);
       } break;
       case STRSXP: {
-        const SEXP *sv = STRING_PTR(v);
+        const SEXP *sv = SEXPPTR(v);
         for (int j=0; j != n; ++j) ians[j] |= (sv[j] == NA_STRING);
       } break;
       case REALSXP: {
@@ -294,7 +294,7 @@ SEXP setcolorder(SEXP x, SEXP o) {
   }
   Free(seen);
 
-  SEXP *tmp = Calloc(ncol, SEXP), *namesd = STRING_PTR(names);
+  SEXP *tmp = Calloc(ncol, SEXP), *namesd = SEXPPTR(names);
   const SEXP *xd = SEXPPTR_RO(x);
   for (int i=0; i != ncol; ++i) tmp[i] = xd[od[i]-1];
   for (int i=0; i != ncol; ++i) SET_VECTOR_ELT(x, i, tmp[i]);

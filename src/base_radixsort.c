@@ -26,49 +26,6 @@
 
 #include "base_radixsort.h"
 
-#define IS_ASCII(x) (LEVELS(x) & 64) // from data.table.h
-
-// NOTE: All of this is copied from Defn.h: https://github.com/wch/r-source/blob/28de75af0541f93832c5899139b969d290bf422e/src/include/Defn.h
-// to avoid checking for ALTREP in TRUELENGTH, which slows down the code unnecessarily...
-
-#define NAMED_BITS 16
-
-struct sxpinfo_struct {
-  SEXPTYPE type      :  TYPE_BITS;
-  /* ==> (FUNSXP == 99) %% 2^5 == 3 == CLOSXP
-   * -> warning: `type' is narrower than values
-   *              of its type
-   * when SEXPTYPE was an enum */
-  unsigned int scalar:  1;
-  unsigned int obj   :  1;
-  unsigned int alt   :  1;
-  unsigned int gp    : 16;
-  unsigned int mark  :  1;
-  unsigned int debug :  1;
-  unsigned int trace :  1;  /* functions and memory tracing */
-  unsigned int spare :  1;  /* used on closures and when REFCNT is defined */
-  unsigned int gcgen :  1;  /* old generation number */
-  unsigned int gccls :  3;  /* node class */
-  unsigned int named : NAMED_BITS;
-  unsigned int extra : 32 - NAMED_BITS; /* used for immediate bindings */
-}; /*		    Tot: 64 */
-
-#define SEXPREC_HEADER           \
-  struct sxpinfo_struct sxpinfo; \
-  struct SEXPREC *attrib;        \
-  struct SEXPREC *gengc_next_node, *gengc_prev_node
-
-struct vecsxp_struct {
-  R_xlen_t	length;
-  R_xlen_t	truelength;
-};
-
-typedef struct VECTOR_SEXPREC {
-  SEXPREC_HEADER;
-  struct vecsxp_struct vecsxp;
-} VECTOR_SEXPREC, *VECSEXP;
-
-
 // gs = groupsizes e.g.23, 12, 87, 2, 1, 34,...
 static int *gs[2] = { NULL };
 //two vectors flip flopped:flip and 1 - flip
@@ -298,7 +255,7 @@ static void icount(int *x, int *o, int n)
   int napos = range; // NA's always counted in last bin
   // static is IMPORTANT, counting sort is called repetitively.
   static unsigned int counts[N_RANGE + 1] = { 0 };
-  /* counts are set back to 0 at the end efficiently. 1e5 = 0.4MB i.e
+  /* counts are set back to 0 at the end efficiently. 1e5 = 0.4MB i.e.
    tiny. We'll only use the front part of it, as large as range. So it's
    just reserving space, not using it. Have defined N_RANGE to be 100000.*/
   if (range > N_RANGE)
@@ -974,7 +931,7 @@ static int StrCmp(SEXP x, SEXP y)            // also used by bmerge and chmatch
 void checkEncodings(SEXP x) // static
 {
   cetype_t ce;
-  SEXP *px = STRING_PTR(x);
+  SEXP *px = SEXPPTR(x);
   int i, lx = length(x);
   for (i = 0; i != lx && px[i] == NA_STRING; ++i);
 
@@ -1223,7 +1180,7 @@ static void csort(SEXP * x, int *o, int n)
   }
   // all i* push onto stack. Using their counts may be faster here
   // than thrashing SEXP fetches over several passes as cgroup does
-  // (but cgroup needs that to keep orginal order, and cgroup saves
+  // (but cgroup needs that to keep original order, and cgroup saves
   // the sort in csort_pre).
 }
 

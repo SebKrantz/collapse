@@ -125,13 +125,13 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
     }
     case STRSXP:
     {
-      SEXP *pout = STRING_PTR(out);
+      SEXP *pout = SEXPPTR(out);
       if(nog) {
         SEXP AG = asChar(xAG);
         #pragma omp simd
         for(int i = 0; i < l; ++i) pout[i] = AG;
       } else {
-        SEXP *AG = STRING_PTR(xAG)-1;
+        SEXP *AG = SEXPPTR(xAG)-1;
         #pragma omp simd
         for(int i = 0; i < l; ++i) pout[i] = AG[pg[i]];
       }
@@ -169,7 +169,7 @@ SEXP ret1(SEXP x, SEXP xAG, SEXP g, int set) {
   // 1 - x is classed (factor, date, time series), xAG is not classed. i.e. vector of fnobs, fmean etc.
   //    -> Sallow replacing, removing class and levels attributes from x, discard attributes of xAG (if any)
   //    -> or (if type matches i.e. double for date or time series), copy attributes of x unless x is a factor
-  // 2 - x is not classed, xAG is classed (factor, date, time series). - an unusual situation should not occurr - copy attributes of xAG, discard attributes of x
+  // 2 - x is not classed, xAG is classed (factor, date, time series). - an unusual situation should not occur - copy attributes of xAG, discard attributes of x
   // 3 - xAG and x are classed - same as above, keep attributes of xAG, discard attributes of x
   // 4 - neither x nor xAG are classed - preserve attributes of x, discard attributes of xAG (if any)
   //
@@ -237,13 +237,13 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         break;
       }
       case STRSXP: {
-        SEXP *pout = STRING_PTR(out);
+        SEXP *pout = SEXPPTR(out);
         if(nog) {
           SEXP AG = asChar(xAG);
           #pragma omp simd
           for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? NA_STRING : AG;
         } else {
-          SEXP *AG = STRING_PTR(xAG)-1;
+          SEXP *AG = SEXPPTR(xAG)-1;
           #pragma omp simd
           for(int i = 0; i < l; ++i) pout[i] = ISNAN(px[i]) ? NA_STRING : AG[pg[i]];
         }
@@ -287,13 +287,13 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         break;
       }
       case STRSXP: {
-        SEXP *pout = STRING_PTR(out);
+        SEXP *pout = SEXPPTR(out);
         if(nog) {
           SEXP AG = asChar(xAG);
           #pragma omp simd
           for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AG;
         } else {
-          SEXP *AG = STRING_PTR(xAG)-1;
+          SEXP *AG = SEXPPTR(xAG)-1;
           #pragma omp simd
           for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_INTEGER) ? NA_STRING : AG[pg[i]];
         }
@@ -306,7 +306,7 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
   }
   case STRSXP:
   {
-    SEXP *px = STRING_PTR(x);
+    SEXP *px = SEXPPTR(x);
     switch(txAG) {
       case REALSXP: {
         double *pout = REAL(out);
@@ -336,13 +336,13 @@ SEXP ret2(SEXP x, SEXP xAG, SEXP g, int set) {
         break;
       }
       case STRSXP: {
-        SEXP *pout = STRING_PTR(out);
+        SEXP *pout = SEXPPTR(out);
         if(nog) {
           SEXP AG = asChar(xAG);
           #pragma omp simd
           for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AG;
         } else {
-          SEXP *AG = STRING_PTR(xAG)-1;
+          SEXP *AG = SEXPPTR(xAG)-1;
           #pragma omp simd
           for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? NA_STRING : AG[pg[i]];
         }
@@ -448,7 +448,7 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
     }
     case STRSXP:
     {
-      SEXP *px = STRING_PTR(x), *pout = STRING_PTR(out);
+      SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
       if(nog) {
         SEXP AG = asChar(xAG);
         #pragma omp simd
@@ -459,7 +459,7 @@ SEXP ret0(SEXP x, SEXP xAG, SEXP g, int set) {
           case LGLSXP:
           case INTSXP: error("Cannot replace missing values in string with numeric data");
           case STRSXP: {
-            SEXP *AG = STRING_PTR(xAG)-1;
+            SEXP *AG = SEXPPTR(xAG)-1;
             #pragma omp simd
             for(int i = 0; i < l; ++i) pout[i] = (px[i] == NA_STRING) ? AG[pg[i]] : px[i];
             break;
@@ -728,7 +728,7 @@ SEXP TRAlC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
       break;
     }
     case STRSXP: {
-      SEXP *pAG = STRING_PTR(xAG);
+      SEXP *pAG = SEXPPTR(xAG);
       RETLOOPS(ScalarString(pAG[j]))
       break;
     }
@@ -814,7 +814,7 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
           }
           case STRSXP:
           {
-            SEXP *pout = STRING_PTR(out), *pAG = STRING_PTR(xAG);
+            SEXP *pout = SEXPPTR(out), *pAG = SEXPPTR(xAG);
             if(nog) {
               for(int j = 0; j != col; ++j) {
                 int s = j * row, e = s + row;
@@ -883,7 +883,7 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
               }
               case STRSXP:
               {
-                SEXP *pout = STRING_PTR(out), *pAG = STRING_PTR(xAG);
+                SEXP *pout = SEXPPTR(out), *pAG = SEXPPTR(xAG);
                 if(nog) {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, e = s + row;
@@ -951,7 +951,7 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
               }
               case STRSXP:
               {
-                SEXP *pout = STRING_PTR(out), *pAG = STRING_PTR(xAG);
+                SEXP *pout = SEXPPTR(out), *pAG = SEXPPTR(xAG);
                 if(nog) {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, e = s + row;
@@ -975,7 +975,7 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
           }
           case STRSXP:
           {
-            SEXP *px = STRING_PTR(x);
+            SEXP *px = SEXPPTR(x);
             switch(txAG) {
               case REALSXP:
               {
@@ -1018,7 +1018,7 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
               }
               case STRSXP:
               {
-                SEXP *pout = STRING_PTR(out), *pAG = STRING_PTR(xAG);
+                SEXP *pout = SEXPPTR(out), *pAG = SEXPPTR(xAG);
                 if(nog) {
                   for(int j = 0; j != col; ++j) {
                     int s = j * row, e = s + row;
@@ -1165,14 +1165,14 @@ SEXP TRAmC(SEXP x, SEXP xAG, SEXP g, SEXP Rret, SEXP Rset) {
       }
       case STRSXP:
       {
-        SEXP *px = STRING_PTR(x), *pout = STRING_PTR(out);
+        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
         switch(txAG) {
         case REALSXP:
         case INTSXP:
         case LGLSXP: error("Cannot replace missing values in string with numeric data");
         case STRSXP:
         {
-          SEXP *pAG = STRING_PTR(xAG);
+          SEXP *pAG = SEXPPTR(xAG);
           if(nog) {
             for(int j = 0; j != col; ++j) {
               int s = j * row, e = s + row;

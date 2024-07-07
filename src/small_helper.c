@@ -3,6 +3,7 @@
 // #ifndef USE_RINTERNALS
 // #define USE_RINTERNALS
 // #endif
+#include "base_radixsort.h"
 #include <math.h>
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
@@ -65,7 +66,7 @@ SEXP falloc(SEXP value, SEXP n, SEXP simplify)  {
       break;
     }
     case STRSXP: {
-      SEXP val = asChar(value), *pout = STRING_PTR(out);
+      SEXP val = asChar(value), *pout = SEXPPTR(out);
       for(int i = 0; i != l; ++i) pout[i] = val;
       break;
     }
@@ -168,7 +169,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
     return R_NilValue;
   }
   if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
-  SEXP *plhs = STRING_PTR(lhs);
+  SEXP *plhs = SEXPPTR(lhs);
   switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, installChar does the same now, but also is available on older systems.
     case REALSXP: {
       double *prhs = REAL(rhs);
@@ -187,7 +188,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
       break;
     }
     case STRSXP: {
-      SEXP *prhs = STRING_PTR(rhs);
+      SEXP *prhs = SEXPPTR(rhs);
       for(int i = 0; i < n; ++i) {
         SEXP nam = installChar(plhs[i]);
         defineVar(nam, ScalarString(prhs[i]), envir);
@@ -234,7 +235,7 @@ SEXP vlabels(SEXP x, SEXP attrn, SEXP usenam) {
     return labx;
   }
   SEXP res = PROTECT(allocVector(STRSXP, l));
-  SEXP *pres = STRING_PTR(res);
+  SEXP *pres = SEXPPTR(res);
   const SEXP *px = SEXPPTR_RO(x);
   for(int i = 0; i < l; ++i) {
     SEXP labxi = getAttrib(px[i], sym_attrn);
@@ -564,10 +565,14 @@ SEXP fnrowC(SEXP x) {
   return ScalarInteger(INTEGER(dim)[0]);
 }
 
+
+#define MYEFL(x) (((SEXPREC_partial *)(x))->sxpinfo.gp)
+#define MYSEFL(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.gp)=(v))
+
 // Taken from: https://github.com/r-lib/rlang/blob/main/src/internal/env.c
 #define CLP_FRAME_LOCK_MASK (1 << 14)
-#define CLP_FRAME_IS_LOCKED(e) (ENVFLAGS(e) & CLP_FRAME_LOCK_MASK)
-#define CLP_UNLOCK_FRAME(e) SET_ENVFLAGS(e, ENVFLAGS(e) & (~CLP_FRAME_LOCK_MASK))
+#define CLP_FRAME_IS_LOCKED(e) (MYEFL(e) & CLP_FRAME_LOCK_MASK)
+#define CLP_UNLOCK_FRAME(e) MYSEFL(e, MYEFL(e) & (~CLP_FRAME_LOCK_MASK))
 
 SEXP unlock_collapse_namespace(SEXP env) {
   if(TYPEOF(env) != ENVSXP) error("Unsupported object passed to C_unlock_collapse_namespace: %s", type2char(TYPEOF(env)));

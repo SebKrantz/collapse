@@ -637,7 +637,7 @@ SEXP mode_impl_plain(SEXP x, int narm, int ret) {
     case INTSXP:  return ScalarInteger(isFactor(x) ? mode_fct_logi(INTEGER(x), &l, l, nlevels(x), 1, narm, ret) :
                                     mode_int(INTEGER(x), &l, l, 1, narm, ret));
     case LGLSXP: return my_ScalarLogical(mode_fct_logi(LOGICAL(x), &l, l, 1, 1, narm, ret));
-    case STRSXP: return ScalarString(mode_string(STRING_PTR(x), &l, l, 1, narm, ret));
+    case STRSXP: return ScalarString(mode_string(SEXPPTR(x), &l, l, 1, narm, ret));
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
@@ -659,7 +659,7 @@ SEXP w_mode_impl_plain(SEXP x, double *pw, int narm, int ret) {
     case INTSXP:  return ScalarInteger(isFactor(x) ? w_mode_fct_logi(INTEGER(x), pw, &l, l, nlevels(x), 1, narm, ret) :
                                     w_mode_int(INTEGER(x), pw, &l, l, 1, narm, ret));
     case LGLSXP:  return my_ScalarLogical(w_mode_fct_logi(LOGICAL(x), pw, &l, l, 1, 1, narm, ret));
-    case STRSXP:  return ScalarString(w_mode_string(STRING_PTR(x), pw, &l, l, 1, narm, ret));
+    case STRSXP:  return ScalarString(w_mode_string(SEXPPTR(x), pw, &l, l, 1, narm, ret));
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
@@ -711,7 +711,7 @@ SEXP mode_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int na
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pres = STRING_PTR(res);
+        SEXP *px = SEXPPTR(x), *pres = SEXPPTR(res);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? NA_STRING : mode_string(px + pst[gr]-1, po, pgs[gr], 1, narm, ret);
@@ -750,7 +750,7 @@ SEXP mode_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int na
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pres = STRING_PTR(res);
+        SEXP *px = SEXPPTR(x), *pres = SEXPPTR(res);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? NA_STRING : mode_string(px, po + pst[gr]-1, pgs[gr], 0, narm, ret);
@@ -804,7 +804,7 @@ SEXP w_mode_g_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int 
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pres = STRING_PTR(res);
+        SEXP *px = SEXPPTR(x), *pres = SEXPPTR(res);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? NA_STRING : w_mode_string(px + pst[gr]-1, pw + pst[gr]-1, po, pgs[gr], 1, narm, ret);
@@ -843,7 +843,7 @@ SEXP w_mode_g_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int 
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *pres = STRING_PTR(res);
+        SEXP *px = SEXPPTR(x), *pres = SEXPPTR(res);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? NA_STRING : w_mode_string(px, pw, po + pst[gr]-1, pgs[gr], 0, narm, ret);
@@ -1039,7 +1039,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *restrict pres = STRING_PTR(res);
+        SEXP *px = SEXPPTR(x), *restrict pres = SEXPPTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) pres[j] = mode_string(px + j*l, &l, l, 1, narm, ret);
@@ -1136,7 +1136,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *restrict pres = STRING_PTR(res);
+        SEXP *px = SEXPPTR(x), *restrict pres = SEXPPTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
@@ -1212,7 +1212,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = STRING_PTR(x), *restrict pres = STRING_PTR(res);
+        SEXP *px = SEXPPTR(x), *restrict pres = SEXPPTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
