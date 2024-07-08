@@ -339,14 +339,14 @@
 <span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/r/base/rowsum.html" class="external-link">rowsum</a></span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min        lq      mean    median</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 82.178947 70.814159 64.398669 65.318548</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  4.210526  3.778761  3.722883  3.705645</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.000000  1.000000  1.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        uq        max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  58.85816 107.962555   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3.51773   6.720264   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.00000   1.000000   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min        lq     mean    median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 81.666667 70.386179 49.90358 62.221453</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  4.156863  3.780488  4.52261  3.598616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.000000  1.00000  1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         uq      max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  46.277372 69.88878   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3.075426 21.35937   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000  1.00000   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now larger data</span></span></span>
 <span class="r-in"><span><span class="va">tdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e5</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="co"># 100 columns with 100.000 obs</span></span></span>
@@ -356,14 +356,14 @@
 <span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/r/base/rowsum.html" class="external-link">rowsum</a></span><span class="op">(</span><span class="va">tdata</span>, <span class="va">f</span>, reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">tdata</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr      min       lq     mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 3.259785 3.144302 2.904633 3.199371 3.166288</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.691997 2.631268 2.681726 2.626211 2.649661</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.530993   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4.305730   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.000000   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr      min       lq     mean  median       uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 3.104233 3.105310 2.584580 3.11082 2.898347</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.540017 2.590563 2.519993 2.62251 2.492460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.00000 1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.6225267   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.6890148   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.0000000   100</span>
 <span class="r-in"><span><span class="co"># Reset options</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="collapse-options.html">set_collapse</a></span><span class="op">(</span><span class="va">opts</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>

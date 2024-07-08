@@ -63,9 +63,9 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2024-06-25</h4>
+            <h4 data-toc-skip class="date">2024-07-08</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.0.15/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
     </div>
 
@@ -172,47 +172,39 @@ groups and may also involve weights or transformations of the original
 data:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>     <span class="co"># Vector</span></span>
-<span><span class="co"># [1] 20.09062</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span> <span class="co"># Matrix</span></span>
+<span><span class="co"># [1] 20.09062</span></span>
+<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span> <span class="co"># Matrix</span></span>
 <span><span class="co">#      DAX      SMI      CAC     FTSE </span></span>
-<span><span class="co"># 2530.657 3376.224 2227.828 3565.643</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>         <span class="co"># Data Frame</span></span>
+<span><span class="co"># 2530.657 3376.224 2227.828 3565.643</span></span>
+<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>         <span class="co"># Data Frame</span></span>
 <span><span class="co">#        mpg        cyl       disp         hp       drat         wt       qsec         vs         am </span></span>
 <span><span class="co">#  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250  17.848750   0.437500   0.406250 </span></span>
 <span><span class="co">#       gear       carb </span></span>
-<span><span class="co">#   3.687500   2.812500</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<span><span class="co">#   3.687500   2.812500</span></span>
+<span></span>
 <span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span><span class="op">)</span>  <span class="co"># Weighted mean</span></span>
-<span><span class="co"># [1] 18.54993</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, g <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span> <span class="co"># Grouped mean</span></span>
+<span><span class="co"># [1] 18.54993</span></span>
+<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, g <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span> <span class="co"># Grouped mean</span></span>
 <span><span class="co">#        4        6        8 </span></span>
-<span><span class="co"># 26.66364 19.74286 15.10000</span></span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, g <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span><span class="op">)</span>   <span class="co"># Weighted group mean</span></span>
+<span><span class="co"># 26.66364 19.74286 15.10000</span></span>
+<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, g <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span><span class="op">)</span>   <span class="co"># Weighted group mean</span></span>
 <span><span class="co">#        4        6        8 </span></span>
-<span><span class="co"># 25.93504 19.64578 14.80643</span></span></code></pre></div>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, g <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span><span class="op">)</span> <span class="co"># Of data frame</span></span>
+<span><span class="co"># 25.93504 19.64578 14.80643</span></span>
+<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">5</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span>, g <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span><span class="op">)</span> <span class="co"># Of data frame</span></span>
 <span><span class="co">#       drat       wt     qsec        vs        am     gear</span></span>
 <span><span class="co"># 4 4.031264 2.414750 19.38044 0.9148868 0.6498031 4.047250</span></span>
 <span><span class="co"># 6 3.569170 3.152060 18.12198 0.6212191 0.3787809 3.821036</span></span>
-<span><span class="co"># 8 3.205658 4.133116 16.88529 0.0000000 0.1203808 3.240762</span></span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, g <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span>, TRA <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="co"># Replace data by weighted group mean</span></span>
+<span><span class="co"># 8 3.205658 4.133116 16.88529 0.0000000 0.1203808 3.240762</span></span>
+<span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, g <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, w <span class="op">=</span> <span class="va">mtcars</span><span class="op">$</span><span class="va">wt</span>, TRA <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="co"># Replace data by weighted group mean</span></span>
 <span><span class="co">#  [1] 19.64578 19.64578 25.93504 19.64578 14.80643 19.64578 14.80643 25.93504 25.93504 19.64578</span></span>
 <span><span class="co"># [11] 19.64578 14.80643 14.80643 14.80643 14.80643 14.80643 14.80643 25.93504 25.93504 25.93504</span></span>
 <span><span class="co"># [21] 25.93504 14.80643 14.80643 14.80643 14.80643 25.93504 25.93504 25.93504 14.80643 19.64578</span></span>
-<span><span class="co"># [31] 14.80643 25.93504</span></span></code></pre></div>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># etc...</span></span></code></pre></div>
+<span><span class="co"># [31] 14.80643 25.93504</span></span>
+<span><span class="co"># etc...</span></span></code></pre></div>
 <p>The data manipulation functions of <em>collapse</em> are integrated
 with these <em>Fast Statistical Functions</em> to enable vectorized
 statistical operations. For example, the following code</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">11</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -236,7 +228,7 @@ simply applied to a subset of the data containing columns
 <p>The <em>Fast Statistical Functions</em> also have a method for
 grouped data, so if we did not want to calculate the weighted mean of
 <code>qsec</code>, the code would simplify as follows:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">11</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -258,7 +250,7 @@ consistent with base R.</p>
 <p>Another thing to be aware of when using <em>Fast Statistical
 Functions</em> inside data manipulation functions is that they toggle
 vectorized execution wherever they are used. E.g.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">qsec</span><span class="op">)</span><span class="op">)</span> <span class="co"># Vectorized</span></span>
 <span><span class="co">#   cyl      mpg</span></span>
 <span><span class="co"># 1   4 41.16364</span></span>
@@ -266,14 +258,13 @@ vectorized execution wherever they are used. E.g.</p>
 <span><span class="co"># 3   8 29.60000</span></span></code></pre></div>
 <p>calculates a grouped mean of <code>mpg</code> but adds the overall
 minimum of <code>qsec</code> to the result, whereas</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/fmin_fmax.html">fmin</a></span><span class="op">(</span><span class="va">qsec</span><span class="op">)</span><span class="op">)</span> <span class="co"># Vectorized</span></span>
 <span><span class="co">#   cyl      mpg</span></span>
 <span><span class="co"># 1   4 43.36364</span></span>
 <span><span class="co"># 2   6 35.24286</span></span>
-<span><span class="co"># 3   8 29.60000</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">qsec</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Not vectorized</span></span>
+<span><span class="co"># 3   8 29.60000</span></span>
+<span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">qsec</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Not vectorized</span></span>
 <span><span class="co">#   cyl      mpg</span></span>
 <span><span class="co"># 1   4 43.36364</span></span>
 <span><span class="co"># 2   6 35.24286</span></span>
@@ -313,7 +304,7 @@ code.</p>
 whole frame and then doing computations on a subset of columns. It would
 be more efficient to select all required columns during the subset
 operation:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">11</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, <span class="va">mpg</span>, <span class="va">carb</span>, <span class="va">hp</span>, <span class="va">qsec</span>, <span class="va">wt</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -329,7 +320,7 @@ operation:</p>
 <span><span class="co"># 7   8  0  1 15.40000 6.000000 299.50000 14.55297</span></span></code></pre></div>
 <p>Without the weighted mean of <code>qsec</code>, this would simplify
 to</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">11</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, <span class="va">mpg</span>, <span class="va">carb</span>, <span class="va">hp</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -345,7 +336,7 @@ to</p>
 <p>Finally, we could set the following options to toggle unsorted
 grouping, no missing value skipping, and multithreading across the three
 columns for more efficient execution.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">mpg</span> <span class="op">&gt;</span> <span class="fl">11</span>, <span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, <span class="va">mpg</span>, <span class="va">carb</span>, <span class="va">hp</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
