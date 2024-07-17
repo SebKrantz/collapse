@@ -155,7 +155,7 @@ join <- function(x, y,
   }
 
   # Check for duplicate columns and suffix as needed
-  if(any(nm <- match(ynam[-iyon], xnam, nomatch = 0L))) {
+  if(any(nm <- match(ynam[-iyon], xnam, nomatch = 0L)) && switch(how, semi = FALSE, anti = FALSE, TRUE)) {
     nnm <- nm != 0L
     nam <- xnam[nm[nnm]]
     if(is.character(drop.dup.cols) || drop.dup.cols) {
