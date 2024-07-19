@@ -32,6 +32,7 @@
 
 #define NAMED_BITS 16
 
+#ifndef DEFN_H
 struct sxpinfo_struct {
   SEXPTYPE type      :  TYPE_BITS;
   /* ==> (FUNSXP == 99) %% 2^5 == 3 == CLOSXP
@@ -66,6 +67,7 @@ typedef struct VECTOR_SEXPREC {
   SEXPREC_HEADER;
   struct vecsxp_struct vecsxp;
 } VECTOR_SEXPREC, *VECSEXP;
+#endif
 
 typedef struct {
   SEXPREC_HEADER;
