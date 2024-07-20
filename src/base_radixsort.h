@@ -32,7 +32,7 @@
 
 #define NAMED_BITS 16
 
-#if ! defined(DEFN_H_) && ! defined(DEFN_H)
+#ifndef SEXPREC_HEADER
 
 struct sxpinfo_struct {
   SEXPTYPE type      :  TYPE_BITS;
