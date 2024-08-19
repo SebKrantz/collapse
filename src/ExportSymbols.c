@@ -166,6 +166,7 @@ void R_init_collapse(DllInfo *dll) {
   R_RegisterCCallable("collapse", "cp_range", (DL_FUNC) &frange);              // frange()
   R_RegisterCCallable("collapse", "cp_dist", (DL_FUNC) &fdist);                // fdist()
   R_RegisterCCallable("collapse", "cp_quantile", (DL_FUNC) &fquantileC);       // .quantile()
+  R_RegisterCCallable("collapse", "cp_match", (DL_FUNC) &fmatchC);             // fmatch()
   R_RegisterCCallable("collapse", "cp_group", (DL_FUNC) &groupVec);            // group(): main hash-based grouping function: for atomic vectors and data frames
   R_RegisterCCallable("collapse", "cp_group_at", (DL_FUNC) &groupAtVec);       // qG(.., sort = FALSE): same but only works with atomic vectors and has option to keep missing values
   R_RegisterCCallable("collapse", "cp_unique", (DL_FUNC) &funiqueC);           // funique.default()
