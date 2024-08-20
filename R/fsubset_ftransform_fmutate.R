@@ -250,16 +250,20 @@ tfmv <- ftransformv
 
 
 settransform <- function(.data, ...) {
-  assign(as.character(substitute(.data)), ftransform(.data, ...), envir = parent.frame())
-  invisible(.data)
+  name <- as.character(substitute(.data))
+  res <- ftransform(.data, ...)
+  assign(name, res, envir = parent.frame())
+  invisible(res)
 }
 # eval.parent(substitute(.data <- get0("ftransform", envir = getNamespace("collapse"))(.data, ...))) # can use `<-`(.data, ftransform(.data,...)) but not faster ..
 
 settfm <- settransform
 
 settransformv <- function(.data, ...) {
-  assign(as.character(substitute(.data)), ftransformv(.data, ...), envir = parent.frame())
-  invisible(.data)
+  name <- as.character(substitute(.data))
+  res <- ftransformv(.data, ...)
+  assign(name, res, envir = parent.frame())
+  invisible(res)
 }
 # eval.parent(substitute(.data <- get0("ftransformv", envir = getNamespace("collapse"))(.data, vars, FUN, ..., apply = apply)))
 
