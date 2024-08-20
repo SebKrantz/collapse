@@ -123,7 +123,7 @@ static void savetl(SEXP s)
 #undef warning
 // since it can be turned to error via warn = 2
 #define warning(...) Do not use warning in this file
-/* use malloc/realloc (not Calloc/Realloc) so we can trap errors
+/* use malloc/realloc (not R_Calloc/R_Realloc) so we can trap errors
  and call savetl_end() before the error(). */
 
 static void growstack(uint64_t newlen)

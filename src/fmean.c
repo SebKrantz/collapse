@@ -50,7 +50,7 @@ double fmean_double_omp_impl(const double *restrict px, const int narm, const in
 void fmean_double_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const int *restrict pgs, const int narm, const int l) {
   memset(pout, 0, sizeof(double) * ng);
   if(narm) {
-    int *restrict n = (int*)Calloc(ng, int);
+    int *restrict n = (int*)R_Calloc(ng, int);
     for(int i = 0, gi; i != l; ++i) {
       if(ISNAN(px[i])) continue;
       gi = pg[i]-1;
@@ -61,7 +61,7 @@ void fmean_double_g_impl(double *restrict pout, const double *restrict px, const
       if(n[i] == 0) pout[i] = NA_REAL;
       else pout[i] /= n[i];
     }
-    Free(n);
+    R_Free(n);
   } else {
     --pout;
     for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
@@ -121,7 +121,7 @@ double fmean_weights_omp_impl(const double *restrict px, const double *restrict 
 }
 
 void fmean_weights_g_impl(double *restrict pout, const double *restrict px, const int ng, const int *restrict pg, const double *restrict pw, const int narm, const int l) {
-  double *restrict sumw = (double*)Calloc(ng, double);
+  double *restrict sumw = (double*)R_Calloc(ng, double);
   memset(pout, 0, sizeof(double) * ng);
   if(narm) {
     for(int i = 0, gi; i != l; ++i) {
@@ -142,7 +142,7 @@ void fmean_weights_g_impl(double *restrict pout, const double *restrict px, cons
     }
     for(int i = ng; i--; ) pout[i] /= sumw[i];
   }
-  Free(sumw);
+  R_Free(sumw);
 }
 
 double fmean_int_impl(const int *restrict px, const int narm, const int l) {
@@ -194,7 +194,7 @@ double fmean_int_omp_impl(const int *restrict px, const int narm, const int l, c
 void fmean_int_g_impl(double *restrict pout, const int *restrict px, const int ng, const int *restrict pg, const int *restrict pgs, const int narm, const int l) {
   memset(pout, 0, sizeof(double) * ng);
   if(narm) {
-    int *restrict n = (int*)Calloc(ng, int);
+    int *restrict n = (int*)R_Calloc(ng, int);
     for(int i = 0, gi; i != l; ++i) {
       if(px[i] == NA_INTEGER) continue;
       gi = pg[i]-1;
@@ -205,7 +205,7 @@ void fmean_int_g_impl(double *restrict pout, const int *restrict px, const int n
       if(n[i] == 0) pout[i] = NA_REAL;
       else pout[i] /= n[i];
     }
-    Free(n);
+    R_Free(n);
   } else {
     --pout;
     for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.

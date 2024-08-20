@@ -310,7 +310,7 @@ SEXP setcolorder(SEXP x, SEXP o) {
 
   // Double-check here at C level that o[] is a strict permutation of 1:ncol. Reordering columns by reference makes no
   // difference to generations/refcnt so we can write behind barrier in this very special case of strict permutation.
-  bool *seen = Calloc(ncol, bool);
+  bool *seen = R_Calloc(ncol, bool);
   for (int i=0; i != ncol; ++i) {
     if (od[i]==NA_INTEGER || od[i]<1 || od[i]>ncol)
       error("Internal error: o passed to Csetcolorder contains an NA or out-of-bounds");  // # nocov
@@ -318,9 +318,9 @@ SEXP setcolorder(SEXP x, SEXP o) {
       error("Internal error: o passed to Csetcolorder contains a duplicate");             // # nocov
     seen[od[i]-1] = true;
   }
-  Free(seen);
+  R_Free(seen);
 
-  SEXP *tmp = Calloc(ncol, SEXP), *namesd = SEXPPTR(names);
+  SEXP *tmp = R_Calloc(ncol, SEXP), *namesd = SEXPPTR(names);
   const SEXP *xd = SEXPPTR_RO(x);
   for (int i=0; i != ncol; ++i) tmp[i] = xd[od[i]-1];
   for (int i=0; i != ncol; ++i) SET_VECTOR_ELT(x, i, tmp[i]);
@@ -330,7 +330,7 @@ SEXP setcolorder(SEXP x, SEXP o) {
   for (int i=0; i != ncol; ++i) tmp[i] = namesd[od[i]-1];
   memcpy(namesd, tmp, ncol*sizeof(SEXP));
   // No need to change key (if any); sorted attribute is column names not positions
-  Free(tmp);
+  R_Free(tmp);
   return(R_NilValue);
 }
 

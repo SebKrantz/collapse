@@ -111,7 +111,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx));
 
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   int *restrict pans = INTEGER(ans);
   size_t id = 0;
 
@@ -283,7 +283,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     }
   } break;
   }
-  Free(h);
+  R_Free(h);
   UNPROTECT(nprotect);
   return ans;
 }
@@ -395,7 +395,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     K++;
   }
 
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   SEXP ans = PROTECT(allocVector(INTSXP, n)); ++nprotect;
   int *restrict pans = INTEGER(ans);
   size_t id = 0;
@@ -599,7 +599,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
     } else error("Unsupported types: %s and %s", type2char(t1), type2char(t2));
   }
 
-  Free(h);
+  R_Free(h);
   UNPROTECT(nprotect);
   return ans;
 }
@@ -618,7 +618,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
   if(n != length(pc2[0])) error("both vectors in x must have the same length");
   if(nt != length(pc2[1])) error("both vectors in table must have the same length");
 
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   size_t id = 0;
   int ngt = 0;
 
@@ -840,7 +840,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
   }
 
   *ng = ngt;
-  Free(h); // Free hash table
+  R_Free(h); // Free hash table
 }
 
 // Helper function to match an additional vector
@@ -850,7 +850,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
   if(length(pcj[0]) != n) error("all vectors in x must have the same length");
   if(length(pcj[1]) != nt) error("all vectors in table must have the same length");
 
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   size_t id = 0;
 
   const unsigned int mult = (M-1) / nt; // TODO: This faster? or better hash ans ? -> Seems faster ! but possible failures ?
@@ -974,7 +974,7 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
   }
 
   *ng = ngt;
-  Free(h); // Free hash table
+  R_Free(h); // Free hash table
 }
 
 // This is after unique table rows have already been found, we simply need to check if the remaining columns are equal...
@@ -1084,7 +1084,7 @@ SEXP fmatch_internal(SEXP x, SEXP table, SEXP nomatch, SEXP overid) {
 void count_match(SEXP res, int nt, int nmv) {
   const int *restrict pres = INTEGER(res);
   int n = length(res), nd = 0, nnm = 0;
-  int *restrict cnt = (int*)Calloc(nt+1, int);
+  int *restrict cnt = (int*)R_Calloc(nt+1, int);
   for (int i = 0; i != n; ++i) {
     if(pres[i] == nmv) ++nnm;
     else if(cnt[pres[i]] == 0) {
@@ -1092,7 +1092,7 @@ void count_match(SEXP res, int nt, int nmv) {
       ++nd;
     }
   }
-  Free(cnt);
+  R_Free(cnt);
   SEXP sym_nomatch = install("N.nomatch");
   SEXP sym_ng = install("N.groups");
   SEXP sym_distinct = install("N.distinct");

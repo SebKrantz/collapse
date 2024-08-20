@@ -372,7 +372,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
           if(po[i] < 1 || po[i] > n) error("Some elements in o are outside of range [1, length(x)]");
       }
     } else  {
-      po = (int *) R_alloc(n, sizeof(int)); // Calloc ?
+      po = (int *) R_alloc(n, sizeof(int)); // R_Calloc ?
       num1radixsort(po, TRUE, FALSE, x);
     }
 
@@ -608,7 +608,7 @@ return (ret == 1) ? (a+b)/2.0 : a + h * (b - a); //  || Q == 0.5
 double nth_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : sorted ? (double)px[0] : (double)px[po[0]-1];
 
-  int *x_cc = (int *) Calloc(l, int), n = 0;
+  int *x_cc = (int *) R_Calloc(l, int), n = 0;
   if(sorted) {
     // if(narm) {
       for(int i = 0; i != l; ++i) if(px[i] != NA_INTEGER) x_cc[n++] = px[i];
@@ -627,7 +627,7 @@ double nth_int(const int *restrict px, const int *restrict po, const int l, cons
   }
 
   double res = (narm == 0 && n != l) ? NA_REAL : iquickselect(x_cc, n, ret, Q);
-  Free(x_cc);
+  R_Free(x_cc);
   return res;
 }
 
@@ -649,7 +649,7 @@ double nth_int_noalloc(const int *restrict px, const int *restrict po, int *x_cc
 double nth_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : sorted ? px[0] : px[po[0]-1];
 
-  double *x_cc = (double *) Calloc(l, double);
+  double *x_cc = (double *) R_Calloc(l, double);
   int n = 0;
 
   if(sorted) {
@@ -670,7 +670,7 @@ double nth_double(const double *restrict px, const int *restrict po, const int l
   }
 
   double res = (narm == 0 && n != l) ? NA_REAL : dquickselect(x_cc, n, ret, Q);
-  Free(x_cc);
+  R_Free(x_cc);
   return res;
 }
 
@@ -749,7 +749,7 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
     return ISNAN(pw[po[0]]) ? NA_REAL : (double)px[po[0]-1];
   }
 
-  int *x_cc = (int *) Calloc(l, int), *i_cc = (int *) Calloc(l, int), n = 0; // TODO: alloc i_cc afterwards if narm ??
+  int *x_cc = (int *) R_Calloc(l, int), *i_cc = (int *) R_Calloc(l, int), n = 0; // TODO: alloc i_cc afterwards if narm ??
 
   if(sorted) { // both the pointers to x and w need to be suitably incremented for grouped execution.
     // if(narm) {
@@ -785,7 +785,7 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   }
 
   if(narm == 0 && n != l) {
-    Free(x_cc); Free(i_cc);
+    R_Free(x_cc); R_Free(i_cc);
     return NA_REAL;
   }
 
@@ -794,13 +794,13 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
 
   if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, ret, Q);
   if(ISNAN(h)) {
-    Free(x_cc); Free(i_cc);
+    R_Free(x_cc); R_Free(i_cc);
     return NA_REAL;
   }
 
   WNTH_CORE_QSORT;
 
-  Free(x_cc); Free(i_cc);
+  R_Free(x_cc); R_Free(i_cc);
   return res;
 }
 
@@ -813,8 +813,8 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
     return ISNAN(pw[po[0]]) ? NA_REAL : px[po[0]-1];
   }
 
-  double *x_cc = (double *) Calloc(l, double);
-  int *i_cc = (int *) Calloc(l, int), n = 0; // TODO: alloc afterwards if narm ??
+  double *x_cc = (double *) R_Calloc(l, double);
+  int *i_cc = (int *) R_Calloc(l, int), n = 0; // TODO: alloc afterwards if narm ??
 
   if(sorted) {
     // if(narm) {
@@ -850,7 +850,7 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   }
 
   if(narm == 0 && n != l) {
-    Free(x_cc); Free(i_cc);
+    R_Free(x_cc); R_Free(i_cc);
     return NA_REAL;
   }
 
@@ -860,15 +860,15 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, ret, Q);
 
   if(ISNAN(h)) {
-    Free(x_cc);
-    Free(i_cc);
+    R_Free(x_cc);
+    R_Free(i_cc);
     return NA_REAL;
   }
 
   WNTH_CORE_QSORT;
 
-  Free(x_cc);
-  Free(i_cc);
+  R_Free(x_cc);
+  R_Free(i_cc);
   return res;
 }
 
@@ -1279,10 +1279,10 @@ if(isNull(ord)) {                                                               
   pst = cgs + 1;                                                                                               \
   if((cond)) po = &l;                                                                                          \
   else {                                                                                                       \
-    int *restrict count = (int *) Calloc(ng+1, int);                                                           \
+    int *restrict count = (int *) R_Calloc(ng+1, int);                                                           \
     po = (int *) R_alloc(nrx, sizeof(int)); --po;                                                              \
     for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;                                     \
-    Free(count);                                                                                               \
+    R_Free(count);                                                                                               \
   }                                                                                                            \
 } else {                                                                                                       \
   po = INTEGER(ord)-1;                                                                                         \
@@ -1368,7 +1368,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
     } else pst = INTEGER(getAttrib(ord, install("starts")))-1;
     if(nullw && sorted) po = &l;
     else {
-      int *restrict count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) R_Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       if(nullw) {
         for(int i = 0; i != l; ++i) po[pst[pgv[i]] + count[pgv[i]]++] = i+1;
@@ -1379,7 +1379,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
           po[pst[tmp] + count[tmp]++] = pxo[i];
         }
       }
-      Free(count);
+      R_Free(count);
     }
     ++pst;
   }
@@ -1402,9 +1402,9 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
 #define COLWISE_NTH_LIST(FUN_NA, FUN, WFUN)                    \
 if(nullw) {                                                    \
   if(nthreads == 1) {                                          \
-    void *x_cc = Calloc(nrx, double);                          \
+    void *x_cc = R_Calloc(nrx, double);                          \
     for(int j = 0; j != l; ++j) pout[j] = FUN_NA(px[j], x_cc, narm, ret, Q); \
-    Free(x_cc);                                                \
+    R_Free(x_cc);                                                \
   } else {                                                     \
     _Pragma("omp parallel for num_threads(nthreads)")          \
     for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, ret, Q); \
@@ -1420,12 +1420,12 @@ if(nullw) {                                                    \
  * } else {
    #pragma omp parallel for num_threads(nthreads)
    for(int j = 0; j < l; ++j) {
-   int *pxo = (int *) Calloc(nrx, int);
+   int *pxo = (int *) R_Calloc(nrx, int);
    // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
    // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
    // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
    pout[j] = w_nth_ord_impl_dbl(px[j], pxo, pw, narm, ret, Q, h);
-   Free(pxo);
+   R_Free(pxo);
    }
   }
    */
@@ -1516,10 +1516,10 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   } /* else {                                                                        \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) {                                                 \
-        int *pxo = (int *) Calloc(l, int);                                           \
+        int *pxo = (int *) R_Calloc(l, int);                                           \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l); // Currently cannot be parallelized   \
         pres[j] = WFUN(px + j*l - 1, pw, pxo, h, l, narm, ret, Q);                   \
-        Free(pxo);                                                                   \
+        R_Free(pxo);                                                                   \
       }                                                                              \
     }                                                                                \
   }                                                            \

@@ -282,8 +282,8 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
 
   SEXP res = PROTECT(allocVector(INTSXP, nx));
   int *restrict pres = INTEGER(res);
-  int *pg = (int*)Calloc(nx, int);
-  int *ptab = (int*)Calloc(nt, int);
+  int *pg = (int*)R_Calloc(nx, int);
+  int *ptab = (int*)R_Calloc(nt, int);
 
   SEXP clist = PROTECT(coerce_to_equal_types(x, table)); // This checks that the lengths match
   const SEXP *pc = SEXPPTR_RO(clist);
@@ -315,8 +315,8 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
     }
   }
 
-  Free(pg);
-  Free(ptab);
+  R_Free(pg);
+  R_Free(ptab);
   if(asLogical(count)) count_match(res, nt, NA_INTEGER);
   UNPROTECT(2);
   return res;
@@ -345,10 +345,10 @@ SEXP multi_match(SEXP m, SEXP g) {
   // This just creates an ordering vector for g, could also use radixorder on y
   int *cgs = (int*)R_alloc(ng+2, sizeof(int)); cgs[1] = 1;
   for(int i = 1; i != ngp; ++i) cgs[i+1] = cgs[i] + gs[i];
-  int *restrict cnt = (int*)Calloc(ngp, int);
+  int *restrict cnt = (int*)R_Calloc(ngp, int);
   int *po = (int*)R_alloc(l, sizeof(int)); --po;
   for(int i = 1; i != lp; ++i) po[cgs[pg[i]] + cnt[pg[i]]++] = i;
-  Free(cnt);
+  R_Free(cnt);
 
   // Indices to duplicate x
   SEXP x_ind = PROTECT(allocVector(INTSXP, n));

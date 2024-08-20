@@ -54,7 +54,7 @@ SEXP dupVecIndex(SEXP x) {
   } else if (tx == LGLSXP) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   SEXP ans_i = PROTECT(allocVector(INTSXP, n));
   int *restrict pans_i = INTEGER(ans_i), g = 0;
   size_t id = 0;
@@ -191,7 +191,7 @@ SEXP dupVecIndex(SEXP x) {
     }
   } break;
   }
-  Free(h);
+  R_Free(h);
   SEXP ngroups_sym = install("N.groups");
   setAttrib(ans_i, ngroups_sym, ScalarInteger(g));
   UNPROTECT(1);
@@ -225,7 +225,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
   } else if (tx == LGLSXP) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   SEXP ans_i = PROTECT(allocVector(INTSXP, n));
   int *restrict pans_i = INTEGER(ans_i), g = 0;
   size_t id = 0;
@@ -358,7 +358,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     }
   } break;
   }
-  Free(h);
+  R_Free(h);
   SEXP ngroups_sym = install("N.groups");
   setAttrib(ans_i, ngroups_sym, ScalarInteger(g));
   UNPROTECT(1);
@@ -405,7 +405,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
     }
   }
 
-  int *restrict h = (int*)Calloc(M, int), g = 0, hid = 0; // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int), g = 0, hid = 0; // Table to save the hash values, table has size M
   size_t id = 0;
 
   if(both_discr) {
@@ -553,7 +553,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
     }
   }
 
-  Free(h);
+  R_Free(h);
   SEXP ngroups_sym = install("N.groups");
   setAttrib(ans, ngroups_sym, ScalarInteger(g));
   UNPROTECT(1);
@@ -599,7 +599,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
   } else if (tx == LGLSXP) {
     M = (size_t)ng * 3 + 1;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *restrict h = (int*)Calloc(M, int), g = 0, hid = 0; // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int), g = 0, hid = 0; // Table to save the hash values, table has size M
   size_t id = 0;
   switch (tx) {
   case LGLSXP:
@@ -720,7 +720,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
     }
   } break;
   }
-  Free(h);
+  R_Free(h);
   return g;
 }
 
@@ -857,7 +857,7 @@ SEXP funiqueC(SEXP x) {
   } else if (tx == LGLSXP) {
     M = 3;
   } else error("Type %s is not supported.", type2char(tx)); // # nocov
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   int *restrict st = (int*)R_alloc((tx == LGLSXP || tx == 1000) ? (int)M : n, sizeof(int));
   int g = 0, nprotect = 0;
   size_t id = 0;
@@ -884,7 +884,7 @@ SEXP funiqueC(SEXP x) {
         if(++g == ng) break;
       }
     }
-    Free(h);
+    R_Free(h);
     if(g == n) return x;
     PROTECT(res = allocVector(tx == LGLSXP ? LGLSXP : INTSXP, g)); ++nprotect;
     int *restrict pres = INTEGER(res);
@@ -917,7 +917,7 @@ SEXP funiqueC(SEXP x) {
         ibbl:;
       }
     }
-    Free(h);
+    R_Free(h);
     if(g == n) {
       UNPROTECT(nprotect);
       return x;
@@ -940,7 +940,7 @@ SEXP funiqueC(SEXP x) {
       st[g++] = i;
       rbl:;
     }
-    Free(h);
+    R_Free(h);
     if(g == n) {
       UNPROTECT(nprotect);
       return x;
@@ -974,7 +974,7 @@ SEXP funiqueC(SEXP x) {
       st[g++] = i;
       cbl:;
     }
-    Free(h);
+    R_Free(h);
     if(g == n) {
       UNPROTECT(nprotect);
       return x;
@@ -995,7 +995,7 @@ SEXP funiqueC(SEXP x) {
       st[g++] = i;
       sbl:;
     }
-    Free(h);
+    R_Free(h);
     if(g == n) {
       UNPROTECT(nprotect);
       return x;
@@ -1037,9 +1037,9 @@ SEXP funiqueC(SEXP x) {
 //     K++;
 //   }
 //   R_xlen_t count = 0;
-//   int *restrict h = (int*) Calloc(M, int);
+//   int *restrict h = (int*) R_Calloc(M, int);
 //   const int *restrict v = INTEGER(mlv);
-//   int *restrict pans = (int*) Calloc(len_i, int);
+//   int *restrict pans = (int*) R_Calloc(len_i, int);
 //   size_t id = 0;
 //
 //       for (R_xlen_t i = 0; i < len_i; ++i) {
@@ -1063,7 +1063,7 @@ SEXP funiqueC(SEXP x) {
 //         count++;
 //         label2:;
 //       }
-//     Free(h);
+//     R_Free(h);
 //     UNPROTECT(1);
 //     SEXP indx = PROTECT(allocVector(INTSXP, count));
 //     int ct = 0;
@@ -1074,7 +1074,7 @@ SEXP funiqueC(SEXP x) {
 //       }
 //     }
 //     SEXP output = PROTECT(subSetRowDataFrame(x, indx));
-//     Free(pans);
+//     R_Free(pans);
 //     UNPROTECT(2);
 //     return output;
 // }
@@ -1114,7 +1114,7 @@ SEXP funiqueC(SEXP x) {
 //     K++;
 //   }
 //   R_xlen_t count = 0;
-//   int *restrict h = (int*) Calloc(M, int);
+//   int *restrict h = (int*) R_Calloc(M, int);
 //   const int *restrict v = INTEGER(mlv);
 //   size_t id = 0;
 //   for (R_xlen_t i = 0; i < len_i; ++i) {
@@ -1137,7 +1137,7 @@ SEXP funiqueC(SEXP x) {
 //     count++;
 //     label2:;
 //   }
-//   Free(h);
+//   R_Free(h);
 //   UNPROTECT(1);
 //   return ScalarInteger(count);
 // }
