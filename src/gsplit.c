@@ -189,7 +189,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
 
   } else { // Unsorted, without ordering
     unsno:;
-    int *count = (int*)Calloc(ng, int);
+    int *count = (int*)R_Calloc(ng, int);
     // memset(count, 0, sizeof(int)*(ng+1)); // Needed here ??
     // int *count = (int *) R_alloc(ng+1, sizeof(int));
 
@@ -255,7 +255,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       default: error("Unsupported type '%s' passed to gsplit", type2char(tx));
       }
     }
-    Free(count);
+    R_Free(count);
   }
   UNPROTECT(1);
   return res;

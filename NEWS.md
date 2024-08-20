@@ -1,3 +1,13 @@
+# collapse 2.0.16
+
+* Fixes an installation bug on some Linux systems (conflicting types) (#613). 
+
+* *collapse* now enforces string encoding in `fmatch()` / `join()`, which caused problems if strings being matched had different encodings (#566, #579, and #618). To avoid noticeable performance implications, checks are done heuristically, i.e., the first, middle and last string of a character vector are checked, and if not UTF8, the entire vector is coerced to UTF8 strings *before* the matching process. In general, character vectors in R can contain strings of different encodings, but this is not the case with most regular data. For performance reasons, *collapse* assumes that character vectors are uniform in terms of string encoding. 
+
+* Fixes a bug using qualified names for fast statistical functions inside `across()` (#621, thanks @alinacherkas). 
+
+* *collapse* now depends on R >= 3.4.0 due to the enforcement of `STRICT_R_HEADERS = 1` from R v4.5.0. In particular R API functions were renamed `Calloc -> R_Calloc` and `Free -> R_Free`.
+
 # collapse 2.0.15
 
 * Some changes on the C-side to move the package closer to C API compliance (demanded by R-Core). One notable change is that `gsplit()` no longer supports S4 objects (because `SET_S4_OBJECT` is not part of the API and `asS4()` is too expensive for tight loops). I cannot think of a single example where it would be necessary to split an S4 object, but if you do have applications please file an issue. 

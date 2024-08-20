@@ -14,7 +14,7 @@ int ndistinct_int(const int *restrict px, const int *restrict po, const int l, c
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
 
   if(sorted) {
     for (int i = 0; i != l; ++i) {
@@ -49,14 +49,14 @@ int ndistinct_int(const int *restrict px, const int *restrict po, const int l, c
     }
   }
 
-  Free(h);
+  R_Free(h);
   if(narm == 0) ndist += anyNA;
   return ndist;
 }
 
 int ndistinct_fct(const int *restrict px, const int *restrict po, const int l, const int nlev, const int sorted, const int narm) {
   if(l == 1) return !(narm && px[sorted ? 0 : po[0]-1] == NA_INTEGER);
-  int *restrict h = (int*)Calloc(nlev+1, int);
+  int *restrict h = (int*)R_Calloc(nlev+1, int);
   int ndist = 0, anyNA = narm; // Ensures breaking works if narm = TRUE or FALSE
   if(sorted) {
     for (int i = 0, xi; i != l; ++i) {
@@ -84,7 +84,7 @@ int ndistinct_fct(const int *restrict px, const int *restrict po, const int l, c
     }
   }
   if(narm == 0) ndist += anyNA;
-  Free(h);
+  R_Free(h);
   return ndist;
 }
 
@@ -136,7 +136,7 @@ int ndistinct_double(const double *restrict px, const int *restrict po, const in
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   union uno tpv;
   double xi;
 
@@ -176,7 +176,7 @@ int ndistinct_double(const double *restrict px, const int *restrict po, const in
   }
 
 
-  Free(h);
+  R_Free(h);
   if(narm == 0) ndist += anyNA;
   return ndist;
 }
@@ -190,7 +190,7 @@ int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int 
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   SEXP xi;
 
   if(sorted) {
@@ -226,7 +226,7 @@ int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int 
     }
   }
 
-  Free(h);
+  R_Free(h);
   if(narm == 0) ndist += anyNA;
   return ndist;
 }
@@ -360,10 +360,10 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
     pst = cgs + 1;
     if(sorted) po = &l;
     else {
-      int *restrict count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) R_Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-      ++po; Free(count);
+      ++po; R_Free(count);
     }
   } else {
     po = INTEGER(o);
@@ -426,10 +426,10 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
         pst = cgs + 1;
         if(sorted) po = &l;
         else {
-          int *restrict count = (int *) Calloc(ng+1, int);
+          int *restrict count = (int *) R_Calloc(ng+1, int);
           po = (int *) R_alloc(gl, sizeof(int)); --po;
           for(int i = 0; i != gl; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-          ++po; Free(count);
+          ++po; R_Free(count);
         }
       } else {
         po = INTEGER(o);
@@ -511,10 +511,10 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       pst = cgs + 1;
       if(sorted) po = &l;
       else {
-        int *restrict count = (int *) Calloc(ng+1, int);
+        int *restrict count = (int *) R_Calloc(ng+1, int);
         po = (int *) R_alloc(l, sizeof(int)); --po;
         for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-        ++po; Free(count);
+        ++po; R_Free(count);
       }
     } else {
       po = INTEGER(o);

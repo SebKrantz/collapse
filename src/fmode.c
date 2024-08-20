@@ -18,8 +18,8 @@ int mode_int(const int *restrict px, const int *restrict po, const int l, const 
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
-  int *restrict n = (int*)Calloc(l, int); // Table to count frequency of values
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values
+  int *restrict n = (int*)R_Calloc(l, int); // Table to count frequency of values
 
   if(sorted) {
     mode = px[0];
@@ -79,8 +79,8 @@ int mode_int(const int *restrict px, const int *restrict po, const int l, const 
     }
   }
 
-  Free(h);
-  Free(n);
+  R_Free(h);
+  R_Free(n);
   return mode;
 }
 
@@ -97,8 +97,8 @@ int w_mode_int(const int *restrict px, const double *restrict pw, const int *res
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
-  double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values
+  double *restrict sumw = (double*)R_Calloc(l, double); // Table to save each values sum of weights
   double max = NEG_INF;
 
   if(sorted) {
@@ -162,8 +162,8 @@ int w_mode_int(const int *restrict px, const double *restrict pw, const int *res
     }
   }
 
-  Free(h);
-  Free(sumw);
+  R_Free(h);
+  R_Free(sumw);
   return mode;
 }
 
@@ -172,7 +172,7 @@ int mode_fct_logi(const int *restrict px, const int *restrict po, const int l, c
   if(l == 1) return sorted ? px[0] : px[po[0]-1];
   int val, mode, max = 1, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
-  int *restrict n = (int*)Calloc(nlevp+1, int); // Table to count frequency of values
+  int *restrict n = (int*)R_Calloc(nlevp+1, int); // Table to count frequency of values
 
   if(sorted) {
     mode = px[0];
@@ -220,7 +220,7 @@ int mode_fct_logi(const int *restrict px, const int *restrict po, const int l, c
     }
   }
 
-  Free(n);
+  R_Free(n);
   return mode;
 }
 
@@ -231,7 +231,7 @@ int w_mode_fct_logi(const int *restrict px, const double *restrict pw, const int
   }
   int val, mode, nlevp = nlev + 1, i = 0, end = l-1,
     minm = ret == 1, nfirstm = ret > 0, lastm = ret == 3;
-  double *restrict sumw = (double*)Calloc(nlevp+1, double); // Table to save each values sum of weights
+  double *restrict sumw = (double*)R_Calloc(nlevp+1, double); // Table to save each values sum of weights
   double max = NEG_INF;
 
   if(sorted) {
@@ -285,7 +285,7 @@ int w_mode_fct_logi(const int *restrict px, const double *restrict pw, const int
     }
   }
 
-  Free(sumw);
+  R_Free(sumw);
   return mode;
 }
 
@@ -300,8 +300,8 @@ double mode_double(const double *restrict px, const int *restrict po, const int 
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
-  int *restrict n = (int*)Calloc(l, int); // Table to count frequency of values
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values
+  int *restrict n = (int*)R_Calloc(l, int); // Table to count frequency of values
   double val, mode;
   union uno tpv;
 
@@ -365,8 +365,8 @@ double mode_double(const double *restrict px, const int *restrict po, const int 
     }
   }
 
-  Free(h);
-  Free(n);
+  R_Free(h);
+  R_Free(n);
   return mode;
 }
 
@@ -382,8 +382,8 @@ double w_mode_double(const double *restrict px, const double *restrict pw, const
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
-  double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values
+  double *restrict sumw = (double*)R_Calloc(l, double); // Table to save each values sum of weights
   double val, mode, max = NEG_INF;
   union uno tpv;
 
@@ -450,8 +450,8 @@ double w_mode_double(const double *restrict px, const double *restrict pw, const
     }
   }
 
-  Free(h);
-  Free(sumw);
+  R_Free(h);
+  R_Free(sumw);
   return mode;
 }
 
@@ -466,8 +466,8 @@ SEXP mode_string(const SEXP *restrict px, const int *restrict po, const int l, c
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
-  int *restrict n = (int*)Calloc(l, int); // Table to count frequency of values
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values
+  int *restrict n = (int*)R_Calloc(l, int); // Table to count frequency of values
   SEXP val, mode;
 
   if(sorted) {
@@ -528,8 +528,8 @@ SEXP mode_string(const SEXP *restrict px, const int *restrict po, const int l, c
     }
   }
 
-  Free(h);
-  Free(n);
+  R_Free(h);
+  R_Free(n);
   return mode;
 }
 
@@ -545,8 +545,8 @@ SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values
-  double *restrict sumw = (double*)Calloc(l, double); // Table to save each values sum of weights
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values
+  double *restrict sumw = (double*)R_Calloc(l, double); // Table to save each values sum of weights
   double max = NEG_INF;
   SEXP val, mode;
 
@@ -611,8 +611,8 @@ SEXP w_mode_string(const SEXP *restrict px, const double *restrict pw, const int
     }
   }
 
-  Free(h);
-  Free(sumw);
+  R_Free(h);
+  R_Free(sumw);
   return mode;
 }
 
@@ -889,10 +889,10 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     pst = cgs + 1;
     if(sorted) po = &l;
     else {
-      int *restrict count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) R_Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-      ++po; Free(count);
+      ++po; R_Free(count);
     }
   } else {
     po = INTEGER(o);
@@ -959,10 +959,10 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
         pst = cgs + 1;
         if(sorted) po = &l;
         else {
-          int *restrict count = (int *) Calloc(ng+1, int);
+          int *restrict count = (int *) R_Calloc(ng+1, int);
           po = (int *) R_alloc(nrx, sizeof(int)); --po;
           for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-          ++po; Free(count);
+          ++po; R_Free(count);
         }
       } else {
         po = INTEGER(o);
@@ -1070,10 +1070,10 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
     pst = cgs + 1;
     if(sorted) po = &l;
     else {
-      int *restrict count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) R_Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-      ++po; Free(count);
+      ++po; R_Free(count);
     }
   } else {
     po = INTEGER(o);

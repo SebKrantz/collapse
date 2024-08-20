@@ -1,6 +1,7 @@
 #include "collapse_c.h" // Needs to be first because includes OpenMP, to avoid namespace conflicts.
+#include "data.table.h"
 #include "kit.h"
-#include "base_radixsort.h"
+
 
 /* A Sort-Merge Join
  See: https://www.dcs.ed.ac.uk/home/tz/phd/thesis/node20.htm
@@ -281,8 +282,8 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
 
   SEXP res = PROTECT(allocVector(INTSXP, nx));
   int *restrict pres = INTEGER(res);
-  int *pg = (int*)Calloc(nx, int);
-  int *ptab = (int*)Calloc(nt, int);
+  int *pg = (int*)R_Calloc(nx, int);
+  int *ptab = (int*)R_Calloc(nt, int);
 
   SEXP clist = PROTECT(coerce_to_equal_types(x, table)); // This checks that the lengths match
   const SEXP *pc = SEXPPTR_RO(clist);
@@ -301,9 +302,9 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
         else sort_merge_join_double_second(REAL_RO(pci[0]), REAL_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);
         break;
       case STRSXP:
-        checkEncodings(pci[0]); checkEncodings(pci[1]);
-        if(i == 0) sort_merge_join_string(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);
-        else sort_merge_join_string_second(SEXPPTR_RO(pci[0]), SEXPPTR_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);
+        if(i == 0) sort_merge_join_string(SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(pci[0]))), SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(pci[1])))-1, pg, ptab, pot, nx, nt, pres);
+        else sort_merge_join_string_second(SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(pci[0]))), SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(pci[1])))-1, pg, ptab, pot, nx, nt, pres);
+        UNPROTECT(2);
         break;
       case CPLXSXP:
         if(i == 0) sort_merge_join_complex(COMPLEX_RO(pci[0]), COMPLEX_RO(pci[1])-1, pg, ptab, pot, nx, nt, pres);
@@ -314,8 +315,8 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
     }
   }
 
-  Free(pg);
-  Free(ptab);
+  R_Free(pg);
+  R_Free(ptab);
   if(asLogical(count)) count_match(res, nt, NA_INTEGER);
   UNPROTECT(2);
   return res;
@@ -344,10 +345,10 @@ SEXP multi_match(SEXP m, SEXP g) {
   // This just creates an ordering vector for g, could also use radixorder on y
   int *cgs = (int*)R_alloc(ng+2, sizeof(int)); cgs[1] = 1;
   for(int i = 1; i != ngp; ++i) cgs[i+1] = cgs[i] + gs[i];
-  int *restrict cnt = (int*)Calloc(ngp, int);
+  int *restrict cnt = (int*)R_Calloc(ngp, int);
   int *po = (int*)R_alloc(l, sizeof(int)); --po;
   for(int i = 1; i != lp; ++i) po[cgs[pg[i]] + cnt[pg[i]]++] = i;
-  Free(cnt);
+  R_Free(cnt);
 
   // Indices to duplicate x
   SEXP x_ind = PROTECT(allocVector(INTSXP, n));

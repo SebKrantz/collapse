@@ -23,6 +23,7 @@
 #define SET_TRLEN(x, v) SET_STDVEC_TRUELENGTH(x, ((int) (v)))
 
 #define MYLEV(x)	(((SEXPREC_partial *)(x))->sxpinfo.gp)
+#define IS_UTF8(x)  (MYLEV(x) & 8)
 #define IS_ASCII(x) (MYLEV(x) & 64) // from data.table.h
 
 #define SETTOF(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.type)=(v))

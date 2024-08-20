@@ -186,7 +186,7 @@ switch(aggfun) {                                                                
       for(int i = 0; i != l; ++i) if(NONMISSCHECK) TYPEACC(pout[pid[i]])[pix[i]-1] += pc[i]; \
   } break;                                                                                 \
   case 5: { /* mean: no multithreading because possible race condition */                  \
-    int *restrict count = (int*)Calloc(nr*nc+1, int);                                      \
+    int *restrict count = (int*)R_Calloc(nr*nc+1, int);                                      \
     tdef *meani = TYPEACC(pout[1]);                                                        \
     for(int i = 0; i != l; ++i) {                                                          \
       if(NONMISSCHECK) {                                                                   \
@@ -199,7 +199,7 @@ switch(aggfun) {                                                                
         meani[pix[i]] += (pc[i] - meani[pix[i]]) / ++count[(pid[i]-1)*nr+pix[i]];          \
       }                                                                                    \
     }                                                                                      \
-    Free(count);                                                                           \
+    R_Free(count);                                                                           \
   } break;                                                                                 \
   case 6: { /* min: no multithreading because possible race condition */                   \
     tdef *mini = TYPEACC(pout[1]);                                                         \

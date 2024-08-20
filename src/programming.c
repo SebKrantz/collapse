@@ -1,5 +1,5 @@
 #include "collapse_c.h"
-#include "base_radixsort.h"
+#include "data.table.h"
 
 SEXP Cna_rm(SEXP x) {
   const int n = LENGTH(x);
@@ -61,8 +61,14 @@ SEXP Cna_rm(SEXP x) {
 
 // Helper function to find a single string in factor levels
 int fchmatch(SEXP x, SEXP val, int nomatch) {
-  const SEXP *px = SEXPPTR(x), v = asChar(val);
-  for(int i = 0, l = length(x); i != l; ++i) if(px[i] == v) return i + 1;
+  const SEXP *px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(x))), v = PROTECT(ENC2UTF8(asChar(val)));
+  for(int i = 0, l = length(x); i != l; ++i) {
+    if(px[i] == v) {
+      UNPROTECT(2);
+      return i + 1;
+    }
+  }
+  UNPROTECT(2);
   return nomatch;
 }
 
@@ -110,9 +116,10 @@ if(length(val) == n && n > 1) {
   }
   case STRSXP:
   {
-    const SEXP *px = SEXPPTR(x);
-    const SEXP *pv = SEXPPTR(val);
+    const SEXP *px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(x)));
+    const SEXP *pv = SEXPPTR(PROTECT(coerceUtf8IfNeeded(val)));
     WHICHVLOOPLX
+    UNPROTECT(2);
     break;
   }
   case RAWSXP :
@@ -156,10 +163,10 @@ if(length(val) == n && n > 1) {
   }
   case STRSXP:
   {
-    const SEXP *px = SEXPPTR(x);
-    const SEXP v = PROTECT(asChar(val));
+    const SEXP *px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(x)));
+    const SEXP v = PROTECT(ENC2UTF8(asChar(val)));
     WHICHVLOOP
-    UNPROTECT(1);
+    UNPROTECT(2);
     break;
   }
   case RAWSXP :
@@ -217,9 +224,27 @@ case REALSXP:
 }
 case STRSXP:
 {
-  const SEXP *px = SEXPPTR(x);
-  const SEXP v = asChar(val);
-  ALLANYVLOOP
+  const SEXP *px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(x)));
+  const SEXP v = PROTECT(ENC2UTF8(asChar(val)));
+  if(all) {
+    for(int i = 0; i != n; ++i) {
+      if(px[i] != v) {
+        UNPROTECT(2);
+        return ScalarLogical(0);
+      }
+    }
+    UNPROTECT(2);
+    return ScalarLogical(1);
+  } else {
+    for(int i = 0; i != n; ++i) {
+      if(px[i] == v) {
+        UNPROTECT(2);
+        return ScalarLogical(1);
+      }
+    }
+    UNPROTECT(2);
+    return ScalarLogical(0);
+  }
   break;
 }
 case RAWSXP :
