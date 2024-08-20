@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.15</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.16</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,9 +31,16 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.0.15/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.0.16/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.16" id="collapse-2016">collapse 2.0.16<a class="anchor" aria-label="anchor" href="#collapse-2016"></a></h2>
+<ul><li><p>Fixes an installation bug on some Linux systems (conflicting types) (<a href="https://github.com/SebKrantz/collapse/issues/613" class="external-link">#613</a>).</p></li>
+<li><p><em>collapse</em> now enforces string encoding in <code><a href="../reference/fmatch.html">fmatch()</a></code> / <code><a href="../reference/join.html">join()</a></code>, which caused problems if strings being matched had different encodings (<a href="https://github.com/SebKrantz/collapse/issues/566" class="external-link">#566</a>, <a href="https://github.com/SebKrantz/collapse/issues/579" class="external-link">#579</a>, and <a href="https://github.com/SebKrantz/collapse/issues/618" class="external-link">#618</a>). To avoid noticeable performance implications, checks are done heuristically, i.e., the first, middle and last string of a character vector are checked, and if not UTF8, the entire vector is coerced to UTF8 strings <em>before</em> the matching process. In general, character vectors in R can contain strings of different encodings, but this is not the case with most regular data. For performance reasons, <em>collapse</em> assumes that character vectors are uniform in terms of string encoding.</p></li>
+<li><p>Fixes a bug using qualified names for fast statistical functions inside <code><a href="../reference/across.html">across()</a></code> (<a href="https://github.com/SebKrantz/collapse/issues/621" class="external-link">#621</a>, thanks <a href="https://github.com/alinacherkas" class="external-link">@alinacherkas</a>).</p></li>
+<li><p><em>collapse</em> now depends on R &gt;= 3.4.0 due to the enforcement of <code>STRICT_R_HEADERS = 1</code> from R v4.5.0. In particular R API functions were renamed <code>Calloc -&gt; R_Calloc</code> and <code>Free -&gt; R_Free</code>.</p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.15" id="collapse-2015">collapse 2.0.15<a class="anchor" aria-label="anchor" href="#collapse-2015"></a></h2><p class="text-muted">CRAN release: 2024-07-08</p>
 <ul><li><p>Some changes on the C-side to move the package closer to C API compliance (demanded by R-Core). One notable change is that <code><a href="../reference/GRP.html">gsplit()</a></code> no longer supports S4 objects (because <code>SET_S4_OBJECT</code> is not part of the API and <code><a href="https://rdrr.io/r/base/isS4.html" class="external-link">asS4()</a></code> is too expensive for tight loops). I cannot think of a single example where it would be necessary to split an S4 object, but if you do have applications please file an issue.</p></li>
