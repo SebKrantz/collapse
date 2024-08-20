@@ -17,6 +17,10 @@
 #define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
 #define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
 
+// Needed for match.c and join.c
+#define NEED2UTF8(s) !(IS_ASCII(s) || (s)==NA_STRING || IS_UTF8(s))
+#define ENC2UTF8(s) (!NEED2UTF8(s) ? (s) : mkCharCE(translateCharUTF8(s), CE_UTF8))
+
 // for use with bit64::integer64
 #define NA_INTEGER64  INT64_MIN
 #define MAX_INTEGER64 INT64_MAX
@@ -52,6 +56,8 @@ extern size_t sizes[100];  // max appears to be FUNSXP = 99, see Rinternals.h
 extern size_t typeorder[100];
 
 // data.table_utils.c
+int need2utf8(SEXP x);
+SEXP coerceUtf8IfNeeded(SEXP x);
 SEXP setnames(SEXP x, SEXP nam);
 bool allNA(SEXP x, bool errorForBadType);
 SEXP allNAv(SEXP x, SEXP errorForBadType);
