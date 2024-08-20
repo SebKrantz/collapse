@@ -8,7 +8,12 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.15
+version: 2.0.16
+identifiers:
+- type: doi
+  value: 10.32614/CRAN.package.collapse
+- type: url
+  value: https://twitter.com/collapse_R
 abstract: A C/C++ based package for advanced data transformation and statistical computing
   in R that is extremely fast, class-agnostic, robust and programmer friendly. Core
   functionality includes a rich set of S3 generic grouped and weighted statistical
@@ -42,7 +47,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2024-05-30'
+date-released: '2024-08-20'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -73,7 +78,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
   year: '2024'
-  notes: R package version 2.0.15
+  notes: R package version 2.0.16
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
@@ -86,7 +91,7 @@ references:
     name: R Foundation for Statistical Computing
     address: Vienna, Austria
   year: '2024'
-  version: '>= 3.3.0'
+  version: '>= 3.4.0'
 - type: software
   title: Rcpp
   abstract: 'Rcpp: Seamless R and C++ Integration'
@@ -113,6 +118,7 @@ references:
   - family-names: Chambers
     given-names: John
   year: '2024'
+  doi: 10.32614/CRAN.package.Rcpp
   version: '>= 1.0.1'
 - type: software
   title: Rcpp
@@ -140,6 +146,7 @@ references:
   - family-names: Chambers
     given-names: John
   year: '2024'
+  doi: 10.32614/CRAN.package.Rcpp
 - type: software
   title: fastverse
   abstract: 'fastverse: A Suite of High-Performance Packages for Statistics and Data
@@ -152,6 +159,7 @@ references:
     given-names: Sebastian
     email: sebastian.krantz@graduateinstitute.ch
   year: '2024'
+  doi: 10.32614/CRAN.package.fastverse
 - type: software
   title: data.table
   abstract: 'data.table: Extension of `data.frame`'
@@ -176,6 +184,7 @@ references:
     given-names: Toby
     orcid: https://orcid.org/0000-0002-3146-0865
   year: '2024'
+  doi: 10.32614/CRAN.package.data.table
 - type: software
   title: magrittr
   abstract: 'magrittr: A Forward-Pipe Operator for R'
@@ -190,6 +199,7 @@ references:
     given-names: Hadley
     email: hadley@rstudio.com
   year: '2024'
+  doi: 10.32614/CRAN.package.magrittr
 - type: software
   title: kit
   abstract: 'kit: Data Manipulation Functions Implemented in C'
@@ -201,6 +211,7 @@ references:
     given-names: Morgan
     email: morgan.emailbox@gmail.com
   year: '2024'
+  doi: 10.32614/CRAN.package.kit
 - type: software
   title: xts
   abstract: 'xts: eXtensible Time Series'
@@ -214,6 +225,7 @@ references:
     given-names: Joshua M.
     email: josh.m.ulrich@gmail.com
   year: '2024'
+  doi: 10.32614/CRAN.package.xts
 - type: software
   title: zoo
   abstract: 'zoo: S3 Infrastructure for Regular and Irregular Time Series (Z''s Ordered
@@ -233,6 +245,7 @@ references:
     given-names: Jeffrey A.
     email: jeff.a.ryan@gmail.com
   year: '2024'
+  doi: 10.32614/CRAN.package.zoo
 - type: software
   title: plm
   abstract: 'plm: Linear Models for Panel Data'
@@ -250,6 +263,7 @@ references:
     given-names: Kevin
     email: kevin.tappe@bwi.uni-stuttgart.de
   year: '2024'
+  doi: 10.32614/CRAN.package.plm
 - type: software
   title: fixest
   abstract: 'fixest: Fast Fixed-Effects Estimations'
@@ -261,6 +275,7 @@ references:
     given-names: Laurent
     email: laurent.berge@u-bordeaux.fr
   year: '2024'
+  doi: 10.32614/CRAN.package.fixest
 - type: software
   title: vars
   abstract: 'vars: VAR Modelling'
@@ -272,6 +287,7 @@ references:
     given-names: Bernhard
     email: bernhard@pfaffikus.de
   year: '2024'
+  doi: 10.32614/CRAN.package.vars
 - type: software
   title: RcppArmadillo
   abstract: 'RcppArmadillo: ''Rcpp'' Integration for the ''Armadillo'' Templated Linear
@@ -291,6 +307,7 @@ references:
   - family-names: Sanderson
     given-names: Conrad
   year: '2024'
+  doi: 10.32614/CRAN.package.RcppArmadillo
 - type: software
   title: RcppEigen
   abstract: 'RcppEigen: ''Rcpp'' Integration for the ''Eigen'' Templated Linear Algebra
@@ -300,14 +317,18 @@ references:
   repository: https://CRAN.R-project.org/package=RcppEigen
   authors:
   - family-names: Bates
-    given-names: Douglas
+    given-names: Doug
+    orcid: https://orcid.org/0000-0001-8316-9503
   - family-names: Eddelbuettel
     given-names: Dirk
+    email: edd@debian.org
+    orcid: https://orcid.org/0000-0001-6419-907X
   - family-names: Francois
     given-names: Romain
-  - family-names: Eigen
-    given-names: Yixuan Qiu; the authors of Eigen for the included version of
+  - family-names: Qiu
+    given-names: Yixuan
   year: '2024'
+  doi: 10.32614/CRAN.package.RcppEigen
 - type: software
   title: tibble
   abstract: 'tibble: Simple Data Frames'
@@ -323,6 +344,7 @@ references:
     given-names: Hadley
     email: hadley@rstudio.com
   year: '2024'
+  doi: 10.32614/CRAN.package.tibble
 - type: software
   title: dplyr
   abstract: 'dplyr: A Grammar of Data Manipulation'
@@ -347,6 +369,7 @@ references:
     email: davis@posit.co
     orcid: https://orcid.org/0000-0003-4777-038X
   year: '2024'
+  doi: 10.32614/CRAN.package.dplyr
 - type: software
   title: ggplot2
   abstract: 'ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics'
@@ -386,6 +409,7 @@ references:
     name-particle: van den
     orcid: https://orcid.org/0000-0002-9335-7468
   year: '2024'
+  doi: 10.32614/CRAN.package.ggplot2
 - type: software
   title: scales
   abstract: 'scales: Scale Functions for Visualization'
@@ -403,6 +427,7 @@ references:
   - family-names: Seidel
     given-names: Dana
   year: '2024'
+  doi: 10.32614/CRAN.package.scales
 - type: software
   title: microbenchmark
   abstract: 'microbenchmark: Accurate Timing Functions'
@@ -413,6 +438,7 @@ references:
   - family-names: Mersmann
     given-names: Olaf
   year: '2024'
+  doi: 10.32614/CRAN.package.microbenchmark
 - type: software
   title: testthat
   abstract: 'testthat: Unit Testing for R'
@@ -424,6 +450,7 @@ references:
     given-names: Hadley
     email: hadley@posit.co
   year: '2024'
+  doi: 10.32614/CRAN.package.testthat
 - type: software
   title: covr
   abstract: 'covr: Test Coverage for Packages'
@@ -435,6 +462,7 @@ references:
     given-names: Jim
     email: james.f.hester@gmail.com
   year: '2024'
+  doi: 10.32614/CRAN.package.covr
 - type: software
   title: knitr
   abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
@@ -447,6 +475,7 @@ references:
     email: xie@yihui.name
     orcid: https://orcid.org/0000-0003-0645-5666
   year: '2024'
+  doi: 10.32614/CRAN.package.knitr
 - type: software
   title: rmarkdown
   abstract: 'rmarkdown: Dynamic Documents for R'
@@ -490,6 +519,7 @@ references:
     email: rich@posit.co
     orcid: https://orcid.org/0000-0003-3925-190X
   year: '2024'
+  doi: 10.32614/CRAN.package.rmarkdown
 - type: software
   title: withr
   abstract: 'withr: Run Code ''With'' Temporarily Modified Global State'
@@ -514,7 +544,5 @@ references:
   - family-names: Chang
     given-names: Winston
   year: '2024'
-identifiers:
-- type: url
-  value: https://twitter.com/collapse_R
+  doi: 10.32614/CRAN.package.withr
 
