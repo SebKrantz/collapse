@@ -23,7 +23,9 @@ across(.cols = NULL, .fns, ..., .names = NULL,
   \item{.transpose}{with multiple \code{.fns}, \code{.transpose} controls whether the result is ordered first by column, then by function (\code{TRUE}), or vice-versa (\code{FALSE}). \code{"auto"} does the former if all functions yield results of the same dimensions (dimensions may differ if \code{.apply = FALSE}). See Examples.}
 }
 \note{
-\code{across} does not support \emph{purr}-style lambdas, and does not support \code{dplyr}-style predicate functions e.g. \code{across(where(is.numeric), sum)}, simply use \code{across(is.numeric, sum)}. In contrast to \code{dplyr}, you can also compute on grouping columns.
+\code{across()} does not support \emph{purr}-style lambdas, and does not support \code{dplyr}-style predicate functions e.g. \code{across(where(is.numeric), sum)}, simply use \code{across(is.numeric, sum)}. In contrast to \code{dplyr}, you can also compute on grouping columns.
+
+Also \emph{note} that \code{across()} is NOT a function in \emph{collapse} but a known expression that is internally transformed by \code{fsummarise()/fmutate()} into something else. Thus, it cannot be called using qualified names, i.e., \code{collapse::across()} does not work and is not necessary if \emph{collapse} is not attached.
 
 %In general, my mission with \code{collapse} is not to create a \code{dplyr}-clone, but to take some of the useful features and make them robust and fast using base R and C/C++, with the aim of having a stable API. So don't ask me to implement the latest \emph{dplyr} feature, unless you firmly believe it is very useful and will be around 10 years from now.
 }

@@ -251,6 +251,7 @@ tfmv <- ftransformv
 
 settransform <- function(.data, ...) {
   name <- as.character(substitute(.data))
+  if(length(name) != 1L || name == ".") stop("Cannot assign to name: ", deparse(substitute(.data)))
   res <- ftransform(.data, ...)
   assign(name, res, envir = parent.frame())
   invisible(res)
@@ -261,6 +262,7 @@ settfm <- settransform
 
 settransformv <- function(.data, ...) {
   name <- as.character(substitute(.data))
+  if(length(name) != 1L || name == ".") stop("Cannot assign to name: ", deparse(substitute(.data)))
   res <- ftransformv(.data, ...)
   assign(name, res, envir = parent.frame())
   invisible(res)
