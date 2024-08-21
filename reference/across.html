@@ -71,7 +71,8 @@
 </dl></div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p><code>across</code> does not support <em>purr</em>-style lambdas, and does not support <code>dplyr</code>-style predicate functions e.g. <code>across(where(is.numeric), sum)</code>, simply use <code>across(is.numeric, sum)</code>. In contrast to <code>dplyr</code>, you can also compute on grouping columns.</p>
+    <p><code>across()</code> does not support <em>purr</em>-style lambdas, and does not support <code>dplyr</code>-style predicate functions e.g. <code>across(where(is.numeric), sum)</code>, simply use <code>across(is.numeric, sum)</code>. In contrast to <code>dplyr</code>, you can also compute on grouping columns.</p>
+<p>Also <em>note</em> that <code>across()</code> is NOT a function in <em>collapse</em> but a known expression that is internally transformed by <code>fsummarise()/fmutate()</code> into something else. Thus, it cannot be called using qualified names, i.e., <code>collapse::across()</code> does not work and is not necessary if <em>collapse</em> is not attached.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
