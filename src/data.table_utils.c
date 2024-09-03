@@ -15,7 +15,7 @@ int need2utf8(SEXP x) {
   // }
   // return(false);
   if (xlen <= 1) return xlen == 1 ? NEED2UTF8(xd[0]) : 0;
-  return NEED2UTF8(xd[0]) || NEED2UTF8(xd[xlen/2]) || NEED2UTF8(xd[xlen-1]);
+  return NEED2UTF8(xd[0]) || NEED2UTF8(xd[xlen/4]) || NEED2UTF8(xd[xlen/2]) || NEED2UTF8(xd[(int)(xlen/1.3333)]) || NEED2UTF8(xd[xlen-1]);
 }
 
 SEXP coerceUtf8IfNeeded(SEXP x) {

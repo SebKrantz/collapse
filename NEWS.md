@@ -2,7 +2,7 @@
 
 * Fixes an installation bug on some Linux systems (conflicting types) (#613). 
 
-* *collapse* now enforces string encoding in `fmatch()` / `join()`, which caused problems if strings being matched had different encodings (#566, #579, and #618). To avoid noticeable performance implications, checks are done heuristically, i.e., the first, middle and last string of a character vector are checked, and if not UTF8, the entire vector is coerced to UTF8 strings *before* the matching process. In general, character vectors in R can contain strings of different encodings, but this is not the case with most regular data. For performance reasons, *collapse* assumes that character vectors are uniform in terms of string encoding. 
+* *collapse* now enforces string encoding in `fmatch()` / `join()`, which caused problems if strings being matched had different encodings (#566, #579, and #618). To avoid noticeable performance implications, checks are done heuristically, i.e., the first, 25th, 50th and 75th percentile and last string of a character vector are checked, and if not UTF8, the entire vector is internally coerced to UTF8 strings *before* the matching process. In general, character vectors in R can contain strings of different encodings, but this is not the case with most regular data. For performance reasons, *collapse* assumes that character vectors are uniform in terms of string encoding. Heterogeneous strings should be coerced using tools like `stringi::stri_trans_general(x, "latin-ascii")`.
 
 * Fixes a bug using qualified names for fast statistical functions inside `across()` (#621, thanks @alinacherkas). 
 
