@@ -267,16 +267,21 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
   int *xstart = INTEGER(xstartArg), *xlen = INTEGER(xlenArg), *xorder = INTEGER(xorderArg);
   n = length(xorderArg);
   ng = length(xstartArg);
+  if(n > 0 && n == ng && asInteger(dns) == 1) return xorderArg;
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *ians = INTEGER(ans);
   if(n > 0) {
     switch(asInteger(dns)) {
     case 0: // Not Sorted
       k=1;
-      for (i = 0; i != ng; i++) {
-        for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
-          ians[xorder[j]-1] = k;
-        k++;
+      if(n == ng) {
+        for (i = 0; i != n; i++) ians[xorder[i]-1] = i+1;
+      } else {
+        for (i = 0; i != ng; i++) {
+          for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
+            ians[xorder[j]-1] = k;
+          k++;
+        }
       }
       break;
     case 1: // Sorted
@@ -286,7 +291,7 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
         k++;
       }
       break;
-    case 2: // This is basically run-length type group-id
+    case 2: // This is basically run-length type group-id: currently not used in collapse!
       for (i = 0; i != ng; i++) {
         k=1;
         for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
@@ -297,7 +302,7 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
     }
   }
   UNPROTECT(1);
-  return(ans);
+  return ans;
 }
 
 // from data.table_assign.c:
