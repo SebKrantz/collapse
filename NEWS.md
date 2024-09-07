@@ -1,3 +1,7 @@
+# collapse 2.0.16.9000
+
+* In `GRP.default()`, the `"group.starts"` attribute is always returned, even if there is only one group or every observation is its own group. Thanks @JamesThompsonC (#631).  
+
 # collapse 2.0.16
 
 * Fixes an installation bug on some Linux systems (conflicting types) (#613). 

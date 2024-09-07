@@ -208,7 +208,9 @@ void fmean_int_g_impl(double *restrict pout, const int *restrict px, const int n
     R_Free(n);
   } else {
     --pout;
-    for(int i = l; i--; ) pout[pg[i]] += px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+    for(int i = l; i--; ) {
+      pout[pg[i]] += px[i] == NA_INTEGER ? NA_REAL : px[i]; // Used to stop loop when all groups passed with NA, but probably no speed gain since groups are mostly ordered.
+    }
     ++pout;
     for(int i = ng; i--; ) pout[i] /= pgs[i];
   }
