@@ -3,7 +3,7 @@ title: "collapse and data.table"
 subtitle: "Harmony and High Performance"
 author: "Sebastian Krantz"
 date: "2021-06-27"
-output: 
+output:
   rmarkdown::html_vignette:
     toc: true
 
@@ -29,9 +29,9 @@ pre[class] {
 library(data.table)
 library(microbenchmark)
 library(collapse)
-knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE, 
+knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
                       comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
-                      fig.width = 8, fig.height = 5, 
+                      fig.width = 8, fig.height = 5,
                       out.width = '100%')
 
 # knitr::opts_chunk$set(
@@ -40,7 +40,7 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 #      tidy = FALSE,
 #     cache = FALSE,
 #  collapse = TRUE,
-#  fig.width = 8, 
+#  fig.width = 8,
 #  fig.height= 5,
 #  out.width='100%'
 # )
@@ -54,28 +54,28 @@ set.seed(101)
 *collapse* is a C/C++ based package for data transformation and statistical computing in R. It's aims are:
 
 1. To facilitate complex data transformation, exploration and computing tasks in R.
-2. To help make R code fast, flexible, parsimonious and programmer friendly. 
+2. To help make R code fast, flexible, parsimonious and programmer friendly.
 -->
-This vignette focuses on using *collapse* with the popular *data.table* package by Matt Dowle and Arun Srinivasan. In contrast to *dplyr* and *plm* whose methods ('grouped_df', 'pseries', 'pdata.frame') *collapse* supports, the integration between *collapse* and *data.table* is hidden in the 'data.frame' methods and *collapse*'s C code. 
+This vignette focuses on using *collapse* with the popular *data.table* package by Matt Dowle and Arun Srinivasan. In contrast to *dplyr* and *plm* whose methods ('grouped_df', 'pseries', 'pdata.frame') *collapse* supports, the integration between *collapse* and *data.table* is hidden in the 'data.frame' methods and *collapse*'s C code.
 
-From version 1.6.0 *collapse* seamlessly handles *data.tables*, permitting reference operations (`set*`, `:=`) on data tables created with collapse (`qDT`) or returned from *collapse*'s data manipulation functions (= all functions except `.FAST_FUN`, `.OPERATOR_FUN`, `BY` and `TRA`, see the [NEWS](<https://sebkrantz.github.io/collapse/news/index.html#collapse-1-6-0-2021-06-28>) for details on the low-level integration). Apart from *data.table* reference semantics, both packages work similarly on the C/C++ side of things, and nicely complement each other in functionality. 
+From version 1.6.0 *collapse* seamlessly handles *data.tables*, permitting reference operations (`set*`, `:=`) on data tables created with collapse (`qDT`) or returned from *collapse*'s data manipulation functions (= all functions except `.FAST_FUN`, `.OPERATOR_FUN`, `BY` and `TRA`, see the [NEWS](<https://sebkrantz.github.io/collapse/news/index.html#collapse-1-6-0-2021-06-28>) for details on the low-level integration). Apart from *data.table* reference semantics, both packages work similarly on the C/C++ side of things, and nicely complement each other in functionality.
 
 ## Overview of Both Packages
 
 Both *data.table* and *collapse* are high-performance packages that work well together. For effective co-use it is helpful to understand where each has its strengths, what one can do what the other cannot, and where they overlap. Therefore this small comparison:
 
-* *data.table* offers an enhanced data frame based class to contain data (including list columns). For this class it provides a concise data manipulation syntax which also includes fast aggregation / slit-apply-combine computing, (rolling, non-equi) joins, keying, reshaping, some time-series functionality like lagging and rolling statistics, set operations on tables and a number of very useful other functions like the fast csv reader, fast switches, list-transpose etc.. *data.table* makes data management, and computations on data very easy and salable, supporting huge datasets in a very memory efficient way. The package caters well to the end user by compressing an enormous amount of functionality into two square brackets `[]`. Some of the exported functions are great for programming and also support other classes, but a lot of the functionality and optimization of *data.table* happens under the hood and can only be accessed through the non-standard evaluation table `[i, j, by]` syntax. This syntax has a cost of about 1-3 milliseconds for each call. Memory efficiency and thread-parallelization make *data.table* the star performer on huge data.   
+* *data.table* offers an enhanced data frame based class to contain data (including list columns). For this class it provides a concise data manipulation syntax which also includes fast aggregation / slit-apply-combine computing, (rolling, non-equi) joins, keying, reshaping, some time-series functionality like lagging and rolling statistics, set operations on tables and a number of very useful other functions like the fast csv reader, fast switches, list-transpose etc.. *data.table* makes data management, and computations on data very easy and scalable, supporting huge datasets in a very memory efficient way. The package caters well to the end user by compressing an enormous amount of functionality into two square brackets `[]`. Some of the exported functions are great for programming and also support other classes, but a lot of the functionality and optimization of *data.table* happens under the hood and can only be accessed through the non-standard evaluation table `[i, j, by]` syntax. This syntax has a cost of about 1-3 milliseconds for each call. Memory efficiency and thread-parallelization make *data.table* the star performer on huge data.
 
-* *collapse* is class-agnostic in nature, supporting vectors, matrices, data frames and non-destructively handling most R classes and objects. It focuses on advanced statistical computing, proving fast column-wise grouped and weighted statistical functions, fast and complex data aggregation and transformations, linear fitting, time series and panel data computations, advanced summary statistics, and recursive processing of lists of data objects. It also includes powerful functions for data manipulation, grouping / factor generation, recoding, handling outliers and missing values. The package default for missing values is `na.rm = TRUE`, which is implemented efficiently in C/C++ in all functions. *collapse* supports both *tidyverse* (piped) and base R / standard evaluation programming. It makes accessible most of it's internal C/C++ based functionality (like grouping objects). *collapse*'s R functions are simple and strongly optimized, i.e. they access the serial C/C++ code quickly, resulting in baseline execution speeds of 10-50 microseconds. All of this makes *collapse* ideal for advanced statistical computing on matrices and larger datasets, and tasks requiring fast programs with repeated function executions. 
+* *collapse* is class-agnostic in nature, supporting vectors, matrices, data frames and non-destructively handling most R classes and objects. It focuses on advanced statistical computing, proving fast column-wise grouped and weighted statistical functions, fast and complex data aggregation and transformations, linear fitting, time series and panel data computations, advanced summary statistics, and recursive processing of lists of data objects. It also includes powerful functions for data manipulation, grouping / factor generation, recoding, handling outliers and missing values. The package default for missing values is `na.rm = TRUE`, which is implemented efficiently in C/C++ in all functions. *collapse* supports both *tidyverse* (piped) and base R / standard evaluation programming. It makes accessible most of it's internal C/C++ based functionality (like grouping objects). *collapse*'s R functions are simple and strongly optimized, i.e. they access the serial C/C++ code quickly, resulting in baseline execution speeds of 10-50 microseconds. All of this makes *collapse* ideal for advanced statistical computing on matrices and larger datasets, and tasks requiring fast programs with repeated function executions.
 
 <!-- (< 10 mio obs.). -->
 
-<!-- 
+<!--
 Thus you don't need to choose between these two. I created *collapse* because I wanted more flexibility and programmability and *data.table* fell short on my statistical demands. I still manage most of my data using *data.table*. -->
 
 ## Interoperating and some Do's and Dont's
 
-Applying *collapse* functions to a data.table always gives a data.table back e.g. 
+Applying *collapse* functions to a data.table always gives a data.table back e.g.
 
 ```{r}
 library(collapse)
@@ -95,7 +95,7 @@ collap(DT, ~ country, fmean, cols = 9:13)
 
 ```
 
-By default, *collapse* orders groups in aggregations, which is equivalent to using `keyby` with *data.table*. `gby / fgroup_by` has an argument `sort = FALSE` to yield an unordered grouping equivalent to *data.table*'s `by` on character data^[Grouping on numeric variables in *collapse* is always ordered.]. 
+By default, *collapse* orders groups in aggregations, which is equivalent to using `keyby` with *data.table*. `gby / fgroup_by` has an argument `sort = FALSE` to yield an unordered grouping equivalent to *data.table*'s `by` on character data^[Grouping on numeric variables in *collapse* is always ordered.].
 
 At this data size *collapse* outperforms *data.table* (which might reverse as data size grows, depending in your computer, the number of *data.table* threads used, and the function in question):
 
@@ -119,7 +119,7 @@ fmean
 methods(fmean)
 ```
 
-You may now contend that `base::mean` is also S3 generic, but in this `DT[, lapply(.SD, mean, na.rm = TRUE), by = country, .SDcols = 9:13]` code *data.table* does not use `base::mean`, but `data.table:::gmean`, an internal optimized mean function which is efficiently applied over those groups (see `?data.table::GForce`). `fmean` works similar, and includes this functionality explicitly. 
+You may now contend that `base::mean` is also S3 generic, but in this `DT[, lapply(.SD, mean, na.rm = TRUE), by = country, .SDcols = 9:13]` code *data.table* does not use `base::mean`, but `data.table:::gmean`, an internal optimized mean function which is efficiently applied over those groups (see `?data.table::GForce`). `fmean` works similar, and includes this functionality explicitly.
 
 ```{r}
 args(fmean.data.frame)
@@ -139,22 +139,22 @@ To give us the same result obtained through the high-level functions `gby / fgro
 ```{r}
 BY(gv(DT, 9:13), g, fmean) # using collapse::BY
 ```
-which applies `fmean` to every group in every column of the data. 
+which applies `fmean` to every group in every column of the data.
 
-More generally, it is very important to understand that *collapse* is not based around applying functions to data by groups using some universal mechanism: The *dplyr* `data %>% group_by(...) %>% summarize(...) / mutate(...)` and *data.table* `[i, j, by]` syntax are essentially universal mechanisms to apply any function to data by groups. 
+More generally, it is very important to understand that *collapse* is not based around applying functions to data by groups using some universal mechanism: The *dplyr* `data %>% group_by(...) %>% summarize(...) / mutate(...)` and *data.table* `[i, j, by]` syntax are essentially universal mechanisms to apply any function to data by groups.
 *data.table* additionally internally optimizes some functions (`min, max, mean, median, var, sd, sum, prod, first, last, head, tail`) which they called GForce, `?data.table::GForce`.
 
-*collapse* instead provides grouped statistical and transformation functions where all grouped computation is done efficiently in C++, and some supporting mechanisms (`fgroup_by`, `collap`) to operate them. In *data.table* words, everything^[Apart from `collapse::BY` which is only an auxiliary function written in base R to perform flexible split-apply combine computing on vectors, matrices and data frames.] in *collapse*, the *Fast Statistical Functions*, data transformations, time series etc. is GForce optimized. 
+*collapse* instead provides grouped statistical and transformation functions where all grouped computation is done efficiently in C++, and some supporting mechanisms (`fgroup_by`, `collap`) to operate them. In *data.table* words, everything^[Apart from `collapse::BY` which is only an auxiliary function written in base R to perform flexible split-apply combine computing on vectors, matrices and data frames.] in *collapse*, the *Fast Statistical Functions*, data transformations, time series etc. is GForce optimized.
 
-The full set of optimized grouped statistical and transformation functions in *collapse* is: 
+The full set of optimized grouped statistical and transformation functions in *collapse* is:
 
 ```{r}
 .FAST_FUN
 ```
 
-Additional optimized grouped functions include `TRA`, `qsu`, `varying`, `fFtest`, `psmat`, `psacf`, `pspacf`, `psccf`.  
+Additional optimized grouped functions include `TRA`, `qsu`, `varying`, `fFtest`, `psmat`, `psacf`, `pspacf`, `psccf`.
 
-The nice thing about those GForce (fast) functions provided by *collapse* is that they can be accessed explicitly and programmatically without any overhead as incurred through *data.table*, they cover a broader range of statistical operations (such as mode, distinct values, order statistics), support sampling weights, operate in a class-agnostic way on vectors, matrices, data.frame's and many related classes, and cover transformations (replacing and sweeping, scaling, (higher order) centering, linear fitting) and time series functionality (lags, differences and growth rates, including irregular time series and unbalanced panels). 
+The nice thing about those GForce (fast) functions provided by *collapse* is that they can be accessed explicitly and programmatically without any overhead as incurred through *data.table*, they cover a broader range of statistical operations (such as mode, distinct values, order statistics), support sampling weights, operate in a class-agnostic way on vectors, matrices, data.frame's and many related classes, and cover transformations (replacing and sweeping, scaling, (higher order) centering, linear fitting) and time series functionality (lags, differences and growth rates, including irregular time series and unbalanced panels).
 
 <!-- *collapse* allows you to do explicitly and programmatically with the *Fast Statistical Functions*. -->
 
@@ -178,7 +178,7 @@ microbenchmark(collapse = DT %>% gby(country) %>% get_vars(9:13) %>% fmean,
 
 ```
 
-It is evident that *data.table* has some overhead, so there is absolutely no need to do this kind of syntax manipulation. 
+It is evident that *data.table* has some overhead, so there is absolutely no need to do this kind of syntax manipulation.
 
 There is more scope to use *collapse* transformation functions inside *data.table*.
 <!--
@@ -190,20 +190,20 @@ Below some basic examples:
 # Computing a column containing the sum of ODA received by country
 DT[, sum_ODA := sum(ODA, na.rm = TRUE), by = country]
 # Same using fsum; "replace_fill" overwrites missing values, "replace" keeps the
-DT[, sum_ODA := fsum(ODA, country, TRA = "replace_fill")]  
+DT[, sum_ODA := fsum(ODA, country, TRA = "replace_fill")]
 # Same: A native collapse solution using settransform (or its shortcut form)
-settfm(DT, sum_ODA = fsum(ODA, country, TRA = "replace_fill"))  
+settfm(DT, sum_ODA = fsum(ODA, country, TRA = "replace_fill"))
 
 # settfm may be more convenient than `:=` for multiple column modifications,
 # each involving a different grouping:
-  # This computes the percentage of total ODA distributed received by 
+  # This computes the percentage of total ODA distributed received by
   # each country both over time and within a given year
 settfm(DT, perc_c_ODA = fsum(ODA, country, TRA = "%"),
            perc_y_ODA = fsum(ODA, year, TRA = "%"))
 ```
 The `TRA` argument is available to all *Fast Statistical Functions* (see the macro `.FAST_STAT_FUN`) and offers 10 different replacing and sweeping operations. Note that `TRA()` can also be called directly to replace or sweep with a previously aggregated *data.table*. A set of operators `%rr%`, `%r+%`, `%r-%`, `%r*%`, `%r/%`, `%cr%`, `%c+%`, `%c-%`, `%c*%`, `%c/%` additionally facilitate row- or column-wise replacing or sweeping out vectors of statistics or other *data.table*'s.
 
-Similarly, we can use the following vector valued functions 
+Similarly, we can use the following vector valued functions
 
 ```{r}
 setdiff(.FAST_FUN, .FAST_STAT_FUN)
@@ -225,7 +225,7 @@ DT[order(year), growth_PCGDP := (PCGDP / shift(PCGDP, 1L) - 1) * 100, by = count
 DT[, lag_PCGDP := fgrowth(PCGDP, 1L, 1L, country, year)] # 1 lag, 1 iteration
 
 # Several Growth rates
-DT[order(year), paste0("growth_", .c(PCGDP, LIFEEX, GINI, ODA)) := (.SD / shift(.SD, 1L) - 1) * 100, 
+DT[order(year), paste0("growth_", .c(PCGDP, LIFEEX, GINI, ODA)) := (.SD / shift(.SD, 1L) - 1) * 100,
    by = country, .SDcols = 9:13]
 
 # Same thing using collapse
@@ -238,14 +238,14 @@ head(DT)
 
 ```
 <!--
-# av(DT) <- DT %>% gby(country) %>% slt(year, 9:13) %>% 
+# av(DT) <- DT %>% gby(country) %>% slt(year, 9:13) %>%
 #     fgrowth(1L, 1L, year, keep.ids = FALSE) %>% add_stub("growth_")
 -->
-Since transformations (`:=` operations) are not highly optimized in *data.table*, *collapse* will be faster in most circumstances. <!-- even on very large data with a strong computer. -->  Also time series functionality in *collapse* is significantly faster as it does not require data to be ordered or balanced to compute. For example `flag` computes an ordered lag without sorting the entire data first. 
+Since transformations (`:=` operations) are not highly optimized in *data.table*, *collapse* will be faster in most circumstances. <!-- even on very large data with a strong computer. -->  Also time series functionality in *collapse* is significantly faster as it does not require data to be ordered or balanced to compute. For example `flag` computes an ordered lag without sorting the entire data first.
 
 ```{r}
 # Lets generate a large dataset and benchmark this stuff
-DT_large <- replicate(1000, qDT(wlddev), simplify = FALSE) %>% 
+DT_large <- replicate(1000, qDT(wlddev), simplify = FALSE) %>%
     lapply(tfm, country = paste(country, rnorm(1))) %>%
     rbindlist
 
@@ -275,7 +275,7 @@ As mentioned, `qDT` is a flexible and very fast function to create / column-wise
 
 ```{r}
 # Creating a matrix from mtcars
-m <- qM(mtcars) 
+m <- qM(mtcars)
 str(m)
 
 # Demonstrating another nice feature of qDT
@@ -286,7 +286,7 @@ mrtl(m, names = TRUE, return = "data.table") %>% head(2)
 
 ```
 
-The computational efficiency of these functions makes them very useful to use in *data.table* based workflows. 
+The computational efficiency of these functions makes them very useful to use in *data.table* based workflows.
 
 ```{r}
 # Benchmark
@@ -297,12 +297,12 @@ For example we could regress the growth rate of GDP per capita on the Growth rat
 ```{r}
 library(lmtest)
 
-wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
+wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
   # This counts missing values on PCGDP and LIFEEX only
-  na_omit(cols = -1L) %>% 
+  na_omit(cols = -1L) %>%
   # This removes countries with less than 20 observations
-  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
-  qDT %>% 
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>%
+  qDT %>%
   # Run estimations by country using data.table
   .[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX))), "Coef"), keyby = country] %>% head
 
@@ -310,47 +310,47 @@ wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
 If we only need the coefficients, not the standard errors, we can also use `collapse::flm` together with `mrtl`:
 
 ```{r}
-wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
-  na_omit(cols = -1L) %>% 
-  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
-  qDT %>% 
-  .[, mrtl(flm(fgrowth(PCGDP)[-1L], 
-               cbind(Intercept = 1, 
-                     LIFEEX = fgrowth(LIFEEX)[-1L])), TRUE), 
+wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
+  na_omit(cols = -1L) %>%
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>%
+  qDT %>%
+  .[, mrtl(flm(fgrowth(PCGDP)[-1L],
+               cbind(Intercept = 1,
+                     LIFEEX = fgrowth(LIFEEX)[-1L])), TRUE),
     keyby = country] %>% head
 
 ```
 
-... which provides a significant speed gain here: 
+... which provides a significant speed gain here:
 ```{r}
 
 microbenchmark(
-  
-A = wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
-  na_omit(cols = -1L) %>% 
-  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
-  qDT %>% 
+
+A = wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
+  na_omit(cols = -1L) %>%
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>%
+  qDT %>%
   .[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX))), "Coef"), keyby = country],
 
-B = wlddev %>% fselect(country, PCGDP, LIFEEX) %>% 
-  na_omit(cols = -1L) %>% 
-  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>% 
-  qDT %>% 
-  .[, mrtl(flm(fgrowth(PCGDP)[-1L], 
-               cbind(Intercept = 1, 
-                     LIFEEX = fgrowth(LIFEEX)[-1L])), TRUE), 
+B = wlddev %>% fselect(country, PCGDP, LIFEEX) %>%
+  na_omit(cols = -1L) %>%
+  fsubset(fnobs(PCGDP, country, "replace_fill") > 20L) %>%
+  qDT %>%
+  .[, mrtl(flm(fgrowth(PCGDP)[-1L],
+               cbind(Intercept = 1,
+                     LIFEEX = fgrowth(LIFEEX)[-1L])), TRUE),
     keyby = country]
 )
 
 ```
 
-Another feature to highlight at this point are *collapse*'s list processing functions, in particular `rsplit`, `rapply2d`, `get_elem` and `unlist2d`. `rsplit` is an efficient recursive generalization of `split`: 
+Another feature to highlight at this point are *collapse*'s list processing functions, in particular `rsplit`, `rapply2d`, `get_elem` and `unlist2d`. `rsplit` is an efficient recursive generalization of `split`:
 
 ```{r}
-DT_list <- rsplit(DT, country + year + PCGDP + LIFEEX ~ region + income) 
+DT_list <- rsplit(DT, country + year + PCGDP + LIFEEX ~ region + income)
 
-# Note: rsplit(DT, year + PCGDP + LIFEEX ~ region + income, flatten = TRUE) 
-# would yield a simple list with interacted categories (like split) 
+# Note: rsplit(DT, year + PCGDP + LIFEEX ~ region + income, flatten = TRUE)
+# would yield a simple list with interacted categories (like split)
 
 str(DT_list, give.attr = FALSE)
 ```
@@ -360,8 +360,8 @@ We can use `rapply2d` to apply a function to each data frame / data.table in an 
 ```{r}
 # This runs region-income level regressions, with country fixed effects
 # following Mundlak (1978)
-lm_summary_list <- DT_list %>% 
-  rapply2d(lm, formula = G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)) %>% 
+lm_summary_list <- DT_list %>%
+  rapply2d(lm, formula = G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country)) %>%
   # Summarizing the results
   rapply2d(summary, classes = "lm")
 
@@ -369,36 +369,36 @@ lm_summary_list <- DT_list %>%
 str(lm_summary_list, give.attr = FALSE)
 ```
 
-We can turn this list into a *data.table* again by calling first `get_elem` to recursively extract the coefficient matrices and then `unlist2d` to recursively bind them to a new *data.table*: 
+We can turn this list into a *data.table* again by calling first `get_elem` to recursively extract the coefficient matrices and then `unlist2d` to recursively bind them to a new *data.table*:
 
 ```{r}
 lm_summary_list %>%
-  get_elem("coefficients") %>% 
-  unlist2d(idcols = .c(Region, Income), 
-           row.names = "Coef", 
+  get_elem("coefficients") %>%
+  unlist2d(idcols = .c(Region, Income),
+           row.names = "Coef",
            DT = TRUE) %>% head
 ```
 
-The fact that this is a nested list of matrices, and that we can save both the names of the lists at each level of nesting and the row- and column- names of the matrices make `unlist2d` a significant generalization of `rbindlist`^[`unlist2d` can similarly bind nested lists of arrays, data frames or *data.table*'s]. 
+The fact that this is a nested list of matrices, and that we can save both the names of the lists at each level of nesting and the row- and column- names of the matrices make `unlist2d` a significant generalization of `rbindlist`^[`unlist2d` can similarly bind nested lists of arrays, data frames or *data.table*'s].
 
 But why do all this fuzz if we could have simply done:?
 
 ```{r}
-DT[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country))), "Coef"), 
+DT[, qDT(coeftest(lm(G(PCGDP) ~ G(LIFEEX) + B(G(LIFEEX), country))), "Coef"),
    keyby = .(region, income)] %>% head
 ```
 
 Well we might want to do more things with that list of linear models first before tidying it, so this is a more general workflow. We might also be interested in additional statistics like the R-squared or the F-statistic:
 ```{r}
 DT_sum <- lm_summary_list %>%
-get_elem("coef|r.sq|fstat", regex = TRUE) %>% 
-  unlist2d(idcols = .c(Region, Income, Statistic), 
-           row.names = "Coef", 
+get_elem("coef|r.sq|fstat", regex = TRUE) %>%
+  unlist2d(idcols = .c(Region, Income, Statistic),
+           row.names = "Coef",
            DT = TRUE)
 
 head(DT_sum)
 
-# Reshaping to long form: 
+# Reshaping to long form:
 DT_sum %>%
   melt(1:4, na.rm = TRUE) %>%
   roworderv(1:2) %>% head(20)
@@ -407,17 +407,17 @@ DT_sum %>%
 As a final example of this kind, lets suppose we are interested in the within-country correlations of all these variables by region and income group:
 
 ```{r}
-DT[, qDT(pwcor(W(.SD, country)), "Variable"), 
+DT[, qDT(pwcor(W(.SD, country)), "Variable"),
    keyby = .(region, income), .SDcols = PCGDP:ODA] %>% head
 ```
 
-In summary: The list processing features, statistical capabilities and efficient converters of *collapse* and the flexibility of *data.table* work well together, facilitating more complex workflows. 
+In summary: The list processing features, statistical capabilities and efficient converters of *collapse* and the flexibility of *data.table* work well together, facilitating more complex workflows.
 
 ## Additional Benchmarks
 
-See [here](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>) or [here](<https://sebkrantz.github.io/collapse/reference/fsum.html#benchmark>). 
+See [here](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>) or [here](<https://sebkrantz.github.io/collapse/reference/fsum.html#benchmark>).
 
-These are all run on a 2 core laptop, so I honestly don't know how *collapse* scales on powerful multi-core machines. My own limited computational resources are part of the reason I did not opt for a thread-parallel package from the start. But a multi-core version of *collapse* will eventually be released, maybe by end of 2021. 
+These are all run on a 2 core laptop, so I honestly don't know how *collapse* scales on powerful multi-core machines. My own limited computational resources are part of the reason I did not opt for a thread-parallel package from the start. But a multi-core version of *collapse* will eventually be released, maybe by end of 2021.
 
 ## References
 
