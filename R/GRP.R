@@ -132,10 +132,10 @@ GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, 
   if(return.groups) {
       # if unit groups, don't subset rows...
       if(length(gs) == length(o) && (use.group || sorted)) {
-        ust <- NULL
+        ust <- st
         groups <- if(is.list(X)) .Call(C_subsetCols, X, by, FALSE) else `names<-`(list(X), namby)
       } else {
-        ust <- if(use.group || sorted) st else .Call(C_subsetVector, o, st, FALSE) # o[st]
+        ust <- if(use.group || sorted) st else if(length(gs) == length(o)) o else .Call(C_subsetVector, o, st, FALSE) # o[st]
         groups <- if(is.list(X)) .Call(C_subsetDT, X, ust, by, FALSE) else
           `names<-`(list(.Call(C_subsetVector, X, ust, FALSE)), namby) # subsetVector preserves attributes (such as "label")
       }
@@ -150,7 +150,7 @@ GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, 
                         groups = groups,
                         group.vars = namby,
                         ordered = c(ordered = sort, sorted = sorted),
-                        order = if(return.order && !use.group) .Call(C_setAttributes, o, ao) else NULL, # `attributes<-`(o, attributes(o)[-2L]) This does a shallow copy on newer R versions # `attr<-`(o, "group.sizes", NULL): This deep-copies it..
+                        order = if(return.order && !use.group) `attributes<-`(o, ao) else NULL, # `attributes<-`(o, attributes(o)[-2L]) This does a shallow copy on newer R versions # `attr<-`(o, "group.sizes", NULL): This deep-copies it..
                         group.starts = ust, # Does not need to be computed by group()
                         call = if(call) match.call() else NULL), "GRP"))
 }
