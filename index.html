@@ -80,7 +80,7 @@
 <li><p><strong>List processing</strong>: Recursive list search, splitting, extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.</p></li>
 <li><p><strong>Advanced data exploration</strong>: Fast (grouped, weighted, panel-decomposed) summary statistics and descriptive tools.</p></li>
 </ul>
-<p><em>collapse</em> is written in C and C++ and only depends on <em>Rcpp</em>. Its algorithms are multiple times faster than base R’s, <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">scale well to &lt;= 1 billion obs</a>, and very efficient for complex tasks (e.g. quantiles, weighted stats, mode/counting/deduplication, joins). Optimized R code ensures minimal overheads and fast syntax evaluation. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  --></p>
+<p><em>collapse</em> is written in C and C++ and only depends on <em>Rcpp</em>. Its algorithms are multiple times faster than base R’s, scale well to &lt;= 1 billion obs (benchmarks: <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">linux</a> | <a href="https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results" class="external-link">windows</a>), and very efficient for complex tasks (e.g. quantiles, weighted stats, mode/counting/deduplication, joins). Optimized R code ensures minimal overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  --></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
