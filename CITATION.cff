@@ -8,7 +8,7 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.16
+version: 2.0.16.9000
 identifiers:
 - type: doi
   value: 10.32614/CRAN.package.collapse
@@ -47,7 +47,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2024-08-20'
+date-released: '2024-09-28'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -78,7 +78,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
   year: '2024'
-  notes: R package version 2.0.16
+  notes: R package version 2.0.16.9000
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
@@ -170,6 +170,7 @@ references:
   - family-names: Barrett
     given-names: Tyson
     email: t.barrett88@gmail.com
+    orcid: https://orcid.org/0000-0002-2137-1391
   - family-names: Dowle
     given-names: Matt
     email: mattjdowle@gmail.com
@@ -180,9 +181,13 @@ references:
     given-names: Jan
   - family-names: Chirico
     given-names: Michael
+    orcid: https://orcid.org/0000-0003-0787-087X
   - family-names: Hocking
     given-names: Toby
     orcid: https://orcid.org/0000-0002-3146-0865
+  - family-names: Schwendinger
+    given-names: Benjamin
+    orcid: https://orcid.org/0000-0003-3315-8114
   year: '2024'
   doi: 10.32614/CRAN.package.data.table
 - type: software
@@ -298,14 +303,19 @@ references:
   authors:
   - family-names: Eddelbuettel
     given-names: Dirk
+    email: edd@debian.org
+    orcid: https://orcid.org/0000-0001-6419-907X
   - family-names: Francois
     given-names: Romain
+    orcid: https://orcid.org/0000-0002-2444-4226
   - family-names: Bates
     given-names: Doug
+    orcid: https://orcid.org/0000-0001-8316-9503
   - family-names: Ni
     given-names: Binxiang
   - family-names: Sanderson
     given-names: Conrad
+    orcid: https://orcid.org/0000-0002-0049-4501
   year: '2024'
   doi: 10.32614/CRAN.package.RcppArmadillo
 - type: software
@@ -325,8 +335,10 @@ references:
     orcid: https://orcid.org/0000-0001-6419-907X
   - family-names: Francois
     given-names: Romain
+    orcid: https://orcid.org/0000-0002-2444-4226
   - family-names: Qiu
     given-names: Yixuan
+    orcid: https://orcid.org/0000-0003-0109-6692
   year: '2024'
   doi: 10.32614/CRAN.package.RcppEigen
 - type: software
