@@ -260,7 +260,7 @@ pivot <- function(data,
           names <- seq_along(names) + length(ids)
           values <- seq_along(values) + length(ids) + length(names)
           if(length(labels)) labels <- seq_along(labels) + length(ids) + length(names) + length(values)
-          data <- na_omit(data, cols = values)
+          data <- na_omit(data, cols = values, prop = 1)
         }
         # (3) Compute ID Columns
         if(sort[1L]) {
@@ -409,9 +409,11 @@ pivot <- function(data,
 
         # (6) Missing Value Removal
         if(na.rm) { # TODO: better way???
-          cc <- whichv(missing_cases(value_cols), FALSE)
-          value_cols <- .Call(C_subsetDT, value_cols, cc, seq_along(value_cols), FALSE)
-          id_cols <- .Call(C_subsetDT, id_cols, cc, seq_along(id_cols), FALSE)
+          cc <- whichv(missing_cases(value_cols, prop = 1), FALSE)
+          if(length(cc) != fnrow(value_cols)) {
+            value_cols <- .Call(C_subsetDT, value_cols, cc, seq_along(value_cols), FALSE)
+            id_cols <- .Call(C_subsetDT, id_cols, cc, seq_along(id_cols), FALSE)
+          }
         }
 
         # (7) Properly deal with variable names and labels
