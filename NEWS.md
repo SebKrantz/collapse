@@ -1,8 +1,10 @@
-# collapse 2.0.16.9000
+# collapse 2.0.17
 
 * In `GRP.default()`, the `"group.starts"` attribute is always returned, even if there is only one group or every observation is its own group. Thanks @JamesThompsonC (#631).  
 
 * Fixed a bug in `pivot()` if `na.rm = TRUE` and `how = "wider"|"recast"` and there are multiple `value` columns with different missingness patterns. In this case `na_omit(values)` was applied with default settings to the original (long) value columns, implying potential loss of information. The fix applies `na_omit(values, prop = 1)`, i.e., only removes completely missing rows. 
+
+* Added a subsection on using internal (ad-hoc) grouping to the *collapse* for *tidyverse* users vignette.  
 
 # collapse 2.0.16
 
