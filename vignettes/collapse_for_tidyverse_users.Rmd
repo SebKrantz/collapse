@@ -168,6 +168,102 @@ mtcars |>
 
 Setting these options globally using `set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)` avoids the need to set them repeatedly.
 
+### Using Internal Grouping 
+
+Another key to writing efficient code with *collapse* is to avoid `fgroup_by()` where possible, especially for mutate operations. *collapse* does not implement `.by` arguments to manipulation functions like *dplyr*, but instead allows ad-hoc grouped transformations through its statistical functions. For example, the easiest and fastest way to computed the median of `mpg` by `cyl`, `vs`, and `am` is
+
+```{r}
+mtcars |>
+  mutate(mpg_median = fmedian(mpg, list(cyl, vs, am), TRA = "fill")) |> 
+  head(3)
+```
+
+For the common case of averaging and centering data, *collapse* also provides functions `fbetween()` for averaging and `fwithin()` for centering, i.e., `fbetween(mpg, list(cyl, vs, am))` is the same as `fmean(mpg, list(cyl, vs, am), TRA = "fill")`. There is also `fscale()` for (grouped) scaling and centering. 
+
+This also applies to multiple columns, where we can use `fmutate(across(...))` or `ftransformv()`, i.e. 
+
+```{r}
+mtcars |>
+  mutate(across(c(mpg, disp, qsec), fmedian, list(cyl, vs, am), TRA = "fill")) |> 
+  head(2)
+
+# Or 
+mtcars |>
+  transformv(c(mpg, disp, qsec), fmedian, list(cyl, vs, am), TRA = "fill") |> 
+  head(2)
+```
+
+Of course, if we want to apply different functions using the same grouping, `fgroup_by()` is sensible, but for mutate operations it also has the argument `return.groups = FALSE`, which avoids materializing the unique grouping columns, saving some memory. 
+
+```{r}
+mtcars |>
+  group_by(cyl, vs, am, return.groups = FALSE) |> 
+  mutate(mpg_median = fmedian(mpg), 
+         mpg_mean = fmean(mpg), # Or fbetween(mpg)
+         mpg_demean = fwithin(mpg), # Or fmean(mpg, TRA = "-")
+         mpg_scale = fscale(mpg), 
+         .keep = "used") |>
+  ungroup() |>
+  head(3)
+```
+
+The `TRA` argument supports a whole array of operations, see `?TRA`. For example `fsum(mtcars, TRA = "/")` turns the column vectors into proportions. As an application of this, consider a generated dataset of sector-level exports.
+
+```{r, include = FALSE}
+set.seed(101)
+```
+```{r}
+# c = country, s = sector, y = year, v = value
+exports <- expand.grid(c = paste0("c", 1:8), s = paste0("s", 1:8), y = 1:15) |>
+           mutate(v = round(abs(rnorm(length(c), mean = 5)), 2)) |>
+           subset(-sample.int(length(v), 360)) # Making it unbalanced and irregular
+head(exports)
+nrow(exports)
+```
+
+It is very easy then to compute Balassa's (1965) Revealed Comparative Advantage (RCA) index, which is the share of a sector in country exports divided by the share of the sector in world exports. An index above 1 indicates that a RCA of country c in sector s. 
+
+```{r}
+# Computing Balassa's (1965) RCA index: fast and memory efficient
+exports <- exports |> 
+  mutate(RCA = fsum(v, list(c, y), TRA = "/") %/=% fsum(v, list(s, y), TRA = "/"))
+```
+
+Note that this involved a single expression with two different grouped operations, which is only possible by incorporating grouping into statistical functions themselves. Let's summarise this dataset using `pivot()` to aggregate the RCA index across years. Here `"mean"` calls a highly efficient internal mean function. 
+
+```{r}
+pivot(exports, ids = "c", values = "RCA", names = "s", 
+      how = "wider", FUN = "mean", sort = TRUE)
+```
+
+We may also wish to investigate the growth rate of RCA. This can be done using `fgrowth()`. Since the panel is irregular, i.e., not every sector is observed in every year, it is critical to also supply the time variable. 
+
+```{r}
+# settransform() modifies exports and assigns back to global env
+settransform(exports, RCA_growth = fgrowth(RCA, g = list(c, s), t = y))
+# Summarise this, using fmedian -> vectorized execution
+pivot(exports, ids = "c", values = "RCA_growth", names = "s", 
+      how = "wider", FUN = fmedian, sort = TRUE)
+```
+
+Lastly, since the panel is unbalanced, we may wish to create an RCA index for only the last year, but balance the dataset a bit more by taking the last available trade within the last three years. This can be done using a single subset call
+
+```{r}
+# Taking the latest observation within the last 3 years
+exports_latest <- subset(exports, y > 12 & y == fmax(y, list(c, s), "fill"), -y)
+# How many sectors do we observe for each country in the last 3 years?
+with(exports_latest, fndistinct(s, c))
+```
+
+We can then compute the RCA index on this data
+
+```{r}
+exports_latest |>
+    mutate(RCA = fsum(v, c, TRA = "/") %/=% fsum(v, s, TRA = "/")) |>
+    pivot("c", "RCA", "s", how = "wider", sort = TRUE)
+```
+
+To summarise, *collapse* provides many options for ad-hoc or limited grouping, which are faster than a full blown `fgroup_by()`, and also syntactically efficient. Further efficiency gains are possible using operations by reference, e.g., `%/=%` instead of `/` to avoid an intermediate copy. It is also possible to transform by reference using fast statistical functions by passing the `set = TRUE` argument, e.g., `with(mtcars, fmean(mpg, cyl, TRA = "fill", set = TRUE))` will replace `mpg` by its group-averaged version (the transformed vector is returned invisibly). 
 
 ## Conclusion 
 
