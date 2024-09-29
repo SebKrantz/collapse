@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.16</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.17</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2024-09-14</h4>
+            <h4 data-toc-skip class="date">2024-09-29</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
@@ -352,6 +352,168 @@ columns for more efficient execution.</p>
 <p>Setting these options globally using
 <code>set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)</code>
 avoids the need to set them repeatedly.</p>
+<div class="section level3">
+<h3 id="using-internal-grouping">Using Internal Grouping<a class="anchor" aria-label="anchor" href="#using-internal-grouping"></a>
+</h3>
+<p>Another key to writing efficient code with <em>collapse</em> is to
+avoid <code><a href="../reference/GRP.html">fgroup_by()</a></code> where possible, especially for mutate
+operations. <em>collapse</em> does not implement <code>.by</code>
+arguments to manipulation functions like <em>dplyr</em>, but instead
+allows ad-hoc grouped transformations through its statistical functions.
+For example, the easiest and fastest way to computed the median of
+<code>mpg</code> by <code>cyl</code>, <code>vs</code>, and
+<code>am</code> is</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mpg_median <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#                mpg cyl disp  hp drat    wt  qsec vs am gear carb mpg_median</span></span>
+<span><span class="co"># Mazda RX4     21.0   6  160 110 3.90 2.620 16.46  0  1    4    4       21.0</span></span>
+<span><span class="co"># Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4       21.0</span></span>
+<span><span class="co"># Datsun 710    22.8   4  108  93 3.85 2.320 18.61  1  1    4    1       30.4</span></span></code></pre></div>
+<p>For the common case of averaging and centering data,
+<em>collapse</em> also provides functions <code><a href="../reference/fbetween_fwithin.html">fbetween()</a></code> for
+averaging and <code><a href="../reference/fbetween_fwithin.html">fwithin()</a></code> for centering, i.e.,
+<code>fbetween(mpg, list(cyl, vs, am))</code> is the same as
+<code>fmean(mpg, list(cyl, vs, am), TRA = "fill")</code>. There is also
+<code><a href="../reference/fscale.html">fscale()</a></code> for (grouped) scaling and centering.</p>
+<p>This also applies to multiple columns, where we can use
+<code>fmutate(across(...))</code> or <code><a href="../reference/ftransform.html">ftransformv()</a></code>,
+i.e. </p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="../reference/across.html">across</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">disp</span>, <span class="va">qsec</span><span class="op">)</span>, <span class="va">fmedian</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#               mpg cyl disp  hp drat    wt  qsec vs am gear carb</span></span>
+<span><span class="co"># Mazda RX4      21   6  160 110  3.9 2.620 16.46  0  1    4    4</span></span>
+<span><span class="co"># Mazda RX4 Wag  21   6  160 110  3.9 2.875 16.46  0  1    4    4</span></span>
+<span></span>
+<span><span class="co"># Or </span></span>
+<span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">transformv</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">disp</span>, <span class="va">qsec</span><span class="op">)</span>, <span class="va">fmedian</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"fill"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#               mpg cyl disp  hp drat    wt  qsec vs am gear carb</span></span>
+<span><span class="co"># Mazda RX4      21   6  160 110  3.9 2.620 16.46  0  1    4    4</span></span>
+<span><span class="co"># Mazda RX4 Wag  21   6  160 110  3.9 2.875 16.46  0  1    4    4</span></span></code></pre></div>
+<p>Of course, if we want to apply different functions using the same
+grouping, <code><a href="../reference/GRP.html">fgroup_by()</a></code> is sensible, but for mutate
+operations it also has the argument <code>return.groups = FALSE</code>,
+which avoids materializing the unique grouping columns, saving some
+memory.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span>, return.groups <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>mpg_median <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>, </span>
+<span>         mpg_mean <span class="op">=</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>, <span class="co"># Or fbetween(mpg)</span></span>
+<span>         mpg_demean <span class="op">=</span> <span class="fu"><a href="../reference/fbetween_fwithin.html">fwithin</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>, <span class="co"># Or fmean(mpg, TRA = "-")</span></span>
+<span>         mpg_scale <span class="op">=</span> <span class="fu"><a href="../reference/fscale.html">fscale</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span>, </span>
+<span>         .keep <span class="op">=</span> <span class="st">"used"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span></span>
+<span><span class="co">#                mpg cyl vs am mpg_median mpg_mean mpg_demean  mpg_scale</span></span>
+<span><span class="co"># Mazda RX4     21.0   6  0  1       21.0 20.56667  0.4333333  0.5773503</span></span>
+<span><span class="co"># Mazda RX4 Wag 21.0   6  0  1       21.0 20.56667  0.4333333  0.5773503</span></span>
+<span><span class="co"># Datsun 710    22.8   4  1  1       30.4 28.37143 -5.5714286 -1.1710339</span></span></code></pre></div>
+<p>The <code>TRA</code> argument supports a whole array of operations,
+see <code><a href="../reference/TRA.html">?TRA</a></code>. For example <code>fsum(mtcars, TRA = "/")</code>
+turns the column vectors into proportions. As an application of this,
+consider a generated dataset of sector-level exports.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># c = country, s = sector, y = year, v = value</span></span>
+<span><span class="va">exports</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html" class="external-link">expand.grid</a></span><span class="op">(</span>c <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span>, s <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>           <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>v <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">c</span><span class="op">)</span>, mean <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>           <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span>, <span class="fl">360</span><span class="op">)</span><span class="op">)</span> <span class="co"># Making it unbalanced and irregular</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">exports</span><span class="op">)</span></span>
+<span><span class="co">#    c  s y    v</span></span>
+<span><span class="co"># 1 c2 s1 1 5.55</span></span>
+<span><span class="co"># 2 c3 s1 1 4.33</span></span>
+<span><span class="co"># 3 c4 s1 1 5.21</span></span>
+<span><span class="co"># 4 c5 s1 1 5.31</span></span>
+<span><span class="co"># 5 c6 s1 1 6.17</span></span>
+<span><span class="co"># 6 c7 s1 1 5.62</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">exports</span><span class="op">)</span></span>
+<span><span class="co"># [1] 600</span></span></code></pre></div>
+<p>It is very easy then to compute Balassa’s (1965) Revealed Comparative
+Advantage (RCA) index, which is the share of a sector in country exports
+divided by the share of the sector in world exports. An index above 1
+indicates that a RCA of country c in sector s.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Computing Balassa's (1965) RCA index: fast and memory efficient</span></span>
+<span><span class="va">exports</span> <span class="op">&lt;-</span> <span class="va">exports</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>RCA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">v</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">c</span>, <span class="va">y</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span> <span class="op"><a href="../reference/efficient-programming.html">%/=%</a></span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">v</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">s</span>, <span class="va">y</span><span class="op">)</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Note that this involved a single expression with two different
+grouped operations, which is only possible by incorporating grouping
+into statistical functions themselves. Let’s summarise this dataset
+using <code><a href="../reference/pivot.html">pivot()</a></code> to aggregate the RCA index across years. Here
+<code>"mean"</code> calls a highly efficient internal mean function.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/pivot.html">pivot</a></span><span class="op">(</span><span class="va">exports</span>, ids <span class="op">=</span> <span class="st">"c"</span>, values <span class="op">=</span> <span class="st">"RCA"</span>, names <span class="op">=</span> <span class="st">"s"</span>, </span>
+<span>      how <span class="op">=</span> <span class="st">"wider"</span>, FUN <span class="op">=</span> <span class="st">"mean"</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#    c        s1        s2        s3       s4       s5        s6        s7       s8</span></span>
+<span><span class="co"># 1 c1 0.9327521 0.9087815 0.9434970 1.105864 1.158613 0.9579166 1.1094150 1.218718</span></span>
+<span><span class="co"># 2 c2 1.4989832 1.0502050 0.8113781 1.024990 1.103707 1.1494829 1.0681358 1.021685</span></span>
+<span><span class="co"># 3 c3 1.0403483 0.9580809 0.8358023 1.024633 1.192487 0.9333733 1.0719161 1.010648</span></span>
+<span><span class="co"># 4 c4 0.9771630 1.0265800 0.9293951 1.007469 1.052942 0.9285248 1.4031524 1.027218</span></span>
+<span><span class="co"># 5 c5 0.9807908 1.1023470 0.8480027 1.080013 1.072168 0.9704144 1.1817784 1.099050</span></span>
+<span><span class="co"># 6 c6 0.9819940 1.1434701 0.9122508 1.164649 1.193275 0.9322847 0.9929571 1.177062</span></span>
+<span><span class="co"># 7 c7 1.1542193 1.1939893 0.7462051 1.109936 1.438044 1.0482547 1.5907867 1.055214</span></span>
+<span><span class="co"># 8 c8 1.4220817 1.2235288 0.7090515 1.189408 1.119605 1.3108897 1.3264848 1.279526</span></span></code></pre></div>
+<p>We may also wish to investigate the growth rate of RCA. This can be
+done using <code><a href="../reference/fgrowth.html">fgrowth()</a></code>. Since the panel is irregular, i.e.,
+not every sector is observed in every year, it is critical to also
+supply the time variable.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># settransform() modifies exports and assigns back to global env</span></span>
+<span><span class="fu"><a href="../reference/ftransform.html">settransform</a></span><span class="op">(</span><span class="va">exports</span>, RCA_growth <span class="op">=</span> <span class="fu"><a href="../reference/fgrowth.html">fgrowth</a></span><span class="op">(</span><span class="va">RCA</span>, g <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">c</span>, <span class="va">s</span><span class="op">)</span>, t <span class="op">=</span> <span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Summarise this, using fmedian -&gt; vectorized execution</span></span>
+<span><span class="fu"><a href="../reference/pivot.html">pivot</a></span><span class="op">(</span><span class="va">exports</span>, ids <span class="op">=</span> <span class="st">"c"</span>, values <span class="op">=</span> <span class="st">"RCA_growth"</span>, names <span class="op">=</span> <span class="st">"s"</span>, </span>
+<span>      how <span class="op">=</span> <span class="st">"wider"</span>, FUN <span class="op">=</span> <span class="va">fmedian</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#    c         s1        s2         s3          s4          s5         s6         s7          s8</span></span>
+<span><span class="co"># 1 c1         NA  29.87093  56.837880   0.3513705  11.9750588   6.356499   5.186966   3.4725766</span></span>
+<span><span class="co"># 2 c2 -19.092254 -10.72516  50.412427   8.7380006 -25.7119274 -17.958011 -36.853824 -30.5827161</span></span>
+<span><span class="co"># 3 c3  -3.904880 -29.72276   4.338254   4.2112875  13.8705938 -27.368230  -5.214542 -10.4867005</span></span>
+<span><span class="co"># 4 c4   0.639523  19.74757  -9.602120   9.7104112  42.0912878  17.583594 -27.915967 -18.1145784</span></span>
+<span><span class="co"># 5 c5   8.184523  18.93554  -5.333235   1.5243547  -0.3306585   8.682935 -15.678443  18.3991608</span></span>
+<span><span class="co"># 6 c6  12.606978  67.07558  19.270685  43.8243108 -25.0283737 -21.785028 -10.059702   0.7774246</span></span>
+<span><span class="co"># 7 c7  24.400344  48.56792  27.552571 -16.9311897  -6.6046775 -28.627885 -12.092345  24.5298895</span></span>
+<span><span class="co"># 8 c8 158.342022  17.99249 -61.857965  36.3372079   0.2085139  -2.178978 -18.666774 -40.5714063</span></span></code></pre></div>
+<p>Lastly, since the panel is unbalanced, we may wish to create an RCA
+index for only the last year, but balance the dataset a bit more by
+taking the last available trade within the last three years. This can be
+done using a single subset call</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Taking the latest observation within the last 3 years</span></span>
+<span><span class="va">exports_latest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">exports</span>, <span class="va">y</span> <span class="op">&gt;</span> <span class="fl">12</span> <span class="op">&amp;</span> <span class="va">y</span> <span class="op">==</span> <span class="fu"><a href="../reference/fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">y</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">c</span>, <span class="va">s</span><span class="op">)</span>, <span class="st">"fill"</span><span class="op">)</span>, <span class="op">-</span><span class="va">y</span><span class="op">)</span></span>
+<span><span class="co"># How many sectors do we observe for each country in the last 3 years?</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">exports_latest</span>, <span class="fu"><a href="../reference/fndistinct.html">fndistinct</a></span><span class="op">(</span><span class="va">s</span>, <span class="va">c</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># c1 c2 c3 c4 c5 c6 c7 c8 </span></span>
+<span><span class="co">#  8  8  7  7  8  8  6  8</span></span></code></pre></div>
+<p>We can then compute the RCA index on this data</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">exports_latest</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>RCA <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">v</span>, <span class="va">c</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span> <span class="op"><a href="../reference/efficient-programming.html">%/=%</a></span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">v</span>, <span class="va">s</span>, TRA <span class="op">=</span> <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>    <span class="fu"><a href="../reference/pivot.html">pivot</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">"RCA"</span>, <span class="st">"s"</span>, how <span class="op">=</span> <span class="st">"wider"</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#    c        s1        s2        s3        s4        s5        s6        s7        s8</span></span>
+<span><span class="co"># 1 c1 0.9038055 0.9073996 0.7608879 0.5752643 0.8558140 0.6619450 0.8820296 0.9617336</span></span>
+<span><span class="co"># 2 c2 1.1725178 1.1771805 0.9871092 0.7462973 1.1102578 0.8587493 1.1442677 1.2476687</span></span>
+<span><span class="co"># 3 c3 1.2072861 1.2120870 1.0163796        NA 1.1431799 0.8842135 1.1781982 1.2846653</span></span>
+<span><span class="co"># 4 c4 1.2438173 1.2487635 1.0471341 0.7916788 1.1777713        NA 1.2138493 1.3235380</span></span>
+<span><span class="co"># 5 c5 1.0014055 1.0053877 0.8430546 0.6373858 0.9482314 0.7334270 0.9772781 1.0655891</span></span>
+<span><span class="co"># 6 c6 1.0234618 1.0275317 0.8616232 0.6514245 0.9691166 0.7495810 0.9988030 1.0890591</span></span>
+<span><span class="co"># 7 c7 1.3447625 1.3501101        NA        NA 1.2733564 0.9849009 1.3123624 1.4309531</span></span>
+<span><span class="co"># 8 c8 1.1226366 1.1271008 0.9451155 0.7145483 1.0630252 0.8222164 1.0955882 1.1945903</span></span></code></pre></div>
+<p>To summarise, <em>collapse</em> provides many options for ad-hoc or
+limited grouping, which are faster than a full blown
+<code><a href="../reference/GRP.html">fgroup_by()</a></code>, and also syntactically efficient. Further
+efficiency gains are possible using operations by reference, e.g.,
+<code>%/=%</code> instead of <code>/</code> to avoid an intermediate
+copy. It is also possible to transform by reference using fast
+statistical functions by passing the <code>set = TRUE</code> argument,
+e.g.,
+<code>with(mtcars, fmean(mpg, cyl, TRA = "fill", set = TRUE))</code>
+will replace <code>mpg</code> by its group-averaged version (the
+transformed vector is returned invisibly).</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>

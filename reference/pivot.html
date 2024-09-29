@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.16</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.17</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -580,20 +580,20 @@
 <span class="r-in"><span><span class="fu">pivot</span><span class="op">(</span><span class="va">GGDC10S</span>, values <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, names <span class="op">=</span> <span class="st">"Variable"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>, how <span class="op">=</span> <span class="st">"w"</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="small-helpers.html">namlab</a></span><span class="op">(</span>N <span class="op">=</span> <span class="cn">TRUE</span>, Nd <span class="op">=</span> <span class="cn">TRUE</span>, class <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Variable     Class    N Ndist         Label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     Country character 1908    36       Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Regioncode character 1908     6   Region code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3      Region character 1908     6        Region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        Year   numeric 1908    67          Year</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      AGR_VA   numeric 1702  1700  Agriculture </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     AGR_EMP   numeric 1674  1669  Agriculture </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      MIN_VA   numeric 1702  1641        Mining</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8     MIN_EMP   numeric 1674  1622        Mining</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9      MAN_VA   numeric 1702  1702 Manufacturing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10    MAN_EMP   numeric 1674  1672 Manufacturing</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11      PU_VA   numeric 1702  1665     Utilities</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12     PU_EMP   numeric 1674  1615     Utilities</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13     CON_VA   numeric 1702  1693  Construction</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14    CON_EMP   numeric 1674  1668  Construction</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     Country character 2346    43       Country</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Regioncode character 2346     6   Region code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      Region character 2346     6        Region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        Year   numeric 2346    67          Year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      AGR_VA   numeric 2139  2135  Agriculture </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     AGR_EMP   numeric 2225  2219  Agriculture </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      MIN_VA   numeric 2139  2072        Mining</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8     MIN_EMP   numeric 2216  2153        Mining</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      MAN_VA   numeric 2139  2139 Manufacturing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10    MAN_EMP   numeric 2216  2214 Manufacturing</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      PU_VA   numeric 2139  2097     Utilities</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     PU_EMP   numeric 2215  2141     Utilities</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     CON_VA   numeric 2139  2130  Construction</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14    CON_EMP   numeric 2216  2209  Construction</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 12 rows ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># -------------------------------- PIVOT RECAST ---------------------------------</span></span></span>
@@ -633,29 +633,29 @@
 <span class="r-in"><span><span class="fu">pivot</span><span class="op">(</span><span class="va">GGDC10S</span>, values <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Variable"</span>, <span class="st">"Sectorcode"</span><span class="op">)</span>, how <span class="op">=</span> <span class="st">"r"</span>,</span></span>
 <span class="r-in"><span>      na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Country Regioncode             Region Year Sectorcode       VA      EMP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     BWA        SSA Sub-saharan Africa 1964        AGR 16.30154 152.1179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     BWA        SSA Sub-saharan Africa 1965        AGR 15.72700 153.2971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     BWA        SSA Sub-saharan Africa 1966        AGR 17.68066 153.8867</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     BWA        SSA Sub-saharan Africa 1967        AGR 19.14591 155.0659</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     BWA        SSA Sub-saharan Africa 1968        AGR 21.09957 156.2451</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     BWA        SSA Sub-saharan Africa 1969        AGR 21.86221 157.4243</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     BWA        SSA Sub-saharan Africa 1960        AGR       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     BWA        SSA Sub-saharan Africa 1961        AGR       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     BWA        SSA Sub-saharan Africa 1962        AGR       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     BWA        SSA Sub-saharan Africa 1963        AGR       NA       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     BWA        SSA Sub-saharan Africa 1964        AGR 16.30154 152.1179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     BWA        SSA Sub-saharan Africa 1965        AGR 15.72700 153.2971</span>
 <span class="r-in"><span><span class="co"># Saving Labels</span></span></span>
 <span class="r-in"><span><span class="fu">pivot</span><span class="op">(</span><span class="va">GGDC10S</span>, values <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Variable"</span>, <span class="st">"Sectorcode"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>      labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>to <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span>, how <span class="op">=</span> <span class="st">"r"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Country Regioncode             Region Year Sectorcode       Sector       VA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     BWA        SSA Sub-saharan Africa 1964        AGR Agriculture  16.30154</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2     BWA        SSA Sub-saharan Africa 1965        AGR Agriculture  15.72700</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     BWA        SSA Sub-saharan Africa 1966        AGR Agriculture  17.68066</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4     BWA        SSA Sub-saharan Africa 1967        AGR Agriculture  19.14591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5     BWA        SSA Sub-saharan Africa 1968        AGR Agriculture  21.09957</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     BWA        SSA Sub-saharan Africa 1969        AGR Agriculture  21.86221</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     BWA        SSA Sub-saharan Africa 1960        AGR Agriculture        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     BWA        SSA Sub-saharan Africa 1961        AGR Agriculture        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     BWA        SSA Sub-saharan Africa 1962        AGR Agriculture        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     BWA        SSA Sub-saharan Africa 1963        AGR Agriculture        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     BWA        SSA Sub-saharan Africa 1964        AGR Agriculture  16.30154</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     BWA        SSA Sub-saharan Africa 1965        AGR Agriculture  15.72700</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        EMP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 152.1179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 153.2971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 153.8867</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 155.0659</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 156.2451</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 157.4243</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 152.1179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 153.2971</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Supplying new labels for generated columns: as complete as it gets</span></span></span>
 <span class="r-in"><span><span class="fu">pivot</span><span class="op">(</span><span class="va">GGDC10S</span>, values <span class="op">=</span> <span class="fl">6</span><span class="op">:</span><span class="fl">16</span>, names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"Variable"</span>, <span class="st">"Sectorcode"</span><span class="op">)</span>,</span></span>
@@ -666,14 +666,14 @@
 <span class="r-in"><span>                            EMP <span class="op">=</span> <span class="st">"Employment"</span><span class="op">)</span><span class="op">)</span>, how <span class="op">=</span> <span class="st">"r"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="small-helpers.html">namlab</a></span><span class="op">(</span>N <span class="op">=</span> <span class="cn">TRUE</span>, Nd <span class="op">=</span> <span class="cn">TRUE</span>, class <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     Variable     Class     N Ndist                   Label</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Country character 21648    42                 Country</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Regioncode character 21648     6             Region code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3     Region character 21648     6                  Region</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4       Year   numeric 21648    63                    Year</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Sectorcode    factor 21648    11     GGDC10S Sector Code</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6     Sector    factor 21648    11 Long Sector Description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         VA   numeric 21648 21508             Value Added</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        EMP   numeric 21648 21447              Employment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    Country character 27852    43                 Country</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Regioncode character 27852     6             Region code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     Region character 27852     6                  Region</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       Year   numeric 27852    67                    Year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Sectorcode    factor 27852    11     GGDC10S Sector Code</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     Sector    factor 27852    11 Long Sector Description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         VA   numeric 23092 22915             Value Added</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        EMP   numeric 23850 23610              Employment</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now another (slightly unconventional) use case here is data transposition</span></span></span>
 <span class="r-in"><span><span class="co"># Let's get the data for Botswana</span></span></span>
