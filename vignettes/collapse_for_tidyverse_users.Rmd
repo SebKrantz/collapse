@@ -128,7 +128,7 @@ mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + fmin(qsec)) # Vectorized
 mtcars |> group_by(cyl) |> summarise(mpg = mean(mpg) + min(qsec))   # Not vectorized
 ```
 
-both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) / fmin(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
+both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) + fmin(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
 
 See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. 
 
@@ -263,7 +263,7 @@ exports_latest |>
     pivot("c", "RCA", "s", how = "wider", sort = TRUE)
 ```
 
-To summarise, *collapse* provides many options for ad-hoc or limited grouping, which are faster than a full blown `fgroup_by()`, and also syntactically efficient. Further efficiency gains are possible using operations by reference, e.g., `%/=%` instead of `/` to avoid an intermediate copy. It is also possible to transform by reference using fast statistical functions by passing the `set = TRUE` argument, e.g., `with(mtcars, fmean(mpg, cyl, TRA = "fill", set = TRUE))` will replace `mpg` by its group-averaged version (the transformed vector is returned invisibly). 
+To summarise, *collapse* provides many options for ad-hoc or limited grouping, which are faster than a full `fgroup_by()`, and also syntactically efficient. Further efficiency gains are possible using operations by reference, e.g., `%/=%` instead of `/` to avoid an intermediate copy. It is also possible to transform by reference using fast statistical functions by passing the `set = TRUE` argument, e.g., `with(mtcars, fmean(mpg, cyl, TRA = "fill", set = TRUE))` replaces `mpg` by its group-averaged version (the transformed vector is returned invisibly). 
 
 ## Conclusion 
 
