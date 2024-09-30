@@ -1,5 +1,5 @@
 
-# rbind_list ??
+
 rowbind <- function(..., idcol = NULL, row.names = FALSE, use.names = TRUE, fill = FALSE, id.factor = "auto",
                     return = c("as.first", "data.frame", "data.table", "tibble", "list")) {
 

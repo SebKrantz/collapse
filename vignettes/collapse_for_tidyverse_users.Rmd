@@ -225,8 +225,8 @@ It is very easy then to compute Balassa's (1965) Revealed Comparative Advantage 
 
 ```{r}
 # Computing Balassa's (1965) RCA index: fast and memory efficient
-exports <- exports |> 
-  mutate(RCA = fsum(v, list(c, y), TRA = "/") %/=% fsum(v, list(s, y), TRA = "/"))
+# settfm() modifies exports and assigns it back to the global environment
+settfm(exports, RCA = fsum(v, list(c, y), TRA = "/") %/=% fsum(v, list(s, y), TRA = "/"))
 ```
 
 Note that this involved a single expression with two different grouped operations, which is only possible by incorporating grouping into statistical functions themselves. Let's summarise this dataset using `pivot()` to aggregate the RCA index across years. Here `"mean"` calls a highly efficient internal mean function. 
@@ -239,11 +239,10 @@ pivot(exports, ids = "c", values = "RCA", names = "s",
 We may also wish to investigate the growth rate of RCA. This can be done using `fgrowth()`. Since the panel is irregular, i.e., not every sector is observed in every year, it is critical to also supply the time variable. 
 
 ```{r}
-# settransform() modifies exports and assigns back to global env
-settransform(exports, RCA_growth = fgrowth(RCA, g = list(c, s), t = y))
-# Summarise this, using fmedian -> vectorized execution
-pivot(exports, ids = "c", values = "RCA_growth", names = "s", 
-      how = "wider", FUN = fmedian, sort = TRUE)
+exports |> 
+  mutate(RCA_growth = fgrowth(RCA, g = list(c, s), t = y)) |> 
+  pivot(ids = "c", values = "RCA_growth", names = "s", 
+        how = "wider", FUN = fmedian, sort = TRUE)
 ```
 
 Lastly, since the panel is unbalanced, we may wish to create an RCA index for only the last year, but balance the dataset a bit more by taking the last available trade within the last three years. This can be done using a single subset call
