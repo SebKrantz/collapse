@@ -63,9 +63,9 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2024-09-29</h4>
+            <h4 data-toc-skip class="date">2024-09-30</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.0.17/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
     </div>
 
@@ -271,7 +271,7 @@ minimum of <code>qsec</code> to the result, whereas</p>
 <span><span class="co"># 3   8 29.60000</span></span></code></pre></div>
 <p>both give the mean + the minimum within each group, but calculated in
 different ways: the former is equivalent to
-<code>fmean(mpg, g = cyl) / fmin(qsec, g = cyl)</code>, whereas the
+<code>fmean(mpg, g = cyl) + fmin(qsec, g = cyl)</code>, whereas the
 latter is equal to
 <code>sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))</code>.</p>
 <p>See <code><a href="../reference/fsummarise.html">?fsummarise</a></code> and <code><a href="../reference/ftransform.html">?fmutate</a></code> for more
@@ -503,16 +503,15 @@ done using a single subset call</p>
 <span><span class="co"># 7 c7 1.3447625 1.3501101        NA        NA 1.2733564 0.9849009 1.3123624 1.4309531</span></span>
 <span><span class="co"># 8 c8 1.1226366 1.1271008 0.9451155 0.7145483 1.0630252 0.8222164 1.0955882 1.1945903</span></span></code></pre></div>
 <p>To summarise, <em>collapse</em> provides many options for ad-hoc or
-limited grouping, which are faster than a full blown
-<code><a href="../reference/GRP.html">fgroup_by()</a></code>, and also syntactically efficient. Further
-efficiency gains are possible using operations by reference, e.g.,
-<code>%/=%</code> instead of <code>/</code> to avoid an intermediate
-copy. It is also possible to transform by reference using fast
-statistical functions by passing the <code>set = TRUE</code> argument,
-e.g.,
+limited grouping, which are faster than a full <code><a href="../reference/GRP.html">fgroup_by()</a></code>,
+and also syntactically efficient. Further efficiency gains are possible
+using operations by reference, e.g., <code>%/=%</code> instead of
+<code>/</code> to avoid an intermediate copy. It is also possible to
+transform by reference using fast statistical functions by passing the
+<code>set = TRUE</code> argument, e.g.,
 <code>with(mtcars, fmean(mpg, cyl, TRA = "fill", set = TRUE))</code>
-will replace <code>mpg</code> by its group-averaged version (the
-transformed vector is returned invisibly).</p>
+replaces <code>mpg</code> by its group-averaged version (the transformed
+vector is returned invisibly).</p>
 </div>
 </div>
 <div class="section level2">
