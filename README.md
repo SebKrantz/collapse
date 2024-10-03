@@ -21,36 +21,35 @@
 * To facilitate complex data transformation, exploration and computing tasks in R.
 * To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a [class-agnostic approach to R programming](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html), supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *units*, *pseries*, *pdata.frame* (*plm*), and *xts*/*zoo*. 
+It further implements a [class-agnostic approach to R programming](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html), supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *units*, *pseries*, *pdata.frame* (*plm*), *xts*/*zoo* and variable labels. 
 
 **Key Features:**
 
 *  **Advanced statistical programming**: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast and programmable grouping, ordering, matching, unique values/rows, 
+        data frames. Fast and programmable grouping, ordering, matching, deduplication, 
         factor generation and interactions. 
         
 * **Fast data manipulation**: Fast and flexible functions for data 
-        manipulation, data object conversions, and memory efficient R programming.
+        manipulation, data object conversions and memory efficient R programming.
 
-*  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, weighted and parallelized data aggregation.
+*  **Advanced aggregation**: Fast and easy multi-data-type, weighted and parallelized data aggregation.
 
-*  **Advanced transformations**: Fast row/column arithmetic, (grouped) replacing 
-        and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, 
-        (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations.
+*  **Advanced transformations**: Fast row/column arithmetic (by reference), (grouped) replacing 
+        and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing and 
+        (higher-dimensional) between and within/centering transformations.
 
-*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
-        differences and (compounded) growth rates on (irregular) time series and panels. 
-        Multivariate auto-, partial- and cross-correlation functions for panel data. 
-        Panel data to (ts-)array conversions.
+*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, 
+       differences and (compound) growth rates on (irregular) time series and panels. Autocorrelation functions for panel data
+       and panel to array conversions.
 
 *  **List processing**: Recursive list search, splitting, 
-        extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.
+        extraction/subsetting, apply and generalized recursive row-binding/unlisting to data frame.
 
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
 
-*collapse* is written in C and C++ and only depends on *Rcpp*. Its algorithms are multiple times faster than base R's, scale well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/#gb) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and very efficient for complex tasks (e.g. quantiles, weighted stats, mode/counting/deduplication, joins). Optimized R code ensures minimal overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
+*collapse* is written in C and C++, with algorithms much faster than base R's, scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and very efficient for complex tasks (e.g., quantiles, weighted stats, mode/counting/deduplication, joins, pivots). Optimized R code ensures minimal overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
 ## Installation
 
