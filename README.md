@@ -31,9 +31,9 @@ It further implements a [class-agnostic approach to R programming](https://sebkr
         factor generation and interactions. 
         
 * **Fast data manipulation**: Fast and flexible functions for data 
-        manipulation, data object conversions, and memory efficient R programming.
+        manipulation, data object conversions and memory efficient R programming.
 
-*  **Advanced aggregation**: Fast and easy multi-data-type, weighted, and parallelized data aggregation.
+*  **Advanced aggregation**: Fast and easy multi-data-type, weighted and parallelized data aggregation.
 
 *  **Advanced transformations**: Fast row/column arithmetic (by reference), (grouped) replacing 
         and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing and 
@@ -44,7 +44,7 @@ It further implements a [class-agnostic approach to R programming](https://sebkr
        and panel to array conversions.
 
 *  **List processing**: Recursive list search, splitting, 
-        extraction/subsetting, apply, and generalized recursive row-binding/unlisting to data frame.
+        extraction/subsetting, apply and generalized recursive row-binding/unlisting to data frame.
 
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
