@@ -37,11 +37,11 @@ It further implements a [class-agnostic approach to R programming](https://sebkr
 
 *  **Advanced transformations**: Fast row/column arithmetic (by reference), (grouped) replacing 
         and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing and 
-        (higher-dimensional) between and within/centering transformations.
+        (higher-dimensional) between/averaging and within/centering transformations.
 
 *  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, 
-       differences and (compound) growth rates on (irregular) time series and panels. Autocorrelation functions for panel data
-       and panel to array conversions.
+       differences and (compounded) growth rates on (irregular) time series and panels. Autocorrelation functions for panel data
+       and panel data to array conversions.
 
 *  **List processing**: Recursive list search, splitting, 
         extraction/subsetting, apply and generalized recursive row-binding/unlisting to data frame.
@@ -49,7 +49,7 @@ It further implements a [class-agnostic approach to R programming](https://sebkr
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
 
-*collapse* is written in C and C++, with algorithms much faster than base R's, scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and very efficient for complex tasks (e.g., quantiles, weighted stats, mode/counting/deduplication, joins, pivots). Optimized R code ensures minimal overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
+*collapse* is written in C and C++, with algorithms much faster than base R's, scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and very efficient for complex tasks (e.g., quantiles, weighted stats, mode/counting/deduplication, joins, pivots). Optimized R code ensures minimal evaluation overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
 ## Installation
 
