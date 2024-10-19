@@ -130,7 +130,7 @@ mtcars |> group_by(cyl) |> summarise(mpg = mean(mpg) + min(qsec))   # Not vector
 
 both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) + fmin(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
 
-See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. 
+See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. [This blog post](https://andrewghazi.github.io/posts/collapse_is_sick/sick.html) by Andrew Ghazi provides an excellent example of computing a p-value test statistic by groups.  
 
 To take full advantage of *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect other parts of your code^[When doing this, make sure to refer to base R functions explicitly using `::` e.g. `base::mean`.]. 
 

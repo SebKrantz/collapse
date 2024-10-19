@@ -45,7 +45,7 @@ as_character_factor(X, keep.attr = TRUE)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X}{a vector, factor, matrix, higher-dimensional array, data frame or list. \code{mctl} and \code{mrtl} only accept matrices, \code{as_numeric_factor}, \code{as_integer_factor} and \code{as_character_factor} only accept factors, data frames or lists.}
-  \item{row.names.col}{can be used to add an column saving names or row.names when converting objects to data frame using \code{qDF/qDT/qTBL}. \code{TRUE} will add a column \code{"row.names"}, or you can supply a name e.g. \code{row.names.col = "variable"}. With \code{qM}, the argument has the opposite meaning, and can be used to select one or more columns in a data frame/list which will be used to create the rownames of the matrix e.g. \code{qM(iris, row.names.col = "Species")}. In this case the column(s) can be specified using names, indices, a logical vector or a selector function. See Examples.}
+  \item{row.names.col}{can be used to add an column saving names or row.names when converting objects to data frame using \code{qDF/qDT/qTBL}. \code{TRUE} will add a column \code{"row.names"}, or you can supply a name e.g. \code{row.names.col = "variable"}. If \code{X} is a named atomic vector, a length 2 vector of names can be supplied, e.g., \code{qDF(fmean(mtcars), c("car", "mean"))}. With \code{qM}, the argument has the opposite meaning, and can be used to select one or more columns in a data frame/list which will be used to create the rownames of the matrix e.g. \code{qM(iris, row.names.col = "Species")}. In this case the column(s) can be specified using names, indices, a logical vector or a selector function. See Examples.}
   \item{keep.attr}{logical. \code{FALSE} (default) yields a \emph{hard} / \emph{thorough} object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / \emph{data.table}. \code{FALSE} yields a \emph{soft} / \emph{minimal} object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also \code{class}.}
   \item{class}{if a vector of classes is passed here, the converted object will be assigned these classes. If \code{NULL} is passed, the default classes are assigned: \code{qM} assigns no class, \code{qDF} a class \code{"data.frame"}, and \code{qDT} a class \code{c("data.table", "data.frame")}. If \code{keep.attr = TRUE} and \code{class = NULL} and the object already inherits the default classes, further inherited classes are preserved. See Details and the Example. }
   \item{sep}{character. Separator used for interacting multiple variables selected through \code{row.names.col}.}
@@ -100,6 +100,8 @@ head(qDT(mtcars, "cars"))               # Saving row.names when converting data 
 head(qM(iris, "Species"))               # Examples converting data to matrix, saving information
 head(qM(GGDC10S, is.character))         # as rownames
 head(qM(gv(GGDC10S, -(2:3)), 1:3, sep = "-")) # plm-style rownames
+
+qDF(fmean(mtcars), c("cars", "mean"))   # Data frame from named vector, with names
 
 # mrtl() and mctl() are very useful for iteration over matrices
 # Think of a coordninates matrix e.g. from sf::st_coordinates()
