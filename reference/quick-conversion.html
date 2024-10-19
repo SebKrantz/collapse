@@ -85,7 +85,7 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
 <dd><p>a vector, factor, matrix, higher-dimensional array, data frame or list. <code>mctl</code> and <code>mrtl</code> only accept matrices, <code>as_numeric_factor</code>, <code>as_integer_factor</code> and <code>as_character_factor</code> only accept factors, data frames or lists.</p></dd>
 
   <dt id="arg-row-names-col">row.names.col<a class="anchor" aria-label="anchor" href="#arg-row-names-col"></a></dt>
-<dd><p>can be used to add an column saving names or row.names when converting objects to data frame using <code>qDF/qDT/qTBL</code>. <code>TRUE</code> will add a column <code>"row.names"</code>, or you can supply a name e.g. <code>row.names.col = "variable"</code>. With <code>qM</code>, the argument has the opposite meaning, and can be used to select one or more columns in a data frame/list which will be used to create the rownames of the matrix e.g. <code>qM(iris, row.names.col = "Species")</code>. In this case the column(s) can be specified using names, indices, a logical vector or a selector function. See Examples.</p></dd>
+<dd><p>can be used to add an column saving names or row.names when converting objects to data frame using <code>qDF/qDT/qTBL</code>. <code>TRUE</code> will add a column <code>"row.names"</code>, or you can supply a name e.g. <code>row.names.col = "variable"</code>. If <code>X</code> is a named atomic vector, a length 2 vector of names can be supplied, e.g., <code>qDF(fmean(mtcars), c("car", "mean"))</code>. With <code>qM</code>, the argument has the opposite meaning, and can be used to select one or more columns in a data frame/list which will be used to create the rownames of the matrix e.g. <code>qM(iris, row.names.col = "Species")</code>. In this case the column(s) can be specified using names, indices, a logical vector or a selector function. See Examples.</p></dd>
 
   <dt id="arg-keep-attr">keep.attr<a class="anchor" aria-label="anchor" href="#arg-keep-attr"></a></dt>
 <dd><p>logical. <code>FALSE</code> (default) yields a <em>hard</em> / <em>thorough</em> object conversion: All unnecessary attributes are removed from the object yielding a plain matrix / data.frame / <em>data.table</em>. <code>FALSE</code> yields a <em>soft</em> / <em>minimal</em> object conversion: Only the attributes 'names', 'row.names', 'dim', 'dimnames' and 'levels' are modified in the conversion. Other attributes are preserved. See also <code>class</code>.</p></dd>
@@ -213,6 +213,20 @@ as_numeric_factor, as_integer_factor, and as_character_factor convert factors, o
 <span class="r-out co"><span class="r-pr">#&gt;</span> BWA-VA-1963       NA       NA       NA       NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> BWA-VA-1964 1.119194 4.822485 2.341328 37.48229</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> BWA-VA-1965 1.246789 5.695848 2.678338 39.34710</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">qDF</span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cars"</span>, <span class="st">"mean"</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Data frame from named vector, with names</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    cars       mean</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   mpg  20.090625</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   cyl   6.187500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  disp 230.721875</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    hp 146.687500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  drat   3.596563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    wt   3.217250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  qsec  17.848750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    vs   0.437500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    am   0.406250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 gear   3.687500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 carb   2.812500</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># mrtl() and mctl() are very useful for iteration over matrices</span></span></span>
 <span class="r-in"><span><span class="co"># Think of a coordninates matrix e.g. from sf::st_coordinates()</span></span></span>

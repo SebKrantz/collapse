@@ -63,9 +63,9 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2024-10-03</h4>
+            <h4 data-toc-skip class="date">2024-10-19</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.0.17/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
     </div>
 
@@ -277,7 +277,9 @@ latter is equal to
 <p>See <code><a href="../reference/fsummarise.html">?fsummarise</a></code> and <code><a href="../reference/ftransform.html">?fmutate</a></code> for more
 detailed examples. This <em>eager vectorization</em> approach is
 intentional as it allows users to vectorize complex expressions and fall
-back to base R if this is not desired.</p>
+back to base R if this is not desired. <a href="https://andrewghazi.github.io/posts/collapse_is_sick/sick.html" class="external-link">This
+blog post</a> by Andrew Ghazi provides an excellent example of computing
+a p-value test statistic by groups.</p>
 <p>To take full advantage of <em>collapse</em>, it is highly recommended
 to use the <em>Fast Statistical Functions</em> as much as possible. You
 can also set <code>set_collapse(mask = "all")</code> to replace

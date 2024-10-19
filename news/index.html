@@ -31,13 +31,14 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.0.17/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.17" id="collapse-2017">collapse 2.0.17<a class="anchor" aria-label="anchor" href="#collapse-2017"></a></h2>
 <ul><li><p>In <code><a href="../reference/GRP.html">GRP.default()</a></code>, the <code>"group.starts"</code> attribute is always returned, even if there is only one group or every observation is its own group. Thanks <a href="https://github.com/JamesThompsonC" class="external-link">@JamesThompsonC</a> (<a href="https://github.com/SebKrantz/collapse/issues/631" class="external-link">#631</a>).</p></li>
 <li><p>Fixed a bug in <code><a href="../reference/pivot.html">pivot()</a></code> if <code>na.rm = TRUE</code> and <code>how = "wider"|"recast"</code> and there are multiple <code>value</code> columns with different missingness patterns. In this case <code>na_omit(values)</code> was applied with default settings to the original (long) value columns, implying potential loss of information. The fix applies <code>na_omit(values, prop = 1)</code>, i.e., only removes completely missing rows.</p></li>
+<li><p><code>qDF()/qDT()/qTBL()</code> now allow a length-2 vector of names to <code>row.names.col</code> if <code>X</code> is a named atomic vector, e.g., <code>qDF(fmean(mtcars), c("cars", "mean"))</code> gives the same as <code>pivot(fmean(mtcars, drop = FALSE), names = list("car", "mean"))</code>.</p></li>
 <li><p>Added a subsection on using internal (ad-hoc) grouping to the <em>collapse</em> for <em>tidyverse</em> users vignette.</p></li>
 </ul></div>
     <div class="section level2">
