@@ -4,6 +4,8 @@
 
 * Fixed a bug in `pivot()` if `na.rm = TRUE` and `how = "wider"|"recast"` and there are multiple `value` columns with different missingness patterns. In this case `na_omit(values)` was applied with default settings to the original (long) value columns, implying potential loss of information. The fix applies `na_omit(values, prop = 1)`, i.e., only removes completely missing rows. 
 
+* `qDF()/qDT()/qTBL()` now allow a length-2 vector of names to `row.names.col` if `X` is a named atomic vector, e.g., `qDF(fmean(mtcars), c("cars", "mean"))` gives the same as `pivot(fmean(mtcars, drop = FALSE), names = list("car", "mean"))`. 
+
 * Added a subsection on using internal (ad-hoc) grouping to the *collapse* for *tidyverse* users vignette.  
 
 # collapse 2.0.16
