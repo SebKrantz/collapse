@@ -47,7 +47,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2024-09-29'
+date-released: '2024-10-19'
 contact:
 - family-names: Krantz
   given-names: Sebastian
