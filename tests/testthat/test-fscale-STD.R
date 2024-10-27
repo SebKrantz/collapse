@@ -308,8 +308,8 @@ test_that("fscale with weights performs like wbscale (defined above)", {
   expect_equal(replace_Inf(fscale(mtcNA, g, wdatNA), NA), BY(mtcNA, g, wbscale, wdatNA, na.rm = TRUE))
 })
 
-wsu <- function(x, w) if(is.null(dim(x))) `attributes<-`(qsu.default(x, w = w)[2:3], NULL) else `attributes<-`(qsu(x, w = w)[,2:3], NULL)
-wsuby <- function(x, f, w) if(is.null(dim(x))) `attributes<-`(qsu.default(x, f, w = w)[, 2:3], NULL) else `attributes<-`(qsu(x, f, w = w)[,2:3,], NULL)
+wsu <- function(x, w) if(is.null(dim(x))) `attributes<-`(qsu.default(x, w = w)[3:4], NULL) else `attributes<-`(qsu(x, w = w)[,3:4], NULL)
+wsuby <- function(x, f, w) if(is.null(dim(x))) `attributes<-`(qsu.default(x, f, w = w)[, 3:4], NULL) else `attributes<-`(qsu(x, f, w = w)[,3:4,], NULL)
 
 test_that("Weighted customized scaling works as intended", {
   expect_equal(wsu(fscale(x, w = w, mean = 5.1, sd = 3.9), w = w), c(5.1, 3.9))
