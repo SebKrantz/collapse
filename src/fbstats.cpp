@@ -385,7 +385,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
     int l = x.size();
     if(pg.size() != l) stop("length(pid) must match nrow(X)");
     bool weights = !Rf_isNull(w);
-    int d = d = ((ext) ? 7 : 5) + weights;
+    int d = ((ext) ? 7 : 5) + weights;
     NumericVector sum(npg, NA_REAL);
     NumericVector sumw((weights) ? npg : 1); // no_init_vector(npg) : no_init_vector(1); // better for valgrind
     double osum = 0;
