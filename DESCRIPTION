@@ -1,7 +1,7 @@
 Package: collapse
 Title: Advanced and Fast Data Transformation
 Version: 2.0.17
-Date: 2024-10-19
+Date: 2024-10-27
 Authors@R: c(
            person("Sebastian", "Krantz", role = c("aut", "cre"), 
                   email = "sebastian.krantz@graduateinstitute.ch", 
@@ -32,7 +32,7 @@ Description: A C/C++ based package for advanced data transformation and
     'plm' (panel-series and data frames), and 'xts'/'zoo'.
 URL: https://sebkrantz.github.io/collapse/,  
      https://github.com/SebKrantz/collapse,
-     https://twitter.com/collapse_R
+     https://x.com/collapse_R
 BugReports: https://github.com/SebKrantz/collapse/issues
 License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8

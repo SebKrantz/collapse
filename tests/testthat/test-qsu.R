@@ -39,25 +39,25 @@ test_that("qsu works properly for simple cases (including unit groups and weight
   expect_equal(qsu(wldNA), base_qsu(wldNA))
   expect_equal(qsu(GGDC10S), base_qsu(GGDC10S))
 
-  expect_equal(qsu(1:10, w = rep(1, 10)), base_qsu(1:10))
-  expect_equal(qsu(10:1, w = rep(1, 10)), base_qsu(10:1))
-  expect_equal(qsu(xNA, w = rep(1, 100)), base_qsu(xNA))
-  expect_equal(qsu(wlddev, w = ones), base_qsu(wlddev))
-  expect_equal(qsu(wldNA, w = ones), base_qsu(wldNA))
-  expect_equal(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S))), base_qsu(GGDC10S))
+  expect_equal(qsu(1:10, w = rep(1, 10))[-2L], base_qsu(1:10))
+  expect_equal(qsu(10:1, w = rep(1, 10))[-2L], base_qsu(10:1))
+  expect_equal(qsu(xNA, w = rep(1, 100))[-2L], base_qsu(xNA))
+  expect_equal(qsu(wlddev, w = ones)[,-2L], base_qsu(wlddev))
+  expect_equal(qsu(wldNA, w = ones)[,-2L], base_qsu(wldNA))
+  expect_equal(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)))[,-2L], base_qsu(GGDC10S))
 
   expect_equal(unattrib(qsu(1:10, g = rep(1, 10))), unattrib(base_qsu(1:10)))
   expect_equal(unattrib(qsu(10:1, g = rep(1, 10))), unattrib(base_qsu(10:1)))
   expect_equal(unattrib(qsu(xNA, g = rep(1, 100))), unattrib(base_qsu(xNA)))
   expect_equal(unattrib(qsu(wlddev, by = ones)), unattrib(t(base_qsu(wlddev)))) # This should be an array... or oriented the other way around...
 
-  expect_equal(unattrib(qsu(1:10, g = rep(1, 10), w = rep(1, 10))), unattrib(base_qsu(1:10)))
-  expect_equal(unattrib(qsu(10:1, g = rep(1, 10), w = rep(1, 10))), unattrib(base_qsu(10:1)))
-  expect_equal(unattrib(qsu(xNA, g = rep(1, 100), w = rep(1, 100))), unattrib(base_qsu(xNA)))
-  expect_equal(qsu(wldNA, w = ones), base_qsu(wldNA))
-  expect_equal(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S))), base_qsu(GGDC10S))
-  expect_equal(t(unclass(qsu(wldNA, w = ones, by = ones))), unclass(base_qsu(wldNA)))
-  expect_equal(t(unclass(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), by = rep(1, fnrow(GGDC10S))))), unclass(base_qsu(GGDC10S)))
+  expect_equal(unattrib(qsu(1:10, g = rep(1, 10), w = rep(1, 10)))[-2L], unattrib(base_qsu(1:10)))
+  expect_equal(unattrib(qsu(10:1, g = rep(1, 10), w = rep(1, 10)))[-2L], unattrib(base_qsu(10:1)))
+  expect_equal(unattrib(qsu(xNA, g = rep(1, 100), w = rep(1, 100)))[-2L], unattrib(base_qsu(xNA)))
+  expect_equal(qsu(wldNA, w = ones)[,-2L], base_qsu(wldNA))
+  expect_equal(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)))[,-2L], base_qsu(GGDC10S))
+  expect_equal(t(unclass(qsu(wldNA, w = ones, by = ones)))[,-2L], unclass(base_qsu(wldNA)))
+  expect_equal(t(unclass(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), by = rep(1, fnrow(GGDC10S)))))[,-2L], unclass(base_qsu(GGDC10S)))
 
 })
 
@@ -73,25 +73,25 @@ test_that("qsu works properly for simple cases with higher-order statistics (inc
   expect_equal(qsu(wldNA, higher = TRUE)[,1:5], base_qsu(wldNA))
   expect_equal(qsu(GGDC10S, higher = TRUE)[,1:5], base_qsu(GGDC10S))
 
-  expect_equal(qsu(1:10, w = rep(1, 10), higher = TRUE)[1:5], base_qsu(1:10))
-  expect_equal(qsu(10:1, w = rep(1, 10), higher = TRUE)[1:5], base_qsu(10:1))
-  expect_equal(qsu(xNA, w = rep(1, 100), higher = TRUE)[1:5], base_qsu(xNA))
-  expect_equal(qsu(wlddev, w = ones, higher = TRUE)[,1:5], base_qsu(wlddev))
-  expect_equal(qsu(wldNA, w = ones, higher = TRUE)[,1:5], base_qsu(wldNA))
-  expect_equal(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), higher = TRUE)[,1:5], base_qsu(GGDC10S))
+  expect_equal(qsu(1:10, w = rep(1, 10), higher = TRUE)[c(1L, 3:6)], base_qsu(1:10))
+  expect_equal(qsu(10:1, w = rep(1, 10), higher = TRUE)[c(1L, 3:6)], base_qsu(10:1))
+  expect_equal(qsu(xNA, w = rep(1, 100), higher = TRUE)[c(1L, 3:6)], base_qsu(xNA))
+  expect_equal(qsu(wlddev, w = ones, higher = TRUE)[,c(1L, 3:6)], base_qsu(wlddev))
+  expect_equal(qsu(wldNA, w = ones, higher = TRUE)[,c(1L, 3:6)], base_qsu(wldNA))
+  expect_equal(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), higher = TRUE)[,c(1L, 3:6)], base_qsu(GGDC10S))
 
   expect_equal(unattrib(qsu(1:10, g = rep(1, 10), higher = TRUE)[1:5]), unattrib(base_qsu(1:10)))
   expect_equal(unattrib(qsu(10:1, g = rep(1, 10), higher = TRUE)[1:5]), unattrib(base_qsu(10:1)))
   expect_equal(unattrib(qsu(xNA, g = rep(1, 100), higher = TRUE)[1:5]), unattrib(base_qsu(xNA)))
   expect_equal(unattrib(qsu(wlddev, by = ones, higher = TRUE)[1:5, ]), unattrib(t(base_qsu(wlddev)))) # This should be an array... or oriented the other way around...
 
-  expect_equal(unattrib(qsu(1:10, g = rep(1, 10), w = rep(1, 10), higher = TRUE)[1:5]), unattrib(base_qsu(1:10)))
-  expect_equal(unattrib(qsu(10:1, g = rep(1, 10), w = rep(1, 10), higher = TRUE)[1:5]), unattrib(base_qsu(10:1)))
-  expect_equal(unattrib(qsu(xNA, g = rep(1, 100), w = rep(1, 100), higher = TRUE)[1:5]), unattrib(base_qsu(xNA)))
-  expect_equal(qsu(wldNA, w = ones, higher = TRUE)[,1:5], base_qsu(wldNA))
-  expect_equal(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), higher = TRUE)[,1:5], base_qsu(GGDC10S))
-  expect_equal(t(unclass(qsu(wldNA, w = ones, by = ones, higher = TRUE)[1:5,])), unclass(base_qsu(wldNA)))
-  expect_equal(t(unclass(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), by = rep(1, fnrow(GGDC10S)), higher = TRUE)))[,1:5], unclass(base_qsu(GGDC10S)))
+  expect_equal(unattrib(qsu(1:10, g = rep(1, 10), w = rep(1, 10), higher = TRUE)[c(1L, 3:6)]), unattrib(base_qsu(1:10)))
+  expect_equal(unattrib(qsu(10:1, g = rep(1, 10), w = rep(1, 10), higher = TRUE)[c(1L, 3:6)]), unattrib(base_qsu(10:1)))
+  expect_equal(unattrib(qsu(xNA, g = rep(1, 100), w = rep(1, 100), higher = TRUE)[c(1L, 3:6)]), unattrib(base_qsu(xNA)))
+  expect_equal(qsu(wldNA, w = ones, higher = TRUE)[,c(1L, 3:6)], base_qsu(wldNA))
+  expect_equal(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), higher = TRUE)[,c(1L, 3:6)], base_qsu(GGDC10S))
+  expect_equal(t(unclass(qsu(wldNA, w = ones, by = ones, higher = TRUE)[c(1L, 3:6),])), unclass(base_qsu(wldNA)))
+  expect_equal(t(unclass(qsu(GGDC10S, w = rep(1, fnrow(GGDC10S)), by = rep(1, fnrow(GGDC10S)), higher = TRUE)))[,c(1L, 3:6)], unclass(base_qsu(GGDC10S)))
 
 })
 
@@ -118,9 +118,9 @@ test_that("Proper performance of weighted statsistics", {
   w <- ceiling(mtcars$wt*10)
   wx <- rep(x, w)
   expect_equal(base_w_qsu(x, w)[-1L], qsu(wx, higher = TRUE)[-1L])
-  expect_equal(qsu(wx)[-1L], qsu(x, w = w)[-1L])
-  expect_equal(qsu(wx, higher = TRUE)[-1L], qsu(x, w = w, higher = TRUE)[-1L])
-  expect_equal(drop(qsu(wx, g = rep(1L, length(wx)), higher = TRUE))[-1L], drop(qsu(x, g = rep(1L, length(x)), w = w, higher = TRUE))[-1L])
+  expect_equal(qsu(wx)[-1L], qsu(x, w = w)[-(1:2)])
+  expect_equal(qsu(wx, higher = TRUE)[-1L], qsu(x, w = w, higher = TRUE)[-(1:2)])
+  expect_equal(drop(qsu(wx, g = rep(1L, length(wx)), higher = TRUE))[-1L], drop(qsu(x, g = rep(1L, length(x)), w = w, higher = TRUE))[-(1:2)])
 })
 
 g <- GRP(wlddev, ~ income)
@@ -136,15 +136,15 @@ test_that("qsu works properly for grouped and panel data computations", {
   expect_equal(qsu(wldNA, g), base_qsu(wldNA, g))
   expect_equal(qsu(GGDC10S, GGDC10S$Variable), base_qsu(GGDC10S, GGDC10S$Variable))
   # Grouped and Weighted Statistics
-  expect_equal(qsu(wldNA, g, w = ones), base_qsu(wldNA, g))
-  expect_equal(qsu(GGDC10S, GGDC10S$Variable, w = rep(1, fnrow(GGDC10S))), base_qsu(GGDC10S, GGDC10S$Variable))
+  expect_equal(qsu(wldNA, g, w = ones)[,-2L,], base_qsu(wldNA, g))
+  expect_equal(qsu(GGDC10S, GGDC10S$Variable, w = rep(1, fnrow(GGDC10S)))[,-2L,], base_qsu(GGDC10S, GGDC10S$Variable))
   # Panel Data Statistics
   ps <- qsu(wldNA, pid = p, cols = is.numeric)
   expect_equal(unattrib(t(ps["Overall",,])), unattrib(base_qsu(nv(wldNA))))
   expect_equal(unattrib(t(ps["Between",,])), unattrib(base_qsu(fmean(nv(wldNA), p))))
   expect_equal(unattrib(t(ps["Within", -1,])), unattrib(base_qsu(fwithin(nv(wldNA), p, mean = "overall.mean"))[, -1]))
   # Weighted Panel Data Statistics
-  ps <- qsu(wldNA, pid = p, w = ones, cols = is.numeric)
+  ps <- qsu(wldNA, pid = p, w = ones, cols = is.numeric)[,-2L,]
   expect_equal(unattrib(t(ps["Overall",,])), unattrib(base_qsu(nv(wldNA))))
   expect_equal(unattrib(t(ps["Between",-1,])), unattrib(base_qsu(fbetween(nv(wldNA), p))[,-1]))
   expect_equal(unattrib(t(ps["Within", -1,])), unattrib(base_qsu(fwithin(nv(wldNA), p, mean = "overall.mean"))[, -1]))
@@ -154,7 +154,7 @@ test_that("qsu works properly for grouped and panel data computations", {
   expect_equal(unattrib(ps[,-1,"Between",]), unattrib(base_qsu(fbetween(nv(wldNA), p), g)[,-1,]))
   expect_equal(unattrib(ps[,-1,"Within",]), unattrib(base_qsu(fwithin(nv(wldNA), p, mean = "overall.mean"), g)[,-1,]))
   # Grouped and Weighted Panel Data Statistics
-  ps <- qsu(wldNA, by = g, pid = p, w = ones, cols = is.numeric)
+  ps <- qsu(wldNA, by = g, pid = p, w = ones, cols = is.numeric)[,-2L,,]
   expect_equal(unattrib(ps[,,"Overall",]), unattrib(base_qsu(nv(wldNA), g)))
   expect_equal(unattrib(ps[,-1,"Between",]), unattrib(base_qsu(fbetween(nv(wldNA), p), g)[,-1,]))
   expect_equal(unattrib(ps[,-1,"Within",]), unattrib(base_qsu(fwithin(nv(wldNA), p, mean = "overall.mean"), g)[,-1,]))
@@ -170,15 +170,15 @@ test_that("qsu works properly for grouped and panel data computations with highe
   expect_equal(qsu(wldNA, g, higher = TRUE)[,1:5,], base_qsu(wldNA, g))
   expect_equal(qsu(GGDC10S, GGDC10S$Variable, higher = TRUE)[,1:5,], base_qsu(GGDC10S, GGDC10S$Variable))
   # Grouped and Weighted Statistics
-  expect_equal(qsu(wldNA, g, w = ones, higher = TRUE)[,1:5,], base_qsu(wldNA, g))
-  expect_equal(qsu(GGDC10S, GGDC10S$Variable, w = rep(1, fnrow(GGDC10S)), higher = TRUE)[,1:5,], base_qsu(GGDC10S, GGDC10S$Variable))
+  expect_equal(qsu(wldNA, g, w = ones, higher = TRUE)[,c(1L, 3:6),], base_qsu(wldNA, g))
+  expect_equal(qsu(GGDC10S, GGDC10S$Variable, w = rep(1, fnrow(GGDC10S)), higher = TRUE)[,c(1L, 3:6),], base_qsu(GGDC10S, GGDC10S$Variable))
   # Panel Data Statistics
   ps <- qsu(wldNA, pid = p, cols = is.numeric, higher = TRUE)[,1:5,]
   expect_equal(unattrib(t(ps["Overall",,])), unattrib(base_qsu(nv(wldNA))))
   expect_equal(unattrib(t(ps["Between",,])), unattrib(base_qsu(fmean(nv(wldNA), p))))
   expect_equal(unattrib(t(ps["Within", -1,])), unattrib(base_qsu(fwithin(nv(wldNA), p, mean = "overall.mean"))[, -1]))
   # Weighted Panel Data Statistics
-  ps <- qsu(wldNA, pid = p, w = ones, cols = is.numeric, higher = TRUE)[,1:5,]
+  ps <- qsu(wldNA, pid = p, w = ones, cols = is.numeric, higher = TRUE)[,c(1L, 3:6),]
   expect_equal(unattrib(t(ps["Overall",,])), unattrib(base_qsu(nv(wldNA))))
   # TODO: Figure out why this test fails !!!!!!
   # expect_equal(unattrib(t(ps["Between",-1,])), unattrib(base_qsu(fbetween(nv(wldNA), p))[,-1]))
@@ -189,7 +189,7 @@ test_that("qsu works properly for grouped and panel data computations with highe
   expect_equal(unattrib(ps[,-1,"Between",]), unattrib(base_qsu(fbetween(nv(wldNA), p), g)[,-1,]))
   expect_equal(unattrib(ps[,-1,"Within",]), unattrib(base_qsu(fwithin(nv(wldNA), p, mean = "overall.mean"), g)[,-1,]))
   # Grouped and Weighted Panel Data Statistics
-  ps <- qsu(wldNA, by = g, pid = p, w = ones, cols = is.numeric, higher = TRUE)[,1:5,,]
+  ps <- qsu(wldNA, by = g, pid = p, w = ones, cols = is.numeric, higher = TRUE)[,c(1L, 3:6),,]
   expect_equal(unattrib(ps[,,"Overall",]), unattrib(base_qsu(nv(wldNA), g)))
   expect_equal(unattrib(ps[,-1,"Between",]), unattrib(base_qsu(fbetween(nv(wldNA), p), g)[,-1,]))
   expect_equal(unattrib(ps[,-1,"Within",]), unattrib(base_qsu(fwithin(nv(wldNA), p, mean = "overall.mean"), g)[,-1,]))

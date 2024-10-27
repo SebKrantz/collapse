@@ -322,10 +322,10 @@ test_that("functions using welfords method properly deal with zero weights", {
     expect_equal(unattrib(fsd(x = c(2, 1, 3), g = g, w = c(0, 1, 1), na.rm = FALSE)), sqrt(2))
     expect_equal(unattrib(fscale(x = c(2, 1, 0), g = g, w = c(1, 1, 0), na.rm = TRUE)), (c(2, 1, 0)-1.5)/sqrt(0.5))
     expect_equal(unattrib(fscale(x = c(2, 1, 3), g = g, w = c(0, 1, 1), na.rm = FALSE)), (c(2, 1, 3)-2)/sqrt(2))
-    expect_equal(unattrib(qsu(x = c(2, 1, 0), g = g, w = c(1, 1, 0))), c(2, 1.5, sqrt(0.5), 1, 2))
-    expect_equal(unattrib(qsu(x = c(2, 1, 3), g = g, w = c(0, 1, 1))), c(2, 2, sqrt(2), 1, 3))
-    expect_equal(unattrib(qsu(x = c(2, 1, 0), g = g, w = c(1, 1, 0), higher = TRUE))[1:5], c(2, 1.5, sqrt(0.5), 1, 2))
-    expect_equal(unattrib(qsu(x = c(2, 1, 3), g = g, w = c(0, 1, 1), higher = TRUE))[1:5], c(2, 2, sqrt(2), 1, 3))
+    expect_equal(unattrib(qsu(x = c(2, 1, 0), g = g, w = c(1, 1, 0)))[-2L], c(2, 1.5, sqrt(0.5), 1, 2))
+    expect_equal(unattrib(qsu(x = c(2, 1, 3), g = g, w = c(0, 1, 1)))[-2L], c(2, 2, sqrt(2), 1, 3))
+    expect_equal(unattrib(qsu(x = c(2, 1, 0), g = g, w = c(1, 1, 0), higher = TRUE))[c(1L, 3:6)], c(2, 1.5, sqrt(0.5), 1, 2))
+    expect_equal(unattrib(qsu(x = c(2, 1, 3), g = g, w = c(0, 1, 1), higher = TRUE))[c(1L, 3:6)], c(2, 2, sqrt(2), 1, 3))
 
   }
 })
