@@ -56,7 +56,7 @@ set.seed(101)
 lmiss <- na_insert(letters)
 month.miss <- na_insert(month.name)
 char_dat <- na_insert(char_vars(GGDC10S))
-
+char_nums <- c("-1", "1", "0", "2", "-2")
 options(warn = -1)
 
 test_that("recode_char works well", {
@@ -93,6 +93,9 @@ test_that("recode_char works well", {
   expect_visible(recode_char(char_dat, saharan = "SSA", regex = TRUE, default = "n"))
   expect_visible(recode_char(char_dat, saharan = "SSA", regex = TRUE, default = "n", missing = "c"))
 
+  expect_equal(recode_char(char_nums, "-\\d+" = "negative", "0" = "zero", regex = T), c("negative", "1", "zero", "2", "negative"))
+  expect_equal(recode_char(char_nums, "0" = "zero", "-\\d+" = "negative", default = "positive", regex = T), c("negative", "positive", "zero", "positive", "negative"))
+  expect_equal(recode_char(char_nums, "-\\d+" = "negative", "0" = "zero", default = "positive", regex = T), c("negative", "positive", "zero", "positive", "negative"))
 })
 
 set.seed(101)
