@@ -167,7 +167,7 @@ namlab <- function(X, class = FALSE, attrn = "label", N = FALSE, Ndistinct = FAL
   attributes(X) <- NULL
   if(class) res$Class <- vapply(X, pasteclass, character(1), USE.NAMES = FALSE)
   if(N) res$N <- fnobs.data.frame(X)
-  if(Ndistinct) res$Ndist <- fndistinct.data.frame(X)
+  if(Ndistinct) res$Ndist <- fndistinct.data.frame(X, na.rm = TRUE)
   res$Label <- vlabels(X, attrn, FALSE)
   attr(res, "row.names") <- c(NA_integer_, -length(X))
   oldClass(res) <- "data.frame"
