@@ -342,7 +342,7 @@ index_stats <- function(index) {
     if(lix <= 2L) {
       idstat <- paste0(nam[1L], " [", fnlevels(index[[1L]]), "]")
     } else {
-      idstat <- paste(paste0(nam[-lix], " [", vapply(index[-lix], fnlevels, integer(1L)), "]"), collapse = " ")
+      idstat <- paste(paste0(nam[-lix], " [", vapply(index[-lix], fnlevels, 0L), "]"), collapse = " ")
     }
   } else idstat <- NULL
   return(paste(c(idstat, tstat), collapse = " | "))

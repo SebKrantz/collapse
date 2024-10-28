@@ -404,7 +404,7 @@ acr_get_funs <- function(.fnsexp, .fns, ...) {
         names(.fns) <- nf
         if(is.null(namfun)) namfun <- nf
       } else {
-        nf <- vapply(.fnsexp[-1L], function(x) l1orlst(all.vars(x)), character(1L), USE.NAMES = FALSE)
+        nf <- vapply(.fnsexp[-1L], function(x) l1orlst(all.vars(x)), "", USE.NAMES = FALSE)
         names(.fns) <- nf
         if(is.null(namfun)) namfun <- as.character(seq_along(.fns))
       }
