@@ -78,7 +78,7 @@ wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = 
   wo = w[o]
   w_cs = cumsum(wo)                   # Cumulative sum
   sumwp = sum(w)                      # Computing sum(w) - min(w)
-  sumwp = sumwp - wo[1L]
+  sumwp = sumwp - min(w)
   sumwp = sumwp * probs               # Target sums of weights for quantile type 7
   res = sapply(sumwp, function(tsump) {
     j = which.max(w_cs > tsump)           # Lower order statistic
