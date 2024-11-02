@@ -21,6 +21,23 @@
 #define NEED2UTF8(s) !(IS_ASCII(s) || (s)==NA_STRING || IS_UTF8(s))
 #define ENC2UTF8(s) (!NEED2UTF8(s) ? (s) : mkCharCE(translateCharUTF8(s), CE_UTF8))
 
+// Needed for vector length manipulation
+// https://github.com/wch/r-source/blob/48f06c1071fea6a6e7e365ad3d745217268e2175/src/include/Defn.h#L675
+// Until data.table fixes this: https://github.com/Rdatatable/data.table/issues/6180
+#define SET_TRULEN(x, v) (STDVEC_TRUELENGTH(x)=(v))
+// ALTREP_TRUELENGTH is 0: https://github.com/wch/r-source/blob/48f06c1071fea6a6e7e365ad3d745217268e2175/src/main/altrep.c#L345
+#define TRULEN(x) (ALTREP(x) ? 0 : STDVEC_TRUELENGTH(x))
+#define STDVEC_LENGTH(x) (((VECSEXP) (x))->vecsxp.length)
+// Needed for SETLENGTH
+#define SETSCAL(x, v) ((((SEXPREC_partial *)(x))->sxpinfo.scalar) = (v))
+#define SET_STDVEC_LENGTH(x,v) do {		      \
+    SEXP __x__ = (x);			                  \
+    R_xlen_t __v__ = (v);			              \
+    STDVEC_LENGTH(__x__) = __v__;		        \
+    SETSCAL(__x__, __v__ == 1 ? 1 : 0);	    \
+    } while (0)
+#define SET_LEN(x, v) SET_STDVEC_LENGTH((x), (v))
+
 // for use with bit64::integer64
 #define NA_INTEGER64  INT64_MIN
 #define MAX_INTEGER64 INT64_MAX

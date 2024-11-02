@@ -16,7 +16,7 @@ static void finalizer(SEXP p)
   p = R_ExternalPtrTag(p);
   if (!isString(p)) error("Internal error: finalizer's ExternalPtr doesn't see names in tag"); // # nocov
   l = LENGTH(p);
-  tl = TRUELENGTH(p);
+  tl = TRULEN(p);
   if (l<0 || tl<l) error("Internal error: finalizer sees l=%d, tl=%d",l,tl); // # nocov
   n = tl-l;
   if (n==0) {
@@ -26,7 +26,7 @@ static void finalizer(SEXP p)
   }
   x = PROTECT(allocVector(INTSXP, 50));  // 50 so it's big enough to be on LargeVector heap. See NodeClassSize in memory.c:allocVector
   // INTSXP rather than VECSXP so that GC doesn't inspect contents after LENGTH (thanks to Karl Miller, Jul 2015)
-  SETLENGTH(x,50+n*2*sizeof(void *)/4);  // 1*n for the names, 1*n for the VECSXP itself (both are over allocated).
+  SET_LEN(x,50+n*2*sizeof(void *)/4);  // 1*n for the names, 1*n for the VECSXP itself (both are over allocated).
   UNPROTECT(1);
   return;
 }
@@ -125,10 +125,10 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   setAttrib(newdt, R_NamesSymbol, newnames);
   // setAttrib appears to change length and truelength, so need to do that first _then_ SET next,
   // otherwise (if the SET were were first) the 100 tl is assigned to length.
-  SETLENGTH(newnames,l);
-  SET_TRUELENGTH(newnames,n);
-  SETLENGTH(newdt,l);
-  SET_TRUELENGTH(newdt,n);
+  SET_LEN(newnames,l);
+  SET_TRULEN(newnames,n);
+  SET_LEN(newdt,l);
+  SET_TRULEN(newdt,n);
   setselfref(newdt);
   UNPROTECT(protecti);
   return(newdt);
@@ -140,7 +140,7 @@ SEXP Calloccol(SEXP dt) // , SEXP Rn
   R_len_t tl, n, l;
   l = LENGTH(dt);
   n = l + 100; // asInteger(GetOption1(sym_collapse_DT_alloccol));  // asInteger(Rn);
-  tl = TRUELENGTH(dt);
+  tl = TRULEN(dt);
   // R <= 2.13.2 and we didn't catch uninitialized tl somehow
   if (tl < 0) error("Internal error, tl of class is marked but tl<0."); // # nocov
   // better disable these...
@@ -153,8 +153,8 @@ SEXP Calloccol(SEXP dt) // , SEXP Rn
     return shallow(dt, R_NilValue, n); // usual case (increasing alloc)
 
 //  SEXP nam = PROTECT(getAttrib(dt, R_NamesSymbol));
-//  if(LENGTH(nam) != l) SETLENGTH(nam, l);
-//  SET_TRUELENGTH(nam, n);
+//  if(LENGTH(nam) != l) SET_LEN(nam, l);
+//  SET_TRULEN(nam, n);
 //  setselfref(dt); // better, otherwise may be invalid !!
 //  UNPROTECT(1);
 //  return(dt);
@@ -544,8 +544,8 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
   // class is also copied here which retains superclass name in class vector as has been the case for many years; e.g. tests 1228.* for #5296
 
   // This is because overalloc.. creating columns by reference stuff..
-  // SET_TRUELENGTH(ans, LENGTH(ans));
-  // SETLENGTH(ans, LENGTH(cols));
+  // SET_TRULEN(ans, LENGTH(ans));
+  // SET_LEN(ans, LENGTH(cols));
   int ansn;
   const SEXP *px = SEXPPTR_RO(x);
   SEXP *pans = SEXPPTR(ans);
@@ -574,8 +574,8 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
   if(TYPEOF(colnam) == STRSXP) {
     PROTECT(colnam);
     SEXP tmp = PROTECT(allocVector(STRSXP, ncol)); nprotect++;
-    // SET_TRUELENGTH(tmp, LENGTH(tmp));
-    // SETLENGTH(tmp, LENGTH(cols));
+    // SET_TRULEN(tmp, LENGTH(tmp));
+    // SET_LEN(tmp, LENGTH(cols));
     setAttrib(ans, R_NamesSymbol, tmp);
     subsetVectorRaw(tmp, colnam, cols, /*anyNA=*/false);
     UNPROTECT(1);
