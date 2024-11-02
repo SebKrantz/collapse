@@ -25,7 +25,8 @@
 // https://github.com/wch/r-source/blob/48f06c1071fea6a6e7e365ad3d745217268e2175/src/include/Defn.h#L675
 // Until data.table fixes this: https://github.com/Rdatatable/data.table/issues/6180
 #define SET_TRULEN(x, v) (STDVEC_TRUELENGTH(x)=(v))
-#define TRULEN(x) STDVEC_TRUELENGTH(x)
+// ALTREP_TRUELENGTH is 0: https://github.com/wch/r-source/blob/48f06c1071fea6a6e7e365ad3d745217268e2175/src/main/altrep.c#L345
+#define TRULEN(x) (ALTREP(x) ? 0 : STDVEC_TRUELENGTH(x))
 #define STDVEC_LENGTH(x) (((VECSEXP) (x))->vecsxp.length)
 // Needed for SETLENGTH
 #define SETSCAL(x, v) ((((SEXPREC_partial *)(x))->sxpinfo.scalar) = (v))
