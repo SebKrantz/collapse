@@ -31,7 +31,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.0.17/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
@@ -41,6 +41,7 @@
 <li><p><code>qDF()/qDT()/qTBL()</code> now allow a length-2 vector of names to <code>row.names.col</code> if <code>X</code> is a named atomic vector, e.g., <code>qDF(fmean(mtcars), c("cars", "mean"))</code> gives the same as <code>pivot(fmean(mtcars, drop = FALSE), names = list("car", "mean"))</code>.</p></li>
 <li><p>Added a subsection on using internal (ad-hoc) grouping to the <em>collapse</em> for <em>tidyverse</em> users vignette.</p></li>
 <li><p><code><a href="../reference/qsu.html">qsu()</a></code> now adds a <code>WeightSum</code> column giving the sum of (non-zero or missing) weights if the <code>w</code> argument is used. Thanks <a href="https://github.com/mayer79" class="external-link">@mayer79</a> for suggesting (<a href="https://github.com/SebKrantz/collapse/issues/650" class="external-link">#650</a>). For panel data (<code>pid</code>) the ‘Between’ sum of weights is also simply the number of groups, and the ‘Within’ sum of weights is the ‘Overall’ sum of weights divided by the number of groups.</p></li>
+<li><p>Fixed an inaccuracy in <code>fquantile()/fnth()</code> with weights: As per documentation the target sum is <code>sumwp = (sum(w) - min(w)) * p</code>, however, in practice, the weight of the minimum element of <code>x</code> was used instead of the minimum weight. Since the smallest element in the sample usually has a small weight this was unnoticed for a long while, but thanks to <a href="https://github.com/Jahnic-kb" class="external-link">@Jahnic-kb</a> now reported and fixed (<a href="https://github.com/SebKrantz/collapse/issues/659" class="external-link">#659</a>).</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.16" id="collapse-2016">collapse 2.0.16<a class="anchor" aria-label="anchor" href="#collapse-2016"></a></h2><p class="text-muted">CRAN release: 2024-08-21</p>
