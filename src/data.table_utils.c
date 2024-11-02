@@ -35,7 +35,7 @@ SEXP coerceUtf8IfNeeded(SEXP x) {
 SEXP setnames(SEXP x, SEXP nam) {
   if(TYPEOF(nam) != STRSXP) error("names need to be character typed");
   if(INHERITS(x, char_datatable)) {
-    int n = TRUELENGTH(x), l = LENGTH(nam);
+    int n = TRULEN(x), l = LENGTH(nam);
     if(n < l) { // error("Invalid data.table (underallocated), use qDT(data) to make valid.");
       setAttrib(x, R_NamesSymbol, nam);
       // setselfref(x);
@@ -44,8 +44,8 @@ SEXP setnames(SEXP x, SEXP nam) {
     SEXP newnam = PROTECT(allocVector(STRSXP, n)),
       *pnn = SEXPPTR(newnam), *pn = SEXPPTR(nam);
     for(int i = 0; i < l; ++i) pnn[i] = pn[i];
-    SETLENGTH(newnam, l);
-    SET_TRUELENGTH(newnam, n);
+    SET_LEN(newnam, l);
+    SET_TRULEN(newnam, n);
     setAttrib(x, R_NamesSymbol, newnam);
     setselfref(x);
     UNPROTECT(1);

@@ -21,6 +21,11 @@
 #define NEED2UTF8(s) !(IS_ASCII(s) || (s)==NA_STRING || IS_UTF8(s))
 #define ENC2UTF8(s) (!NEED2UTF8(s) ? (s) : mkCharCE(translateCharUTF8(s), CE_UTF8))
 
+// Needed for vector length manipulation
+#define TRULEN(x) (TRUELENGTH(x))
+#define SET_TRULEN(x, v) (SET_TRUELENGTH((x), (v)))
+#define SET_LEN(x, v) (SETLENGTH((x), (v)))
+
 // for use with bit64::integer64
 #define NA_INTEGER64  INT64_MIN
 #define MAX_INTEGER64 INT64_MAX
