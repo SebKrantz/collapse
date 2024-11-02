@@ -88,12 +88,12 @@ case 4: // quantile type 4: not exact for weighted case, and also bad properties
   break;
 */
 
-// Weighted quantiles. Idea: make h dependent on sum of weights and average weight.
+// Weighted quantiles. Idea: make h dependent on sum of weights and minimum weight.
 #undef RETWQSWITCH
-#define RETWQSWITCH(sumw, mu)                                  \
+#define RETWQSWITCH(sumw, minw)                                \
 switch(ret) {                                                  \
 case 7: /* quantile type 7 */                                  \
-  h = (sumw - mu) * Q;                                         \
+  h = (sumw - minw) * Q;                                       \
   break;                                                       \
 case 1:                                                        \
 case 2:                                                        \
@@ -101,25 +101,25 @@ case 3: /* average, lower or upper element (adjust algorithm)*/\
   h = sumw * Q;                                                \
   break;                                                       \
 case 5: /* quantile type 5*/                                   \
-  h = sumw * Q - 0.5*mu;                                       \
+  h = sumw * Q - 0.5*minw;                                     \
   if(h < 0.0) h = 0.0;                                         \
   break;                                                       \
 case 6: /* quantile type 6*/                                   \
-  h = (sumw + mu)*Q - mu;                                      \
+  h = (sumw + minw)*Q - minw;                                  \
   if(h < 0.0) h = 0.0;                                         \
   break;                                                       \
 case 8: /* quantile type 8 (best according to H&F 1986)*/      \
-  h = (sumw + 1.0/3.0 * mu)*Q - 2.0/3.0 * mu;                  \
+  h = (sumw + 1.0/3.0 * minw)*Q - 2.0/3.0 * minw;              \
   if(h < 0.0) h = 0.0;                                         \
   break;                                                       \
 case 9: /* quantile type 9*/                                   \
-  h = (sumw + 1.0/4.0 * mu)*Q - 5.0/8.0 * mu;                  \
+  h = (sumw + 1.0/4.0 * minw)*Q - 5.0/8.0 * minw;              \
   if(h < 0.0) h = 0.0;                                         \
   break;                                                       \
 }
 /*
 case 4: // quantile type 4: does not give exact results
-  h = sumw * Q - mu;
+  h = sumw * Q - minw;
   break;
 */
 /* Redundant? -> yes!
@@ -229,7 +229,7 @@ double Q, h, a, wb, b;                                \
 for(int i = 0, k = 0; i < np; ++i) {                  \
   Q = probs[i];                                       \
   if(Q > 0.0 && Q < 1.0) {                            \
-    RETWQSWITCH(sumw, mu);                            \
+    RETWQSWITCH(sumw, minw);                            \
     a = h + eps;                                      \
     while(wsum <= a) wsum += pw[po[k++]];             \
     a = px[po[k == 0 ? 0 : k-1]];                     \
@@ -423,10 +423,14 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
       }
 
     } else {
-      double wsum = 0.0, sumw = 0.0; // wsum is running sum, sumw is the total sum
+      double wsum = 0.0, sumw = 0.0, minw = DBL_MAX; // wsum is running sum, sumw is the total sum
 
-      #pragma omp simd reduction(+:sumw)
-      for (int i = 0; i < l; ++i) sumw += pw[po[i]];
+      // #pragma omp simd reduction(+:sumw)
+      for (int i = 0; i < l; ++i) {
+        wsum = pw[po[i]];
+        sumw += wsum;
+        if(minw > wsum && wsum > 0.0) minw = wsum;
+      }
 
       wsum = 0.0;
       if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
@@ -435,9 +439,6 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
         n = 0;
         goto wall0;
       }
-      double mu = pw[po[0]]; //  = sumw / (l - nw0);
-      int i = 0;
-      while(mu <= 0.0) mu = pw[po[++i]];
 
       if(tx == REALSXP) { // Numeric data
         double *px = REAL(x)-1;
@@ -498,28 +499,25 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 
 // Expects pw and po to be consistent
 double w_compute_h(const double *pw, const int *po, const int l, const int sorted, const int ret, const double Q) {
-  double sumw = 0.0, mu = 0.0, h = 0.0; /* To avoid -Wmaybe-uninitialized */
+  double sumw = 0.0, minw = DBL_MAX, h = 0.0; /* To avoid -Wmaybe-uninitialized */
   if(sorted) {
-    #pragma omp simd reduction(+:sumw)
-    for(int i = 0; i < l; ++i) sumw += pw[i];
-    if(sumw > eps) {
-      int i = 0;
-      mu = pw[0];
-      while(mu <= 0.0) mu = pw[++i];
+    // #pragma omp simd reduction(+:sumw)
+    for(int i = 0; i < l; ++i) {
+      sumw += pw[i];
+      if(minw > pw[i] && pw[i] > 0.0) minw = pw[i];
     }
   } else {
-    #pragma omp simd reduction(+:sumw)
-    for(int i = 0; i < l; ++i) sumw += pw[po[i]];
-    if(sumw > eps) {
-      int i = 0;
-      mu = pw[po[0]];
-      while(mu <= 0.0) mu = pw[po[++i]];
+    // #pragma omp simd reduction(+:sumw)
+    for(int i = 0; i < l; ++i) {
+      h = pw[po[i]];
+      sumw += h;
+      if(minw > h && h > 0.0) minw = h;
     }
   }
   if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
   if(sumw < 0.0) error("Weights must be positive or zero");
-  if(mu == 0.0) return NA_REAL;
-  RETWQSWITCH(sumw, mu);
+  if(minw == DBL_MAX) return NA_REAL;
+  RETWQSWITCH(sumw, minw);
   return h;
 }
 

@@ -9,6 +9,8 @@
 
 * `qsu()` now adds a `WeightSum` column giving the sum of (non-zero or missing) weights if the `w` argument is used. Thanks @mayer79 for suggesting (#650). For panel data (`pid`) the 'Between' sum of weights is also simply the number of groups, and the 'Within' sum of weights is the 'Overall' sum of weights divided by the number of groups.   
 
+* Fixed an inaccuracy in `fquantile()/fnth()` with weights: As per documentation the target sum is `sumwp = (sum(w) - min(w)) * p`, however, in practice, the weight of the minimum element of `x` was used instead of the minimum weight. Since the smallest element in the sample usually has a small weight this was unnoticed for a long while, but thanks to @Jahnic-kb now reported and fixed (#659). 
+
 # collapse 2.0.16
 
 * Fixes an installation bug on some Linux systems (conflicting types) (#613). 
