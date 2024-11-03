@@ -85,7 +85,7 @@ Use data.table::setorder(v) to sort a data frame without creating a copy. "><met
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>If you don't require a copy of the data, use <code><a href="https://rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">data.table::setorder</a></code> (you can also use it in a piped call as it invisibly returns the data).</p>
+    <p>If you don't require a copy of the data, use <code><a href="https://rdrr.io/pkg/data.table/man/setorder.html" class="external-link">data.table::setorder</a></code> (you can also use it in a piped call as it invisibly returns the data).</p>
 <p><code>roworder(v)</code> has internal facilities to deal with <a href="GRP.html">grouped</a> and <a href="indexing.html">indexed</a> data. This is however inefficient (since in most cases data could be reordered before grouping/indexing), and therefore issues a message if <code>verbose &gt; 0L</code>.</p>
     </div>
     <div class="section level2">

@@ -119,7 +119,7 @@
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p><code>ss</code> offers no support for indexed data. Use <code>fsubset</code> with indices instead.</p>
-<p>No replacement method <code>fsubset&lt;-</code> or <code>ss&lt;-</code> is offered in <em>collapse</em>. For efficient subset replacement (without copying) use <code><a href="https://rdatatable.gitlab.io/data.table/reference/assign.html" class="external-link">data.table::set</a></code>, which can also be used with data frames and tibbles. To search and replace certain elements without copying, and to efficiently copy elements / rows from an equally sized vector / data frame, see <code><a href="efficient-programming.html">setv</a></code>.</p>
+<p>No replacement method <code>fsubset&lt;-</code> or <code>ss&lt;-</code> is offered in <em>collapse</em>. For efficient subset replacement (without copying) use <code><a href="https://rdrr.io/pkg/data.table/man/assign.html" class="external-link">data.table::set</a></code>, which can also be used with data frames and tibbles. To search and replace certain elements without copying, and to efficiently copy elements / rows from an equally sized vector / data frame, see <code><a href="efficient-programming.html">setv</a></code>.</p>
 <p>For subsetting columns alone, please also see <a href="select_replace_vars.html">selecting and replacing columns</a>.</p>
 <p>Note that the use of <code><a href="efficient-programming.html">%==%</a></code> can yield significant performance gains on large data.</p>
     </div>

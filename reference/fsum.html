@@ -330,7 +330,7 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:collapse’:</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>     fdroplevels</span>
-<span class="r-in"><span><span class="va">opts</span> <span class="op">&lt;-</span> <span class="fu"><a href="collapse-options.html">set_collapse</a></span><span class="op">(</span>nthreads <span class="op">=</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/openmp-utils.html" class="external-link">getDTthreads</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">opts</span> <span class="op">&lt;-</span> <span class="fu"><a href="collapse-options.html">set_collapse</a></span><span class="op">(</span>nthreads <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/openmp-utils.html" class="external-link">getDTthreads</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">mtcDT</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="qF.html">qF</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -339,13 +339,13 @@
 <span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/r/base/rowsum.html" class="external-link">rowsum</a></span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min        lq      mean median</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 80.291667 70.608108 64.971695 63.596</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  3.989583  3.734234  3.616178  3.588</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.000000  1.000000  1.000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min        lq      mean   median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 78.326531 71.706422 64.602877 64.97131</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  3.887755  3.770642  3.653346  3.67623</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.000000  1.000000  1.00000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         uq        max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  55.527397 139.060606   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3.335616   5.971861   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  55.944828 132.063781   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3.393103   6.273349   100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000   1.000000   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now larger data</span></span></span>
@@ -357,13 +357,13 @@
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">tdata</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               expr      min       lq     mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 3.234281 3.159407 2.445574 3.147231 2.977826</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.650202 2.645001 2.190740 2.624553 2.517715</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 3.230871 3.179210 3.277992 3.179174 3.255707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.635998 2.598668 2.536717 2.571899 2.604439</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.4343424   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.0970197   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.0000000   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4.761254   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  4.775432   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1.000000   100</span>
 <span class="r-in"><span><span class="co"># Reset options</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="collapse-options.html">set_collapse</a></span><span class="op">(</span><span class="va">opts</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
