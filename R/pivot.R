@@ -175,6 +175,7 @@ pivot <- function(data,
              warning("duplicated id values detected: there are ", ng, " unique id-combinations, but the data has ", fnrow(data),
                      " rows. This means you have on average ", round(fnrow(data)/ng, 1), " duplicates per id-combination. ",
                      "Consider adding additional ids or aggregating your data (e.g. using collap()) before applying pivot().")
+          if(length(vd)) {
           if(na.rm) {
             cc <- lapply(vd, whichNA, invert = TRUE) # TODO: could do this all internally using a single vector
             # cc_vec <- c_to_vec(cc)
@@ -227,6 +228,7 @@ pivot <- function(data,
             oldClass(value_cols[[1L]]) <- "factor" # c("factor", "na.included")
           } else if(length(labels)) value_cols[[1L]] <- duplAttributes(Csv(nam[values], value_cols[[1L]]), value_cols[[1L]])
           res <- c(id_cols, value_cols)
+          } else res <- data[ids]
         }
 
     } else {
