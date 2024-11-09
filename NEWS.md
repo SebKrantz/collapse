@@ -1,3 +1,7 @@
+# collapse 2.0.18
+
+* Cases in `pivot(..., how = "longer")` with no `values` columns now no longer give an error. Thanks @alvarocombo for flagging this (#663).
+
 # collapse 2.0.17
 
 * In `GRP.default()`, the `"group.starts"` attribute is always returned, even if there is only one group or every observation is its own group. Thanks @JamesThompsonC (#631).  

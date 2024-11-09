@@ -61,7 +61,7 @@ void writeValueByIndex(SEXP target, SEXP source, const int from, SEXP index) {
 SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
   if(TYPEOF(data) != VECSXP) error("pivot_long: input data is of type '%s', but needs to be a list", type2char(TYPEOF(data)));
   const int l = length(data);
-  if(l == 1) return VECTOR_ELT(data, 0);
+  if(l == 1 && isNull(ind) && !asLogical(idcol)) return VECTOR_ELT(data, 0);
   if(l == 0) error("pivot_long: input data needs to have 1 or more columns. Current number of columns: 0");
 
   const SEXP *pd = SEXPPTR_RO(data), *pind = pd;
