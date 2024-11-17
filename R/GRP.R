@@ -871,13 +871,13 @@ fduplicated <- function(x, all = FALSE) {
   if(all) {
     g <- .Call(C_group, x, FALSE, FALSE)
     ng <- attr(g, "N.groups")
-    if(ng == length(g)) return(.Call(C_alloc, FALSE, length(g), TRUE))
+    if(ng == length(g)) return(logical(length(g)))
     gs <- .Call(C_fwtabulate, g, NULL, ng, FALSE)
     return(.Call(C_subsetVector, gs != 1L, g, FALSE))
   }
   g <- .Call(C_group, x, TRUE, FALSE)
   starts <- attr(g, "starts")
-  if(length(starts) == length(g)) return(.Call(C_alloc, FALSE, length(g), TRUE))
+  if(length(starts) == length(g)) return(logical(length(g)))
   .Call(C_setcopyv, .Call(C_alloc, TRUE, length(g), TRUE), starts, FALSE, FALSE, TRUE, TRUE)
 }
 

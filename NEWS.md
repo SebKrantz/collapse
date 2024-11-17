@@ -2,6 +2,8 @@
 
 * Cases in `pivot(..., how = "longer")` with no `values` columns now no longer give an error. Thanks @alvarocombo for flagging this (#663).
 
+* Fixed bug in `qF(c(4L, 1L, NA), sort = FALSE)`: hash function failure due to a coding bug. Thanks @mayer79 for flagging this (#666).
+
 # collapse 2.0.17
 
 * In `GRP.default()`, the `"group.starts"` attribute is always returned, even if there is only one group or every observation is its own group. Thanks @JamesThompsonC (#631).  

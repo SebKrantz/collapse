@@ -465,4 +465,8 @@ test_that("fmedian ties handled properly with weights", {
                c(2.5, 2, 3))
 })
 
+test_that("Misc bugs", {
+  expect_visible(qF(c(4L, 1L, NA), sort = FALSE))
+})
+
 options(warn = 1)

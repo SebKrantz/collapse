@@ -43,7 +43,7 @@
 // #define RCHAR(x, y) CHAR(STRING_ELT(x, y))
 // #define SEXP_F ScalarLogical(FALSE)
 // #define SEXP_T ScalarLogical(TRUE)
-#define NOGE(x, l) ((x < 0) || (x >= l))
+#define NOGE(x, l) ((x < 0 && x != NA_INTEGER) || (x >= l))
 #define HASH(key, K)  (3141592653U * (unsigned int)(key) >> (32 - (K)))
 #define HASHK(key, K)  (3141592653U * (unsigned int)(key) >> (K))
 #define N_ISNAN(x, y) (!ISNAN(x) && !ISNAN(y))
