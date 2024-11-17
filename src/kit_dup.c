@@ -261,7 +261,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
             goto ibl;
           } // else, we move forward to the next slot, until we find an empty one... We need to keep checking against the values,
           // because if we found the same value before, we would also have put it in another slot after the initial one with the same hash value.
-          if(++id >= nu) id = 0; // ++iid; iid %= nu; // # nocov
+          if(++iid >= nu) iid = 0; // ++iid; iid %= nu; // # nocov
         } // We put the index into the empty slot.
         h[iid] = i + 1; // need + 1 because for zero the while loop gives false..
         pans_i[i] = ++g; // h[id];
