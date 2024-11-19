@@ -9,24 +9,17 @@
 int need2utf8(SEXP x) {
   const int xlen = length(x);
   const SEXP *xd = STRING_PTR_RO(x);
-  // for (int i=0; i<xlen; i++) {
-  //   if (NEED2UTF8(xd[i]))
-  //     return(true);
-  // }
-  // return(false);
   if (xlen <= 1) return xlen == 1 ? NEED2UTF8(xd[0]) : 0;
-  return NEED2UTF8(xd[0]) || NEED2UTF8(xd[xlen/4]) || NEED2UTF8(xd[xlen/2]) || NEED2UTF8(xd[(int)(xlen/1.3333)]) || NEED2UTF8(xd[xlen-1]);
+  for (int i = 0, t = xlen < 1000 ? xlen : 1000; i < t; ++i) if(NEED2UTF8(xd[i])) return 1;
+  return NEED2UTF8(xd[xlen/4]) || NEED2UTF8(xd[xlen/2]) || NEED2UTF8(xd[(int)(xlen/1.3333)]) || NEED2UTF8(xd[xlen-1]);
 }
 
 SEXP coerceUtf8IfNeeded(SEXP x) {
-  if (!need2utf8(x))
-    return(x);
+  if (!need2utf8(x)) return(x);
   const int xlen = length(x);
   SEXP ans = PROTECT(allocVector(STRSXP, xlen));
   const SEXP *xd = STRING_PTR_RO(x);
-  for (int i=0; i<xlen; i++) {
-    SET_STRING_ELT(ans, i, ENC2UTF8(xd[i]));
-  }
+  for (int i=0; i<xlen; i++) SET_STRING_ELT(ans, i, ENC2UTF8(xd[i]));
   UNPROTECT(1);
   return(ans);
 }
