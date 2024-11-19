@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="Advanced and Fast Data Transformation in R">
 <meta name="description" content="A C/C++ based package for advanced data transformation and statistical computing in R that is extremely fast, class-agnostic, robust and programmer friendly. Core functionality includes a rich set of S3 generic grouped and weighted statistical functions for vectors, matrices and data frames, which provide efficient low-level vectorizations, OpenMP multithreading, and skip missing values by default. These are integrated with fast grouping and ordering algorithms (also callable from C), and efficient data manipulation functions. The package also provides a flexible and rigorous approach to time series and panel data in R. It further includes fast functions for common statistical procedures, detailed (grouped, weighted) summary statistics, powerful tools to work with nested data, fast data object conversions, functions for memory efficient R programming, and helpers to effectively deal with variable labels, attributes, and missing data. It is well integrated with base R classes, dplyr/tibble, data.table, sf, units, plm (panel-series and data frames), and xts/zoo.">
@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.16.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.17.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,18 +70,18 @@
 <li>To facilitate complex data transformation, exploration and computing tasks in R.</li>
 <li>To help make R code fast, flexible, parsimonious and programmer friendly.</li>
 </ul>
-<p>It further implements a <a href="https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html">class-agnostic approach to R programming</a>, supporting base R, <em>tibble</em>, <em>grouped_df</em> (<em>tidyverse</em>), <em>data.table</em>, <em>sf</em>, <em>units</em>, <em>pseries</em>, <em>pdata.frame</em> (<em>plm</em>), and <em>xts</em>/<em>zoo</em>.</p>
+<p>It further implements a <a href="https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html">class-agnostic approach to R programming</a>, supporting base R, <em>tibble</em>, <em>grouped_df</em> (<em>tidyverse</em>), <em>data.table</em>, <em>sf</em>, <em>units</em>, <em>pseries</em>, <em>pdata.frame</em> (<em>plm</em>), <em>xts</em>/<em>zoo</em> and variable labels.</p>
 <p><strong>Key Features:</strong></p>
 <ul>
-<li><p><strong>Advanced statistical programming</strong>: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data frames. Fast and programmable grouping, ordering, matching, unique values/rows, factor generation and interactions.</p></li>
-<li><p><strong>Fast data manipulation</strong>: Fast and flexible functions for data manipulation, data object conversions, and memory efficient R programming.</p></li>
-<li><p><strong>Advanced aggregation</strong>: Fast and easy multi-data-type, multi-function, weighted and parallelized data aggregation.</p></li>
-<li><p><strong>Advanced transformations</strong>: Fast row/column arithmetic, (grouped) replacing and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations.</p></li>
-<li><p><strong>Advanced time-computations</strong>: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, and (lagged/leaded, iterated, quasi-, log-) differences and (compounded) growth rates on (irregular) time series and panels. Multivariate auto-, partial- and cross-correlation functions for panel data. Panel data to (ts-)array conversions.</p></li>
-<li><p><strong>List processing</strong>: Recursive list search, splitting, extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.</p></li>
+<li><p><strong>Advanced statistical programming</strong>: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data frames. Fast and programmable grouping, ordering, matching, deduplication, factor generation and interactions.</p></li>
+<li><p><strong>Fast data manipulation</strong>: Fast and flexible functions for data manipulation, data object conversions and memory efficient R programming.</p></li>
+<li><p><strong>Advanced aggregation</strong>: Fast and easy multi-data-type, weighted and parallelized data aggregation.</p></li>
+<li><p><strong>Advanced transformations</strong>: Fast row/column arithmetic (by reference), (grouped) replacing and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing and (higher-dimensional) between/averaging and within/centering transformations.</p></li>
+<li><p><strong>Advanced time-computations</strong>: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, differences and (compounded) growth rates on (irregular) time series and panels. Autocorrelation functions for panel data and panel data to array conversions.</p></li>
+<li><p><strong>List processing</strong>: Recursive list search, splitting, extraction/subsetting, apply and generalized recursive row-binding/unlisting to data frame.</p></li>
 <li><p><strong>Advanced data exploration</strong>: Fast (grouped, weighted, panel-decomposed) summary statistics and descriptive tools.</p></li>
 </ul>
-<p><em>collapse</em> is written in C and C++ and only depends on <em>Rcpp</em>. Its algorithms are multiple times faster than base R’s, scale well to &lt;= 1 billion obs (benchmarks: <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">linux</a> | <a href="https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results" class="external-link">windows</a>), and very efficient for complex tasks (e.g. quantiles, weighted stats, mode/counting/deduplication, joins). Optimized R code ensures minimal overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  --></p>
+<p><em>collapse</em> is written in C and C++, with algorithms much faster than base R’s, scales well (benchmarks: <a href="https://duckdblabs.github.io/db-benchmark/" class="external-link">linux</a> | <a href="https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results" class="external-link">windows</a>), and very efficient for complex tasks (e.g., quantiles, weighted stats, mode/counting/deduplication, joins, pivots). Optimized R code ensures minimal evaluation overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  --></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
