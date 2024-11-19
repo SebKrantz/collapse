@@ -1,4 +1,4 @@
-# collapse 2.0.18
+# collapse 2.0.17.9000
 
 * Cases in `pivot(..., how = "longer")` with no `values` columns now no longer give an error. Thanks @alvarocombo for flagging this (#663).
 
