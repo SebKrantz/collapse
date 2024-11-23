@@ -1,8 +1,10 @@
-# collapse 2.0.17.9000
+# collapse 2.0.18
 
 * Cases in `pivot(..., how = "longer")` with no `values` columns now no longer give an error. Thanks @alvarocombo for flagging this (#663).
 
 * Fixed bug in `qF(c(4L, 1L, NA), sort = FALSE)`: hash function failure due to a coding bug. Thanks @mayer79 for flagging this (#666).
+
+* If `x` is already a `qG` object of the right properties, calling `qG(x)` now does not copy `x` anymore. Thanks @mayer79 (https://github.com/mayer79/effectplots/issues/11).
 
 # collapse 2.0.17
 

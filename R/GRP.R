@@ -732,6 +732,7 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]],
         ax <- if(return.groups) list(N.groups = attr(x, "N.groups"), groups = attr(x, "groups"), class = newclx) else
           list(N.groups = attr(x, "N.groups"), class = newclx)
       }
+      if(identical(ax, attributes(x))) return(x)
       return(`attributes<-`(x, ax))
     }
     newclx <- c(if(ordered) "ordered", "qG", "na.included")
