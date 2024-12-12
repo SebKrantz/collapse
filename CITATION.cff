@@ -8,7 +8,7 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.18
+version: 2.0.18.9000
 identifiers:
 - type: doi
   value: 10.32614/CRAN.package.collapse
@@ -47,7 +47,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2024-11-23'
+date-released: '2024-12-12'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -78,7 +78,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
   year: '2024'
-  notes: R package version 2.0.18
+  notes: R package version 2.0.18.9000
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
