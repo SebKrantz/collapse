@@ -1,3 +1,7 @@
+# collapse 2.0.18.9000
+
+* `fmatch(factor(NA), NA)` now gives `1` instead of `NA`. Thanks @NicChr (#675).
+
 # collapse 2.0.18
 
 * Cases in `pivot(..., how = "longer")` with no `values` columns now no longer give an error. Thanks @alvarocombo for flagging this (#663).
