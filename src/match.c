@@ -42,14 +42,52 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     if(tx < tt) { // table could be integer, double, complex, character....
       if(tx == INTSXP-1) { // For factors there is a shorthand: just match the levels against table...
         SEXP nmvint = PROTECT(ScalarInteger(nmv)); ++nprotect;
-        PROTECT(table = match_single(getAttrib(x, R_LevelsSymbol), table, nmvint)); ++nprotect;
-        int *pans = INTEGER(ans), *pt = INTEGER(table)-1, *px = INTEGER(x);
+        SEXP tab = PROTECT(match_single(getAttrib(x, R_LevelsSymbol), table, nmvint)); ++nprotect;
+        int *pans = INTEGER(ans), *pt = INTEGER(tab)-1, *px = INTEGER(x);
         if(inherits(x, "na.included")) {
           #pragma omp simd
           for(int i = 0; i < n; ++i) pans[i] = pt[px[i]];
         } else {
+          int na_ind = 0;
+          // Need to take care of possible NA matches in table..
+          switch(tt) {
+            case INTSXP: {
+              const int *ptt = INTEGER_RO(table);
+              for(int i = 0; i != nt; ++i) {
+                if(ptt[i] == NA_INTEGER) {
+                  na_ind = i+1; break;
+                }
+              }
+            } break;
+            case REALSXP: {
+              const double *ptt = REAL_RO(table);
+              for(int i = 0; i != nt; ++i) {
+                if(ISNAN(ptt[i])) {
+                  na_ind = i+1; break;
+                }
+              }
+            } break;
+            case STRSXP: {
+              const SEXP *ptt = STRING_PTR_RO(table);
+              for(int i = 0; i != nt; ++i) {
+                if(ptt[i] == NA_STRING) {
+                  na_ind = i+1; break;
+                }
+              }
+            } break;
+            case CPLXSXP: {
+              const Rcomplex *ptt = COMPLEX_RO(table);
+              for(int i = 0; i != nt; ++i) {
+                if(C_IsNA(ptt[i]) || C_IsNaN(ptt[i])) {
+                  na_ind = i+1; break;
+                }
+              }
+            } break;
+            default: error("Type %s for 'table' is not supported.", type2char(tt));
+          }
+          if(na_ind == 0) na_ind = nmv;
           #pragma omp simd
-          for(int i = 0; i < n; ++i) pans[i] = px[i] == NA_INTEGER ? nmv : pt[px[i]];
+          for(int i = 0; i < n; ++i) pans[i] = px[i] == NA_INTEGER ? na_ind : pt[px[i]];
         }
         UNPROTECT(nprotect);
         return ans;

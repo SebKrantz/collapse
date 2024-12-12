@@ -467,6 +467,9 @@ test_that("fmedian ties handled properly with weights", {
 
 test_that("Misc bugs", {
   expect_visible(qF(c(4L, 1L, NA), sort = FALSE))
+  expect_equal(fmatch(factor(NA, exclude = NULL), NA), 1L) # #675
+  expect_equal(fmatch(factor(NA), NA), 1L)
 })
+
 
 options(warn = 1)
