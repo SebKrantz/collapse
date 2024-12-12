@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.17.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.18.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,9 +35,15 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.17.9000" id="collapse-20179000">collapse 2.0.17.9000<a class="anchor" aria-label="anchor" href="#collapse-20179000"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.18.9000" id="collapse-20189000">collapse 2.0.18.9000<a class="anchor" aria-label="anchor" href="#collapse-20189000"></a></h2>
+<ul><li>
+<code>fmatch(factor(NA), NA)</code> now gives <code>1</code> instead of <code>NA</code>. Thanks <a href="https://github.com/NicChr" class="external-link">@NicChr</a> (<a href="https://github.com/SebKrantz/collapse/issues/675" class="external-link">#675</a>).</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.18" id="collapse-2018">collapse 2.0.18<a class="anchor" aria-label="anchor" href="#collapse-2018"></a></h2><p class="text-muted">CRAN release: 2024-11-23</p>
 <ul><li><p>Cases in <code>pivot(..., how = "longer")</code> with no <code>values</code> columns now no longer give an error. Thanks <a href="https://github.com/alvarocombo" class="external-link">@alvarocombo</a> for flagging this (<a href="https://github.com/SebKrantz/collapse/issues/663" class="external-link">#663</a>).</p></li>
 <li><p>Fixed bug in <code>qF(c(4L, 1L, NA), sort = FALSE)</code>: hash function failure due to a coding bug. Thanks <a href="https://github.com/mayer79" class="external-link">@mayer79</a> for flagging this (<a href="https://github.com/SebKrantz/collapse/issues/666" class="external-link">#666</a>).</p></li>
+<li><p>If <code>x</code> is already a <code>qG</code> object of the right properties, calling <code>qG(x)</code> now does not copy <code>x</code> anymore. Thanks <a href="https://github.com/mayer79" class="external-link">@mayer79</a> (<a href="https://github.com/mayer79/effectplots/issues/11" class="external-link uri">https://github.com/mayer79/effectplots/issues/11</a>).</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.17" id="collapse-2017">collapse 2.0.17<a class="anchor" aria-label="anchor" href="#collapse-2017"></a></h2><p class="text-muted">CRAN release: 2024-11-03</p>
