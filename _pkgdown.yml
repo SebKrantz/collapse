@@ -26,6 +26,7 @@ navbar:
     - blog
     right:
     - search
+    - bluesky
     - twitter
     - github
   components:
@@ -41,6 +42,10 @@ navbar:
     blog:
       text: Blog
       href: https://sebkrantz.github.io/Rblog/
+    bluesky:
+      icon: fa-bluesky
+      href: https://bsky.app/profile/rcollapse.bsky.social
+      aria-label: BlueSky
     twitter:
       icon: fa-twitter
       href: https://twitter.com/collapse_R
