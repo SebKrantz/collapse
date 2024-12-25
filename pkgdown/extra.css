@@ -51,7 +51,7 @@ small.nav-text.text-muted {
   --bs-tertiary-color: #999a9c !important;
 }
 
-.fa-custom-bluesky {
+.fa-custom-bluesky::before {
   display: inline-block;
   width: 1em; /* Adjust size of the icon */
   height: 1em;
