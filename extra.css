@@ -20,6 +20,14 @@ p {
   font-size: 0.875em;  14px/16=0.875em
 }
 */
+.fa-bluesky {
+  font-family: "Font Awesome 6 Brands";
+  font-weight: 400;
+}
+span.fa.fa-bluesky {
+  font-size: 16px;
+  padding-left: 12px;
+}
 span.fa.fa-twitter {
   font-size: 18px;
 }
@@ -50,3 +58,5 @@ small.nav-text.text-muted {
   --bs-secondary-color: #cccccc !important;
   --bs-tertiary-color: #999a9c !important;
 }
+
+
