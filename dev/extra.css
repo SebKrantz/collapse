@@ -51,13 +51,13 @@ small.nav-text.text-muted {
   --bs-tertiary-color: #999a9c !important;
 }
 
-a[href*="bsky.app"] .fa-custom-bluesky::before {
-  content: "";
+.fa-custom-bluesky {
   display: inline-block;
-  width: 1em;
+  width: 1em; /* Adjust size of the icon */
   height: 1em;
   background-image: url(assets/bluesky.svg); /* Adjust path if necessary */
   background-size: contain;
   background-repeat: no-repeat;
   vertical-align: middle;
+  content: ""; /* Ensures the icon renders properly */
 }
