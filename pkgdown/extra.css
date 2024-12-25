@@ -50,3 +50,14 @@ small.nav-text.text-muted {
   --bs-secondary-color: #cccccc !important;
   --bs-tertiary-color: #999a9c !important;
 }
+
+a[href*="bsky.app"] .fa-custom-bluesky::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-image: url(assets/bluesky.svg); /* Adjust path if necessary */
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+}
