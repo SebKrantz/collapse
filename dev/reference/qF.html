@@ -27,7 +27,7 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <li class="nav-item"><a class="external-link nav-link" href="https://sebkrantz.github.io/Rblog/">Blog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://bsky.app/profile/rcollapse.bsky.social" aria-label="BlueSky"><span class="fa fa-custom-bluesky"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://bsky.app/profile/rcollapse.bsky.social" aria-label="BlueSky"><span class="fa fa-bluesky"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul></div>
@@ -146,9 +146,9 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf</span><span class="op">)</span>, <span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min      lq    mean median      uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 88.068 88.8060 89.6998 89.134 89.6260  96.104   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 83.845 84.3575 85.7269 84.624 85.4235 111.028   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min     lq     mean median      uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 90.159 92.168 93.50542 93.070 94.1565 101.844   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 85.075 87.002 89.30087 88.273 89.3800 125.501   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>  <span class="co"># Interacting two variables (can be factors)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0 6.0 4.1 6.1 8.0 6.1 8.0 4.1 4.1 6.1 6.1 8.0 8.0 8.0 8.0 8.0 8.0 4.1 4.1</span>
