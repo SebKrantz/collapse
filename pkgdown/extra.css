@@ -20,6 +20,14 @@ p {
   font-size: 0.875em;  14px/16=0.875em
 }
 */
+.fa-bluesky {
+  font-family: "Font Awesome 6 Brands";
+  font-weight: 400;
+}
+span.fa.fa-bluesky {
+  font-size: 16px;
+  padding-left: 12px;
+}
 span.fa.fa-twitter {
   font-size: 18px;
 }
@@ -51,13 +59,4 @@ small.nav-text.text-muted {
   --bs-tertiary-color: #999a9c !important;
 }
 
-.fa-custom-bluesky::before {
-  display: inline-block;
-  width: 1em; /* Adjust size of the icon */
-  height: 1em;
-  background-image: url(bluesky.svg); /* Adjust path if necessary */
-  background-size: contain;
-  background-repeat: no-repeat;
-  vertical-align: middle;
-  content: ""; /* Ensures the icon renders properly */
-}
+
