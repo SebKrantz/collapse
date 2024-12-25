@@ -43,7 +43,7 @@ navbar:
       text: Blog
       href: https://sebkrantz.github.io/Rblog/
     bluesky:
-      icon: custom-bluesky
+      icon: fa-custom-bluesky
       href: https://bsky.app/profile/rcollapse.bsky.social
       aria-label: BlueSky
     twitter:
