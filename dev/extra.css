@@ -25,8 +25,12 @@ p {
   font-weight: 400;
 }
 span.fa.fa-bluesky {
-  font-size: 16px;
-  padding-left: 12px;
+  font-size: 15.5px;
+}
+@media screen and (min-width: 800px) {
+  span.fa.fa-bluesky {
+    padding-left: 12px;
+  }
 }
 span.fa.fa-twitter {
   font-size: 18px;
@@ -58,5 +62,3 @@ small.nav-text.text-muted {
   --bs-secondary-color: #cccccc !important;
   --bs-tertiary-color: #999a9c !important;
 }
-
-
