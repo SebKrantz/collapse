@@ -169,7 +169,7 @@ microbenchmark::microbenchmark(
 # Unit: microseconds
 #       expr    min      lq     mean   median       uq     max neval
 #  withcheck 60.680 102.049 105.3921 105.4930 110.2285 124.968   100
-#    nocheck 52.685 103.033 108.5491 106.6615 111.3355 268.222   100
+#    nocheck 52.685 100.033 103.5491 102.6615 107.3355 120.222   100
 ```
 
 Another common source of inefficiencies is copies produces in statistical operations. For example
