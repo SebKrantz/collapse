@@ -32,7 +32,7 @@ pre[class] {
 
 ## Introduction
 
-*collapse* offers an integrated suite of C/C++-based statistical and data manipulation functions, many low-level tools for memory efficient programming, and a [class-agnostic architecture](https://sebkrantz.github.io/collapse/dev/articles/collapse_object_handling.html) that seamlessly supports vectors, matrices, and data.frame-like objects. These features make it an ideal backend for high-performance statistical packages. This vignette is meant to provide some recommendations for developing with *collapse*. It is complementary to the earlier [blog post on programming with *collapse*](https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/) which readers are also highly recommended to consult. The vignette adds 3 important points for writing efficient R/*collapse* code.
+*collapse* offers an integrated suite of C/C++-based statistical and data manipulation functions, many low-level tools for memory efficient programming, and a [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) that seamlessly supports vectors, matrices, and data.frame-like objects. These features make it an ideal backend for high-performance statistical packages. This vignette is meant to provide some recommendations for developing with *collapse*. It is complementary to the earlier [blog post on programming with *collapse*](https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/) which readers are also highly recommended to consult. The vignette adds 3 important points for writing efficient R/*collapse* code.
 
 But before I jump into those let me start with an important warning which is that, while *collapse* is conveniently globally configurable using the `set_collapse()` function, this function should NEVER be called in a package: These are global options that will also affect *collapse*'s behavior outside of your package.
 
@@ -359,7 +359,7 @@ microbenchmark::microbenchmark(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
 #  pwnobs_list_opt(mtcNA)  26.527  27.4495  28.97839  28.0645  29.3560  44.321   100
 ```
 
-As the benchmark shows, the optimized function is 6x faster on this (small) dataset, and we have changed nothing to the loop doing the computation. With larger data the difference would of course become less stark, but you never know what's going on in methods you have not written and how they behave with larger data. My advice is: avoid them, use simple objects and take full control of your code. This also makes your code more robust and you can create class-agnostic code.
+As the benchmark shows, the optimized function is 6x faster on this (small) dataset, and we have changed nothing to the loop doing the computation. With larger data the difference would of course become less stark, but you never know what's going on in methods you have not written and how they behave with larger data. My advice is: avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code.
 
 <!--
 As another illustration let's say we want to aggregate an input-output table:
