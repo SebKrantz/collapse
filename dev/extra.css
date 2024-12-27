@@ -27,7 +27,7 @@ p {
 span.fa.fa-bluesky {
   font-size: 15.5px;
 }
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 1000px) {
   span.fa.fa-bluesky {
     padding-left: 12px;
   }
