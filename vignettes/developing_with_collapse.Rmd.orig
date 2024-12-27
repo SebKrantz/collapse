@@ -55,12 +55,11 @@ In the aggregation case, we can improve performance by also using unsorted group
 
 If the same operation is needed on multiple vectors/objects, save the factor/'qG' object and reuse it. If not using `group()` to create 'qG', add the argument `na.exclude = FALSE` to `qF()/qG()` to add a class 'na.included' to the object which precludes internal missing value checks in `fsum()` and friends. Always set `use.g.names = FALSE` if not needed, and, if your data has no missing values, set `na.rm = FALSE` in statistical functions like `fsum()` for maximum performance.
 
-Overall, note that factors/'qG' are efficient inputs for computations with all statistical/transformation functions except for `fmedian()`, `fnth()`, `fmode()`, `fndistinct()`, and split-apply-combine operations using `BY()/gsplit()`.
+Overall, note that factors/'qG' objects are efficient inputs for computations with all statistical/transformation functions except for `fmedian()`, `fnth()`, `fmode()`, `fndistinct()`, and split-apply-combine operations using `BY()/gsplit()`.
 
 For repeated grouped operations involving these latter functions, it makes sense to create 'GRP' objects using `g = GRP(g)`. These objects are more expensive to create but provide more complete information - see `?GRP`, in particular the 'Value' section. If sorting is not needed, set `sort = FALSE`, and if aggregation or the unique groups/group names are not needed set `return.groups = FALSE`.
 
-Only in rare cases where repeated operations on grouped data frames/indexed panels are needed does it make sense to employ `fgroup_by()` or `findex_by()` in package code. Likewise, functions like `fsummarise()/fmutate()` are essentially wrappers. For example
-
+Only in rare cases are grouped/indexed data frames created with `fgroup_by()`/`findex_by()` needed in package code. Likewise, functions like `fsummarise()/fmutate()` are essentially wrappers. For example
 ```{r}
 mtcars |>
   fgroup_by(cyl, vs, am) |>
@@ -111,7 +110,7 @@ x[is.na(x)] <- y[is.na(x)]
 ```
 `setv()` is quite versatile and also works with indices and logical vectors instead of elements to search for, and it can invert the query setting `invert = TRUE`.
 
-In more complex workflows, we may want to save the logical vector, e.g. `xmiss <- is.na(x)` and use it repeatedly. One aspect to note here is the logical vectors are inefficient for subsetting compared to indices:
+In more complex workflows, we may want to save the logical vector, e.g. `xmiss <- is.na(x)` and use it repeatedly. One aspect to note here is that logical vectors are inefficient for subsetting compared to indices:
 
 ```{r}
 xNA <- na_insert(x, prop = 0.4)
@@ -143,7 +142,7 @@ microbenchmark::microbenchmark(
 )
 ```
 
-Another common source of inefficiencies is copies produces in statistical operations. For example
+Another common source of inefficiencies is copies produced in statistical operations. For example
 
 ```{r}
 x <- rnorm(100); y <- rnorm(100); z <- rnorm(100)
@@ -202,11 +201,11 @@ The expression computed by `greg()` amounts to `sum(y * (x - mean(x)))/sum((x - 
 
 This partly reiterates Point 1 but now with a focus on internal data representation rather than grouping and computations. The point could also be bluntly stated as: 'vectors, matrices and lists are good, data frames and complex objects are bad'.
 
-Many frameworks seem to imply the opposite, e.g., the *tidyverse* encourages you to cast your data as a tidy tibble, and also *data.table* offers you a more efficient data frame. But these objects are internally complex, and, in the case of *data.table*, only efficient because of the internal C-level algorithms for large-data manipulation. You should always take a step back to ask yourself: For the statistical software I am writing, do I need this complexity? Complex objects require complex methods to manipulate them, thus, when using them, you incur the cost of everything that goes on in these methods. Vectors, matrices, and lists are much more efficient in R and *collapse* provides you with many options to manipulate them directly.
+Many frameworks seem to imply the opposite, e.g., the *tidyverse* encourages you to cast your data as a tidy tibble, and *data.table* offers you a more efficient data frame. But these objects are internally complex, and, in the case of *data.table*, only efficient because of the internal C-level algorithms for large-data manipulation. You should always take a step back to ask yourself: For the statistical software I am writing, do I need this complexity? Complex objects require complex methods to manipulate them, thus, when using them, you incur the cost of everything that goes on in these methods. Vectors, matrices, and lists are much more efficient in R and *collapse* provides you with many options to manipulate them directly.
 
-It may surprise you to hear that, internally, *collapse* does not use data frame-like objects at all. Instead, such objects are cast to lists using `unclass()`, `class(data) <- NULL`, or `attributes(data) <- NULL` and code is written to do specific things on that list. This is advisable if you want to write fast package code for data frame-like objects. Of course there are limits, e.g., for advanced manipulations such as `join()` or `pivot()`, but many tasks can be solved using simpler objects. If you don't want to internally convert data frames to lists, use functions `.subset()` and `.subset2()` to efficiently extract columns and `attr()` to extract/set attributes. With matrices use `dimnames()` directly instead of `rownames()` and `colnames()`, which are wrappers around it.
+It may surprise you to hear that, internally, *collapse* does not use data frame-like objects at all. Instead, such objects are cast to lists using `unclass(data)`, `class(data) <- NULL`, or `attributes(data) <- NULL`. This is advisable if you want to write fast package code for data frame-like objects. Of course there are limits, e.g., for advanced manipulations such as `join()` or `pivot()`, but many tasks can be accomplished using simple objects. If you don't want to internally convert data frames to lists, use functions `.subset()` and `.subset2()` to efficiently extract columns and `attr()` to extract/set attributes. With matrices use `dimnames()` directly instead of `rownames()` and `colnames()` which wrap it.
 
-The benchmark below illustrates that basically everything you do on the data.frame is more expensive than on the equivalent list.
+The benchmark below illustrates that everything you do on the data.frame is more expensive than on the equivalent list.
 
 ```{r}
 l <- unclass(mtcars)
@@ -263,7 +262,7 @@ identical(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
 microbenchmark::microbenchmark(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
 ```
 
-As the benchmark shows, the optimized function is 6x faster on this (small) dataset, and we have changed nothing to the loop doing the computation. With larger data the difference would of course become less stark, but you never know what's going on in methods you have not written and how they behave with larger data. My advice is: avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code.
+As the benchmark shows, the optimized function is 6x faster on this (small) dataset, and we have changed nothing to the loops doing the computation. With larger data the difference would of course become less stark, but you never know what's going on in methods you have not written and how they scale to larger data. My advice is: avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code.
 
 <!--
 As another illustration let's say we want to aggregate an input-output table:
@@ -304,7 +303,7 @@ microbenchmark::microbenchmark(agg_IOT_DF(IOT_DF), agg_IOT(IOT))
 ```
 -->
 
-When doing this, avoid `as.data.frame()` and friends to coerce/recreate data frame-like objects. It is quite easy to construct a *data.frame* from a list:
+When doing this, also avoid `as.data.frame()` and friends to coerce/recreate data frame-like objects. It is quite easy to construct a *data.frame* from a list:
 
 ```{r}
 attr(l, "row.names") <- .set_row_names(length(l[[1L]]))
