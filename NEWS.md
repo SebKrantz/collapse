@@ -23,7 +23,7 @@
 
 * Fixed an inaccuracy in `fquantile()/fnth()` with weights: As per documentation the target sum is `sumwp = (sum(w) - min(w)) * p`, however, in practice, the weight of the minimum element of `x` was used instead of the minimum weight. Since the smallest element in the sample usually has a small weight this was unnoticed for a long while, but thanks to @Jahnic-kb now reported and fixed (#659). 
 
-* Fixed a bug in `recode_char()` when `regex = TRUE` and the `default` argument was used. Thanks @alinacherkas for both reporing and fixing (#654).
+* Fixed a bug in `recode_char()` when `regex = TRUE` and the `default` argument was used. Thanks @alinacherkas for both reporting and fixing (#654).
 
 # collapse 2.0.16
 
