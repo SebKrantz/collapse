@@ -172,7 +172,7 @@ microbenchmark::microbenchmark(
 #    nocheck 52.685 100.033 103.5491 102.6615 107.3355 120.222   100
 ```
 
-Another common source of inefficiencies is copies produces in statistical operations. For example
+Another common source of inefficiencies is copies produced in statistical operations. For example
 
 
 ```r

@@ -143,7 +143,7 @@ microbenchmark::microbenchmark(
 )
 ```
 
-Another common source of inefficiencies is copies produces in statistical operations. For example
+Another common source of inefficiencies is copies produced in statistical operations. For example
 
 ```{r}
 x <- rnorm(100); y <- rnorm(100); z <- rnorm(100)
