@@ -1,6 +1,6 @@
 ---
 title: "Developing with collapse"
-subtitle: "Or: How do Code Efficiently in R"
+subtitle: "Or: How to Code Efficiently in R"
 author: "Sebastian Krantz"
 date: "`r Sys.Date()`"
 output:
