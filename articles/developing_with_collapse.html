@@ -140,10 +140,9 @@ create ‘qG’, add the argument <code>na.exclude = FALSE</code> to
 precludes internal missing value checks in <code><a href="../reference/fsum.html">fsum()</a></code> and
 friends. Always set <code>use.g.names = FALSE</code> if not needed, and,
 if your data has no missing values, set <code>na.rm = FALSE</code> in
-statistical functions like <code><a href="../reference/fsum.html">fsum()</a></code> for maximum
-performance.</p>
-<p>Overall, note that factors/‘qG’ are efficient inputs for computations
-with all statistical/transformation functions except for
+statistical functions for maximum performance.</p>
+<p>Overall, note that factors/‘qG’ objects are efficient inputs for
+computations with all statistical/transformation functions except for
 <code><a href="../reference/fnth_fmedian.html">fmedian()</a></code>, <code><a href="../reference/fnth_fmedian.html">fnth()</a></code>, <code><a href="../reference/fmode.html">fmode()</a></code>,
 <code><a href="../reference/fndistinct.html">fndistinct()</a></code>, and split-apply-combine operations using
 <code>BY()/gsplit()</code>.</p>
@@ -154,10 +153,9 @@ information - see <code><a href="../reference/GRP.html">?GRP</a></code>, in part
 If sorting is not needed, set <code>sort = FALSE</code>, and if
 aggregation or the unique groups/group names are not needed set
 <code>return.groups = FALSE</code>.</p>
-<p>Only in rare cases where repeated operations on grouped data
-frames/indexed panels are needed does it make sense to employ
-<code><a href="../reference/GRP.html">fgroup_by()</a></code> or <code><a href="../reference/indexing.html">findex_by()</a></code> in package code.
-Likewise, functions like <code>fsummarise()/fmutate()</code> are
+<p>Only in rare cases are grouped/indexed data frames created with
+<code><a href="../reference/GRP.html">fgroup_by()</a></code>/<code><a href="../reference/indexing.html">findex_by()</a></code> needed in package
+code. Likewise, functions like <code>fsummarise()/fmutate()</code> are
 essentially wrappers. For example</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
@@ -172,7 +170,7 @@ essentially wrappers. For example</p>
 <span><span class="co"># 5   6  1  0  76.5 2.500000 115.25000 19.21500</span></span>
 <span><span class="co"># 6   8  0  0 180.6 3.083333 194.16667 17.14250</span></span>
 <span><span class="co"># 7   8  0  1  30.8 6.000000 299.50000 14.55000</span></span></code></pre></div>
-<p>Is the same as (<code>use = FALSE</code> abbreviates
+<p>is the same as (<code>use = FALSE</code> abbreviates
 <code>use.g.names = FALSE</code>)</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"vs"</span>, <span class="st">"am"</span><span class="op">)</span><span class="op">)</span></span>
@@ -246,7 +244,7 @@ and logical vectors instead of elements to search for, and it can invert
 the query setting <code>invert = TRUE</code>.</p>
 <p>In more complex workflows, we may want to save the logical vector,
 e.g. <code>xmiss &lt;- is.na(x)</code> and use it repeatedly. One aspect
-to note here is the logical vectors are inefficient for subsetting
+to note here is that logical vectors are inefficient for subsetting
 compared to indices:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xNA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/efficient-programming.html">na_insert</a></span><span class="op">(</span><span class="va">x</span>, prop <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></span>
@@ -300,7 +298,7 @@ this data size):</p>
 <span><span class="co">#       expr    min      lq     mean   median       uq     max neval</span></span>
 <span><span class="co">#  withcheck 60.680 102.049 105.3921 105.4930 110.2285 124.968   100</span></span>
 <span><span class="co">#    nocheck 52.685 100.033 103.5491 102.6615 107.3355 120.222   100</span></span></code></pre></div>
-<p>Another common source of inefficiencies is copies produces in
+<p>Another common source of inefficiencies is copies produced in
 statistical operations. For example</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>; <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>; <span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
@@ -405,7 +403,7 @@ also be bluntly stated as: ‘vectors, matrices and lists are good, data
 frames and complex objects are bad’.</p>
 <p>Many frameworks seem to imply the opposite, e.g., the
 <em>tidyverse</em> encourages you to cast your data as a tidy tibble,
-and also <em>data.table</em> offers you a more efficient data frame. But
+and <em>data.table</em> offers you a more efficient data frame. But
 these objects are internally complex, and, in the case of
 <em>data.table</em>, only efficient because of the internal C-level
 algorithms for large-data manipulation. You should always take a step
@@ -417,19 +415,18 @@ more efficient in R and <em>collapse</em> provides you with many options
 to manipulate them directly.</p>
 <p>It may surprise you to hear that, internally, <em>collapse</em> does
 not use data frame-like objects at all. Instead, such objects are cast
-to lists using <code><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass()</a></code>,
+to lists using <code>unclass(data)</code>,
 <code>class(data) &lt;- NULL</code>, or
-<code>attributes(data) &lt;- NULL</code> and code is written to do
-specific things on that list. This is advisable if you want to write
-fast package code for data frame-like objects. Of course there are
-limits, e.g., for advanced manipulations such as <code><a href="../reference/join.html">join()</a></code> or
-<code><a href="../reference/pivot.html">pivot()</a></code>, but many tasks can be solved using simpler
+<code>attributes(data) &lt;- NULL</code>. This is advisable if you want
+to write fast package code for data frame-like objects. Of course there
+are limits, e.g., for advanced manipulations such as <code><a href="../reference/join.html">join()</a></code>
+or <code><a href="../reference/pivot.html">pivot()</a></code>, but many tasks can be accomplished using simple
 objects. If you don’t want to internally convert data frames to lists,
 use functions <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset()</a></code> and <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset2()</a></code> to
 efficiently extract columns and <code><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr()</a></code> to extract/set
 attributes. With matrices use <code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> directly instead
-of <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames()</a></code> and <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code>, which are
-wrappers around it.</p>
+of <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames()</a></code> and <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code> which wrap
+it.</p>
 <p>The benchmark below illustrates that basically everything you do on
 the data.frame is more expensive than on the equivalent list.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -522,11 +519,11 @@ currently don’t see any way to write this more efficiently.&lt;/p&gt;"><sup>5<
 <span><span class="co">#      pwnobs_list(mtcNA) 149.978 152.4585 155.44371 153.8115 157.2965 193.479   100</span></span>
 <span><span class="co">#  pwnobs_list_opt(mtcNA)  26.527  27.4495  28.97839  28.0645  29.3560  44.321   100</span></span></code></pre></div>
 <p>As the benchmark shows, the optimized function is 6x faster on this
-(small) dataset, and we have changed nothing to the loop doing the
+(small) dataset, and we have changed nothing to the loops doing the
 computation. With larger data the difference would of course become less
 stark, but you never know what’s going on in methods you have not
-written and how they behave with larger data. My advice is: avoid them,
-use simple objects and take full control over your code. This also makes
+written and how they scale to larger data. My advice is: avoid them, use
+simple objects and take full control over your code. This also makes
 your code more robust and you can create class-agnostic code.</p>
 <!--
 As another illustration let's say we want to aggregate an input-output table:
@@ -633,9 +630,9 @@ microbenchmark::microbenchmark(agg_IOT_DF(IOT_DF), agg_IOT(IOT))
 #        agg_IOT(IOT) 364.449 378.0815 402.2805 380.3775 385.2975 2340.280   100
 ```
 -->
-<p>When doing this, avoid <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> and friends to
-coerce/recreate data frame-like objects. It is quite easy to construct a
-<em>data.frame</em> from a list:</p>
+<p>When doing this, also avoid <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> and friends
+to coerce/recreate data frame-like objects. It is quite easy to
+construct a <em>data.frame</em> from a list:</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">l</span>, <span class="st">"row.names"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.set_row_names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">l</span><span class="op">[[</span><span class="fl">1L</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">l</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"data.frame"</span></span>
