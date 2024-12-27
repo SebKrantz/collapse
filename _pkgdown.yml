@@ -217,6 +217,7 @@ articles:
   - collapse_for_tidyverse_users
   - collapse_and_sf
   - collapse_object_handling
+  - developing_with_collapse
 - title: Legacy (Pre v1.7)
   desc: Vignettes that cover functionality of versions <1.7. These
     remain very useful, but do not cover newer features.
