@@ -31,7 +31,7 @@ oldopts <- options(width = 100L)
 
 ```{r, echo = FALSE, message = FALSE, warning=FALSE}
 knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
-                      comment = "#", tidy = FALSE, cache = TRUE, collapse = TRUE,
+                      comment = "#", tidy = FALSE, cache = FALSE, collapse = TRUE,
                       fig.width = 8, fig.height = 5,
                       out.width = '100%')
 
