@@ -68,7 +68,7 @@ Krantz</h4>
             
             <h4 data-toc-skip class="date">2024-12-27</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/developing_with_collapse.Rmd" class="external-link"><code>vignettes/developing_with_collapse.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/development/vignettes/developing_with_collapse.Rmd" class="external-link"><code>vignettes/developing_with_collapse.Rmd</code></a></small>
       <div class="d-none name"><code>developing_with_collapse.Rmd</code></div>
     </div>
 
@@ -198,13 +198,15 @@ makes sense to go down one level.</p>
 efficient way. You will find that you can craft very parsimonious and
 efficient code to solve complicated problems.</p>
 <p>For example, after merging multiple spatial datasets, I had some of
-the same features from multiple sources, and, unwilling to match
-features individually across sources, I decided to keep the richest
-source on each feature type and location. After creating a feature
-<code>importance</code> indicator comparable across sources, the
-deduplication expression ended up being a single line of the form:
+the same map features (businesses) from multiple sources, and, unwilling
+to match features individually across data sources, I decided to keep
+the richest source covering each feature type and location. After
+creating a feature <code>importance</code> indicator comparable across
+sources, the deduplication expression ended up being a single line of
+the form:
 <code>fsubset(data, source == fmode(source, list(location, type), importance, "fill"))</code>,
-i.e., keep the importance-weighted mode source.</p>
+i.e., keep features from the importance-weighted mode (i.e., most
+frequent) source.</p>
 <p>If an effective <em>collapse</em> solution is not apparent, other
 packages may offer efficient solutions. Check out the <a href="https://fastverse.github.io/fastverse/" class="external-link"><em>fastverse</em></a> and
 its <a href="https://fastverse.github.io/fastverse/#suggested-extensions" class="external-link">suggested
