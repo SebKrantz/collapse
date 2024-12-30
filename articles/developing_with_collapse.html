@@ -614,17 +614,17 @@ class-agnostic code.</p>
 <p>If you only use <em>collapse</em> functions this discussion is void -
 all <em>collapse</em> functions designed for data frames, including
 <code><a href="../reference/join.html">join()</a></code>, <code><a href="../reference/pivot.html">pivot()</a></code>, <code><a href="../reference/fsubset.html">fsubset()</a></code>, etc.,
-internally handle your data as a list and thus also work with lists.
-However, if you want to use base R semantics (<code>[</code>, etc.)
-alongside <em>collapse</em> and other functions, it makes sense to
-unclass incoming data frame-like objects and reclass them at the
-end.</p>
+internally handle your data as a list and are equally efficient on data
+frames and lists. However, if you want to use base R semantics
+(<code>[</code>, etc.) alongside <em>collapse</em> and other functions,
+it makes sense to unclass incoming data frame-like objects and reclass
+them at the end.</p>
 <p>If you don’t want to internally convert data frames to lists, at
-least use functions <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset()</a></code> and <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset2()</a></code>
-to efficiently extract columns and <code><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr()</a></code> to extract/set
-attributes. With matrices, use <code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> directly instead
-of <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames()</a></code> and <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code> which wrap
-it.</p>
+least use functions <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset()</a></code>, <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset2()</a></code>, or
+<code><a href="../reference/select_replace_vars.html">collapse::get_vars()</a></code> to efficiently extract columns and
+<code><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr()</a></code> to extract/set attributes. With matrices, use
+<code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> directly instead of <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames()</a></code> and
+<code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code> which wrap it.</p>
 <p>Also avoid <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> and friends to
 coerce/recreate data frame-like objects. It is quite easy to construct a
 <em>data.frame</em> from a list:</p>
@@ -665,8 +665,7 @@ general data frame-like objects is to save the attributes
 <code>ax &lt;- attributes(data)</code>, manipulate it as a list
 <code>attributes(data) &lt;- NULL</code>, modify <code>ax$names</code>
 and <code>ax$row.names</code> as needed and then use
-<code>setattrib(data, ax)</code> before returning. This way your code
-will also work with <em>tibble</em> etc.</p>
+<code>setattrib(data, ax)</code> before returning.</p>
 </div>
 <div class="section level2">
 <h2 id="some-notes-on-global-options">Some Notes on Global Options<a class="anchor" aria-label="anchor" href="#some-notes-on-global-options"></a>
