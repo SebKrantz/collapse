@@ -765,30 +765,36 @@ SEXP groupVec(SEXP X, SEXP starts, SEXP sizes) {
       SEXP gs, st, starts_sym = install("starts"), sizes_sym = install("group.sizes");
       setAttrib(res, starts_sym, st = allocVector(INTSXP, ng));
       setAttrib(res, sizes_sym, gs = allocVector(INTSXP, ng));
-      int *pgs = INTEGER(gs), *pst = INTEGER(st);
-      memset(pgs, 0, sizeof(int) * ng); --pgs;
-      memset(pst, 0, sizeof(int) * ng); --pst;
-      for(int i = 0; i != n; ++i) {
-        ++pgs[pres[i]];
-        if(pst[pres[i]] == 0) pst[pres[i]] = i + 1;
+      if(ng > 0) {
+        int *pgs = INTEGER(gs), *pst = INTEGER(st);
+        memset(pgs, 0, sizeof(int) * ng); --pgs;
+        memset(pst, 0, sizeof(int) * ng); --pst;
+        for(int i = 0; i != n; ++i) {
+          ++pgs[pres[i]];
+          if(pst[pres[i]] == 0) pst[pres[i]] = i + 1;
+        }
       }
     } else if(start) {
       SEXP st, starts_sym = install("starts");
       setAttrib(res, starts_sym, st = allocVector(INTSXP, ng));
-      int *pst = INTEGER(st), k = 0;
-      memset(pst, 0, sizeof(int) * ng); --pst;
-      for(int i = 0; i != n; ++i) {
-        if(pst[pres[i]] == 0) {
-          pst[pres[i]] = i + 1;
-          if(++k == ng) break;
+      if(ng > 0) {
+        int *pst = INTEGER(st), k = 0;
+        memset(pst, 0, sizeof(int) * ng); --pst;
+        for(int i = 0; i != n; ++i) {
+          if(pst[pres[i]] == 0) {
+            pst[pres[i]] = i + 1;
+            if(++k == ng) break;
+          }
         }
       }
     } else {
       SEXP gs, sizes_sym = install("group.sizes");
       setAttrib(res, sizes_sym, gs = allocVector(INTSXP, ng));
-      int *pgs = INTEGER(gs);
-      memset(pgs, 0, sizeof(int) * ng); --pgs;
-      for(int i = 0; i != n; ++i) ++pgs[pres[i]];
+      if(ng > 0) {
+        int *pgs = INTEGER(gs);
+        memset(pgs, 0, sizeof(int) * ng); --pgs;
+        for(int i = 0; i != n; ++i) ++pgs[pres[i]];
+      }
     }
   }
   UNPROTECT(nprotect);
