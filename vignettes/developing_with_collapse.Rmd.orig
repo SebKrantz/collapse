@@ -325,9 +325,9 @@ microbenchmark::microbenchmark(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
 
 Evidently, the optimized function is 6x faster on this (small) dataset and we have changed nothing to the loops doing the computation. With larger data the difference is less stark, but you never know what's going on in methods you have not written and how they scale. My advice is: try to avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code.
 
-If you only use *collapse* functions this discussion is void - all *collapse* functions designed for data frames, including `join()`, `pivot()`, `fsubset()`, etc., internally handle your data as a list and thus also work with lists. However, if you want to use base R semantics (`[`, etc.) alongside *collapse* and other functions, it makes sense to unclass incoming data frame-like objects and reclass them at the end.
+If you only use *collapse* functions this discussion is void - all *collapse* functions designed for data frames, including `join()`, `pivot()`, `fsubset()`, etc., internally handle your data as a list and are equally efficient on data frames and lists. However, if you want to use base R semantics (`[`, etc.) alongside *collapse* and other functions, it makes sense to unclass incoming data frame-like objects and reclass them at the end.
 
- If you don't want to internally convert data frames to lists, at least use functions `.subset()` and `.subset2()` to efficiently extract columns and `attr()` to extract/set attributes. With matrices, use `dimnames()` directly instead of `rownames()` and `colnames()` which wrap it.
+ If you don't want to internally convert data frames to lists, at least use functions `.subset()` and `.subset2()`, or `collapse::get_vars()` to efficiently extract columns and `attr()` to extract/set attributes. With matrices, use `dimnames()` directly instead of `rownames()` and `colnames()` which wrap it.
 
 Also avoid `as.data.frame()` and friends to coerce/recreate data frame-like objects. It is quite easy to construct a *data.frame* from a list:
 
@@ -350,7 +350,7 @@ microbenchmark::microbenchmark(qDF(l), as.data.frame(l), as.data.table(l), as_ti
 
 ```
 
-*collapse* also provides functions like `setattrib()`, `copyMostAttrib()`, etc., to efficiently attach attributes again. So another efficient workflow for general data frame-like objects is to save the attributes `ax <- attributes(data)`, manipulate it as a list `attributes(data) <- NULL`, modify `ax$names` and `ax$row.names` as needed and then use `setattrib(data, ax)` before returning. This way your code will also work with *tibble* etc.
+*collapse* also provides functions like `setattrib()`, `copyMostAttrib()`, etc., to efficiently attach attributes again. So another efficient workflow for general data frame-like objects is to save the attributes `ax <- attributes(data)`, manipulate it as a list `attributes(data) <- NULL`, modify `ax$names` and `ax$row.names` as needed and then use `setattrib(data, ax)` before returning.
 
 ## Some Notes on Global Options
 
