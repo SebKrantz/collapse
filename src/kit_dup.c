@@ -813,20 +813,22 @@ SEXP groupAtVec(SEXP X, SEXP starts, SEXP naincl) {
   SEXP st, sym_ng = install("N.groups"), starts_sym = install("starts");
   int ng = asInteger(getAttrib(idx, sym_ng)), n = length(idx), *pidx = INTEGER(idx);
   setAttrib(idx, starts_sym, st = allocVector(INTSXP, ng));
-  int *pst = INTEGER(st), k = 0;
-  memset(pst, 0, sizeof(int) * ng); --pst;
-  if(nain) {
-    for(int i = 0; i != n; ++i) {
-      if(pst[pidx[i]] == 0) {
-        pst[pidx[i]] = i + 1;
-        if(++k == ng) break;
+  if(ng > 0) {
+    int *pst = INTEGER(st), k = 0;
+    memset(pst, 0, sizeof(int) * ng); --pst;
+    if(nain) {
+      for(int i = 0; i != n; ++i) {
+        if(pst[pidx[i]] == 0) {
+          pst[pidx[i]] = i + 1;
+          if(++k == ng) break;
+        }
       }
-    }
-  } else {
-    for(int i = 0; i != n; ++i) {
-      if(pidx[i] != NA_INTEGER && pst[pidx[i]] == 0) {
-        pst[pidx[i]] = i + 1;
-        if(++k == ng) break;
+    } else {
+      for(int i = 0; i != n; ++i) {
+        if(pidx[i] != NA_INTEGER && pst[pidx[i]] == 0) {
+          pst[pidx[i]] = i + 1;
+          if(++k == ng) break;
+        }
       }
     }
   }
