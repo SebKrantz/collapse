@@ -468,7 +468,7 @@ Evidently, the optimized function is 6x faster on this (small) dataset and we ha
 
 If you only use *collapse* functions this discussion is void - all *collapse* functions designed for data frames, including `join()`, `pivot()`, `fsubset()`, etc., internally handle your data as a list and are equally efficient on data frames and lists. However, if you want to use base R semantics (`[`, etc.) alongside *collapse* and other functions, it makes sense to unclass incoming data frame-like objects and reclass them at the end. 
  
- If you don't want to internally convert data frames to lists, at least use functions `.subset()` and `.subset2()` to efficiently extract columns and `attr()` to extract/set attributes. With matrices, use `dimnames()` directly instead of `rownames()` and `colnames()` which wrap it.
+ If you don't want to internally convert data frames to lists, at least use functions `.subset()`, `.subset2()`, or `collapse::get_vars()` to efficiently extract columns and `attr()` to extract/set attributes. With matrices, use `dimnames()` directly instead of `rownames()` and `colnames()` which wrap it.
 
 Also avoid `as.data.frame()` and friends to coerce/recreate data frame-like objects. It is quite easy to construct a *data.frame* from a list:
 
