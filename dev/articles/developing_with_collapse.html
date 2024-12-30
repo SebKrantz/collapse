@@ -109,12 +109,11 @@ on them using different types of grouping information (plain vectors,
 objects, factors, ‘GRP’ objects, grouped or indexed data frames).
 Grouping can be sorted or unsorted. A key for very efficient code is to
 use the minimal required operations/objects to get the job done.</p>
-<p>For example, suppose you have the simple task of summing an object
-<code>x</code> by groups using a grouping vector <code>g</code>. If this
-grouping is only needed once, it should be done using the internal
-grouping of <code><a href="../reference/fsum.html">fsum()</a></code> without creating any external grouping
-objects, e.g., <code>fsum(x, g)</code> for aggregation and
-<code>fsum(x, g, TRA = "fill")</code> for expansion:</p>
+<p>Suppose you want to sum an object <code>x</code> by groups using a
+grouping vector <code>g</code>. If the grouping is only needed once,
+this should be done using the internal grouping of <code><a href="../reference/fsum.html">fsum()</a></code>
+without creating external grouping objects - <code>fsum(x, g)</code> for
+aggregation and <code>fsum(x, g, TRA = "fill")</code> for expansion:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span><span class="op">)</span></span>
 <span><span class="co">#        4        6        8 </span></span>
@@ -127,11 +126,11 @@ objects, e.g., <code>fsum(x, g)</code> for aggregation and
 <p>The expansion case is very efficient because it internally uses
 unsorted grouping. Apart from the default sorted aggregation, these
 functions efficiently convert your input <code>g</code> into the
-minimally required grouping information.</p>
+minimally required information.</p>
 <p>In the aggregation case, we can improve performance by also using
 unsorted grouping, e.g., <code>fsum(x, qF(g, sort = FALSE))</code> or
 <code>fsum(x, qG(g, sort = FALSE), use.g.names = FALSE)</code> if the
-row-names are not needed. It is advisable to also set argument
+group-names are not needed. It is advisable to also set argument
 <code>na.exclude = FALSE</code> in <code><a href="../reference/qF.html">qF()</a></code>/<code><a href="../reference/qF.html">qG()</a></code>
 to add a class ‘na.included’ which precludes internal missing value
 checks in <code><a href="../reference/fsum.html">fsum()</a></code> and friends. If <code>g</code> is a plain
@@ -139,10 +138,10 @@ vector or the first-appearance order of groups should be kept even if
 <code>g</code> is a factor, use <code>group(g)</code> instead of
 <code>qG(g, sort = FALSE, na.exclude = FALSE)</code>.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;&lt;code&gt;&lt;a href="../reference/group.html"&gt;group()&lt;/a&gt;&lt;/code&gt; directly calls a C-based hashing
 algorithm which works for all types of vectors and lists of vectors/data
-frames. Missing values are treated as distinct elements.&lt;/p&gt;'><sup>2</sup></a> Always set
-<code>use.g.names = FALSE</code> if not needed (you can abbreviate it
-with <code>use = FALSE</code>), and, if your data has no missing values,
-set <code>na.rm = FALSE</code> for maximum performance.</p>
+frames. Missing values are treated as distinct elements.&lt;/p&gt;'><sup>2</sup></a> Set
+<code>use.g.names = FALSE</code> if not needed (can abbreviate as
+<code>use = FALSE</code>), and, if your data has no missing values, set
+<code>na.rm = FALSE</code> for maximum performance.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e7</span><span class="op">)</span> <span class="co"># 10 million random obs</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="fl">1e6</span>, <span class="fl">1e7</span>, <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># 1 Million random groups</span></span>
@@ -174,21 +173,19 @@ set <code>na.rm = FALSE</code> for maximum performance.</p>
 <p>Factors and ‘qG’ objects are efficient inputs to all
 statistical/transformation functions except for <code><a href="../reference/fnth_fmedian.html">fmedian()</a></code>,
 <code><a href="../reference/fnth_fmedian.html">fnth()</a></code>, <code><a href="../reference/fmode.html">fmode()</a></code>, <code><a href="../reference/fndistinct.html">fndistinct()</a></code>,
-and split-apply-combine operations using <code>BY()/gsplit()</code>. For
-repeated grouped operations involving those, it makes sense to create
-‘GRP’ objects using <code>grp &lt;- GRP(g)</code>. These objects are
-more expensive to create but provide more complete information.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;See &lt;code&gt;&lt;a href="../reference/GRP.html"&gt;?GRP&lt;/a&gt;&lt;/code&gt;, in particular the ‘Value’
-section.&lt;/p&gt;'><sup>3</sup></a> If sorting
-is not needed, set <code>sort = FALSE</code>, and if aggregation or the
-unique groups/group names are not needed set
-<code>return.groups = FALSE</code>.</p>
+and split-apply-combine operations using
+<code><a href="../reference/BY.html">BY()</a></code>/<code><a href="../reference/GRP.html">gsplit()</a></code>. For repeated grouped operations
+involving those, it makes sense to create ‘GRP’ objects using
+<code><a href="../reference/GRP.html">GRP()</a></code>. These objects are more expensive to create but
+provide more complete information.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;See &lt;code&gt;&lt;a href="../reference/GRP.html"&gt;?GRP&lt;/a&gt;&lt;/code&gt;, in particular the ‘Value’
+section.&lt;/p&gt;'><sup>3</sup></a> If sorting is not needed, set
+<code>sort = FALSE</code>, and if aggregation or the unique groups/names
+are not needed set <code>return.groups = FALSE</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
-<span><span class="va">f2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">g</span>, na.exclude <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span>; <span class="va">f2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">g</span>, na.exclude <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">gg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/group.html">group</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="co"># Same as qG(g, sort = FALSE, na.exclude = FALSE)</span></span>
 <span><span class="va">grp</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GRP.html">GRP</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Simple functions: factors are efficient</span></span>
+<span><span class="co"># Simple functions: factors are efficient inputs</span></span>
 <span><span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>  factor <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">f</span><span class="op">)</span>,</span>
 <span>  factor_nona <span class="op">=</span> <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">f2</span><span class="op">)</span>,</span>
@@ -209,18 +206,17 @@ unique groups/group names are not needed set
 <span><span class="co"># Complex functions: more information helps</span></span>
 <span><span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>  qG <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">gg</span>, use <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>  GRP <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">grp</span>, use <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
-<span>  times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span>  GRP <span class="op">=</span> <span class="fu"><a href="../reference/fnth_fmedian.html">fmedian</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">grp</span>, use <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, times <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co"># Unit: milliseconds</span></span>
 <span><span class="co">#  expr      min       lq     mean   median       uq      max neval</span></span>
 <span><span class="co">#    qG 258.4450 261.9357 267.2520 264.2608 267.4161 297.1552    10</span></span>
 <span><span class="co">#   GRP 191.8623 193.0631 196.0935 193.4358 194.6245 210.3685    10</span></span>
 <span><span class="fu"><a href="../reference/collapse-options.html">set_collapse</a></span><span class="op">(</span><span class="va">oldopts</span><span class="op">)</span></span></code></pre></div>
-<p>You may ask for simple unsorted grouping and simple functions like
-<code><a href="../reference/fsum.html">fsum()</a></code>, why not always use <code><a href="../reference/group.html">group()</a></code>? Well, it
-turns out that that <code>qF()/qG()</code> are a bit smarter when it
-comes to handling input factors/‘qG’ objects whereas
-<code><a href="../reference/group.html">group()</a></code> hashes every vector.</p>
+<p>Why not always use <code><a href="../reference/group.html">group()</a></code> for unsorted grouping with
+simple functions? You can do that, but
+<code><a href="../reference/qF.html">qF()</a></code>/<code><a href="../reference/qF.html">qG()</a></code> are a bit smarter when it comes to
+handling input factors/‘qG’ objects whereas <code><a href="../reference/group.html">group()</a></code> hashes
+every vector:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">microbenchmark</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span></span>
 <span>  factor_factor <span class="op">=</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span>,</span>
@@ -264,7 +260,7 @@ wrappers. For example</p>
 <span><span class="co"># 5   6  1  0  76.5 2.500000 115.25000 19.21500</span></span>
 <span><span class="co"># 6   8  0  0 180.6 3.083333 194.16667 17.14250</span></span>
 <span><span class="co"># 7   8  0  1  30.8 6.000000 299.50000 14.55000</span></span></code></pre></div>
-<p>is the same as (<code>use = FALSE</code> abbreviates
+<p>is the same as (again <code>use = FALSE</code> abbreviates
 <code>use.g.names = FALSE</code>)</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/GRP.html">GRP</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"vs"</span>, <span class="st">"am"</span><span class="op">)</span><span class="op">)</span></span>
@@ -281,7 +277,7 @@ wrappers. For example</p>
 <span><span class="co"># 5   6  1  0  76.5 2.500000 115.25000 19.21500</span></span>
 <span><span class="co"># 6   8  0  0 180.6 3.083333 194.16667 17.14250</span></span>
 <span><span class="co"># 7   8  0  1  30.8 6.000000 299.50000 14.55000</span></span></code></pre></div>
-<p>To be clear, nothing prevents you from using these wrappers - they
+<p>To be clear: nothing prevents you from using these wrappers - they
 are quite efficient - but if you want to change all inputs
 programmatically it makes sense to go down one level - your code will
 also become safer.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;If you do use &lt;code&gt;&lt;a href="../reference/GRP.html"&gt;fgroup_by()&lt;/a&gt;&lt;/code&gt; in a package use
@@ -290,20 +286,19 @@ it with non-standard evaluation, i.e.,
 &lt;code&gt;ind &amp;lt;- c("cyl", "vs", "am")&lt;/code&gt; and then
 &lt;code&gt;fgroup_by(ind)&lt;/code&gt; as the data may contain a column called
 &lt;code&gt;ind&lt;/code&gt;. For such cases use &lt;code&gt;group_by_vars(ind)&lt;/code&gt;.&lt;/p&gt;'><sup>4</sup></a></p>
-<p>In general, think carefully about how to vectorize (using
-<em>collapse</em> or auxiliary packages) in a minimalistic and memory
-efficient way. You will find that you can craft very parsimonious and
-efficient code to solve complicated problems.</p>
+<p>In general, think carefully about how to vectorize in a minimalistic
+and memory efficient way. You will find that you can craft very
+parsimonious and efficient code to solve complicated problems.</p>
 <p>For example, after merging multiple spatial datasets, I had some of
 the same map features (businesses) from multiple sources, and, unwilling
 to match features individually across data sources, I decided to keep
-the richest source on covering each feature type and location. After
+the richest source covering each feature type and location. After
 creating a feature <code>importance</code> indicator comparable across
 sources, the deduplication expression ended up being a single line of
 the form:
-<code>fsubset(data, source == fmode(source, list(location, type), importance, "fill"))</code>,
-i.e., keep features from the importance-weighted mode (i.e., most
-frequent) source by location and type.</p>
+<code>fsubset(data, source == fmode(source, list(location, type), importance, "fill"))</code>
+- keep features from the importance-weighted most frequent source by
+location and type.</p>
 <p>If an effective <em>collapse</em> solution is not apparent, other
 packages may offer efficient solutions. Check out the <a href="https://fastverse.github.io/fastverse/" class="external-link"><em>fastverse</em></a> and
 its <a href="https://fastverse.github.io/fastverse/#suggested-extensions" class="external-link">suggested
@@ -332,7 +327,7 @@ vectors. For example</p>
 elements just to indicate to R which elements of <code>x</code> are
 <code>0</code>. In <em>collapse</em>, <code>setv(x, 0, NA)</code> is the
 efficient equivalent. This also works if we don’t want to replace with
-<code>NA</code> but with another vector y, e.g.,</p>
+<code>NA</code> but with another vector <code>y</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e6</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/efficient-programming.html">setv</a></span><span class="op">(</span><span class="va">x</span>, <span class="cn">NA</span>, <span class="va">y</span><span class="op">)</span> <span class="co"># Replaces missing x with y</span></span></code></pre></div>
@@ -340,12 +335,12 @@ efficient equivalent. This also works if we don’t want to replace with
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 <p><code><a href="../reference/efficient-programming.html">setv()</a></code> is quite versatile and also works with indices
-and logical vectors instead of elements to search for, and it can invert
-the query setting <code>invert = TRUE</code>.</p>
-<p>In more complex workflows, we may want to save the logical vector,
-e.g. <code>xmiss &lt;- is.na(x)</code> and use it repeatedly. One aspect
-to note here is that logical vectors are inefficient for subsetting
-compared to indices:</p>
+and logical vectors instead of elements to search for. You can also
+invert the query by setting <code>invert = TRUE</code>.</p>
+<p>In more complex workflows, we may wish to save the logical vector,
+e.g., <code>xmiss &lt;- is.na(x)</code>, and use it repeatedly. One
+aspect to note here is that logical vectors are inefficient for
+subsetting compared to indices:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">xNA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/efficient-programming.html">na_insert</a></span><span class="op">(</span><span class="va">x</span>, prop <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span></span>
 <span><span class="va">xmiss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">xNA</span><span class="op">)</span></span>
@@ -358,17 +353,16 @@ compared to indices:</p>
 <span><span class="co"># 2 x[ind]     771.74µs 972.11µs     1025.    3.05MB     6.61</span></span></code></pre></div>
 <p>Thus, indices are always preferable. With <em>collapse</em>, they can
 be created directly using <code>whichNA(xNA)</code> in this case, or
-using <code>whichv(x, 0)</code> for <code>which(x == 0)</code> or any
-other number. Also here there exist an <code>invert = TRUE</code>
-argument covering the <code>!=</code> case. For convenience, infix
-operators <code>x %==% 0</code> and <code>x %!=% 0</code> wrap
+<code>whichv(x, 0)</code> for <code>which(x == 0)</code> or any other
+number. Also here there exist an <code>invert = TRUE</code> argument
+covering the <code>!=</code> case. For convenience, infix operators
+<code>x %==% 0</code> and <code>x %!=% 0</code> wrap
 <code>whichv(x, 0)</code> and <code>whichv(x, 0, invert = TRUE)</code>,
 respectively.</p>
-<p>Similarly, the function <code><a href="../reference/fmatch.html">fmatch()</a></code> supports faster
-matching with associated operators <code>%iin%</code> and
-<code>%!iin%</code> which also return indices, e.g.,
-<code>letters %iin% c("a", "b")</code> returns <code>1:2</code>. This
-can also be used in subsetting:</p>
+<p>Similarly, <code><a href="../reference/fmatch.html">fmatch()</a></code> supports faster matching with
+associated operators <code>%iin%</code> and <code>%!iin%</code> which
+also return indices, e.g., <code>letters %iin% c("a", "b")</code>
+returns <code>1:2</code>. This can also be used in subsetting:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">bench</span><span class="fu">::</span><span class="fu">mark</span><span class="op">(</span></span>
 <span>  `%in%` <span class="op">=</span> <span class="fu"><a href="../reference/fsubset.html">fsubset</a></span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">iso3c</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"USA"</span>, <span class="st">"DEU"</span>, <span class="st">"ITA"</span>, <span class="st">"GBR"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -404,7 +398,7 @@ statistical operations. For example</p>
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>; <span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>; <span class="va">z</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">res</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span> <span class="op">+</span> <span class="va">z</span> <span class="co"># Creates 2 copies</span></span></code></pre></div>
 <p>For this particular case <code>res &lt;- kit::psum(x, y, z)</code>
-offers a direct efficient solution<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;In general, also see other packages, in particular
+offers an efficient solution<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;In general, also see other packages, in particular
 &lt;em&gt;kit&lt;/em&gt; and &lt;em&gt;data.table&lt;/em&gt; for useful programming functions.&lt;/p&gt;"><sup>5</sup></a>. A more general solution is</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">+</span> <span class="va">y</span></span>
@@ -413,9 +407,9 @@ offers a direct efficient solution<a class="footnote-ref" tabindex="0" data-bs-t
 <code>%*=%</code> and <code>%/=%</code> operators are wrappers around
 the <code><a href="../reference/efficient-programming.html">setop()</a></code> function which also works with matrices and
 data frames.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;&lt;em&gt;Note&lt;/em&gt; that infix operators do not obey the rules
-of arithmetic but are always evaluated from left to right.&lt;/p&gt;"><sup>6</sup></a> This function also supports a
+of arithmetic but are always evaluated from left to right.&lt;/p&gt;"><sup>6</sup></a> This function also has a
 <code>rowwise</code> argument for operations between vectors and
-matrix/data.frame rows, e.g.</p>
+matrix/data.frame rows:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/quick-conversion.html">qM</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/efficient-programming.html">setop</a></span><span class="op">(</span><span class="va">m</span>, <span class="st">"*"</span>, <span class="fu"><a href="../reference/efficient-programming.html">seq_col</a></span><span class="op">(</span><span class="va">m</span><span class="op">)</span>, rowwise <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -431,11 +425,11 @@ matrix/data.frame rows, e.g.</p>
 also have <code>set = TRUE</code> arguments to perform operations by
 reference.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Note that &lt;code&gt;&lt;a href="../reference/efficient-programming.html"&gt;na_locf()&lt;/a&gt;&lt;/code&gt;/&lt;code&gt;&lt;a href="../reference/efficient-programming.html"&gt;na_focb()&lt;/a&gt;&lt;/code&gt;
 are not vectorized across groups, thus, if using them in a grouped
-&lt;code&gt;&lt;a href="../reference/ftransform.html"&gt;fmutate()&lt;/a&gt;&lt;/code&gt; call adding &lt;code&gt;set = TRUE&lt;/code&gt; will save
-some memory on intermediate objects.&lt;/p&gt;'><sup>7</sup></a> There is also the function
-<code><a href="../reference/TRA.html">setTRA()</a></code> for (grouped) transformations by reference, which
-wraps <code>TRA(..., set = TRUE)</code>. Since <code>TRA</code> is added
-as an argument to all <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
+&lt;code&gt;&lt;a href="../reference/ftransform.html"&gt;fmutate()&lt;/a&gt;&lt;/code&gt; call, adding &lt;code&gt;set = TRUE&lt;/code&gt; will save
+some memory on intermediate objects.&lt;/p&gt;'><sup>7</sup></a> There is also <code><a href="../reference/TRA.html">setTRA()</a></code> for
+(grouped) transformations by reference, wrapping
+<code>TRA(..., set = TRUE)</code>. Since <code>TRA</code> is added as an
+argument to all <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
 Statistical Functions</em></a>, <code>set = TRUE</code> can be passed
 down to modify by reference. For example:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -456,7 +450,7 @@ species median by reference:</p>
 <p>This <code>set</code> argument can be invoked anywhere, also inside
 <code><a href="../reference/ftransform.html">fmutate()</a></code> calls with/without groups. This can also be done
 in combination with other transformations (sweeping operations). For
-example the following turns the columns of the matrix into
+example, the following turns the columns of the matrix into
 proportions.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">m</span>, TRA <span class="op">=</span> <span class="st">"/"</span>, set <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -471,8 +465,8 @@ univariate linear regression by groups:</p>
 <code class="sourceCode R"><span><span class="va">greg</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">y</span>, <span class="va">x</span>, <span class="va">g</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/group.html">group</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span></span>
 <span>  <span class="va">dmx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"-"</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span>  <span class="op">(</span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">g</span>, <span class="va">dmx</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/efficient-programming.html">%/=%</a></span></span>
-<span>   <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">dmx</span>, <span class="va">g</span>, <span class="va">dmx</span>, use.g.names <span class="op">=</span> <span class="cn">FALSE</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">(</span><span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">y</span>, <span class="va">g</span>, <span class="va">dmx</span>, use <span class="op">=</span> <span class="cn">FALSE</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op"><a href="../reference/efficient-programming.html">%/=%</a></span></span>
+<span>   <span class="fu"><a href="../reference/fsum.html">fsum</a></span><span class="op">(</span><span class="va">dmx</span>, <span class="va">g</span>, <span class="va">dmx</span>, use <span class="op">=</span> <span class="cn">FALSE</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="co"># Test</span></span>
@@ -493,29 +487,27 @@ group-demeaned vector, <code>dmx</code>, and then using the
 <code>w</code> (weights) argument to <code><a href="../reference/fsum.html">fsum()</a></code> to sum the
 products (<code>y * dmx</code> and <code>dmx * dmx</code>) on the fly,
 including a division by reference avoiding an additional copy. One
-cannot do much better coding a grouped regression directly in C, and
-ostensibly the grouping step already accounts for half of the computing
-time.</p>
+cannot do much better coding a grouped regression directly in C.</p>
 </div>
 <div class="section level2">
 <h2 id="point-3-internally-favor-primitive-r-objects-and-functions">Point 3: Internally Favor Primitive R Objects and Functions<a class="anchor" aria-label="anchor" href="#point-3-internally-favor-primitive-r-objects-and-functions"></a>
 </h2>
 <p>This partly reiterates Point 1 but now with a focus on internal data
-representation rather than grouping and computations. The point could
-also be bluntly stated as: ‘vectors, matrices and lists are good, data
-frames and complex objects are bad’.</p>
-<p>Many frameworks seem to imply the opposite, e.g., the
-<em>tidyverse</em> encourages you to cast your data as a tidy tibble,
-and <em>data.table</em> offers you a more efficient data frame. But
-these objects are internally complex, and, in the case of
-<em>data.table</em>, only efficient because of the internal C-level
-algorithms for large-data manipulation. You should always take a step
-back to ask yourself: For the statistical software I am writing, do I
-need this complexity? Complex objects require complex methods to
-manipulate them, thus, when using them, you incur the cost of everything
-that goes on in these methods. Vectors, matrices, and lists are much
-more efficient in R and <em>collapse</em> provides you with many options
-to manipulate them directly.</p>
+representation rather than grouping and computing. The point could also
+be bluntly stated as: ‘vectors, matrices and lists are good, data frames
+and complex objects are bad’.</p>
+<p>Many frameworks seem to imply the opposite - the <em>tidyverse</em>
+encourages you to cast your data as a tidy tibble, and
+<em>data.table</em> offers you a more efficient data frame. But these
+objects are internally complex, and, in the case of <em>data.table</em>,
+only efficient because of the internal C-level algorithms for large-data
+manipulation. You should always take a step back to ask yourself: for
+the statistical software I am writing, do I need this complexity?
+Complex objects require complex methods to manipulate them, thus, when
+using them, you incur the cost of everything that goes on in these
+methods. Vectors, matrices, and lists are much more efficient in R and
+<em>collapse</em> provides you with many options to manipulate them
+directly.</p>
 <p>It may surprise you to hear that, internally, <em>collapse</em> does
 not use data frame-like objects at all. Instead, such objects are cast
 to lists using <code>unclass(data)</code>,
@@ -613,25 +605,25 @@ currently don’t see any way to write this more efficiently.&lt;/p&gt;"><sup>8<
 <span><span class="co">#                    expr     min       lq      mean  median      uq     max neval</span></span>
 <span><span class="co">#      pwnobs_list(mtcNA) 153.217 160.1255 185.09696 179.744 215.004 241.654   100</span></span>
 <span><span class="co">#  pwnobs_list_opt(mtcNA)  27.429  31.1600  33.38507  32.964  35.137  45.387   100</span></span></code></pre></div>
-<p>As the benchmark shows, the optimized function is 6x faster on this
-(small) dataset and we have changed nothing to the loops doing the
-computation. With larger data the difference is less stark, but you
-never know what’s going on in methods you have not written and how they
-scale to larger data. My advice is: try to avoid them, use simple
-objects and take full control over your code. This also makes your code
-more robust and you can create class-agnostic code.</p>
+<p>Evidently, the optimized function is 6x faster on this (small)
+dataset and we have changed nothing to the loops doing the computation.
+With larger data the difference is less stark, but you never know what’s
+going on in methods you have not written and how they scale. My advice
+is: try to avoid them, use simple objects and take full control over
+your code. This also makes your code more robust and you can create
+class-agnostic code.</p>
 <p>If you only use <em>collapse</em> functions this discussion is void -
 all <em>collapse</em> functions designed for data frames, including
 <code><a href="../reference/join.html">join()</a></code>, <code><a href="../reference/pivot.html">pivot()</a></code>, <code><a href="../reference/fsubset.html">fsubset()</a></code>, etc.,
-internally handle your data as a list and thus work equivalently with
-lists. However, typically you want to use base R semantics
-(<code>[</code>, etc.) alongside <em>collapse</em> and other functions,
-and in that case it makes sense to unclass incoming data frame-like
-objects and reclass them at the end.</p>
-<p>If you don’t want to internally convert data frames to lists, use
-functions <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset()</a></code> and <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset2()</a></code> to
-efficiently extract columns and <code><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr()</a></code> to extract/set
-attributes. With matrices use <code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> directly instead
+internally handle your data as a list and thus also work with lists.
+However, if you want to use base R semantics (<code>[</code>, etc.)
+alongside <em>collapse</em> and other functions, it makes sense to
+unclass incoming data frame-like objects and reclass them at the
+end.</p>
+<p>If you don’t want to internally convert data frames to lists, at
+least use functions <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset()</a></code> and <code><a href="https://rdrr.io/r/base/base-internal.html" class="external-link">.subset2()</a></code>
+to efficiently extract columns and <code><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr()</a></code> to extract/set
+attributes. With matrices, use <code><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames()</a></code> directly instead
 of <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames()</a></code> and <code><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames()</a></code> which wrap
 it.</p>
 <p>Also avoid <code><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame()</a></code> and friends to
@@ -672,11 +664,10 @@ coerce/recreate data frame-like objects. It is quite easy to construct a
 efficiently attach attributes again. So another efficient workflow for
 general data frame-like objects is to save the attributes
 <code>ax &lt;- attributes(data)</code>, manipulate it as a list
-<code>l &lt;- unclass(data)</code>, modify <code>ax$names</code> and
-<code>ax$row.names</code> as needed and then use
-<code>setattrib(l, ax)</code> to turn it into a data frame again before
-returning. This way your code will also work with <em>tibble</em>
-etc.</p>
+<code>attributes(data) &lt;- NULL</code>, modify <code>ax$names</code>
+and <code>ax$row.names</code> as needed and then use
+<code>setattrib(data, ax)</code> before returning. This way your code
+will also work with <em>tibble</em> etc.</p>
 </div>
 <div class="section level2">
 <h2 id="some-notes-on-global-options">Some Notes on Global Options<a class="anchor" aria-label="anchor" href="#some-notes-on-global-options"></a>
@@ -688,15 +679,15 @@ implement advanced options such as namespace masking (options
 &lt;code&gt;mask&lt;/code&gt; and &lt;code&gt;remove&lt;/code&gt;). The options are stored in an
 internal environment called &lt;code&gt;.op&lt;/code&gt; visible in the
 documentation of some functions such as &lt;code&gt;&lt;a href="../reference/fmean.html"&gt;fmean()&lt;/a&gt;&lt;/code&gt; when used
-to set argument defaults.&lt;/p&gt;'><sup>9</sup></a> This confers responsibilities on package
-developers, as setting these options inside a package also affects how
-<em>collapse</em> behaves outside your package.</p>
-<p>In general, the same rules apply as for setting other R options like
-<code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code> or <code><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par()</a></code>: They need to be reset
-using <code><a href="https://rdrr.io/r/base/on.exit.html" class="external-link">on.exit()</a></code> so that the users choices are unaffected
-even if your package function breaks. For example, if you want a block
-of code multithreaded and without missing value skipping to achieve
-maximum performance:</p>
+to set argument defaults.&lt;/p&gt;'><sup>9</sup></a> This confers responsibilities upon package
+developers as setting these options inside a package also affects how
+<em>collapse</em> behaves outside of your package.</p>
+<p>In general, the same rules apply as for setting other R options
+through <code><a href="https://rdrr.io/r/base/options.html" class="external-link">options()</a></code> or <code><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par()</a></code>: they need to be
+reset using <code><a href="https://rdrr.io/r/base/on.exit.html" class="external-link">on.exit()</a></code> so that the user choices are
+unaffected even if your package function breaks. For example, if you
+want a block of code multithreaded and without missing value skipping
+for maximum performance:</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fast_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  </span>
@@ -717,8 +708,8 @@ explicitly which <em>collapse</em> functions you are using (e.g., via
 <code>importFrom("collapse", "fmean")</code> in NAMESPACE or
 <code><a href="../reference/fmean.html">collapse::fmean()</a></code> in your code).</p>
 <p>Particularly options <code>na.rm</code>, <code>nthreads</code>, and
-<code>sort</code> if set by the user will impact your code, unless you
-explicitly set the targeted arguments (e.g. <code>nthreads</code> and
+<code>sort</code>, if set by the user, will impact your code, unless you
+explicitly set the targeted arguments (e.g., <code>nthreads</code> and
 <code>na.rm</code> in statistical functions like <code><a href="../reference/fmean.html">fmean()</a></code>,
 and <code>sort</code> arguments in grouping functions like
 <code><a href="../reference/GRP.html">GRP()</a></code>/<code><a href="../reference/qF.html">qF()</a></code>/<code><a href="../reference/qF.html">qG()</a></code>/<code><a href="../reference/GRP.html">fgroup_by()</a></code>).</p>
