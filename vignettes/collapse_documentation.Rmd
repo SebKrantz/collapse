@@ -53,6 +53,9 @@ Updated vignettes are
 
 * [***collapse*'s Handling of R Objects**](<https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html>): A quick view behind the scenes of class-agnostic R programming
 
+* [**Developing with *collapse***](<https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html>): How to write efficient statistical packages using R and *collapse*
+
+
 The other vignettes (only available [online](<https://sebkrantz.github.io/collapse/articles/index.html>)) do not cover major features introduced in versions >= 1.7, but contain much useful information and examples:
 
 * [**Introduction to *collapse* **](<https://sebkrantz.github.io/collapse/articles/collapse_intro.html>): Introduces key features in a structured way
