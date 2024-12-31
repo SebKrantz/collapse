@@ -22,6 +22,11 @@ for (sort in c(FALSE, TRUE)) {
   expect_identical(join(df1, df2, how = "full", sort = sort), merge(df1, df2, all = TRUE))
 }
 
+expect_identical(names(join(df1, df2, on = "id2", how = "full", keep.col.order = FALSE, column = TRUE))[1:2], c("id2", ".join"))
+expect_identical(names(join(df1, df2, on = "id2", how = "full", keep.col.order = FALSE, column = TRUE, multiple = TRUE))[1:2], c("id2", ".join"))
+expect_identical(names(join(df1, df2, on = "id2", how = "right", keep.col.order = FALSE, column = TRUE))[1:2], c("id2", ".join"))
+expect_identical(names(join(df1, df2, on = "id2", how = "right", keep.col.order = FALSE, column = TRUE, multiple = TRUE))[1:2], c("id2", ".join"))
+
 # Different types of joins
 # https://github.com/SebKrantz/collapse/issues/503
 x1 = data.frame(
