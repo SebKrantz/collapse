@@ -480,9 +480,7 @@ SEXP fbstatsCpp(const NumericVector& x, bool ext = false, int ng = 0, const Inte
         result(_,2) = replaceC12(as<NumericMatrix>(fbstatstemp(within, ext, ng, g, w, false, stable_algo)), gnpids, true);
         if(setn) {
           Rf_dimgets(result, Dimension(ng, d, 3));
-          Rf_dimnamesgets(result, List::create(gn, (ext) ? CharacterVector::create("N/T","Mean","SD","Min","Max","Skew","Kurt") :
-                                                    CharacterVector::create("N/T","Mean","SD","Min","Max"),
-                                                    CharacterVector::create("Overall","Between","Within")));
+          Rf_dimnamesgets(result, List::create(gn, get_stats_names(d, true), CharacterVector::create("Overall","Between","Within")));
           Rf_classgets(result, CharacterVector::create("qsu","array","table"));
         }
         return(result);

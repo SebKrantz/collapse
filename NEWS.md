@@ -1,9 +1,10 @@
-# collapse 2.0.18.9000
+# collapse 2.0.19
 
 * `fmatch(factor(NA), NA)` now gives `1` instead of `NA`. Thanks @NicChr (#675).
 
 * New developer focused vignette on [developing with *collapse*](https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html).
 
+* Fixed minor CRAN issues (#676, #702). 
 
 # collapse 2.0.18
 

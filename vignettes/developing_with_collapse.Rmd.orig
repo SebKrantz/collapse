@@ -323,7 +323,7 @@ identical(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
 microbenchmark::microbenchmark(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
 ```
 
-Evidently, the optimized function is 6x faster on this (small) dataset and we have changed nothing to the loops doing the computation. With larger data the difference is less stark, but you never know what's going on in methods you have not written and how they scale. My advice is: try to avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code.
+Evidently, the optimized function is 6x faster on this (small) dataset and we have changed nothing to the loops doing the computation. With larger data the difference is less stark, but you never know what's going on in methods you have not written and how they scale. My advice is: try to avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code. If the latter is your intent the [vignette on *collapse*'s object handling](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) will also be helpful.
 
 If you only use *collapse* functions this discussion is void - all *collapse* functions designed for data frames, including `join()`, `pivot()`, `fsubset()`, etc., internally handle your data as a list and are equally efficient on data frames and lists. However, if you want to use base R semantics (`[`, etc.) alongside *collapse* and other functions, it makes sense to unclass incoming data frame-like objects and reclass them at the end.
 
