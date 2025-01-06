@@ -8,7 +8,7 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.18.9000
+version: 2.0.19
 identifiers:
 - type: doi
   value: 10.32614/CRAN.package.collapse
@@ -47,7 +47,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2024-12-12'
+date-released: '2025-01-06'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -77,8 +77,8 @@ references:
   authors:
   - family-names: Krantz
     given-names: Sebastian
-  year: '2024'
-  notes: R package version 2.0.18.9000
+  year: '2025'
+  notes: R package version 2.0.19
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
@@ -90,7 +90,7 @@ references:
   institution:
     name: R Foundation for Statistical Computing
     address: Vienna, Austria
-  year: '2024'
+  year: '2025'
   version: '>= 3.4.0'
 - type: software
   title: Rcpp
@@ -125,7 +125,7 @@ references:
     orcid: https://orcid.org/0000-0001-8316-9503
   - family-names: Chambers
     given-names: John
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.Rcpp
   version: '>= 1.0.1'
 - type: software
@@ -161,7 +161,7 @@ references:
     orcid: https://orcid.org/0000-0001-8316-9503
   - family-names: Chambers
     given-names: John
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.Rcpp
 - type: software
   title: fastverse
@@ -174,7 +174,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
     email: sebastian.krantz@graduateinstitute.ch
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.fastverse
 - type: software
   title: data.table
@@ -204,7 +204,7 @@ references:
   - family-names: Schwendinger
     given-names: Benjamin
     orcid: https://orcid.org/0000-0003-3315-8114
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.data.table
 - type: software
   title: magrittr
@@ -219,7 +219,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.magrittr
 - type: software
   title: kit
@@ -231,7 +231,7 @@ references:
   - family-names: Jacob
     given-names: Morgan
     email: morgan.emailbox@gmail.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.kit
 - type: software
   title: xts
@@ -245,7 +245,7 @@ references:
   - family-names: Ulrich
     given-names: Joshua M.
     email: josh.m.ulrich@gmail.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.xts
 - type: software
   title: zoo
@@ -265,7 +265,7 @@ references:
   - family-names: Ryan
     given-names: Jeffrey A.
     email: jeff.a.ryan@gmail.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.zoo
 - type: software
   title: plm
@@ -283,7 +283,7 @@ references:
   - family-names: Tappe
     given-names: Kevin
     email: kevin.tappe@bwi.uni-stuttgart.de
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.plm
 - type: software
   title: fixest
@@ -295,7 +295,7 @@ references:
   - family-names: Berge
     given-names: Laurent
     email: laurent.berge@u-bordeaux.fr
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.fixest
 - type: software
   title: vars
@@ -307,7 +307,7 @@ references:
   - family-names: Pfaff
     given-names: Bernhard
     email: bernhard@pfaffikus.de
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.vars
 - type: software
   title: RcppArmadillo
@@ -332,7 +332,7 @@ references:
   - family-names: Sanderson
     given-names: Conrad
     orcid: https://orcid.org/0000-0002-0049-4501
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.RcppArmadillo
 - type: software
   title: RcppEigen
@@ -355,7 +355,7 @@ references:
   - family-names: Qiu
     given-names: Yixuan
     orcid: https://orcid.org/0000-0003-0109-6692
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.RcppEigen
 - type: software
   title: tibble
@@ -371,7 +371,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.tibble
 - type: software
   title: dplyr
@@ -396,7 +396,7 @@ references:
     given-names: Davis
     email: davis@posit.co
     orcid: https://orcid.org/0000-0003-4777-038X
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.dplyr
 - type: software
   title: ggplot2
@@ -436,7 +436,7 @@ references:
     given-names: Teun
     name-particle: van den
     orcid: https://orcid.org/0000-0002-9335-7468
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.ggplot2
 - type: software
   title: scales
@@ -454,7 +454,7 @@ references:
     orcid: https://orcid.org/0000-0002-5147-4711
   - family-names: Seidel
     given-names: Dana
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.scales
 - type: software
   title: microbenchmark
@@ -465,7 +465,7 @@ references:
   authors:
   - family-names: Mersmann
     given-names: Olaf
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.microbenchmark
 - type: software
   title: testthat
@@ -477,7 +477,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@posit.co
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.testthat
 - type: software
   title: covr
@@ -489,7 +489,7 @@ references:
   - family-names: Hester
     given-names: Jim
     email: james.f.hester@gmail.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.covr
 - type: software
   title: knitr
@@ -502,7 +502,7 @@ references:
     given-names: Yihui
     email: xie@yihui.name
     orcid: https://orcid.org/0000-0003-0645-5666
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.knitr
 - type: software
   title: rmarkdown
@@ -546,7 +546,7 @@ references:
     given-names: Richard
     email: rich@posit.co
     orcid: https://orcid.org/0000-0003-3925-190X
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.rmarkdown
 - type: software
   title: withr
@@ -571,6 +571,6 @@ references:
     email: hadley@posit.co
   - family-names: Chang
     given-names: Winston
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.withr
 
