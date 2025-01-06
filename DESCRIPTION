@@ -30,9 +30,7 @@ Description: A C/C++ based package for advanced data transformation and
     helpers to effectively deal with variable labels, attributes, and missing data. 
     It is well integrated with base R classes, 'dplyr'/'tibble', 'data.table', 'sf', 'units', 
     'plm' (panel-series and data frames), and 'xts'/'zoo'.
-URL: https://sebkrantz.github.io/collapse/,  
-     https://github.com/SebKrantz/collapse,
-     https://x.com/collapse_R
+URL: https://sebkrantz.github.io/collapse/
 BugReports: https://github.com/SebKrantz/collapse/issues
 License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8

@@ -105,7 +105,13 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       break;
     case REALSXP: {
       if (INHERITS(target, char_integer64)) {
-        memcpy((int64_t *)REAL(target) + from, (int64_t *)REAL(source), n * sizeof(int64_t));
+        if(coerce) {
+          int64_t *ptgt = (int64_t *)REAL(target) + from;
+          const double *ptcol = REAL_RO(source);
+          for(int i = 0; i != n; ++i) ptgt[i] = ptcol[i];
+        } else {
+          memcpy((int64_t *)REAL(target) + from, (int64_t *)REAL(source), n * sizeof(int64_t));
+        }
       } else {
         memcpy(REAL(target) + from, REAL(source), n * sizeof(double));
       }
@@ -690,6 +696,8 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         setAttrib(target, R_ClassSymbol, ScalarString(char_factor));
       }
     } else {  // factor==false
+      // Needs to be here for integer64 class to be attached
+      copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
       for (int i=0; i < ll; ++i) {
         const int thisnrow = eachMax[i];
         if (thisnrow==0) continue;
@@ -712,7 +720,6 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         }
         ansloc += thisnrow;
       }
-      copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
     }
   }
   UNPROTECT(nprotect);  // ans, coercedForFactor, thisCol

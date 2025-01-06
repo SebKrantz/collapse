@@ -6,6 +6,10 @@
 
 * Fixed minor CRAN issues (#676, #702). 
 
+* Fixed bug with integer64 types in `rowbind()`. Thanks @arthurgailes for reporting and @aitap for providing a fix (#697). 
+
+* *collapse* now also has a Bluesky account at https://bsky.app/profile/rcollapse.bsky.social.
+
 # collapse 2.0.18
 
 * Cases in `pivot(..., how = "longer")` with no `values` columns now no longer give an error. Thanks @alvarocombo for flagging this (#663).
