@@ -43,10 +43,10 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       if(tx == INTSXP-1) { // For factors there is a shorthand: just match the levels against table...
         SEXP nmvint = PROTECT(ScalarInteger(nmv)); ++nprotect;
         SEXP tab = PROTECT(match_single(getAttrib(x, R_LevelsSymbol), table, nmvint)); ++nprotect;
-        int *pans = INTEGER(ans), *pt = INTEGER(tab)-1, *px = INTEGER(x);
+        int *pans = INTEGER(ans), *pt = INTEGER(tab), *px = INTEGER(x);
         if(inherits(x, "na.included")) {
           #pragma omp simd
-          for(int i = 0; i < n; ++i) pans[i] = pt[px[i]];
+          for(int i = 0; i < n; ++i) pans[i] = pt[px[i]-1];
         } else {
           int na_ind = 0;
           // Need to take care of possible NA matches in table..
@@ -87,7 +87,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
           }
           if(na_ind == 0) na_ind = nmv;
           #pragma omp simd
-          for(int i = 0; i < n; ++i) pans[i] = px[i] == NA_INTEGER ? na_ind : pt[px[i]];
+          for(int i = 0; i < n; ++i) pans[i] = px[i] == NA_INTEGER ? na_ind : pt[px[i]-1];
         }
         UNPROTECT(nprotect);
         return ans;
