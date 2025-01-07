@@ -105,7 +105,7 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       break;
     case REALSXP: {
       if (INHERITS(target, char_integer64)) {
-        if(coerce) {
+        if(coerce || !INHERITS(source, char_integer64)) {
           int64_t *ptgt = (int64_t *)REAL(target) + from;
           const double *ptcol = REAL_RO(source);
           for(int i = 0; i != n; ++i) ptgt[i] = ptcol[i];
