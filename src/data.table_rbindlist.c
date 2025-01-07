@@ -74,12 +74,15 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
     } break;
     case REALSXP: {
       if (INHERITS(target, char_integer64)) {
-      int64_t *vd = (int64_t *)REAL(target), value = (int64_t)REAL(source)[0];
-      for (int i=from; i<=to; ++i) vd[i] = value;
-    } else {
-      double *vd = REAL(target), value = REAL(source)[0];
-      for (int i=from; i<=to; ++i) vd[i] = value;
-    }
+        int64_t *vd = (int64_t *)REAL(target);
+        int64_t value =
+          (!coerce && INHERITS(target, char_integer64)) ? ((int64_t *)REAL(source))[0]
+          : (int64_t)REAL(source)[0];
+        for (int i=from; i<=to; ++i) vd[i] = value;
+      } else {
+        double *vd = REAL(target), value = REAL(source)[0];
+        for (int i=from; i<=to; ++i) vd[i] = value;
+      }
     } break;
     case CPLXSXP: {
       Rcomplex *vd = COMPLEX(target), value = COMPLEX(source)[0];
