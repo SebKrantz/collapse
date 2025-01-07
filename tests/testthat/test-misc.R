@@ -394,7 +394,7 @@ test_that("rowbind", {
   expect_equal(rowbind(a = mtcars, b = mtcars, idcol = "id", id.factor = FALSE), unlist2d(list(a = mtcars, b = mtcars), idcols = "id"))
 })
 
-if (requireNamespace("bit64")) test_that("rowbind + integer64", {
+if (requireNamespace("bit64", quietly = TRUE)) test_that("rowbind + integer64", {
   # https://github.com/SebKrantz/collapse/issues/697
   x <- data.frame(a = bit64::as.integer64(1))
   xi <- data.frame(a = 1L)
