@@ -571,4 +571,16 @@ references:
     given-names: Winston
   year: '2025'
   doi: 10.32614/CRAN.package.withr
+- type: software
+  title: bit64
+  abstract: 'bit64: A S3 Class for Vectors of 64bit Integers'
+  notes: Suggests
+  url: https://github.com/truecluster/bit64
+  repository: https://CRAN.R-project.org/package=bit64
+  authors:
+  - family-names: Oehlschlägel
+    given-names: Jens
+    email: Jens.Oehlschlaegel@truecluster.com
+  year: '2025'
+  doi: 10.32614/CRAN.package.bit64
 
