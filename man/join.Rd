@@ -1,10 +1,10 @@
 \name{join}
 \alias{join}
 
-\title{Fast Table Joins}
+\title{Fast and Verbose Table Joins}
 
 \description{
-  Join two data frame like objects \code{x} and \code{y} \code{on} columns. Inspired by \emph{polars} and by default uses a vectorized hash join algorithm (workhorse function \code{\link{fmatch}}).
+  Join two data frame like objects \code{x} and \code{y} \code{on} columns. Inspired by \emph{polars} and by default uses a vectorized hash join algorithm (workhorse function \code{\link{fmatch}}) including several verbose options.
 }
 
 \usage{
@@ -100,7 +100,7 @@ str(join(df1, df2, attr = TRUE))
 }
 
 \seealso{
-\code{\link{fmatch}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fmatch}}, \code{\link{pivot}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 
 \keyword{manip}
