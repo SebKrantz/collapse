@@ -4,7 +4,7 @@
 \title{Fast and Verbose Table Joins}
 
 \description{
-  Join two data frame like objects \code{x} and \code{y} \code{on} columns. Inspired by \emph{polars} and by default uses a vectorized hash join algorithm (workhorse function \code{\link{fmatch}}) including several verbose options.
+  Join two data frame like objects \code{x} and \code{y} \code{on} columns. Inspired by \emph{polars} and by default uses a vectorized hash join algorithm (workhorse function \code{\link{fmatch}}), including several verbose options.
 }
 
 \usage{
