@@ -647,7 +647,7 @@ static
     return (u.ull ^ mask);
   }
 
-static Rboolean dnan(void *p, int i)
+static int dnan(void *p, int i)
 {
   u.d = ((double *) p)[i];
   return (ISNAN(u.d));

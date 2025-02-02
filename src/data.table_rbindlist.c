@@ -16,7 +16,7 @@ void writeNA(SEXP v, const int from, const int n)
     memset(RAW(v)+from, 0, n*sizeof(Rbyte));
     break;
   case LGLSXP: {
-    Rboolean *vd = (Rboolean *)LOGICAL(v);
+    int *vd = (int *)LOGICAL(v);
     for (int i=from; i<=to; ++i) vd[i] = NA_LOGICAL;
   } break;
   case INTSXP: {
@@ -64,7 +64,7 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
     case LGLSXP: {
-      Rboolean *vd = (Rboolean *)LOGICAL(target), value = (Rboolean)LOGICAL(source)[0];
+      int *vd = (int *)LOGICAL(target), value = (int)LOGICAL(source)[0];
       for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
     case INTSXP: {
@@ -102,7 +102,7 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       memcpy(INTEGER(target) + from, INTEGER(source), n * sizeof(int));
       break;
     case LGLSXP:
-      memcpy(LOGICAL(target) + from, LOGICAL(source), n * sizeof(Rboolean));
+      memcpy(LOGICAL(target) + from, LOGICAL(source), n * sizeof(int));
       break;
     case REALSXP: {
       if (INHERITS(target, char_integer64)) {
@@ -203,7 +203,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     error("use.names= should be TRUE, FALSE, or not used (\"check\" by default)");  // R levels converts "check" to NA
   if (!length(l)) return(l);
   if (TYPEOF(l) != VECSXP) error("Input to rbindlist must be a list. This list can contain data.tables, data.frames or plain lists.");
-  Rboolean usenames = LOGICAL(usenamesArg)[0];
+  int usenames = LOGICAL(usenamesArg)[0];
   const bool fill = LOGICAL(fillArg)[0];
   if (fill && usenames==NA_LOGICAL) {
     usenames=TRUE;
