@@ -654,7 +654,7 @@ static int dnan(void *p, int i)
 }
 
 static unsigned long long (*twiddle) (void *, int, int);
-static Rboolean(*is_nan) (void *, int);
+static int(*is_nan) (void *, int);
 // the size of the arg type (4 or 8). Just 8 currently until iradix is
 // merged in.
 static size_t colSize = 8;
