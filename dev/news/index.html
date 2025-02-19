@@ -38,8 +38,8 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.20" id="collapse-2020">collapse 2.0.20<a class="anchor" aria-label="anchor" href="#collapse-2020"></a></h2>
 <ul><li>
-<code><a href="../reference/join.html">join()</a></code> has a new argument require allowing the user to generate messages or errors if the join operation is not successful enough:</li>
-</ul><div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">join</span>(df1, df2, <span class="at">require =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fl">0.8</span>, <span class="at">on.fail =</span> <span class="st">"warning"</span>))</span>
+<code><a href="../reference/join.html">join()</a></code> has a new argument <code>require</code> allowing the user to generate messages or errors if the join operation is not successful enough:</li>
+</ul><div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">join</span>(df1, df2, <span class="at">require =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fl">0.8</span>, <span class="at">fail =</span> <span class="st">"warning"</span>))</span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>left join<span class="sc">:</span> df1[id1, id2] <span class="dv">3</span><span class="sc">/</span><span class="dv">4</span> (<span class="dv">75</span><span class="sc">%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  id1 id2 name age salary      dept</span>
 <span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="dv">1</span>   <span class="dv">1</span>   a John  <span class="dv">35</span>  <span class="dv">60000</span>        IT</span>
