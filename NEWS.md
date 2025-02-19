@@ -1,9 +1,9 @@
 # collapse 2.0.20
 
-* `join()` has a new argument require allowing the user to generate messages or errors if the join operation is not successful enough: 
+* `join()` has a new argument `require` allowing the user to generate messages or errors if the join operation is not successful enough: 
 
 ```r
-> join(df1, df2, require = list(x = 0.8, on.fail = "warning"))
+> join(df1, df2, require = list(x = 0.8, fail = "warning"))
 left join: df1[id1, id2] 3/4 (75%) <1:1st> df2[id1, id2] 3/4 (75%)
   id1 id2 name age salary      dept
 1   1   a John  35  60000        IT
