@@ -898,27 +898,12 @@ SEXP vtypes(SEXP x, SEXP isnum) {
   case 1: // Numeric variables: do_is with op = 100: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
           // See also DispatchOrEval in https://github.com/wch/r-source/blob/trunk/src/main/eval.c
     {
-    if(inherits(x, "indexed_frame")) { // NOT pdata.frame!! because columns in pdata.frame only become pseries when extracted from the frame
-      for(int i = 0, tci, tnum, is_num; i != n; ++i) {
-        is_num = 0;
-        tci = TYPEOF(px[i]);
-        tnum = tci == INTSXP || tci == REALSXP;
-        if(tnum) is_num = inherits(px[i], "integer") || inherits(px[i], "numeric") || inherits(px[i], "ts") || inherits(px[i], "units") || inherits(px[i], "integer64");
-        pans[i] = tnum && is_num;
-      }
-      // for(int i = 0; i != n; ++i) {
-      //   int tci = TYPEOF(px[i]);
-      //   pans[i] = (tci == INTSXP && inherits(px[i], "integer")) || (tci == REALSXP && inherits(px[i], "numeric")); // length(getAttrib(ci, R_ClassSymbol)) <= 2;
-      // }
-    } else {
-      for(int i = 0, tci, tnum, is_num; i != n; ++i) {
-        // pans[i] = isNumeric(px[i]) && !isLogical(px[i]); // Date is numeric, from: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
-        tci = TYPEOF(px[i]);
-        tnum = tci == INTSXP || tci == REALSXP;
-        is_num = tnum && OBJECT(px[i]) == 0;
-        if(tnum && !is_num) is_num = inherits(px[i], "ts") || inherits(px[i], "units") || inherits(px[i], "integer64");
-        pans[i] = is_num;
-      }
+    for(int i = 0, tci, tnum; i != n; ++i) {
+      // pans[i] = isNumeric(px[i]) && !isLogical(px[i]); // Date is numeric, from: https://github.com/wch/r-source/blob/2b0818a47199a0b64b6aa9b9f0e53a1e886e8e95/src/main/coerce.c
+      tci = TYPEOF(px[i]);
+      tnum = tci == INTSXP || tci == REALSXP;
+      if(tnum && isObject(px[i])) tnum = !(inherits(px[i], "factor") || inherits(px[i], "Date") || inherits(px[i], "POSIXct") || inherits(px[i], "yearmon") || inherits(px[i], "yearqtr"));
+      pans[i] = tnum;
     }
     SETTOF(ans, LGLSXP);
     break;

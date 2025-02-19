@@ -15,6 +15,8 @@ In switch_msg(sprintf("Matched %#.1f%% of records in table %s (x), but %#.1f%% i
   Matched 75.0% of records in table df1 (x), but 80.0% is required
 ```
 
+* `num_vars()` (and thus als `cat_vars()` and `collap()`) where changed to a simpler C-definition of numeric data types which is more in-line with `is.numeric()`: `is_numeric_C <- function(x) typeof(x) %in% c("integer", "double") && !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))`. The previous definition was: `is_numeric_C_old <- function(x) typeof(x) %in% c("integer", "double") && (!is.object(x) || inherits(x, c("ts", "units", "integer64")))`. Thus, the definition changed from including only certain classes to excluding the most important classes. Thanks @maouw for flagging this (#727).
+
 # collapse 2.0.19
 
 * `fmatch(factor(NA), NA)` now gives `1` instead of `NA`. Thanks @NicChr (#675).
