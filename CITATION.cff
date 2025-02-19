@@ -8,7 +8,7 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.19
+version: 2.0.19.9000
 identifiers:
 - type: doi
   value: 10.32614/CRAN.package.collapse
@@ -76,7 +76,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
   year: '2025'
-  notes: R package version 2.0.19
+  notes: R package version 2.0.19.9000
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
@@ -575,12 +575,14 @@ references:
   title: bit64
   abstract: 'bit64: A S3 Class for Vectors of 64bit Integers'
   notes: Suggests
-  url: https://github.com/truecluster/bit64
+  url: https://github.com/r-lib/bit64
   repository: https://CRAN.R-project.org/package=bit64
   authors:
+  - family-names: Chirico
+    given-names: Michael
+    email: michaelchirico4@gmail.com
   - family-names: Oehlschlägel
     given-names: Jens
-    email: Jens.Oehlschlaegel@truecluster.com
   year: '2025'
   doi: 10.32614/CRAN.package.bit64
 
