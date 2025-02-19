@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.18.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.19.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,7 @@ Scenes of Class-Agnostic R Programming</h3>
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2024-12-30</h4>
+            <h4 data-toc-skip class="date">2025-02-19</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_object_handling.Rmd</code></div>
@@ -272,22 +272,20 @@ i.e. <code>qM(EuStockMarkets, keep.attr = TRUE)</code>.</p>
 columns by data type without the need to check data frame columns by
 applying a function such as <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric()</a></code> in R. For
 <code>is.numeric</code>, the C implementation is equivalent to
-<code>is_numeric_C &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; (!is.object(x) || inherits(x, "ts") || inherits(x, "units") || inherits(x, "integer64"))</code>.
+<code>is_numeric_C &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))</code>.
 This of course does not respect the behavior of other classes that
 define methods for <code>is.numeric</code>
-e.g. <code>is.numeric.foo &lt;- function(x) TRUE</code>, then for
+e.g. <code>is.numeric.foo &lt;- function(x) FALSE</code>, then for
 <code>y = structure(rnorm(100), class = "foo")</code>,
-<code>is.numeric(y)</code> is <code>TRUE</code> but
-<code>num_vars(data.frame(y))</code> returns an empty frame. Correct
-behavior in this case requires
-<code>get_vars(data.frame(y), is.numeric)</code>. A particular case to
-be aware of here is when using <code><a href="../reference/collap.html">collap()</a></code> with the
-<code>FUN</code> and <code>catFUN</code> arguments, where the C code
-(<code>is_numeric_C</code>) is used internally to decide whether a
-column is numeric or categorical. Thus numeric columns with a class
-attribute other than “ts”, “units”, and “integer64” are not recognized
-as numeric by <code><a href="../reference/collap.html">collap()</a></code>. <em>collapse</em> also does not
-support statistical operations on complex data.</p>
+<code>is.numeric(y)</code> is <code>FALSE</code> but
+<code>num_vars(data.frame(y))</code> still returns it. Correct behavior
+in this case requires <code>get_vars(data.frame(y), is.numeric)</code>.
+A particular case to be aware of here is when using
+<code><a href="../reference/collap.html">collap()</a></code> with the <code>FUN</code> and <code>catFUN</code>
+arguments, where the C code (<code>is_numeric_C</code>) is used
+internally to decide whether a column is numeric or categorical.
+<em>collapse</em> does not support statistical operations on complex
+data.</p>
 </div>
 <div class="section level4">
 <h4 id="parsing-of-time-ids">Parsing of Time-IDs<a class="anchor" aria-label="anchor" href="#parsing-of-time-ids"></a>

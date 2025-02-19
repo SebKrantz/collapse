@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.18.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.19.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -611,7 +611,8 @@ With larger data the difference is less stark, but you never know what’s
 going on in methods you have not written and how they scale. My advice
 is: try to avoid them, use simple objects and take full control over
 your code. This also makes your code more robust and you can create
-class-agnostic code.</p>
+class-agnostic code. If the latter is your intent the <a href="https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html">vignette
+on <em>collapse</em>’s object handling</a> will also be helpful.</p>
 <p>If you only use <em>collapse</em> functions this discussion is void -
 all <em>collapse</em> functions designed for data frames, including
 <code><a href="../reference/join.html">join()</a></code>, <code><a href="../reference/pivot.html">pivot()</a></code>, <code><a href="../reference/fsubset.html">fsubset()</a></code>, etc.,

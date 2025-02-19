@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.18.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.19.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,29 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.0.18.9000" id="collapse-20189000">collapse 2.0.18.9000<a class="anchor" aria-label="anchor" href="#collapse-20189000"></a></h2>
+<h2 class="pkg-version" data-toc-text="2.0.20" id="collapse-2020">collapse 2.0.20<a class="anchor" aria-label="anchor" href="#collapse-2020"></a></h2>
+<ul><li>
+<code><a href="../reference/join.html">join()</a></code> has a new argument require allowing the user to generate messages or errors if the join operation is not successful enough:</li>
+</ul><div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="sc">&gt;</span> <span class="fu">join</span>(df1, df2, <span class="at">require =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fl">0.8</span>, <span class="at">on.fail =</span> <span class="st">"warning"</span>))</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>left join<span class="sc">:</span> df1[id1, id2] <span class="dv">3</span><span class="sc">/</span><span class="dv">4</span> (<span class="dv">75</span><span class="sc">%) &lt;1:1st&gt; df2[id1, id2] 3/4 (75%</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>  id1 id2 name age salary      dept</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="dv">1</span>   <span class="dv">1</span>   a John  <span class="dv">35</span>  <span class="dv">60000</span>        IT</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="dv">2</span>   <span class="dv">1</span>   b Jane  <span class="dv">28</span>     <span class="cn">NA</span>      <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="dv">3</span>   <span class="dv">2</span>   b  Bob  <span class="dv">42</span>  <span class="dv">55000</span> Marketing</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="dv">4</span>   <span class="dv">3</span>   c Carl  <span class="dv">50</span>  <span class="dv">70000</span>     Sales</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>Warning message<span class="sc">:</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>In <span class="fu">switch_msg</span>(<span class="fu">sprintf</span>(<span class="st">"Matched %#.1f%% of records in table %s (x), but %#.1f%% is required"</span>,  <span class="sc">:</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>  Matched <span class="fl">75.0</span><span class="sc">% of records in table df1 (x), but 80.0%</span> is required</span></code></pre></div>
+<ul><li>
+<code><a href="../reference/select_replace_vars.html">num_vars()</a></code> (and thus als <code><a href="../reference/select_replace_vars.html">cat_vars()</a></code> and <code><a href="../reference/collap.html">collap()</a></code>) where changed to a simpler C-definition of numeric data types which is more in-line with <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric()</a></code>: <code>is_numeric_C &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))</code>. The previous definition was: <code>is_numeric_C_old &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; (!is.object(x) || inherits(x, c("ts", "units", "integer64")))</code>. Thus, the definition changed from including only certain classes to excluding the most important classes. Thanks <a href="https://github.com/maouw" class="external-link">@maouw</a> for flagging this (<a href="https://github.com/SebKrantz/collapse/issues/727" class="external-link">#727</a>).</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.0.19" id="collapse-2019">collapse 2.0.19<a class="anchor" aria-label="anchor" href="#collapse-2019"></a></h2><p class="text-muted">CRAN release: 2025-01-09</p>
 <ul><li><p><code>fmatch(factor(NA), NA)</code> now gives <code>1</code> instead of <code>NA</code>. Thanks <a href="https://github.com/NicChr" class="external-link">@NicChr</a> (<a href="https://github.com/SebKrantz/collapse/issues/675" class="external-link">#675</a>).</p></li>
 <li><p>New developer focused vignette on <a href="https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html">developing with <em>collapse</em></a>.</p></li>
+<li><p>Fixed minor CRAN issues (<a href="https://github.com/SebKrantz/collapse/issues/676" class="external-link">#676</a>, <a href="https://github.com/SebKrantz/collapse/issues/702" class="external-link">#702</a>).</p></li>
+<li><p>Fixed bug with integer64 types in <code><a href="../reference/rowbind.html">rowbind()</a></code>. Thanks <a href="https://github.com/arthurgailes" class="external-link">@arthurgailes</a> for reporting and <a href="https://github.com/aitap" class="external-link">@aitap</a> for providing a fix (<a href="https://github.com/SebKrantz/collapse/issues/697" class="external-link">#697</a>).</p></li>
+<li><p><em>collapse</em> now also has a Bluesky account at <a href="https://bsky.app/profile/rcollapse.bsky.social" class="external-link uri">https://bsky.app/profile/rcollapse.bsky.social</a>.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.0.18" id="collapse-2018">collapse 2.0.18<a class="anchor" aria-label="anchor" href="#collapse-2018"></a></h2><p class="text-muted">CRAN release: 2024-11-23</p>
@@ -69,7 +89,7 @@
 <li><p><code><a href="../reference/pivot.html">pivot()</a></code> has new arguments <code>FUN = "last"</code> and <code>FUN.args = NULL</code>, allowing wide and recast pivots with aggregation (default last value as before). <code>FUN</code> currently supports a single function returning a scalar value. <em>Fast Statistical Functions</em> receive vectorized execution. <code>FUN.args</code> can be used to supply a list of function arguments, including data-length arguments such as weights. There are also a couple of internal functions callable using function strings: <code>"first"</code>, <code>"last"</code>, <code>"count"</code>, <code>"sum"</code>, <code>"mean"</code>, <code>"min"</code>, or <code>"max"</code>. These are built into the reshaping C-code and thus extremely fast. Thanks <a href="https://github.com/AdrianAntico" class="external-link">@AdrianAntico</a> for the request (<a href="https://github.com/SebKrantz/collapse/issues/582" class="external-link">#582</a>).</p></li>
 <li>
 <p><code><a href="../reference/join.html">join()</a></code> now provides enhanced verbosity, indicating the average order of the join between the two tables, e.g.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/join.html">join</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; left join: x[id] 3/4 (75%) &lt;1.5:1st&gt; y[id] 2/6 (33.3%)</span></span>
 <span><span class="co">#&gt;   id</span></span>
@@ -96,7 +116,7 @@
 <li><p>Fixed a bug in <code><a href="../reference/join.html">join()</a></code> where a full join silently became a left join if there are no matches between the tables (<a href="https://github.com/SebKrantz/collapse/issues/574" class="external-link">#574</a>). Thanks <a href="https://github.com/D3SL" class="external-link">@D3SL</a> for reporting.</p></li>
 <li>
 <p>Added function <code><a href="../reference/GRP.html">group_by_vars()</a></code>: A standard evaluation version of <code><a href="../reference/GRP.html">fgroup_by()</a></code> that is slimmer and safer for programming, e.g. <code>data |&gt; group_by_vars(ind1) |&gt; collapg(custom = list(fmean = ind2, fsum = ind3))</code>. Or, using <em>magrittr</em>:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/collapse-options.html">set_collapse</a></span><span class="op">(</span>mask <span class="op">=</span> <span class="st">"manip"</span><span class="op">)</span> <span class="co"># for fgroup_vars -&gt; group_vars</span></span>
 <span></span>
@@ -304,7 +324,7 @@ HDB(mtcars, mpg ~ carb*qF(cyl) + qF(vs) + qF(am))
 <h4 id="improvements-1-9-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-1-9-0"></a></h4>
 <ul><li>
 <p><code><a href="../reference/fnth_fmedian.html">fnth()</a></code> and <code><a href="../reference/fnth_fmedian.html">fmedian()</a></code> were rewritten in C, with significant gains in performance and versatility. Notably, <code><a href="../reference/fnth_fmedian.html">fnth()</a></code> now supports (grouped, weighted) continuous quantile estimation like <code><a href="../reference/fquantile.html">fquantile()</a></code> (<code><a href="../reference/fnth_fmedian.html">fmedian()</a></code>, which is a wrapper around <code><a href="../reference/fnth_fmedian.html">fnth()</a></code>, can also estimate various quantile based weighted medians). The new default for <code><a href="../reference/fnth_fmedian.html">fnth()</a></code> is <code>ties = "q7"</code>, which gives the same result as <code>(f)quantile(..., type = 7)</code> (R’s default). OpenMP multithreading across groups is also much more effective in both the weighted and unweighted case. Finally, <code>fnth.default</code> gained an additional argument <code>o</code> to pass an ordering vector, which can dramatically speed up repeated invocations of the function on the dame data:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Estimating multiple weighted-grouped quantiles on mpg: pre-computing an ordering provides extra speed. </span></span>
 <span><span class="va">mtcars</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="../reference/ftransform.html">fmutate</a></span><span class="op">(</span>o <span class="op">=</span> <span class="fu"><a href="../reference/radixorder.html">radixorder</a></span><span class="op">(</span><span class="fu"><a href="../reference/GRP.html">GRPid</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># On grouped data, need to account for GRPid()</span></span>
