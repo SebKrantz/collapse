@@ -31,14 +31,14 @@ setTRA(x, STATS, FUN = "-", ...) # Shorthand for invisible(TRA(..., set = TRUE))
                  0 \tab\tab "na" or "replace_na"   \tab\tab replace missing values in \code{x} \cr
                  1 \tab\tab "fill" or "replace_fill"   \tab\tab replace data and missing values in \code{x} \cr
                  2 \tab\tab "replace" \tab\tab replace data but preserve missing values in \code{x} \cr
-                 3 \tab\tab "-"   \tab\tab subtract (i.e. center) \cr
+                 3 \tab\tab "-"   \tab\tab subtract (center on \code{STATS}) \cr
                  4 \tab\tab "-+"  \tab\tab subtract group-statistics but add group-frequency weighted average of group statistics (i.e. center on overall average statistic) \cr
                  5 \tab\tab "/"   \tab\tab divide (i.e. scale. For mean-preserving scaling see also \code{\link{fscale}}) \cr
-                 6 \tab\tab "\%"     \tab\tab compute percentages (i.e. divide and multiply by 100) \cr
+                 6 \tab\tab "\%"     \tab\tab compute percentages (divide and multiply by 100) \cr
                  7 \tab\tab "+" \tab\tab add \cr
                  8 \tab\tab "*" \tab\tab multiply \cr
-                 9 \tab\tab "\%\%" \tab\tab modulus (i.e. remainder from division by  \code{STATS}) \cr
-                 10 \tab\tab "-\%\%" \tab\tab subtract modulus (i.e. make data divisible by \code{STATS})
+                 9 \tab\tab "\%\%" \tab\tab modulus (remainder from division by  \code{STATS}) \cr
+                 10 \tab\tab "-\%\%" \tab\tab subtract modulus (make data divisible by \code{STATS})
   }
   }
 \item{g}{a factor, \code{\link{GRP}} object, atomic vector (internally converted to factor) or a list of vectors / factors (internally converted to a \code{\link{GRP}} object) used to group \code{x}. Number of groups must match rows of \code{STATS}. See Details.}

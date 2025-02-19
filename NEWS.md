@@ -1,3 +1,22 @@
+# collapse 2.0.20
+
+* `join()` has a new argument require allowing the user to generate messages or errors if the join operation is not successful enough: 
+
+```r
+> join(df1, df2, require = list(x = 0.8, on.fail = "warning"))
+left join: df1[id1, id2] 3/4 (75%) <1:1st> df2[id1, id2] 3/4 (75%)
+  id1 id2 name age salary      dept
+1   1   a John  35  60000        IT
+2   1   b Jane  28     NA      <NA>
+3   2   b  Bob  42  55000 Marketing
+4   3   c Carl  50  70000     Sales
+Warning message:
+In switch_msg(sprintf("Matched %#.1f%% of records in table %s (x), but %#.1f%% is required",  :
+  Matched 75.0% of records in table df1 (x), but 80.0% is required
+```
+
+* `num_vars()` (and thus als `cat_vars()` and `collap()`) where changed to a simpler C-definition of numeric data types which is more in-line with `is.numeric()`: `is_numeric_C <- function(x) typeof(x) %in% c("integer", "double") && !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))`. The previous definition was: `is_numeric_C_old <- function(x) typeof(x) %in% c("integer", "double") && (!is.object(x) || inherits(x, c("ts", "units", "integer64")))`. Thus, the definition changed from including only certain classes to excluding the most important classes. Thanks @maouw for flagging this (#727).
+
 # collapse 2.0.19
 
 * `fmatch(factor(NA), NA)` now gives `1` instead of `NA`. Thanks @NicChr (#675).

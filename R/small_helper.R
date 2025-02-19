@@ -716,6 +716,11 @@ tochar <- function(x) if(is.character(x)) x else as.character(x)  # if(is.object
 #   substr(args, 2, nc) # 3, nc-1 for no brackets !
 # }
 
+switch_msg <- function(msg, which = NULL) {
+  if(is.null(which)) stop(msg)
+  switch(which, error = stop(msg), message = message(msg), warning = warning(msg))
+}
+
 unused_arg_action <- function(call, ...) {
   wo <- switch(getOption("collapse_unused_arg_action"), none = 0L, message = 1L, warning = 2L, error = 3L,
                stop("Unused argument encountered. Please instruct collapse what to do about unused arguments by setting
