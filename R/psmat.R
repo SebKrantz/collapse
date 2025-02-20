@@ -1,7 +1,7 @@
 
 psmat <- function(x, ...) UseMethod("psmat") # , x
 
-psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
+psmat.default <- function(x, g, t = NULL, transpose = FALSE, fill = NULL, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   if(is.matrix(x)) stop("x is already a matrix")
   if(is.atomic(g) && length(g) == 1L) {
@@ -14,16 +14,16 @@ psmat.default <- function(x, g, t = NULL, transpose = FALSE, ...) {
                     g <- as_factor_GRP(g) else g <- as_factor_GRP(GRP.default(g, return.order = FALSE, call = FALSE))
   if(is.null(t)) {
     # message("No timevar provided: Assuming Balanced Panel")
-    return(.Call(Cpp_psmat,x, g, NULL, transpose))
+    return(.Call(Cpp_psmat,x, g, NULL, transpose, fill))
   } else {
     if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, sort = TRUE, na.exclude = FALSE) else if(is_GRP(t))
                       t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, sort = TRUE, return.order = FALSE, call = FALSE))
-    return(.Call(Cpp_psmat,x, g, t, transpose))
+    return(.Call(Cpp_psmat,x, g, t, transpose, fill))
     }
   }
 }
 
-psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, array = TRUE, ...) {
+psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, fill = NULL, array = TRUE, ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   oldClass(x) <- NULL # Setting globally !
   if(is.atomic(by) && length(by) == 1L) {
@@ -60,11 +60,11 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
                          by <- as_factor_GRP(by) else by <- as_factor_GRP(GRP.default(by, return.order = FALSE, call = FALSE))
       if(is.null(t)) {
         # message("No timevar provided: Assuming Balanced Panel")
-        res <- lapply(x, psmatCpp, by, NULL, transpose)
+        res <- lapply(x, psmatCpp, by, NULL, transpose, fill)
       } else {
         if(!is.nmfactor(t)) if(is.atomic(t)) t <- qF(t, sort = TRUE, na.exclude = FALSE) else if(is_GRP(t))
                   t <- as_factor_GRP(t) else t <- as_factor_GRP(GRP.default(t, sort = TRUE, return.order = FALSE, call = FALSE))
-        res <- lapply(x, psmatCpp, by, t, transpose)
+        res <- lapply(x, psmatCpp, by, t, transpose, fill)
       }
   }
   if(array) {
@@ -73,18 +73,18 @@ psmat.data.frame <- function(x, by, t = NULL, cols = NULL, transpose = FALSE, ar
   } else return(res)
 }
 
-psmat.pseries <- function(x, transpose = FALSE, drop.index.levels = "none", ...) {
+psmat.pseries <- function(x, transpose = FALSE, fill = NULL, drop.index.levels = "none", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- droplevels_index(uncl2pix(x, interact = TRUE), drop.index.levels)
   if(is.matrix(x)) stop("x is already a matrix")
-  .Call(Cpp_psmat, x, index[[1L]], index[[2L]], transpose)
+  .Call(Cpp_psmat, x, index[[1L]], index[[2L]], transpose, fill)
 }
 
-psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, array = TRUE, drop.index.levels = "none", ...) {
+psmat.pdata.frame <- function(x, cols = NULL, transpose = FALSE, fill = NULL, array = TRUE, drop.index.levels = "none", ...) {
   if(!missing(...)) unused_arg_action(match.call(), ...)
   index <- droplevels_index(uncl2pix(x, interact = TRUE), drop.index.levels)
   oldClass(x) <- NULL
-  res <- lapply(if(is.null(cols)) x else x[cols2int(cols, x, names(x), FALSE)], psmatCpp, index[[1L]], index[[2L]], transpose)
+  res <- lapply(if(is.null(cols)) x else x[cols2int(cols, x, names(x), FALSE)], psmatCpp, index[[1L]], index[[2L]], transpose, fill)
   if(array) {
     if(length(res) == 1L) return(res[[1L]]) else
     return(addAttributes(fsimplify2array(res), list(transpose = transpose, class = c("psmat","array"))))

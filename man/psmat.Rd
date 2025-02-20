@@ -17,15 +17,16 @@ Matrix / Array from Panel Series
 \usage{
 psmat(x, \dots)
 
-\method{psmat}{default}(x, g, t = NULL, transpose = FALSE, \dots)
+\method{psmat}{default}(x, g, t = NULL, transpose = FALSE, fill = NULL, \dots)
 
-\method{psmat}{data.frame}(x, by, t = NULL, cols = NULL, transpose = FALSE, array = TRUE, \dots)
+\method{psmat}{data.frame}(x, by, t = NULL, cols = NULL, transpose = FALSE, fill = NULL, array = TRUE, \dots)
 
 # Methods for indexed data / compatibility with plm:
 
-\method{psmat}{pseries}(x, transpose = FALSE, drop.index.levels = "none", \dots)
+\method{psmat}{pseries}(x, transpose = FALSE, fill = NULL, drop.index.levels = "none", \dots)
 
-\method{psmat}{pdata.frame}(x, cols = NULL, transpose = FALSE, array = TRUE, drop.index.levels = "none", \dots)
+\method{psmat}{pdata.frame}(x, cols = NULL, transpose = FALSE, fill = NULL, array = TRUE,
+      drop.index.levels = "none", \dots)
 
 
 \method{plot}{psmat}(x, legend = FALSE, colours = legend, labs = NULL, grid = FALSE, \dots)
@@ -38,6 +39,7 @@ psmat(x, \dots)
 \item{t}{same inputs as \code{g/by}, to indicate the time-variable(s) or second identifier(s). \code{g} and \code{t} together should fully identify the panel. If \code{t = NULL}, the data is assumed sorted and \code{seq_col} is used to generate rownames for the output matrix.}
 \item{cols}{\emph{data.frame method}: Select columns using a function, column names, indices or a logical vector. \emph{Note}: \code{cols} is ignored if a two-sided formula is passed to \code{by}.}
 \item{transpose}{logical. \code{TRUE} generates the matrix such that \code{g/by -> columns, t -> rows}. Default is \code{g/by -> rows, t -> columns}.}
+\item{fill}{element to fill empty slots of matrix / array if panel is unbalanced. \code{NULL} will generate a \code{NA} of the right type.}
 \item{array}{\emph{data.frame / pdata.frame methods}: logical. \code{TRUE} returns a 3D array (if just one column is selected a matrix is returned). \code{FALSE} returns a list of matrices.}
  \item{drop.index.levels}{character. Either \code{"id"}, \code{"time"}, \code{"all"} or \code{"none"}. See \link{indexing}.}
   \item{\dots}{arguments to be passed to or from other methods, or for the plot method additional arguments passed to \code{\link{ts.plot}}.}

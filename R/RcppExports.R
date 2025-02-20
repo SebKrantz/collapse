@@ -81,8 +81,8 @@ mctl <- function(X, names = FALSE, ret = 0L) {
     .Call(`_collapse_mctl`, X, names, ret)
 }
 
-psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
-    .Call(`_collapse_psmatCpp`, x, g, t, transpose)
+psmatCpp <- function(x, g, t = NULL, transpose = FALSE, fill = NULL) {
+    .Call(`_collapse_psmatCpp`, x, g, t, transpose, fill)
 }
 
 pwnobsmCpp <- function(x) {

@@ -382,8 +382,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // psmatCpp
-SEXP psmatCpp(const SEXP& x, const IntegerVector& g, const SEXP& t, bool transpose);
-RcppExport SEXP _collapse_psmatCpp(SEXP xSEXP, SEXP gSEXP, SEXP tSEXP, SEXP transposeSEXP) {
+SEXP psmatCpp(const SEXP& x, const IntegerVector& g, const SEXP& t, bool transpose, const SEXP& fill);
+RcppExport SEXP _collapse_psmatCpp(SEXP xSEXP, SEXP gSEXP, SEXP tSEXP, SEXP transposeSEXP, SEXP fillSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -391,7 +391,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const IntegerVector& >::type g(gSEXP);
     Rcpp::traits::input_parameter< const SEXP& >::type t(tSEXP);
     Rcpp::traits::input_parameter< bool >::type transpose(transposeSEXP);
-    rcpp_result_gen = Rcpp::wrap(psmatCpp(x, g, t, transpose));
+    Rcpp::traits::input_parameter< const SEXP& >::type fill(fillSEXP);
+    rcpp_result_gen = Rcpp::wrap(psmatCpp(x, g, t, transpose, fill));
     return rcpp_result_gen;
 END_RCPP
 }
