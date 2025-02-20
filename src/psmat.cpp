@@ -1,9 +1,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-
 template <int RTYPE>
-Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transpose) {
+Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transpose, SEXP fill) {
   int l = x.size(), gss = g.size();
   if(gss != l) stop("length(g) must match length(x)");
   CharacterVector glevs = Rf_getAttrib(g, R_LevelsSymbol);
@@ -35,7 +34,11 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
     CharacterVector tlevs = Rf_getAttrib(t, R_LevelsSymbol);
     int nt = tlevs.size();
     Matrix<RTYPE> out = transpose ? no_init_matrix(nt, ng) : no_init_matrix(ng, nt); // best way to do this ? Stable ? -> Could conditionally create vector and the coerce to matrix -> faster init ?
-    if(nt != gs) std::fill(out.begin(), out.end(), Vector<RTYPE>::get_na());
+    if(nt != gs) {
+      typename traits::storage_type<RTYPE>::type coerced_fill = Rf_isNull(fill) ?
+        Vector<RTYPE>::get_na() : as<typename traits::storage_type<RTYPE>::type>(fill);
+      std::fill(out.begin(), out.end(), coerced_fill);
+    }
     if(transpose) {
       for(int i = 0; i != l; ++i) out[(pg[i]-1)*nt + pt[i]-1] = x[i]; // out(tt[i]-1, g[i]-1) = x[i]; // tiny bit faster
     } else {
@@ -49,24 +52,24 @@ Matrix<RTYPE> psmatCppImpl(Vector<RTYPE> x, IntegerVector g, SEXP t, bool transp
 }
 
 template <>
-Matrix<VECSXP> psmatCppImpl(Vector<VECSXP> x, IntegerVector g, SEXP t, bool transpose) {
+Matrix<VECSXP> psmatCppImpl(Vector<VECSXP> x, IntegerVector g, SEXP t, bool transpose, SEXP fill) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-Matrix<RAWSXP> psmatCppImpl(Vector<RAWSXP> x, IntegerVector g, SEXP t, bool transpose) {
+Matrix<RAWSXP> psmatCppImpl(Vector<RAWSXP> x, IntegerVector g, SEXP t, bool transpose, SEXP fill) {
   stop("Not supported SEXP type!");
 }
 
 template <>
-Matrix<EXPRSXP> psmatCppImpl(Vector<EXPRSXP> x, IntegerVector g, SEXP t, bool transpose) {
+Matrix<EXPRSXP> psmatCppImpl(Vector<EXPRSXP> x, IntegerVector g, SEXP t, bool transpose, SEXP fill) {
   stop("Not supported SEXP type!");
 }
 
 
 // [[Rcpp::export]]
-SEXP psmatCpp(const SEXP& x, const IntegerVector& g, const SEXP& t = R_NilValue, bool transpose = false) {
-  RCPP_RETURN_VECTOR(psmatCppImpl, x, g, t, transpose);
+SEXP psmatCpp(const SEXP& x, const IntegerVector& g, const SEXP& t = R_NilValue, bool transpose = false, const SEXP& fill = R_NilValue) {
+  RCPP_RETURN_VECTOR(psmatCppImpl, x, g, t, transpose, fill);
 }
 
 

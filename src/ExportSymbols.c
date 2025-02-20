@@ -68,7 +68,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fvarsdl", (DL_FUNC) &_collapse_fvarsdlCpp, 9},
   {"Cpp_mrtl", (DL_FUNC) &_collapse_mrtl, 3},
   {"Cpp_mctl", (DL_FUNC) &_collapse_mctl, 3},
-  {"Cpp_psmat", (DL_FUNC) &_collapse_psmatCpp, 4},
+  {"Cpp_psmat", (DL_FUNC) &_collapse_psmatCpp, 5},
   {"Cpp_qF", (DL_FUNC) &_collapse_qFCpp, 5},
   {"Cpp_sortunique", (DL_FUNC) &_collapse_sortuniqueCpp, 1},
   {"Cpp_fdroplevels", (DL_FUNC) &_collapse_fdroplevelsCpp, 2},
