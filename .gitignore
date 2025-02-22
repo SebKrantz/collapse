@@ -58,3 +58,4 @@ doc
 Meta
 testing
 *.db
+.DS_Store
