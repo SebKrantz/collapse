@@ -26,9 +26,6 @@ to `development` branch in the source repository.
 
 The project uses `renv` to allow you to easily install the dependencies in an isolated manner.
 
-> [!NOTE]  
-> You may need to [install or update `renv`](https://rstudio.github.io/renv/index.html#installation) package on your system before proceeding.
-
 1. Open `collapse.Rproj`. This will automatically activate the environment.
 2. Run `renv::install()` in the console to install the packages required for development and testing.
 3. For interactive testing, you may want to use `devtools::load_all()` to load the complete `collapse` package.
