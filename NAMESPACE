@@ -203,6 +203,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  export(fcount)
  export(fcountv)
  export(fslice)
+ export(fslicev)
  # export(group_names.GRP)
  export(has_elem)
  export(flm)

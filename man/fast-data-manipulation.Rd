@@ -47,11 +47,9 @@
                  \code{\link{pivot}} \tab\tab No methods, for data frames \tab\tab Fast reshaping \cr
                  \code{\link{fsubset}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab Fast subset data (non-standard evaluation) \cr
                  \code{\link{ss}} \tab\tab No methods, for data frames \tab\tab Fast subset data frames \cr
-                 \code{\link{fslice}} \tab\tab No methods, for matrices and data frames\tab\tab Fast slicing of rows \cr
-
+                 \code{\link[=fslice]{fslice(v)}} \tab\tab No methods, for matrices and data frames\tab\tab Fast slicing of rows \cr
                  \code{\link{fsummarise}} \tab\tab No methods, for data frames \tab\tab Fast data aggregation \cr
-
-                \code{\link{fmutate}}, \code{\link[=ftransform]{(f/set)ftransform(<-)}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns (non-standard evaluation) \cr
+                 \code{\link{fmutate}}, \code{\link[=ftransform]{(f/set)ftransform(<-)}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns (non-standard evaluation) \cr
                  %\code{\link{settransform}} \tab\tab No methods, for data frames \tab\tab Compute, modify or delete columns by reference (non-standard evaluation) \cr
                  \code{\link[=fcompute]{fcompute(v)}} \tab\tab No methods, for data frames \tab\tab Compute or modify columns, returned in a new data frame (non-standard evaluation) \cr
                  \code{\link[=roworder]{roworder(v)}} \tab\tab No methods, for data frames incl. pdata.frame \tab\tab Reorder rows and return data frame (standard and non-standard evaluation) \cr
