@@ -8,7 +8,7 @@ A fast function to extract rows from a matrix or data frame, with support for gr
 }
 \usage{
 fslice(x, ..., n = 1, how = "first", order.by = NULL,
-       na.rm = FALSE, with.ties = FALSE)
+       na.rm = FALSE, sort = FALSE, with.ties = FALSE)
 }
 \arguments{
   \item{x}{a matrix, data frame or list-like object, including 'grouped_df'.}
