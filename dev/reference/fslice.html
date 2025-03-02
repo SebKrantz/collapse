@@ -71,13 +71,16 @@
   <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
 <dd><p>logical. If <code>TRUE</code>, missing values in <code>order.by</code> are removed before selecting rows.</p></dd>
 
+  <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
+<dd><p>logical. If <code>TRUE</code>, sort selected rows on the grouping columns.</p></dd>
+
   <dt id="arg-with-ties">with.ties<a class="anchor" aria-label="anchor" href="#arg-with-ties"></a></dt>
 <dd><p>logical. If <code>TRUE</code> and <code>how</code> is "min" or "max", returns all rows that tie with the extreme value. Only applies when n = 1.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A subset of the input data frame containing the selected rows. The output preserves the input data frame's attributes and class.</p>
+    <p>A subset of the input matrix/data frame containing the selected rows. The output preserves the input's attributes and class.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -124,6 +127,14 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
+<span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu">fslice</span><span class="op">(</span><span class="va">cyl</span>, n <span class="op">=</span> <span class="fl">2</span>, sort <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>           <span class="co"># with sorting (slightly less efficient)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                    mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Datsun 710        22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Merc 240D         24.4   4 146.7  62 3.69 3.190 20.00  1  0    4    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4         21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4 Wag     21.0   6 160.0 110 3.90 2.875 17.02  0  1    4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout 18.7   8 360.0 175 3.15 3.440 17.02  0  0    3    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Duster 360        14.3   8 360.0 245 3.21 3.570 15.84  0  0    3    4</span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu">fslice</span><span class="op">(</span><span class="va">cyl</span>, n <span class="op">=</span> <span class="fl">2</span>, how <span class="op">=</span> <span class="st">"min"</span>, order.by <span class="op">=</span> <span class="va">mpg</span><span class="op">)</span>  <span class="co"># 2 lowest mpg cars per cylinder</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Merc 280C           17.8   6 167.6 123 3.92 3.440 18.90  1  0    4    4</span>
