@@ -88,6 +88,8 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_gsplit", (DL_FUNC) &gsplit, 3},
   {"C_greorder", (DL_FUNC) &greorder, 2},
   {"C_lassign", (DL_FUNC) &lassign, 4},
+  {"C_gwhich_first", (DL_FUNC) &gwhich_first, 3},
+  {"C_gslice_multi", (DL_FUNC) &gslice_multi, 4},
   {"Cpp_seqid", (DL_FUNC) &_collapse_seqid, 7},
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 1},

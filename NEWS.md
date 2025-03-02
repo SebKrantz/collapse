@@ -1,4 +1,6 @@
-# collapse 2.0.20
+# collapse 2.0.19.9000
+
+* Added function `fslice()`: a fast alternative to `dplyr::slice_[head|tail|min|max]` that also works with matrices. Thanks @alinacherkas for the proposal and initial implementation (#725).
 
 * `join()` has a new argument `require` allowing the user to generate messages or errors if the join operation is not successful enough: 
 

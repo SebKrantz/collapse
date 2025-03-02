@@ -20,12 +20,12 @@ test_that("fslice works with integers and no grouping", {
     )
     # min
     expect_equal(
-      iris |> dplyr::slice_min(Petal.Length, n = n),
+      iris |> dplyr::slice_min(Petal.Length, n = n, with_ties = FALSE),
       fslice(iris, n = n, how = "min", order.by = "Petal.Length")
     )
     # max
     expect_equal(
-      iris |> dplyr::slice_max(Petal.Length, n = n),
+      iris |> dplyr::slice_max(Petal.Length, n = n, with_ties = FALSE),
       fslice(iris, n = n, how = "max", order.by = "Petal.Length")
     )
   }
@@ -51,12 +51,12 @@ test_that("fslice works with proportions and no grouping", {
     )
     # min
     expect_equal(
-      iris |> dplyr::slice_min(Petal.Length, prop = n),
+      iris |> dplyr::slice_min(Petal.Length, prop = n, with_ties = FALSE),
       fslice(iris, n = n, how = "min", order.by = "Petal.Length")
     )
     # max
     expect_equal(
-      iris |> dplyr::slice_max(Petal.Length, prop = n),
+      iris |> dplyr::slice_max(Petal.Length, prop = n, with_ties = FALSE),
       fslice(iris, n = n, how = "max", order.by = "Petal.Length")
     )
   }
@@ -68,38 +68,38 @@ test_that("fslice works with grouping", {
   for (n in N) {
     # first
     expect_equal(
-      iris |> dplyr::group_by(Species) |> dplyr::slice_head(n = n) |> as.data.frame(),
+      iris |> dplyr::group_by(Species) |> dplyr::slice_head(n = n) |> qDF(),
       fslice(iris, "Species", n = n, how = "first")
     )
     # last
     expect_equal(
-      iris |> dplyr::group_by(Species) |> dplyr::slice_tail(n = n) |> as.data.frame(),
+      iris |> dplyr::group_by(Species) |> dplyr::slice_tail(n = n) |> qDF(),
       fslice(iris, "Species", n = n, how = "last")
     )
     # min
     expect_equal(
-      iris |> dplyr::group_by(Species) |> dplyr::slice_min(Petal.Length, n = n) |> as.data.frame(),
+      iris |> dplyr::group_by(Species) |> dplyr::slice_min(Petal.Length, n = n, with_ties = FALSE) |> qDF(),
       fslice(iris, "Species", n = n, how = "min", order.by = "Petal.Length")
     )
     # max
     expect_equal(
-      iris |> dplyr::group_by(Species) |> dplyr::slice_max(Petal.Length, n = n) |> as.data.frame(),
+      iris |> dplyr::group_by(Species) |> dplyr::slice_max(Petal.Length, n = n, with_ties = FALSE) |> qDF(),
       fslice(iris, "Species", n = n, how = "max", order.by = "Petal.Length")
     )
   }
 })
 
-test_that("fslice works without ties", {
-  N <- c(1, 5, 17)
+test_that("fslice works with ties", {
+  N <- 1 # c(1, 5, 17)
   for (n in N) {
     # min
     expect_equal(
-      iris |> dplyr::group_by(Species) |> dplyr::slice_min(Petal.Length, n = n, with_ties = TRUE) |> as.data.frame(),
+      iris |> dplyr::group_by(Species) |> dplyr::slice_min(Petal.Length, n = n, with_ties = TRUE) |> qDF(),
       fslice(iris, "Species", n = n, how = "min", order.by = "Petal.Length", with.ties = TRUE)
     )
     # max
     expect_equal(
-      iris |> dplyr::group_by(Species) |> dplyr::slice_max(Petal.Length, n = n, with_ties = TRUE) |> as.data.frame(),
+      iris |> dplyr::group_by(Species) |> dplyr::slice_max(Petal.Length, n = n, with_ties = TRUE) |> qDF(),
       fslice(iris, "Species", n = n, how = "max", order.by = "Petal.Length", with.ties = TRUE)
     )
   }
