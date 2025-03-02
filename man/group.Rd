@@ -15,7 +15,7 @@ groupv(x, starts = FALSE, group.sizes = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{\dots}{comma deparated atomic vectors to group. Also supports a single list of vectors for backward compatibility.}
+  \item{\dots}{comma separated atomic vectors to group. Also supports a single list of vectors for backward compatibility.}
   \item{x}{an atomic vector or data frame / list of equal-length atomic vectors.}
   \item{starts}{logical. If \code{TRUE}, an additional attribute \code{"starts"} is attached giving a vector of group starts (= index of first-occurrence of unique rows).
 }
