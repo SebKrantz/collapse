@@ -220,7 +220,7 @@ SEXP gslice_multi(SEXP g, SEXP o, SEXP Rn, SEXP first)  {
     }
   }
 
-  Free(sizes);
+  R_Free(sizes);
   UNPROTECT(1);
   return res;
 }
