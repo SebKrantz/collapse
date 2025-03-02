@@ -68,6 +68,8 @@ SEXP CcopyAttrib(SEXP to, SEXP from);
 SEXP CcopyMostAttrib(SEXP to, SEXP from);
 SEXP copyMostAttributes(SEXP to, SEXP from);
 SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
+SEXP gwhich_first(SEXP x, SEXP g, SEXP target);
+SEXP gslice_multi(SEXP g, SEXP o, SEXP Rn, SEXP first);
 SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 SEXP gsplit(SEXP x, SEXP gobj, SEXP toint);
 SEXP greorder(SEXP x, SEXP gobj);

@@ -12,6 +12,7 @@ Authors@R: c(
            person("Dirk", "Eddelbuettel", role = "ctb"),
            person("Laurent", "Berge", role = "ctb"),
            person("Kevin", "Tappe", role = "ctb"),
+           person("Alina", "Cherkas", role = "ctb"),
            person("R Core Team and contributors worldwide", role = "ctb"),
            person("Martyn", "Plummer", role = "cph"),
            person("1999-2016 The R Core Team", role = "cph")

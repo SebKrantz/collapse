@@ -1,0 +1,57 @@
+
+
+fslice <- function(x, ..., n = 1, how = "first", order.by = NULL,
+                   na.rm = FALSE, with.ties = FALSE) {
+
+  # handle grouping
+  if(!missing(...)) {
+    g <- GRP.default(if(is.list(x)) fselect(x, ...) else list(...), sort = FALSE, return.groups = FALSE, return.order = FALSE, call = FALSE)
+  } else if(is.list(x) && inherits(x, "grouped_df")) {
+    g <- GRP.grouped_df(x, return.groups = FALSE, call = FALSE)
+    x <- fungroup2(x, oldClass(x))
+  } else g <- NULL
+
+  # convert a proportion to a number if applicable
+  if(n < 1) n <- if(is.null(g)) max(1L, as.integer(round(n * fnrow(x)))) else max(1L, as.integer(round(n * fnrow(x)/g[[1L]])))
+  if(n > 1 && with.ties) stop("with.ties = TRUE is only supported for n = 1")
+
+  # resolve values to order by
+  if(switch(how, min = TRUE, max = TRUE, FALSE)) {
+    if(is.list(x)) order.by <- eval(substitute(order.by), x, parent.frame())
+    if(is.character(order.by) && length(order.by) == 1L && anyv(attr(x, "names"), order.by))
+      order.by <- .subset2(x, order.by)
+    if(!is.vector(order.by) || !is.numeric(order.by) || length(order.by) != fnrow(x))
+      stop("order.by must be a numeric vector of the same length as the number of rows in x, or the name of a column in x.")
+  }
+
+  if(is.null(g)) {
+    ind <- switch(how,
+      first = 1:n,
+      last = (fnrow(x)-n+1L):fnrow(x),
+      min = if(n > 1) radixorderv(order.by, decreasing = FALSE, na.last = na.rm)[1:n] else if(with.ties) order.by %==% fmin.default(order.by, na.rm = na.rm) else which.min(order.by),
+      max = if(n > 1) radixorderv(order.by, decreasing = TRUE, na.last = na.rm)[1:n] else if(with.ties) order.by %==% fmax.default(order.by, na.rm = na.rm) else which.max(order.by),
+      stop("Unknown 'how' option: ", how)
+    )
+    return(ss(x, ind, check = FALSE))
+  }
+
+  if(n == 1) return(switch(how,
+      first = ffirst(x, g, na.rm = na.rm),
+      last = flast(x, g, na.rm = na.rm),
+      min = if(with.ties) ss(x, order.by %==% fmin(order.by, g, TRA = "fill", na.rm = na.rm, use.g.names = FALSE), check = FALSE) else
+            ss(x, .Call(C_gwhich_first, order.by, g, fmin.default(order.by, g, na.rm = na.rm, use.g.names = FALSE)), check = FALSE),
+      max = if(with.ties) ss(x, order.by %==% fmax(order.by, g, TRA = "fill", na.rm = na.rm, use.g.names = FALSE), check = FALSE) else
+            ss(x, .Call(C_gwhich_first, order.by, g, fmax.default(order.by, g, na.rm = na.rm, use.g.names = FALSE)), check = FALSE),
+      stop("Unknown 'how' option: ", how)
+  ))
+
+  ind <- switch(how,
+      first = .Call(C_gslice_multi, g, NULL, n, TRUE),
+      last = .Call(C_gslice_multi, g, NULL, n, FALSE),
+      min = .Call(C_gslice_multi, g, radixorder(g$group.id, order.by, decreasing = FALSE, na.last = na.rm), n, TRUE),
+      max = .Call(C_gslice_multi, g, radixorder(g$group.id, order.by, decreasing = c(FALSE, TRUE), na.last = na.rm), n, TRUE),
+      stop("Unknown 'how' option: ", how)
+    )
+
+  return(ss(x, ind, check = FALSE))
+}

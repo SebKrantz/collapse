@@ -20,6 +20,8 @@
 
 \item \code{\link{fsubset}} is a much faster version of \code{\link{subset}} to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by \code{\link{fsubset}} is not needed, the function \code{\link{ss}} is a much faster and also more secure alternative to \code{[.data.frame}.
 
+\item \code{\link{fslice}} is a much faster alternative to \code{dplyr::slice_[head|tail|min|max]} for filtering/deduplicating matrix-like objects (by groups).
+
 \item \code{\link{fsummarise}} is a much faster version of \code{dplyr::summarise} when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions} and \code{\link{fgroup_by}}, with whom it also supports super fast weighted aggregation.
 
 \item \code{\link{fmutate}} is a much faster version of \code{dplyr::mutate} when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions} as well as fast \link[=data-transformations]{Data Transformation Functions} and \code{\link{fgroup_by}}.
@@ -45,6 +47,7 @@
                  \code{\link{pivot}} \tab\tab No methods, for data frames \tab\tab Fast reshaping \cr
                  \code{\link{fsubset}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame} \tab\tab Fast subset data (non-standard evaluation) \cr
                  \code{\link{ss}} \tab\tab No methods, for data frames \tab\tab Fast subset data frames \cr
+                 \code{\link{fslice}} \tab\tab No methods, for matrices and data frames\tab\tab Fast slicing of rows \cr
 
                  \code{\link{fsummarise}} \tab\tab No methods, for data frames \tab\tab Fast data aggregation \cr
 
