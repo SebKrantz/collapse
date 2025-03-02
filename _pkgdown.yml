@@ -92,11 +92,12 @@ reference:
   - seqid
   - timeid
 - title: Fast Data Manipulation
-  desc: Fast and flexible select, replace, add, subset, transform, sort/reorder, rename/relabel, bind, join and pivot/reshape data / data frame columns.
+  desc: Fast and flexible select, replace, add, subset, slice, transform, sort/reorder, rename/relabel, bind, join and pivot/reshape data / data frame columns.
   contents:
   - fast-data-manipulation
   - fselect-get_vars-add_vars
   - fsubset
+  - fslice
   - fsummarise
   - ftransform
   - across

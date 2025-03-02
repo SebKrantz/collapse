@@ -36,8 +36,8 @@ fslice <- function(x, ..., n = 1, how = "first", order.by = NULL,
   }
 
   if(n == 1) return(switch(how,
-      first = ffirst(x, g, na.rm = na.rm),
-      last = flast(x, g, na.rm = na.rm),
+      first = condalc(ffirst(x, g, na.rm = na.rm), inherits(x, "data.table")),
+      last = condalc(flast(x, g, na.rm = na.rm), inherits(x, "data.table")),
       min = if(with.ties) ss(x, order.by %==% fmin(order.by, g, TRA = "fill", na.rm = na.rm, use.g.names = FALSE), check = FALSE) else
             ss(x, .Call(C_gwhich_first, order.by, g, fmin.default(order.by, g, na.rm = na.rm, use.g.names = FALSE)), check = FALSE),
       max = if(with.ties) ss(x, order.by %==% fmax(order.by, g, TRA = "fill", na.rm = na.rm, use.g.names = FALSE), check = FALSE) else

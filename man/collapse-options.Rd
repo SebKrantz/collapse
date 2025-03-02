@@ -44,7 +44,7 @@ get_collapse(opts = NULL)
 
   \tab\tab There are also a couple of convenience keywords that you can use to mask groups of functions: \cr\cr
 
-\tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr\cr
+\tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, fslice, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr\cr
 \tab\tab - \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{fmatch}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. \cr\cr % fdim not because of infinite recursion
 \tab\tab - \code{"special"} exports \code{n()}, \code{table()} and \code{\%in\%}. See above. \cr\cr
 \tab\tab - \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See also Note. \cr\cr
