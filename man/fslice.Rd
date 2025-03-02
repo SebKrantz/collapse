@@ -1,10 +1,10 @@
 \name{fslice}
 \alias{fslice}
 \title{
-Efficiently Slice Data Frame Rows
+Fast Slicing of Matrix-Like Objects
 }
 \description{
-A fast function to extract rows from a data frame, with support for grouped operations.
+A fast function to extract rows from a matrix or data frame, with support for grouped operations.
 }
 \usage{
 fslice(x, ..., n = 1, how = "first", order.by = NULL,
