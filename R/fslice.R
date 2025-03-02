@@ -1,11 +1,11 @@
 
 
 fslice <- function(x, ..., n = 1, how = "first", order.by = NULL,
-                   na.rm = FALSE, with.ties = FALSE) {
+                   na.rm = FALSE, sort = FALSE, with.ties = FALSE) {
 
   # handle grouping
   if(!missing(...)) {
-    g <- GRP.default(if(is.list(x)) fselect(x, ...) else list(...), sort = FALSE, return.groups = FALSE, return.order = FALSE, call = FALSE)
+    g <- GRP.default(if(is.list(x)) fselect(x, ...) else list(...), sort = sort, return.groups = FALSE, return.order = sort, call = FALSE)
   } else if(is.list(x) && inherits(x, "grouped_df")) {
     g <- GRP.grouped_df(x, return.groups = FALSE, call = FALSE)
     x <- fungroup2(x, oldClass(x))
@@ -46,8 +46,8 @@ fslice <- function(x, ..., n = 1, how = "first", order.by = NULL,
   ))
 
   ind <- switch(how,
-      first = .Call(C_gslice_multi, g, NULL, n, TRUE),
-      last = .Call(C_gslice_multi, g, NULL, n, FALSE),
+      first = .Call(C_gslice_multi, g, if(sort && length(g$order)) g$order else NULL, n, TRUE),
+      last = .Call(C_gslice_multi, g, if(sort && length(g$order)) g$order else NULL, n, FALSE),
       min = .Call(C_gslice_multi, g, radixorder(g$group.id, order.by, decreasing = FALSE, na.last = na.rm), n, TRUE),
       max = .Call(C_gslice_multi, g, radixorder(g$group.id, order.by, decreasing = c(FALSE, TRUE), na.last = na.rm), n, TRUE),
       stop("Unknown 'how' option: ", how)

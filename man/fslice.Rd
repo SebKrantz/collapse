@@ -24,10 +24,11 @@ fslice(x, ..., n = 1, how = "first", order.by = NULL,
   }
   \item{order.by}{vector or column name to order by when \code{how} is "min" or "max". Must be same length as rows in x.}
   \item{na.rm}{logical. If \code{TRUE}, missing values in \code{order.by} are removed before selecting rows.}
+  \item{sort}{logical. If \code{TRUE}, sort selected rows on the grouping columns.}
   \item{with.ties}{logical. If \code{TRUE} and \code{how} is "min" or "max", returns all rows that tie with the extreme value. Only applies when n = 1.}
 }
 \value{
-A subset of the input data frame containing the selected rows. The output preserves the input data frame's attributes and class.
+A subset of the input matrix/data frame containing the selected rows. The output preserves the input's attributes and class.
 }
 \seealso{
 \code{\link{fsubset}}, \code{\link{fcount}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
@@ -44,6 +45,7 @@ fslice(mtcars, n = 3, how = "max", order.by = mpg)  # 3 cars with highest mpg
 
 # With grouping
 mtcars |> fslice(cyl, n = 2)                        # First 2 cars per cylinder
+mtcars |> fslice(cyl, n = 2, sort = TRUE)           # with sorting (slightly less efficient)
 mtcars |> fslice(cyl, n = 2, how = "min", order.by = mpg)  # 2 lowest mpg cars per cylinder
 
 # Using with.ties
