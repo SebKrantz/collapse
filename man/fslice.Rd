@@ -11,8 +11,8 @@ fslice(x, ..., n = 1, how = "first", order.by = NULL,
        na.rm = FALSE, with.ties = FALSE)
 }
 \arguments{
-  \item{x}{a data frame or list-like object, including 'grouped_df'. Atomic vectors or matrices can also be passed, but will be sent through \code{\link{qDF}}.}
-  \item{\dots}{names or sequences of columns to group by - passed to \code{\link{fselect}}. Can be empty to operate on (un)grouped data.}
+  \item{x}{a matrix, data frame or list-like object, including 'grouped_df'.}
+  \item{\dots}{names or sequences of columns to group by - passed to \code{\link{fselect}}. If \code{x} is a matrix: atomic vectors to group \code{x}. Can be empty to operate on (un)grouped data.}
   \item{n}{integer or proportion (if < 1). Number of rows to select from each group. If a proportion is provided, it is converted to the equivalent number of rows.}
   \item{how}{character. Method to select rows. One of:
     \itemize{
