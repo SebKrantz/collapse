@@ -22,7 +22,14 @@ switchGRP <- function(x, na.last = TRUE, decreasing = FALSE, starts = FALSE,
   .Call(C_radixsort, na.last, decreasing, starts, group.sizes, sort, z)
 }
 
-group <- function(x, starts = FALSE, group.sizes = FALSE) {
+group <- function(..., starts = FALSE, group.sizes = FALSE) {
+  x <- if(...length() == 1L) ..1 else list(...)
+  g <- .Call(C_group, x, starts, group.sizes)
+  oldClass(g) <- c("qG", "na.included")
+  g
+}
+
+groupv <- function(x, starts = FALSE, group.sizes = FALSE) {
   g <- .Call(C_group, x, starts, group.sizes)
   oldClass(g) <- c("qG", "na.included")
   g

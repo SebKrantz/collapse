@@ -2,6 +2,8 @@
 
 * Added function `fslice()`: a fast alternative to `dplyr::slice_[head|tail|min|max]` that also works with matrices. Thanks @alinacherkas for the proposal and initial implementation (#725).
 
+* Added function `groupv()` as programmers version of `group()`, or rather, `groupv()` is now identical to the former `group()`, and `group()` now supports multiple vectors as input e.g. `group(v1, v2)`. This is done for convenience and consistency with `radixorder[v]()`. For backwards compatibility, `group()` also supports a single list as input.
+
 * `join()` has a new argument `require` allowing the user to generate messages or errors if the join operation is not successful enough: 
 
 ```r

@@ -272,7 +272,7 @@ pivot <- function(data,
           g <- g[[2L]]
           attr(g, "N.groups") <- ng
         } else { # Could also use GRP(), but this avoids computing a potentially large and redundant group sizes vector
-          g <- group(data[ids], starts = TRUE)
+          g <- groupv(data[ids], starts = TRUE)
           id_cols <- .Call(C_subsetDT, data, attr(g, "starts"), ids, FALSE)
         }
         # (4) Compute Names and Labels Columns
@@ -308,7 +308,7 @@ pivot <- function(data,
           namv <- names(data)[values]
           attributes(data) <- NULL
           if(!is.character(FUN)) {
-            data[values] <- apply_external_FUN(data[values], group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+            data[values] <- apply_external_FUN(data[values], group(g, g_v), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
             FUN <- "last"
           }
           value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, FUN, na.rm))
@@ -318,7 +318,7 @@ pivot <- function(data,
           names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)
         } else {
           if(!is.character(FUN)) {
-            data[[values]] <- apply_external_FUN(data[[values]], group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+            data[[values]] <- apply_external_FUN(data[[values]], group(g, g_v), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
             FUN <- "last"
           }
           value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill, nthreads, FUN, na.rm)
@@ -358,7 +358,7 @@ pivot <- function(data,
             g <- g[[2L]]
             attr(g, "N.groups") <- ng
           } else { # Could also use GRP(), but this avoids computing a potentially large and redundant group sizes vector
-            g <- group(data[ids], starts = TRUE)
+            g <- groupv(data[ids], starts = TRUE)
             id_cols <- .Call(C_subsetDT, data, attr(g, "starts"), ids, FALSE)
           }
         } else {
@@ -398,7 +398,7 @@ pivot <- function(data,
           attributes(vd) <- NULL
         }
         if(!is.character(FUN)) {
-          vd <- apply_external_FUN(vd, group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+          vd <- apply_external_FUN(vd, group(g, g_v), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
           FUN <- "last"
         }
         value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, FUN, na.rm))
