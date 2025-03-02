@@ -20,7 +20,7 @@
 
 \item \code{\link{fsubset}} is a much faster version of \code{\link{subset}} to efficiently subset vectors, matrices and data frames. If the non-standard evaluation offered by \code{\link{fsubset}} is not needed, the function \code{\link{ss}} is a much faster and also more secure alternative to \code{[.data.frame}.
 
-\item \code{\link{fslice}} is a much faster alternative to \code{dplyr::slice_[head|tail|min|max]} for filtering/deduplicating data-frame-like objects (by groups).
+\item \code{\link{fslice}} is a much faster alternative to \code{dplyr::slice_[head|tail|min|max]} for filtering/deduplicating matrix-like objects (by groups).
 
 \item \code{\link{fsummarise}} is a much faster version of \code{dplyr::summarise} when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions} and \code{\link{fgroup_by}}, with whom it also supports super fast weighted aggregation.
 
