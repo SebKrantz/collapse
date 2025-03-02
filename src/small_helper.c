@@ -215,7 +215,7 @@ SEXP gslice_multi(SEXP g, SEXP o, SEXP Rn, SEXP first)  {
     const int *po = INTEGER(o);
     if(asLogical(first)) {
       for(int i = 0, k = 0; i != l; ++i) if(n > sizes[pg[po[i]-1]]++) pres[k++] = po[i];
-    } else { // Currently not needed
+    } else {
       for(int i = l, k = lvec; i--; ) if(n > sizes[pg[po[i]-1]]++) pres[--k] = po[i];
     }
   }

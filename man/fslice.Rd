@@ -4,7 +4,7 @@
 Fast Slicing of Matrix-Like Objects
 }
 \description{
-A fast function to extract rows from a matrix or data frame, with support for grouped operations.
+A fast function to extract rows from a matrix or data frame-like object (by groups).
 }
 \usage{
 fslice(x, ..., n = 1, how = "first", order.by = NULL,
@@ -16,19 +16,19 @@ fslice(x, ..., n = 1, how = "first", order.by = NULL,
   \item{n}{integer or proportion (if < 1). Number of rows to select from each group. If a proportion is provided, it is converted to the equivalent number of rows.}
   \item{how}{character. Method to select rows. One of:
     \itemize{
-      \item "first": select first n rows
-      \item "last": select last n rows
-      \item "min": select n rows with minimum values of order.by
-      \item "max": select n rows with maximum values of order.by
+      \item \code{"first"}: select first \code{n} rows
+      \item \code{"last"}: select last \code{n} rows
+      \item \code{"min"}: select \code{n} rows with minimum values of \code{order.by}
+      \item \code{"max"}: select \code{n} rows with maximum values of \code{order.by}
     }
   }
-  \item{order.by}{vector or column name to order by when \code{how} is "min" or "max". Must be same length as rows in x.}
+  \item{order.by}{vector or column name to order by when \code{how} is \code{"min"} or \code{"max"}. Must be same length as rows in \code{x}.}
   \item{na.rm}{logical. If \code{TRUE}, missing values in \code{order.by} are removed before selecting rows.}
-  \item{sort}{logical. If \code{TRUE}, sort selected rows on the grouping columns.}
-  \item{with.ties}{logical. If \code{TRUE} and \code{how} is "min" or "max", returns all rows that tie with the extreme value. Only applies when n = 1.}
+  \item{sort}{logical. If \code{TRUE}, sort selected rows on the grouping columns. \code{FALSE} uses first-sppearance order (including grouping columns if \code{how} is \code{"first"} or \code{"last"}) - fastest.}
+  \item{with.ties}{logical. If \code{TRUE} and \code{how} is \code{"min"} or \code{"max"}, returns all rows with the extreme value. Only applies when \code{n = 1}.}
 }
 \value{
-A subset of the input matrix/data frame containing the selected rows. The output preserves the input's attributes and class.
+A subset of \code{x} containing the selected rows.
 }
 \seealso{
 \code{\link{fsubset}}, \code{\link{fcount}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=collapse-documentation]{Collapse Overview}
