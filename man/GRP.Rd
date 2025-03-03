@@ -24,7 +24,7 @@
 \alias{as_factor_GRP}
 \title{Fast Grouping / \emph{collapse} Grouping Objects}
 \description{
-  \code{GRP} performs fast, ordered and unordered, groupings of vectors and data frames (or lists of vectors) using \code{\link{radixorderv}} or \code{\link{group}}. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \emph{collapse}'s fast statistical and transformation functions and operators (see macros \code{.FAST_FUN} and \code{.OPERATOR_FUN}), as well as to \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
+  \code{GRP} performs fast, ordered and unordered, groupings of vectors and data frames (or lists of vectors) using \code{\link{radixorder}} or \code{\link{group}}. The output is a list-like object of class 'GRP' which can be printed, plotted and used as an efficient input to all of \emph{collapse}'s fast statistical and transformation functions and operators (see macros \code{.FAST_FUN} and \code{.OPERATOR_FUN}), as well as to \code{\link{collap}}, \code{\link{BY}} and \code{\link{TRA}}.
 
 \code{fgroup_by} is similar to \code{dplyr::group_by} but faster and class-agnostic. It creates a grouped data frame with a 'GRP' object attached - for fast dplyr-like programming with \emph{collapse}'s fast functions.
 
@@ -99,15 +99,15 @@ fungroup(X, \dots)
   \item{sort}{logical. If \code{FALSE}, groups are not ordered but simply grouped in the order of first appearance of unique elements / rows. This often provides a performance gain if the data was not sorted beforehand. See also \code{method}.}
   \item{ordered}{logical. \code{TRUE} adds a class 'ordered' i.e. generates an ordered factor.}
 
-  \item{decreasing}{logical. Should the sort order be increasing or decreasing? Can be a vector of length equal to the number of arguments in \code{X} / \code{by} (argument passed to \code{\link{radixorderv}}).}
+  \item{decreasing}{logical. Should the sort order be increasing or decreasing? Can be a vector of length equal to the number of arguments in \code{X} / \code{by} (argument passed to \code{\link{radixorder}}).}
 
-  \item{na.last}{logical. If missing values are encountered in grouping vector/columns, assign them to the last group (argument passed to \code{\link{radixorderv}}).}
+  \item{na.last}{logical. If missing values are encountered in grouping vector/columns, assign them to the last group (argument passed to \code{\link{radixorder}}).}
 
   \item{return.groups}{logical. Include the unique groups in the created GRP object.}
 
-  \item{return.order}{logical. If \code{sort = TRUE}, include the output from \code{\link{radixorderv}} in the created GRP object. This brings performance improvements in \code{gsplit} (and thus also benefits grouped execution of base R functions). }
+  \item{return.order}{logical. If \code{sort = TRUE}, include the output from \code{\link{radixorder}} in the created GRP object. This brings performance improvements in \code{gsplit} (and thus also benefits grouped execution of base R functions). }
 
-  \item{method}{character. The algorithm to use for grouping: either \code{"radix"}, \code{"hash"} or \code{"auto"}. \code{"auto"} will chose \code{"radix"} when \code{sort = TRUE}, yielding ordered grouping via \code{\link{radixorderv}}, and \code{"hash"}-based grouping in first-appearance order via \code{\link{group}} otherwise. It is possibly to put \code{method = "radix"} and \code{sort = FALSE}, which will group character data in first appearance order but sort numeric data (a good hybrid option). \code{method = "hash"} currently does not support any sorting, thus putting \code{sort = TRUE} will simply be ignored.}
+  \item{method}{character. The algorithm to use for grouping: either \code{"radix"}, \code{"hash"} or \code{"auto"}. \code{"auto"} will chose \code{"radix"} when \code{sort = TRUE}, yielding ordered grouping via \code{\link{radixorder}}, and \code{"hash"}-based grouping in first-appearance order via \code{\link{group}} otherwise. It is possibly to put \code{method = "radix"} and \code{sort = FALSE}, which will group character data in first appearance order but sort numeric data (a good hybrid option). \code{method = "hash"} currently does not support any sorting, thus putting \code{sort = TRUE} will simply be ignored.}
 
   \item{group.sizes}{logical. \code{TRUE} tabulates factor levels using \code{\link{tabulate}} to create a vector of group sizes; \code{FALSE} leaves that slot empty when converting from factors.}
 
@@ -195,7 +195,7 @@ Creating a factor from a 'GRP' object using \code{as_factor_GRP} does not involv
                  [[5]] \tab\tab group.vars   \tab\tab \code{character} \tab\tab The names of the grouping variables \cr\cr
                  [[6]] \tab\tab ordered   \tab\tab \code{logical(2)} \tab\tab \code{[1]} Whether the groups are ordered: equal to the \code{sort} argument in the default method, or \code{TRUE} if converted objects inherit a class \code{"ordered"} and \code{NA} otherwise, \code{[2]} Whether the data (\code{X}) is already sorted: the result of \code{!is.unsorted(group.id)}. If \code{sort = FALSE} (default method) the second entry is \code{NA}. \cr\cr
 
-                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{radixorderv} (with \code{"starts"} attribute), or \code{NULL} if \code{return.order = FALSE} \cr\cr
+                 [[7]] \tab\tab order     \tab\tab \code{integer(NROW(X))} or \code{NULL} \tab\tab Ordering vector from \code{radixorder} (with \code{"starts"} attribute), or \code{NULL} if \code{return.order = FALSE} \cr\cr
                  [[8]] \tab\tab group.starts \tab\tab \code{integer(N.groups)} or \code{NULL} \tab\tab The first-occurrence positions/rows of the groups. Useful e.g. with \code{ffirst(x, g, na.rm = FALSE)}. \code{NULL} if \code{return.groups = FALSE}. \cr\cr
 
                  [[9]] \tab\tab call \tab\tab \code{match.call()} or \code{NULL} \tab\tab The \code{GRP()} call, obtained from \code{match.call()}, or \code{NULL} if \code{call = FALSE}
