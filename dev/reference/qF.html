@@ -119,7 +119,7 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p>An efficient alternative for character vectors with multithreading support is provided by <code><a href="https://rdrr.io/pkg/kit/man/charToFact.html" class="external-link">kit::charToFact</a></code>.</p>
-<p><code>qG(x, sort = FALSE, na.exclude = FALSE, method = "hash")</code> internally calls <code><a href="group.html">group(x)</a></code> which can also be used directly and also supports multivariate groupings where <code>x</code> can be a list of vectors.</p>
+<p><code>qG(x, sort = FALSE, na.exclude = FALSE, method = "hash")</code> internally calls <code><a href="group.html">group(x)</a></code> which can also be used directly and also supports multivariate groupings.</p>
 <p>Neither <code>qF</code> nor <code>qG</code> reorder groups / factor levels. An exception was added in v1.7, when calling <code>qF(f, sort = FALSE)</code> on a factor <code>f</code>, the levels are recast in first appearance order. These objects can however be converted into one another using <code>qF/qG</code> or the direct method <code>as_factor_qG</code> (called inside <code>qF</code>). It is also possible to add a class 'ordered' (<code>ordered = TRUE</code>) and to create am extra level / integer for missing values (<code>na.exclude = FALSE</code>) if factors or 'qG' objects are passed to <code>qF</code> or <code>qG</code>. <!-- % Apart from that \code{qF} and \code{qG} don't do much to each others objects. --></p>
     </div>
     <div class="section level2">
@@ -146,9 +146,9 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf</span><span class="op">)</span>, <span class="fu"><a href="fmin_fmax.html">fmax</a></span><span class="op">(</span><span class="va">dat</span>, <span class="va">cf2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min     lq      mean median      uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 95.817 97.744 100.73249 98.810 100.819 147.190   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 90.364 92.701  97.35532 93.767  95.653 188.272   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            expr    min      lq     mean   median      uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   fmax(dat, cf) 96.227 98.7690 146.4594 103.5045 131.282 767.069   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmax(dat, cf2) 91.799 94.6895 142.1429  99.2405 168.920 559.363   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">finteraction</span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span>  <span class="co"># Interacting two variables (can be factors)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0 6.0 4.1 6.1 8.0 6.1 8.0 4.1 4.1 6.1 6.1 8.0 8.0 8.0 8.0 8.0 8.0 4.1 4.1</span>
@@ -169,7 +169,7 @@ collapse internally makes optimal use of factors and 'qG' objects when passed as
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "qG"          "na.included"</span>
-<span class="r-in"><span><span class="fu"><a href="group.html">group</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cyl"</span>, <span class="st">"vs"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="co"># Same thing. Use whatever syntax is more convenient</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="group.html">group</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">cyl</span>, <span class="va">mtcars</span><span class="op">$</span><span class="va">vs</span><span class="op">)</span> <span class="co"># Same thing</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 1 1 2 3 4 3 4 2 2 3 3 4 4 4 4 4 4 2 2 2 2 4 4 4 4 2 5 2 4 1 4 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"N.groups")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5</span>

@@ -64,10 +64,10 @@ Use data.table::setorder(v) to sort a data frame without creating a copy. "><met
 <dd><p>select columns to sort by using a function, column names, indices or a logical vector. The default <code>NULL</code> sorts by all columns in order of occurrence (from left to right).</p></dd>
 
   <dt id="arg-na-last">na.last<a class="anchor" aria-label="anchor" href="#arg-na-last"></a></dt>
-<dd><p>logical. If <code>TRUE</code>, missing values in the sorting columns are placed last; if <code>FALSE</code>, they are placed first; if <code>NA</code> they are removed (argument passed to <code><a href="radixorder.html">radixorderv</a></code>).</p></dd>
+<dd><p>logical. If <code>TRUE</code>, missing values in the sorting columns are placed last; if <code>FALSE</code>, they are placed first; if <code>NA</code> they are removed (argument passed to <code><a href="radixorder.html">radixorder</a></code>).</p></dd>
 
   <dt id="arg-decreasing">decreasing<a class="anchor" aria-label="anchor" href="#arg-decreasing"></a></dt>
-<dd><p>logical. Should the sort order be increasing or decreasing? Can also be a vector of length equal to the number of arguments in <code>cols</code> (argument passed to <code><a href="radixorder.html">radixorderv</a></code>).</p></dd>
+<dd><p>logical. Should the sort order be increasing or decreasing? Can also be a vector of length equal to the number of arguments in <code>cols</code> (argument passed to <code><a href="radixorder.html">radixorder</a></code>).</p></dd>
 
   <dt id="arg-neworder">neworder<a class="anchor" aria-label="anchor" href="#arg-neworder"></a></dt>
 <dd><p>an ordering vector, can be <code>&lt; nrow(X)</code>. if <code>pos = "front"</code> or <code>pos = "end"</code>, a logical vector can also be supplied. This argument overwrites <code>cols</code>.</p></dd>
@@ -86,7 +86,7 @@ Use data.table::setorder(v) to sort a data frame without creating a copy. "><met
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>If you don't require a copy of the data, use <code><a href="https://rdrr.io/pkg/data.table/man/setorder.html" class="external-link">data.table::setorder</a></code> (you can also use it in a piped call as it invisibly returns the data).</p>
+    <p>If you don't require a copy of the data, use <code><a href="https://rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">data.table::setorder</a></code> (you can also use it in a piped call as it invisibly returns the data).</p>
 <p><code>roworder(v)</code> has internal facilities to deal with <a href="GRP.html">grouped</a> and <a href="indexing.html">indexed</a> data. This is however inefficient (since in most cases data could be reordered before grouping/indexing), and therefore issues a message if <code>verbose &gt; 0L</code>.</p>
     </div>
     <div class="section level2">

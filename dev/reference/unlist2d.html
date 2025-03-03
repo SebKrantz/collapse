@@ -85,7 +85,7 @@ It is a powerful tool to create a tidy data frame representation from (nested) l
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>For lists of data frames <code>unlist2d</code> works just like <code>data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")</code> however for lists of lists <code>unlist2d</code> does not produce the same output as <code><a href="https://rdrr.io/pkg/data.table/man/rbindlist.html" class="external-link">data.table::rbindlist</a></code> because <code>unlist2d</code> is a recursive function. You can use <code><a href="rowbind.html">rowbind</a></code> as a faithful alternative to <code><a href="https://rdrr.io/pkg/data.table/man/rbindlist.html" class="external-link">data.table::rbindlist</a></code>.</p>
+    <p>For lists of data frames <code>unlist2d</code> works just like <code>data.table::rbindlist(l, use.names = TRUE, fill = TRUE, idcol = ".id")</code> however for lists of lists <code>unlist2d</code> does not produce the same output as <code><a href="https://rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">data.table::rbindlist</a></code> because <code>unlist2d</code> is a recursive function. You can use <code><a href="rowbind.html">rowbind</a></code> as a faithful alternative to <code><a href="https://rdatatable.gitlab.io/data.table/reference/rbindlist.html" class="external-link">data.table::rbindlist</a></code>.</p>
 <p>The function <code>rrapply::rrapply(l, how = "melt"|"bind")</code> is a fast alternative (written fully in C) for nested lists of atomic elements.</p>
     </div>
     <div class="section level2">

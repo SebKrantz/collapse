@@ -37,7 +37,7 @@
     </div>
 
     <div class="ref-description section level2">
-    <p><code>rsplit</code> (recursively) splits a vector, matrix or data frame into subsets according to combinations of (multiple) vectors / factors and returns a (nested) list. If <code>flatten = TRUE</code>, the list is flattened yielding the same result as <code><a href="https://rdrr.io/pkg/data.table/man/split.html" class="external-link">split</a></code>. <code>rsplit</code> is implemented as a wrapper around <code><a href="GRP.html">gsplit</a></code>, and significantly faster than <code><a href="https://rdrr.io/pkg/data.table/man/split.html" class="external-link">split</a></code>.</p>
+    <p><code>rsplit</code> (recursively) splits a vector, matrix or data frame into subsets according to combinations of (multiple) vectors / factors and returns a (nested) list. If <code>flatten = TRUE</code>, the list is flattened yielding the same result as <code><a href="https://rdatatable.gitlab.io/data.table/reference/split.html" class="external-link">split</a></code>. <code>rsplit</code> is implemented as a wrapper around <code><a href="GRP.html">gsplit</a></code>, and significantly faster than <code><a href="https://rdatatable.gitlab.io/data.table/reference/split.html" class="external-link">split</a></code>.</p>
     </div>
 
     <div class="section level2">
@@ -75,7 +75,7 @@
 <dd><p>logical. If <code>fl</code> is a list of vectors / factors, <code>TRUE</code> calls <code><a href="GRP.html">GRP</a></code> on the list, creating a single grouping used for splitting; <code>FALSE</code> yields recursive splitting.</p></dd>
 
   <dt id="arg-use-names">use.names<a class="anchor" aria-label="anchor" href="#arg-use-names"></a></dt>
-<dd><p>logical. <code>TRUE</code> returns a named list (like <code><a href="https://rdrr.io/pkg/data.table/man/split.html" class="external-link">split</a></code>); <code>FALSE</code> returns a plain list.</p></dd>
+<dd><p>logical. <code>TRUE</code> returns a named list (like <code><a href="https://rdatatable.gitlab.io/data.table/reference/split.html" class="external-link">split</a></code>); <code>FALSE</code> returns a plain list.</p></dd>
 
   <dt id="arg-drop-dim">drop.dim<a class="anchor" aria-label="anchor" href="#arg-drop-dim"></a></dt>
 <dd><p>logical. <code>TRUE</code> returns atomic vectors for matrix-splits consisting of one row.</p></dd>

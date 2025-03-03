@@ -45,11 +45,11 @@ any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vecto
     </div>
 
     <div class="ref-description section level2">
-    <p><code>funique</code> is an efficient alternative to <code><a href="https://rdrr.io/pkg/data.table/man/duplicated.html" class="external-link">unique</a></code> (or <code>unique.data.table, kit::funique, dplyr::distinct</code>).</p>
+    <p><code>funique</code> is an efficient alternative to <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">unique</a></code> (or <code>unique.data.table, kit::funique, dplyr::distinct</code>).</p>
 <p><code>fnunique</code> is an alternative to <code>NROW(unique(x))</code> (or <code>data.table::uniqueN, kit::uniqLen, dplyr::n_distinct</code>).</p>
-<p><code>fduplicated</code> is an alternative to <code><a href="https://rdrr.io/pkg/data.table/man/duplicated.html" class="external-link">duplicated</a></code> (or <code>duplicated.data.table</code>, <code><a href="https://rdrr.io/pkg/kit/man/funique.html" class="external-link">kit::fduplicated</a></code>).</p>
+<p><code>fduplicated</code> is an alternative to <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">duplicated</a></code> (or <code>duplicated.data.table</code>, <code><a href="https://rdrr.io/pkg/kit/man/funique.html" class="external-link">kit::fduplicated</a></code>).</p>
 <p>The <em>collapse</em> versions are versatile and highly competitive. <!-- % on data frames. --></p>
-<p><code>any_duplicated(x)</code> is faster than <code>any(fduplicated(x))</code>. <em>Note</em> that for atomic vectors, <code><a href="https://rdrr.io/pkg/data.table/man/duplicated.html" class="external-link">anyDuplicated</a></code> is currently more efficient if there are duplicates at the beginning of the vector.</p>
+<p><code>any_duplicated(x)</code> is faster than <code>any(fduplicated(x))</code>. <em>Note</em> that for atomic vectors, <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">anyDuplicated</a></code> is currently more efficient if there are duplicates at the beginning of the vector.</p>
     </div>
 
     <div class="section level2">
@@ -95,7 +95,7 @@ any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vecto
 <dd><p>compute unique rows according to a subset of columns. Columns can be selected using column names, indices, a logical vector or a selector function (e.g. <code>is.character</code>). <em>Note:</em> All columns are returned.</p></dd>
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>arguments passed to <code><a href="radixorder.html">radixorderv</a></code>, e.g. <code>decreasing</code> or <code>na.last</code>. Only applicable if <code>method = "radix"</code>.</p></dd>
+<dd><p>arguments passed to <code><a href="radixorder.html">radixorder</a></code>, e.g. <code>decreasing</code> or <code>na.last</code>. Only applicable if <code>method = "radix"</code>.</p></dd>
 
 <dt id="arg-drop-index-levels">drop.index.levels<a class="anchor" aria-label="anchor" href="#arg-drop-index-levels"></a></dt>
 <dd><p>character. Either <code>"id"</code>, <code>"time"</code>, <code>"all"</code> or <code>"none"</code>. See <a href="indexing.html">indexing</a>.</p></dd>
@@ -109,11 +109,11 @@ any_duplicated(x) is faster than any(fduplicated(x)). Note that for atomic vecto
     <p>If all values/rows are already unique, then <code>x</code> is returned. Otherwise a copy of <code>x</code> with duplicate rows removed is returned.  See <code><a href="group.html">group</a></code> for some additional computational details.</p>
 <p>The <em>sf</em> method simply ignores the geometry column when determining unique values.</p>
 <p>Methods for indexed data also subset the index accordingly.</p>
-<p><code>any_duplicated</code> is currently simply implemented as <code>fnunique(x) &lt; NROW(x)</code>, which means it does not have facilities to terminate early, and users are advised to use <code><a href="https://rdrr.io/pkg/data.table/man/duplicated.html" class="external-link">anyDuplicated</a></code> with atomic vectors if chances are high that there are duplicates at the beginning of the vector. With no duplicate values or data frames, <code>any_duplicated</code> is considerably faster than <code><a href="https://rdrr.io/pkg/data.table/man/duplicated.html" class="external-link">anyDuplicated</a></code>.</p>
+<p><code>any_duplicated</code> is currently simply implemented as <code>fnunique(x) &lt; NROW(x)</code>, which means it does not have facilities to terminate early, and users are advised to use <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">anyDuplicated</a></code> with atomic vectors if chances are high that there are duplicates at the beginning of the vector. With no duplicate values or data frames, <code>any_duplicated</code> is considerably faster than <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">anyDuplicated</a></code>.</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>These functions treat lists like data frames, unlike <code><a href="https://rdrr.io/pkg/data.table/man/duplicated.html" class="external-link">unique</a></code> which has a list method to determine uniqueness of (non-atomic/heterogeneous) elements in a list.</p>
+    <p>These functions treat lists like data frames, unlike <code><a href="https://rdatatable.gitlab.io/data.table/reference/duplicated.html" class="external-link">unique</a></code> which has a list method to determine uniqueness of (non-atomic/heterogeneous) elements in a list.</p>
 <p>No matrix method is provided. Please use the alternatives provided in package <em>kit</em> with matrices. <!-- % The \emph{kit} version is also often faster for vectors. --></p>
     </div>
     <div class="section level2">

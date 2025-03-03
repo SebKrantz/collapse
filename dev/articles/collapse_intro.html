@@ -1088,7 +1088,7 @@ Botswana:</p>
 <span>  <span class="co"># Fast conversion to data.table</span></span>
 <span>  <span class="va">qDT</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># data.table's melt function</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="co"># ggplot with some scales provided by the 'scales' package</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">Sector</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_area</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"fill"</span>, alpha <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="cn">NULL</span>, y <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">+</span></span>
@@ -1338,7 +1338,7 @@ method.</p>
 </h3>
 <p><code>roworder</code> is a fast analogue to
 <code><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">dplyr::arrange</a></code>. The syntax is inspired by
-<code><a href="https://rdrr.io/pkg/data.table/man/setorder.html" class="external-link">data.table::setorder</a></code>, so that negative variable names
+<code><a href="https://rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">data.table::setorder</a></code>, so that negative variable names
 indicate descending sort.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/roworder.html">roworder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="op">-</span><span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="../reference/fsubset.html">ss</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span></span>
@@ -1352,10 +1352,10 @@ indicate descending sort.</p>
 <span><span class="co">#      expr      min       lq      mean   median        uq      max neval</span></span>
 <span><span class="co">#  collapse  113.406  152.151  176.7567  165.722  183.0855  538.330   100</span></span>
 <span><span class="co">#     dplyr 1240.168 1299.372 1618.5869 1384.755 1507.8160 8350.552   100</span></span></code></pre></div>
-<p>In contrast to <code><a href="https://rdrr.io/pkg/data.table/man/setorder.html" class="external-link">data.table::setorder</a></code>,
+<p>In contrast to <code><a href="https://rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">data.table::setorder</a></code>,
 <code>roworder</code> creates a copy of the data frame (unless data are
 already sorted). If this copy is not required,
-<code><a href="https://rdrr.io/pkg/data.table/man/setorder.html" class="external-link">data.table::setorder</a></code> is faster. The function
+<code><a href="https://rdatatable.gitlab.io/data.table/reference/setorder.html" class="external-link">data.table::setorder</a></code> is faster. The function
 <code>roworderv</code> is a standard evaluation analogue to
 <code>roworder</code>:</p>
 <div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
@@ -1389,7 +1389,7 @@ rows in a data frame:</p>
 facilitates efficient reordering of columns in a data frame. These
 functions not require a deep copy of the data and are very fast. To
 reorder columns by reference, see also
-<code><a href="https://rdrr.io/pkg/data.table/man/setcolorder.html" class="external-link">data.table::setcolorder</a></code>.</p>
+<code><a href="https://rdatatable.gitlab.io/data.table/reference/setcolorder.html" class="external-link">data.table::setcolorder</a></code>.</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># The default is again pos = "front" which brings selected columns to the front / left</span></span>
 <span><span class="fu"><a href="../reference/colorder.html">colorder</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, <span class="va">Year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
@@ -1844,7 +1844,7 @@ to data.frame, <em>data.table</em> and <em>tibble</em> respectively.</p>
 <span><span class="co">#   ..$ : NULL</span></span>
 <span><span class="co">#   ..$ : chr [1:4] "DAX" "SMI" "CAC" "FTSE"</span></span>
 <span><span class="co"># Efficient Conversion of data frames and matrices to data.table</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="../reference/quick-conversion.html">qDT</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span>, <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/as.data.table.html" class="external-link">as.data.table</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Unit: microseconds</span></span>
 <span><span class="co">#                           expr    min      lq      mean   median       uq      max neval</span></span>
 <span><span class="co">#                    qDT(wlddev)  3.075   3.608   4.21439   3.8950   4.2640   12.546   100</span></span>
@@ -4525,7 +4525,7 @@ just use the impulses:</p>
 <span><span class="co"># 2: STD.HDW.AGR     2   0.3986337   0.1892803   0.3014961  0.09430567  0.07263670   0.03669857</span></span>
 <span><span class="co"># 3: STD.HDW.AGR     3   0.2676944   0.1654161   0.2491999  0.10769335  0.09330830   0.06042380</span></span>
 <span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>                   <span class="co"># Using data.table's melt</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>                   <span class="co"># Using data.table's melt</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#        Impulse  Time    variable     value</span></span>
 <span><span class="co">#         &lt;fctr&gt; &lt;int&gt;      &lt;fctr&gt;     &lt;num&gt;</span></span>
@@ -4556,7 +4556,7 @@ plot of chunk IRFplot
 <p>To round things off, below we do the same thing for the FEVD’s:</p>
 <div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">pFEVD</span>, idcols <span class="op">=</span> <span class="st">"variable"</span>, row.names <span class="op">=</span> <span class="st">"Time"</span>, id.factor <span class="op">=</span> <span class="cn">TRUE</span>, DT <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>            <span class="fu"><a href="https://rdrr.io/pkg/data.table/man/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"Time"</span><span class="op">)</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span></span>
+<span>            <span class="fu"><a href="https://rdatatable.gitlab.io/data.table/reference/melt.data.table.html" class="external-link">melt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"variable"</span>, <span class="st">"Time"</span><span class="op">)</span>, variable.name <span class="op">=</span> <span class="st">"Sector"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="co">#       variable  Time      Sector     value</span></span>
 <span><span class="co">#         &lt;fctr&gt; &lt;int&gt;      &lt;fctr&gt;     &lt;num&gt;</span></span>
