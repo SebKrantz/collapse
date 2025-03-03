@@ -8,7 +8,7 @@
 \itemize{
 \item \code{\link{fselect}} is a much faster alternative to \code{dplyr::select} to select columns using expressions involving column names. \code{\link{get_vars}} is a more versatile and programmer friendly function to efficiently select and replace columns by names, indices, logical vectors, regular expressions, or using functions to identify columns.
 
-\item The functions \code{\link{num_vars}}, \code{\link{cat_vars}}, \code{\link{char_vars}}, \code{\link{fact_vars}}, \code{\link{logi_vars}} and \code{\link{date_vars}} are convenience functions to efficiently select and replace columns by data type.
+\item \code{\link{num_vars}}, \code{\link{cat_vars}}, \code{\link{char_vars}}, \code{\link{fact_vars}}, \code{\link{logi_vars}} and \code{\link{date_vars}} are convenience functions to efficiently select and replace columns by data type.
 
 \item \code{\link{add_vars}} efficiently adds new columns at any position within a data frame (default at the end). This can be done vie replacement (i.e. \code{add_vars(data) <- newdata}) or returning the appended data, e.g., \code{add_vars(data, newdata1, newdata2, \dots)}. It is thus also an efficient alternative to \code{\link{cbind.data.frame}}.
 
@@ -25,7 +25,6 @@
 \item \code{\link{fsummarise}} is a much faster version of \code{dplyr::summarise}, especially when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions} and \code{\link{fgroup_by}}.
 
 \item \code{\link{fmutate}} is a much faster version of \code{dplyr::mutate}, especially when used together with the \link[=fast-statistical-functions]{Fast Statistical Functions}, the fast \link[=data-transformations]{Data Transformation Functions}, and \code{\link{fgroup_by}}.
-
 
 \item \code{\link[=ftransform]{ftransform(v)}} is a much faster version of \code{\link{transform}}, which also supports list input and nested pipelines. \code{\link[=ftransform]{settransform(v)}} does all of that by reference, i.e. it assigns to the calling environment. \code{\link[=fcompute]{fcompute(v)}} is similar to \code{\link[=ftransform]{ftransform(v)}} but only returns modified/computed columns. %As a new feature, it is now possible to bulk-process columns with \code{\link{ftransform}}, i.e. \code{ftransform(data, fscale(data[1:2]))} is the same as \code{ftransform(data, col1 = fscale(col1), col2 = fscale(col2))}, and \code{ftransform(data) <- fscale(data[1:2]))} or \code{settransform(data, fscale(data[1:2]))} are both equivalent to \code{data[1:2] <- fscale(data[1:2]))}. Non-matching columns are added to the data.frame.
 
