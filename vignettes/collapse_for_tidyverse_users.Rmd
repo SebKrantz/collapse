@@ -58,7 +58,7 @@ library(collapse)
 set_collapse(mask = "manip") # version >= 2.0.0 
 ```
 
-makes available functions `select`, `group_by`, `summarise`, `mutate`, `rename`, `count`, `subset`, and `transform` in the *collapse* namespace and detaches and re-attaches the package, such that the following code is executed by *collapse*:
+makes available functions `select`, `group_by`, `summarise`, `mutate`, `rename`, `count`, `subset`, `slice`, and `transform` in the *collapse* namespace and detaches and re-attaches the package, such that the following code is executed by *collapse*:
 
 ```{r}
 mtcars |>
