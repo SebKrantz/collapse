@@ -128,9 +128,9 @@ option to mask functions and eliminate the prefixes with
 <span><span class="fu"><a href="../reference/collapse-options.html">set_collapse</a></span><span class="op">(</span>mask <span class="op">=</span> <span class="st">"manip"</span><span class="op">)</span> <span class="co"># version &gt;= 2.0.0 </span></span></code></pre></div>
 <p>makes available functions <code>select</code>, <code>group_by</code>,
 <code>summarise</code>, <code>mutate</code>, <code>rename</code>,
-<code>count</code>, <code>subset</code>, and <code>transform</code> in
-the <em>collapse</em> namespace and detaches and re-attaches the
-package, such that the following code is executed by
+<code>count</code>, <code>subset</code>, <code>slice</code>, and
+<code>transform</code> in the <em>collapse</em> namespace and detaches
+and re-attaches the package, such that the following code is executed by
 <em>collapse</em>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>
