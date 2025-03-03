@@ -16,12 +16,14 @@
 [![arXiv](https://img.shields.io/badge/arXiv-2403.05038-0969DA.svg)](https://arxiv.org/abs/2403.05038)
 <!-- badges: end -->
 
-*collapse* is a C/C++ based package for data transformation and statistical computing in R. Its aims are:
+*collapse* is a large C/C++-based package for data transformation and statistical computing in R. It aims to:
 
-* To facilitate complex data transformation, exploration and computing tasks in R.
-* To help make R code fast, flexible, parsimonious and programmer friendly. 
+* Facilitate complex data transformation, exploration and computing tasks in R.
+* Help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a [class-agnostic approach to R programming](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html), supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *units*, *pseries*, *pdata.frame* (*plm*), *xts*/*zoo* and variable labels. 
+Great flexibility in particular is provided by its [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) supporting all basic R objects and their popular extensions, including, but not limited to, *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries*, and *pdata.frame*. 
+
+
 
 **Key Features:**
 
@@ -49,7 +51,7 @@ It further implements a [class-agnostic approach to R programming](https://sebkr
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
 
-*collapse* is written in C and C++, with algorithms much faster than base R's, scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and very efficient for complex tasks (e.g., quantiles, weighted stats, mode/counting/deduplication, joins, pivots). Optimized R code ensures minimal evaluation overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
+*collapse* is written in C and C++, with algorithms much faster than base R's, scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and excels on complex tasks (e.g., quantiles, weighted stats, mode/counting/deduplication, joins, pivots). Optimized R code ensures minimal evaluation overheads. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
 ## Installation
 
