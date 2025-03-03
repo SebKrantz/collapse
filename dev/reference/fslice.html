@@ -43,7 +43,10 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fslice</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, n <span class="op">=</span> <span class="fl">1</span>, how <span class="op">=</span> <span class="st">"first"</span>, order.by <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>       na.rm <span class="op">=</span> <span class="cn">FALSE</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, with.ties <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<span>       na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, with.ties <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">fslicev</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, n <span class="op">=</span> <span class="fl">1</span>, how <span class="op">=</span> <span class="st">"first"</span>, order.by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>        na.rm <span class="op">=</span> <span class="va">.op</span><span class="op">[[</span><span class="st">"na.rm"</span><span class="op">]</span><span class="op">]</span>, sort <span class="op">=</span> <span class="cn">FALSE</span>, with.ties <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -53,7 +56,10 @@
 <dd><p>a matrix, data frame or list-like object, including 'grouped_df'.</p></dd>
 
   <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>names or sequences of columns to group by - passed to <code><a href="select_replace_vars.html">fselect</a></code>. If <code>x</code> is a matrix: atomic vectors to group <code>x</code>. Can be empty to operate on (un)grouped data.</p></dd>
+<dd><p>for <code>fslice</code>: names or sequences of columns to group by - passed to <code><a href="select_replace_vars.html">fselect</a></code>. If <code>x</code> is a matrix: atomic vectors to group <code>x</code>. Can be empty to operate on (un)grouped data. For <code>fslicev</code>: further arguments passed to <code><a href="GRP.html">GRP</a></code> (such as <code>decreasing</code>, <code>na.last</code>, <code>method</code>).</p></dd>
+
+  <dt id="arg-cols">cols<a class="anchor" aria-label="anchor" href="#arg-cols"></a></dt>
+<dd><p>select columns to group by, using column names, indices, a logical vector or a selector function (e.g. <code>is_categorical</code>). It can also be a list of vectors, or, if <code>x</code> is a matrix, a single vector.</p></dd>
 
   <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
 <dd><p>integer or proportion (if &lt; 1). Number of rows to select from each group. If a proportion is provided, it is converted to the equivalent number of rows.</p></dd>
@@ -66,13 +72,13 @@
 </ul><p></p></dd>
 
   <dt id="arg-order-by">order.by<a class="anchor" aria-label="anchor" href="#arg-order-by"></a></dt>
-<dd><p>vector or column name to order by when <code>how</code> is <code>"min"</code> or <code>"max"</code>. Must be same length as rows in <code>x</code>.</p></dd>
+<dd><p>vector or column name to order by when <code>how</code> is <code>"min"</code> or <code>"max"</code>. Must be same length as rows in <code>x</code>. In <code>fslice</code> it must not be quoted.</p></dd>
 
   <dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
 <dd><p>logical. If <code>TRUE</code>, missing values in <code>order.by</code> are removed before selecting rows.</p></dd>
 
   <dt id="arg-sort">sort<a class="anchor" aria-label="anchor" href="#arg-sort"></a></dt>
-<dd><p>logical. If <code>TRUE</code>, sort selected rows on the grouping columns. <code>FALSE</code> uses first-sppearance order (including grouping columns if <code>how</code> is <code>"first"</code> or <code>"last"</code>) - fastest.</p></dd>
+<dd><p>logical. If <code>TRUE</code>, sort selected rows on the grouping columns. <code>FALSE</code> uses first-appearance order (including grouping columns if <code>how</code> is <code>"first"</code> or <code>"last"</code>) - fastest.</p></dd>
 
   <dt id="arg-with-ties">with.ties<a class="anchor" aria-label="anchor" href="#arg-with-ties"></a></dt>
 <dd><p>logical. If <code>TRUE</code> and <code>how</code> is <code>"min"</code> or <code>"max"</code>, returns all rows with the extreme value. Only applies when <code>n = 1</code>.</p></dd>

@@ -42,13 +42,18 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">group</span><span class="op">(</span><span class="va">x</span>, starts <span class="op">=</span> <span class="cn">FALSE</span>, group.sizes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">group</span><span class="op">(</span><span class="va">...</span>, starts <span class="op">=</span> <span class="cn">FALSE</span>, group.sizes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">groupv</span><span class="op">(</span><span class="va">x</span>, starts <span class="op">=</span> <span class="cn">FALSE</span>, group.sizes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <p></p>
-<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dl><dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>comma separated atomic vectors to group. Also supports a single list of vectors for backward compatibility.</p></dd>
+
+  <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>an atomic vector or data frame / list of equal-length atomic vectors.</p></dd>
 
   <dt id="arg-starts">starts<a class="anchor" aria-label="anchor" href="#arg-starts"></a></dt>
@@ -72,7 +77,7 @@
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="GRP.html">GRPid</a></code>, <a href="fast-grouping-ordering.html">Fast Grouping and Ordering</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
+    <div class="dont-index"><p><code><a href="radixorder.html">radixorder</a></code>, <code><a href="GRP.html">GRPid</a></code>, <a href="fast-grouping-ordering.html">Fast Grouping and Ordering</a>, <a href="collapse-documentation.html">Collapse Overview</a></p></div>
     </div>
 
     <div class="section level2">
