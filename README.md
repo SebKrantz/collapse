@@ -51,7 +51,7 @@ Its flexible [class-agnostic architecture](https://sebkrantz.github.io/collapse/
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
 
-*collapse* is written in C and C++, with algorithms much faster than base R's, has extremely low evaluation overheads, and scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)). It excels on complex tasks, such as weighted statistics, mode/counting/deduplication, joins, pivots, panel data. <!-- Optimized R code ensures minimal evaluation overheads.  , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
+*collapse* is written in C and C++, with algorithms much faster than base R's, has extremely low evaluation overheads, and scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)). It excels on complex statistical tasks. <!--, such as weighted statistics, mode/counting/deduplication, joins, pivots, panel data.  Optimized R code ensures minimal evaluation overheads.  , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
 ## Installation
 
