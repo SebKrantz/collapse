@@ -103,7 +103,7 @@ join <- function(x, y,
   )
 
   if(multiple) {
-    g <- group(if(rjoin) x[ixon] else y[iyon], group.sizes = TRUE)
+    g <- groupv(if(rjoin) x[ixon] else y[iyon], group.sizes = TRUE)
     if(verbose) mi <- m
     m <- multi_match(m, g)
     if(is.list(m)) {

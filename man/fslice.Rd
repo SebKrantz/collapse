@@ -1,5 +1,6 @@
 \name{fslice}
 \alias{fslice}
+\alias{fslicev}
 \title{
 Fast Slicing of Matrix-Like Objects
 }
@@ -8,11 +9,15 @@ A fast function to extract rows from a matrix or data frame-like object (by grou
 }
 \usage{
 fslice(x, ..., n = 1, how = "first", order.by = NULL,
-       na.rm = FALSE, sort = FALSE, with.ties = FALSE)
+       na.rm = .op[["na.rm"]], sort = FALSE, with.ties = FALSE)
+
+fslicev(x, cols = NULL, n = 1, how = "first", order.by = NULL,
+        na.rm = .op[["na.rm"]], sort = FALSE, with.ties = FALSE, ...)
 }
 \arguments{
   \item{x}{a matrix, data frame or list-like object, including 'grouped_df'.}
-  \item{\dots}{names or sequences of columns to group by - passed to \code{\link{fselect}}. If \code{x} is a matrix: atomic vectors to group \code{x}. Can be empty to operate on (un)grouped data.}
+  \item{\dots}{for \code{fslice}: names or sequences of columns to group by - passed to \code{\link{fselect}}. If \code{x} is a matrix: atomic vectors to group \code{x}. Can be empty to operate on (un)grouped data. For \code{fslicev}: further arguments passed to \code{\link{GRP}} (such as \code{decreasing}, \code{na.last}, \code{method}). }
+  \item{cols}{select columns to group by, using column names, indices, a logical vector or a selector function (e.g. \code{is_categorical}). It can also be a list of vectors, or, if \code{x} is a matrix, a single vector.}
   \item{n}{integer or proportion (if < 1). Number of rows to select from each group. If a proportion is provided, it is converted to the equivalent number of rows.}
   \item{how}{character. Method to select rows. One of:
     \itemize{
@@ -22,9 +27,9 @@ fslice(x, ..., n = 1, how = "first", order.by = NULL,
       \item \code{"max"}: select \code{n} rows with maximum values of \code{order.by}
     }
   }
-  \item{order.by}{vector or column name to order by when \code{how} is \code{"min"} or \code{"max"}. Must be same length as rows in \code{x}.}
+  \item{order.by}{vector or column name to order by when \code{how} is \code{"min"} or \code{"max"}. Must be same length as rows in \code{x}. In \code{fslice} it must not be quoted.}
   \item{na.rm}{logical. If \code{TRUE}, missing values in \code{order.by} are removed before selecting rows.}
-  \item{sort}{logical. If \code{TRUE}, sort selected rows on the grouping columns. \code{FALSE} uses first-sppearance order (including grouping columns if \code{how} is \code{"first"} or \code{"last"}) - fastest.}
+  \item{sort}{logical. If \code{TRUE}, sort selected rows on the grouping columns. \code{FALSE} uses first-appearance order (including grouping columns if \code{how} is \code{"first"} or \code{"last"}) - fastest.}
   \item{with.ties}{logical. If \code{TRUE} and \code{how} is \code{"min"} or \code{"max"}, returns all rows with the extreme value. Only applies when \code{n = 1}.}
 }
 \value{

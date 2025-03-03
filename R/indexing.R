@@ -129,7 +129,7 @@ is_irregular <- function(x, any_id = TRUE) {
     oldClass(x) <- NULL
     if(length(x) > 1L) {
       g <- if(length(x) <= 2L) x[[1L]] else if(any_id)
-        group(x[-length(x)]) else finteraction(x[-length(x)], sort = FALSE)
+        groupv(x[-length(x)]) else finteraction(x[-length(x)], sort = FALSE)
       t <- x[[length(x)]]
       # if(!is.nmfactor(t)) stop("t must be a factor without any missing values")
       attributes(t) <- NULL
@@ -265,7 +265,7 @@ group_effect <- function(x, effect) {
   index <- findex(x)
   g <- if(length(effect) == 1L) .subset2(index, effect) else .subset(index, effect)
   if(is.factor(g)) return(g)
-  g <- group(g)
+  g <- groupv(g)
   attr(g, "levels") <- seq_len(attr(g, "N.groups")) # This is just a trick for fnlevels..
   g
 }
@@ -279,7 +279,7 @@ uncl2pix <- function(x, interact = FALSE) {
     if(interact) {
       g <- finteraction(ix[-length(ix)])
     } else {
-      g <- group(ix[-length(ix)])
+      g <- groupv(ix[-length(ix)])
       attr(g, "levels") <- seq_len(attr(g, "N.groups"))
     }
     res <- list(g, ix[[length(ix)]])
