@@ -40,14 +40,14 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 
 The [*tidyverse*](https://www.tidyverse.org/) set of packages provides a rich, expressive, and consistent syntax for data manipulation in R centering on the *tibble* object and tidy data principles (each observation is a row, each variable is a column). 
 
-*collapse* fully supports the *tibble* object and provides many *tidyverse*-like functions for data manipulation. It can thus be used to write *tidyverse*-like data manipulation code that, thanks to low-level vectorization of many statistical operations and optimized R code, typically runs much faster than native *tidyverse* code (in addition to being much more lightweight in dependencies). 
+*collapse* fully supports the *tibble* object and provides many *tidyverse*-like functions for data manipulation. It can thus be used to write *tidyverse*-like data manipulation code that, thanks to low-level vectorization of many statistical operations and optimized R code, typically runs much faster than native *tidyverse* code, in addition to being much more lightweight in dependencies. 
 
 Its aim is not to create a faster *tidyverse*, i.e., it does not implements all aspects of the rich *tidyverse* grammar or changes to it^[Notably, tidyselect, lambda expressions, and many of the smaller helper functions are left out.], and also takes inspiration from other leading data manipulation libraries to serve broad aims of performance, parsimony, complexity, and robustness in data manipulation for R. 
 
 
 ## Namespace and Global Options
 
-*collapse* data manipulation functions familiar to *tidyverse* users include `fselect`, `fgroup_by`, `fsummarise`, `fmutate`, `across`, `frename`, and `fcount`. Other functions like `fsubset`, `ftransform`, and `get_vars` are inspired by base R, while again other functions like `join`, `pivot`, `roworder`, `colorder`, `rowbind`, etc. are inspired by other data manipulation libraries such as *data.table* and *polars*. 
+*collapse* data manipulation functions familiar to *tidyverse* users include `fselect`, `fgroup_by`, `fsummarise`, `fmutate`, `across`, `frename`, `fslice`, and `fcount`. Other functions like `fsubset`, `ftransform`, and `get_vars` are inspired by base R, while again other functions like `join`, `pivot`, `roworder`, `colorder`, `rowbind`, etc. are inspired by other data manipulation libraries such as *data.table* and *polars*. 
 
 By virtue of the f- prefixes, the *collapse* namespace has no conflicts with the *tidyverse*, and these functions can easily be substituted in a *tidyverse* workflow. 
 
