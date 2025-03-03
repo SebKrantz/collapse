@@ -72,7 +72,7 @@ Regarding speed: In general \code{qF} is around 5x faster than \code{as.factor} 
 \note{
 An efficient alternative for character vectors with multithreading support is provided by \code{kit::charToFact}.
 
-\code{qG(x, sort = FALSE, na.exclude = FALSE, method = "hash")} internally calls \code{\link[=group]{group(x)}} which can also be used directly and also supports multivariate groupings where \code{x} can be a list of vectors.
+\code{qG(x, sort = FALSE, na.exclude = FALSE, method = "hash")} internally calls \code{\link[=group]{group(x)}} which can also be used directly and also supports multivariate groupings.
 
 Neither \code{qF} nor \code{qG} reorder groups / factor levels. An exception was added in v1.7, when calling \code{qF(f, sort = FALSE)} on a factor \code{f}, the levels are recast in first appearance order. These objects can however be converted into one another using \code{qF/qG} or the direct method \code{as_factor_qG} (called inside \code{qF}). It is also possible to add a class 'ordered' (\code{ordered = TRUE}) and to create am extra level / integer for missing values (\code{na.exclude = FALSE}) if factors or 'qG' objects are passed to \code{qF} or \code{qG}. % Apart from that \code{qF} and \code{qG} don't do much to each others objects.
 }
@@ -96,7 +96,7 @@ finteraction(mtcars$cyl, mtcars$vs)  # Interacting two variables (can be factors
 head(finteraction(mtcars))           # A more crude example..
 
 finteraction(mtcars$cyl, mtcars$vs, factor = FALSE) # Returns 'qG', by default unsorted
-group(mtcars[c("cyl", "vs")]) # Same thing. Use whatever syntax is more convenient
+group(mtcars$cyl, mtcars$vs) # Same thing
 
 }
 \keyword{manip}

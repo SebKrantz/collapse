@@ -21,8 +21,8 @@ roworderv(X, cols = NULL, neworder = NULL, decreasing = FALSE,
   \item{X}{a data frame or list of equal-length columns. }
   \item{\dots}{comma-separated columns of \code{X} to sort by e.g. \code{var1, var2}. Negatives i.e. \code{-var1, var2} can be used to sort in decreasing order of \code{var1}. Internally all expressions are turned into strings and \code{startsWith(expr, "-")} is used to detect this, thus it does not negate the actual values (which may as well be strings), and you cannot apply any other functions to columns inside \code{roworder()} to induce different sorting behavior.}
   \item{cols}{select columns to sort by using a function, column names, indices or a logical vector. The default \code{NULL} sorts by all columns in order of occurrence (from left to right). }
-  \item{na.last}{logical. If \code{TRUE}, missing values in the sorting columns are placed last; if \code{FALSE}, they are placed first; if \code{NA} they are removed (argument passed to \code{\link{radixorderv}}).}
-  \item{decreasing}{logical. Should the sort order be increasing or decreasing? Can also be a vector of length equal to the number of arguments in \code{cols} (argument passed to \code{\link{radixorderv}}).}
+  \item{na.last}{logical. If \code{TRUE}, missing values in the sorting columns are placed last; if \code{FALSE}, they are placed first; if \code{NA} they are removed (argument passed to \code{\link{radixorder}}).}
+  \item{decreasing}{logical. Should the sort order be increasing or decreasing? Can also be a vector of length equal to the number of arguments in \code{cols} (argument passed to \code{\link{radixorder}}).}
   \item{neworder}{an ordering vector, can be \code{< nrow(X)}. if \code{pos = "front"} or \code{pos = "end"}, a logical vector can also be supplied. This argument overwrites \code{cols}.}
     \item{pos}{integer or character. Different arrangement options if \code{!is.null(neworder) && length(neworder) < nrow(X)}.
         \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
