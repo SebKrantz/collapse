@@ -40,7 +40,7 @@ The Hash Function and inspiration was taken from the excellent \emph{kit} packag
 }
 \examples{
 # Let's replicate what funique does
-g <- group(wlddev, starts = TRUE)
+g <- groupv(wlddev, starts = TRUE)
 if(attr(g, "N.groups") == fnrow(wlddev)) wlddev else
    ss(wlddev, attr(g, "starts"))
 
