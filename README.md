@@ -21,7 +21,7 @@
 * Facilitate complex data transformation, exploration and computing tasks in R.
 * Help make R code fast, flexible, parsimonious and programmer friendly. 
 
-Its flexible [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) supports all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
+Its novel [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) supports all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
 
 
 
@@ -51,7 +51,7 @@ Its flexible [class-agnostic architecture](https://sebkrantz.github.io/collapse/
 * **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
         summary statistics and descriptive tools.
 
-*collapse* is written in C and C++, with algorithms much faster than base R's, has extremely low evaluation overheads, and scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)). It excels on complex statistical tasks. <!--, such as weighted statistics, mode/counting/deduplication, joins, pivots, panel data.  Optimized R code ensures minimal evaluation overheads.  , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
+*collapse* is written in C and C++, with algorithms much faster than base R's, has extremely low evaluation overheads, scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and excels on complex statistical tasks. <!--, such as weighted statistics, mode/counting/deduplication, joins, pivots, panel data.  Optimized R code ensures minimal evaluation overheads.  , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
 ## Installation
 
