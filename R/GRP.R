@@ -163,10 +163,10 @@ GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, 
 }
 
 is_GRP <- function(x) inherits(x, "GRP")
-is.GRP <- function(x) {
-  .Deprecated(msg = "'is.GRP' was renamed to 'is_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
-  inherits(x, "GRP")
-}
+# is.GRP <- function(x) {
+#   .Deprecated(msg = "'is.GRP' was renamed to 'is_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
+#   inherits(x, "GRP")
+# }
 
 length.GRP <- function(x) length(x[[2L]])
 
@@ -284,10 +284,10 @@ as_factor_GRP <- function(x, ordered = FALSE, sep = ".") { # , ...
   f
 }
 
-as.factor_GRP <- function(x, ordered = FALSE) {
-  .Deprecated(msg = "'as.factor_GRP' was renamed to 'as_factor_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
-  as_factor_GRP(x, ordered)
-}
+# as.factor_GRP <- function(x, ordered = FALSE) {
+#   .Deprecated(msg = "'as.factor_GRP' was renamed to 'as_factor_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
+#   as_factor_GRP(x, ordered)
+# }
 
 finteraction <- function(..., factor = TRUE, ordered = FALSE, sort = factor && .op[["sort"]], method = "auto", sep = ".") { # does it drop levels ? -> Yes !
   X <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
@@ -593,10 +593,10 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 }
 
 is_qG <- function(x) is.integer(x) && inherits(x, "qG")
-is.qG <- function(x) {
-  .Deprecated(msg = "'is.qG' was renamed to 'is_qG'. It will be removed end of 2023, see help('collapse-renamed').")
-  inherits(x, "qG")
-}
+# is.qG <- function(x) {
+#   .Deprecated(msg = "'is.qG' was renamed to 'is_qG'. It will be removed end of 2023, see help('collapse-renamed').")
+#   inherits(x, "qG")
+# }
 
 na_rm2 <- function(x, sort) {
   if(sort) return(if(is.na(x[length(x)])) x[-length(x)] else x)
@@ -695,10 +695,10 @@ as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
   return(`attributes<-`(x, list(levels = groups, class = clx)))
 }
 
-as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
-  .Deprecated(msg = "'as.factor_qG' was renamed to 'as_factor_qG'. It will be removed end of 2023, see help('collapse-renamed').")
-  as_factor_qG(x, ordered, na.exclude)
-}
+# as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
+#   .Deprecated(msg = "'as.factor_qG' was renamed to 'as_factor_qG'. It will be removed end of 2023, see help('collapse-renamed').")
+#   as_factor_qG(x, ordered, na.exclude)
+# }
 
 qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]], drop = FALSE,
                keep.attr = TRUE, method = "auto") {

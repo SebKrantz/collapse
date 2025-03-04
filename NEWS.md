@@ -4,6 +4,8 @@
 
 * Added function `groupv()` as programmers version of `group()`, or rather, `groupv()` is now identical to the former `group()`, and `group()` now supports multiple vectors as input e.g. `group(v1, v2)`. This is done for convenience and consistency with `radixorder[v]()`. For backwards compatibility, `group()` also supports a single list as input.
 
+* Functions `pwNobs`, `as.factor_GRP`, `as.factor_qG`, `is.GRP`, `is.qG`, `is.unlistable`, `is.categorical`, `is.Date`, `as.numeric_factor`, `as.character_factor`, and `Date_vars`, which were renamed in v1.6.0 by either replacing '.' with '_' or using all lower-case letters, and depreciated since then, are now finally removed from the package.
+
 * `join()` has a new argument `require` allowing the user to generate messages or errors if the join operation is not successful enough: 
 
 ```r
