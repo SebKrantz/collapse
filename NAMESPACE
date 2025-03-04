@@ -745,6 +745,7 @@ importFrom("stats", "as.formula", "complete.cases", "cor", "cov", "var", "pt",
  S3method('[[', GRP_df)
  S3method('[<-', GRP_df)
  S3method('[[<-', GRP_df)
+ S3method('names<-', GRP_df)
  S3method('[', indexed_series)
  S3method(Math, indexed_series)
  S3method(Ops, indexed_series)
