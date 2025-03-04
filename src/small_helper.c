@@ -198,7 +198,8 @@ SEXP gslice_multi(SEXP g, SEXP o, SEXP Rn, SEXP first)  {
     *pg = INTEGER_RO(VECTOR_ELT(g, 1)), *pgs = INTEGER_RO(VECTOR_ELT(g, 2));
 
   int lvec = 0;
-  for(int i = 0; i != ng; ++i) lvec += n <= pgs[i] ? n : pgs[i];
+  #pragma omp simd reduction(+:lvec)
+  for(int i = 0; i < ng; ++i) lvec += n <= pgs[i] ? n : pgs[i];
 
   SEXP res = PROTECT(allocVector(INTSXP, lvec));
   int *sizes = (int*)R_Calloc(ng+1, int);

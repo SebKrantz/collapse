@@ -318,16 +318,16 @@ addAttributes <- function(x, a) .Call(C_setAttributes, x, c(attributes(x), a))
 
 
 is_categorical <- function(x) !is.numeric(x)
-is.categorical <- function(x) {
-  .Deprecated(msg = "'is.categorical' was renamed to 'is_categorical'. It will be removed end of 2023, see help('collapse-renamed').")
-  !is.numeric(x)
-}
+# is.categorical <- function(x) {
+#   .Deprecated(msg = "'is.categorical' was renamed to 'is_categorical'. It will be removed end of 2023, see help('collapse-renamed').")
+#   !is.numeric(x)
+# }
 
 is_date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
-is.Date <- function(x) {
-  .Deprecated(msg = "'is.Date' was renamed to 'is_date'. It will be removed end of 2023, see help('collapse-renamed').")
-  inherits(x, c("Date","POSIXlt","POSIXct"))
-}
+# is.Date <- function(x) {
+#   .Deprecated(msg = "'is.Date' was renamed to 'is_date'. It will be removed end of 2023, see help('collapse-renamed').")
+#   inherits(x, c("Date","POSIXlt","POSIXct"))
+# }
 
 # more consistent with base than na_rm
 # na.rm <- function(x) { # cpp version available, but not faster !
@@ -521,15 +521,15 @@ as_character_factor <- function(X, keep.attr = TRUE) {
   res
 }
 
-as.numeric_factor <- function(X, keep.attr = TRUE) {
-  .Deprecated(msg = "'as.numeric_factor' was renamed to 'as_numeric_factor'. It will be removed end of 2023, see help('collapse-renamed').")
-  as_numeric_factor(X, keep.attr)
-}
-
-as.character_factor <- function(X, keep.attr = TRUE) {
-  .Deprecated(msg = "'as.character_factor' was renamed to 'as_character_factor'. It will be removed end of 2023, see help('collapse-renamed').")
-  as_character_factor(X, keep.attr)
-}
+# as.numeric_factor <- function(X, keep.attr = TRUE) {
+#   .Deprecated(msg = "'as.numeric_factor' was renamed to 'as_numeric_factor'. It will be removed end of 2023, see help('collapse-renamed').")
+#   as_numeric_factor(X, keep.attr)
+# }
+#
+# as.character_factor <- function(X, keep.attr = TRUE) {
+#   .Deprecated(msg = "'as.character_factor' was renamed to 'as_character_factor'. It will be removed end of 2023, see help('collapse-renamed').")
+#   as_character_factor(X, keep.attr)
+# }
 
 
 setRnDF <- function(df, nm) `attr<-`(df, "row.names", nm)

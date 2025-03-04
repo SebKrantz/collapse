@@ -56,10 +56,10 @@ is_unlistable <- function(l, DF.as.list = FALSE) {
   all(unlist(checkisul(l), use.names = FALSE)) # fastest way?
 }
 
-is.unlistable <- function(l, DF.as.list = FALSE) {
-  .Deprecated(msg = "'is.unlistable' was renamed to 'is_unlistable'. It will be removed end of 2023, see help('collapse-renamed').")
-  is_unlistable(l, DF.as.list)
-}
+# is.unlistable <- function(l, DF.as.list = FALSE) {
+#   .Deprecated(msg = "'is.unlistable' was renamed to 'is_unlistable'. It will be removed end of 2023, see help('collapse-renamed').")
+#   is_unlistable(l, DF.as.list)
+# }
 
 # If data.frame, search all, otherwise, make optional counting df or not, but don't search them.
 ldepth <- function(l, DF.as.list = FALSE) {

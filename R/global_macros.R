@@ -105,13 +105,12 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                             "%r-%", "%r*%", "%r/%", "%r+%", "%rr%", "add_stub", "add_vars",
                             "add_vars<-", "all_funs", "all_identical", "all_obj_equal", "allNA",
                             "alloc", "allv", "any_duplicated", "anyv", "as_character_factor",
-                            "as_factor_GRP", "as_factor_qG", "as_numeric_factor", "as_integer_factor", "as.character_factor",
-                            "as.factor_GRP", "as.factor_qG", "as.numeric_factor", "atomic_elem",
-                            "atomic_elem<-", "av", "av<-", "B", "BY", "BY.data.frame", "BY.default",
+                            "as_factor_GRP", "as_factor_qG", "as_numeric_factor", "as_integer_factor",
+                            "atomic_elem", "atomic_elem<-", "av", "av<-", "B", "BY", "BY.data.frame", "BY.default",
                             "BY.matrix", "cat_vars", "cat_vars<-", "char_vars", "char_vars<-",
                             "cinv", "ckmatch", "collap", "collapg", "collapv", "colorder",
                             "colorderv", "copyAttrib", "copyMostAttrib", "copyv", "D", "dapply",
-                            "date_vars", "Date_vars", "date_vars<-", "Date_vars<-", "descr",
+                            "date_vars", "date_vars<-", "descr",
                             "descr.default", "Dlog", "fact_vars", "fact_vars<-", "fbetween",
                             "fbetween.data.frame", "fbetween.default", "fbetween.matrix",
                             "fcompute", "fcomputev", "fcount", "fcountv", "fcumsum", "fcumsum.data.frame",
@@ -149,7 +148,6 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                             "GRPid", "GRPN", "GRPnames", "gsplit", "gv", "gv<-", "gvr", "gvr<-",
                             "has_elem", "HDB", "HDW", "iby", "irreg_elem", "is_categorical",
                             "is_date", "is_GRP", "is_irregular", "is_qG", "is_unlistable",
-                            "is.categorical", "is.Date", "is.GRP", "is.qG", "is.unlistable",
                             "itn", "ix", "join", "L", "ldepth", "list_elem", "list_elem<-",
                             "logi_vars", "logi_vars<-", "massign", "mctl", "missing_cases",
                             "mrtl", "mtt", "na_insert", "na_omit", "na_rm", "na_locf", "na_focb", "namlab", "num_vars",
@@ -157,7 +155,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                             "print.pwcov", "print.qsu", "psacf", "psacf.data.frame", "psacf.default",
                             "psccf", "psccf.default", "psmat", "psmat.data.frame", "psmat.default",
                             "pspacf", "pspacf.data.frame", "pspacf.default", "pwcor", "pwcov",
-                            "pwnobs", "pwNobs", "qDF", "qDT", "qF", "qG", "qM", "qsu", "qsu.data.frame",
+                            "pwnobs", "qDF", "qDT", "qF", "qG", "qM", "qsu", "qsu.data.frame",
                             "qsu.default", "qsu.matrix", "qtab", "qtable", "qTBL", "radixorder",
                             "radixorderv", "rapply2d", "recode_char", "recode_num", "reg_elem",
                             "reindex", "relabel", "replace_inf", "replace_Inf", "replace_na",
@@ -171,16 +169,15 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                             "tfmv", "timeid", "to_plm", "TRA", "TRA.data.frame", "TRA.default",
                             "TRA.matrix", "unattrib", "unindex", "unlist2d", "varying", "varying.data.frame",
                             "varying.default", "varying.matrix", "vclasses", "vec", "vgcd",
-                            "vlabels", "vlabels<-", "vlengths", "vtypes", "W", "whichNA",
-                            "whichv")
+                            "vlabels", "vlabels<-", "vlengths", "vtypes", "W", "whichNA", "whichv")
 
 .COLLAPSE_ALL <- sort(unique(c("%-=%", "%!=%", "%!iin%", "%!in%", "%*=%", "%/=%", "%+=%", "%=%", "%==%", "%c-%", "%c*%", "%c/%", "%c+%",
                                "%cr%", "%iin%", "%r-%", "%r*%", "%r/%", "%r+%", "%rr%", "add_stub", "add_vars", "add_vars<-", "all_funs",
                                "all_identical", "all_obj_equal", "allNA", "alloc", "allv", "any_duplicated", "anyv", "as_character_factor",
                                "as_factor_GRP", "as_factor_qG", "as_numeric_factor", "as_integer_factor", "atomic_elem", "atomic_elem<-", "av", "av<-", "B", "BY",
                                "cat_vars", "cat_vars<-", "char_vars", "char_vars<-", "cinv", "ckmatch", "collap", "collapg", "collapv", "colorder",
-                               "colorderv", "copyAttrib", "copyMostAttrib", "copyv", "D", "dapply", "date_vars", "Date_vars", "date_vars<-",
-                               "Date_vars<-", "descr", "Dlog", "fact_vars", "fact_vars<-", "fbetween", "fcompute", "fcomputev", "fcount",
+                               "colorderv", "copyAttrib", "copyMostAttrib", "copyv", "D", "dapply", "date_vars", "date_vars<-",
+                               "descr", "Dlog", "fact_vars", "fact_vars<-", "fbetween", "fcompute", "fcomputev", "fcount",
                                "fcountv", "fcumsum", "fdiff", "fdim", "fdist", "fdroplevels", "fduplicated", "ffirst", "fFtest", "fgroup_by", "group_by_vars",
                                "fgroup_vars", "fgrowth", "fhdbetween", "fhdwithin", "findex", "findex_by", "finteraction", "flag", "flast", "flm",
                                "fmatch", "fmax", "fmean", "fmedian", "fmin", "fmode", "fmutate", "fncol", "fndistinct", "fnlevels", "fnobs", "fnrow",
@@ -192,7 +189,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                                "logi_vars", "logi_vars<-", "massign", "mctl", "missing_cases", "mrtl", "mtt", "na_insert", "na_omit", "na_rm", "na_locf", "na_focb", "namlab",
                                "num_vars", "num_vars<-", "nv", "nv<-", "pad", "pivot", "psacf", "psccf", "psmat", "pspacf", "pwcor", "pwcov", "pwnobs",
                                "qDF", "qDT", "qF", "qG", "qM", "qsu", "qtab", "qtable", "qTBL", "radixorder", "radixorderv", "rapply2d", "recode_char",
-                               "recode_num", "reg_elem", "reindex", "relabel", "replace_inf", "replace_Inf", "replace_na", "replace_NA", "replace_outliers",
+                               "recode_num", "reg_elem", "reindex", "relabel", "replace_inf", "replace_na", "replace_outliers",
                                "rm_stub", "rnm", "rowbind", "roworder", "roworderv", "rsplit", "sbt", "seq_col", "seq_row", "seqid", "set_collapse",
                                "setattrib", "setAttrib", "setColnames", "setDimnames", "setLabels", "setop", "setrelabel", "setrename", "setRownames",
                                "settfm", "settfmv", "setTRA", "settransform", "settransformv", "setv", "slt", "slt<-", "smr", "ss", "STD", "t_list",
@@ -221,9 +218,7 @@ get_collapse <- function(opts = NULL) if(is.null(opts)) as.list(.op) else if(len
                  "slt", "slt<-", "sbt", "gby", "iby", "mtt", "smr",
                  "tfm", "tfmv", "tfm<-", "settfm", "settfmv", "rnm")
 
-.COLLAPSE_OLD <- c("fNobs", "fNdistinct", "pwNobs", "fHDwithin", "fHDbetween", "as.factor_GRP", "as.factor_qG",
-             "is.GRP", "is.qG", "is.unlistable", "is.categorical", "is.Date", "as.numeric_factor",
-              "as.character_factor", "Date_vars", "Date_vars<-", "replace_NA", "replace_Inf")
+.COLLAPSE_OLD <- c("fNobs", "fNdistinct", "fHDwithin", "fHDbetween", "replace_NA", "replace_Inf")
 
 .FAST_STAT_FUN_POLD <- c(.FAST_STAT_FUN, "fNobs","fNdistinct", "GRPN", "GRPid") # "n"
 
