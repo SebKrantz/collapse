@@ -82,15 +82,15 @@ various releases since v1.4.0.</p>
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
 <p><em>collapse</em> provides a class-agnostic architecture permitting
-computations on and manipulation of a very broad range of R objects. It
-provides explicit support for base R classes and data types
-(<em>logical</em>, <em>integer</em>, <em>double</em>,
-<em>character</em>, <em>list</em>, <em>data.frame</em>, <em>matrix</em>,
-<em>factor</em>, <em>Date</em>, <em>POSIXct</em>, <em>ts</em>) and their
-popular extensions, including <em>integer64</em>, <em>data.table</em>,
-<em>tibble</em>, <em>grouped_df</em>, <em>xts</em>/<em>zoo</em>,
-<em>pseries</em>, <em>pdata.frame</em>, <em>units</em>, and <em>sf</em>
-(no geometric operations).</p>
+computations on a very broad range of R objects. It provides explicit
+support for base R classes and data types (<em>logical</em>,
+<em>integer</em>, <em>double</em>, <em>character</em>, <em>list</em>,
+<em>data.frame</em>, <em>matrix</em>, <em>factor</em>, <em>Date</em>,
+<em>POSIXct</em>, <em>ts</em>) and their popular extensions, including
+<em>integer64</em>, <em>data.table</em>, <em>tibble</em>,
+<em>grouped_df</em>, <em>xts</em>/<em>zoo</em>, <em>pseries</em>,
+<em>pdata.frame</em>, <em>units</em>, and <em>sf</em> (no geometric
+operations).</p>
 <p>It also introduces <a href="https://sebkrantz.github.io/collapse/reference/GRP.html"><em>GRP_df</em></a>
 as a more performant and class-agnostic grouped data frame, and <a href="https://sebkrantz.github.io/collapse/reference/indexing.html"><em>indexed_series</em>
 and <em>indexed_frame</em></a> classes as modern class-agnostic
@@ -98,28 +98,27 @@ successors of <em>pseries</em>, <em>pdata.frame</em>. These objects
 inherit the classes they succeed and are handled through
 <code>.pseries</code>, <code>.pdata.frame</code>, and
 <code>.grouped_df</code> methods, which also support the original
-(<em>plm</em> / <em>dplyr</em>) implementations (more details at the
-end).</p>
+(<em>plm</em> / <em>dplyr</em>) implementations (more details
+below).</p>
 <p>All other objects are handled internally at the C or R level using
 general principles extended by specific considerations for some of the
 above classes. I start with summarizing the general principles, which
-enable the usage of <em>collapse</em> with further classes it was not
-designed for.</p>
+enable the usage of <em>collapse</em> with further classes it does not
+explicitly support.</p>
 </div>
 <div class="section level2">
 <h2 id="general-principles">General Principles<a class="anchor" aria-label="anchor" href="#general-principles"></a>
 </h2>
-<p>In general, in <em>collapse</em>, attributes and classes of R objects
-are preserved in statistical and data manipulation operations unless
-their preservation involves a <strong>high-risk</strong> of yielding
-something wrong/useless. Risky operations are those that change the
-dimensions or internal data type (<code><a href="https://rdrr.io/r/base/typeof.html" class="external-link">typeof()</a></code>) of an R
-object.</p>
+<p>In general, <em>collapse</em> preserves attributes and classes of R
+objects in statistical and data manipulation operations unless their
+preservation involves a <strong>high-risk</strong> of yielding something
+wrong/useless. Risky operations change the dimensions or internal data
+type (<code><a href="https://rdrr.io/r/base/typeof.html" class="external-link">typeof()</a></code>) of an R object.</p>
 <p>To <em>collapse</em>’s R and C code, there exist 3 principal types of
-objects: atomic vectors, matrices, and lists - which are often assumed
-to be data frames. Most data manipulation functions in <em>collapse</em>
-like <code><a href="../reference/ftransform.html">fmutate()</a></code> only support lists, whereas statistical
-functions - notably the S3 generic <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
+R objects: atomic vectors, matrices, and lists - which are often assumed
+to be data frames. Most data manipulation functions in
+<em>collapse</em>, like <code><a href="../reference/ftransform.html">fmutate()</a></code>, only support lists,
+whereas statistical functions - like the S3 generic <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
 Statistical Functions</em></a> like <code><a href="../reference/fmean.html">fmean()</a></code> - generally
 support all 3 types of objects.</p>
 <p>S3 generic functions initially dispatch to <code>.default</code>,
@@ -134,7 +133,7 @@ attribute handling principles mostly implemented in C.</p>
 <p>The simplest case arises when an operation preserves the dimensions
 of the object, such as <code>fscale(x)</code> or
 <code>fmutate(data, across(a:c, log))</code>. In this case, all
-attributes of <code>x / data</code> are preserved<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Preservation implies a shallow copy of the attribute
+attributes of <code>x / data</code> are fully preserved<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Preservation implies a shallow copy of the attribute
 lists from the original object to the result object. A shallow copy is
 memory-efficient and means we are copying the list containing the
 attributes in memory, but not the attributes themselves. Whenever I talk
@@ -153,8 +152,8 @@ are dropped and a (named) vector of means is returned.</p>
 <code>fmean(x)</code> will preserve the attributes (except for
 <em>ts</em> objects), as the object could have useful properties such as
 labels or units.</p>
-<p>More complex cases involve changing the dimensions (number of rows or
-columns) of an object. If the number of rows is preserved
+<p>More complex cases involve changing the dimensions of an object. If
+the number of rows is preserved
 e.g. <code>fmutate(data, a_b = a / b)</code> or
 <code>flag(x, -1:1)</code>, only the (column-)names attribute of the
 object is modified. If the number of rows is reduced
@@ -170,22 +169,22 @@ frame being aggregated.</p>
 function</a> e.g. <code>TRA(x, STATS, operation, groups)</code> and the
 like-named argument to the <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
 Statistical Functions</em></a>, operations that simply modify the input
-(<code>x</code>) in a statistical sense (<code>"replace_NA"</code>,
+(<code>x</code>) in a statistical sense (<code>"replace_na"</code>,
 <code>"-"</code>, <code>"-+"</code>, <code>"/"</code>, <code>"+"</code>,
 <code>"*"</code>, <code>"%%"</code>, <code>"-%%"</code>) just copy the
-attributes to the transformed object. Operations
-<code>"replace_fill"</code> and <code>"replace"</code> are more tricky,
-since here <code>x</code> is replaced with <code>STATS</code>, which
-could be of a different class or data type. The following rules apply:
-(1) the result has the same data type as <code>STATS</code>; (2) if
-<code>is.object(STATS)</code>, the attributes of <code>STATS</code> are
-preserved; (3) otherwise the attributes of <code>x</code> are preserved
-unless <code>is.object(x) &amp;&amp; typeof(x) != typeof(STATS)</code>;
-(4) an exemption to this rule is made if <code>x</code> is a factor and
-an integer replacement is offered to STATS
-e.g. <code>fnobs(factor, group, TRA = "replace_fill")</code>. In that
-case, the attributes of <code>x</code> are copied except for the ‘class’
-and ‘levels’ attributes. These rules were devised considering the
+attributes to the transformed object. Operations <code>"fill"</code> and
+<code>"replace"</code> are more tricky, since here <code>x</code> is
+replaced with <code>STATS</code>, which could be of a different class or
+data type. The following rules apply: (1) the result has the same data
+type as <code>STATS</code>; (2) if <code>is.object(STATS)</code>, the
+attributes of <code>STATS</code> are preserved; (3) otherwise the
+attributes of <code>x</code> are preserved unless
+<code>is.object(x) &amp;&amp; typeof(x) != typeof(STATS)</code>; (4) an
+exemption to this rule is made if <code>x</code> is a factor and an
+integer replacement is offered to STATS
+e.g. <code>fnobs(factor, group, TRA = "fill")</code>. In that case, the
+attributes of <code>x</code> are copied except for the ‘class’ and
+‘levels’ attributes. These rules were devised considering the
 possibility that <code>x</code> may have important information attached
 to it which should be preserved in data transformations, such as a
 <code>"label"</code> attribute.</p>
@@ -228,9 +227,9 @@ of the same data type). If they are deemed incompatible,
 <code>"label"</code> attribute and copies that one to
 <code>y</code>.</p>
 <p>So to summarize the general principles: <em>collapse</em> just tries
-to preserve attributes in all cases except for where it is likely to
-break something, beholding the way most commonly used R classes and
-objects behave. The most likely operations that break something are when
+to preserve attributes in all cases except where it is likely to break
+something, beholding the way most commonly used R classes and objects
+behave. The most likely operations that break something are when
 aggregating matrices which have a class (such as
 <em>mts</em>/<em>xts</em>) or univariate time series (<em>ts</em>), when
 data is to be replaced by another object, or when applying an unknown
@@ -269,10 +268,10 @@ i.e. <code>qM(EuStockMarkets, keep.attr = TRUE)</code>.</p>
 </h4>
 <p>Functions <a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html"><code>num_vars()</code>,
 <code>cat_vars()</code> (the opposite of <code>num_vars()</code>),
-<code>char_vars()</code> etc.</a> are implemented in C to quickly select
-columns by data type without the need to check data frame columns by
-applying a function such as <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric()</a></code> in R. For
-<code>is.numeric</code>, the C implementation is equivalent to
+<code>char_vars()</code> etc.</a> are implemented in C to avoid the need
+to check data frame columns by applying an R function such as
+<code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric()</a></code>. For <code>is.numeric</code>, the C
+implementation is equivalent to
 <code>is_numeric_C &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))</code>.
 This of course does not respect the behavior of other classes that
 define methods for <code>is.numeric</code>
@@ -281,12 +280,11 @@ e.g. <code>is.numeric.foo &lt;- function(x) FALSE</code>, then for
 <code>is.numeric(y)</code> is <code>FALSE</code> but
 <code>num_vars(data.frame(y))</code> still returns it. Correct behavior
 in this case requires <code>get_vars(data.frame(y), is.numeric)</code>.
-A particular case to be aware of here is when using
-<code><a href="../reference/collap.html">collap()</a></code> with the <code>FUN</code> and <code>catFUN</code>
-arguments, where the C code (<code>is_numeric_C</code>) is used
-internally to decide whether a column is numeric or categorical.
-<em>collapse</em> does not support statistical operations on complex
-data.</p>
+A particular case to be aware of is when using <code><a href="../reference/collap.html">collap()</a></code>
+with the <code>FUN</code> and <code>catFUN</code> arguments, where the C
+code (<code>is_numeric_C</code>) is used internally to decide whether a
+column is numeric or categorical. <em>collapse</em> does not support
+statistical operations on complex data.</p>
 </div>
 <div class="section level4">
 <h4 id="parsing-of-time-ids">Parsing of Time-IDs<a class="anchor" aria-label="anchor" href="#parsing-of-time-ids"></a>
@@ -334,21 +332,21 @@ perform an indexed lag on <em>xts</em>/<em>zoo</em>. For example:
 <h4 id="support-for-sf-and-units">Support for <em>sf</em> and <em>units</em><a class="anchor" aria-label="anchor" href="#support-for-sf-and-units"></a>
 </h4>
 <p><em>collapse</em> internally supports <em>sf</em> by seeking to avoid
-undue destruction of <em>sf</em> objects through removal of the
-‘geometry’ column in data manipulation operations. This is simply
-implemented through an additional check in the C programs used to subset
-columns of data: if the object is an <em>sf</em> data frame, the
-‘geometry’ column is added to the column selection. Other functions like
-<code><a href="../reference/funique.html">funique()</a></code> or <code><a href="../reference/roworder.html">roworder()</a></code> have internal
-facilities to avoid sorting or grouping on the ‘geometry’ column. Again
-other functions like <code><a href="../reference/descr.html">descr()</a></code> and <code><a href="../reference/qsu.html">qsu()</a></code> simply
-omit the geometry column in their statistical calculations. A short <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html">vignette</a>
+their undue destruction through removal of the ‘geometry’ column in data
+manipulation operations. This is simply implemented through an
+additional check in the C programs used to subset columns of data: if
+the object is an <em>sf</em> data frame, the ‘geometry’ column is added
+to the column selection. Other functions like <code><a href="../reference/funique.html">funique()</a></code> or
+<code><a href="../reference/roworder.html">roworder()</a></code> have internal facilities to avoid sorting or
+grouping on the ‘geometry’ column. Again other functions like
+<code><a href="../reference/descr.html">descr()</a></code> and <code><a href="../reference/qsu.html">qsu()</a></code> simply omit the geometry
+column in their statistical calculations. A short <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html">vignette</a>
 describes the integration of <em>collapse</em> and <em>sf</em> in a bit
 more detail. In summary: <em>collapse</em> supports <em>sf</em> by
 seeking to appropriately deal with the ‘geometry’ column. It cannot
-perform any geometrical operations, for example after subsetting
-<em>sf</em> with <code><a href="../reference/fsubset.html">fsubset()</a></code>, the bounding box attribute of
-the geometry is unaltered and likely too large.</p>
+perform geometrical operations. For example, after subsetting with
+<code><a href="../reference/fsubset.html">fsubset()</a></code>, the bounding box attribute of the geometry is
+unaltered and likely too large.</p>
 <p>Regarding <em>units</em> objects, all relevant functions also have
 simple methods of the form
 <code>FUN.units &lt;- function(x, ...) copyMostAttrib(if(is.matrix(x)) FUN.matrix(x, ...), x) else FUN.default(x, ....)</code>.
@@ -357,7 +355,7 @@ units class, whereas the matrix method does not if <code>FUN</code>
 aggregates the data. The use of <code><a href="../reference/small-helpers.html">copyMostAttrib()</a></code>, which
 copies all attributes apart from <code>"dim"</code>,
 <code>"dimnames"</code>, and <code>"names"</code>, ensures that the
-returned objects are still <em>units</em> objects.</p>
+returned objects are still <em>units</em>.</p>
 </div>
 <div class="section level4">
 <h4 id="support-for-data-table">Support for <em>data.table</em><a class="anchor" aria-label="anchor" href="#support-for-data-table"></a>
@@ -424,27 +422,26 @@ assigns a class attribute as follows</p>
 by the classes of the original object<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Removing
 &lt;code&gt;c("GRP_df", "grouped_df", "data.frame")&lt;/code&gt; if present to avoid
 duplicate classes and allowing grouped data to be re-grouped.&lt;/p&gt;'><sup>4</sup></a>, followed by <code>"grouped_df"</code> and
-finally <code>"data.frame"</code>, if present. The first class
-<code>"GRP_df"</code> is for dealing appropriately with the object
-through methods for <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and subsetting (<code>[</code>,
-<code>[[</code>), e.g. <code>print.GRP_df</code> fetches the grouping
-object, prints <code>fungroup(.X)</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Which reverses the changes of &lt;code&gt;&lt;a href="../reference/GRP.html"&gt;fgroup_by()&lt;/a&gt;&lt;/code&gt;
+finally <code>"data.frame"</code>, if present. The <code>"GRP_df"</code>
+class is for dealing appropriately with the object through methods for
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and subsetting (<code>[</code>, <code>[[</code>),
+e.g. <code>print.GRP_df</code> fetches the grouping object, prints
+<code>fungroup(.X)</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Which reverses the changes of &lt;code&gt;&lt;a href="../reference/GRP.html"&gt;fgroup_by()&lt;/a&gt;&lt;/code&gt;
 so that the print method for the original object &lt;code&gt;.X&lt;/code&gt; is
-called.&lt;/p&gt;'><sup>5</sup></a>, and then prints a
-summary of the grouping. <code>[.GRP_df</code> works similarly: it saves
-the groups, calls <code>[</code> on <code>fungroup(.X)</code>, and
-attaches the groups again if the result is a list with the same number
-of rows. So <em>collapse</em> has no issues printing and handling
-grouped <em>data.table</em>’s, <em>tibbles</em>, <em>sf</em> data
-frames, etc.: they continue to behave as usual. Now <em>collapse</em>
-has various functions with a <code>.grouped_df</code> method to deal
-with grouped data frames. For example <code>fmean.grouped_df</code>, in
-a nutshell, fetches the attached ‘GRP’ object using
-<code>GRP.grouped_df</code>, and calls <code>fmean.data.frame</code> on
-<code>fungroup(data)</code>, passing the ‘GRP’ object to the
-<code>g</code> argument for grouped computation. Here the general
-principles outlined above apply so that the resulting object has the
-same classes and attributes as the original one.</p>
+called.&lt;/p&gt;'><sup>5</sup></a>, and then prints a summary of the grouping.
+<code>[.GRP_df</code> works similarly: it saves the groups, calls
+<code>[</code> on <code>fungroup(.X)</code>, and attaches the groups
+again if the result is a list with the same number of rows. So
+<em>collapse</em> has no issues printing and handling grouped
+<em>data.table</em>’s, <em>tibbles</em>, <em>sf</em> data frames, etc. -
+they continue to behave as usual. Now <em>collapse</em> has various
+functions with a <code>.grouped_df</code> method to deal with grouped
+data frames. For example <code>fmean.grouped_df</code>, in a nutshell,
+fetches the attached ‘GRP’ object using <code>GRP.grouped_df</code>, and
+calls <code>fmean.data.frame</code> on <code>fungroup(data)</code>,
+passing the ‘GRP’ object to the <code>g</code> argument for grouped
+computation. Here the general principles outlined above apply so that
+the resulting object has the same attributes as the input.</p>
 <p>This architecture has an additional advantage: it allows
 <code>GRP.grouped_df</code> to examine the grouping object and check if
 it was created by <em>collapse</em> (class ‘GRP’) or by <em>dplyr</em>.
@@ -453,11 +450,10 @@ the <em>dplyr</em> grouping object to a ‘GRP’ object so that all
 <code>.grouped_df</code> methods in <em>collapse</em> apply to data
 frames created with either <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">dplyr::group_by()</a></code> or
 <code><a href="../reference/GRP.html">fgroup_by()</a></code>.</p>
-<p>The <em>indexed_frame</em> works more or less in the same way. It
-inherits from <em>pdata.frame</em> so that <code>.pdata.frame</code>
-methods in <em>collapse</em> deal with both <em>indexed_frame</em>’s of
-arbitrary classes and <em>pdata.frame</em>’s created with
-<em>plm</em>.</p>
+<p>The <em>indexed_frame</em> works similarly. It inherits from
+<em>pdata.frame</em> so that <code>.pdata.frame</code> methods in
+<em>collapse</em> deal with both <em>indexed_frame</em>’s of arbitrary
+classes and <em>pdata.frame</em>’s created with <em>plm</em>.</p>
 <p>A notable difference to both <em>grouped_df</em> and
 <em>pdata.frame</em> is that <em>indexed_frame</em> is a deeply indexed
 data structure: each variable inside an <em>indexed_frame</em> is an
@@ -476,8 +472,8 @@ matrix of any class can become an <em>indexed_series</em>.</p>
 <p>Further levels of generality are that indexed series and frames allow
 one, two or more variables in the index to support both time series and
 complex panels, natively deal with irregularity in time<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;This is done through the creation of a time-factor in
-the &lt;em&gt;index_df&lt;/em&gt; attribute whose levels represent time steps
-i.e. the factor will have unused levels for gaps in time.&lt;/p&gt;"><sup>6</sup></a>, and provide a rich
+the &lt;em&gt;index_df&lt;/em&gt; attribute whose levels represent time steps, i.e.,
+the factor will have unused levels for gaps in time.&lt;/p&gt;"><sup>6</sup></a>, and provide a rich
 set of methods for subsetting and manipulation which also subset the
 <em>index_df</em> attribute, including internal methods for
 <code><a href="../reference/fsubset.html">fsubset()</a></code>, <code><a href="../reference/funique.html">funique()</a></code>, <code>roworder(v)</code>
@@ -493,17 +489,17 @@ for more information.</p>
 <p><em>collapse</em> handles R objects in a preserving and fairly
 intelligent manner, allowing seamless compatibility with many common
 data classes in R, and statistical workflows that preserve attributes
-(labels, units, etc.) of the data. This is done by general principles
-and some specific considerations/exemptions mostly implemented in C - as
-detailed in this vignette.</p>
+(labels, units, etc.) of the data. This is implemented through general
+principles and some specific considerations/exemptions mostly
+implemented in C - as detailed in this vignette.</p>
 <p>The main benefits of this design are generality and execution speed:
 <em>collapse</em> has much fewer R-level method dispatches and function
 calls than other frameworks used to perform statistical or data
 manipulation operations, it behaves predictably, and may also work well
 with your simple new class.</p>
-<p>The main disadvantage is that many of the general principles and
-exemptions are hard-coded in C and thus may not work with specific
-classes. A prominent example where <em>collapse</em> simply fails is
+<p>The main disadvantage is that the general principles and exemptions
+are hard-coded in C and thus may not work with specific classes. A
+prominent example where <em>collapse</em> simply fails is
 <em>lubridate</em>’s <em>interval</em> class (<a href="https://github.com/SebKrantz/collapse/issues/186" class="external-link">#186</a>, <a href="https://github.com/SebKrantz/collapse/issues/418" class="external-link">#418</a>), which
 has a <code>"starts"</code> attribute of the same length as the data
 that is preserved but not subset in <em>collapse</em> operations.</p>
