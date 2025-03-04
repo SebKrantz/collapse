@@ -21,7 +21,7 @@
 * Facilitate complex data transformation, exploration and computing tasks in R.
 * Help make R code fast, flexible, parsimonious and programmer friendly. 
 
-Its novel [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) supports operations on all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
+Its novel [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) supports all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
 
 
 
