@@ -37,19 +37,16 @@ Its novel [class-agnostic architecture](https://sebkrantz.github.io/collapse/art
 
 *  **Advanced aggregation**: Fast and easy multi-data-type, weighted and parallelized data aggregation.
 
-*  **Advanced transformations**: Fast row/column arithmetic (by reference), (grouped) replacing 
-        and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing and 
-        (higher-dimensional) between/averaging and within/centering transformations.
+*  **Advanced transformations**: Fast row/column arithmetic, (grouped) sweeping out of statistics (by reference), 
+        (grouped, weighted) scaling and (higher-dimensional) centering and averaging transformations.
 
-*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, 
-       differences and (compounded) growth rates on (irregular) time series and panels. Autocorrelation functions for panel data
-       and panel data to array conversions.
+*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, lags/leads, 
+       differences and growth rates on (irregular) time series and panels, panel-autocorrelation functions, and panel data to array conversions.
 
 *  **List processing**: Recursive list search, splitting, 
-        extraction/subsetting, apply and generalized recursive row-binding/unlisting to data frame.
+        extraction, and generalized row-binding to data frame.
 
-* **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
-        summary statistics and descriptive tools.
+* **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) descriptive statistical tools.
 
 *collapse* is written in C and C++, with algorithms much faster than base R's, has extremely low evaluation overheads, scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and excels on complex statistical tasks. <!--, such as weighted statistics, mode/counting/deduplication, joins, pivots, panel data.  Optimized R code ensures minimal evaluation overheads.  , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
