@@ -1,5 +1,4 @@
-#include <R.h>
-#include <Rinternals.h>
+#include "collapse_c.h"
 
 // See https://github.com/wch/r-source/blob/079f863446b5414dd96f3c29d519e4a654146364/src/main/memory.c
 // and https://github.com/wch/r-source/blob/80e410a786324e0e472a25481d5dd28db8285330/src/main/attrib.c
@@ -73,7 +72,6 @@ SEXP copyMostAttributes(SEXP x, SEXP y) {
     return x;
   }
   // In any case we can preserve variable labels..
-  SEXP sym_label = install("label");
   SEXP lab = getAttrib(y, sym_label);
   if(TYPEOF(lab) != NILSXP) setAttrib(x, sym_label, lab);
   return x;

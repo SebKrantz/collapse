@@ -3,7 +3,7 @@
 // #ifndef USE_RINTERNALS
 // #define USE_RINTERNALS
 // #endif
-#include "base_radixsort.h"
+// #include "base_radixsort.h"
 #include <math.h>
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
@@ -637,10 +637,6 @@ SEXP fnrowC(SEXP x) {
   if(TYPEOF(dim) != INTSXP) return R_NilValue;
   return ScalarInteger(INTEGER(dim)[0]);
 }
-
-
-#define MYEFL(x) (((SEXPREC_partial *)(x))->sxpinfo.gp)
-#define MYSEFL(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.gp)=(v))
 
 // Taken from: https://github.com/r-lib/rlang/blob/main/src/internal/env.c
 #define CLP_FRAME_LOCK_MASK (1 << 14)

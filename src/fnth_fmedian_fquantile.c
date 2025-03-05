@@ -1284,8 +1284,8 @@ if(isNull(ord)) {                                                               
   }                                                                                                            \
 } else {                                                                                                       \
   po = INTEGER(ord)-1;                                                                                         \
-  pst = INTEGER(getAttrib(ord, install("starts")));                                                            \
-  if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(ord, install("maxgrpn")));                          \
+  pst = INTEGER(getAttrib(ord, sym_starts));                                                            \
+  if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(ord, sym_maxgrpn));                          \
 }
 
 
@@ -1363,7 +1363,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
       int *cgs = (int *) R_alloc(ng+2, sizeof(int)); cgs[1] = 1;
       for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i]; // TODO: get maxgrpn?
       pst = cgs;
-    } else pst = INTEGER(getAttrib(ord, install("starts")))-1;
+    } else pst = INTEGER(getAttrib(ord, sym_starts))-1;
     if(nullw && sorted) po = &l;
     else {
       int *restrict count = (int *) R_Calloc(ng+1, int);

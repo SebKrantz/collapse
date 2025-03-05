@@ -27,10 +27,14 @@ SEXP sym_sf_column;
 SEXP SelfRefSymbol;
 SEXP sym_datatable_locked;
 // SEXP sym_inherits;
-// SEXP sym_maxgrpn;
-// SEXP sym_starts;
 // SEXP char_starts;
 // SEXP sym_collapse_DT_alloccol;
+SEXP sym_label;
+SEXP sym_starts;
+SEXP sym_maxgrpn;
+SEXP sym_n_groups;
+SEXP sym_group_sizes;
+
 
 int max_threads;
 
@@ -145,8 +149,12 @@ SEXP collapse_init(SEXP mess) // void SEXP mess DllInfo *info
   SelfRefSymbol = install(".internal.selfref");
   sym_datatable_locked = install(".data.table.locked");
   // sym_inherits = install("inherits");
-  // sym_maxgrpn = install("maxgrpn");
   // sym_collapse_DT_alloccol = install("collapse_DT_alloccol");
+  sym_label = install("label");
+  sym_starts = install("starts");
+  sym_maxgrpn = install("maxgrpn");
+  sym_n_groups = install("N.groups");
+  sym_group_sizes = install("group.sizes");
 
   max_threads = OMP_NUM_PROCS;
   max_threads = imin(max_threads, OMP_THREAD_LIMIT);
