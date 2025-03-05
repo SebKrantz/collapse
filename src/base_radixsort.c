@@ -1650,7 +1650,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   o = INTEGER(ans);
   if (n > 0)
     o[0] = -1;
-  xd = DATAPTR(x);
+  xd = DPTR(x);
 
   stackgrps = narg > 1 || retGrp;
 
@@ -1744,7 +1744,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   for (int col = 2; col <= narg; col++) {
     x = CAR(args);
     args = CDR(args);
-    xd = DATAPTR(x);
+    xd = DPTR(x);
     ngrp = gsngrp[flip];
     if (ngrp == n && nalast != 0)
       break;
@@ -2062,7 +2062,7 @@ void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   gsmaxalloc = n;
 
   if (n > 0) o[0] = -1;
-  xd = DATAPTR(x);
+  xd = DPTR(x);
 
   switch(TYPEOF(x)) {
   case INTSXP:
