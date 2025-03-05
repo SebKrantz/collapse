@@ -101,7 +101,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
 
   if(distinct_types == 0) {
     copyMostAttrib(pd[0], res);
-    // setAttrib(res, install("label"), R_NilValue); // better to keep, this is also used for id-columns if na.rm = TRUE
+    // setAttrib(res, sym_label, R_NilValue); // better to keep, this is also used for id-columns if na.rm = TRUE
   }
 
   // Add ID column
@@ -227,10 +227,9 @@ switch(aggfun) {                                                                
 // TODO: How to check for duplicate rows?
 SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEXP Raggfun, SEXP Rnarm) {
 
-  SEXP sym_ng = install("N.groups");
   const int *restrict pix = INTEGER_RO(index), *restrict pid = INTEGER_RO(id), l = length(index),
-    nr = asInteger(getAttrib(index, sym_ng)),
-    nc = asInteger(getAttrib(id, sym_ng)), tx = TYPEOF(column), aggfun = aggFUNtI(Raggfun);
+    nr = asInteger(getAttrib(index, sym_n_groups)),
+    nc = asInteger(getAttrib(id, sym_n_groups)), tx = TYPEOF(column), aggfun = aggFUNtI(Raggfun);
   int narm = asInteger(Rnarm);
   if(l != length(id)) error("Internal error: length(index) must match length(id)");
   if(l != length(column)) error("Internal error: length(index) must match length(column)");

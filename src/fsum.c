@@ -666,7 +666,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
           if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
         }
         #pragma omp parallel for num_threads(nthreads)
-        for(int j = 0; j < l; ++j) fsum_g_omp_impl(px[j], DATAPTR(pout[j]), ng, pg, narm);
+        for(int j = 0; j < l; ++j) fsum_g_omp_impl(px[j], DPTR(pout[j]), ng, pg, narm);
       } else {
         for(int j = 0; j != l; ++j) pout[j] = fsum_g_impl(px[j], ng, pg, narm);
       }

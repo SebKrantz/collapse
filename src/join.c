@@ -328,9 +328,9 @@ SEXP sort_merge_join(SEXP x, SEXP table, SEXP ot, SEXP count) {
 */
 SEXP multi_match(SEXP m, SEXP g) {
 
-  SEXP ng_sym = install("N.groups"), sizes_sym = install("group.sizes"), gsR = getAttrib(g, sizes_sym);
+  SEXP gsR = getAttrib(g, sym_group_sizes);
   if(isNull(gsR)) error("Internal error: g needs to be a 'qG' type vector with a 'group.sizes' attribute.");
-  const int ng = asInteger(getAttrib(g, ng_sym)), ngp = ng+1;
+  const int ng = asInteger(getAttrib(g, sym_n_groups)), ngp = ng+1;
   if(ng != length(gsR)) error("'qG' vector is invalied, 'N.groups' attribute does not match 'group.sizes' attribute");
   const int lm = length(m), l = length(g), lp = l+1,
     *gs = INTEGER(gsR)-1, *pm = INTEGER(m), *pg = INTEGER(g)-1;

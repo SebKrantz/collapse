@@ -1,3 +1,6 @@
+#ifndef COLLAPSE_H  // Check if COLLAPSE_H is not defined
+#define COLLAPSE_H  // Define COLLAPSE_H
+
 #ifdef _OPENMP
   #include <omp.h>
   #define OMP_NUM_PROCS omp_get_num_procs()
@@ -12,16 +15,21 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <stdbool.h>
+#include "connection/connection.h"
 
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
-#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
 
 #define NISNAN(x) ((x) == (x))  // opposite of ISNAN for doubles
 // Faster than Rinternals version (which uses math library version)
 #undef ISNAN
 #define ISNAN(x) ((x) != (x))
 
+// Initialized in data.table_init.c
 extern int max_threads;
+extern SEXP sym_label;
+extern SEXP sym_starts;
+extern SEXP sym_maxgrpn;
+extern SEXP sym_n_groups;
+extern SEXP sym_group_sizes;
 
 // from base_radixsort.h (with significant modifications)
 SEXP Cradixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -177,3 +185,4 @@ SEXP nth_impl(SEXP x, int narm, int ret, double Q);
 SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q);
 SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h);
 
+#endif // End of COLLAPSE_H guard

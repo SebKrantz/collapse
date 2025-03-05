@@ -137,9 +137,9 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
       tx = 1000;
       M = (size_t)nlevels(x) + 2;
     } else if(inherits(x, "qG")) {
-      SEXP sym_ng = install("N.groups"), ngtab = getAttrib(table, sym_ng);
+      SEXP ngtab = getAttrib(table, sym_n_groups);
       if(isNull(ngtab)) goto bigint;
-      int ng = asInteger(getAttrib(x, sym_ng)), ngt = asInteger(ngtab);
+      int ng = asInteger(getAttrib(x, sym_n_groups)), ngt = asInteger(ngtab);
       if(ngt > ng) ng = ngt;
       M = (size_t)ng + 2;
       tx = 1000;
@@ -1132,10 +1132,9 @@ void count_match(SEXP res, int nt, int nmv) {
   }
   R_Free(cnt);
   SEXP sym_nomatch = install("N.nomatch");
-  SEXP sym_ng = install("N.groups");
   SEXP sym_distinct = install("N.distinct");
   setAttrib(res, sym_nomatch, ScalarInteger(nnm));
-  setAttrib(res, sym_ng, ScalarInteger(nt));
+  setAttrib(res, sym_n_groups, ScalarInteger(nt));
   setAttrib(res, sym_distinct, ScalarInteger(nd));
   classgets(res, mkString("qG"));
 }

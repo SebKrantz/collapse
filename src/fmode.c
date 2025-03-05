@@ -896,7 +896,7 @@ SEXP fmodeC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     }
   } else {
     po = INTEGER(o);
-    pst = INTEGER(getAttrib(o, install("starts")));
+    pst = INTEGER(getAttrib(o, sym_starts));
   }
   // if(nullw) return mode_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), asInteger(Rret), asInteger(Rnthreads));
   // if(TYPEOF(w) != REALSXP) UNPROTECT(nprotect);
@@ -966,7 +966,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
         }
       } else {
         po = INTEGER(o);
-        pst = INTEGER(getAttrib(o, install("starts")));
+        pst = INTEGER(getAttrib(o, sym_starts));
       }
       if(nullw) { // Parallelism at sub-column level
         for(int j = 0; j < l; ++j) pout[j] = mode_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, nthreads);
@@ -1077,7 +1077,7 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
     }
   } else {
     po = INTEGER(o);
-    pst = INTEGER(getAttrib(o, install("starts")));
+    pst = INTEGER(getAttrib(o, sym_starts));
   }
 
   if(sorted) { // Sorted

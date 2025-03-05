@@ -367,15 +367,12 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
     }
   } else {
     po = INTEGER(o);
-    pst = INTEGER(getAttrib(o, install("starts")));
+    pst = INTEGER(getAttrib(o, sym_starts));
   }
   if(nthreads > max_threads) nthreads = max_threads;
   PROTECT(res = ndistinct_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), nthreads));
   if(OBJECT(x) == 0) copyMostAttrib(x, res);
-  else {
-    SEXP sym_label = install("label");
-    setAttrib(res, sym_label, getAttrib(x, sym_label));
-  }
+  else setAttrib(res, sym_label, getAttrib(x, sym_label));
   UNPROTECT(1);
   return res;
 }
@@ -399,7 +396,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
     UNPROTECT(1);
     return out;
   } else {
-    SEXP out = PROTECT(allocVector(VECSXP, l)), sym_label = PROTECT(install("label")), *restrict pout = SEXPPTR(out);
+    SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out);
     const SEXP *restrict px = SEXPPTR_RO(x);
     if(isNull(g)) {
       if(nthreads <= 1) {
@@ -433,7 +430,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
         }
       } else {
         po = INTEGER(o);
-        pst = INTEGER(getAttrib(o, install("starts")));
+        pst = INTEGER(getAttrib(o, sym_starts));
       }
       for(int j = 0; j != l; ++j) {
         SEXP xj = px[j];
@@ -444,7 +441,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       }
       DFcopyAttr(out, x, ng);
     }
-    UNPROTECT(2);
+    UNPROTECT(1);
     return out;
   }
 }
@@ -518,7 +515,7 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       }
     } else {
       po = INTEGER(o);
-      pst = INTEGER(getAttrib(o, install("starts")));
+      pst = INTEGER(getAttrib(o, sym_starts));
     }
 
     if(sorted) { // Sorted

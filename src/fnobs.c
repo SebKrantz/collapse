@@ -62,9 +62,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
     if(!isObject(x)) {
       copyMostAttrib(x, n); // SHALLOW_DUPLICATE_ATTRIB(n, x);
     } else {
-      SEXP sym_label = PROTECT(install("label")); // PROTECT ??
       setAttrib(n, sym_label, getAttrib(x, sym_label));
-      UNPROTECT(1);
     }
     UNPROTECT(1);
     return n;
@@ -183,9 +181,16 @@ SEXP fnobslC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
   } else {
     SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
     const SEXP *px = SEXPPTR_RO(x);
-    for(int j = 0; j != l; ++j) pout[j] = fnobsC(px[j], Rng, g);
+    for(int j = 0; j != l; ++j) {
+      SEXP xj = px[j];
+      pout[j] = fnobsC(xj, Rng, g);
+      if(OBJECT(xj) == 0) copyMostAttrib(xj, pout[j]);
+      else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
+    }
     DFcopyAttr(out, x, ng);
     UNPROTECT(1);
     return out;
   }
 }
+
+

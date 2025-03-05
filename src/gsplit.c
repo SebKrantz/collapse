@@ -20,7 +20,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
     SEXP x1 = PROTECT(allocVector(tx, 1));
     copyMostAttrib(x, x1);
     SEXP ax = ATTRIB(x1);
-    if(length(ax) == 1 && TAG(ax) == install("label")) ax = R_NilValue;
+    if(length(ax) == 1 && TAG(ax) == sym_label) ax = R_NilValue;
     int ox = OBJECT(x);
     // FAZIT: Need to use SET_VECTOR_ELT!! pres[i] = allocVector() doesn't work!!
     if(TYPEOF(ax) != NILSXP && ox != 0) {
@@ -120,9 +120,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       }
     }
   } else if(length(order) == l) { // Grouping not sorted but we have the ordering..
-    SEXP sym_starts = PROTECT(install("starts"));
     const SEXP starts = getAttrib(order, sym_starts);
-    UNPROTECT(1);
     if(length(starts) != ng) goto unsno;
     const int *po = INTEGER(order), *ps = INTEGER(starts);
 
@@ -275,9 +273,7 @@ SEXP greorder(SEXP x, SEXP gobj) {
 
   // Note: This is only faster for a large number of groups...
   if(length(order) == l) { // Grouping not sorted but we have the ordering..
-    SEXP sym_starts = PROTECT(install("starts"));
     const SEXP starts = getAttrib(order, sym_starts);
-    UNPROTECT(1);
     if(length(starts) != ng) goto unsno2;
     const int *po = INTEGER(order), *ps = INTEGER(starts);
 
