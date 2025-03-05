@@ -41,7 +41,7 @@ Its novel [class-agnostic architecture](https://sebkrantz.github.io/collapse/art
         (grouped, weighted) scaling and (higher-dimensional) centering and averaging transformations.
 
 *  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, lags/leads, 
-       differences and growth rates on (irregular) time series and panels, panel-autocorrelation functions, and panel-data to array conversions.
+       differences and growth rates on (irregular) time series and panels, panel-autocorrelation functions, and panel data to array conversions.
 
 *  **List processing**: Recursive list search, splitting, 
         extraction, and generalized row-binding to data frame.
