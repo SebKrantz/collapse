@@ -10,7 +10,7 @@
  [![Conda Version](https://img.shields.io/conda/vn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
  [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://app.codecov.io/gh/SebKrantz/collapse?branch=master)
-[![minimal R version](https://img.shields.io/badge/R%3E%3D-3.4.0-6666ff.svg)](https://cran.r-project.org/)
+[![minimal R version](https://img.shields.io/badge/R%3E%3D-3.5.0-6666ff.svg)](https://cran.r-project.org/)
 [![dependencies](https://tinyverse.netlify.app/badge/collapse)](https://CRAN.R-project.org/package=collapse)
 [![DOI](https://zenodo.org/badge/172910283.svg)](https://zenodo.org/badge/latestdoi/172910283)
 [![arXiv](https://img.shields.io/badge/arXiv-2403.05038-0969DA.svg)](https://arxiv.org/abs/2403.05038)
@@ -35,15 +35,15 @@ Its novel [class-agnostic architecture](https://sebkrantz.github.io/collapse/art
 * **Fast data manipulation**: Fast and flexible functions for data 
         manipulation, data object conversions and memory efficient R programming.
 
-*  **Advanced aggregation**: Fast and easy multi-data-type, weighted and parallelized data aggregation.
+*  **Advanced aggregation**: Fast and easy multi-type, weighted and parallelized data aggregation.
 
 *  **Advanced transformations**: Fast row/column arithmetic, (grouped) sweeping out of statistics (by reference), 
         (grouped, weighted) scaling and (higher-dimensional) centering and averaging.
 
 *  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, lags/leads, 
-       differences and growth rates on (irregular) time series and panels, panel-autocorrelation functions, and panel data to array conversions.
+       differences and (compound) growth rates on (irregular) time series and panels, panel-autocorrelation functions and panel data to array conversions.
 
-*  **List processing**: Recursive list search, filtering, splitting, apply, and unlisting to data frame.
+*  **List processing**: Recursive list search, filtering, splitting, apply and unlisting to data frame.
 
 * **Advanced data exploration**: Fast (grouped, weighted, multi-level) descriptive statistical tools.
 
