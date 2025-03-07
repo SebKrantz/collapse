@@ -192,7 +192,7 @@ SEXP dupVecIndex(SEXP x) {
   }
   R_Free(h);
   setAttrib(ans_i, sym_n_groups, ScalarInteger(g));
-  UNPROTECT(ans_i);
+  UNPROTECT(1);
   return ans_i;
 }
 
@@ -358,7 +358,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
   }
   R_Free(h);
   setAttrib(ans_i, sym_n_groups, ScalarInteger(g));
-  UNPROTECT(ans_i);
+  UNPROTECT(1);
   return ans_i;
 }
 
@@ -552,7 +552,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
 
   R_Free(h);
   setAttrib(ans, sym_n_groups, ScalarInteger(g));
-  UNPROTECT(ans);
+  UNPROTECT(1);
   return ans;
 }
 
