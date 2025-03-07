@@ -6,8 +6,9 @@
 
 #define OBJ OBJECT
 #define SET_OBJ SET_OBJECT
-#define ATTR ATTRIB
 #define SET_OBJ SET_OBJECT
+#define ATTRIBUTES ATTRIB
+#define SET_ATTRIBUTES SET_ATTRIB
 
 #define MYLEV LEVELS
 #define IS_UTF8(x)  (MYLEV(x) & 8)
@@ -89,6 +90,10 @@ typedef struct {
 // For super efficient access, e.g. in gsplit()
 #define SEXP_DATAPTR(x) ((SEXP *) (((SEXPREC_ALIGN *) (x)) + 1))
 
+#define DPTR(x) ((void *)DATAPTR_RO(x))
+#define SEXPPTR(x) ((SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
+#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
+
 // #define STDVEC_DATAPTR(x) ((void *) (((SEXPREC_ALIGN *) (x)) + 1))
 //
 // static R_INLINE void *DPTR(SEXP x) {
@@ -96,15 +101,9 @@ typedef struct {
 //   else if (LENGTH(x) == 0 && TYPEOF(x) != CHARSXP) return (void *) 1;
 //   else return STDVEC_DATAPTR(x);
 // }
-
 // External symbols not in DLL?
 // extern inline void *DPTR(SEXP x) {
 //   return DATAPTR(x);
 // }
-
-#define DPTR(x) ((void *)DATAPTR_RO(x))
-#define SEXPPTR(x) ((SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
-#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
-
 
 #endif // End of CONNECTION_H guard
