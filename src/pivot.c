@@ -73,9 +73,9 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
   }
 
   int max_type = 0, distinct_types = 0, len = 0;
-  for (int j = 0, tj, tj_first = TYPEOF(pd[0]), oj, oj_first = OBJECT(pd[0]); j != l; ++j) {
+  for (int j = 0, tj, tj_first = TYPEOF(pd[0]), oj, oj_first = isObject(pd[0]); j != l; ++j) {
     tj = TYPEOF(pd[j]);
-    oj = OBJECT(pd[j]);
+    oj = isObject(pd[j]);
     len += length(pind[j]);
     if(tj > max_type) max_type = tj;
     if(tj != tj_first || oj != oj_first) distinct_types = 1;
@@ -119,7 +119,8 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
         pid += end; ++v;
       }
     } else {
-      SEXP *restrict pid = SEXPPTR(id_column), *pnam = SEXPPTR(names);
+      SEXP *restrict pid = SEXPPTR(id_column);
+      const SEXP *pnam = SEXPPTR_RO(names);
       for (int j = 0, end = 0; j != l; ++j) {
         SEXP namj = pnam[j];
         end = length(pind[j]); // SIMD??
@@ -239,7 +240,8 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
   if(l < 100000) nthreads = 1; // No improvements from multithreading on small data.
   if(nthreads > max_threads) nthreads = max_threads;
 
-  SEXP out = PROTECT(allocVector(VECSXP, nc)), *restrict pout = SEXPPTR(out)-1;
+  SEXP out = PROTECT(allocVector(VECSXP, nc));
+  const SEXP *restrict pout = SEXPPTR_RO(out)-1;
 
   SEXP out1;
   if(aggfun < 3 || aggfun > 4) {
@@ -315,14 +317,14 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
     case STRSXP: {
       const SEXP *restrict pc = SEXPPTR_RO(column);
       if(aggfun > 3) error("Cannot aggregate character column with sum, mean, min, or max.");
-      AGGFUN_SWITCH_CAT(SEXPPTR, pc[i] != NA_STRING);
+      AGGFUN_SWITCH_CAT(SEXP_DATAPTR, pc[i] != NA_STRING);
       break;
     }
     case VECSXP:
     case EXPRSXP: {
       const SEXP *restrict pc = SEXPPTR_RO(column);
       if(aggfun > 3) error("Cannot aggregate list column with sum, mean, min, or max.");
-      AGGFUN_SWITCH_CAT(SEXPPTR, length(pc[i]) != 0);
+      AGGFUN_SWITCH_CAT(SEXP_DATAPTR, length(pc[i]) != 0);
       break;
     }
     default: error("Unsupported SEXP type: '%s'", type2char(tx));

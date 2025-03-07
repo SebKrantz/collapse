@@ -637,7 +637,7 @@ SEXP mode_impl_plain(SEXP x, int narm, int ret) {
     case INTSXP:  return ScalarInteger(isFactor(x) ? mode_fct_logi(INTEGER(x), &l, l, nlevels(x), 1, narm, ret) :
                                     mode_int(INTEGER(x), &l, l, 1, narm, ret));
     case LGLSXP: return my_ScalarLogical(mode_fct_logi(LOGICAL(x), &l, l, 1, 1, narm, ret));
-    case STRSXP: return ScalarString(mode_string(SEXPPTR(x), &l, l, 1, narm, ret));
+    case STRSXP: return ScalarString(mode_string(SEXPPTR_RO(x), &l, l, 1, narm, ret));
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
@@ -659,7 +659,7 @@ SEXP w_mode_impl_plain(SEXP x, double *pw, int narm, int ret) {
     case INTSXP:  return ScalarInteger(isFactor(x) ? w_mode_fct_logi(INTEGER(x), pw, &l, l, nlevels(x), 1, narm, ret) :
                                     w_mode_int(INTEGER(x), pw, &l, l, 1, narm, ret));
     case LGLSXP:  return my_ScalarLogical(w_mode_fct_logi(LOGICAL(x), pw, &l, l, 1, 1, narm, ret));
-    case STRSXP:  return ScalarString(w_mode_string(SEXPPTR(x), pw, &l, l, 1, narm, ret));
+    case STRSXP:  return ScalarString(w_mode_string(SEXPPTR_RO(x), pw, &l, l, 1, narm, ret));
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
@@ -711,7 +711,8 @@ SEXP mode_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int na
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *pres = SEXPPTR(res);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pres = SEXPPTR(res);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? NA_STRING : mode_string(px + pst[gr]-1, po, pgs[gr], 1, narm, ret);
@@ -750,7 +751,8 @@ SEXP mode_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int na
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *pres = SEXPPTR(res);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pres = SEXPPTR(res);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? NA_STRING : mode_string(px, po + pst[gr]-1, pgs[gr], 0, narm, ret);
@@ -804,7 +806,8 @@ SEXP w_mode_g_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int 
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *pres = SEXPPTR(res);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pres = SEXPPTR(res);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? NA_STRING : w_mode_string(px + pst[gr]-1, pw + pst[gr]-1, po, pgs[gr], 1, narm, ret);
@@ -843,7 +846,8 @@ SEXP w_mode_g_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, int 
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *pres = SEXPPTR(res);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pres = SEXPPTR(res);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? NA_STRING : w_mode_string(px, pw, po + pst[gr]-1, pgs[gr], 0, narm, ret);
@@ -922,7 +926,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
   if(nullg && nthreads > l) nthreads = l;
   if(nullg && nullw) {
     if(nthreads <= 1) {
-      for(int j = 0; j != l; ++j) pout[j] = mode_impl(px[j], narm, ret);
+      for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, mode_impl(px[j], narm, ret));
     } else {
       #pragma omp parallel for num_threads(nthreads)
       for(int j = 0; j < l; ++j) pout[j] = mode_impl_plain(px[j], narm, ret);
@@ -941,7 +945,7 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
     }
     if(nullg) {
       if(nthreads <= 1) {
-        for(int j = 0; j != l; ++j) pout[j] = w_mode_impl(px[j], pw, narm, ret);
+        for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, w_mode_impl(px[j], pw, narm, ret));
       } else {
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < l; ++j) pout[j] = w_mode_impl_plain(px[j], pw, narm, ret);
@@ -1039,7 +1043,8 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *restrict pres = SEXPPTR(res);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *restrict pres = SEXPPTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) pres[j] = mode_string(px + j*l, &l, l, 1, narm, ret);
@@ -1136,19 +1141,20 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *restrict pres = SEXPPTR(res);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *restrict pres = SEXPPTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
-            SEXP *pxj = px + j * l;
+            const SEXP *pxj = px + j * l;
             for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_STRING : mode_string(pxj + pst[gr]-1, po, pgs[gr], 1, narm, ret);
           }
         } else {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
-            SEXP *pxj = px + j * l;
+            const SEXP *pxj = px + j * l;
             for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_STRING : w_mode_string(pxj + pst[gr]-1, pw + pst[gr]-1, po, pgs[gr], 1, narm, ret);
           }
         }
@@ -1212,19 +1218,20 @@ SEXP fmodemC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, SEXP Rnt
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *restrict pres = SEXPPTR(res);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *restrict pres = SEXPPTR(res);
         if(nullw) {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
-            SEXP *pxj = px + j * l;
+            const SEXP *pxj = px + j * l;
             for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_STRING : mode_string(pxj, po + pst[gr]-1, pgs[gr], 0, narm, ret);
           }
         } else {
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
-            SEXP *pxj = px + j * l;
+            const SEXP *pxj = px + j * l;
             for(int gr = 0; gr < ng; ++gr) pres[jng + gr] = pgs[gr] == 0 ? NA_STRING : w_mode_string(pxj, pw, po + pst[gr]-1, pgs[gr], 0, narm, ret);
           }
         }

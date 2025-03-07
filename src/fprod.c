@@ -226,9 +226,9 @@ SEXP fprodlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
     UNPROTECT(1);
     return out;
   }
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
+  SEXP out = PROTECT(allocVector(VECSXP, l));
   const SEXP *px = SEXPPTR_RO(x);
-  for(int j = 0; j != l; ++j) pout[j] = fprodC(px[j], Rng, g, w, Rnarm);
+  for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, fprodC(px[j], Rng, g, w, Rnarm));
   // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
   DFcopyAttr(out, x, ng);
   UNPROTECT(1);

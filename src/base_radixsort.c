@@ -931,7 +931,7 @@ static int StrCmp(SEXP x, SEXP y)            // also used by bmerge and chmatch
 void checkEncodings(SEXP x) // static
 {
   cetype_t ce;
-  SEXP *px = SEXPPTR(x);
+  const SEXP *px = SEXPPTR_RO(x);
   int i, lx = length(x);
   for (i = 0; i != lx && px[i] == NA_STRING; ++i);
 

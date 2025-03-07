@@ -34,9 +34,8 @@ SEXP setnames(SEXP x, SEXP nam) {
       // setselfref(x);
       return x;
     }
-    SEXP newnam = PROTECT(allocVector(STRSXP, n)),
-      *pnn = SEXPPTR(newnam), *pn = SEXPPTR(nam);
-    for(int i = 0; i < l; ++i) pnn[i] = pn[i];
+    SEXP newnam = PROTECT(allocVector(STRSXP, n));
+    memcpy(SEXPPTR(newnam), SEXPPTR_RO(nam), l*sizeof(SEXP));
     SET_LEN(newnam, l);
     SET_TRULEN(newnam, n);
     setAttrib(x, R_NamesSymbol, newnam);
@@ -77,7 +76,7 @@ bool allNA(SEXP x, bool errorForBadType) {
     }
     return true;
   case STRSXP: {
-    const SEXP *xd = SEXPPTR(x);
+    const SEXP *xd = SEXPPTR_RO(x);
     for (int i=0; i != n; ++i)    if (xd[i]!=NA_STRING) {
       return false;
     }
@@ -178,7 +177,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
         for (int j=0; j != n; ++j) ians[j] += (iv[j] == NA_INTEGER);
       } break;
       case STRSXP: {
-        const SEXP *sv = SEXPPTR(v);
+        const SEXP *sv = SEXPPTR_RO(v);
         for (int j=0; j != n; ++j) ians[j] += (sv[j] == NA_STRING);
       } break;
       case REALSXP: {
@@ -223,7 +222,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
         for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_INTEGER);
       } break;
       case STRSXP: {
-        const SEXP *sv = SEXPPTR(v);
+        const SEXP *sv = SEXPPTR_RO(v);
         for (int j=0; j != n; ++j) ians[j] |= (sv[j] == NA_STRING);
       } break;
       case REALSXP: {

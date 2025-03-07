@@ -25,7 +25,7 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
           break;
         }
         case STRSXP: {
-          SEXP *px = SEXPPTR(x);
+          const SEXP *px = SEXPPTR_RO(x);
           while(px[j] == NA_STRING && j != end) ++j;
           SET_STRING_ELT(out, 0, px[j]);
           break;
@@ -86,7 +86,8 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = NA_STRING;
         --pout;
         for(int i = 0; i != l; ++i) {
@@ -156,7 +157,8 @@ SEXP ffirst_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         break;
       }
       case STRSXP:{
-        SEXP *px = SEXPPTR(x)-1, *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x)-1;
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng; i--; ) pout[i] = gl[i] == NA_INTEGER ? NA_STRING : px[gl[i]];
         break;
       }
@@ -255,7 +257,8 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int j = 0, i = 0; j != col; ++j) {
           while(px[i] == NA_STRING && i != end) ++i;
           pout[j] = px[i]; px += l; i = 0;
@@ -326,7 +329,8 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x), *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x);
+        SEXP *pout = SEXPPTR(out);
         for(int i = ng * col; i--; ) pout[i] = NA_STRING;
         --pout;
         for(int j = 0; j != col; ++j) {
@@ -389,7 +393,8 @@ SEXP ffirstmC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x)-1, *pout = SEXPPTR(out);
+        const SEXP *px = SEXPPTR_RO(x)-1;
+        SEXP *pout = SEXPPTR(out);
         for(int j = 0; j != col; ++j) {
           for(int i = ng; i--; ) pout[i] = pgl[i] == NA_INTEGER ? NA_STRING : px[pgl[i]];
           px += l; pout += ng;

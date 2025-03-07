@@ -1474,16 +1474,15 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
     CHECK_GROUPS(nrx, sorted);
 
-    SEXP *restrict pout = SEXPPTR(out);
     if(nullw) { // Parallelism at sub-column level
       if(nthreads <= 1) {
         void *x_cc = R_alloc(maxgrpn, sizeof(double));
-        for(int j = 0; j < l; ++j) pout[j] = nth_g_impl_noalloc(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, x_cc);
+        for(int j = 0; j < l; ++j) SET_VECTOR_ELT(out, j, nth_g_impl_noalloc(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, x_cc));
       } else {
-        for(int j = 0; j < l; ++j) pout[j] = nth_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+        for(int j = 0; j < l; ++j) SET_VECTOR_ELT(out, j, nth_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, nthreads));
       }
     } else { // Parallelism at sub-column level
-      for(int j = 0; j < l; ++j) pout[j] = w_nth_g_qsort_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+      for(int j = 0; j < l; ++j) SET_VECTOR_ELT(out, j, w_nth_g_qsort_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads));
     }
   }
 

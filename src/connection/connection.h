@@ -4,9 +4,10 @@
 #include <R.h>
 #include <Rinternals.h>
 
-#define DPTR DATAPTR
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
-#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
+#define OBJ OBJECT
+#define SET_OBJ SET_OBJECT
+#define ATTR ATTRIB
+#define SET_OBJ SET_OBJECT
 
 #define MYLEV LEVELS
 #define IS_UTF8(x)  (MYLEV(x) & 8)
@@ -63,6 +64,8 @@ typedef struct VECTOR_SEXPREC {
   struct vecsxp_struct vecsxp;
 } VECTOR_SEXPREC, *VECSEXP;
 
+typedef union { VECTOR_SEXPREC s; double align; } SEXPREC_ALIGN;
+
 #endif
 
 typedef struct {
@@ -82,6 +85,26 @@ typedef struct {
 
 #define MYEFL(x) (((SEXPREC_partial *)(x))->sxpinfo.gp)
 #define MYSEFL(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.gp)=(v))
+
+// For super efficient access, e.g. in gsplit()
+#define SEXP_DATAPTR(x) ((SEXP *) (((SEXPREC_ALIGN *) (x)) + 1))
+
+// #define STDVEC_DATAPTR(x) ((void *) (((SEXPREC_ALIGN *) (x)) + 1))
+//
+// static R_INLINE void *DPTR(SEXP x) {
+//   if (ALTREP(x)) error("Cannot get writable DATAPTR from ALTREP string or list");
+//   else if (LENGTH(x) == 0 && TYPEOF(x) != CHARSXP) return (void *) 1;
+//   else return STDVEC_DATAPTR(x);
+// }
+
+// External symbols not in DLL?
+// extern inline void *DPTR(SEXP x) {
+//   return DATAPTR(x);
+// }
+
+#define DPTR(x) ((void *)DATAPTR_RO(x))
+#define SEXPPTR(x) ((SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
+#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
 
 
 #endif // End of CONNECTION_H guard
