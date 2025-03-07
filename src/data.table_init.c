@@ -5,7 +5,7 @@
 
 #include "collapse_c.h" // Needs to be first because includes OpenMP, to avoid namespace conflicts.
 #include "data.table.h"
-#include <Rdefines.h>
+// #include <Rdefines.h> // macros for an S-like interface to the above (no longer maintained)
 // #include <R_ext/Rdynload.h>
 // #include <R_ext/Visibility.h>
 
