@@ -917,7 +917,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
     SETTOF(ans, LGLSXP);
     break;
   case 4: // is.sublist, needed for list processing functions
-    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !isFrame(px[i]);
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !inherits(px[i], "data.frame");
     SETTOF(ans, LGLSXP);
     break;
   case 7: // is.atomic(x), needed in atomic_elem()
@@ -970,7 +970,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         pans[i] = 1;
       else switch(TYPEOF(px[i])) {
            case VECSXP:
-             pans[i] = isFrame(px[i]) ? 2 : 0;
+             pans[i] = inherits(px[i], "data.frame") ? 2 : 0;
              break;
            case NILSXP: /* NULL is atomic (S compatibly), but not in isVectorAtomic(.) */
            case CHARSXP:

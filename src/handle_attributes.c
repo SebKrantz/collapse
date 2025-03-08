@@ -109,7 +109,7 @@ SEXP CcopyMostAttrib(SEXP to, SEXP from) {
   if(TYPEOF(to) == VECSXP) {
     SEXP res = PROTECT(shallow_duplicate(to));
     copyMostAttrib(from, res);
-    if(isFrame(from) && length(VECTOR_ELT(to, 0)) != length(VECTOR_ELT(from, 0)))
+    if(inherits(from, "data.frame") && length(VECTOR_ELT(to, 0)) != length(VECTOR_ELT(from, 0)))
        setAttrib(res, R_RowNamesSymbol, getAttrib(to, R_RowNamesSymbol));
     UNPROTECT(1);
     return res;
