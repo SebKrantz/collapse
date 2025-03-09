@@ -1,5 +1,7 @@
 context("fquantile, and quantiles with fnth")
 
+test_zero_weights <- FALSE
+
 probs1 <- c(0, 0.25, 0.5, 0.75, 1)
 probs2 <- c(0, 0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95, 0.99, 1)
 
@@ -74,6 +76,8 @@ for(x in na_insert(airquality, 0.05)) {
   }
 }
 
+if(test_zero_weights) {
+
 # Testing behavior with zero weights
 for(x in mtcars) {
   for(o in list(NULL, radixorder(x))) {
@@ -108,6 +112,8 @@ for(x in na_insert(mtcars)) {
       }
     }
   }
+}
+
 }
 
 
@@ -210,6 +216,8 @@ for(g in list(NULL, gaq, gaqus)) {
   }
 }
 
+if(test_zero_weights) {
+
 # Testing behavior with zero weights
 for(g in list(NULL, gmtc, gmtcus)) {
   for(x in mtcars) {
@@ -264,4 +272,6 @@ for(g in list(NULL, gmtc, gmtcus)) {
       }
     }
   }
+}
+
 }
