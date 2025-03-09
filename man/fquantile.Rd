@@ -28,7 +28,7 @@ frange(x, na.rm = .op[["na.rm"]], finite = FALSE)
 \arguments{
   \item{x}{a numeric or integer vector.}
   \item{probs}{numeric vector of probabilities with values in [0,1].}
-  \item{w}{a numeric vector of sampling weights. Missing weights are only supported if \code{x} is also missing.}
+  \item{w}{a numeric vector of strictly positive sampling weights. Missing weights are only supported if \code{x} is also missing.}
   \item{o}{integer. An vector giving the ordering of the elements in \code{x}, such that \code{identical(x[o], sort(x))}. If available this considerably speeds up the estimation.}
   \item{na.rm}{logical. Remove missing values, default \code{TRUE}. }
   \item{finite}{logical. Omit all non-finite values.}
@@ -47,7 +47,7 @@ Following \href{https://doi.org/10.2307/2684934}{Hyndman and Fan (1996)}, the qu
 
 where \eqn{j = \lfloor pn + m \rfloor,\ m \in \mathbb{R}} and \eqn{\gamma = pn + m - j,\ 0 \le \gamma \le 1}, with \eqn{m} differing by quantile type (\eqn{i}). For example, the default type 7 quantile estimator uses \eqn{m = 1 - p}, see \code{\link{quantile}}.
 
-For weighted data with normalized weights \eqn{w = \{w_1, ... w_n\}}, where \eqn{w_k \ge 0} and \eqn{\sum_k w_k = 1}, let \eqn{\{w_{(1)}, ... w_{(n)}\}} be the weights for each order statistic and \eqn{W_{(k)} = \operatorname{Weight}[X_j \le X_{(k)}] = \sum_{j=1}^k w_{(j)}} the cumulative weight for each order statistic.
+For weighted data with normalized weights \eqn{w = \{w_1, ... w_n\}}, where \eqn{w_k > 0} and \eqn{\sum_k w_k = 1}, let \eqn{\{w_{(1)}, ... w_{(n)}\}} be the weights for each order statistic and \eqn{W_{(k)} = \operatorname{Weight}[X_j \le X_{(k)}] = \sum_{j=1}^k w_{(j)}} the cumulative weight for each order statistic.
 
 We can then first find the largest value \eqn{l} such that the cumulative normalized weight \eqn{W_{(l)} \leq p}, and replace \eqn{pn} with \eqn{l + (p - W_{(l)})/w_{(l+1)}}, where \eqn{w_{(l+1)}} is the weight of the next observation. This gives:
 
@@ -55,6 +55,9 @@ We can then first find the largest value \eqn{l} such that the cumulative normal
 \deqn{\gamma = l + \frac{p - W_{(l)}}{w_{(l+1)}} + m - j}
 
 For a more detailed exposition \href{https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html}{see these excellent notes} by Matthew Kay. See also the R implementation of weighted quantiles type 7 in the Examples below.
+}
+\note{
+The new weighted quantile algorithm from v2.1.0 does not skip zero weights anymore as this is technically very difficult (it is not clear if \eqn{j} hits a zero weight element whether one should move forward or backward to find an alternative). Thus, all non-missing elements are considered and weights should be strictily positive.
 }
 \value{
 A vector of quantiles. If \code{names = TRUE}, \code{fquantile} generates names as \code{paste0(round(probs * 100, 1), "\%")} (in C).
@@ -94,10 +97,6 @@ wquantile7R <- function(x, w, probs = c(0.25, 0.5, 0.75), na.rm = TRUE, names = 
   if(na.rm && anyNA(x)) {             # Removing missing values (only in x)
     cc = whichNA(x, invert = TRUE)    # The C code first calls radixorder(x), which places
     x = x[cc]; w = w[cc]              # missing values last, so removing = early termination
-  }
-  if(anyv(w, 0)) {                    # Removing zero weights
-    nzw = whichv(w, 0, invert = TRUE) # In C, skipping zero weight order statistics is built
-    x = x[nzw]; w = w[nzw]            # into the quantile algorithm, as outlined above
   }
   o = radixorder(x)                   # Ordering
   wo = proportions(w[o])
