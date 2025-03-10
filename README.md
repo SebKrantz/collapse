@@ -62,9 +62,9 @@ install.packages("collapse", repos = "https://fastverse.r-universe.dev")
 remotes::install_github("SebKrantz/collapse")
 
 # Install previous versions from the CRAN Archive (requires compilation)
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.9.6.tar.gz", 
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_2.0.19.tar.gz", 
                  repos = NULL, type = "source") 
-# Older stable versions: 1.8.9, 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
+# Older stable versions: 1.9.6, 1.8.9, 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
 ```
 
 ## Documentation
