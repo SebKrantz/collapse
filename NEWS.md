@@ -8,11 +8,11 @@
 
 * `num_vars()` (and thus also `cat_vars()` and `collap()`) were changed to a simpler C-definition of numeric data types which is more in-line with `is.numeric()`: `is_numeric_C <- function(x) typeof(x) %in% c("integer", "double") && !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))`. The previous definition was: `is_numeric_C_old <- function(x) typeof(x) %in% c("integer", "double") && (!is.object(x) || inherits(x, c("ts", "units", "integer64")))`. Thus, the definition changed from including only certain classes to excluding the most important classes. Thanks @maouw for flagging this (#727).
 
-* New improved quantile algorithm in `fquantile()` and `fnth()` (see below) does not support zero weights anymore, i.e. the code runs through, but elements with zero weights are no longer ignored by the algorithm. Thus is because the new algorithm makes it difficult to skip zero weight elements 'on the fly'. 
+* New improved quantile algorithm in `fquantile()` and `fnth()` (see below) does not support zero weights anymore, i.e., the code runs through, but elements with zero weights are no longer ignored by the algorithm. Thus is because the new algorithm makes it difficult to skip zero weight elements 'on the fly'. 
 
 ### Bug Fixes
 
-* Fixed some issues using *collapse* and the *tidyverse* together, particularly regarding tidyverse methods for 'grouped_df'.
+* Fixed some issues using *collapse* and the *tidyverse* together, particularly regarding tidyverse methods for 'grouped_df' - thanks @NicChr (#645) .
 
 ### Additions
 
@@ -37,7 +37,9 @@ join(df1, df2, require = list(x = 0.8, fail = "warning"))
 
 ### Improvements
 
-* The weighted quantile algorithm in `fquantile()` was changed and now uses a more theoretically sound method following [excellent notes](https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html) by [Matthew Kay](https://github.com/mjskay). It now also supports quantile type 4, but it does not support zero weights anymore (see above). *Note* that the existing *collapse* algorithm [already had very goood](https://github.com/mjskay/uncertainty-examples/issues/2) properties after a bug fix in v2.0.17, but the new algorithm is more theoretically sound and also faster.
+* The weighted quantile algorithm in `fquantile()` was changed and now uses a more theoretically sound method following [excellent notes](https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html) by [Matthew Kay](https://github.com/mjskay). It now also supports quantile type 4, but it does not support zero weights anymore (see above). *Note* that the existing *collapse* algorithm [already had very good](https://github.com/mjskay/uncertainty-examples/issues/2) properties after a bug fix in v2.0.17, but the new algorithm is more theoretically sound, more exact, and also faster.
+
+* The *collapse* [**arXiv article**](https://arxiv.org/abs/2403.05038) has been updated and significantly enhanced. It is an excellent resource to get an overview of the package.  
 
 
 
