@@ -32,7 +32,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.1.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
@@ -42,11 +42,11 @@
 <h4 id="potentially-breaking-changes-2-1-0">Potentially breaking changes<a class="anchor" aria-label="anchor" href="#potentially-breaking-changes-2-1-0"></a></h4>
 <ul><li><p>Functions <code>pwNobs</code>, <code>as.factor_GRP</code>, <code>as.factor_qG</code>, <code>is.GRP</code>, <code>is.qG</code>, <code>is.unlistable</code>, <code>is.categorical</code>, <code>is.Date</code>, <code>as.numeric_factor</code>, <code>as.character_factor</code>, and <code>Date_vars</code>, which were renamed in v1.6.0 by either replacing ‘.’ with ’_’ or using all lower-case letters, and depreciated since then, are now finally removed from the package.</p></li>
 <li><p><code><a href="../reference/select_replace_vars.html">num_vars()</a></code> (and thus also <code><a href="../reference/select_replace_vars.html">cat_vars()</a></code> and <code><a href="../reference/collap.html">collap()</a></code>) were changed to a simpler C-definition of numeric data types which is more in-line with <code><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric()</a></code>: <code>is_numeric_C &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))</code>. The previous definition was: <code>is_numeric_C_old &lt;- function(x) typeof(x) %in% c("integer", "double") &amp;&amp; (!is.object(x) || inherits(x, c("ts", "units", "integer64")))</code>. Thus, the definition changed from including only certain classes to excluding the most important classes. Thanks <a href="https://github.com/maouw" class="external-link">@maouw</a> for flagging this (<a href="https://github.com/SebKrantz/collapse/issues/727" class="external-link">#727</a>).</p></li>
-<li><p>New improved quantile algorithm in <code><a href="../reference/fquantile.html">fquantile()</a></code> and <code><a href="../reference/fnth_fmedian.html">fnth()</a></code> (see below) does not support zero weights anymore, i.e. the code runs through, but elements with zero weights are no longer ignored by the algorithm. Thus is because the new algorithm makes it difficult to skip zero weight elements ‘on the fly’.</p></li>
 </ul></div>
 <div class="section level4">
 <h4 id="bug-fixes-2-1-0">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-2-1-0"></a></h4>
-<ul><li>Fixed some issues using <em>collapse</em> and the <em>tidyverse</em> together, particularly regarding tidyverse methods for ‘grouped_df’.</li>
+<ul><li><p>Fixed some issues using <em>collapse</em> and the <em>tidyverse</em> together, particularly regarding tidyverse methods for ‘grouped_df’ - thanks <a href="https://github.com/NicChr" class="external-link">@NicChr</a> (<a href="https://github.com/SebKrantz/collapse/issues/645" class="external-link">#645</a>).</p></li>
+<li><p>More consistent handling of zero-length inputs - they are now also returned in <code><a href="../reference/fmean.html">fmean()</a></code> and <code><a href="../reference/fnth_fmedian.html">fmedian()</a></code>/<code><a href="../reference/fnth_fmedian.html">fnth()</a></code> instead of returning <code>NA</code> (<a href="https://github.com/SebKrantz/collapse/issues/628" class="external-link">#628</a>).</p></li>
 </ul></div>
 <div class="section level4">
 <h4 id="additions-2-1-0">Additions<a class="anchor" aria-label="anchor" href="#additions-2-1-0"></a></h4>
@@ -67,7 +67,12 @@
 </ul></div>
 <div class="section level4">
 <h4 id="improvements-2-1-0">Improvements<a class="anchor" aria-label="anchor" href="#improvements-2-1-0"></a></h4>
-<ul><li>The weighted quantile algorithm in <code><a href="../reference/fquantile.html">fquantile()</a></code> was changed and now uses a more theoretically sound method following <a href="https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html" class="external-link">excellent notes</a> by <a href="https://github.com/mjskay" class="external-link">Matthew Kay</a>. It now also supports quantile type 4, but it does not support zero weights anymore (see above). <em>Note</em> that the existing <em>collapse</em> algorithm <a href="https://github.com/mjskay/uncertainty-examples/issues/2" class="external-link">already had very goood</a> properties after a bug fix in v2.0.17, but the new algorithm is more theoretically sound and also faster.</li>
+<ul><li><p>The weighted quantile algorithm in <code><a href="../reference/fquantile.html">fquantile()</a></code>/<code><a href="../reference/fnth_fmedian.html">fnth()</a></code> was improved to a more theoretically sound method following <a href="https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html" class="external-link">excellent notes</a> by <a href="https://github.com/mjskay" class="external-link">Matthew Kay</a>. It now also supports quantile type 4, but it does not skip zero weights anymore, as the new algorithm makes it difficult to skip them ‘on the fly’. <em>Note</em> that the existing <em>collapse</em> algorithm <a href="https://github.com/mjskay/uncertainty-examples/issues/2" class="external-link">already had very good</a> properties after a bug fix in v2.0.17, but the new algorithm is more exact and also faster.</p></li>
+<li><p>The <em>collapse</em> <a href="https://arxiv.org/abs/2403.05038" class="external-link"><strong>arXiv article</strong></a> has been updated and significantly enhanced. It is an excellent resource to get an overview of the package.</p></li>
+</ul></div>
+<div class="section level4">
+<h4 id="notes-2-1-0">Notes<a class="anchor" aria-label="anchor" href="#notes-2-1-0"></a></h4>
+<ul><li>On CRAN, collapse R dependency was changed to &gt;= 4.1.0 to be able to use the base pipe in examples without generating a NOTE on R CMD check (another absolutely unnecessary restriction). The package depends on R &gt;= 3.5.0 and the DESCRIPTION file on GitHub/R-universe will continue to reflect this.</li>
 </ul></div>
 </div>
     <div class="section level2">

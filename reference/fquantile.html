@@ -79,7 +79,7 @@
 <dd><p>logical. Omit all non-finite values.</p></dd>
 
   <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
-<dd><p>integer. Quantile types 4-9. See <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></code>. Further details are provided in <a href="https://doi.org/10.2307/2684934" class="external-link">Hyndman and Fan (1996)</a> who recommended type 8. The default method is type 7.</p></dd>
+<dd><p>integer. Quantile types 4-9. See <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></code>. Further details are provided in <a href="https://www.tandfonline.com/doi/abs/10.1080/00031305.1996.10473566" class="external-link">Hyndman and Fan (1996)</a> who recommended type 8. The default method is type 7.</p></dd>
 
   <dt id="arg-names">names<a class="anchor" aria-label="anchor" href="#arg-names"></a></dt>
 <dd><p>logical. Generates names of the form <code>paste0(round(probs * 100, 1), "%")</code> (in C). Set to <code>FALSE</code> for speedup.</p></dd>
@@ -92,7 +92,7 @@
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>fquantile</code> is implemented using a quickselect algorithm in C, inspired by <em>data.table</em>'s <code>gmedian</code>. The algorithm is applied incrementally to different sections of the array to find individual quantiles. If many quantile probabilities are requested, sorting the whole array with the fast <code><a href="radixorder.html">radixorder</a></code> algorithm is more efficient. The default threshold for this (<code>length(x) &gt; 1e5L &amp;&amp; length(probs) &gt; log(length(x))</code>) is conservative, given that quickselect is generally more efficient on longitudinal data with similar values repeated by groups. With random data, my investigations yield that a threshold of <code>length(probs) &gt; log10(length(x))</code> would be more appropriate.</p>
 <p><code>frange</code> is considerably more efficient than <code><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></code>, requiring only one pass through the data instead of two. For probabilities 0 and 1, <code>fquantile</code> internally calls <code>frange</code>.</p>
-<p>Following <a href="https://doi.org/10.2307/2684934" class="external-link">Hyndman and Fan (1996)</a>, the quantile type-\(i\) quantile function of the sample \(X\) can be written as a weighted average of two order statistics:</p>
+<p>Following <a href="https://www.tandfonline.com/doi/abs/10.1080/00031305.1996.10473566" class="external-link">Hyndman and Fan (1996)</a>, the quantile type-\(i\) quantile function of the sample \(X\) can be written as a weighted average of two order statistics:</p>
 <p>$$\hat{Q}_{X,i}(p) = (1 - \gamma) X_{(j)} + \gamma X_{(j + 1)}$$</p>
 <p>where \(j = \lfloor pn + m \rfloor,\ m \in \mathbb{R}\) and \(\gamma = pn + m - j,\ 0 \le \gamma \le 1\), with \(m\) differing by quantile type (\(i\)). For example, the default type 7 quantile estimator uses \(m = 1 - p\), see <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></code>.</p>
 <p>For weighted data with normalized weights \(w = \{w_1, ... w_n\}\), where \(w_k &gt; 0\) and \(\sum_k w_k = 1\), let \(\{w_{(1)}, ... w_{(n)}\}\) be the weights for each order statistic and \(W_{(k)} = \operatorname{Weight}[X_j \le X_{(k)}] = \sum_{j=1}^k w_{(j)}\) the cumulative weight for each order statistic.</p>
@@ -103,7 +103,7 @@ $$\gamma = l + \frac{p - W_{(l)}}{w_{(l+1)}} + m - j$$</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>The new weighted quantile algorithm from v2.1.0 does not skip zero weights anymore as this is technically very difficult (it is not clear if \(j\) hits a zero weight element whether one should move forward or backward to find an alternative). Thus, all non-missing elements are considered and weights should be strictily positive.</p>
+    <p>The new weighted quantile algorithm from v2.1.0 does not skip zero weights anymore as this is technically very difficult (it is not clear if \(j\) hits a zero weight element whether one should move forward or backward to find an alternative). Thus, all non-missing elements are considered and weights should be strictly positive.</p>
     </div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
