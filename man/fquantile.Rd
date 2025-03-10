@@ -32,7 +32,7 @@ frange(x, na.rm = .op[["na.rm"]], finite = FALSE)
   \item{o}{integer. An vector giving the ordering of the elements in \code{x}, such that \code{identical(x[o], sort(x))}. If available this considerably speeds up the estimation.}
   \item{na.rm}{logical. Remove missing values, default \code{TRUE}. }
   \item{finite}{logical. Omit all non-finite values.}
-  \item{type}{integer. Quantile types 4-9. See \code{\link{quantile}}. Further details are provided in \href{https://doi.org/10.2307/2684934}{Hyndman and Fan (1996)} who recommended type 8. The default method is type 7.}
+  \item{type}{integer. Quantile types 4-9. See \code{\link{quantile}}. Further details are provided in \href{https://www.tandfonline.com/doi/abs/10.1080/00031305.1996.10473566}{Hyndman and Fan (1996)} who recommended type 8. The default method is type 7.}
   \item{names}{logical. Generates names of the form \code{paste0(round(probs * 100, 1), "\%")} (in C). Set to \code{FALSE} for speedup. }
   \item{check.o}{logical. If \code{o} is supplied, \code{TRUE} runs through \code{o} once and checks that it is valid, i.e. that each element is in \code{[1, length(x)]}. Set to \code{FALSE} for significant speedup if \code{o} is known to be valid. }
 }
@@ -41,7 +41,7 @@ frange(x, na.rm = .op[["na.rm"]], finite = FALSE)
 
 \code{frange} is considerably more efficient than \code{\link{range}}, requiring only one pass through the data instead of two. For probabilities 0 and 1, \code{fquantile} internally calls \code{frange}.
 
-Following \href{https://doi.org/10.2307/2684934}{Hyndman and Fan (1996)}, the quantile type-\eqn{i} quantile function of the sample \eqn{X} can be written as a weighted average of two order statistics:
+Following \href{https://www.tandfonline.com/doi/abs/10.1080/00031305.1996.10473566}{Hyndman and Fan (1996)}, the quantile type-\eqn{i} quantile function of the sample \eqn{X} can be written as a weighted average of two order statistics:
 
 \deqn{\hat{Q}_{X,i}(p) = (1 - \gamma) X_{(j)} + \gamma X_{(j + 1)}}
 
@@ -57,7 +57,7 @@ We can then first find the largest value \eqn{l} such that the cumulative normal
 For a more detailed exposition \href{https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html}{see these excellent notes} by Matthew Kay. See also the R implementation of weighted quantiles type 7 in the Examples below.
 }
 \note{
-The new weighted quantile algorithm from v2.1.0 does not skip zero weights anymore as this is technically very difficult (it is not clear if \eqn{j} hits a zero weight element whether one should move forward or backward to find an alternative). Thus, all non-missing elements are considered and weights should be strictily positive.
+The new weighted quantile algorithm from v2.1.0 does not skip zero weights anymore as this is technically very difficult (it is not clear if \eqn{j} hits a zero weight element whether one should move forward or backward to find an alternative). Thus, all non-missing elements are considered and weights should be strictly positive.
 }
 \value{
 A vector of quantiles. If \code{names = TRUE}, \code{fquantile} generates names as \code{paste0(round(probs * 100, 1), "\%")} (in C).
