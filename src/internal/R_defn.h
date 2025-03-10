@@ -1,26 +1,11 @@
-#ifndef CONNECTION_H  // Check if CONNECTION_H is not defined
-#define CONNECTION_H  // Define CONNECTION_H
+#ifndef R_DEFINITIONS_H  // Check if R_DEFINITIONS_H is not defined
+#define R_DEFINITIONS_H  // Define R_DEFINITIONS_H
+
+#define USE_RINTERNALS
+
 
 #include <R.h>
 #include <Rinternals.h>
-
-#define OBJ OBJECT
-#define SET_OBJ SET_OBJECT
-#define SET_OBJ SET_OBJECT
-#define ATTRIBUTES ATTRIB
-#define SET_ATTRIBUTES SET_ATTRIB
-
-#define MYLEV LEVELS
-#define IS_UTF8(x)  (MYLEV(x) & 8)
-#define IS_ASCII(x) (MYLEV(x) & 64) // from data.table.h
-// #define ASCII_MASK (1<<6) // evaluates to 64 !!
-// #define IS_ASCII(x) ((x)->sxpinfo.gp & ASCII_MASK)
-// #define IS_ASCII(x) (LEVELS(x) & ASCII_MASK)
-
-#define SETTOF SET_TYPEOF
-#define SET_LEN SETLENGTH
-#define TRULEN TRUELENGTH
-#define SET_TRULEN SET_TRUELENGTH
 
 // NOTE: All of this is copied from Defn.h: https://github.com/wch/r-source/blob/28de75af0541f93832c5899139b969d290bf422e/src/include/Defn.h
 
@@ -50,15 +35,66 @@ struct sxpinfo_struct {
   unsigned int extra : 32 - NAMED_BITS; /* used for immediate bindings */
 }; /*		    Tot: 64 */
 
+  struct vecsxp_struct {
+    R_xlen_t	length;
+    R_xlen_t	truelength;
+  };
+
+  struct primsxp_struct {
+    int offset;
+  };
+
+  struct symsxp_struct {
+    struct SEXPREC *pname;
+    struct SEXPREC *value;
+    struct SEXPREC *internal;
+  };
+
+  struct listsxp_struct {
+    struct SEXPREC *carval;
+    struct SEXPREC *cdrval;
+    struct SEXPREC *tagval;
+  };
+
+  struct envsxp_struct {
+    struct SEXPREC *frame;
+    struct SEXPREC *enclos;
+    struct SEXPREC *hashtab;
+  };
+
+  struct closxp_struct {
+    struct SEXPREC *formals;
+    struct SEXPREC *body;
+    struct SEXPREC *env;
+  };
+
+  struct promsxp_struct {
+    struct SEXPREC *value;
+    struct SEXPREC *expr;
+    struct SEXPREC *env;
+  };
+
+
 #define SEXPREC_HEADER           \
   struct sxpinfo_struct sxpinfo; \
   struct SEXPREC *attrib;        \
   struct SEXPREC *gengc_next_node, *gengc_prev_node
 
-struct vecsxp_struct {
-  R_xlen_t	length;
-  R_xlen_t	truelength;
-};
+typedef struct SEXPREC {
+  SEXPREC_HEADER;
+  union {
+    struct primsxp_struct primsxp;
+    struct symsxp_struct symsxp;
+    struct listsxp_struct listsxp;
+    struct envsxp_struct envsxp;
+    struct closxp_struct closxp;
+    struct promsxp_struct promsxp;
+  } u;
+} SEXPREC;
+
+// typedef struct {
+//   SEXPREC_HEADER;
+// } SEXPREC_partial;
 
 typedef struct VECTOR_SEXPREC {
   SEXPREC_HEADER;
@@ -69,9 +105,20 @@ typedef union { VECTOR_SEXPREC s; double align; } SEXPREC_ALIGN;
 
 #endif
 
-typedef struct {
-  SEXPREC_HEADER;
-} SEXPREC_partial;
+
+#define OOBJ(x)	((x)->sxpinfo.obj)
+#define SET_OOBJ(x,v) (OOBJ(x)=(v))
+#define ATTTR(x)	((x)->attrib)
+#define SET_ATTTR(x,v) (ATTR(x)=(v))
+
+
+#define MYLEV(x)	((x)->sxpinfo.gp)
+#define IS_UTF8(x)  (MYLEV(x) & 8)
+#define IS_ASCII(x) (MYLEV(x) & 64) // from data.table.h
+// #define ASCII_MASK (1<<6) // evaluates to 64 !!
+// #define IS_ASCII(x) ((x)->sxpinfo.gp & ASCII_MASK)
+// #define IS_ASCII(x) (LEVELS(x) & ASCII_MASK)
+#define SETTOF(x,v)	(((x)->sxpinfo.type)=(v))
 
 // to avoid checking for ALTREP in TRUELENGTH, which slows down the code unnecessarily...
 #ifndef STDVEC_TRUELENGTH
@@ -81,11 +128,26 @@ typedef struct {
   /* It would be better to find a way to avoid abusing TRUELENGTH, but
    in the meantime replace TRUELENGTH/SET_TRUELENGTH with
    TRLEN/SET_TRLEN that cast to int to avoid warnings. */
+
+#define TRULEN(x) (ALTREP(x) ? 0 : STDVEC_TRUELENGTH(x))
+#define SET_TRULEN(x, v) (STDVEC_TRUELENGTH(x)=(v))
+
 #define TRLEN(x) ((int) STDVEC_TRUELENGTH(x)) // ((int) TRUELENGTH(x))
 #define SET_TRLEN(x, v) SET_STDVEC_TRUELENGTH(x, ((int) (v)))
 
-#define MYEFL(x) (((SEXPREC_partial *)(x))->sxpinfo.gp)
-#define MYSEFL(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.gp)=(v))
+#define STDVEC_LENGTH(x) (((VECSEXP) (x))->vecsxp.length)
+  // Needed for SETLENGTH
+#define SETSCAL(x, v) (((x)->sxpinfo.scalar) = (v))
+#define SET_STDVEC_LENGTH(x,v) do {		      \
+  SEXP __x__ = (x);			                    \
+  R_xlen_t __v__ = (v);			                \
+  STDVEC_LENGTH(__x__) = __v__;		          \
+  SETSCAL(__x__, __v__ == 1 ? 1 : 0);	      \
+} while (0)
+#define SET_LEN(x, v) SET_STDVEC_LENGTH((x), (v))
+
+#define MYEFL(x) ((x)->sxpinfo.gp)
+#define MYSEFL(x,v)	(((x)->sxpinfo.gp)=(v))
 
 // For super efficient access, e.g. in gsplit()
 #define SEXP_DATAPTR(x) ((SEXP *) (((SEXPREC_ALIGN *) (x)) + 1))
@@ -106,4 +168,4 @@ typedef struct {
 //   return DATAPTR(x);
 // }
 
-#endif // End of CONNECTION_H guard
+#endif // End of R_DEFINITIONS_H guard
