@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,7 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2025-01-23</h4>
+            <h4 data-toc-skip class="date">2025-03-10</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
@@ -95,8 +95,8 @@ provides many <em>tidyverse</em>-like functions for data manipulation.
 It can thus be used to write <em>tidyverse</em>-like data manipulation
 code that, thanks to low-level vectorization of many statistical
 operations and optimized R code, typically runs much faster than native
-<em>tidyverse</em> code (in addition to being much more lightweight in
-dependencies).</p>
+<em>tidyverse</em> code, in addition to being much more lightweight in
+dependencies.</p>
 <p>Its aim is not to create a faster <em>tidyverse</em>, i.e., it does
 not implements all aspects of the rich <em>tidyverse</em> grammar or
 changes to it<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;Notably, tidyselect, lambda expressions, and many of the
@@ -109,13 +109,13 @@ parsimony, complexity, and robustness in data manipulation for R.</p>
 <p><em>collapse</em> data manipulation functions familiar to
 <em>tidyverse</em> users include <code>fselect</code>,
 <code>fgroup_by</code>, <code>fsummarise</code>, <code>fmutate</code>,
-<code>across</code>, <code>frename</code>, and <code>fcount</code>.
-Other functions like <code>fsubset</code>, <code>ftransform</code>, and
-<code>get_vars</code> are inspired by base R, while again other
-functions like <code>join</code>, <code>pivot</code>,
-<code>roworder</code>, <code>colorder</code>, <code>rowbind</code>, etc.
-are inspired by other data manipulation libraries such as
-<em>data.table</em> and <em>polars</em>.</p>
+<code>across</code>, <code>frename</code>, <code>fslice</code>, and
+<code>fcount</code>. Other functions like <code>fsubset</code>,
+<code>ftransform</code>, and <code>get_vars</code> are inspired by base
+R, while again other functions like <code>join</code>,
+<code>pivot</code>, <code>roworder</code>, <code>colorder</code>,
+<code>rowbind</code>, etc. are inspired by other data manipulation
+libraries such as <em>data.table</em> and <em>polars</em>.</p>
 <p>By virtue of the f- prefixes, the <em>collapse</em> namespace has no
 conflicts with the <em>tidyverse</em>, and these functions can easily be
 substituted in a <em>tidyverse</em> workflow.</p>
@@ -127,9 +127,9 @@ option to mask functions and eliminate the prefixes with
 <span><span class="fu"><a href="../reference/collapse-options.html">set_collapse</a></span><span class="op">(</span>mask <span class="op">=</span> <span class="st">"manip"</span><span class="op">)</span> <span class="co"># version &gt;= 2.0.0 </span></span></code></pre></div>
 <p>makes available functions <code>select</code>, <code>group_by</code>,
 <code>summarise</code>, <code>mutate</code>, <code>rename</code>,
-<code>count</code>, <code>subset</code>, and <code>transform</code> in
-the <em>collapse</em> namespace and detaches and re-attaches the
-package, such that the following code is executed by
+<code>count</code>, <code>subset</code>, <code>slice</code>, and
+<code>transform</code> in the <em>collapse</em> namespace and detaches
+and re-attaches the package, such that the following code is executed by
 <em>collapse</em>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span></span>

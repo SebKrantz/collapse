@@ -13,7 +13,7 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -531,8 +531,8 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f1</span><span class="op">)</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># A minor difference, larger on larger data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               expr   min    lq    mean median    uq    max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.895 4.059 4.32099  4.100 4.141 24.272   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.731 3.895 3.96798  3.936 4.018  4.592   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.854 4.018 4.47761  4.100 4.182 33.743   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.690 3.895 4.01964  3.977 4.059  5.371   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Efficient interactions of vectors and/or factors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0</span>
@@ -618,12 +618,12 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">2</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># A remarkable performance gain..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq      mean  median      uq     max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.009   2.2755   3.08074   2.747   3.198  15.498</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 289.214 296.6350 306.38398 302.498 312.830 453.911</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq      mean  median       uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.132   2.6035   5.05735   3.198   5.3095</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 291.510 300.9195 405.93567 335.626 399.4015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    35.998   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1261.939   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sds</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span></span></span>
@@ -1357,27 +1357,27 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 <span class="r-in"><span><span class="va">wlddev</span> <span class="op">|&gt;</span> <span class="fu"><a href="efficient-programming.html">na_omit</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="st">"POP"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span>, <span class="va">income</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">POP</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="fl">0.75</span>, <span class="va">POP</span><span class="op">)</span>       <span class="co"># Weighted group third quartile</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       region              income     sum.POP     PCGDP   LIFEEX</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        East Asia &amp; Pacific         High income 11407808149 42237.359 81.72529</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        East Asia &amp; Pacific Lower middle income 22174820629  2359.522 69.86711</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        East Asia &amp; Pacific Upper middle income 69639871478  3815.390 73.83074</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4      Europe &amp; Central Asia         High income 27285316560 37968.308 79.13238</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5      Europe &amp; Central Asia          Low income   311485944  1028.229 68.92227</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6      Europe &amp; Central Asia Lower middle income  4511786205  3109.060 70.16087</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7      Europe &amp; Central Asia Upper middle income 16972478305 10579.353 70.58594</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Latin America &amp; Caribbean         High income  1466292826 13936.359 77.63032</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Latin America &amp; Caribbean          Low income   429756890  1429.081 60.35597</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Latin America &amp; Caribbean Lower middle income  1290800630  2248.974 71.20178</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        East Asia &amp; Pacific         High income 11407808149 42201.079 81.71320</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        East Asia &amp; Pacific Lower middle income 22174820629  2350.332 69.84968</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        East Asia &amp; Pacific Upper middle income 69639871478  3796.016 73.77902</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      Europe &amp; Central Asia         High income 27285316560 37939.285 79.12994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      Europe &amp; Central Asia          Low income   311485944  1010.399 68.74935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      Europe &amp; Central Asia Lower middle income  4511786205  3049.405 70.15657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      Europe &amp; Central Asia Upper middle income 16972478305 10543.823 70.57815</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  Latin America &amp; Caribbean         High income  1466292826 13929.260 77.62527</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  Latin America &amp; Caribbean          Low income   429756890  1426.615 60.19115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 Latin America &amp; Caribbean Lower middle income  1290800630  2241.730 71.18339</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        GINI        ODA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  33.50000  755719050</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  39.33432 1840884811</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  42.40186 2582104924</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4  34.70000 1751293143</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5  33.59662  370935975</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6  29.83209  724985435</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7  41.20000 1799582651</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8  54.89047  158773677</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9  41.10000  968787392</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 55.50000  660837650</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  33.50000  744862041</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  39.09699 1828537218</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  42.25373 2498289114</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  34.70000 1665332268</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  33.54169  369881699</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  29.76143  713578745</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  41.20000 1780829097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  54.82206  156066838</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  41.10000  956301069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 55.50000  657517519</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 13 rows ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">wlddev</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
@@ -1404,12 +1404,12 @@ It is made compatible with the tidyverse, data.table, sf, units, xts/zoo, and th
 <span class="r-in"><span>  <span class="fu"><a href="ftransform.html">ftransform</a></span><span class="op">(</span><span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">.</span>, <span class="op">-</span><span class="va">country</span>, <span class="op">-</span><span class="va">year</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>             <span class="fu"><a href="fnth_fmedian.html">fnth</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="va">POP</span>, <span class="st">"fill"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       country year    PCGDP   LIFEEX GINI       ODA     POP</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960 407.2632 45.91724   NA 237905880 8996973</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961 407.2632 45.91724   NA 237905880 9169410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Afghanistan 1962 407.2632 45.91724   NA 237905880 9351441</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963 407.2632 45.91724   NA 237905880 9543205</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964 407.2632 45.91724   NA 237905880 9744781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965 407.2632 45.91724   NA 237905880 9956320</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Afghanistan 1960 406.9948 45.86685   NA 237899441 8996973</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Afghanistan 1961 406.9948 45.86685   NA 237899441 9169410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Afghanistan 1962 406.9948 45.86685   NA 237899441 9351441</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Afghanistan 1963 406.9948 45.86685   NA 237899441 9543205</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 Afghanistan 1964 406.9948 45.86685   NA 237899441 9744781</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 Afghanistan 1965 406.9948 45.86685   NA 237899441 9956320</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">wlddev</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span><span class="op">:</span><span class="va">ODA</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="fscale.html">fscale</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># Standardizing</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   PCGDP    LIFEEX GINI        ODA</span>

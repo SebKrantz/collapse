@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.0.19</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,18 +45,19 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Default S3 method</span></span>
-<span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, t <span class="op">=</span> <span class="cn">NULL</span>, transpose <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, <span class="va">g</span>, t <span class="op">=</span> <span class="cn">NULL</span>, transpose <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'data.frame'</span></span>
-<span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, <span class="va">by</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, transpose <span class="op">=</span> <span class="cn">FALSE</span>, array <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, <span class="va">by</span>, t <span class="op">=</span> <span class="cn">NULL</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, transpose <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">NULL</span>, array <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Methods for indexed data / compatibility with plm:</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'pseries'</span></span>
-<span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, transpose <span class="op">=</span> <span class="cn">FALSE</span>, drop.index.levels <span class="op">=</span> <span class="st">"none"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, transpose <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">NULL</span>, drop.index.levels <span class="op">=</span> <span class="st">"none"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'pdata.frame'</span></span>
-<span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, transpose <span class="op">=</span> <span class="cn">FALSE</span>, array <span class="op">=</span> <span class="cn">TRUE</span>, drop.index.levels <span class="op">=</span> <span class="st">"none"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">psmat</span><span class="op">(</span><span class="va">x</span>, cols <span class="op">=</span> <span class="cn">NULL</span>, transpose <span class="op">=</span> <span class="cn">FALSE</span>, fill <span class="op">=</span> <span class="cn">NULL</span>, array <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>      drop.index.levels <span class="op">=</span> <span class="st">"none"</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span></span>
 <span><span class="co"># S3 method for class 'psmat'</span></span>
@@ -83,6 +84,9 @@
 
 <dt id="arg-transpose">transpose<a class="anchor" aria-label="anchor" href="#arg-transpose"></a></dt>
 <dd><p>logical. <code>TRUE</code> generates the matrix such that <code>g/by -&gt; columns, t -&gt; rows</code>. Default is <code>g/by -&gt; rows, t -&gt; columns</code>.</p></dd>
+
+<dt id="arg-fill">fill<a class="anchor" aria-label="anchor" href="#arg-fill"></a></dt>
+<dd><p>element to fill empty slots of matrix / array if panel is unbalanced. <code>NULL</code> will generate a <code>NA</code> of the right type.</p></dd>
 
 <dt id="arg-array">array<a class="anchor" aria-label="anchor" href="#arg-array"></a></dt>
 <dd><p><em>data.frame / pdata.frame methods</em>: logical. <code>TRUE</code> returns a 3D array (if just one column is selected a matrix is returned). <code>FALSE</code> returns a list of matrices.</p></dd>
