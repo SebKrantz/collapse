@@ -19,7 +19,7 @@ fslice <- function(x, ..., n = 1, how = "first", order.by = NULL,
     if(length(order.by) != fnrow(x)) stop("order.by must be a numeric vector of the same length as the number of rows in x, or the name of a column in x.")
   }
 
-  fslice_core(x, g, n, how, order.by, na.rm, with.ties)
+  fslice_core(x, g, n, how, order.by, na.rm, with.ties, sort)
 }
 
 fslicev <- function(x, cols = NULL, n = 1, how = "first", order.by = NULL,
@@ -43,11 +43,11 @@ fslicev <- function(x, cols = NULL, n = 1, how = "first", order.by = NULL,
     if(length(order.by) != fnrow(x)) stop("order.by must be a numeric vector of the same length as the number of rows in x, or the name of a column in x.")
   }
 
-  fslice_core(x, g, n, how, order.by, na.rm, with.ties)
+  fslice_core(x, g, n, how, order.by, na.rm, with.ties, sort)
 }
 
 
-fslice_core <- function(x, g, n, how, order.by, na.rm, with.ties) {
+fslice_core <- function(x, g, n, how, order.by, na.rm, with.ties, sort) {
 
   # convert a proportion to a number if applicable
   if(n < 1) n <- if(is.null(g)) max(1L, as.integer(round(n * fnrow(x)))) else max(1L, as.integer(round(n * fnrow(x)/g[[1L]])))
