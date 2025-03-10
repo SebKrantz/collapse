@@ -42,7 +42,9 @@ join(df1, df2, require = list(x = 0.8, fail = "warning"))
 
 * The *collapse* [**arXiv article**](https://arxiv.org/abs/2403.05038) has been updated and significantly enhanced. It is an excellent resource to get an overview of the package.  
 
+### Notes
 
+* On CRAN, collapse R dependency was changed to >= 4.1.0 to be able to use the base pipe in examples without generating a NOTE on R CMD check (another absolutely unnecessary restriction). The package depends on R >= 3.5.0 and the DESCRIPTION file on GitHub/R-universe will continue to reflect this.  
 
 
 # collapse 2.0.19
