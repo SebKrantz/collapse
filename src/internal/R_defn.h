@@ -1,7 +1,7 @@
 #ifndef R_DEFINITIONS_H  // Check if R_DEFINITIONS_H is not defined
 #define R_DEFINITIONS_H  // Define R_DEFINITIONS_H
 
-#define USE_RINTERNALS
+// #define USE_RINTERNALS
 
 
 #include <R.h>
