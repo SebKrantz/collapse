@@ -11,11 +11,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../katex-auto.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><link href="../deps/KaTex-0.16.10/katex.min.css" rel="stylesheet">
+<script src="../deps/KaTex-0.16.10/katex.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="collapse and dplyr">
 </head>
 <body>
@@ -67,7 +68,7 @@ Krantz</h4>
             
             <h4 data-toc-skip class="date">2021-01-04</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_and_dplyr.Rmd" class="external-link"><code>vignettes/collapse_and_dplyr.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/development/vignettes/collapse_and_dplyr.Rmd" class="external-link"><code>vignettes/collapse_and_dplyr.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_and_dplyr.Rmd</code></div>
     </div>
 
@@ -1447,9 +1448,8 @@ and second differences of each variable in the data:</p>
 <span><span class="co"># #   D2.OTH &lt;dbl&gt;, L10D1.OTH &lt;dbl&gt;, L10D2.OTH &lt;dbl&gt;, D1.SUM &lt;dbl&gt;, D2.SUM &lt;dbl&gt;, L10D1.SUM &lt;dbl&gt;, …</span></span>
 <span><span class="co"># </span></span>
 <span><span class="co"># Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]</span></span></code></pre></div>
-<p>Log-differences of the form
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mi>s</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">log(x_t) - log(x_{t-s})</annotation></semantics></math>
-are also easily computed.</p>
+<p>Log-differences of the form <span class="math inline">log(x_t) -
+log(x_{t-s})</span> are also easily computed.</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="op">-</span><span class="va">Region</span>, <span class="op">-</span><span class="va">Regioncode</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -1475,10 +1475,9 @@ are also easily computed.</p>
 <span><span class="co"># </span></span>
 <span><span class="co"># Grouped by:  Variable, Country  [85 | 59 (7.7) 4-65]</span></span></code></pre></div>
 <p>Finally, it is also possible to compute quasi-differences and
-quasi-log-differences of the form
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>x</mi><mi>t</mi></msub><mo>−</mo><mi>ρ</mi><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mi>s</mi></mrow></msub></mrow><annotation encoding="application/x-tex">x_t - \rho x_{t-s}</annotation></semantics></math>
-or
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>ρ</mi><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mi>s</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">log(x_t) - \rho log(x_{t-s})</annotation></semantics></math>:</p>
+quasi-log-differences of the form <span class="math inline">x_t - \rho
+x_{t-s}</span> or <span class="math inline">log(x_t) - \rho
+log(x_{t-s})</span>:</p>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="op">-</span><span class="va">Region</span>, <span class="op">-</span><span class="va">Regioncode</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -1507,10 +1506,9 @@ Cochrane &amp; Orcutt (1949).</p>
 <!-- and `fgrowth` computes lagged-leaded and iterated growth-rates obtained via the exact computation method or through log-differencing.  -->
 <p>Finally, <code>fgrowth</code> computes growth rates in the same way.
 By default exact growth rates are computed in percentage terms using
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mo>−</mo><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mi>s</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mi>s</mi></mrow></msub><mo>×</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">(x_t-x_{t-s}) / x_{t-s} \times 100</annotation></semantics></math>
-(the default argument is <code>scale = 100</code>). The user can also
-request growth rates obtained by log-differencing using
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>t</mi></msub><mi>/</mi><msub><mi>x</mi><mrow><mi>t</mi><mo>−</mo><mi>s</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mn>100</mn></mrow><annotation encoding="application/x-tex">log(x_t/ x_{t-s}) \times 100</annotation></semantics></math>.</p>
+<span class="math inline">(x_t-x_{t-s}) / x_{t-s} \times 100</span> (the
+default argument is <code>scale = 100</code>). The user can also request
+growth rates obtained by log-differencing using <span class="math inline">log(x_t/ x_{t-s}) \times 100</span>.</p>
 <div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exact growth rates, computed as: (x/lag(x) - 1) * 100</span></span>
 <span><span class="va">GGDC10S</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
