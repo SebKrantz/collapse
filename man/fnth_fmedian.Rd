@@ -13,9 +13,9 @@
 Fast (Grouped, Weighted) N'th Element/Quantile for Matrix-Like Objects
 }
 \description{
-\code{fnth} (column-wise) returns the n'th smallest element from a set of unsorted elements \code{x} corresponding to an integer index (\code{n}), or to a probability between 0 and 1. If \code{n} is passed as a probability, ties can be resolved using the lower, upper, or average of the possible elements, or, since v1.9.0, continuous quantile estimation. The new default is quantile type 7 (as in \code{\link{quantile}}). For \code{n > 1}, the lower element is always returned (as in \code{sort(x, partial = n)[n]}). See Details.
+\code{fnth} (column-wise) returns the n'th smallest element from a set of unsorted elements \code{x} corresponding to an integer index (\code{n}), or to a probability between 0 and 1. If \code{n} is passed as a probability, ties can be resolved using the lower, upper, or average of the possible elements, or (default) continuous quantile estimation. For \code{n > 1}, the lower element is always returned (as in \code{sort(x, partial = n)[n]}). See Details.
 
-\code{fmedian} is a simple wrapper around \code{fnth}, which fixes \code{n = 0.5} and (default) \code{ties = "mean"} i.e. it averages eligible elements. See Details. %Users may prefer a quantile based definition of the weighted median.
+\code{fmedian} is a simple wrapper around \code{fnth}, which fixes \code{n = 0.5} and (default) \code{ties = "mean"}, i.e., it averages eligible elements. See Details. %Users may prefer a quantile based definition of the weighted median.
 }
 \usage{
 fnth(x, n = 0.5, \dots)
@@ -63,7 +63,7 @@ fmedian(x, \dots)
                  1 \tab\tab "mean"   \tab\tab take the arithmetic mean of all qualifying elements. \cr
                  2 \tab\tab "min" \tab\tab take the smallest of the elements. \cr
                  3 \tab\tab "max"   \tab\tab take the largest of the elements. \cr
-                 5-9 \tab\tab "qn" \tab\tab continuous quantile types 5-9, see \code{\link{fquantile}}. \cr
+                 4-9 \tab\tab "qn" \tab\tab continuous quantile types 4-9, see \code{\link{fquantile}}. \cr
                 }
 }
 
@@ -85,10 +85,10 @@ fmedian(x, \dots)
 
 }
 \details{
-For v1.9.0 \code{fnth} was completely rewritten in C and offers significantly enhanced speed and functionality. It uses a combination of quickselect, quicksort, and radixsort algorithms, combined with several (weighted) quantile estimation methods and, where possible, OpenMP multithreading. This synthesis can be summarised as follows:
+\code{fnth} uses a combination of quickselect, quicksort, and radixsort algorithms, combined with several (weighted) quantile estimation methods and, where possible, OpenMP multithreading:
 
 \itemize{
-\item without weights, quickselect is used to determine a (lower) order statistic. If \code{ties \%!in\% c("min", "max")} a second order statistic is found by taking the max of the upper part of the partitioned array, and the two statistics are averaged using a simple mean (\code{ties = "mean"}), or weighted average according to a \code{\link{quantile}} method (\code{ties = "q5"-"q9"}). For \code{n = 0.5}, all supported quantile methods give the sample median. With matrices, multithreading is always across columns, for vectors and data frames it is across groups unless \code{is.null(g)} for data frames.
+\item without weights, quickselect is used to determine a (lower) order statistic. If \code{ties \%!in\% c("min", "max")} a second order statistic is found by taking the max of the upper part of the partitioned array, and the two statistics are averaged using a simple mean (\code{ties = "mean"}), or weighted average according to a \code{\link{quantile}} method (\code{ties = "q4"-"q9"}). For \code{n = 0.5}, all supported quantile methods give the sample median. With matrices, multithreading is always across columns, for vectors and data frames it is across groups unless \code{is.null(g)} for data frames.
 
 \item with weights and no groups (\code{is.null(g)}), \code{\link{radixorder}} is called internally (on each column of \code{x}). The ordering is used to sum the weights in order of \code{x} and determine weighted order statistics or quantiles. See details below. Multithreading is disabled as \code{\link{radixorder}} cannot be called concurrently on the same memory stack.
 
@@ -104,12 +104,12 @@ For v1.9.0 \code{fnth} was completely rewritten in C and offers significantly en
 If \code{n > 1}, the result is equivalent to (column-wise) \code{sort(x, partial = n)[n]}. Internally, \code{n} is converted to a probability using \code{p = (n-1)/(NROW(x)-1)}, and that probability is applied to the set of non-missing elements to find the \code{as.integer(p*(fnobs(x)-1))+1L}'th element (which corresponds to option \code{ties = "min"}). % Note that it is necessary to subtract and add 1 so that \code{n = 1} corresponds to \code{p = 0} and \code{n = NROW(x)} to \code{p = 1}. %So if \code{n > 1} is used in the presence of missing values, and the default \code{ties = "mean"} is enabled, the resulting element could be the average of two elements.
 When using grouped computations with \code{n > 1}, \code{n} is transformed to a probability \code{p = (n-1)/(NROW(x)/ng-1)} (where \code{ng} contains the number of unique groups in \code{g}).
 
-If weights are used and \code{ties = "q5"-"q9"}, weighted continuous quantile estimation is done as described in \code{\link{fquantile}}.
+If weights are used and \code{ties = "q4"-"q9"}, weighted continuous quantile estimation is done as described in \code{\link{fquantile}}.
 
 For \code{ties \%in\% c("mean", "min", "max")}, a target partial sum of weights \code{p*sum(w)} is calculated, and the weighted n'th element is the element k such that all elements smaller than k have a sum of weights \code{<= p*sum(w)}, and all elements larger than k have a sum of weights \code{<= (1 - p)*sum(w)}. If the partial-sum of weights (\code{p*sum(w)}) is reached exactly for some element k, then (summing from the lower end) both k and k+1 would qualify as the weighted n'th element. If the weight of element k+1 is zero, k, k+1 and k+2 would qualify... . If \code{n > 1}, k is chosen (consistent with the unweighted behavior). %(ensuring that \code{fnth(x, n)}) and \code{fnth(x, n, w = rep(1, NROW(x)))}, always provide the same outcome)
 If \code{0 < n < 1}, the \code{ties} option regulates how to resolve such conflicts, yielding lower (\code{ties = "min"}: k), upper (\code{ties = "max"}: k+2) or average weighted (\code{ties = "mean"}: mean(k, k+1, k+2)) n'th elements.
 
-Thus, in the presence of zero weights, the weighted median (default \code{ties = "mean"}) can be an arithmetic average of >2 qualifying elements. Users may prefer a quantile based weighted median by setting \code{ties = "q5"-"q9"}, which is a continuous function of \code{p} and ignores elements with zero weights.
+Thus, in the presence of zero weights, the weighted median (default \code{ties = "mean"}) can be an arithmetic average of >2 qualifying elements.
 
 For data frames, column-attributes and overall attributes are preserved if \code{g} is used or \code{drop = FALSE}.
 
