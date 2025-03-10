@@ -229,7 +229,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnthread
   // default: error("ALTREP object must be integer or real typed");
   // }
   // }
-  if(l < 1) return tx == REALSXP ? x : ScalarReal(asReal(x)); // Prevents seqfault for numeric(0) #101
+  if(l < 1) return tx == REALSXP ? x : allocVector(REALSXP, 0); // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(nthreads > max_threads) nthreads = max_threads;
   if(l < 100000) nthreads = 1; // No improvements from multithreading on small data.

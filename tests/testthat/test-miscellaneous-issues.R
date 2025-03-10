@@ -225,7 +225,7 @@ test_that("0-length vectors give expected output", {
   funs <- .c(fsum, fprod, fmean, fmedian, fmin, fmax, fnth, fcumsum, fbetween, fwithin, fscale)
   for(i in funs) {
     FUN <- match.fun(i)
-    if(i %!in% .c(fsum, fmin, fmax, fcumsum, fprod, fmean, fmedian, fnth)) {
+    if(i %!in% .c(fsum, fmin, fmax, fcumsum, fmedian, fnth)) {
       expect_true(all_identical(FUN(numeric(0)), FUN(integer(0)), numeric(0)))
     } else {
       expect_identical(FUN(numeric(0)), numeric(0))
