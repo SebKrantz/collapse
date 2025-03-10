@@ -32,7 +32,7 @@ pre[class] {
 
 ## Introduction
 
-*collapse* offers an integrated suite of C/C++-based statistical and data manipulation functions, many low-level tools for memory efficient programming, and a [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) that seamlessly supports vectors, matrices, and data frame-like objects. These features make it an ideal backend for high-performance statistical packages. This vignette is meant to provide some recommendations for developing with *collapse*. It is complementary to the earlier [blog post on programming with *collapse*](https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/) which readers are also highly recommended to consult. The vignette adds 3 important points for writing efficient R/*collapse* code.
+*collapse* offers an integrated suite of C/C++-based statistical and data manipulation functions, many low-level tools for memory efficient programming, and a [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) that seamlessly supports vectors, matrices, and data frame-like objects. These features make it an ideal backend for high-performance statistical packages. This vignette is meant to provide some recommendations for developing with *collapse*. It is complementary to the earlier [blog post on programming with *collapse*](https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/) which readers are also encouraged to consult. The vignette adds 3 important points for writing efficient R/*collapse* code.
 
 ## Point 1: Be Minimalistic in Computations
 
