@@ -10,7 +10,10 @@
 
 ### Bug Fixes
 
-* Fixed some issues using *collapse* and the *tidyverse* together, particularly regarding tidyverse methods for 'grouped_df' - thanks @NicChr (#645) .
+* Fixed some issues using *collapse* and the *tidyverse* together, particularly regarding tidyverse methods for 'grouped_df' - thanks @NicChr (#645).
+
+* More consistent handling of zero-length inputs - they are now also returned in `fmean()` and `fmedian()`/`fnth()` instead of returning `NA` (#628).
+
 
 ### Additions
 
