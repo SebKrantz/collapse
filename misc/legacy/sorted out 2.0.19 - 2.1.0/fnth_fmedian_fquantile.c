@@ -6,8 +6,7 @@
    https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
    https://doi.org/10.2307/2684934
    https://aakinshin.net/posts/weighted-quantiles/
-   https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html
-   The weighted quantile algorithm follows Matthew Kay
+ At large, the weighted quantile algorithm is my own cooking [(C) 2022 Sebastian Krantz]
 */
 
 // Adopted from data.table's quickselect.c
@@ -70,9 +69,6 @@ static double eps = 10 * DBL_EPSILON;
   case 3: /* upper element*/                                   \
     h = n*Q;                                                   \
     break;                                                     \
-  case 4: /* quantile type 4*/                                 \
-    h = n*Q - 1.0;                                             \
-    break;                                                     \
   case 5: /* quantile type 5*/                                 \
     h = n*Q - 0.5;                                             \
     break;                                                     \
@@ -86,30 +82,50 @@ static double eps = 10 * DBL_EPSILON;
     h = ((double)n + 1.0/4.0)*Q - 5.0/8.0;                     \
     break;                                                     \
   }
+/*
+case 4: // quantile type 4: not exact for weighted case, and also bad properties.
+  h = n*Q - 1.0;
+  break;
+*/
 
-// Weighted quantiles: https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html
-// Basically we add m to h
-#undef RETWQADDM
-#define RETWQADDM                                                \
-switch(ret) {                                                    \
-  case 7: /* quantile type 7 */                                  \
-    h += 1 - Q;                                                  \
-    break;                                                       \
-  case 4: /* quantile type 4*/                                   \
-    break;                                                       \
-  case 5: /* quantile type 5*/                                   \
-    h += 0.5;                                                    \
-    break;                                                       \
-  case 6: /* quantile type 6*/                                   \
-    h += Q;                                                      \
-    break;                                                       \
-  case 8: /* quantile type 8 (best according to H&F 1986)*/      \
-    h += 1.0/3.0 * (Q + 1);                                      \
-    break;                                                       \
-  case 9: /* quantile type 9*/                                   \
-    h += 1.0/4.0 * Q + 3.0/8.0;                                  \
-    break;                                                       \
+// Weighted quantiles. Idea: make h dependent on sum of weights and minimum weight.
+#undef RETWQSWITCH
+#define RETWQSWITCH(sumw, minw)                                \
+switch(ret) {                                                  \
+case 7: /* quantile type 7 */                                  \
+  h = (sumw - minw) * Q;                                       \
+  break;                                                       \
+case 1:                                                        \
+case 2:                                                        \
+case 3: /* average, lower or upper element (adjust algorithm)*/\
+  h = sumw * Q;                                                \
+  break;                                                       \
+case 5: /* quantile type 5*/                                   \
+  h = sumw * Q - 0.5*minw;                                     \
+  if(h < 0.0) h = 0.0;                                         \
+  break;                                                       \
+case 6: /* quantile type 6*/                                   \
+  h = (sumw + minw)*Q - minw;                                  \
+  if(h < 0.0) h = 0.0;                                         \
+  break;                                                       \
+case 8: /* quantile type 8 (best according to H&F 1986)*/      \
+  h = (sumw + 1.0/3.0 * minw)*Q - 2.0/3.0 * minw;              \
+  if(h < 0.0) h = 0.0;                                         \
+  break;                                                       \
+case 9: /* quantile type 9*/                                   \
+  h = (sumw + 1.0/4.0 * minw)*Q - 5.0/8.0 * minw;              \
+  if(h < 0.0) h = 0.0;                                         \
+  break;                                                       \
 }
+/*
+case 4: // quantile type 4: does not give exact results
+  h = sumw * Q - minw;
+  break;
+*/
+/* Redundant? -> yes!
+ if(h > sumw) h = sumw;
+*/
+
 
 
 // --------------------------------------------------------------------------
@@ -139,6 +155,27 @@ double iquickselect_elem(int *x, const int n, const unsigned int elem, double h)
 }
 
 #undef FQUANTILE_CORE
+/*
+ Old Solution: full initial pass to get min and max.
+if(probs[0] == 0.0 || probs[np-1] == 1.0) {                                   \
+  x_min = x_max = x_cc[0];                                                    \
+  if(probs[0] == 0.0 && probs[np-1] == 1.0) {                                 \
+    for(unsigned int i = 1; i != l; ++i) {                                    \
+      if(x_cc[i] < x_min) x_min = x_cc[i];                                    \
+      if(x_cc[i] > x_max) x_max = x_cc[i];                                    \
+    }                                                                         \
+    pres[0] = x_min; pres[np-1] = x_max;                                      \
+  } else if(probs[0] == 0.0) {                                                \
+    for(unsigned int i = 1; i != l; ++i)                                      \
+      if(x_cc[i] < x_min) x_min = x_cc[i];                                    \
+      pres[0] = x_min;                                                        \
+  } else {                                                                    \
+    for(unsigned int i = 1; i != l; ++i)                                      \
+      if(x_cc[i] > x_min) x_min = x_cc[i];                                    \
+      pres[np-1] = x_max;                                                     \
+  }                                                                           \
+}                                                                             \
+*/
 #define FQUANTILE_CORE(QFUN)                                                  \
   double h, Q;                                                                \
   int ih = 0; /* To avoid -Wmaybe-uninitialized */                            \
@@ -182,23 +219,36 @@ for(int i = 0, ih; i < np; ++i) {                           \
   } else pres[i] = px[po[(int)((l-1)*Q)]];                  \
 }
 
-// Following https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html
+// Proper quantile weighting? At least it gives the same results for equal weights of any magnitude.
+// See: https://aakinshin.net/posts/weighted-quantiles/
+// And: https://en.wikipedia.org/wiki/Percentile#Weighted_percentile
 // Expects px and pw to be decremented by 1
 #undef WQUANTILE_CORE
 #define WQUANTILE_CORE                                \
-double Q, h;                                          \
-int j;                                                \
+double Q, h, a, wb, b;                                \
 for(int i = 0, k = 0; i < np; ++i) {                  \
   Q = probs[i];                                       \
   if(Q > 0.0 && Q < 1.0) {                            \
-    h = sumw * Q + eps;                               \
-    while(wsum <= h) wsum += pw[po[k++]];             \
-    if(k > 0) wsum -= pw[po[--k]];                    \
-    h = k-1 + (h - wsum) / pw[po[k]];                 \
-    RETWQADDM;                                        \
-    j = (int)h; h -= j;                               \
-    pres[i] = (j >= l-1 || h < eps) ? px[po[j]] :     \
-            (1 - h) * px[po[j]] + h * px[po[j+1]];    \
+    RETWQSWITCH(sumw, minw);                            \
+    a = h + eps;                                      \
+    while(wsum <= a) wsum += pw[po[k++]];             \
+    a = px[po[k == 0 ? 0 : k-1]];                     \
+    if(k == 0 || k == l || h == 0.0) {                \
+      pres[i] = a; continue;                          \
+    }                                                 \
+    wb = pw[po[k-1]];                                 \
+    /* If zero weights, need to move forward*/        \
+    if(pw[po[k]] == 0.0) {                            \
+    /* separate indices as possible: h < wsum(i-1) */ \
+      int kp = k+1;                                   \
+      while(kp < l && pw[po[kp]] == 0.0) ++kp;        \
+      if(kp == l) {                                   \
+        k = kp-1; pres[i] = a; continue;              \
+      }                                               \
+      b = px[po[kp]];                                 \
+    } else b = px[po[k]];                             \
+    h = (wsum - h) / wb;                              \
+    pres[i] = b + h * (a - b);                        \
   } else {  /* Since probs must be passed in order*/  \
     if(Q == 0.0) {                                    \
       while(pw[po[k]] == 0.0) ++k;                    \
@@ -216,7 +266,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   if(TYPEOF(Rprobs) != REALSXP) error("probs needs to be a numeric vector");
   int tx = TYPEOF(x), n = length(x), np = length(Rprobs), narm = asLogical(Rnarm), ret = asInteger(Rtype), nprotect = 1;
   if(tx != REALSXP && tx != INTSXP && tx != LGLSXP) error("x needs to be numeric");
-  if(ret < 4 || ret > 9) error("fquantile only supports continuous quantile types 4-9. You requested type: %d", ret);
+  if(ret < 5 || ret > 9) error("fquantile only supports continuous quantile types 5-9. You requested type: %d", ret);
 
   SEXP res = PROTECT(allocVector(REALSXP, np));
   copyMostAttrib(x, res); // Consistent with other functions, and works for "units"
@@ -373,10 +423,14 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
       }
 
     } else {
-      double wsum = 0.0, sumw = 0.0; // wsum is running sum, sumw is the total sum
+      double wsum = 0.0, sumw = 0.0, minw = DBL_MAX; // wsum is running sum, sumw is the total sum
 
-      #pragma omp simd reduction(+:sumw)
-      for (int i = 0; i < l; ++i) sumw += pw[po[i]];
+      // #pragma omp simd reduction(+:sumw)
+      for (int i = 0; i < l; ++i) {
+        wsum = pw[po[i]];
+        sumw += wsum;
+        if(minw > wsum && wsum > 0.0) minw = wsum;
+      }
 
       wsum = 0.0;
       if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
@@ -444,32 +498,40 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 // or quicksort at the group-level
 
 // Expects pw and po to be consistent
-double w_compute_h(const double *pw, const int *po, const int l, const int sorted, double Q) {
-  if(l == 0) return NA_REAL;
-  double sumw = 0.0;
+double w_compute_h(const double *pw, const int *po, const int l, const int sorted, const int ret, const double Q) {
+  double sumw = 0.0, minw = DBL_MAX, h = 0.0; /* To avoid -Wmaybe-uninitialized */
   if(sorted) {
-    #pragma omp simd reduction(+:sumw)
-    for(int i = 0; i < l; ++i) sumw += pw[i];
+    // #pragma omp simd reduction(+:sumw)
+    for(int i = 0; i < l; ++i) {
+      sumw += pw[i];
+      if(minw > pw[i] && pw[i] > 0.0) minw = pw[i];
+    }
   } else {
-    #pragma omp simd reduction(+:sumw)
-    for(int i = 0; i < l; ++i) sumw += pw[po[i]];
+    // #pragma omp simd reduction(+:sumw)
+    for(int i = 0; i < l; ++i) {
+      h = pw[po[i]];
+      sumw += h;
+      if(minw > h && h > 0.0) minw = h;
+    }
   }
   if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
   if(sumw < 0.0) error("Weights must be positive or zero");
-  return Q * sumw;
+  if(minw == DBL_MAX) return NA_REAL;
+  RETWQSWITCH(sumw, minw);
+  return h;
 }
 
 // If no groups or sorted groups po is the ordering of x
 // Expects pointers px and pw to be decremented by one
 #undef WNTH_CORE
 #define WNTH_CORE                                                          \
-double wsum = pw[po[0]], wb;                                               \
+double wsum = pw[po[0]], wb, a;                                            \
 int k = 1;                                                                 \
 if(ret < 3) { /* lower (2), or average (1) element*/                       \
   while(wsum < h) wsum += pw[po[k++]];                                     \
-  double a = px[po[k-1]];                                                  \
+  a = px[po[k-1]];                                                         \
   if(ret == 2 || wsum > h+eps) return a;/* h = sumw * Q must be > 0 here */\
-  wb = px[po[k]]; wsum = 2.0;                                              \
+  wsum = 2.0; wb = px[po[k]];                                              \
   while(pw[po[k]] == 0.0) { /* l should never be reached, I tested it */   \
     wb += px[po[++k]]; ++wsum;                                             \
   }                                                                        \
@@ -477,42 +539,50 @@ if(ret < 3) { /* lower (2), or average (1) element*/                       \
 }                                                                          \
 wb = h + eps;                                                              \
 while(wsum <= wb) wsum += pw[po[k++]];                                     \
-if(ret == 3) return px[po[k-1]];                                           \
-wsum -= pw[po[--k]];                                                       \
-h = k-1 + (h - wsum) / pw[po[k]];                                          \
-RETWQADDM;                                                                 \
-int j = (int)h; h -= j;                                                    \
-return (j >= l-1 || h < eps) ? px[po[j]] : (1 - h) * px[po[j]] + h * px[po[j+1]];
-
+a = px[po[k-1]];                                                           \
+if(ret == 3 || k == l || h == 0.0)                                         \
+  return a;                                                                \
+wb = pw[po[k-1]];                                                          \
+/* If zero weights, need to move forward*/                                 \
+while(k < l && pw[po[k]] == 0.0) ++k;                                      \
+if(k == l) return a;                                                       \
+h = (wsum - h) / wb;                                                       \
+wb = px[po[k]];                                                            \
+return wb + h * (a - wb);
 
 // This is the same, just that the result is assigned. Needed for quicksort based implementations
 // Does not require incremented pointers (depending on the content of i_cc)
 #undef WNTH_CORE_QSORT
 #define WNTH_CORE_QSORT                                                      \
-double res, wsum = pw[i_cc[0]], wb;                                          \
+double res, wsum = pw[i_cc[0]], wb, a;                                       \
 int k = 1;                                                                   \
 if(ret < 3) { /* lower (2), or average (1) element*/                         \
   while(wsum < h) wsum += pw[i_cc[k++]];                                     \
-  double a = x_cc[k-1];                                                      \
+  a = x_cc[k-1];                                                             \
   if(ret == 2 || wsum > h+eps) res = a; /* h = sumw * Q must be > 0 here */  \
   else {                                                                     \
-    wb = x_cc[k]; wsum = 2.0;                                                \
+    wsum = 2.0; wb = x_cc[k];                                                \
     while(pw[i_cc[k]] == 0.0) { /* n should never be reached, I tested it */ \
       wb += x_cc[++k]; ++wsum;                                               \
     }                                                                        \
     res = (a + wb) / wsum;                                                   \
   }                                                                          \
 } else {                                                                     \
-  wb = h + eps;                                                              \
+  wb = h+eps;                                                                \
   while(wsum <= wb) wsum += pw[i_cc[k++]];                                   \
-  if(ret == 3) {                                                             \
-    res = x_cc[k-1];                                                         \
+  a = x_cc[k-1];                                                             \
+  if(ret == 3 || k == n || h == 0.0) {                                       \
+    res = a;                                                                 \
   } else {                                                                   \
-    wsum -= pw[i_cc[--k]];                                                     \
-    h = k-1 + (h - wsum) / pw[i_cc[k]];                                        \
-    RETWQADDM;                                                               \
-    int j = (int)h; h -= j;                                                  \
-    res = (j >= n-1 || h < eps) ? x_cc[j] : (1 - h) * x_cc[j] + h * x_cc[j+1]; \
+    wb = pw[i_cc[k-1]];                                                      \
+    /* If zero weights, need to move forward*/                               \
+    while(k < n && pw[i_cc[k]] == 0.0) ++k;                                  \
+    if(k == n) res = a;                                                      \
+    else {                                                                   \
+      h = (wsum - h) / wb;                                                   \
+      wb = x_cc[k];                                                          \
+      res = wb + h * (a - wb);                                               \
+    }                                                                        \
   }                                                                          \
 }
 
@@ -647,7 +717,7 @@ double w_nth_int_ord(const int *restrict px, const double *restrict pw, const in
     while(l != 0 && px[po[l-1]] == NA_INTEGER) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
   } else if(px[po[l-1]] == NA_INTEGER) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -662,7 +732,7 @@ double w_nth_double_ord(const double *restrict px, const double *restrict pw, co
     while(l != 0 && ISNAN(px[po[l-1]])) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
   } else if(ISNAN(px[po[l-1]])) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -720,7 +790,7 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   // i_cc is one-indexed
   R_qsort_int_I(x_cc, i_cc, 1, n);
 
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, ret, Q);
   if(ISNAN(h)) {
     R_Free(x_cc); R_Free(i_cc);
     return NA_REAL;
@@ -785,7 +855,7 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   // i_cc is one-indexed
   R_qsort_I(x_cc, i_cc, 1, n);
 
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, ret, Q);
 
   if(ISNAN(h)) {
     R_Free(x_cc);
@@ -1143,7 +1213,7 @@ int Rties2int(SEXP x) {
   int tx = TYPEOF(x);
   if(tx == INTSXP || tx == REALSXP || tx == LGLSXP) {
     int ret = asInteger(x);
-    if(ret < 1 || ret > 9) error("ties must be 1-9, you supplied: %d", ret);
+    if(ret < 1 || ret > 9 || ret == 4) error("ties must be 1, 2, 3 or 5-9, you supplied: %d", ret);
     return ret;
   }
   if(tx != STRSXP) error("ties must be integer or character");
@@ -1151,7 +1221,6 @@ int Rties2int(SEXP x) {
   if(strcmp(r, "mean") == 0) return 1;
   if(strcmp(r, "min") == 0) return 2;
   if(strcmp(r, "max") == 0) return 3;
-  if(strcmp(r, "q4") == 0) return 4;
   if(strcmp(r, "q5") == 0) return 5;
   if(strcmp(r, "q6") == 0) return 6;
   if(strcmp(r, "q7") == 0) return 7;
@@ -1233,7 +1302,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   CHECK_PROB(l);
 
   // if(l < 1) return x;
-  if(l < 1 || (l == 1 && nullw)) return TYPEOF(x) == REALSXP ? x : l < 1 ? allocVector(REALSXP, 0) : ScalarReal(asReal(x));
+  if(l < 1 || (l == 1 && nullw)) return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
 
   // First the simplest case
   if(nullg && nullw && nullo) return nth_impl(x, narm, ret, Q);
@@ -1379,7 +1448,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   double *restrict pw = &Q, h = DBL_MIN;
   if(!nullw) {
     CHECK_WEIGHTS(nrx);
-    if(nullg && !narm) h = w_compute_h(pw+1, &l, nrx, 1, Q); // if no missing value removal, h is the same for all columns
+    if(nullg && !narm) h = w_compute_h(pw+1, &l, nrx, 1, ret, Q); // if no missing value removal, h is the same for all columns
   }
 
   if(nullg) { // No groups, multithreading across columns
@@ -1556,7 +1625,7 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   double *restrict pw = &Q, h = DBL_MIN;
   if(!nullw) {
     CHECK_WEIGHTS(l);
-    if(nullg && !narm) h = w_compute_h(pw+1, &l, l, 1, Q);
+    if(nullg && !narm) h = w_compute_h(pw+1, &l, l, 1, ret, Q);
   }
 
   if(nullg) {

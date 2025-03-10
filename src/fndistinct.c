@@ -354,6 +354,7 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
   int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst,
     l = length(x), nthreads = asInteger(Rnthreads);
   if(l != length(pg[1])) error("length(g) must match length(x)");
+  if(l < 1) return ScalarInteger(0);
   if(isNull(o)) {
     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
     for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];

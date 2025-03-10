@@ -17,7 +17,7 @@
 #include <stdbool.h>
 #include "internal/R_defn.h"
 
-
+#undef NISNAN
 #define NISNAN(x) ((x) == (x))  // opposite of ISNAN for doubles
 // Faster than Rinternals version (which uses math library version)
 #undef ISNAN

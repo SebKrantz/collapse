@@ -62,9 +62,9 @@ install.packages("collapse", repos = "https://fastverse.r-universe.dev")
 remotes::install_github("SebKrantz/collapse")
 
 # Install previous versions from the CRAN Archive (requires compilation)
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.9.6.tar.gz", 
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_2.0.19.tar.gz", 
                  repos = NULL, type = "source") 
-# Older stable versions: 1.8.9, 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
+# Older stable versions: 1.9.6, 1.8.9, 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
 ```
 
 ## Documentation
@@ -80,7 +80,7 @@ In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/
 
 ### Article on arXiv
 
-An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* has been submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/) in March 2024. 
+An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* was submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/) in March 2024 and updated/revised in February 2025. 
 
 ### Presentation at [useR 2022](https://user2022.r-project.org)
 
