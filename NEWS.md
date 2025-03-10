@@ -1,29 +1,46 @@
-# collapse 2.0.19.9000
+# collapse 2.1.0
+
+*collapse* 2.1.0, released in March 2025, introduces a fast slicing function, an improved weighted quantile algorithm, a few convenience features, and removes some legacy functions from the package. 
+
+### Potentially breaking changes
+
+* Functions `pwNobs`, `as.factor_GRP`, `as.factor_qG`, `is.GRP`, `is.qG`, `is.unlistable`, `is.categorical`, `is.Date`, `as.numeric_factor`, `as.character_factor`, and `Date_vars`, which were renamed in v1.6.0 by either replacing '.' with '_' or using all lower-case letters, and depreciated since then, are now finally removed from the package.
+
+* `num_vars()` (and thus also `cat_vars()` and `collap()`) were changed to a simpler C-definition of numeric data types which is more in-line with `is.numeric()`: `is_numeric_C <- function(x) typeof(x) %in% c("integer", "double") && !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))`. The previous definition was: `is_numeric_C_old <- function(x) typeof(x) %in% c("integer", "double") && (!is.object(x) || inherits(x, c("ts", "units", "integer64")))`. Thus, the definition changed from including only certain classes to excluding the most important classes. Thanks @maouw for flagging this (#727).
+
+* New improved quantile algorithm in `fquantile()` and `fnth()` (see below) does not support zero weights anymore, i.e. the code runs through, but elements with zero weights are no longer ignored by the algorithm. Thus is because the new algorithm makes it difficult to skip zero weight elements 'on the fly'. 
+
+### Bug Fixes
+
+* Fixed some issues using *collapse* and the *tidyverse* together, particularly regarding tidyverse methods for 'grouped_df'.
+
+### Additions
 
 * Added function `fslice()`: a fast alternative to `dplyr::slice_[head|tail|min|max]` that also works with matrices. Thanks @alinacherkas for the proposal and initial implementation (#725).
 
 * Added function `groupv()` as programmers version of `group()`, or rather, `groupv()` is now identical to the former `group()`, and `group()` now supports multiple vectors as input e.g. `group(v1, v2)`. This is done for convenience and consistency with `radixorder[v]()`. For backwards compatibility, `group()` also supports a single list as input.
 
-* Functions `pwNobs`, `as.factor_GRP`, `as.factor_qG`, `is.GRP`, `is.qG`, `is.unlistable`, `is.categorical`, `is.Date`, `as.numeric_factor`, `as.character_factor`, and `Date_vars`, which were renamed in v1.6.0 by either replacing '.' with '_' or using all lower-case letters, and depreciated since then, are now finally removed from the package.
-
 * `join()` has a new argument `require` allowing the user to generate messages or errors if the join operation is not successful enough: 
 
-```r
-> join(df1, df2, require = list(x = 0.8, fail = "warning"))
-left join: df1[id1, id2] 3/4 (75%) <1:1st> df2[id1, id2] 3/4 (75%)
-  id1 id2 name age salary      dept
-1   1   a John  35  60000        IT
-2   1   b Jane  28     NA      <NA>
-3   2   b  Bob  42  55000 Marketing
-4   3   c Carl  50  70000     Sales
-Warning message:
-In switch_msg(sprintf("Matched %#.1f%% of records in table %s (x), but %#.1f%% is required",  :
-  Matched 75.0% of records in table df1 (x), but 80.0% is required
+``` r
+join(df1, df2, require = list(x = 0.8, fail = "warning"))
+#> Warning: Matched 75.0% of records in table df1 (x), but 80.0% is required
+#> left join: df1[id1, id2] 3/4 (75%) <1:1st> df2[id1, id2] 3/4 (75%)
+#>   id1 id2 name age salary      dept
+#> 1   1   a John  35  60000        IT
+#> 2   1   b Jane  28     NA      <NA>
+#> 3   2   b  Bob  42  55000 Marketing
+#> 4   3   c Carl  50  70000     Sales
 ```
 
-* `num_vars()` (and thus also `cat_vars()` and `collap()`) were changed to a simpler C-definition of numeric data types which is more in-line with `is.numeric()`: `is_numeric_C <- function(x) typeof(x) %in% c("integer", "double") && !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))`. The previous definition was: `is_numeric_C_old <- function(x) typeof(x) %in% c("integer", "double") && (!is.object(x) || inherits(x, c("ts", "units", "integer64")))`. Thus, the definition changed from including only certain classes to excluding the most important classes. Thanks @maouw for flagging this (#727).
-
 * `psmat()` now has a `fill` argument to fill empty slots in matrix/array with other elements (default `NULL`/`NA`). 
+
+### Improvements
+
+* The weighted quantile algorithm in `fquantile()` was changed and now uses a more theoretically sound method following [excellent notes](https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html) by [Matthew Kay](https://github.com/mjskay). It now also supports quantile type 4, but it does not support zero weights anymore (see above). *Note* that the existing *collapse* algorithm [already had very goood](https://github.com/mjskay/uncertainty-examples/issues/2) properties after a bug fix in v2.0.17, but the new algorithm is more theoretically sound and also faster.
+
+
+
 
 # collapse 2.0.19
 
