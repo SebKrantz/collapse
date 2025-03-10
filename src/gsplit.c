@@ -21,14 +21,14 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
     copyMostAttrib(x, x1);
     SEXP ax = ATTRIB(x1);
     if(length(ax) == 1 && TAG(ax) == sym_label) ax = R_NilValue;
-    int ox = OBJECT(x);
+    int ox = OOBJ(x);
     // FAZIT: Need to use SET_VECTOR_ELT!! pres[i] = allocVector() doesn't work!!
     if(TYPEOF(ax) != NILSXP && ox != 0) {
       for(int i = 0; i != ng; ++i) { // , s4o = IS_S4_OBJECT(x)
         SEXP resi;
         SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
         SET_ATTRIB(resi, ax);
-        SET_OBJECT(resi, ox);
+        SET_OOBJ(resi, ox);
         // if(s4o) SET_S4_OBJECT(resi);
       }
     } else if(TYPEOF(ax) != NILSXP) {
@@ -41,7 +41,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       for(int i = 0; i != ng; ++i) { // , s4o = IS_S4_OBJECT(x)
         SEXP resi;
         SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
-        SET_OBJECT(resi, ox);
+        SET_OOBJ(resi, ox);
         // if(s4o) SET_S4_OBJECT(resi);
       }
     } else {

@@ -13,7 +13,7 @@ SEXP setAttributes(SEXP x, SEXP a) {
 
 SEXP setattributes(SEXP x, SEXP a) {
   SET_ATTRIB(x, coerceVector(a, LISTSXP));
-  // SET_OBJECT(x, TYPEOF(x)); // if(OBJECT(a))  // This does not work with ts-matrices! could also make compatible with S4 objects !
+  // SET_OOBJ(x, TYPEOF(x)); // if(OOBJ(a))  // This does not work with ts-matrices! could also make compatible with S4 objects !
   classgets(x, getAttrib(x, R_ClassSymbol));
   return R_NilValue;
 }
@@ -66,7 +66,7 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 SEXP copyMostAttributes(SEXP x, SEXP y) {
   int tx = TYPEOF(x);
   // -> This is about the best we can do: unlist() does not preserve dates, and we don't want to create malformed factors
-  // if(TYPEOF(x) == TYPEOF(y) && (OBJECT(x) == OBJECT(y) || (!inherits(y, "factor") && !(length(x) != length(y) && inherits(y, "ts")))))
+  // if(TYPEOF(x) == TYPEOF(y) && (OOBJ(x) == OOBJ(y) || (!inherits(y, "factor") && !(length(x) != length(y) && inherits(y, "ts")))))
   if(tx == TYPEOF(y) && (isObject(x) == isObject(y) || tx != INTSXP || inherits(y, "IDate") || inherits(y, "ITime")) && !(length(x) != length(y) && inherits(y, "ts"))) {
     copyMostAttrib(y, x);
     return x;
