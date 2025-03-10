@@ -3,7 +3,6 @@
 
 // #define USE_RINTERNALS
 
-
 #include <R.h>
 #include <Rinternals.h>
 
@@ -105,19 +104,23 @@ typedef union { VECTOR_SEXPREC s; double align; } SEXPREC_ALIGN;
 
 #endif
 
-
+#undef OOBJ
 #define OOBJ(x)	((x)->sxpinfo.obj)
 #define SET_OOBJ(x,v) (OOBJ(x)=(v))
+#undef ATTTR
 #define ATTTR(x)	((x)->attrib)
 #define SET_ATTTR(x,v) (ATTR(x)=(v))
 
-
+#undef MYLEV
 #define MYLEV(x)	((x)->sxpinfo.gp)
+#undef IS_UTF8
 #define IS_UTF8(x)  (MYLEV(x) & 8)
+#undef IS_ASCII
 #define IS_ASCII(x) (MYLEV(x) & 64) // from data.table.h
 // #define ASCII_MASK (1<<6) // evaluates to 64 !!
 // #define IS_ASCII(x) ((x)->sxpinfo.gp & ASCII_MASK)
 // #define IS_ASCII(x) (LEVELS(x) & ASCII_MASK)
+#undef SETTOF
 #define SETTOF(x,v)	(((x)->sxpinfo.type)=(v))
 
 // to avoid checking for ALTREP in TRUELENGTH, which slows down the code unnecessarily...
@@ -129,31 +132,50 @@ typedef union { VECTOR_SEXPREC s; double align; } SEXPREC_ALIGN;
    in the meantime replace TRUELENGTH/SET_TRUELENGTH with
    TRLEN/SET_TRLEN that cast to int to avoid warnings. */
 
+#undef TRULEN
 #define TRULEN(x) (ALTREP(x) ? 0 : STDVEC_TRUELENGTH(x))
+#undef SET_TRULEN
 #define SET_TRULEN(x, v) (STDVEC_TRUELENGTH(x)=(v))
 
+#undef TRLEN
 #define TRLEN(x) ((int) STDVEC_TRUELENGTH(x)) // ((int) TRUELENGTH(x))
+#undef SET_TRLEN
 #define SET_TRLEN(x, v) SET_STDVEC_TRUELENGTH(x, ((int) (v)))
 
+#ifndef STDVEC_LENGTH
 #define STDVEC_LENGTH(x) (((VECSEXP) (x))->vecsxp.length)
+#endif
   // Needed for SETLENGTH
+#ifndef SETSCAL
 #define SETSCAL(x, v) (((x)->sxpinfo.scalar) = (v))
+#endif
+
+#ifndef SET_STDVEC_LENGTH
 #define SET_STDVEC_LENGTH(x,v) do {		      \
   SEXP __x__ = (x);			                    \
   R_xlen_t __v__ = (v);			                \
   STDVEC_LENGTH(__x__) = __v__;		          \
   SETSCAL(__x__, __v__ == 1 ? 1 : 0);	      \
 } while (0)
+#endif
+
+#undef SET_LEN
 #define SET_LEN(x, v) SET_STDVEC_LENGTH((x), (v))
 
+#undef MYEFL
 #define MYEFL(x) ((x)->sxpinfo.gp)
+#undef MYSEFL
 #define MYSEFL(x,v)	(((x)->sxpinfo.gp)=(v))
 
 // For super efficient access, e.g. in gsplit()
+#undef SEXP_DATAPTR
 #define SEXP_DATAPTR(x) ((SEXP *) (((SEXPREC_ALIGN *) (x)) + 1))
 
+#undef DPTR
 #define DPTR(x) ((void *)DATAPTR_RO(x))
+#undef SEXPPTR
 #define SEXPPTR(x) ((SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
+#undef SEXPPTR_RO
 #define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
 
 // #define STDVEC_DATAPTR(x) ((void *) (((SEXPREC_ALIGN *) (x)) + 1))
