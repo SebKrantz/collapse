@@ -205,9 +205,9 @@ SEXP fminlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
     UNPROTECT(1);
     return out;
   }
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
+  SEXP out = PROTECT(allocVector(VECSXP, l));
   const SEXP *px = SEXPPTR_RO(x);
-  for(int j = 0; j != l; ++j) pout[j] = fminC(px[j], Rng, g, Rnarm);
+  for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, fminC(px[j], Rng, g, Rnarm));
   // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
   DFcopyAttr(out, x, ng);
   UNPROTECT(1);
@@ -279,9 +279,9 @@ SEXP fmaxlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm, SEXP Rdrop) {
     UNPROTECT(1);
     return out;
   }
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
+  SEXP out = PROTECT(allocVector(VECSXP, l));
   const SEXP *px = SEXPPTR_RO(x);
-  for(int j = 0; j != l; ++j) pout[j] = fmaxC(px[j], Rng, g, Rnarm);
+  for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, fmaxC(px[j], Rng, g, Rnarm));
   // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
   DFcopyAttr(out, x, ng);
   UNPROTECT(1);

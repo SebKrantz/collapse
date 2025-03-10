@@ -30,7 +30,7 @@ fslicev(x, cols = NULL, n = 1, how = "first", order.by = NULL,
   \item{order.by}{vector or column name to order by when \code{how} is \code{"min"} or \code{"max"}. Must be same length as rows in \code{x}. In \code{fslice} it must not be quoted.}
   \item{na.rm}{logical. If \code{TRUE}, missing values in \code{order.by} are removed before selecting rows.}
   \item{sort}{logical. If \code{TRUE}, sort selected rows on the grouping columns. \code{FALSE} uses first-appearance order (including grouping columns if \code{how} is \code{"first"} or \code{"last"}) - fastest.}
-  \item{with.ties}{logical. If \code{TRUE} and \code{how} is \code{"min"} or \code{"max"}, returns all rows with the extreme value. Only applies when \code{n = 1}.}
+  \item{with.ties}{logical. If \code{TRUE} and \code{how} is \code{"min"} or \code{"max"}, returns all rows with the extreme value. Currently only supported for \code{n = 1} and \code{sort = FALSE}.}
 }
 \value{
 A subset of \code{x} containing the selected rows.

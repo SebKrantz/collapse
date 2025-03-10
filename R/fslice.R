@@ -19,7 +19,7 @@ fslice <- function(x, ..., n = 1, how = "first", order.by = NULL,
     if(length(order.by) != fnrow(x)) stop("order.by must be a numeric vector of the same length as the number of rows in x, or the name of a column in x.")
   }
 
-  fslice_core(x, g, n, how, order.by, na.rm, with.ties)
+  fslice_core(x, g, n, how, order.by, na.rm, with.ties, sort)
 }
 
 fslicev <- function(x, cols = NULL, n = 1, how = "first", order.by = NULL,
@@ -43,11 +43,11 @@ fslicev <- function(x, cols = NULL, n = 1, how = "first", order.by = NULL,
     if(length(order.by) != fnrow(x)) stop("order.by must be a numeric vector of the same length as the number of rows in x, or the name of a column in x.")
   }
 
-  fslice_core(x, g, n, how, order.by, na.rm, with.ties)
+  fslice_core(x, g, n, how, order.by, na.rm, with.ties, sort)
 }
 
 
-fslice_core <- function(x, g, n, how, order.by, na.rm, with.ties) {
+fslice_core <- function(x, g, n, how, order.by, na.rm, with.ties, sort) {
 
   # convert a proportion to a number if applicable
   if(n < 1) n <- if(is.null(g)) max(1L, as.integer(round(n * fnrow(x)))) else max(1L, as.integer(round(n * fnrow(x)/g[[1L]])))
@@ -64,15 +64,19 @@ fslice_core <- function(x, g, n, how, order.by, na.rm, with.ties) {
     return(ss(x, ind, check = FALSE))
   }
 
-  if(n == 1) return(switch(how,
+  if(n == 1) {
+    if(with.ties && sort) warning("sorting with ties is currently not supported")
+    return(switch(how,
       first = condalc(ffirst(x, g, na.rm = FALSE), inherits(x, "data.table")),
       last = condalc(flast(x, g, na.rm = FALSE), inherits(x, "data.table")),
+      # TODO: sort with ties?
       min = if(with.ties) ss(x, order.by %==% fmin(order.by, g, TRA = "fill", na.rm = na.rm, use.g.names = FALSE), check = FALSE) else
             ss(x, .Call(C_gwhich_first, order.by, g, fmin.default(order.by, g, na.rm = na.rm, use.g.names = FALSE)), check = FALSE),
       max = if(with.ties) ss(x, order.by %==% fmax(order.by, g, TRA = "fill", na.rm = na.rm, use.g.names = FALSE), check = FALSE) else
             ss(x, .Call(C_gwhich_first, order.by, g, fmax.default(order.by, g, na.rm = na.rm, use.g.names = FALSE)), check = FALSE),
       stop("Unknown 'how' option: ", how)
   ))
+  }
 
   ind <- switch(how,
       first = .Call(C_gslice_multi, g, g$order, n, TRUE), # g$order is NULL if sort = FALSE

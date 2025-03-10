@@ -242,7 +242,7 @@ int ndistinct_impl_int(SEXP x, int narm) {
       return isFactor(x) ? ndistinct_fct(INTEGER(x), &l, l, nlevels(x), 1, narm) :
                            ndistinct_int(INTEGER(x), &l, l, 1, narm);
     case LGLSXP: return ndistinct_logi(LOGICAL(x), &l, l, 1, narm);
-    case STRSXP: return ndistinct_string(SEXPPTR(x), &l, l, 1, narm);
+    case STRSXP: return ndistinct_string(SEXPPTR_RO(x), &l, l, 1, narm);
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
@@ -291,7 +291,7 @@ SEXP ndistinct_g_impl(SEXP x, const int ng, const int *restrict pgs, const int *
         break;
       }
       case STRSXP: {
-        const SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_string(px + pst[gr]-1, po, pgs[gr], 1, narm);
@@ -330,7 +330,7 @@ SEXP ndistinct_g_impl(SEXP x, const int ng, const int *restrict pgs, const int *
         break;
       }
       case STRSXP: {
-        const SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_string(px, po + pst[gr]-1, pgs[gr], 0, narm);
@@ -371,7 +371,7 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
   }
   if(nthreads > max_threads) nthreads = max_threads;
   PROTECT(res = ndistinct_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), nthreads));
-  if(OBJECT(x) == 0) copyMostAttrib(x, res);
+  if(!isObject(x)) copyMostAttrib(x, res);
   else setAttrib(res, sym_label, getAttrib(x, sym_label));
   UNPROTECT(1);
   return res;
@@ -409,7 +409,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       // Not thread safe and thus taken out
       for(int j = 0; j != l; ++j) {
         SEXP xj = px[j];
-        if(OBJECT(xj) == 0) copyMostAttrib(xj, pout[j]);
+        if(!isObject(xj)) copyMostAttrib(xj, pout[j]);
         else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
       }
       DFcopyAttr(out, x, /*ng=*/0);
@@ -436,7 +436,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
         SEXP xj = px[j];
         if(length(xj) != gl) error("length(g) must match nrow(x)");
         pout[j] = ndistinct_g_impl(xj, ng, pgs, po, pst, sorted, narm, nthreads);
-        if(OBJECT(xj) == 0) copyMostAttrib(xj, pout[j]);
+        if(!isObject(xj)) copyMostAttrib(xj, pout[j]);
         else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
       }
       DFcopyAttr(out, x, ng);
@@ -481,7 +481,7 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < col; ++j)
           pres[j] = ndistinct_string(px + j*l, &l, l, 1, narm);
@@ -552,11 +552,11 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           break;
         }
         case STRSXP: {
-          SEXP *px = SEXPPTR(x);
+          const SEXP *px = SEXPPTR_RO(x);
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
-            SEXP *pxj = px + j * l;
+            const SEXP *pxj = px + j * l;
             for(int gr = 0; gr < ng; ++gr)
               pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_string(pxj + pst[gr]-1, po, pgs[gr], 1, narm);
           }
@@ -599,11 +599,11 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           break;
         }
         case STRSXP: {
-          SEXP *px = SEXPPTR(x);
+          const SEXP *px = SEXPPTR_RO(x);
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
-            SEXP *pxj = px + j * l;
+            const SEXP *pxj = px + j * l;
             for(int gr = 0; gr < ng; ++gr)
               pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_string(pxj, po + pst[gr]-1, pgs[gr], 0, narm);
           }

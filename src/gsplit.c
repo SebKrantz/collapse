@@ -21,14 +21,14 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
     copyMostAttrib(x, x1);
     SEXP ax = ATTRIB(x1);
     if(length(ax) == 1 && TAG(ax) == sym_label) ax = R_NilValue;
-    int ox = OBJECT(x);
+    int ox = OOBJ(x);
     // FAZIT: Need to use SET_VECTOR_ELT!! pres[i] = allocVector() doesn't work!!
     if(TYPEOF(ax) != NILSXP && ox != 0) {
       for(int i = 0; i != ng; ++i) { // , s4o = IS_S4_OBJECT(x)
         SEXP resi;
         SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
         SET_ATTRIB(resi, ax);
-        SET_OBJECT(resi, ox);
+        SET_OOBJ(resi, ox);
         // if(s4o) SET_S4_OBJECT(resi);
       }
     } else if(TYPEOF(ax) != NILSXP) {
@@ -41,7 +41,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       for(int i = 0; i != ng; ++i) { // , s4o = IS_S4_OBJECT(x)
         SEXP resi;
         SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
-        SET_OBJECT(resi, ox);
+        SET_OOBJ(resi, ox);
         // if(s4o) SET_S4_OBJECT(resi);
       }
     } else {
@@ -90,9 +90,9 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case STRSXP: {
-        const SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int j = 0, gsj; j != ng; ++j) {
-          SEXP *pgj = SEXPPTR(pres[j]);
+          SEXP *pgj = SEXP_DATAPTR(pres[j]);
           gsj = pgs[j];
           for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
         }
@@ -101,7 +101,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       case VECSXP: {
         const SEXP *px = SEXPPTR_RO(x);
         for(int j = 0, gsj; j != ng; ++j) {
-          SEXP *pgj = SEXPPTR(pres[j]);
+          SEXP *pgj = SEXP_DATAPTR(pres[j]);
           gsj = pgs[j];
           for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
         }
@@ -158,9 +158,9 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int i = 0; i != ng; ++i) {
-          SEXP *pri = SEXPPTR(pres[i]);
+          SEXP *pri = SEXP_DATAPTR(pres[i]);
           for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; ++j) pri[k++] = px[po[j]-1];
         }
         break;
@@ -168,7 +168,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       case VECSXP: {
         const SEXP *px = SEXPPTR_RO(x);
         for(int i = 0; i != ng; ++i) {
-          SEXP *pri = SEXPPTR(pres[i]);
+          SEXP *pri = SEXP_DATAPTR(pres[i]);
           for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; ++j) pri[k++] = px[po[j]-1];
         }
         break;
@@ -227,10 +227,10 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case STRSXP: {
-        const SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int i = 0, gi; i != l; ++i) {
           gi = pg[i]-1;
-          SEXPPTR(pres[gi])[count[gi]++] = px[i];
+          SEXP_DATAPTR(pres[gi])[count[gi]++] = px[i];
         }
         break;
       }
@@ -238,7 +238,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         const SEXP *px = SEXPPTR_RO(x);
         for(int i = 0, gi; i != l; ++i) {
           gi = pg[i]-1;
-          SEXPPTR(pres[gi])[count[gi]++] = px[i];
+          SEXP_DATAPTR(pres[gi])[count[gi]++] = px[i];
         }
         break;
       }
@@ -301,7 +301,8 @@ SEXP greorder(SEXP x, SEXP gobj) {
       break;
     }
     case STRSXP: {
-      SEXP *px = SEXPPTR(x), *pr = SEXPPTR(res);
+      const SEXP *px = SEXPPTR_RO(x);
+      SEXP *pr = SEXPPTR(res);
       for(int i = 0, k = 0; i != ng; ++i) {
         for(int j = ps[i]-1, end = ps[i]+pgs[i]-1; j < end; ++j) pr[po[j]-1] = px[k++];
       }
@@ -351,7 +352,8 @@ SEXP greorder(SEXP x, SEXP gobj) {
       break;
     }
     case STRSXP: {
-      SEXP *px = SEXPPTR(x), *pr = SEXPPTR(res);
+      const SEXP *px = SEXPPTR_RO(x);
+      SEXP *pr = SEXPPTR(res);
       for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
       break;
     }

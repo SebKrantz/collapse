@@ -23,14 +23,14 @@ void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
       SET_VECTOR_ELT(dn, 1, cn);
       dimnamesgets(out, dn);
     }
-    if(OBJECT(x) == 0) copyMostAttrib(x, out);
+    if(!isObject(x)) copyMostAttrib(x, out);
     UNPROTECT(nprotect);
   }
 }
 
 void DFcopyAttr(SEXP out, SEXP x, int ng) {
   SHALLOW_DUPLICATE_ATTRIB(out, x);
-  if(OBJECT(x) != 0) { // No attributes for plain lists
+  if(isObject(x)) { // No attributes for plain lists
     if(ng == 0) {
       setAttrib(out, R_RowNamesSymbol, ScalarInteger(1));
     } else {
@@ -242,7 +242,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
     return R_NilValue;
   }
   if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
-  SEXP *plhs = SEXPPTR(lhs);
+  const SEXP *plhs = SEXPPTR_RO(lhs);
   switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, installChar does the same now, but also is available on older systems.
     case REALSXP: {
       double *prhs = REAL(rhs);
@@ -261,7 +261,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
       break;
     }
     case STRSXP: {
-      SEXP *prhs = SEXPPTR(rhs);
+      const SEXP *prhs = SEXPPTR_RO(rhs);
       for(int i = 0; i < n; ++i) {
         SEXP nam = installChar(plhs[i]);
         defineVar(nam, ScalarString(prhs[i]), envir);

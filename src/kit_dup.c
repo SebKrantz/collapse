@@ -174,7 +174,7 @@ SEXP dupVecIndex(SEXP x) {
     }
   } break;
   case STRSXP: {
-    const SEXP *restrict px = SEXPPTR(x);
+    const SEXP *restrict px = SEXPPTR_RO(x);
     for (int i = 0; i != n; ++i) {
       id = HASH(((uintptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {
@@ -192,6 +192,7 @@ SEXP dupVecIndex(SEXP x) {
   }
   R_Free(h);
   setAttrib(ans_i, sym_n_groups, ScalarInteger(g));
+  UNPROTECT(1);
   return ans_i;
 }
 
@@ -335,7 +336,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
     }
   } break;
   case STRSXP: {
-    const SEXP *restrict px = SEXPPTR(x);
+    const SEXP *restrict px = SEXPPTR_RO(x);
     for (int i = 0; i != n; ++i) {
       if(px[i] == NA_STRING) {
         pans_i[i] = NA_INTEGER;
@@ -357,6 +358,7 @@ SEXP dupVecIndexKeepNA(SEXP x) {
   }
   R_Free(h);
   setAttrib(ans_i, sym_n_groups, ScalarInteger(g));
+  UNPROTECT(1);
   return ans_i;
 }
 
@@ -550,6 +552,7 @@ SEXP dupVecIndexTwoVectors(SEXP x, SEXP y) {
 
   R_Free(h);
   setAttrib(ans, sym_n_groups, ScalarInteger(g));
+  UNPROTECT(1);
   return ans;
 }
 
@@ -695,7 +698,7 @@ int dupVecSecond(int *restrict pidx, int *restrict pans_i, SEXP x, const int n, 
     }
   } break;
   case STRSXP: {
-    const SEXP *restrict px = SEXPPTR(x);
+    const SEXP *restrict px = SEXPPTR_RO(x);
     const unsigned int mult = (M-1) / ng; // -1 because C is zero indexed
     for (int i = 0; i != n; ++i) {
       id = (pidx[i]*mult) ^ HASH(((uintptr_t) px[i] & 0xffffffff), K); // HASH(((uintptr_t) px[i] & 0xffffffff) ^ pidx[i], K) + pidx[i];
@@ -726,7 +729,7 @@ SEXP groupVec(SEXP X, SEXP starts, SEXP sizes) {
   int l = length(X), islist = TYPEOF(X) == VECSXP,
     start = asLogical(starts), size = asLogical(sizes), nprotect = 0;
   // Better not exceptions to fundamental algorithms, when a couple of user-level functions return qG objects...
-  // if(islist == 0 && OBJECT(X) != 0 && inherits(X, "qG") && inherits(X, "na.included")) return X; // return "qG" objects
+  // if(islist == 0 && isObject(X) && inherits(X, "qG") && inherits(X, "na.included")) return X; // return "qG" objects
   const SEXP *px = islist ? SEXPPTR_RO(X) : &X;
   SEXP idx = islist == 0 ? dupVecIndex(X) : l > 1 ? dupVecIndexTwoVectors(px[0], px[1]) : dupVecIndex(px[0]);
   if(isNull(idx)) { // One of the vectors is complex valued
@@ -985,7 +988,7 @@ SEXP funiqueC(SEXP x) {
     for(int i = 0; i != g; ++i) pres[i] = px[st[i]];
   } break;
   case STRSXP: {
-    const SEXP *restrict px = SEXPPTR(x);
+    const SEXP *restrict px = SEXPPTR_RO(x);
     for (int i = 0; i != n; ++i) {
       id = HASH(((uintptr_t) px[i] & 0xffffffff), K);
       while(h[id]) {

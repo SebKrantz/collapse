@@ -6,7 +6,7 @@
 #ifndef DATATABLE_H  // Check if DATATABLE_H is not defined
 #define DATATABLE_H  // Define DATATABLE_H
 
-#define USE_RINTERNALS
+// #define USE_RINTERNALS
 #include "base_radixsort.h"
 // #include <stdint.h> // for uint64_t rather than unsigned long long
 #include <stdbool.h>

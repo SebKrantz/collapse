@@ -123,7 +123,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   int K = 0, anyNA = 0;
   size_t M;
   // if(n >= INT_MAX) error("Length of 'x' is too large. (Long vector not supported yet)"); // 1073741824
-  if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP || (tx == INTSXP && OBJECT(x) == 0)) {
+  if (tx == STRSXP || tx == REALSXP || tx == CPLXSXP || (tx == INTSXP && !isObject(x))) {
     bigint:;
     const size_t n2 = 2U * (size_t) nt;
     M = 256;
@@ -295,7 +295,7 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
     if (need2utf8(table)) {
       PROTECT(table = coerceUtf8IfNeeded(table)); ++nprotect;
     }
-    const SEXP *restrict px = SEXPPTR(x), *restrict pt = SEXPPTR(table);
+    const SEXP *restrict px = SEXPPTR_RO(x), *restrict pt = SEXPPTR_RO(table);
     // fill hash table with indices of 'table'
     for (int i = 0; i != nt; ++i) {
       id = HASH(((uintptr_t) pt[i] & 0xffffffff), K);
@@ -477,8 +477,8 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
           if(need2utf8(pc1[i])) SET_VECTOR_ELT(pc[0], i, coerceUtf8IfNeeded(pc1[i]));
           if(need2utf8(pc2[i])) SET_VECTOR_ELT(pc[1], i, coerceUtf8IfNeeded(pc2[i]));
         }
-        const SEXP *restrict px1 = SEXPPTR(pc1[0]), *restrict px2 = SEXPPTR(pc2[0]),
-                   *restrict pt1 = SEXPPTR(pc1[1]), *restrict pt2 = SEXPPTR(pc2[1]);
+        const SEXP *restrict px1 = SEXPPTR_RO(pc1[0]), *restrict px2 = SEXPPTR_RO(pc2[0]),
+                   *restrict pt1 = SEXPPTR_RO(pc1[1]), *restrict pt2 = SEXPPTR_RO(pc2[1]);
         // fill hash table with indices of 'table'
         for (int i = 0; i != nt; ++i) {
           id = HASH(64988430769U * ((uintptr_t)pt1[i] & 0xffffffff) + ((uintptr_t)pt2[i] & 0xffffffff), K);
@@ -575,7 +575,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       for(int i = 0; i < 2; ++i) {
         if(need2utf8(VECTOR_ELT(pc[1-rev], i))) SET_VECTOR_ELT(pc[1-rev], i, coerceUtf8IfNeeded(VECTOR_ELT(pc[1-rev], i)));
       }
-      const SEXP *restrict pxs = SEXPPTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR(VECTOR_ELT(pc[1-rev], 1));
+      const SEXP *restrict pxs = SEXPPTR_RO(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR_RO(VECTOR_ELT(pc[1-rev], 1));
       union uno tpv;
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -609,7 +609,7 @@ SEXP match_two_vectors(SEXP x, SEXP table, SEXP nomatch) {
       for(int i = 0; i < 2; ++i) {
         if(need2utf8(VECTOR_ELT(pc[1-rev], i))) SET_VECTOR_ELT(pc[1-rev], i, coerceUtf8IfNeeded(VECTOR_ELT(pc[1-rev], i)));
       }
-      const SEXP *restrict pxs = SEXPPTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR(VECTOR_ELT(pc[1-rev], 1));
+      const SEXP *restrict pxs = SEXPPTR_RO(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR_RO(VECTOR_ELT(pc[1-rev], 1));
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -702,8 +702,8 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
         if(need2utf8(pc1[i])) SET_VECTOR_ELT(pc[0], i, coerceUtf8IfNeeded(pc1[i]));
         if(need2utf8(pc2[i])) SET_VECTOR_ELT(pc[1], i, coerceUtf8IfNeeded(pc2[i]));
       }
-      const SEXP *restrict px1 = SEXPPTR(pc1[0]), *restrict px2 = SEXPPTR(pc2[0]),
-                 *restrict pt1 = SEXPPTR(pc1[1]), *restrict pt2 = SEXPPTR(pc2[1]);
+      const SEXP *restrict px1 = SEXPPTR_RO(pc1[0]), *restrict px2 = SEXPPTR_RO(pc2[0]),
+                 *restrict pt1 = SEXPPTR_RO(pc1[1]), *restrict pt2 = SEXPPTR_RO(pc2[1]);
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         id = HASH(64988430769U * ((uintptr_t)pt1[i] & 0xffffffff) + ((uintptr_t)pt2[i] & 0xffffffff), K);
@@ -809,7 +809,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       for(int i = 0; i < 2; ++i) {
         if(need2utf8(VECTOR_ELT(pc[1-rev], i))) SET_VECTOR_ELT(pc[1-rev], i, coerceUtf8IfNeeded(VECTOR_ELT(pc[1-rev], i)));
       }
-      const SEXP *restrict pxs = SEXPPTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR(VECTOR_ELT(pc[1-rev], 1));
+      const SEXP *restrict pxs = SEXPPTR_RO(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR_RO(VECTOR_ELT(pc[1-rev], 1));
       union uno tpv;
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -846,7 +846,7 @@ void match_two_vectors_extend(const SEXP *pc, const int nmv, const int n, const 
       for(int i = 0; i < 2; ++i) {
         if(need2utf8(VECTOR_ELT(pc[1-rev], i))) SET_VECTOR_ELT(pc[1-rev], i, coerceUtf8IfNeeded(VECTOR_ELT(pc[1-rev], i)));
       }
-      const SEXP *restrict pxs = SEXPPTR(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR(VECTOR_ELT(pc[1-rev], 1));
+      const SEXP *restrict pxs = SEXPPTR_RO(VECTOR_ELT(pc[1-rev], 0)), *restrict pts = SEXPPTR_RO(VECTOR_ELT(pc[1-rev], 1));
 
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
@@ -936,8 +936,8 @@ void match_additional(const SEXP *pcj, const int nmv, const int n, const int nt,
       }
     } break;
     case STRSXP: {
-      const SEXP *restrict px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(pcj[0]))),
-                 *restrict pt = SEXPPTR(PROTECT(coerceUtf8IfNeeded(pcj[1])));
+      const SEXP *restrict px = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(pcj[0]))),
+                 *restrict pt = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(pcj[1])));
       // fill hash table with indices of 'table'
       for (int i = 0; i != nt; ++i) {
         if(ptab_copy[i] == nmv) {
@@ -1031,7 +1031,7 @@ void match_rest(const SEXP *pcj, const int nmv, const int n, const int nt, int *
       }
     } break;
     case STRSXP: {
-      const SEXP *restrict px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(pcj[0]))), *restrict pt = SEXPPTR(PROTECT(coerceUtf8IfNeeded(pcj[1])))-1;
+      const SEXP *restrict px = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(pcj[0]))), *restrict pt = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(pcj[1])))-1;
       for (int i = 0; i != n; ++i) {
         if(pans[i] == nmv) continue;
         if(px[i] != pt[pans[i]]) pans[i] = nmv;

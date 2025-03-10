@@ -269,7 +269,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       if (isNull(li) || !LENGTH(li)) continue;
       const SEXP cn = getAttrib(li, R_NamesSymbol);
       if (!length(cn)) continue;
-      const SEXP *cnp = SEXPPTR(cn);
+      const SEXP *cnp = SEXPPTR_RO(cn);
       for (int j=0; j<thisncol; j++) {
         SEXP s = cnp[j];
         if (TRULEN(s)<0) continue;  // seen this name before
@@ -300,7 +300,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       if (thisncol==0) continue;
       const SEXP cn = getAttrib(li, R_NamesSymbol);
       if (!length(cn)) continue;
-      const SEXP *cnp = SEXPPTR(cn);
+      const SEXP *cnp = SEXPPTR_RO(cn);
       memset(counts, 0, nuniq*sizeof(int));
       for (int j=0; j<thisncol; j++) {
         SEXP s = cnp[j];
@@ -340,7 +340,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       if (!length(cn)) {
         for (int j=0; j<thisncol; j++) colMapRaw[i*ncol + j] = j;
       } else {
-        const SEXP *cnp = SEXPPTR(cn);
+        const SEXP *cnp = SEXPPTR_RO(cn);
         memset(counts, 0, nuniq*sizeof(int));
         for (int j=0; j<thisncol; j++) {
           SEXP s = cnp[j];
@@ -547,7 +547,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         //      c( a<c<b, c<b, 'c,b'   ) => a<c<b  because the regular factor/character items c and b exist in the ordered levels
         //      c( a<c<b, c<b, 'c,d'   ) => a<c<b<d  'd' from non-ordered item added on the end of longest ordered levels
         //      c( a<c<b, c<b<d<e )  => regular factor because this case isn't yet implemented. a<c<b<d<e would be possible in future (extending longest at the beginning or end)
-        const SEXP *sd = SEXPPTR(longestLevels);
+        const SEXP *sd = SEXPPTR_RO(longestLevels);
         nLevel = allocLevel = longestLen;
         levelsRaw = (SEXP *)malloc(nLevel * sizeof(SEXP));
         if (!levelsRaw) { savetl_end(); error("Failed to allocate working memory for %d ordered factor levels of result column %d", nLevel, idcol+j+1); }
@@ -563,7 +563,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           SEXP thisCol = VECTOR_ELT(VECTOR_ELT(l, i), w);
           if (isOrdered(thisCol)) {
             SEXP levels = getAttrib(thisCol, R_LevelsSymbol);
-            const SEXP *levelsD = SEXPPTR(levels);
+            const SEXP *levelsD = SEXPPTR_RO(levels);
             const int n = length(levels);
             for (int k=0, last=0; k<n; ++k) {
               SEXP s = levelsD[k];
@@ -602,7 +602,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           SEXP thisCol = VECTOR_ELT(li, w);
           SEXP thisColStr = isFactor(thisCol) ? getAttrib(thisCol, R_LevelsSymbol) : (isString(thisCol) ? thisCol : VECTOR_ELT(coercedForFactor, i));
           const int n = length(thisColStr);
-          const SEXP *thisColStrD = SEXPPTR(thisColStr);  // D for data
+          const SEXP *thisColStrD = SEXPPTR_RO(thisColStr);  // D for data
           for (int k=0; k<n; ++k) {
             SEXP s = thisColStrD[k];
             if (s==NA_STRING ||             // remove NA from levels; test 1979 found by package emil when revdep testing 1.12.2 (#3473)
@@ -669,7 +669,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
               }
             }
           } else {
-            const SEXP *sd = SEXPPTR(thisColStr);
+            const SEXP *sd = SEXPPTR_RO(thisColStr);
             if (length(thisCol)<=1) {
               const int val = (length(thisCol)==1 && sd[0]!=NA_STRING) ? -TRULEN(sd[0]) : NA_INTEGER;
               for (int r=0; r<thisnrow; ++r) targetd[ansloc+r] = val;

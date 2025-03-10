@@ -32,7 +32,7 @@ SEXP Cna_rm(SEXP x) {
     return out;
   }
   case STRSXP: {
-    const SEXP *xd = SEXPPTR(x);
+    const SEXP *xd = SEXPPTR_RO(x);
     for (int i = 0; i != n; ++i) if(xd[i] == NA_STRING) ++k;
     if(k == 0) return x;
     SEXP out = PROTECT(allocVector(STRSXP, n - k));
@@ -61,7 +61,7 @@ SEXP Cna_rm(SEXP x) {
 
 // Helper function to find a single string in factor levels
 int fchmatch(SEXP x, SEXP val, int nomatch) {
-  const SEXP *px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(x))), v = PROTECT(ENC2UTF8(asChar(val)));
+  const SEXP *px = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(x))), v = PROTECT(ENC2UTF8(asChar(val)));
   for(int i = 0, l = length(x); i != l; ++i) {
     if(px[i] == v) {
       UNPROTECT(2);
@@ -116,8 +116,8 @@ if(length(val) == n && n > 1) {
   }
   case STRSXP:
   {
-    const SEXP *px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(x)));
-    const SEXP *pv = SEXPPTR(PROTECT(coerceUtf8IfNeeded(val)));
+    const SEXP *px = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(x)));
+    const SEXP *pv = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(val)));
     WHICHVLOOPLX
     UNPROTECT(2);
     break;
@@ -163,7 +163,7 @@ if(length(val) == n && n > 1) {
   }
   case STRSXP:
   {
-    const SEXP *px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(x)));
+    const SEXP *px = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(x)));
     const SEXP v = PROTECT(ENC2UTF8(asChar(val)));
     WHICHVLOOP
     UNPROTECT(2);
@@ -224,7 +224,7 @@ case REALSXP:
 }
 case STRSXP:
 {
-  const SEXP *px = SEXPPTR(PROTECT(coerceUtf8IfNeeded(x)));
+  const SEXP *px = SEXPPTR_RO(PROTECT(coerceUtf8IfNeeded(x)));
   const SEXP v = PROTECT(ENC2UTF8(asChar(val)));
   if(all) {
     for(int i = 0; i != n; ++i) {
@@ -421,7 +421,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
         setcopyvLOOP(r)
         UNPROTECT(1);
       } else {
-        const SEXP *restrict pr = SEXPPTR(rep);
+        const SEXP *restrict pr = SEXPPTR_RO(rep);
         setcopyvLOOP(pr[i])
       }
       UNPROTECT(1);
@@ -432,7 +432,7 @@ SEXP setcopyv(SEXP x, SEXP val, SEXP rep, SEXP Rinvert, SEXP Rset, SEXP Rind1) {
         setcopyvLOOPLVEC1
         UNPROTECT(1);
       } else {
-        const SEXP *restrict pr = SEXPPTR(rep);
+        const SEXP *restrict pr = SEXPPTR_RO(rep);
         setcopyvLOOPLVEC
       }
     }
@@ -917,7 +917,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
     SETTOF(ans, LGLSXP);
     break;
   case 4: // is.sublist, needed for list processing functions
-    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !isFrame(px[i]);
+    for(int i = 0; i != n; ++i) pans[i] = TYPEOF(px[i]) == VECSXP && !inherits(px[i], "data.frame");
     SETTOF(ans, LGLSXP);
     break;
   case 7: // is.atomic(x), needed in atomic_elem()
@@ -970,7 +970,7 @@ SEXP vtypes(SEXP x, SEXP isnum) {
         pans[i] = 1;
       else switch(TYPEOF(px[i])) {
            case VECSXP:
-             pans[i] = isFrame(px[i]) ? 2 : 0;
+             pans[i] = inherits(px[i], "data.frame") ? 2 : 0;
              break;
            case NILSXP: /* NULL is atomic (S compatibly), but not in isVectorAtomic(.) */
            case CHARSXP:

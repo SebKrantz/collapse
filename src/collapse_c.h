@@ -15,7 +15,7 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <stdbool.h>
-#include "connection/connection.h"
+#include "internal/R_defn.h"
 
 
 #define NISNAN(x) ((x) == (x))  // opposite of ISNAN for doubles
