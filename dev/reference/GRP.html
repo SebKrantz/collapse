@@ -554,12 +554,12 @@ gsplit efficiently splits a vector based on a 'GRP' object, and greorder helps t
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/GRP.html">gby</a></span><span class="op">(</span><span class="va">GGDC10S</span>, <span class="va">Variable</span>, <span class="va">Country</span>, sort <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>less accurate nanosecond times to avoid potential integer overflows</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr    min     lq     mean   median</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 83.148 97.170 183.0137 170.0885</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE) 29.069 35.301 102.8423  71.2375</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        uq      max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  226.4635 1030.289   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   92.8650 1115.897   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                           expr    min      lq     mean  median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                gby(GGDC10S, Variable, Country) 76.137 77.1620 81.24888 77.8795</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  gby(GGDC10S, Variable, Country, sort = FALSE) 25.953 27.2035 27.99644 27.6340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       uq     max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  78.8430 214.881   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  28.1875  39.729   100</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
