@@ -6,12 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>collapse's Handling of R Objects • collapse</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="48x48" href="../favicon-48x48.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- katex math --><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" integrity="sha384-nB0miv6/jRmo5UMMR1wu3Gz6NLsoTkbqJghGIsx//Rlm+ZU03BU6SQNC66uf4l5+" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" integrity="sha384-7zkQWkzuo3B5mTepMUcHkMB5jZaolc2xDwL6VFqjFALcbeS9Ggm/Yr2r3Dy4lfFg" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script><script src="../katex-auto.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
@@ -27,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.0.19.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +67,7 @@ Scenes of Class-Agnostic R Programming</h3>
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2025-03-05</h4>
+            <h4 data-toc-skip class="date">2025-03-22</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_object_handling.Rmd</code></div>
@@ -98,8 +99,7 @@ successors of <em>pseries</em>, <em>pdata.frame</em>. These objects
 inherit the classes they succeed and are handled through
 <code>.pseries</code>, <code>.pdata.frame</code>, and
 <code>.grouped_df</code> methods, which also support the original
-(<em>plm</em> / <em>dplyr</em>) implementations (more details
-below).</p>
+(<em>plm</em> / <em>dplyr</em>) implementations (details below).</p>
 <p>All other objects are handled internally at the C or R level using
 general principles extended by specific considerations for some of the
 above classes. I start with summarizing the general principles, which
@@ -220,8 +220,7 @@ e.g. &lt;code&gt;BY(factor, group, function(x) x[1])&lt;/code&gt; is dealt with
 because &lt;code&gt;&lt;a href="https://rdrr.io/r/base/unlist.html" class="external-link"&gt;unlist()&lt;/a&gt;&lt;/code&gt; preserves factors, so
 &lt;code&gt;identical(class(x), class(y))&lt;/code&gt; is &lt;code&gt;TRUE&lt;/code&gt;. The
 last part of the expression again guards against reducing the length of
-univariate time series and then copying the attributes.&lt;/p&gt;'><sup>2</sup></a>
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≈</mo><annotation encoding="application/x-tex">\approx</annotation></semantics></math>
+univariate time series and then copying the attributes.&lt;/p&gt;'><sup>2</sup></a> (<span class="math inline">\approx</span>
 of the same data type). If they are deemed incompatible,
 <code>copyMostAttributes</code> still checks if <code>x</code> has a
 <code>"label"</code> attribute and copies that one to
