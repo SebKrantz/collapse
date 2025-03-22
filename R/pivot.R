@@ -185,7 +185,7 @@ pivot <- function(data,
             # value_col <- .Call(C_pivot_long, vd, cc, FALSE) # Csv(c_to_vec(data[values]), cc_vec)
             # variable_col <- rep(if(factor[1L]) seq_along(values) else nam[values], vlengths(cc))
           } else {
-            id_cols <- .Call(C_rbindlist, alloc(data[ids], length(values)), FALSE, FALSE, NULL) # .Call(C_subsetDT, data, rep.int(seq_len(n), length(values)), ids, FALSE)
+            id_cols <- .Call(C_rbindlist, alloc(data[ids], length(values), FALSE), FALSE, FALSE, NULL) # .Call(C_subsetDT, data, rep.int(seq_len(n), length(values)), ids, FALSE)
             # This is faster than .Call(C_pivot_long, vd, NULL) because rep() is slow...
             value_cols <- .Call(C_pivot_long, vd, NULL, TRUE) # .Call(C_rbindlist, lapply(vd, list), FALSE, FALSE, "id")
             # value_col <- .Call(C_pivot_long, vd, NULL)   # c_to_vec(data[values])
@@ -402,7 +402,7 @@ pivot <- function(data,
           FUN <- "last"
         }
         value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, FUN, na.rm))
-        if(length(id_cols)) id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols)), FALSE, FALSE, NULL)
+        if(length(id_cols)) id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols), FALSE), FALSE, FALSE, NULL)
         value_cols <- .Call(C_rbindlist, value_cols, FALSE, FALSE, names[[2L]]) # Final column is "variable" name
 
         names(value_cols) <- c(names[[2L]], names1)
