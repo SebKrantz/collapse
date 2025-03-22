@@ -82,6 +82,8 @@ SEXP falloc(SEXP value, SEXP n, SEXP simplify)  {
     }
     default: {
       SEXP *pout = SEXPPTR(out);
+      if(asLogical(simplify) && tval == VECSXP && length(value) == 1)
+        value = VECTOR_ELT(value, 0);
       for(int i = 0; i != l; ++i) pout[i] = value;
       break;
     }

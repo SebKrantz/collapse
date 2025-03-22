@@ -109,7 +109,7 @@ typedef union { VECTOR_SEXPREC s; double align; } SEXPREC_ALIGN;
 #define SET_OOBJ(x,v) (OOBJ(x)=(v))
 #undef ATTTR
 #define ATTTR(x)	((x)->attrib)
-#define SET_ATTTR(x,v) (ATTR(x)=(v))
+#define SET_ATTTR(x,v) (ATTTR(x)=(v))
 
 #undef MYLEV
 #define MYLEV(x)	((x)->sxpinfo.gp)
