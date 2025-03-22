@@ -92,7 +92,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{value}{a single value of any (atomic) vector type. For \code{whichv} it can also be a \code{length(x)} vector.}
   \item{invert}{logical. \code{TRUE} considers elements \code{x != value}.}
   \item{set}{logical. \code{TRUE} transforms \code{x} by reference.}
-  \item{simplify}{logical. If \code{value} is a length-1 atomic vector, \code{alloc()} with \code{simplify = TRUE} returns a length-n atomic vector. If \code{simplify = FALSE}, the result is always a list.}
+  \item{simplify}{logical. If \code{value} is a length-1 vector, \code{alloc()} with \code{simplify = TRUE} returns a length-n vector of the same type. If \code{simplify = FALSE}, the result is always a list.}
   \item{vind1}{logical. If \code{length(v) == 1L}, setting \code{vind1 = TRUE} will interpret \code{v} as an index, rather than a value to search and replace.}
   \item{xlist}{logical. If \code{X} is a list, the default is to treat it like a data frame and replace rows. Setting \code{xlist = TRUE} will treat \code{X} and its replacement \code{R} like 1-dimensional list vectors.}
   \item{op}{an integer or character string indicating the operation to perform.
@@ -113,7 +113,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
   \item{\dots}{for \code{na_omit}: further arguments passed to \code{[} for vectors and matrices. With indexed data it is also possible to specify the \code{drop.index.levels} argument, see \link{indexing}. For \code{copyv}, \code{setv} and \code{setop}, the argument is unused, and serves as a placeholder for possible future arguments.}
 }
 \details{
-\code{alloc} is a fusion of \code{\link{rep_len}} and \code{\link{replicate}} that is faster in both cases. If \code{value} is a length one atomic vector (logical, integer, double, string, complex or raw) and \code{simplify = TRUE}, the functionality is as \code{rep_len(value, n)} i.e. the output is a length \code{n} atomic vector with the same attributes as \code{value} (apart from \code{"names"}, \code{"dim"} and \code{"dimnames"}). For all other cases the functionality is as \code{replicate(n, value, simplify = FALSE)} i.e. the output is a length-\code{n} list of the objects. For efficiency reasons the object is not copied i.e. only the pointer to the object is replicated.
+\code{alloc} is a fusion of \code{\link{rep_len}} and \code{\link{replicate}} that is faster in both cases. If \code{value} is a length one vector and \code{simplify = TRUE}, the functionality is as \code{rep_len(value, n)} i.e. the output is a length \code{n} vector with \code{value}. Otherwise, it is equivalent to \code{replicate(n, value, simplify = FALSE)}, i.e., the output is a length-\code{n} list of the objects. For efficiency reasons the object is not copied (only the pointer to the object is replicated).
 
 \code{copyv} and \code{setv} are designed to optimize operations that require replacing data in objects in the broadest sense. The only difference between them is that \code{copyv} first deep-copies \code{X} before doing replacements whereas \code{setv} modifies \code{X} in place and returns the result invisibly. There are 3 ways these functions can be used:
 
