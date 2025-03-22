@@ -1,3 +1,7 @@
+# collapse 2.1.0.9000
+
+* `alloc(list(1), 2)` now gives `list(1, 1)` instead of `list(list(1), list(1))`, which can still be generated with `alloc(list(1), 2, simplify = FALSE)`. This change also affects `ftransform()`/`fmutate()`, making, e.g., `fmutate(data, y = list(1))` consistent with `dplyr::mutate(data, y = list(1))`. Thanks @MattAFiedler (#753). 
+
 # collapse 2.1.0
 
 *collapse* 2.1.0, released in March 2025, introduces a fast slicing function, an improved weighted quantile algorithm, a few convenience features, and removes some legacy functions from the package. 

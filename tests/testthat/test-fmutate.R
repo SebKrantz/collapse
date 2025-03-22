@@ -319,6 +319,8 @@ if(NCRAN) {
 test_that("fmutate works as intended for simple usage", {
 
   expect_equal(fmutate(mtc, bla = 1), dplyr::mutate(mtc, bla = 1))
+  expect_equal(fmutate(mtc, bla = list(1)), dplyr::mutate(mtc, bla = list(1)))
+  expect_equal(fmutate(mtc, bla = as.list(mpg)), dplyr::mutate(mtc, bla = as.list(mpg)))
   expect_equal(fmutate(mtc, mu = bmean(mpg)), dplyr::mutate(mtc, mu = bmean(mpg)))
   expect_equal(fmutate(mtc, mu = bmean(mpg), mpg = NULL), dplyr::mutate(mtc, mu = bmean(mpg), mpg = NULL))
   expect_equal(fmutate(mtc, mu = bmean(mpg), dmu = mpg - mu), dplyr::mutate(mtc, mu = bmean(mpg), dmu = mpg - mu))
