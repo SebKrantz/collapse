@@ -5,7 +5,7 @@ fslice <- function(x, ..., n = 1, how = "first", order.by = NULL,
 
   # handle grouping
   if(!missing(...)) {
-    g <- GRP.default(if(is.list(x)) fselect(x, ...) else list(...), sort = sort, return.groups = FALSE, return.order = sort, call = FALSE)
+    g <- GRP.default(if(is.list(x)) fselect(unclass(x), ...) else list(...), sort = sort, return.groups = FALSE, return.order = sort, call = FALSE)
   } else if(is.list(x) && inherits(x, "grouped_df")) {
     g <- GRP.grouped_df(x, return.groups = FALSE, call = FALSE)
     x <- fungroup2(x, oldClass(x))
