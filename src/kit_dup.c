@@ -132,6 +132,27 @@ SEXP dupVecIndex(SEXP x) {
     for (int i = 0; i != n; ++i) {
       tpv.d = px[i]; // R_IsNA(px[i]) ? NA_REAL : (R_IsNaN(px[i]) ? R_NaN : px[i]);
       id = HASH(tpv.u[0] + tpv.u[1], K);
+      // Double hashing idea: not faster!
+      // if(h[id]) {
+      //   if(REQUAL(px[h[id]-1], px[i])) {
+      //     pans_i[i] = pans_i[h[id]-1]; // h[id];
+      //     continue;
+      //   }
+      //   offset = (id / M) + 1;
+      //   // if(offset == 0) offset = 1;
+      //   id += offset;
+      //   id %= M;
+      //   while(h[id]) {
+      //     if(REQUAL(px[h[id]-1], px[i])) {
+      //       pans_i[i] = pans_i[h[id]-1]; // h[id];
+      //       goto rbl;
+      //     }
+      //     id += offset;
+      //     id %= M;
+      //     // if(id >= M) id = 0;
+      //   }
+      // }
+      //
       while(h[id]) {
         if(REQUAL(px[h[id]-1], px[i])) {
           pans_i[i] = pans_i[h[id]-1]; // h[id];
