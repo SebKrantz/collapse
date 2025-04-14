@@ -495,6 +495,7 @@ set.seed(101)
 rdatNA <- na_insert(rdat)
 
 test_that("funique works well", {
+ withr::local_locale(c(LC_COLLATE = "C"))
 
  expect_equal(funique(rctry), unique(rctry))
  expect_equal(funique(rctry, sort = TRUE), sort(unique(rctry)))
