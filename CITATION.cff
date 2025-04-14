@@ -8,7 +8,7 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.1.0.9000
+version: 2.1.1
 identifiers:
 - type: doi
   value: 10.32614/CRAN.package.collapse
@@ -23,9 +23,9 @@ abstract: A C/C++ based package for advanced data transformation and statistical
   functions for common statistical procedures, detailed (grouped, weighted) summary
   statistics, powerful tools to work with nested data, fast data object conversions,
   functions for memory efficient R programming, and helpers to effectively deal with
-  variable labels, attributes, and missing data. It is well integrated with base R
-  classes, 'dplyr'/'tibble', 'data.table', 'sf', 'units', 'plm' (panel-series and
-  data frames), and 'xts'/'zoo'.
+  variable labels, attributes, and missing data. It seamlessly supports base R objects/classes
+  as well as 'units', 'integer64', 'xts'/'zoo', 'tibble', 'grouped_df', 'data.table',
+  'sf', 'pseries'/'pdata.frame'.
 authors:
 - family-names: Krantz
   given-names: Sebastian
@@ -45,7 +45,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2025-03-21'
+date-released: '2025-04-14'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -76,7 +76,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
   year: '2025'
-  notes: R package version 2.1.0.9000
+  notes: R package version 2.1.1
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
