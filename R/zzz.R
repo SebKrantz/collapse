@@ -1,3 +1,4 @@
+.datatable.aware <- TRUE
 
 do_collapse_mask <- function(clpns, mask) {
   if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
