@@ -9,7 +9,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -297,7 +297,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> OECD            -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP     17.1154</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX     2.6718</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Grouped Summaries ------------------------</span></span></span>
 <span class="r-in"><span><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, <span class="op">~</span> <span class="va">region</span>, labels <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>        <span class="co"># Statistics by World Bank Region</span></span></span>
@@ -323,7 +323,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   488     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          2928     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 10 matrix slice(s) ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 10 slices ] </span>
 <span class="r-in"><span><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">+</span> <span class="va">LIFEEX</span> <span class="op">~</span> <span class="va">income</span><span class="op">)</span>        <span class="co"># Summarize GDP per Capita and Life Expectancy by</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -374,7 +374,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> PCGDP   35  809.4753  336.5425  366.9354  1458.9932   0.426  1.9987</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> LIFEEX  60   60.1129     6.147    50.613     71.097  0.3991  1.9875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 18 matrix slice(s) ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 18 slices ] </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Grouped summary</span></span></span>
 <span class="r-in"><span><span class="va">wlddev</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">region</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="select_replace_vars.html">fselect</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="va">LIFEEX</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">qsu</span><span class="op">(</span><span class="op">)</span></span></span>
@@ -445,7 +445,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> Overall  13176     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Between    216     -   -    -    -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row(s) and 7 matrix slice(s) ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 slices ] </span>
 <span class="r-in"><span><span class="co"># -&gt; They show amongst other things that year and decade are individual-invariant,</span></span></span>
 <span class="r-in"><span><span class="co"># that we have GINI-data on only 161 countries, with only 8.42 observations per country on average,</span></span></span>
 <span class="r-in"><span><span class="co"># and that GDP, LIFEEX and GINI vary more between-countries, but ODA received varies more within</span></span></span>
@@ -513,7 +513,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> Overall  13176  1985.5738  17.5117       1960       2020</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Between    216  1985.5738        0  1985.5738  1985.5738</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row(s) and 8 matrix slice(s) ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 8 slices ] </span>
 <span class="r-in"><span><span class="fu">qsu</span><span class="op">(</span><span class="va">wldi</span><span class="op">$</span><span class="va">PCGDP</span><span class="op">)</span>                          <span class="co"># Default summary for Panel Series</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              N/T        Mean          SD          Min         Max</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Overall     9470   12048.778  19077.6416     132.0776  196061.417</span>
@@ -557,7 +557,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8   1235.9256   1488.3669      413.68   6621.5002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           47   1840.0259   2234.3254    253.1886   9922.0052</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 10 matrix slice(s) ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 10 slices ] </span>
 <span class="r-in"><span><span class="va">psr</span> <span class="op">&lt;-</span> <span class="fu">qsu</span><span class="op">(</span><span class="va">wldi</span>, <span class="op">~</span> <span class="va">region</span>, cols <span class="op">=</span> <span class="fl">9</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>     <span class="co"># Same on indexed data</span></span></span>
 <span class="r-in"><span><span class="va">psr</span>                                         <span class="co"># -&gt; Gives a 4D array</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , Overall, PCGDP</span>
@@ -590,7 +590,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8   1235.9256   1488.3669      413.68   6621.5002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           47   1840.0259   2234.3254    253.1886   9922.0052</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 10 matrix slice(s) ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 10 slices ] </span>
 <span class="r-in"><span><span class="va">psr</span><span class="op">[</span>,<span class="st">"N/T"</span>,,<span class="op">]</span>                               <span class="co"># Checking out the number of observations:</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> , , PCGDP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -631,6 +631,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific            1537       31  49.5806</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia           787       32  24.5938</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 5 rows ] </span>
 <span class="r-in"><span><span class="co"># In North america we only have 3 countries, for the GINI we only have 3.91 observations on average</span></span></span>
 <span class="r-in"><span><span class="co"># for 45 Sub-Saharan-African countries, etc..</span></span></span>
 <span class="r-in"><span><span class="va">psr</span><span class="op">[</span>,<span class="st">"SD"</span>,,<span class="op">]</span>                                <span class="co"># Considering only standard deviations</span></span></span>
@@ -673,6 +674,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> East Asia &amp; Pacific             622'847624      457'183279      422'992450</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Europe &amp; Central Asia           568'237036      438'074771      361'916875</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 5 rows ] </span>
 <span class="r-in"><span><span class="co"># -&gt; In all regions variations in inequality (GINI) between countries are greater than variations</span></span></span>
 <span class="r-in"><span><span class="co"># in inequality within countries. The opposite is true for Life-Expectancy in all regions apart</span></span></span>
 <span class="r-in"><span><span class="co"># from Europe, etc..</span></span></span>
@@ -716,7 +718,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                   8   1235.9256   1488.3669      413.68   6621.5002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa          47   1840.0259   2234.3254    253.1886   9922.0052</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 matrix slice(s) ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 slice ] </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Proof:</span></span></span>
 <span class="r-in"><span><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, <span class="va">PCGDP</span> <span class="op">~</span> <span class="va">region</span>, <span class="op">~</span> <span class="va">iso3c</span><span class="op">)</span></span></span>
@@ -750,7 +752,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> South Asia                    8   1235.9256   1488.3669      413.68   6621.5002</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sub-Saharan Africa           47   1840.0259   2234.3254    253.1886   9922.0052</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 matrix slice(s) ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 slice ] </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Weighted Summaries -----------------------</span></span></span>
 <span class="r-in"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span></span>
@@ -774,7 +776,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> region                -        -         -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> income                -        -         -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OECD                  -        -         -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"><span><span class="va">weightsNA</span> <span class="op">&lt;-</span> <span class="va">weights</span>                        <span class="co"># Weights may contain missing values.. inserting 1000</span></span></span>
 <span class="r-in"><span><span class="va">weightsNA</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample.int</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span></span>
 <span class="r-in"><span><span class="fu">qsu</span><span class="op">(</span><span class="va">wlddev</span>, w <span class="op">=</span> <span class="va">weightsNA</span>, higher <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># But now these values are removed from all variables</span></span></span>
@@ -796,7 +798,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 <span class="r-out co"><span class="r-pr">#&gt;</span> region         -        -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> income         -        -</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OECD           -        -</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 5 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 5 rows ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Grouped and panel-summaries can also be weighted in the same manner</span></span></span>
 <span class="r-in"><span></span></span>

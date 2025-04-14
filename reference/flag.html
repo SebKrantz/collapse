@@ -9,7 +9,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -156,7 +156,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951 140 145 150 178 163 172 178 199 199 184 162 146</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 166 171 180 193 181 183 218 230 242 209 191 172</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 194 196 196 236 235 229 243 264 272 237 211 180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span><span class="fu">flag</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                   <span class="co"># Same</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  NA 112 118 132 129 121 135 148 148 136 119 104</span>
@@ -164,7 +164,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951 140 145 150 178 163 172 178 199 199 184 162 146</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 166 171 180 193 181 183 218 230 242 209 191 172</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 194 196 196 236 235 229 243 264 272 237 211 180</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span><span class="fu">L</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>                  <span class="co"># 1 lead</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949 118 132 129 121 135 148 148 136 119 104 118 115</span>
@@ -172,16 +172,16 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951 150 178 163 172 178 199 199 184 162 146 166 171</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 180 193 181 183 218 230 242 209 191 172 194 196</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 196 236 235 229 243 264 272 237 211 180 201 204</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>          <span class="co"># 1 lead and 3 lags - output as matrix</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       F1  --  L1  L2  L3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 118 112  NA  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 132 118 112  NA  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 129 132 118 112  NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] 121 129 132 118 112</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] 135 121 129 132 118</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [6,] 148 135 121 129 132</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           F1  --  L1  L2  L3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1949 118 112  NA  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Feb 1949 132 118 112  NA  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mar 1949 129 132 118 112  NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apr 1949 121 129 132 118 112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> May 1949 135 121 129 132 118</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Jun 1949 148 135 121 129 132</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Time Series Matrix of 4 EU Stock Market Indicators, 1991-1998</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/tsp.html" class="external-link">tsp</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">)</span>                                     <span class="co"># Data is recorded on 260 days per year</span></span></span>
@@ -190,19 +190,23 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/stl.html" class="external-link">stl</a></span><span class="op">(</span><span class="va">EuStockMarkets</span><span class="op">[</span>,<span class="st">"DAX"</span><span class="op">]</span>, <span class="va">freq</span><span class="op">)</span><span class="op">)</span>                 <span class="co"># There is some obvious seasonality</span></span></span>
 <span class="r-plt img"><img src="flag-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">L</span><span class="op">(</span><span class="va">EuStockMarkets</span>, <span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op">*</span> <span class="va">freq</span><span class="op">)</span><span class="op">)</span>                    <span class="co"># 1 annual lead and 3 annual lags</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      F260.DAX     DAX L260.DAX L520.DAX L780.DAX F260.SMI    SMI L260.SMI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  1755.98 1628.75       NA       NA       NA   1846.6 1678.1       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  1754.95 1613.63       NA       NA       NA   1854.8 1688.5       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  1759.90 1606.51       NA       NA       NA   1845.3 1678.6       NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      L520.SMI L780.SMI F260.CAC    CAC L260.CAC L520.CAC L780.CAC F260.FTSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]       NA       NA   1907.3 1772.8       NA       NA       NA    2515.8</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]       NA       NA   1900.6 1750.5       NA       NA       NA    2521.2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]       NA       NA   1880.9 1718.0       NA       NA       NA    2493.9</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        FTSE L260.FTSE L520.FTSE L780.FTSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,] 2443.6        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] 2460.2        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] 2448.2        NA        NA        NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 3 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Time Series:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Start = c(1991, 130) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> End = c(1991, 135) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Frequency = 260 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          F260.DAX     DAX L260.DAX L520.DAX L780.DAX F260.SMI    SMI L260.SMI</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.496  1755.98 1628.75       NA       NA       NA   1846.6 1678.1       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.500  1754.95 1613.63       NA       NA       NA   1854.8 1688.5       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.504  1759.90 1606.51       NA       NA       NA   1845.3 1678.6       NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          L520.SMI L780.SMI F260.CAC    CAC L260.CAC L520.CAC L780.CAC F260.FTSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.496       NA       NA   1907.3 1772.8       NA       NA       NA    2515.8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.500       NA       NA   1900.6 1750.5       NA       NA       NA    2521.2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.504       NA       NA   1880.9 1718.0       NA       NA       NA    2493.9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            FTSE L260.FTSE L520.FTSE L780.FTSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.496 2443.6        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.500 2460.2        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1991.504 2448.2        NA        NA        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 3 rows ]</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">DAX</span> <span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="fu">L</span><span class="op">(</span><span class="va">EuStockMarkets</span>,<span class="op">-</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">*</span><span class="va">freq</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># DAX regressed on its own annual lead,</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
@@ -228,7 +232,7 @@ Note: Since v1.9.0, F is no longer exported, but can be accessed using collapse:
 <span class="r-out co"><span class="r-pr">#&gt;</span> CAC          7.165e-01  3.189e-02  22.470  &lt; 2e-16 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> L260.CAC    -5.482e-02  3.874e-02  -1.415 0.157455    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> L520.CAC     2.326e-01  4.570e-02   5.090 4.46e-07 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 6 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 6 rows ]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

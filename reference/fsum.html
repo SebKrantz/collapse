@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -247,7 +247,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive      3.403600 7.142857 0.000000 2.542373 1.111111</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout   2.979901 0.000000 0.000000 2.542373 2.222222</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant             3.540164 7.142857 0.000000 2.542373 1.111111</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
 <span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         mpg cyl   disp   hp  drat     wt   qsec vs am gear carb</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4.0.1  26.0   4  120.3   91  4.43  2.140  16.70  0  1    5    2</span>
@@ -256,7 +256,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1  61.7  18  465.0  395 11.42  8.265  48.98  0  3   13   14</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0  76.5  24  818.2  461 13.68 13.555  76.86  4  0   14   10</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 180.6  96 4291.4 2330 37.45 49.249 205.71  0  0   36   37</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-in"><span><span class="fu">fsum</span><span class="op">(</span><span class="va">m</span>, <span class="va">g</span>, TRA <span class="op">=</span> <span class="st">"%"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            mpg        cyl       disp         hp       drat</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Mazda RX4            34.035656  33.333333  34.408602  27.848101  34.150613</span>
@@ -279,7 +279,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet 4 Drive       10.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Hornet Sportabout     5.405405</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Valiant              10.000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 26 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 26 rows ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">fsum</span><span class="op">(</span><span class="va">hp</span><span class="op">)</span>  <span class="co"># Weighted grouped sum (total)</span></span></span>
@@ -340,14 +340,14 @@
 <span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/r/base/rowsum.html" class="external-link">rowsum</a></span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min        lq      mean    median</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 82.774194 73.084112 63.810311 64.297959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  4.021505  3.747664  3.630729  3.538776</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.000000  1.000000  1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min        lq      mean   median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 87.134021 79.431193 72.867262 70.95565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  3.515464  3.518349  3.353867  3.33871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.000000  1.000000  1.00000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         uq       max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  56.735714 70.462921   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3.378571  5.860674   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000  1.000000   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  64.838129 169.05955   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3.233813   5.91067   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000   1.00000   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now larger data</span></span></span>
 <span class="r-in"><span><span class="va">tdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e5</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="co"># 100 columns with 100.000 obs</span></span></span>
@@ -358,13 +358,13 @@
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">tdata</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               expr      min       lq     mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 3.236777 3.155115 2.803206 3.185735 3.209402</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.675738 2.583841 2.207114 2.581611 2.643727</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 3.171036 3.171920 3.254008 3.210418 3.628227</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.308122 2.312164 2.384941 2.314543 2.328211</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3.4456175   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  0.9843729   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.0000000   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  10.261481   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   9.613777   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000   100</span>
 <span class="r-in"><span><span class="co"># Reset options</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="collapse-options.html">set_collapse</a></span><span class="op">(</span><span class="va">opts</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>

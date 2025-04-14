@@ -9,7 +9,7 @@ fmedian is a simple wrapper around fnth, which fixes n = 0.5 and (default) ties 
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -276,7 +276,7 @@ If <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how to r
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1 21.000   6 160.00 142.50 3.900 2.8225 16.740  0  1  4.5    5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 19.750   6 233.25 123.00 3.920 3.4450 19.635  1  0  4.0    4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 16.625   8 410.00 218.75 3.165 4.3650 17.655  0  0  3.0    4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">fnth</span><span class="op">(</span><span class="fl">0.75</span><span class="op">)</span></span></span>
@@ -469,7 +469,7 @@ If <code>0 &lt; n &lt; 1</code>, the <code>ties</code> option regulates how to r
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.0.1 21.00   6 160.0 110.0 3.900 2.770 16.46  0  1  4.0  4.0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6.1.0 18.65   6 196.3 116.5 3.500 3.440 19.17  1  0  3.5  2.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 8.0.0 15.20   8 355.0 180.0 3.075 3.810 17.35  0  0  3.0  3.0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## method for grouped data frames - created with dplyr::group_by or fgroup_by</span></span></span>
 <span class="r-in"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="GRP.html">fgroup_by</a></span><span class="op">(</span><span class="va">cyl</span>,<span class="va">vs</span>,<span class="va">am</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">fmedian</span><span class="op">(</span><span class="op">)</span></span></span>
