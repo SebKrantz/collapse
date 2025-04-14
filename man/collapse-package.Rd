@@ -12,7 +12,7 @@ Advanced and Fast Data Transformation
 \item To help make R code fast, flexible, parsimonious and programmer friendly. % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter,
 % collapse provides a broad set.. -> Nah, its not a misc package
 }
-It is made compatible with the \emph{tidyverse}, \emph{data.table}, \emph{sf}, \emph{units}, \emph{xts/zoo}, and the \emph{plm} approach to panel data.
+It also implements a \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{class-agnostic approach} to data manipulation in R, supporting all major classes.
 
 }
 \section{Getting Started}{
@@ -81,7 +81,7 @@ The statistical functions in \emph{collapse} are S3 generic with core methods fo
 
 % attributes of atomic objects are preserved if the dimensions are unaltered by the computation, and data frame attributes are always preserved,
 
- Additional methods and C-level features enable broad based compatibility with \emph{dplyr} (grouped tibble), \emph{data.table}, \emph{sf} and \emph{plm} panel data classes. Functions and core methods seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes). See also the \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{vignette} on \emph{collapse}'s handling of R objects.
+ Functions and core methods seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes). See the \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{vignette} on \emph{collapse}'s handling of R objects.
 
  Missing values are efficiently skipped at C/C++ level. The package default is \code{na.rm = TRUE}. This can be changed using \code{\link[=set_collapse]{set_collapse(na.rm = FALSE)}}. Missing weights are generally supported. % Core functionality and all statistical functions / computations are tested with > 20,000 unit tests for Base R equivalence, exempting some improvements (e.g. \code{fsum(NA, na.rm = TRUE)} evaluates to \code{NA}, not 0 (unless \code{fill = TRUE}), similarly for \code{fmin} and \code{fmax}; no \code{NaN} values are generated from computations involving \code{NA} values). %Generic functions provide some \link[=collapse-options]{security} against silent swallowing of arguments.
 
@@ -107,16 +107,16 @@ The package is coded both in C and C++ and built with \emph{Rcpp}, but also uses
 \section{Author(s)}{ % \author{
 \bold{Maintainer}: Sebastian Krantz \email{sebastian.krantz@graduateinstitute.ch}
 
-Other contributors from packages \emph{collapse} utilizes:
-\itemize{
-\item Matt Dowle, Arun Srinivasan and contributors worldwide (\emph{data.table})
-\item Dirk Eddelbuettel and contributors worldwide (\emph{Rcpp}, \emph{RcppArmadillo}, \emph{RcppEigen})
-\item Morgan Jacob (\emph{kit})
-\item Laurent Berge (\emph{fixest})
-\item Josh Pasek (\emph{weights})
-\item R Core Team and contributors worldwide (\emph{stats})
-}
-I thank many people from diverse fields for helpful answers on Stackoverflow, Joris Meys for encouraging me and helping to set up the \href{https://github.com/SebKrantz/collapse}{GitHub repository} for \emph{collapse}, and many other people for feature requests and helpful suggestions.
+% Other contributors from packages \emph{collapse} utilizes:
+% \itemize{
+% \item Matt Dowle, Arun Srinivasan and contributors worldwide (\emph{data.table})
+% \item Dirk Eddelbuettel and contributors worldwide (\emph{Rcpp}, \emph{RcppArmadillo}, \emph{RcppEigen})
+% \item Morgan Jacob (\emph{kit})
+% \item Laurent Berge (\emph{fixest})
+% \item Josh Pasek (\emph{weights})
+% \item R Core Team and contributors worldwide (\emph{stats})
+% }
+% I thank many people from diverse fields for helpful answers on Stackoverflow and many other people for feature requests and helpful suggestions.
 }
 \section{Developing / Bug Reporting}{
 \itemize{
