@@ -1,6 +1,8 @@
-# collapse 2.1.0.9000
+# collapse 2.1.1
 
 * `alloc(list(1), 2)` now gives `list(1, 1)` instead of `list(list(1), list(1))`, which can still be generated with `alloc(list(1), 2, simplify = FALSE)`. This change also affects `ftransform()`/`fmutate()`, making, e.g., `fmutate(data, y = list(1))` consistent with `dplyr::mutate(data, y = list(1))`. Thanks @MattAFiedler (#753). 
+
+* `fslice()` now works with *sf* data frames. 
 
 # collapse 2.1.0
 
