@@ -1,6 +1,6 @@
 pandoc: 3.1.11
 pkgdown: 2.1.1.9000
-pkgdown_sha: 10643265c4a320f39a04c76d8dbad83ecbecd9c7
+pkgdown_sha: 5c8cf6707905e943c8d9e7a734f3cc82a74fa859
 articles:
   collapse_and_data.table: collapse_and_data.table.html
   collapse_and_dplyr: collapse_and_dplyr.html
@@ -11,7 +11,7 @@ articles:
   collapse_intro: collapse_intro.html
   collapse_object_handling: collapse_object_handling.html
   developing_with_collapse: developing_with_collapse.html
-last_built: 2025-04-14T14:42Z
+last_built: 2025-04-14T20:54Z
 urls:
   reference: https://sebkrantz.github.io/collapse/reference
   article: https://sebkrantz.github.io/collapse/articles

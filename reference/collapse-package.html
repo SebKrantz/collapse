@@ -543,9 +543,9 @@ It also implements a class-agnostic approach to data manipulation in R, supporti
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f1</span><span class="op">)</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># A minor difference, larger on larger data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               expr   min     lq    mean median     uq    max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.813 3.9975 4.40299  4.100 4.2025 29.110   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.649 3.8540 3.98602  3.936 4.0590  5.002   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               expr   min    lq    mean median    uq    max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.895 4.100 4.42882  4.182 4.264 25.051   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.854 3.977 4.04711  4.018 4.100  4.961   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Efficient interactions of vectors and/or factors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0</span>
@@ -631,9 +631,9 @@ It also implements a class-agnostic approach to data manipulation in R, supporti
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">2</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># A remarkable performance gain..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq     mean   median       uq     max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.173   2.6240   3.3907   3.0135   3.8950  13.325</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 309.550 320.4355 331.7572 326.6880 338.3935 512.172</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq      mean  median       uq     max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.255   2.4805   3.12666   2.870   3.2800  12.464</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 307.951 311.3130 323.70156 317.217 328.0615 474.575</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  neval</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
