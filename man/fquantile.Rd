@@ -47,7 +47,7 @@ Following \href{https://www.tandfonline.com/doi/abs/10.1080/00031305.1996.104735
 
 where \eqn{j = \lfloor pn + m \rfloor,\ m \in \mathbb{R}} and \eqn{\gamma = pn + m - j,\ 0 \le \gamma \le 1}, with \eqn{m} differing by quantile type (\eqn{i}). For example, the default type 7 quantile estimator uses \eqn{m = 1 - p}, see \code{\link{quantile}}.
 
-For weighted data with normalized weights \eqn{w = \{w_1, ... w_n\}}, where \eqn{w_k > 0} and \eqn{\sum_k w_k = 1}, let \eqn{\{w_{(1)}, ... w_{(n)}\}} be the weights for each order statistic and \eqn{W_{(k)} = \operatorname{Weight}[X_j \le X_{(k)}] = \sum_{j=1}^k w_{(j)}} the cumulative weight for each order statistic.
+For weighted data with normalized weights \eqn{w = \{w_1, ..., w_n\}}, where \eqn{w_k > 0} and \eqn{\sum_k w_k = 1}, let \eqn{\{w_{(1)}, ..., w_{(n)}\}} be the weights for each order statistic and \eqn{W_{(k)} = \operatorname{Weight}[X_j \le X_{(k)}] = \sum_{j=1}^k w_{(j)}} the cumulative weight for each order statistic.
 
 We can then first find the largest value \eqn{l} such that the cumulative normalized weight \eqn{W_{(l)} \leq p}, and replace \eqn{pn} with \eqn{l + (p - W_{(l)})/w_{(l+1)}}, where \eqn{w_{(l+1)}} is the weight of the next observation. This gives:
 

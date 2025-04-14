@@ -226,7 +226,7 @@ It is very easy then to compute Balassa's (1965) Revealed Comparative Advantage 
 ```{r}
 # Computing Balassa's (1965) RCA index: fast and memory efficient
 # settfm() modifies exports and assigns it back to the global environment
-settfm(exports, RCA = fsum(v, list(c, y), TRA = "/") %/=% fsum(v, list(s, y), TRA = "/"))
+settfm(exports, RCA = fsum(v, list(c, y), TRA = "/") %/=% fsum(fsum(v, y, TRA = "/"), list(s, y), TRA = "fill", set = TRUE))
 ```
 
 Note that this involved a single expression with two different grouped operations, which is only possible by incorporating grouping into statistical functions themselves. Let's summarise this dataset using `pivot()` to aggregate the RCA index across years. Here `"mean"` calls a highly efficient internal mean function. 
@@ -258,7 +258,7 @@ We can then compute the RCA index on this data
 
 ```{r}
 exports_latest |>
-    mutate(RCA = fsum(v, c, TRA = "/") %/=% fsum(v, s, TRA = "/")) |>
+    mutate(RCA = fsum(v, c, TRA = "/") %/=% fsum(proportions(v), s, TRA = "fill")) |>
     pivot("c", "RCA", "s", how = "wider", sort = TRUE)
 ```
 
