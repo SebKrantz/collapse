@@ -12,9 +12,9 @@ version: 2.1.1
 identifiers:
 - type: doi
   value: 10.32614/CRAN.package.collapse
-abstract: A C/C++ based package for advanced data transformation and statistical computing
-  in R that is extremely fast, class-agnostic, robust and programmer friendly. Core
-  functionality includes a rich set of S3 generic grouped and weighted statistical
+abstract: A large C/C++-based package for advanced data transformation and statistical
+  computing in R that is extremely fast, class-agnostic, robust, and programmer friendly.
+  Core functionality includes a rich set of S3 generic grouped and weighted statistical
   functions for vectors, matrices and data frames, which provide efficient low-level
   vectorizations, OpenMP multithreading, and skip missing values by default. These
   are integrated with fast grouping and ordering algorithms (also callable from C),
@@ -25,7 +25,7 @@ abstract: A C/C++ based package for advanced data transformation and statistical
   functions for memory efficient R programming, and helpers to effectively deal with
   variable labels, attributes, and missing data. It seamlessly supports base R objects/classes
   as well as 'units', 'integer64', 'xts'/'zoo', 'tibble', 'grouped_df', 'data.table',
-  'sf', 'pseries'/'pdata.frame'.
+  'sf', and 'pseries'/'pdata.frame'.
 authors:
 - family-names: Krantz
   given-names: Sebastian
