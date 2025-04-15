@@ -38,7 +38,7 @@
   Small Functions to Make R Programming More Efficient
 }
 \description{
- A small set of functions to address some common inefficiencies in R, such as the creation of logical vectors to compare quantities, unnecessary copies of objects in elementary mathematical or subsetting operations, obtaining information about objects (esp. data frames), or dealing with missing values. % It makes sense to use them when dealing with > 10,000 obs. on modern computers.
+ A small set of functions to address some common inefficiencies in R, such as the creation of logical vectors to compare quantities, unnecessary copies of objects in elementary mathematical or sub-assignment operations, obtaining information about objects (esp. data frames), or dealing with missing values. % It makes sense to use them when dealing with > 10,000 obs. on modern computers.
 }
 \usage{
 anyv(x, value)              # Faster than any(x == value). See also kit::panyv()

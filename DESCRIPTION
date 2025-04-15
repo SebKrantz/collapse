@@ -17,8 +17,8 @@ Authors@R: c(
            person("Martyn", "Plummer", role = "cph"),
            person("1999-2016 The R Core Team", role = "cph")
            )
-Description: A C/C++ based package for advanced data transformation and 
-    statistical computing in R that is extremely fast, class-agnostic, robust and 
+Description: A large C/C++-based package for advanced data transformation and 
+    statistical computing in R that is extremely fast, class-agnostic, robust, and 
     programmer friendly. Core functionality includes a rich set of S3 generic grouped 
     and weighted statistical functions for vectors, matrices and data frames, which 
     provide efficient low-level vectorizations, OpenMP multithreading, and skip missing 
@@ -30,7 +30,7 @@ Description: A C/C++ based package for advanced data transformation and
     fast data object conversions, functions for memory efficient R programming, and 
     helpers to effectively deal with variable labels, attributes, and missing data. 
     It seamlessly supports base R objects/classes as well as 'units', 'integer64', 
-    'xts'/'zoo', 'tibble', 'grouped_df', 'data.table', 'sf', 'pseries'/'pdata.frame'.
+    'xts'/'zoo', 'tibble', 'grouped_df', 'data.table', 'sf', and 'pseries'/'pdata.frame'.
 URL: https://sebkrantz.github.io/collapse/, https://github.com/SebKrantz/collapse
 BugReports: https://github.com/SebKrantz/collapse/issues
 License: GPL (>= 2) | file LICENSE
