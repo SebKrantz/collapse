@@ -69,8 +69,8 @@ na_focb(x, set = FALSE)     # (by reference). These also support lists (NULL/emp
 na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
         na.attr = FALSE,    # can use selected columns to check, attach indices,
         prop = 0, ...)      # and remove cases with a proportion of values missing
-na_insert(X, prop = 0.1,    # Insert missing values at random
-          value = NA)
+na_insert(X, prop = 0.1,    # Insert missing values at random (by reference)
+    value = NA, set = TRUE)
 missing_cases(X, cols=NULL, # The opposite of complete.cases(), faster for DF's.
   prop = 0, count = FALSE)  # See also kit::panyNA(), kit::pallNA(), kit::pcountNA()
 vlengths(X, use.names=TRUE) # Faster lengths() and nchar() (in C, no method dispatch)
@@ -88,7 +88,7 @@ cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{X, V, R}{a vector, matrix or data frame.}
-  \item{x, v}{a (atomic) vector or matrix (\code{na_rm} also supports lists).}
+  \item{x, v}{a (atomic) vector or matrix (\code{na_rm}/\code{locf}/\code{focb} also support lists).}
   \item{value}{a single value of any (atomic) vector type. For \code{whichv} it can also be a \code{length(x)} vector.}
   \item{invert}{logical. \code{TRUE} considers elements \code{x != value}.}
   \item{set}{logical. \code{TRUE} transforms \code{x} by reference.}
