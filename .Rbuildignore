@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^collapse\.Rproj$
 ^\.Rproj\.user$
 \.fsrc$
