@@ -445,17 +445,24 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE, prop = 0, ...) {
   res
 }
 
-na_insert <- function(X, prop = 0.1, value = NA) {
+na_insert <- function(X, prop = 0.1, value = NA, set = FALSE) {
   if(is.list(X)) {
     n <- fnrow(X)
     nmiss <- floor(n * prop)
-    res <- duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, sample.int(n, nmiss), value = value)), X)
+    if(set) {
+      lapply(unattrib(X), function(y) scv(y, sample.int(n, nmiss), value, TRUE))
+      return(invisible(X))
+    }
+    res <- duplAttributes(lapply(unattrib(X), function(y) scv(y, sample.int(n, nmiss), value)), X)
     return(if(inherits(X, "data.table")) alc(res) else res)
   }
   if(!is.atomic(X)) stop("X must be an atomic vector, array or data.frame")
   l <- length(X)
-  X[sample.int(l, floor(l * prop))] <- value
-  X
+  if(set) {
+    scv(X, sample.int(l, floor(l * prop)), value, TRUE)
+    return(invisible(X))
+  }
+  return(scv(X, sample.int(l, floor(l * prop)), value))
 }
 
 fdapply <- function(X, FUN, ...) duplAttributes(lapply(`attributes<-`(X, NULL), FUN, ...), X)
