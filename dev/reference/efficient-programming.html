@@ -71,7 +71,7 @@
 <span>        na.attr <span class="op">=</span> <span class="cn">FALSE</span>,    <span class="co"># can use selected columns to check, attach indices,</span></span>
 <span>        prop <span class="op">=</span> <span class="fl">0</span>, <span class="va">...</span><span class="op">)</span>      <span class="co"># and remove cases with a proportion of values missing</span></span>
 <span><span class="fu">na_insert</span><span class="op">(</span><span class="va">X</span>, prop <span class="op">=</span> <span class="fl">0.1</span>,    <span class="co"># Insert missing values at random (by reference)</span></span>
-<span>    value <span class="op">=</span> <span class="cn">NA</span>, set <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    value <span class="op">=</span> <span class="cn">NA</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu">missing_cases</span><span class="op">(</span><span class="va">X</span>, cols<span class="op">=</span><span class="cn">NULL</span>, <span class="co"># The opposite of complete.cases(), faster for DF's.</span></span>
 <span>  prop <span class="op">=</span> <span class="fl">0</span>, count <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># See also kit::panyNA(), kit::pallNA(), kit::pcountNA()</span></span>
 <span><span class="fu">vlengths</span><span class="op">(</span><span class="va">X</span>, use.names<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Faster lengths() and nchar() (in C, no method dispatch)</span></span>
