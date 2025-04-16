@@ -1,6 +1,3 @@
-# collapse 2.1.1.9000
-
-* `na_insert` has new argument `set` to do this by reference. 
 
 # collapse 2.1.1
 
