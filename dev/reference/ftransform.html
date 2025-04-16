@@ -62,8 +62,8 @@ Catering to the tidyverse user, v1.7.0 introduced fmutate, providing familiar fu
 <span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">settfmv</a></span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Replace/add modified columns in/to a data frame</span></span>
-<span><span class="fu">ftransform</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
-<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">tfm</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">ftransform</span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/ftransform.html">tfm</a></span><span class="op">(</span><span class="va">.data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span> <span class="op">&lt;-</span> <span class="va">value</span>           <span class="co"># Shorthand for ftransform&lt;-</span></span>
 <span></span>
 <span><span class="co"># Compute columns, returned as a new data frame</span></span>
 <span><span class="fu">fcompute</span><span class="op">(</span><span class="va">.data</span>, <span class="va">...</span>, keep <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>

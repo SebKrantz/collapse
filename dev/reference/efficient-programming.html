@@ -42,49 +42,49 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">anyv</span><span class="op">(</span><span class="va">x</span>, <span class="va">value</span><span class="op">)</span>              <span class="co"># Faster than any(x == value). See also kit::panyv()</span></span>
-<span><span class="fu">allv</span><span class="op">(</span><span class="va">x</span>, <span class="va">value</span><span class="op">)</span>              <span class="co"># Faster than all(x == value). See also kit::pallv()</span></span>
-<span><span class="fu">allNA</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                    <span class="co"># Faster than all(is.na(x)). See also kit::pallNA()</span></span>
-<span><span class="fu">whichv</span><span class="op">(</span><span class="va">x</span>, <span class="va">value</span>,            <span class="co"># Faster than which(x == value)</span></span>
-<span>       invert <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>      <span class="co"># or which(x != value). See also Note (3)</span></span>
-<span><span class="fu">whichNA</span><span class="op">(</span><span class="va">x</span>, invert <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># Faster than which((!)is.na(x))</span></span>
-<span><span class="va">x</span> <span class="op">%==%</span> <span class="va">value</span></span>
-<span><span class="va">x</span> <span class="op">%!=%</span> <span class="va">value</span></span>
-<span><span class="fu">alloc</span><span class="op">(</span><span class="va">value</span>, <span class="va">n</span>,             <span class="co"># Fast rep_len(value, n) or replicate(n, value).</span></span>
-<span>      simplify <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>      <span class="co"># simplify only works if length(value) == 1. See Details.</span></span>
-<span><span class="fu">copyv</span><span class="op">(</span><span class="va">X</span>, <span class="va">v</span>, <span class="va">R</span>, <span class="va">...</span>, invert  <span class="co"># Fast replace(X, v, R), replace(X, X (!/=)= v, R) or</span></span>
-<span>    <span class="op">=</span> <span class="cn">FALSE</span>, vind1 <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># replace(X, (!)v, R[(!)v]). See Details and Note (4).</span></span>
-<span>    xlist <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># For multi-replacement see also kit::vswitch()</span></span>
-<span><span class="fu">setv</span><span class="op">(</span><span class="va">X</span>, <span class="va">v</span>, <span class="va">R</span>, <span class="va">...</span>, invert   <span class="co"># Same for X[v] &lt;- r, X[x (!/=)= v] &lt;- r or</span></span>
-<span>    <span class="op">=</span> <span class="cn">FALSE</span>, vind1 <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># x[(!)v] &lt;- r[(!)v]. Modifies X by reference, fastest.</span></span>
-<span>    xlist <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>          <span class="co"># X/R/V can also be lists/DFs. See Details and Examples.</span></span>
-<span><span class="fu">setop</span><span class="op">(</span><span class="va">X</span>, <span class="va">op</span>, <span class="va">V</span>, <span class="va">...</span>,        <span class="co"># Faster than X &lt;- X +\-\*\/ V (modifies by reference)</span></span>
-<span>      rowwise <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>      <span class="co"># optionally can also add v to rows of a matrix or list</span></span>
-<span><span class="va">X</span> <span class="op">%+=%</span> <span class="va">V</span></span>
-<span><span class="va">X</span> <span class="op">%-=%</span> <span class="va">V</span></span>
-<span><span class="va">X</span> <span class="op">%*=%</span> <span class="va">V</span></span>
-<span><span class="va">X</span> <span class="op">%/=%</span> <span class="va">V</span></span>
-<span><span class="fu">na_rm</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                    <span class="co"># Fast: if(anyNA(x)) x[!is.na(x)] else x, last</span></span>
-<span><span class="fu">na_locf</span><span class="op">(</span><span class="va">x</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>     <span class="co"># obs. carried forward and first obs. carried back.</span></span>
-<span><span class="fu">na_focb</span><span class="op">(</span><span class="va">x</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>     <span class="co"># (by reference). These also support lists (NULL/empty)</span></span>
-<span><span class="fu">na_omit</span><span class="op">(</span><span class="va">X</span>, cols <span class="op">=</span> <span class="cn">NULL</span>,     <span class="co"># Faster na.omit for matrices and data frames,</span></span>
-<span>        na.attr <span class="op">=</span> <span class="cn">FALSE</span>,    <span class="co"># can use selected columns to check, attach indices,</span></span>
-<span>        prop <span class="op">=</span> <span class="fl">0</span>, <span class="va">...</span><span class="op">)</span>      <span class="co"># and remove cases with a proportion of values missing</span></span>
-<span><span class="fu">na_insert</span><span class="op">(</span><span class="va">X</span>, prop <span class="op">=</span> <span class="fl">0.1</span>,    <span class="co"># Insert missing values at random (by reference)</span></span>
-<span>    value <span class="op">=</span> <span class="cn">NA</span>, set <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="fu">missing_cases</span><span class="op">(</span><span class="va">X</span>, cols<span class="op">=</span><span class="cn">NULL</span>, <span class="co"># The opposite of complete.cases(), faster for DF's.</span></span>
-<span>  prop <span class="op">=</span> <span class="fl">0</span>, count <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  <span class="co"># See also kit::panyNA(), kit::pallNA(), kit::pcountNA()</span></span>
-<span><span class="fu">vlengths</span><span class="op">(</span><span class="va">X</span>, use.names<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Faster lengths() and nchar() (in C, no method dispatch)</span></span>
-<span><span class="fu">vtypes</span><span class="op">(</span><span class="va">X</span>, use.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="co"># Get data storage types (faster vapply(X, typeof, ...))</span></span>
-<span><span class="fu">vgcd</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                     <span class="co"># Greatest common divisor of positive integers or doubles</span></span>
-<span><span class="fu">fnlevels</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                 <span class="co"># Faster version of nlevels(x) (for factors)</span></span>
-<span><span class="fu">fnrow</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>                    <span class="co"># Faster nrow for data frames (not faster for matrices)</span></span>
-<span><span class="fu">fncol</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>                    <span class="co"># Faster ncol for data frames (not faster for matrices)</span></span>
-<span><span class="fu">fdim</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>                     <span class="co"># Faster dim for data frames (not faster for matrices)</span></span>
-<span><span class="fu">seq_row</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>                  <span class="co"># Fast integer sequences along rows of X</span></span>
-<span><span class="fu">seq_col</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>                  <span class="co"># Fast integer sequences along columns of X</span></span>
-<span><span class="fu">vec</span><span class="op">(</span><span class="va">X</span><span class="op">)</span>                      <span class="co"># Vectorization (stacking) of matrix or data frame/list</span></span>
-<span><span class="fu">cinv</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>                     <span class="co"># Choleski (fast) inverse of symmetric PD matrix, e.g. X'X</span></span></code></pre></div>
+    <div class="sourceCode"><pre><code>anyv(x, value)              # Faster than any(x == value). See also kit::panyv()
+allv(x, value)              # Faster than all(x == value). See also kit::pallv()
+allNA(x)                    # Faster than all(is.na(x)). See also kit::pallNA()
+whichv(x, value,            # Faster than which(x == value)
+       invert = FALSE)      # or which(x != value). See also Note (3)
+whichNA(x, invert = FALSE)  # Faster than which((!)is.na(x))
+x %==% value, use e.g. in fsubset()
+x %!=% value. See also Note (3)
+alloc(value, n,             # Fast rep_len(value, n) or replicate(n, value).
+      simplify = TRUE)      # simplify only works if length(value) == 1. See Details.
+copyv(X, v, R, ..., invert  # Fast replace(X, v, R), replace(X, X (!/=)= v, R) or
+    = FALSE, vind1 = FALSE, # replace(X, (!)v, R[(!)v]). See Details and Note (4).
+    xlist = FALSE)          # For multi-replacement see also kit::vswitch()
+setv(X, v, R, ..., invert   # Same for X[v] &lt;- r, X[x (!/=)= v] &lt;- r or
+    = FALSE, vind1 = FALSE, # x[(!)v] &lt;- r[(!)v]. Modifies X by reference, fastest.
+    xlist = FALSE)          # X/R/V can also be lists/DFs. See Details and Examples.
+setop(X, op, V, ...,        # Faster than X &lt;- X +\-\*\/ V (modifies by reference)
+      rowwise = FALSE)      # optionally can also add v to rows of a matrix or list
+X %+=% V. See also Note (2)
+X %-=% V. See also Note (2)
+X %*=% V. See also Note (2)
+X %/=% V. See also Note (2)
+na_rm(x)                    # Fast: if(anyNA(x)) x[!is.na(x)] else x, last
+na_locf(x, set = FALSE)     # obs. carried forward and first obs. carried back.
+na_focb(x, set = FALSE)     # (by reference). These also support lists (NULL/empty)
+na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
+        na.attr = FALSE,    # can use selected columns to check, attach indices,
+        prop = 0, ...)      # and remove cases with a proportion of values missing
+na_insert(X, prop = 0.1,    # Insert missing values at random (by reference)
+    value = NA, set = FALSE)
+missing_cases(X, cols=NULL, # The opposite of complete.cases(), faster for DF's.
+  prop = 0, count = FALSE)  # See also kit::panyNA(), kit::pallNA(), kit::pcountNA()
+vlengths(X, use.names=TRUE) # Faster lengths() and nchar() (in C, no method dispatch)
+vtypes(X, use.names = TRUE) # Get data storage types (faster vapply(X, typeof, ...))
+vgcd(x)                     # Greatest common divisor of positive integers or doubles
+fnlevels(x)                 # Faster version of nlevels(x) (for factors)
+fnrow(X)                    # Faster nrow for data frames (not faster for matrices)
+fncol(X)                    # Faster ncol for data frames (not faster for matrices)
+fdim(X)                     # Faster dim for data frames (not faster for matrices)
+seq_row(X)                  # Fast integer sequences along rows of X
+seq_col(X)                  # Fast integer sequences along columns of X
+vec(X)                      # Vectorization (stacking) of matrix or data frame/list
+cinv(x)                     # Choleski (fast) inverse of symmetric PD matrix, e.g. X'X</code></pre></div>
     </div>
 
     <div class="section level2">
