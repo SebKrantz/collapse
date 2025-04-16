@@ -69,7 +69,7 @@ na_focb(x, set = FALSE)     # (by reference). These also support lists (NULL/emp
 na_omit(X, cols = NULL,     # Faster na.omit for matrices and data frames,
         na.attr = FALSE,    # can use selected columns to check, attach indices,
         prop = 0, ...)      # and remove cases with a proportion of values missing
-na_insert(X, prop = 0.1,    # Insert missing values at random
+na_insert(X, prop = 0.1,    # Insert missing values at random (by reference)
     value = NA, set = TRUE)
 missing_cases(X, cols=NULL, # The opposite of complete.cases(), faster for DF's.
   prop = 0, count = FALSE)  # See also kit::panyNA(), kit::pallNA(), kit::pcountNA()
