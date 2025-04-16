@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,7 +95,7 @@
 <p>Following <a href="https://www.tandfonline.com/doi/abs/10.1080/00031305.1996.10473566" class="external-link">Hyndman and Fan (1996)</a>, the quantile type-\(i\) quantile function of the sample \(X\) can be written as a weighted average of two order statistics:</p>
 <p>$$\hat{Q}_{X,i}(p) = (1 - \gamma) X_{(j)} + \gamma X_{(j + 1)}$$</p>
 <p>where \(j = \lfloor pn + m \rfloor,\ m \in \mathbb{R}\) and \(\gamma = pn + m - j,\ 0 \le \gamma \le 1\), with \(m\) differing by quantile type (\(i\)). For example, the default type 7 quantile estimator uses \(m = 1 - p\), see <code><a href="https://rdrr.io/r/stats/quantile.html" class="external-link">quantile</a></code>.</p>
-<p>For weighted data with normalized weights \(w = \{w_1, ... w_n\}\), where \(w_k &gt; 0\) and \(\sum_k w_k = 1\), let \(\{w_{(1)}, ... w_{(n)}\}\) be the weights for each order statistic and \(W_{(k)} = \operatorname{Weight}[X_j \le X_{(k)}] = \sum_{j=1}^k w_{(j)}\) the cumulative weight for each order statistic.</p>
+<p>For weighted data with normalized weights \(w = \{w_1, ..., w_n\}\), where \(w_k &gt; 0\) and \(\sum_k w_k = 1\), let \(\{w_{(1)}, ..., w_{(n)}\}\) be the weights for each order statistic and \(W_{(k)} = \operatorname{Weight}[X_j \le X_{(k)}] = \sum_{j=1}^k w_{(j)}\) the cumulative weight for each order statistic.</p>
 <p>We can then first find the largest value \(l\) such that the cumulative normalized weight \(W_{(l)} \leq p\), and replace \(pn\) with \(l + (p - W_{(l)})/w_{(l+1)}\), where \(w_{(l+1)}\) is the weight of the next observation. This gives:</p>
 <p>$$j = \lfloor l + \frac{p - W_{(l)}}{w_{(l+1)}} + m \rfloor$$
 $$\gamma = l + \frac{p - W_{(l)}}{w_{(l+1)}} + m - j$$</p>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -189,7 +189,7 @@ It is also possible to compute forward differences by passing negative <code>n</
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951    5    5   28  -15    9    6   21    0  -15  -22  -16   20</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952    5    9   13  -12    2   35   12   12  -33  -18  -19   22</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953    2    0   40   -1   -6   14   21    8  -35  -26  -31   21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>                  <span class="co"># Forward difference</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  -6 -14   3   8 -14 -13   0  12  17  15 -14   3</span>
@@ -197,7 +197,7 @@ It is also possible to compute forward differences by passing negative <code>n</
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951  -5 -28  15  -9  -6 -21   0  15  22  16 -20  -5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952  -9 -13  12  -2 -35 -12 -12  33  18  19 -22  -2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953   0 -40   1   6 -14 -21  -8  35  26  31 -21  -3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span><span class="fu">Dlog</span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                   <span class="co"># Log-difference</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               Jan          Feb          Mar          Apr          May</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949           NA  0.052185753  0.112117298 -0.022989518 -0.064021859</span>
@@ -217,7 +217,7 @@ It is also possible to compute forward differences by passing negative <code>n</
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951 -0.103989714  0.128381167</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 -0.104778951  0.120363682</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 -0.158901283  0.110348057</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>                <span class="co"># Second difference</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Jan  Feb  Mar  Apr  May  Jun  Jul  Aug  Sep  Oct  Nov  Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949   NA   NA    8  -17   -5   22   -1  -13  -12   -5    2   29</span>
@@ -225,7 +225,7 @@ It is also possible to compute forward differences by passing negative <code>n</
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951  -21    0   23  -43   24   -3   15  -21  -15   -7    6   36</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952  -15    4    4  -25   14   33  -23    0  -45   15   -1   41</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953  -20   -2   40  -41   -5   20    7  -13  -43    9   -5   52</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span><span class="fu">Dlog</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>             <span class="co"># Second log-difference</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Jan           Feb           Mar           Apr           May</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949            NA            NA  0.0599315450 -0.1351068163 -0.0410323405</span>
@@ -245,7 +245,7 @@ It is also possible to compute forward differences by passing negative <code>n</
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951  0.0233497089  0.2323708802</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952 -0.0147181273  0.2251426335</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953 -0.0426992749  0.2692493398</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fl">12</span><span class="op">)</span>                  <span class="co"># Seasonal difference (data is monthly)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1949  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA</span>
@@ -253,7 +253,7 @@ It is also possible to compute forward differences by passing negative <code>n</
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951  30  24  37  28  47  29  29  29  26  29  32  26</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952  26  30  15  18  11  40  31  43  25  29  26  28</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953  25  16  43  54  46  25  34  30  28  20   8   7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>,                      <span class="co"># Quasi-difference, see a better example below</span></span></span>
 <span class="r-in"><span>  rho <span class="op">=</span> <span class="fu"><a href="pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>              Jan         Feb         Mar         Apr         May         Jun</span>
@@ -268,16 +268,16 @@ It is also possible to compute forward differences by passing negative <code>n</
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1951  28.0853526   7.9212650  -7.0787350 -14.6758152  -9.5515330  25.8115814</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1952  20.6775667  21.1552309 -23.3671048  -9.6806814 -11.3971778  28.8465205</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1953  30.6727005  18.5086129 -24.1729443 -16.5661316 -22.6010707  28.1649634</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 7 rows ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 7 rows ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">D</span><span class="op">(</span><span class="va">AirPassengers</span>, <span class="op">-</span><span class="fl">2</span><span class="op">:</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>     <span class="co"># Sequence of leaded/lagged and iterated differences</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      F2D1 F2D2 F2D3 FD1 FD2 FD3  -- D1  D2  D3 L2D1 L2D2 L2D3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  -20  -31  -69  -6   8  25 112 NA  NA  NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]  -11   -5  -12 -14 -17 -12 118  6  NA  NA   NA   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   11   38   77   3  -5 -27 132 14   8  NA   20   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -6    7   49   8  22  23 129 -3 -17 -25   11   NA   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  -27  -39  -19 -14  -1  12 121 -8  -5  12  -11  -31   NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached getOption("max.print") -- omitted 1 row ]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          F2D1 F2D2 F2D3 FD1 FD2 FD3  -- D1  D2  D3 L2D1 L2D2 L2D3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Jan 1949  -20  -31  -69  -6   8  25 112 NA  NA  NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Feb 1949  -11   -5  -12 -14 -17 -12 118  6  NA  NA   NA   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Mar 1949   11   38   77   3  -5 -27 132 14   8  NA   20   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Apr 1949   -6    7   49   8  22  23 129 -3 -17 -25   11   NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> May 1949  -27  -39  -19 -14  -1  12 121 -8  -5  12  -11  -31   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ reached 'max' / getOption("max.print") -- omitted 1 row ]</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># let's do some visual analysis</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">AirPassengers</span><span class="op">)</span>                   <span class="co"># Plot the series - seasonal pattern is evident</span></span></span>
