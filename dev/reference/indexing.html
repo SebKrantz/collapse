@@ -42,57 +42,57 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co">## Create an 'indexed_frame' containing 'indexed_series'</span></span>
-<span><span class="fu">findex_by</span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, single <span class="op">=</span> <span class="st">"auto"</span>, interact.ids <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/indexing.html">iby</a></span><span class="op">(</span><span class="va">.X</span>, <span class="va">...</span>, single <span class="op">=</span> <span class="st">"auto"</span>, interact.ids <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="co"># Shorthand</span></span>
-<span></span>
-<span><span class="co">## Retrieve the index ('index_df') from an 'indexed_frame' or 'indexed_series'</span></span>
-<span><span class="fu">findex</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/indexing.html">ix</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>     <span class="co"># Shorthand</span></span>
-<span></span>
-<span><span class="co">## Remove index from 'indexed_frame' or 'indexed_series' (i.e. get .X back)</span></span>
-<span><span class="fu">unindex</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Reindex 'indexed_frame' or 'indexed_series' (or index vectors / matrices)</span></span>
-<span><span class="fu">reindex</span><span class="op">(</span><span class="va">x</span>, index <span class="op">=</span> <span class="fu">findex</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>, single <span class="op">=</span> <span class="st">"auto"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Check if 'indexed_frame', 'indexed_series', index or time vector is irregular</span></span>
-<span><span class="fu">is_irregular</span><span class="op">(</span><span class="va">x</span>, any_id <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Convert 'indexed_frame'/'indexed_series' to normal 'pdata.frame'/'pseries'</span></span>
-<span><span class="fu">to_plm</span><span class="op">(</span><span class="va">x</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Subsetting &amp; replacement methods: [(&lt;-) methods call NextMethod().</span></span>
-<span><span class="co"># Also methods for fsubset, funique and roworder(v), na_omit (internal).</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'indexed_series'</span></span>
-<span><span class="va">x</span><span class="op">[</span><span class="va">i</span>, <span class="va">...</span>, drop.index.levels <span class="op">=</span> <span class="st">"id"</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'indexed_frame'</span></span>
-<span><span class="va">x</span><span class="op">[</span><span class="va">i</span>, <span class="va">...</span>, drop.index.levels <span class="op">=</span> <span class="st">"id"</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'indexed_frame'</span></span>
-<span><span class="va">x</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">value</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'indexed_frame'</span></span>
-<span><span class="va">x</span><span class="op">$</span><span class="va">name</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'indexed_frame'</span></span>
-<span><span class="va">x</span><span class="op">$</span><span class="va">name</span> <span class="op">&lt;-</span> <span class="va">value</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'indexed_frame'</span></span>
-<span><span class="va">x</span><span class="op">[[</span><span class="va">i</span>, <span class="va">...</span><span class="op">]</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'indexed_frame'</span></span>
-<span><span class="va">x</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">value</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
-<span></span>
-<span><span class="co"># Index subsetting and printing: optimized using ss()</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'index_df'</span></span>
-<span><span class="va">x</span><span class="op">[</span><span class="va">i</span>, <span class="va">j</span>, drop <span class="op">=</span> <span class="cn">FALSE</span>, drop.index.levels <span class="op">=</span> <span class="st">"id"</span><span class="op">]</span></span>
-<span></span>
-<span><span class="co"># S3 method for class 'index_df'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, topn <span class="op">=</span> <span class="fl">5</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre><code>## Create an 'indexed_frame' containing 'indexed_series'
+findex_by(.X, ..., single = "auto", interact.ids = TRUE)
+iby(.X, ..., single = "auto", interact.ids = TRUE)  # Shorthand
+
+## Retrieve the index ('index_df') from an 'indexed_frame' or 'indexed_series'
+findex(x)
+ix(x)     # Shorthand
+
+## Remove index from 'indexed_frame' or 'indexed_series' (i.e. get .X back)
+unindex(x)
+
+## Reindex 'indexed_frame' or 'indexed_series' (or index vectors / matrices)
+reindex(x, index = findex(x), single = "auto")
+
+## Check if 'indexed_frame', 'indexed_series', index or time vector is irregular
+is_irregular(x, any_id = TRUE)
+
+## Convert 'indexed_frame'/'indexed_series' to normal 'pdata.frame'/'pseries'
+to_plm(x, row.names = FALSE)
+
+# Subsetting &amp; replacement methods: [(&lt;-) methods call NextMethod().
+# Also methods for fsubset, funique and roworder(v), na_omit (internal).
+
+# S3 method for class 'indexed_series'
+x[i, ..., drop.index.levels = "id"]`[`(x, i, ..., drop.index.levels = "id")
+
+# S3 method for class 'indexed_frame'
+x[i, ..., drop.index.levels = "id"]`[`(x, i, ..., drop.index.levels = "id")
+
+# S3 method for class 'indexed_frame'
+x[i, j] &lt;- value`[`(x, i, j) &lt;- value
+
+# S3 method for class 'indexed_frame'
+x$name`$`(x, name)
+
+# S3 method for class 'indexed_frame'
+x$name &lt;- value`$`(x, name) &lt;- value
+
+# S3 method for class 'indexed_frame'
+x[[i, ...]]`[[`(x, i, ...)
+
+# S3 method for class 'indexed_frame'
+x[[i]] &lt;- value`[[`(x, i) &lt;- value
+
+# Index subsetting and printing: optimized using ss()
+
+# S3 method for class 'index_df'
+x[i, j, drop = FALSE, drop.index.levels = "id"]`[`(x, i, j, drop = FALSE, drop.index.levels = "id")
+
+# S3 method for class 'index_df'
+print(x, topn = 5, ...)</code></pre></div>
     </div>
 
     <div class="section level2">
@@ -626,7 +626,7 @@
 <span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="fu">to_plm</span><span class="op">(</span><span class="va">wldi</span><span class="op">)</span>, effect <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x14d327740&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x1165d49e8&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))-- L(G(LIFEEX, 5, p = 1/5), c(0, 5))L5 </span>

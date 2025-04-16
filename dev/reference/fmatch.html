@@ -48,19 +48,19 @@ This is a much faster replacement for match that works
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre><code>fmatch(x, table, nomatch = NA_integer_,
-       count = FALSE, overid = 1L)
-
-# Check match: throws an informative error for non-matched elements
-# Default message reflects frequent internal use to check data frame columns
-ckmatch(x, table, e = "Unknown columns:", ...)
-
-# Infix operators based on fmatch():
-x %!in% tablex %!in% table   # Opposite of %in%
-x %iin% table, but more efficient
-x %!iin% table, but more efficient
-# Use set_collapse(mask = "%in%") to replace %in% with
-# a much faster version based on fmatch()</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fmatch</span><span class="op">(</span><span class="va">x</span>, <span class="va">table</span>, nomatch <span class="op">=</span> <span class="cn">NA_integer_</span>,</span>
+<span>       count <span class="op">=</span> <span class="cn">FALSE</span>, overid <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check match: throws an informative error for non-matched elements</span></span>
+<span><span class="co"># Default message reflects frequent internal use to check data frame columns</span></span>
+<span><span class="fu">ckmatch</span><span class="op">(</span><span class="va">x</span>, <span class="va">table</span>, e <span class="op">=</span> <span class="st">"Unknown columns:"</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Infix operators based on fmatch():</span></span>
+<span><span class="va">x</span> <span class="op">%!in%</span> <span class="va">table</span>   <span class="co"># Opposite of %in%</span></span>
+<span><span class="va">x</span> <span class="op">%iin%</span> <span class="va">table</span>   <span class="co"># = which(x %in% table), but more efficient</span></span>
+<span><span class="va">x</span> <span class="op">%!iin%</span> <span class="va">table</span>  <span class="co"># = which(x %!in% table), but more efficient</span></span>
+<span><span class="co"># Use set_collapse(mask = "%in%") to replace %in% with</span></span>
+<span><span class="co"># a much faster version based on fmatch()</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
