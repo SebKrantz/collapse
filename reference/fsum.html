@@ -340,14 +340,14 @@
 <span class="r-in"><span>               <span class="fu"><a href="https://rdrr.io/r/base/rowsum.html" class="external-link">rowsum</a></span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, reorder <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">mtcDT</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min        lq     mean   median</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 88.831579 78.634703 70.62758 73.28992</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  3.673684  3.424658  3.33947  3.42437</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.000000  1.00000  1.00000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         uq        max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  62.802817 136.422175   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   3.165493   5.507463   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000   1.000000   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                               expr       min       lq      mean    median</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  mtcDT[, lapply(.SD, sum), by = f] 88.094737 79.34272 70.943360 73.297414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(mtcDT, f, reorder = FALSE)  3.642105  3.43662  3.406925  3.448276</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(mtcDT, f, na.rm = FALSE)  1.000000  1.00000  1.000000  1.000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         uq       max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  62.733577 84.694313   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   3.145985  5.613744   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.000000  1.000000   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now larger data</span></span></span>
 <span class="r-in"><span><span class="va">tdata</span> <span class="op">&lt;-</span> <span class="fu"><a href="quick-conversion.html">qDT</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">replicate</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1e5</span><span class="op">)</span>, simplify <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span> <span class="co"># 100 columns with 100.000 obs</span></span></span>
@@ -358,13 +358,13 @@
 <span class="r-in"><span>               <span class="fu">fsum</span><span class="op">(</span><span class="va">tdata</span>, <span class="va">f</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, unit <span class="op">=</span> <span class="st">"relative"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: relative</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                               expr      min       lq     mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 3.333374 3.196280 3.049802 3.229762 3.371307</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.424533 2.313368 2.263252 2.331422 2.425420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  tdata[, lapply(.SD, sum), by = f] 3.312002 3.185396 3.389484 3.201109 3.502803</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  rowsum(tdata, f, reorder = FALSE) 2.400094 2.313414 2.555743 2.318842 2.536019</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      fsum(tdata, f, na.rm = FALSE) 1.000000 1.000000 1.000000 1.000000 1.000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4.441966   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  4.096463   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  1.000000   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  11.48875   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  10.76483   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   1.00000   100</span>
 <span class="r-in"><span><span class="co"># Reset options</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="collapse-options.html">set_collapse</a></span><span class="op">(</span><span class="va">opts</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>

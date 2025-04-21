@@ -544,8 +544,8 @@ It also implements a class-agnostic approach to data manipulation in R, supporti
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f1</span><span class="op">)</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># A minor difference, larger on larger data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               expr   min    lq    mean median    uq    max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.813 4.018 4.61701 4.0795 4.182 53.751   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.813 3.895 4.01349 3.9360 4.018  9.061   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.895 4.018 4.33411  4.059 4.141 26.158   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.608 3.854 4.01226  3.895 3.977 11.029   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Efficient interactions of vectors and/or factors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0</span>
@@ -631,9 +631,9 @@ It also implements a class-agnostic approach to data manipulation in R, supporti
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">2</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># A remarkable performance gain..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min      lq      mean   median       uq     max</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.050   2.624   3.28369   3.0135   3.5260  12.915</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 289.173 295.651 307.49180 300.0175 310.8005 473.919</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq      mean  median       uq     max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.050   2.2550   2.99546   2.747   3.1570  12.505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 283.187 288.4555 299.80922 295.733 305.3885 451.943</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  neval</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
