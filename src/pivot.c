@@ -276,9 +276,9 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
     case LGLSXP: {
       const int *restrict pc = INTEGER_RO(column);
       if(aggfun <= 3) {
-        AGGFUN_SWITCH_CAT(INTEGER, pc[i] != NA_INTEGER);
+        AGGFUN_SWITCH_CAT(INT_DATAPTR, pc[i] != NA_INTEGER);
       } else {
-        AGGFUN_SWITCH_NUM(int, INTEGER, pc[i] != NA_INTEGER, ISMISS_INTDBL);
+        AGGFUN_SWITCH_NUM(int, INT_DATAPTR, pc[i] != NA_INTEGER, ISMISS_INTDBL);
       }
       break;
     }
@@ -291,9 +291,9 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
       //   pout_i[pix[i]] = pc[i];
       // }
       if(aggfun <= 3) {
-        AGGFUN_SWITCH_CAT(REAL, NISNAN(pc[i]));
+        AGGFUN_SWITCH_CAT(DBL_DATAPTR, NISNAN(pc[i]));
       } else {
-        AGGFUN_SWITCH_NUM(double, REAL, NISNAN(pc[i]), ISNAN);
+        AGGFUN_SWITCH_NUM(double, DBL_DATAPTR, NISNAN(pc[i]), ISNAN);
       }
       break;
     }

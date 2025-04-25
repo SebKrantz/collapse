@@ -171,6 +171,11 @@ typedef union { VECTOR_SEXPREC s; double align; } SEXPREC_ALIGN;
 #undef SEXP_DATAPTR
 #define SEXP_DATAPTR(x) ((SEXP *) (((SEXPREC_ALIGN *) (x)) + 1))
 
+#undef INT_DATAPTR
+#define INT_DATAPTR(x) ((int *) (((SEXPREC_ALIGN *) (x)) + 1))
+#undef DBL_DATAPTR
+#define DBL_DATAPTR(x) ((double *) (((SEXPREC_ALIGN *) (x)) + 1))
+
 #undef DPTR
 #define DPTR(x) ((void *)DATAPTR_RO(x))
 #undef SEXPPTR

@@ -10,7 +10,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
   if(TYPEOF(gobj) != VECSXP || !inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP g = VECTOR_ELT(gobj, 1), gs = VECTOR_ELT(gobj, 2),
     ord = VECTOR_ELT(gobj, 5), order = VECTOR_ELT(gobj, 6);
-  const int ng = length(gs), *pgs = INTEGER(gs), tx = TYPEOF(x), l = length(g);
+  const int ng = length(gs), *pgs = INTEGER_RO(gs), tx = TYPEOF(x), l = length(g);
   if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
   SEXP res = PROTECT(allocVector(VECSXP, ng));
   // Output as integer or not
@@ -64,24 +64,24 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       switch(tx) {
       case INTSXP:
       case LGLSXP: {
-        const int *px = INTEGER(x);
+        const int *px = INTEGER_RO(x);
         for(int j = 0; j != ng; ++j) {
-          int *pgj = INTEGER(pres[j]), gsj = pgs[j];
+          int *pgj = INT_DATAPTR(pres[j]), gsj = pgs[j];
           for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
         }
         break;
       }
       case REALSXP: {
-        const double *px = REAL(x);
+        const double *px = REAL_RO(x);
         for(int j = 0, gsj; j != ng; ++j) {
-          double *pgj = REAL(pres[j]);
+          double *pgj = DBL_DATAPTR(pres[j]);
           gsj = pgs[j];
           for(int i = 0; i != gsj; ++i) pgj[i] = px[count++];
         }
         break;
       }
       case CPLXSXP: {
-        const Rcomplex *px = COMPLEX(x);
+        const Rcomplex *px = COMPLEX_RO(x);
         for(int j = 0, gsj; j != ng; ++j) {
           Rcomplex *pgj = COMPLEX(pres[j]);
           gsj = pgs[j];
@@ -108,7 +108,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case RAWSXP: {
-        const Rbyte *px = RAW(x);
+        const Rbyte *px = RAW_RO(x);
         for(int j = 0, gsj; j != ng; ++j) {
           Rbyte *pgj = RAW(pres[j]);
           gsj = pgs[j];
@@ -122,11 +122,11 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
   } else if(length(order) == l) { // Grouping not sorted but we have the ordering..
     const SEXP starts = getAttrib(order, sym_starts);
     if(length(starts) != ng) goto unsno;
-    const int *po = INTEGER(order), *ps = INTEGER(starts);
+    const int *po = INTEGER_RO(order), *ps = INTEGER_RO(starts);
 
     if(asLogical(toint)) {
       for(int i = 0; i != ng; ++i) {
-        int *pri = INTEGER(pres[i]);
+        int *pri = INT_DATAPTR(pres[i]);
         for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; j++) pri[k++] = po[j];
       }
     } else {
@@ -134,23 +134,23 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       switch(tx) {
       case INTSXP:
       case LGLSXP: {
-        const int *px = INTEGER(x);
+        const int *px = INTEGER_RO(x);
         for(int i = 0; i != ng; ++i) {
-          int *pri = INTEGER(pres[i]);
+          int *pri = INT_DATAPTR(pres[i]);
           for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; ++j) pri[k++] = px[po[j]-1];
         }
         break;
       }
       case REALSXP: {
-        double *px = REAL(x);
+        const double *px = REAL_RO(x);
         for(int i = 0; i != ng; ++i) {
-          double *pri = REAL(pres[i]);
+          double *pri = DBL_DATAPTR(pres[i]);
           for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; ++j) pri[k++] = px[po[j]-1];
         }
         break;
       }
       case CPLXSXP: {
-        Rcomplex *px = COMPLEX(x);
+        const Rcomplex *px = COMPLEX_RO(x);
         for(int i = 0; i != ng; ++i) {
           Rcomplex *pri = COMPLEX(pres[i]);
           for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; ++j) pri[k++] = px[po[j]-1];
@@ -174,7 +174,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case RAWSXP: {
-        const Rbyte *px = RAW(x);
+        const Rbyte *px = RAW_RO(x);
         for(int i = 0; i != ng; ++i) {
           Rbyte *pri = RAW(pres[i]);
           for(int j = ps[i]-1, end = ps[i]+pgs[i]-1, k = 0; j < end; ++j) pri[k++] = px[po[j]-1];
@@ -191,35 +191,35 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
     // memset(count, 0, sizeof(int)*(ng+1)); // Needed here ??
     // int *count = (int *) R_alloc(ng+1, sizeof(int));
 
-    const int *pg = INTEGER(g);
+    const int *pg = INTEGER_RO(g);
     // --pres;
     if(asLogical(toint)) {
       for(int i = 0, gi; i != l; ++i) {
         gi = pg[i]-1;
-        INTEGER(pres[gi])[count[gi]++] = i+1;
+        INT_DATAPTR(pres[gi])[count[gi]++] = i+1;
       }
     } else {
       if(length(x) != l) error("length(x) must match length(g)");
       switch(tx) {
       case INTSXP:
       case LGLSXP: {
-        const int *px = INTEGER(x);
+        const int *px = INTEGER_RO(x);
         for(int i = 0, gi; i != l; ++i) {
           gi = pg[i]-1;
-          INTEGER(pres[gi])[count[gi]++] = px[i];
+          INT_DATAPTR(pres[gi])[count[gi]++] = px[i];
         }
         break;
       }
       case REALSXP: {
-        const double *px = REAL(x);
+        const double *px = REAL_RO(x);
         for(int i = 0, gi; i != l; ++i) {
           gi = pg[i]-1;
-          REAL(pres[gi])[count[gi]++] = px[i];
+          DBL_DATAPTR(pres[gi])[count[gi]++] = px[i];
         }
         break;
       }
       case CPLXSXP: {
-        const Rcomplex *px = COMPLEX(x);
+        const Rcomplex *px = COMPLEX_RO(x);
         for(int i = 0, gi; i != l; ++i) {
           gi = pg[i]-1;
           COMPLEX(pres[gi])[count[gi]++] = px[i];
@@ -243,7 +243,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
         break;
       }
       case RAWSXP: {
-        const Rbyte *px = RAW(x);
+        const Rbyte *px = RAW_RO(x);
         for(int i = 0, gi; i != l; ++i) {
           gi = pg[i]-1;
           RAW(pres[gi])[count[gi]++] = px[i];
@@ -264,7 +264,7 @@ SEXP greorder(SEXP x, SEXP gobj) {
   if(TYPEOF(gobj) != VECSXP || !inherits(gobj, "GRP")) error("g needs to be an object of class 'GRP', see ?GRP");
   const SEXP g = VECTOR_ELT(gobj, 1), gs = VECTOR_ELT(gobj, 2), order = VECTOR_ELT(gobj, 6);
   const int ng = length(gs), l = length(g), tx = TYPEOF(x),
-            *pgs = INTEGER(gs), *pg = INTEGER(g);
+            *pgs = INTEGER_RO(gs), *pg = INTEGER_RO(g);
   if(l != length(x)) error("length(x) must match length(g)");
   if(ng != INTEGER(VECTOR_ELT(gobj, 0))[0]) error("'GRP' object needs to have valid vector of group-sizes");
   if(LOGICAL(VECTOR_ELT(gobj, 5))[1] == 1) return x;
@@ -275,26 +275,29 @@ SEXP greorder(SEXP x, SEXP gobj) {
   if(length(order) == l) { // Grouping not sorted but we have the ordering..
     const SEXP starts = getAttrib(order, sym_starts);
     if(length(starts) != ng) goto unsno2;
-    const int *po = INTEGER(order), *ps = INTEGER(starts);
+    const int *po = INTEGER_RO(order), *ps = INTEGER_RO(starts);
 
     switch(tx) {
     case INTSXP:
     case LGLSXP: {
-      int *px = INTEGER(x), *pr = INTEGER(res);
+      const int *px = INTEGER_RO(x);
+      int *pr = INTEGER(res);
       for(int i = 0, k = 0; i != ng; ++i) {
         for(int j = ps[i]-1, end = ps[i]+pgs[i]-1; j < end; ++j) pr[po[j]-1] = px[k++];
       }
       break;
     }
     case REALSXP: {
-      double *px = REAL(x), *pr = REAL(res);
+      const double *px = REAL_RO(x);
+      double *pr = REAL(res);
       for(int i = 0, k = 0; i != ng; ++i) {
         for(int j = ps[i]-1, end = ps[i]+pgs[i]-1; j < end; ++j) pr[po[j]-1] = px[k++];
       }
       break;
     }
     case CPLXSXP: {
-      Rcomplex *px = COMPLEX(x), *pr = COMPLEX(res);
+      const Rcomplex *px = COMPLEX_RO(x);
+      Rcomplex *pr = COMPLEX(res);
       for(int i = 0, k = 0; i != ng; ++i) {
         for(int j = ps[i]-1, end = ps[i]+pgs[i]-1; j < end; ++j) pr[po[j]-1] = px[k++];
       }
@@ -317,7 +320,8 @@ SEXP greorder(SEXP x, SEXP gobj) {
       break;
     }
     case RAWSXP: {
-      Rbyte *px = RAW(x), *pr = RAW(res);
+      const Rbyte *px = RAW_RO(x);
+      Rbyte *pr = RAW(res);
       for(int i = 0, k = 0; i != ng; ++i) {
         for(int j = ps[i]-1, end = ps[i]+pgs[i]-1; j < end; ++j) pr[po[j]-1] = px[k++];
       }
@@ -337,17 +341,20 @@ SEXP greorder(SEXP x, SEXP gobj) {
     switch(tx) {
     case INTSXP:
     case LGLSXP: {
-      int *px = INTEGER(x), *pr = INTEGER(res);
+      const int *px = INTEGER_RO(x);
+      int *pr = INTEGER(res);
       for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
       break;
     }
     case REALSXP: {
-      double *px = REAL(x), *pr = REAL(res);
+      const double *px = REAL_RO(x);
+      double *pr = REAL(res);
       for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
       break;
     }
     case CPLXSXP: {
-      Rcomplex *px = COMPLEX(x), *pr = COMPLEX(res);
+      const Rcomplex *px = COMPLEX_RO(x);
+      Rcomplex *pr = COMPLEX(res);
       for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
       break;
     }
@@ -364,7 +371,8 @@ SEXP greorder(SEXP x, SEXP gobj) {
       break;
     }
     case RAWSXP: {
-      Rbyte *px = RAW(x), *pr = RAW(res);
+      const Rbyte *px = RAW_RO(x);
+      Rbyte *pr = RAW(res);
       for(int i = 0; i != l; ++i) pr[i] = px[cgs[pg[i]]+count[pg[i]]++];
       break;
     }
