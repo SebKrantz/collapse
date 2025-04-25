@@ -2,6 +2,8 @@
 
 * `na_insert()` has new argument `set` to do this by reference. 
 
+* Some moderate performance gains to `gsplit()`/`BY()` and `pivot()`.
+
 # collapse 2.1.1
 
 * `alloc(list(1), 2)` now gives `list(1, 1)` instead of `list(list(1), list(1))`, which can still be generated with `alloc(list(1), 2, simplify = FALSE)`. This change also affects `ftransform()`/`fmutate()`, making, e.g., `fmutate(data, y = list(1))` consistent with `dplyr::mutate(data, y = list(1))`. Thanks @MattAFiedler (#753). 
