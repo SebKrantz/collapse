@@ -121,7 +121,7 @@ Another thing to be aware of when using *Fast Statistical Functions* inside data
 mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + min(qsec)) # Vectorized
 ```
 
-calculates a grouped mean of `mpg` but adds the overall minimum of `qsec` to the result, whereas 
+calculates a grouped mean of `mpg` but adds the overall minimum of `qsec` to the result, i.e., it is equivalent to `fmean(mpg, g = cyl) + min(qsec)`. On the other hand 
 
 ```{r}
 mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + fmin(qsec)) # Vectorized
@@ -130,9 +130,9 @@ mtcars |> group_by(cyl) |> summarise(mpg = mean(mpg) + min(qsec))   # Not vector
 
 both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) + fmin(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
 
-See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. [This blog post](https://andrewghazi.github.io/posts/collapse_is_sick/sick.html) by Andrew Ghazi provides an excellent example of computing a p-value test statistic by groups.  
+See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. [This blog post](https://andrewghazi.github.io/posts/collapse_is_sick/sick.html) by Andrew Ghazi provides an excellent example of computing a p-value test statistic by groups. *Note* that only expressions typed out can be vectorized; expressions inside functions such as `mean_plus_min <- function(x) fmean(x) + fmin(x)` are not vectorized.^[*collapse* can only read what you type, e.g. `exp <- substitute(fmean(mpg) + min(mpg))`, then `all_funs(exp)` gives `c("+", "fmean", "min")`, and `any(all_funs(exp) %in% .FAST_STAT_FUN)` returns `TRUE`, signifying to `fsummarise()` that the expression should be executed only once with the grouping object passed to the `g` argument of `fmean()`, instead of it being executed once for every group.] To take full advantage of *collapse*, it is thus highly recommended to use the *Fast Statistical Functions* as much as possible.
 
-To take full advantage of *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect other parts of your code^[When doing this, make sure to refer to base R functions explicitly using `::` e.g. `base::mean`.]. 
+<!-- To take full advantage of *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect other parts of your code^[When doing this, make sure to refer to base R functions explicitly using `::` e.g. `base::mean`.]. -->
 
 ## Writing Efficient Code
 
