@@ -78,7 +78,7 @@ with(latest, fndistinct(s, c))
 ###################################################
 ### code chunk number 7: RCA
 ###################################################
-with(latest, fsum(v, c, TRA = "/") / fsum(v, s, TRA = "/"))[1:10]
+with(latest, fsum(v, c, TRA = "/") / fsum(fsum(v, TRA = "/"), s, TRA = "fill"))[1:10]
 
 
 ###################################################
