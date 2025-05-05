@@ -695,8 +695,8 @@ Among all \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipul
 Compared to commercial software such as \proglang{STATA} \citep{STATA}, the implementation of joins in most open-source software provides no information on how many records were joined from both tables. This often provokes manual efforts to validate the join operation. \fct{collapse::join} provides many options to understand table join operations. Its syntax is:
 \begin{Code}
 join(x, y, on = NULL, how = "left", suffix = NULL, validate = "m:m",
-  multiple = FALSE, sort = FALSE, keep.col.order = TRUE,
-  drop.dup.cols = FALSE, verbose = 1, column = NULL, attr = NULL, ...)
+  multiple = FALSE, sort = FALSE, keep.col.order = TRUE, verbose = 1,
+  drop.dup.cols = FALSE, require = NULL, column = NULL, attr = NULL, ...)
 \end{Code}
 It defaults to left join and only takes first matches from \code{y} (\code{multiple = FALSE}), thus, it simply adds columns to \code{x}, which is efficient and sufficient/desired in many cases. By default (\code{verbose = 1}), it prints information about the join operation and number of records joined. \newline
 
@@ -844,7 +844,7 @@ The reshaping/pivoting functionality of both commercial and open-source software
 %
 \begin{Code}
 pivot(data, ids = NULL, values = NULL, names = NULL, labels = NULL,
-  how = "longer", na.rm = FALSE, check.dups = FALSE, ...)
+  how = "longer", na.rm = FALSE, check.dups = FALSE, FUN = "last", ...)
 \end{Code}
 %
 The demonstration below employs the included Groningen Growth and Development Centre 10-Sector Database (\href{https://sebkrantz.github.io/collapse/reference/GGDC10S.html}{\code{GGDC10S}}) providing long-run internationally comparable data on sectoral productivity performance in Africa, Asia, and Latin America. While the database covers 10 sectors, for the demonstration I only retain Agriculture, Mining, and Manufacturing.\footnote{The \code{"Label"} column is added for demonstration purposes. \fct{namlab} provides a compact overview of variable names and labels stored in \code{attr(column, "label")}, with (optional) additional information/statistics.}
@@ -893,7 +893,7 @@ The second option is a wider pivot with \code{how = "wider"}. Here, \code{names}
 \begin{Schunk}
 \begin{Sinput}
 R> head(dw <- pivot(data, c("Country", "Year"), names = "Variable",
-+                   labels = "Label", how = "w"))
++                   labels = "Label", how = "wider"))
 \end{Sinput}
 \begin{Soutput}
   Country Year AGR_VA AGR_EMP MIN_VA MIN_EMP MAN_VA MAN_EMP
@@ -925,8 +925,8 @@ For the recast pivot (\code{how = "recast"}), unless a column named \code{variab
 \begin{Schunk}
 \begin{Sinput}
 R> head(dr <- pivot(data, c("Country", "Year"),
-+               names = list(from = "Variable", to = "Sectorcode"),
-+               labels = list(from = "Label", to = "Sector"), how = "r"))
++    names = list(from = "Variable", to = "Sectorcode"),
++    labels = list(from = "Label", to = "Sector"), how = "recast"))
 \end{Sinput}
 \begin{Soutput}
   Country Year Sectorcode      Sector    VA   EMP
@@ -951,9 +951,9 @@ This (\code{dr}) is the tidy format \citep{rtidydata} where each variable is a s
 \fct{pivot} also supports fast aggregation pivots, the default being \code{FUN = "last"}, which simply overwrites values in appearance order if the combination of \code{ids} and \code{names} does not fully identify the data. The latter can be checked with \code{check.dups = TRUE}. There are a small number of internal functions: \code{"first", "last", "sum", "mean", "min", "max",} and \code{"count"}. These carry out computations 'on the fly' and are thus extremely fast. \fct{pivot} also supports \emph{Fast Statistical Functions}, which will yield vectorized aggregations, but require a deep copy of the columns aggregated which is avoided using the internal functions. The following example performs aggregation across years with the internal mean function during a recast pivot.
 \begin{Schunk}
 \begin{Sinput}
-R> head(dr_agg <- pivot(data, "Country", c("AGR", "MIN", "MAN"), how = "r",
-+       names = list(from = "Variable", to = "Sectorcode"),
-+       labels = list(from = "Label", to = "Sector"), FUN = "mean"))
+R> head(dr_agg <- pivot(data, "Country", c("AGR", "MIN", "MAN"),
++    how = "recast", names = list(from = "Variable", to = "Sectorcode"),
++    labels = list(from = "Label", to = "Sector"), FUN = "mean"))
 \end{Sinput}
 \begin{Soutput}
   Country Sectorcode      Sector       VA      EMP
