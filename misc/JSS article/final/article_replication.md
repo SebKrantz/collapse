@@ -1,0 +1,1484 @@
+
+
+``` r
+#####################################################
+### Replication Script for the JSS Article:
+### collapse: Advanced and Fast Statistical Computing
+###           and Data Transformation in R
+```
+
+``` r
+### By: Sebastian Krantz, IfW Kiel
+### E-Mail: sebastian.krantz@ifw-kiel.de
+#####################################################
+
+###################################################
+### code chunk number 1: preliminaries
+###################################################
+
+rm(list = ls()); gc()
+```
+
+```
+##           used (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
+## Ncells  690907 36.9    1303780  69.7         NA  1303780  69.7
+## Vcells 1118445  8.6   27012546 206.1      49152 27825192 212.3
+```
+
+``` r
+r_opts <- options(prompt = "R> ", continue = "+  ", width = 77, digits = 4, useFancyQuotes = FALSE, warn = 1)
+
+# Loading libraries and installing if unavailable
+if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
+options(fastverse.styling = FALSE)
+library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
+```
+
+```
+## -- Attaching packages ------------------------------------ fastverse 0.3.4 --
+```
+
+```
+## v data.table 1.17.0         v kit        0.0.19    
+## v magrittr   2.0.3          v collapse   2.1.1.9000
+```
+
+``` r
+# Package versions used in the article:
+# fastverse 0.3.4, collapse 2.1.2, data.table 1.17.0, nycflights23 0.2.0,
+# bench 1.1.4, dplyr 1.1.4, tidyr 1.3.1, matrixStats 1.5.0, janitor 2.2.0
+pkg <- c("bench", "dplyr", "tidyr", "matrixStats", "janitor", "nycflights23")
+if(!all(avail <- is_installed(pkg))) install.packages(pkg[!avail])
+
+# Reset collapse options (if set)
+oldopts <- set_collapse(nthreads = 1L, remove = NULL, stable.algo = TRUE, sort = TRUE,
+             digits = 2L, stub = TRUE, verbose = 1L, mask = NULL, na.rm = TRUE)
+
+# For presentation: removing whitespace around labels
+vlabels(GGDC10S) <- trimws(vlabels(GGDC10S))
+
+# This is the benchmark function
+bmark <- function(...) {
+  bench::mark(..., min_time = 2, check = FALSE) |> janitor::clean_names() |>
+  fselect(expression, min, median, mem_alloc, n_itr, n_gc, total_time) |>
+  fmutate(expression = names(expression)) |> dapply(as.character) |> qDF()
+}
+
+
+###################################################
+### code chunk number 2: collapse_topics
+###################################################
+.COLLAPSE_TOPICS
+```
+
+```
+##  [1] "collapse-documentation"     "fast-statistical-functions"
+##  [3] "fast-grouping-ordering"     "fast-data-manipulation"    
+##  [5] "quick-conversion"           "advanced-aggregation"      
+##  [7] "data-transformations"       "time-series-panel-series"  
+##  [9] "list-processing"            "summary-statistics"        
+## [11] "recode-replace"             "efficient-programming"     
+## [13] "small-helpers"              "collapse-options"
+```
+
+``` r
+help("collapse-documentation")
+
+
+###################################################
+### code chunk number 3: faststatfun
+###################################################
+fmean(iris$Sepal.Length)
+```
+
+```
+## [1] 5.843
+```
+
+``` r
+fmean(num_vars(iris))
+```
+
+```
+## Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
+##        5.843        3.057        3.758        1.199
+```
+
+``` r
+identical(fmean(num_vars(iris)), fmean(as.matrix(num_vars(iris))))
+```
+
+```
+## [1] TRUE
+```
+
+``` r
+fmean(iris$Sepal.Length, g = iris$Species)
+```
+
+```
+##     setosa versicolor  virginica 
+##      5.006      5.936      6.588
+```
+
+``` r
+fmean(num_vars(iris), g = iris$Species, nthreads = 4)
+```
+
+```
+##            Sepal.Length Sepal.Width Petal.Length Petal.Width
+## setosa            5.006       3.428        1.462       0.246
+## versicolor        5.936       2.770        4.260       1.326
+## virginica         6.588       2.974        5.552       2.026
+```
+
+``` r
+###################################################
+### code chunk number 4: TRA
+###################################################
+fmean(iris$Sepal.Length, g = iris$Species, TRA = "fill")[c(1:5, 51:55)]
+```
+
+```
+##  [1] 5.006 5.006 5.006 5.006 5.006 5.936 5.936 5.936 5.936 5.936
+```
+
+``` r
+###################################################
+### code chunk number 5: BY
+###################################################
+BY(num_vars(iris), g = iris$Species, FUN = mad) |> head(1)
+```
+
+```
+##        Sepal.Length Sepal.Width Petal.Length Petal.Width
+## setosa       0.2965      0.3706       0.1483           0
+```
+
+``` r
+###################################################
+### code chunk number 6: fscale
+###################################################
+fscale(iris$Sepal.Length, g = iris$Species) |> fsd(iris$Species)
+```
+
+```
+##     setosa versicolor  virginica 
+##          1          1          1
+```
+
+``` r
+###################################################
+### code chunk number 7: wlddev_distinct
+###################################################
+fndistinct(wlddev)
+```
+
+```
+## country   iso3c    date    year  decade  region  income    OECD   PCGDP 
+##     216     216      61      61       7       7       4       2    9470 
+##  LIFEEX    GINI     ODA     POP 
+##   10548     368    7832   12877
+```
+
+``` r
+###################################################
+### code chunk number 8: fsummarise
+###################################################
+wlddev |> fgroup_by(country, income) |>
+  fsummarise(n = fnobs(LIFEEX),
+             diff = fmax(LIFEEX) %-=% fmin(LIFEEX),
+             mean_diff = fmean(fdiff(LIFEEX)),
+             cor_PCGDP = pwcor(Dlog(LIFEEX), Dlog(PCGDP)),
+             across(c(LIFEEX, PCGDP, POP), flast)) |>
+  collap( ~ income, w = ~ POP, keep.w = FALSE) |> print(digits = 2)
+```
+
+```
+##         country              income  n diff mean_diff cor_PCGDP LIFEEX PCGDP
+## 1 United States         High income 60   13      0.23  -0.00828     81 44599
+## 2      Ethiopia          Low income 60   26      0.43   0.27153     64   691
+## 3         India Lower middle income 60   24      0.41  -0.15366     69  2324
+## 4         China Upper middle income 60   27      0.45   0.00077     76  8749
+```
+
+``` r
+###################################################
+### code chunk number 9: fsummarise_2
+###################################################
+wlddev |> fsubset(year >= 2015, income, PCGDP:POP) |>
+  fgroup_by(income) |> fmean(POP)
+```
+
+```
+##                income   sum.POP PCGDP LIFEEX  GINI        ODA
+## 1         High income 5.901e+09 43340  80.70 36.14   81398948
+## 2          Low income 3.296e+09   663  63.05 39.13 2466732035
+## 3 Lower middle income 1.490e+10  2177  68.31 36.48 2234540565
+## 4 Upper middle income 1.318e+10  8168  75.51 41.68  -86630117
+```
+
+``` r
+###################################################
+### code chunk number 10: glinreg
+###################################################
+wlddev |> collap(POP ~ region + year, FUN = fsum) |>
+  fmutate(POP = POP / 1e6) |> fgroup_by(region) |>
+  fmutate(dmy = fmean(year, TRA = "-")) |>
+  fsummarise(beta = fsum(POP, dmy) %/=% fsum(dmy, dmy),
+             POP20 = flast(POP)) |>
+  fmutate(POP21 = POP20 + beta, POP22 = POP21 + beta,
+          POP23 = POP22 + beta, POP24 = POP23 + beta)
+```
+
+```
+##                       region   beta  POP20  POP21  POP22  POP23  POP24
+## 1        East Asia & Pacific 18.731 2291.4 2310.2 2328.9 2347.6 2366.4
+## 2      Europe & Central Asia  2.463  921.2  923.7  926.1  928.6  931.0
+## 3  Latin America & Caribbean  6.460  646.4  652.9  659.4  665.8  672.3
+## 4 Middle East & North Africa  5.409  456.7  462.1  467.5  472.9  478.3
+## 5              North America  2.301  365.9  368.2  370.5  372.8  375.1
+## 6                 South Asia 19.640 1835.8 1855.4 1875.1 1894.7 1914.3
+## 7         Sub-Saharan Africa 12.852 1103.5 1116.3 1129.2 1142.0 1154.9
+```
+
+``` r
+###################################################
+### code chunk number 11: wstats
+###################################################
+wlddev |> fsubset(is.finite(POP)) |> fgroup_by(region) |>
+  fmutate(o = radixorder(GRPid(), LIFEEX)) |>
+  fsummarise(min = fmin(LIFEEX),
+             Q1 = fnth(LIFEEX, 0.25, POP, o = o, ties = "q8"),
+             mean = fmean(LIFEEX, POP),
+             median = fmedian(LIFEEX, POP, o = o),
+             Q3 = fnth(LIFEEX, 0.75, POP, o = o, ties = "q8"),
+             max = fmax(LIFEEX))
+```
+
+```
+##                       region   min    Q1  mean median    Q3   max
+## 1        East Asia & Pacific 18.91 65.28 68.45  69.67 73.86 85.08
+## 2      Europe & Central Asia 45.37 68.68 72.30  71.58 76.67 85.42
+## 3  Latin America & Caribbean 41.76 65.17 69.16  70.87 74.48 82.19
+## 4 Middle East & North Africa 29.92 61.96 66.65  69.12 72.64 82.80
+## 5              North America 68.90 73.57 75.54  75.62 78.38 82.05
+## 6                 South Asia 32.45 55.08 60.19  62.00 66.67 78.92
+## 7         Sub-Saharan Africa 26.17 46.51 52.53  52.23 58.32 74.51
+```
+
+``` r
+###################################################
+### code chunk number 12: GRP
+###################################################
+str(g <- GRP(wlddev, ~ income + OECD))
+```
+
+```
+## Class 'GRP'  hidden list of 9
+##  $ N.groups    : int 6
+##  $ group.id    : int [1:13176] 3 3 3 3 3 3 3 3 3 3 ...
+##  $ group.sizes : int [1:6] 2745 2074 1830 2867 3538 122
+##  $ groups      :'data.frame':	6 obs. of  2 variables:
+##   ..$ income: Factor w/ 4 levels "High income",..: 1 1 2 3 4 4
+##   .. ..- attr(*, "label")= chr "Income Level"
+##   ..$ OECD  : logi [1:6] FALSE TRUE FALSE FALSE FALSE TRUE
+##   .. ..- attr(*, "label")= chr "Is OECD Member Country?"
+##  $ group.vars  : chr [1:2] "income" "OECD"
+##  $ ordered     : Named logi [1:2] TRUE FALSE
+##   ..- attr(*, "names")= chr [1:2] "ordered" "sorted"
+##  $ order       : int [1:13176] 245 246 247 248 249 250 251 252 253 254 ...
+##   ..- attr(*, "starts")= int [1:6] 1 2746 4820 6650 9517 13055
+##   ..- attr(*, "maxgrpn")= int 3538
+##   ..- attr(*, "sorted")= logi FALSE
+##  $ group.starts: int [1:6] 245 611 1 306 62 7687
+##  $ call        : language GRP.default(X = wlddev, by = ~income + OECD)
+```
+
+``` r
+###################################################
+### code chunk number 13: gcomp
+###################################################
+add_vars(g$groups,
+         get_vars(wlddev, "country") |> fmode(g, wlddev$POP, use = FALSE),
+         get_vars(wlddev, c("PCGDP", "LIFEEX")) |> fmean(g, wlddev$POP, use = F),
+         get_vars(wlddev, "POP") |> fsum(g, use = FALSE))
+```
+
+```
+##                income  OECD       country   PCGDP LIFEEX       POP
+## 1         High income FALSE  Saudi Arabia 22426.7  73.00 3.114e+09
+## 2         High income  TRUE United States 31749.6  75.84 5.573e+10
+## 3          Low income FALSE      Ethiopia   557.1  53.51 2.095e+10
+## 4 Lower middle income FALSE         India  1238.8  60.59 1.138e+11
+## 5 Upper middle income FALSE         China  3820.6  68.21 1.114e+11
+## 6 Upper middle income  TRUE        Mexico  8311.2  69.06 8.162e+09
+```
+
+``` r
+###################################################
+### code chunk number 14: gtrans
+###################################################
+add_vars(wlddev) <- get_vars(wlddev, c("PCGDP", "LIFEEX")) |>
+  fwithin(g, mean = "overall.mean") |> add_stub("center_")
+
+
+###################################################
+### code chunk number 15: fsumm_bench
+###################################################
+bmark(collapse = collapse::fsummarise(mtcars, sum = sum(mpg)),
+      dplyr = dplyr::summarise(mtcars, sum = sum(mpg)))
+```
+
+```
+##   expression      min   median mem_alloc n_itr n_gc total_time
+## 1   collapse   3.32µs   4.18µs   14.33KB  9998    2    43.01ms
+## 2      dplyr 201.84µs 234.64µs    1.53MB  7433   50      1.87s
+```
+
+``` r
+###################################################
+### code chunk number 16: ts_example
+###################################################
+fgrowth(airmiles) |> round(2)
+```
+
+```
+## Time Series:
+## Start = 1937 
+## End = 1960 
+## Frequency = 1 
+##  [1]    NA 16.50 42.29 54.03 31.65  2.38 15.23 33.29 54.36 76.92  2.71 -2.10
+## [13] 12.91 18.51 32.03 18.57 17.82 13.61 18.19 12.83 13.32  0.01 15.49  4.25
+```
+
+``` r
+###################################################
+### code chunk number 17: exports
+###################################################
+set.seed(101)
+exports <- expand.grid(y = 2001:2010, c = paste0("c", 1:10),
+                       s = paste0("s", 1:10)) |> fmutate(v = abs(rnorm(1e3))) |>
+  colorder(c, s) |> fsubset(-sample.int(1e3, 500))
+
+
+###################################################
+### code chunk number 18: ts_example_2
+###################################################
+.c(y, v) %=% fsubset(exports, c == "c1" & s == "s7", -c, -s)
+print(y)
+```
+
+```
+## [1] 2001 2002 2004 2005 2007 2008 2009 2010
+```
+
+``` r
+fgrowth(v, t = y) |> round(2)
+```
+
+```
+## [1]     NA 175.52     NA -22.37     NA 624.27 -79.01 534.56
+```
+
+``` r
+fgrowth(v, -1:3, t = y) |> head(4)
+```
+
+```
+##         FG1     --     G1   L2G1   L3G1
+## [1,] -63.71 0.3893     NA     NA     NA
+## [2,]     NA 1.0726 175.52     NA     NA
+## [3,]  28.82 0.8450     NA -21.22 117.05
+## [4,]     NA 0.6559 -22.37     NA -38.85
+```
+
+``` r
+###################################################
+### code chunk number 19: example_growth
+###################################################
+G(exports, -1:2, by = v ~ c + s, t = ~ y) |> head(3)
+```
+
+```
+##    c  s    y  FG1.v      v   G1.v L2G1.v
+## 1 c1 s1 2002 -18.15 0.5525     NA     NA
+## 2 c1 s1 2003 214.87 0.6749  22.17     NA
+## 3 c1 s1 2004 -31.02 0.2144 -68.24  -61.2
+```
+
+``` r
+tfm(exports, fgrowth(list(v = v), -1:2, g = list(c, s), t = y)) |> head(3)
+```
+
+```
+##    c  s    y      v  FG1.v   G1.v L2G1.v
+## 1 c1 s1 2002 0.5525 -18.15     NA     NA
+## 2 c1 s1 2003 0.6749 214.87  22.17     NA
+## 3 c1 s1 2004 0.2144 -31.02 -68.24  -61.2
+```
+
+``` r
+###################################################
+### code chunk number 20: example_growth_continued
+###################################################
+A <- exports |> fgroup_by(c, s) |> fmutate(gv = G(v, t = y)) |> fungroup()
+head(B <- exports |> fmutate(gv = G(v, g = list(c, s), t = y)), 4)
+```
+
+```
+##    c  s    y      v     gv
+## 1 c1 s1 2002 0.5525     NA
+## 2 c1 s1 2003 0.6749  22.17
+## 3 c1 s1 2004 0.2144 -68.24
+## 4 c1 s1 2005 0.3108  44.98
+```
+
+``` r
+identical(A, B)
+```
+
+```
+## [1] TRUE
+```
+
+``` r
+###################################################
+### code chunk number 21: indexing
+###################################################
+exportsi <- exports |> findex_by(c, s, y)
+exportsi |> G() |> head(5)
+```
+
+```
+##    c  s    y   G1.v
+## 1 c1 s1 2002     NA
+## 2 c1 s1 2003  22.17
+## 3 c1 s1 2004 -68.24
+## 4 c1 s1 2005  44.98
+## 5 c1 s1 2006 277.76
+## 
+## Indexed by:  c.s [1] | y [5 (10)]
+```
+
+``` r
+exportsi |> findex() |> print(2)
+```
+
+```
+##     c.s    y
+## 1 c1.s1 2002
+## 2 c1.s1 2003
+## ---                
+## 499 c10.s10 2007
+## 500 c10.s10 2009
+## 
+## c.s [100] | y [10]
+```
+
+``` r
+###################################################
+### code chunk number 22: indexing_2
+###################################################
+vi <- exportsi$v; str(vi, width = 70, strict = "cut")
+```
+
+```
+##  'indexed_series' num [1:500] 0.552 0.675 0.214 0.311 1.174 ...
+##  - attr(*, "index_df")=Classes 'index_df', 'pindex' and 'data.frame'..
+##   ..$ c.s: Factor w/ 100 levels "c1.s1","c2.s1",..: 1 1 1 1 1 1 1 1 ..
+##   ..$ y  : Ord.factor w/ 10 levels "2001"<"2002"<..: 2 3 4 5 6 7 8 9..
+##   ..- attr(*, "nam")= chr [1:3] "c" "s" "y"
+```
+
+``` r
+is_irregular(vi)
+```
+
+```
+## [1] TRUE
+```
+
+``` r
+vi |> psmat() |> head(3)
+```
+
+```
+##       2001  2002  2003  2004  2005 2006  2007   2008  2009  2010
+## c1.s1   NA 0.552 0.675 0.214 0.311 1.17 0.619 0.1127 0.917 0.223
+## c2.s1   NA 0.795    NA    NA 0.237   NA    NA 0.0585 0.818    NA
+## c3.s1   NA 0.709 0.268 1.464    NA   NA 0.467 0.1193 0.467    NA
+```
+
+``` r
+fdiff(vi) |> psmat() |> head(3)
+```
+
+```
+##       2001 2002   2003   2004   2005  2006   2007   2008  2009   2010
+## c1.s1   NA   NA  0.122 -0.461 0.0964 0.863 -0.555 -0.506 0.804 -0.694
+## c2.s1   NA   NA     NA     NA     NA    NA     NA     NA 0.759     NA
+## c3.s1   NA   NA -0.441  1.196     NA    NA     NA -0.348 0.348     NA
+```
+
+``` r
+###################################################
+### code chunk number 23: indexing_3
+###################################################
+settransform(exportsi, v_ld = Dlog(v))
+lm(v_ld ~ L(v_ld, 1:2), exportsi) |> summary() |> coef() |> round(3)
+```
+
+```
+##                Estimate Std. Error t value Pr(>|t|)
+## (Intercept)      -0.008      0.141  -0.058    0.954
+## L(v_ld, 1:2)L1   -0.349      0.115  -3.042    0.004
+## L(v_ld, 1:2)L2   -0.033      0.154  -0.215    0.831
+```
+
+``` r
+###################################################
+### code chunk number 24: rollmean
+###################################################
+BY(vi, ix(vi)$c.s, data.table::frollmean, 5) |> head(10)
+```
+
+```
+##  [1]     NA     NA     NA     NA 0.5853 0.5986 0.4861 0.6267 0.6092     NA
+## 
+## Indexed by:  c.s [2] | y [9 (10)]
+```
+
+``` r
+###################################################
+### code chunk number 25: joins
+###################################################
+teacher <- data.frame(id = 1:4, names = c("John", "Jane", "Bob", "Carl"),
+                      age = c(35, 32, 42, 67), subject = c("Math", "Econ", "Stats", "Trade"))
+course <- data.frame(id = c(1, 2, 2, 3, 5), semester = c(1, 1, 2, 1, 2),
+                     course = c("Math I", "Microecon", "Macroecon", "Stats I", "History"))
+join(teacher, course, on = "id")
+```
+
+```
+## left join: teacher[id] 3/4 (75%) <1:1st> course[id] 3/5 (60%)
+```
+
+```
+##   id names age subject semester    course
+## 1  1  John  35    Math        1    Math I
+## 2  2  Jane  32    Econ        1 Microecon
+## 3  3   Bob  42   Stats        1   Stats I
+## 4  4  Carl  67   Trade       NA      <NA>
+```
+
+``` r
+###################################################
+### code chunk number 26: joins_2
+###################################################
+join(teacher, course, how = "full", multiple = TRUE, column = TRUE)
+```
+
+```
+## full join: teacher[id] 3/4 (75%) <1:1.33> course[id] 4/5 (80%)
+```
+
+```
+##   id names age subject semester    course   .join
+## 1  1  John  35    Math        1    Math I matched
+## 2  2  Jane  32    Econ        1 Microecon matched
+## 3  2  Jane  32    Econ        2 Macroecon matched
+## 4  3   Bob  42   Stats        1   Stats I matched
+## 5  4  Carl  67   Trade       NA      <NA> teacher
+## 6  5  <NA>  NA    <NA>        2   History  course
+```
+
+``` r
+###################################################
+### code chunk number 27: joins_3
+###################################################
+join(teacher, course, multiple = TRUE, attr = "jn") |> attr("jn") |> str(strict.width = "cut", width = 70)
+```
+
+```
+## left join: teacher[id] 3/4 (75%) <1:1.33> course[id] 4/5 (80%)
+## List of 3
+##  $ call   : language join(x = teacher, y = course, multiple = TRUE,"..
+##  $ on.cols:List of 2
+##   ..$ x: chr "id"
+##   ..$ y: chr "id"
+##  $ match  : 'qG' int [1:5] 1 2 3 4 NA
+##   ..- attr(*, "N.nomatch")= int 1
+##   ..- attr(*, "N.groups")= int 5
+##   ..- attr(*, "N.distinct")= int 4
+```
+
+``` r
+###################################################
+### code chunk number 28: joins_4
+###################################################
+join(teacher, course, on = "id", validate = "1:1") |>
+  tryCatch(error = function(e) strwrap(e) |> cat(sep = "\n"))
+```
+
+```
+## Error in join(teacher, course, on = "id", validate = "1:1"): Join is
+## not 1:1: teacher (x) is unique on the join columns; course (y) is
+## not unique on the join columns
+```
+
+``` r
+###################################################
+### code chunk number 29: joins_4.5
+###################################################
+join(teacher, course, on = "id", require = list(x = 0.8)) |>
+  tryCatch(error = function(e) substr(e, 102, 200) |> cat())
+```
+
+```
+## Matched 75.0% of records in table teacher (x), but 80.0% is required
+```
+
+``` r
+###################################################
+### code chunk number 30: joins_5
+###################################################
+for (h in c("semi", "anti")) join(teacher, course, how = h) |> print()
+```
+
+```
+## semi join: teacher[id] 3/4 (75%) <1:1st> course[id] 3/5 (60%)
+##   id names age subject
+## 1  1  John  35    Math
+## 2  2  Jane  32    Econ
+## 3  3   Bob  42   Stats
+## anti join: teacher[id] 3/4 (75%) <1:1st> course[id] 3/5 (60%)
+##   id names age subject
+## 1  4  Carl  67   Trade
+```
+
+``` r
+###################################################
+### code chunk number 31: joins_6
+###################################################
+course$names <- teacher$names[course$id]
+join(teacher, course, on = "id", how = "inner", multiple = TRUE)
+```
+
+```
+## inner join: teacher[id] 3/4 (75%) <1:1.33> course[id] 4/5 (80%)
+## duplicate columns: names => renamed using suffix '_course' for y
+```
+
+```
+##   id names age subject semester    course names_course
+## 1  1  John  35    Math        1    Math I         John
+## 2  2  Jane  32    Econ        1 Microecon         Jane
+## 3  2  Jane  32    Econ        2 Macroecon         Jane
+## 4  3   Bob  42   Stats        1   Stats I          Bob
+```
+
+``` r
+###################################################
+### code chunk number 32: joins_7
+###################################################
+join(teacher, course, on = "id", multiple = TRUE, drop.dup.cols = "y")
+```
+
+```
+## left join: teacher[id] 3/4 (75%) <1:1.33> course[id] 4/5 (80%)
+## duplicate columns: names => dropped from y
+```
+
+```
+##   id names age subject semester    course
+## 1  1  John  35    Math        1    Math I
+## 2  2  Jane  32    Econ        1 Microecon
+## 3  2  Jane  32    Econ        2 Macroecon
+## 4  3   Bob  42   Stats        1   Stats I
+## 5  4  Carl  67   Trade       NA      <NA>
+```
+
+``` r
+###################################################
+### code chunk number 33: pivots
+###################################################
+data <- GGDC10S |>
+  fmutate(Label = ifelse(Variable == "VA", "Value Added", "Employment")) |>
+  fsubset(is.finite(AGR), Country, Variable, Label, Year, AGR:MAN)
+namlab(data, N = TRUE, Ndistinct = TRUE, class = TRUE)
+```
+
+```
+##   Variable     Class    N Ndist         Label
+## 1  Country character 4364    43       Country
+## 2 Variable character 4364     2      Variable
+## 3    Label character 4364     2          <NA>
+## 4     Year   numeric 4364    67          Year
+## 5      AGR   numeric 4364  4353   Agriculture
+## 6      MIN   numeric 4355  4224        Mining
+## 7      MAN   numeric 4355  4353 Manufacturing
+```
+
+``` r
+###################################################
+### code chunk number 34: pivot_longer
+###################################################
+head(dl <- pivot(data, ids = 1:4, names = list("Sectorcode", "Value"),
+                 labels = "Sector", how = "longer"))
+```
+
+```
+##   Country Variable       Label Year Sectorcode      Sector Value
+## 1     BWA       VA Value Added 1964        AGR Agriculture 16.30
+## 2     BWA       VA Value Added 1965        AGR Agriculture 15.73
+## 3     BWA       VA Value Added 1966        AGR Agriculture 17.68
+## 4     BWA       VA Value Added 1967        AGR Agriculture 19.15
+## 5     BWA       VA Value Added 1968        AGR Agriculture 21.10
+## 6     BWA       VA Value Added 1969        AGR Agriculture 21.86
+```
+
+``` r
+###################################################
+### code chunk number 35: pivot_wider
+###################################################
+head(dw <- pivot(data, c("Country", "Year"), names = "Variable",
+                 labels = "Label", how = "w"))
+```
+
+```
+##   Country Year AGR_VA AGR_EMP MIN_VA MIN_EMP MAN_VA MAN_EMP
+## 1     BWA 1964  16.30   152.1  3.494  1.9400 0.7366   2.420
+## 2     BWA 1965  15.73   153.3  2.496  1.3263 1.0182   2.330
+## 3     BWA 1966  17.68   153.9  1.970  1.0022 0.8038   1.282
+## 4     BWA 1967  19.15   155.1  2.299  1.1192 0.9378   1.042
+## 5     BWA 1968  21.10   156.2  1.839  0.7855 0.7503   1.069
+## 6     BWA 1969  21.86   157.4  5.245  2.0314 2.1396   2.124
+```
+
+``` r
+namlab(dw)
+```
+
+```
+##   Variable                       Label
+## 1  Country                     Country
+## 2     Year                        Year
+## 3   AGR_VA   Agriculture - Value Added
+## 4  AGR_EMP    Agriculture - Employment
+## 5   MIN_VA        Mining - Value Added
+## 6  MIN_EMP         Mining - Employment
+## 7   MAN_VA Manufacturing - Value Added
+## 8  MAN_EMP  Manufacturing - Employment
+```
+
+``` r
+###################################################
+### code chunk number 36: pivot_recast
+###################################################
+head(dr <- pivot(data, c("Country", "Year"),
+                 names = list(from = "Variable", to = "Sectorcode"),
+                 labels = list(from = "Label", to = "Sector"), how = "r"))
+```
+
+```
+##   Country Year Sectorcode      Sector    VA   EMP
+## 1     BWA 1964        AGR Agriculture 16.30 152.1
+## 2     BWA 1965        AGR Agriculture 15.73 153.3
+## 3     BWA 1966        AGR Agriculture 17.68 153.9
+## 4     BWA 1967        AGR Agriculture 19.15 155.1
+## 5     BWA 1968        AGR Agriculture 21.10 156.2
+## 6     BWA 1969        AGR Agriculture 21.86 157.4
+```
+
+``` r
+vlabels(dr)[3:6]
+```
+
+```
+##    Sectorcode        Sector            VA           EMP 
+##            NA            NA "Value Added"  "Employment"
+```
+
+``` r
+###################################################
+### code chunk number 37: pivot_agg
+###################################################
+head(dr_agg <- pivot(data, "Country", c("AGR", "MIN", "MAN"), how = "r",
+                     names = list(from = "Variable", to = "Sectorcode"),
+                     labels = list(from = "Label", to = "Sector"), FUN = "mean"))
+```
+
+```
+##   Country Sectorcode      Sector       VA      EMP
+## 1     BWA        AGR Agriculture    462.2   188.06
+## 2     ETH        AGR Agriculture  34389.9 17624.34
+## 3     GHA        AGR Agriculture   1549.4  3016.04
+## 4     KEN        AGR Agriculture 139705.9  5348.91
+## 5     MWI        AGR Agriculture  28512.6  2762.62
+## 6     MUS        AGR Agriculture   3819.6    59.34
+```
+
+``` r
+###################################################
+### code chunk number 38: list_proc
+###################################################
+dl <- GGDC10S |> rsplit( ~ Country + Variable)
+dl$ARG$EMP$AGR[1:12]
+```
+
+```
+##  [1] 1800 1835 1731 2030 1889 1843 1789 1724 1678 1725 1650 1553
+```
+
+``` r
+###################################################
+### code chunk number 39: list_proc_2
+###################################################
+result <- list()
+for (country in c("ARG", "BRA", "CHL")) {
+  for (variable in c("EMP", "VA")) {
+    m <- lm(log(AGR+1) ~ log(MIN+1) + log(MAN+1) + Year,
+            data = dl[[country]][[variable]])
+    result[[country]][[variable]] <- list(model = m, BIC = BIC(m),
+                                          summary = summary(m))
+  }
+}
+
+
+###################################################
+### code chunk number 40: list_proc_3
+###################################################
+str(r_sq_l <- result |> get_elem("r.squared"))
+```
+
+```
+## List of 3
+##  $ ARG:List of 2
+##   ..$ EMP: num 0.907
+##   ..$ VA : num 1
+##  $ BRA:List of 2
+##   ..$ EMP: num 0.789
+##   ..$ VA : num 0.999
+##  $ CHL:List of 2
+##   ..$ EMP: num 0.106
+##   ..$ VA : num 0.999
+```
+
+``` r
+rowbind(r_sq_l, idcol = "Country", return = "data.frame")
+```
+
+```
+##   Country    EMP     VA
+## 1     ARG 0.9068 0.9996
+## 2     BRA 0.7888 0.9988
+## 3     CHL 0.1058 0.9991
+```
+
+``` r
+###################################################
+### code chunk number 41: list_proc_3.5
+###################################################
+r_sq_l |> t_list() |> rowbind(idcol = "Variable", return = "data.frame")
+```
+
+```
+##   Variable    ARG    BRA    CHL
+## 1      EMP 0.9068 0.7888 0.1058
+## 2       VA 0.9996 0.9988 0.9991
+```
+
+``` r
+###################################################
+### code chunk number 42: list_proc_4
+###################################################
+result$ARG$EMP$summary$coefficients
+```
+
+```
+##               Estimate Std. Error  t value  Pr(>|t|)
+## (Intercept)  26.583617  1.2832583  20.7157 1.747e-28
+## log(MIN + 1)  0.083168  0.0352493   2.3594 2.169e-02
+## log(MAN + 1) -0.064413  0.0767614  -0.8391 4.048e-01
+## Year         -0.009683  0.0005556 -17.4278 1.003e-24
+```
+
+``` r
+###################################################
+### code chunk number 43: list_proc_5
+###################################################
+result |> get_elem("coefficients") |> get_elem(is.matrix) |>
+  unlist2d(idcols = c("Country", "Variable"),
+           row.names = "Covariate") |> head(3)
+```
+
+```
+##   Country Variable    Covariate Estimate Std. Error t value  Pr(>|t|)
+## 1     ARG      EMP  (Intercept) 26.58362    1.28326 20.7157 1.747e-28
+## 2     ARG      EMP log(MIN + 1)  0.08317    0.03525  2.3594 2.169e-02
+## 3     ARG      EMP log(MAN + 1) -0.06441    0.07676 -0.8391 4.048e-01
+```
+
+``` r
+###################################################
+### code chunk number 44: varying
+###################################################
+varying(wlddev, ~ iso3c)
+```
+
+```
+##       country          date          year        decade        region 
+##         FALSE          TRUE          TRUE          TRUE         FALSE 
+##        income          OECD         PCGDP        LIFEEX          GINI 
+##         FALSE         FALSE          TRUE          TRUE          TRUE 
+##           ODA           POP  center_PCGDP center_LIFEEX 
+##          TRUE          TRUE          TRUE          TRUE
+```
+
+``` r
+###################################################
+### code chunk number 45: pdec
+###################################################
+LIFEEXi <- reindex(wlddev$LIFEEX, wlddev$iso3c)
+all.equal(fvar(LIFEEXi), fvar(fbetween(LIFEEXi)) + fvar(fwithin(LIFEEXi)))
+```
+
+```
+## [1] TRUE
+```
+
+``` r
+###################################################
+### code chunk number 46: qsu_1
+###################################################
+qsu(LIFEEXi)
+```
+
+```
+##              N/T     Mean       SD      Min      Max
+## Overall    11670  64.2963  11.4764   18.907  85.4171
+## Between      207  64.9537   9.8936  40.9663  85.4171
+## Within   56.3768  64.2963   6.0842  32.9068  84.4198
+```
+
+``` r
+###################################################
+### code chunk number 47: qsu_2
+###################################################
+qsu(wlddev, by = LIFEEX ~ income, w = ~ POP)
+```
+
+```
+##                         N       WeightSum     Mean      SD     Min      Max
+## High income          3828  5.87959699e+10  75.6926  4.5346  42.672  85.4171
+## Low income           1792  2.09491614e+10  53.5061  8.8691  26.172    74.43
+## Lower middle income  2790  1.13837685e+11  60.5865  8.3607  18.907   76.699
+## Upper middle income  3249  1.19295269e+11  68.2698  7.1889  36.535   80.279
+```
+
+``` r
+###################################################
+### code chunk number 48: descr
+###################################################
+wlda15 <- wlddev |> fsubset(year >= 2015) |> fgroup_by(iso3c) |> flast()
+wlda15 |> descr(by = income + LIFEEX ~ OECD)
+```
+
+```
+## Dataset: wlda15, 2 Variables, N = 216
+## Grouped by: OECD [2]
+##          N   Perc
+## FALSE  180  83.33
+## TRUE    36  16.67
+## -----------------------------------------------------------------------------
+## income (factor): Income Level
+## Statistics (N = 216)
+##          N   Perc  Ndist
+## FALSE  180  83.33      4
+## TRUE    36  16.67      2
+## 
+## Table (Freq Perc)
+##                        FALSE     TRUE    Total
+## High income          45 25.0  34 94.4  79 36.6
+## Upper middle income  58 32.2   2  5.6  60 27.8
+## Lower middle income  47 26.1   0  0.0  47 21.8
+## Low income           30 16.7   0  0.0  30 13.9
+## -----------------------------------------------------------------------------
+## LIFEEX (numeric): Life expectancy at birth, total (years)
+## Statistics (N = 200, 7.41% NAs)
+##          N  Perc  Ndist   Mean    SD    Min    Max   Skew  Kurt
+## FALSE  164    82    164  71.25  7.06  53.28  85.08   -0.5  2.61
+## TRUE    36    18     36  80.83  2.55  75.05  84.36  -0.92  2.72
+## 
+## Quantiles
+##           1%     5%    10%    25%    50%    75%    90%    95%    99%
+## FALSE   54.3  58.38  61.25  66.43  72.56  76.68  78.93  80.88  83.77
+## TRUE   75.12  75.83   76.8  79.04  81.77  82.63  83.21  83.54  84.13
+## -----------------------------------------------------------------------------
+```
+
+``` r
+###################################################
+### code chunk number 49: qtab
+###################################################
+wlda15 |> with(qtab(OECD, income))
+```
+
+```
+##        income
+## OECD    High income Low income Lower middle income Upper middle income
+##   FALSE          45         30                  47                  58
+##   TRUE           34          0                   0                   2
+```
+
+``` r
+###################################################
+### code chunk number 50: qtab_2
+###################################################
+wlda15 |> with(qtab(OECD, income, w = POP) / 1e6)
+```
+
+```
+##        income
+## OECD    High income Low income Lower middle income Upper middle income
+##   FALSE       93.01     694.89             3063.54             2459.71
+##   TRUE      1098.75       0.00                0.00              211.01
+```
+
+``` r
+###################################################
+### code chunk number 51: qtab_3
+###################################################
+wlda15 |> with(qtab(OECD, income, w = LIFEEX, wFUN = fmean))
+```
+
+```
+##        income
+## OECD    High income Low income Lower middle income Upper middle income
+##   FALSE       78.75      62.81               68.30               73.81
+##   TRUE        81.09                                              76.37
+```
+
+``` r
+###################################################
+### code chunk number 52: qtab_4
+###################################################
+wlda15 |> with(qtab(OECD, income, w = LIFEEX, wFUN = fmean,
+                    wFUN.args = list(w = POP)))
+```
+
+```
+##        income
+## OECD    High income Low income Lower middle income Upper middle income
+##   FALSE       77.91      63.81               68.76               75.93
+##   TRUE        81.13                                              76.10
+```
+
+``` r
+###################################################
+### code chunk number 53: bench_1
+###################################################
+set.seed(101)
+int <- 1:1000; g_int <- sample.int(1000, 1e7, replace = TRUE)
+char <- c(letters, LETTERS, month.abb, month.name)
+g_char <- sample(char <- outer(char, char, paste0), 1e7, TRUE)
+bmark(base_int = unique(g_int), collapse_int = funique(g_int))
+```
+
+```
+## Warning: Some expressions had a GC in every iteration; so filtering is
+## disabled.
+```
+
+```
+##     expression    min median mem_alloc n_itr n_gc total_time
+## 1     base_int 40.6ms 42.4ms   166.2MB    47   47      2.03s
+## 2 collapse_int    5ms  7.1ms    38.2MB   262   53         2s
+```
+
+``` r
+bmark(base_char = unique(g_char), collapse_char = funique(g_char))
+```
+
+```
+## Warning: Some expressions had a GC in every iteration; so filtering is
+## disabled.
+```
+
+```
+##      expression    min median mem_alloc n_itr n_gc total_time
+## 1     base_char 68.5ms   71ms   166.2MB    27   27      2.05s
+## 2 collapse_char 14.1ms 16.8ms    38.2MB   115   23      2.01s
+```
+
+``` r
+bmark(base_int = match(g_int, int), collapse_int = fmatch(g_int, int))
+```
+
+```
+##     expression     min  median mem_alloc n_itr n_gc total_time
+## 1     base_int 14.64ms  15.4ms    76.3MB    55   55   871.17ms
+## 2 collapse_int  5.36ms  7.34ms    38.2MB   192   64      1.34s
+```
+
+``` r
+bmark(base_char = match(g_char, char), data.table_char =
+        chmatch(g_char, char), collapse_char = fmatch(g_char, char))
+```
+
+```
+##        expression    min median mem_alloc n_itr n_gc total_time
+## 1       base_char 54.5ms   55ms   114.5MB    12   20   662.07ms
+## 2 data.table_char 30.2ms 33.6ms    38.1MB    50    9      1.66s
+## 3   collapse_char 16.5ms   19ms    38.1MB    88   14      1.67s
+```
+
+``` r
+###################################################
+### code chunk number 54: bench_2
+###################################################
+set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 4)
+m <- matrix(rnorm(1e7), ncol = 1000)
+bmark(R = colSums(m), collapse = fsum(m))
+```
+
+```
+##   expression      min   median mem_alloc n_itr n_gc total_time
+## 1          R   5.41ms   5.89ms    7.86KB   339    0         2s
+## 2   collapse 284.58µs 325.58µs    7.86KB  6046    0         2s
+```
+
+``` r
+bmark(R = colMeans(m), collapse = fmean(m))
+```
+
+```
+##   expression      min  median mem_alloc n_itr n_gc total_time
+## 1          R   5.76ms   6.2ms   32.09KB   324    0         2s
+## 2   collapse 283.76µs 323.2µs    7.86KB  6159    0         2s
+```
+
+``` r
+bmark(MS = matrixStats::colMedians(m), collapse = fmedian(m))
+```
+
+```
+##   expression    min median mem_alloc n_itr n_gc total_time
+## 1         MS 77.4ms 79.7ms    89.9KB    26    0      2.07s
+## 2   collapse 19.4ms 19.5ms    27.2KB   103    0      2.02s
+```
+
+``` r
+###################################################
+### code chunk number 55: bench_2.1
+###################################################
+g <- sample.int(1e3, 1e4, TRUE)
+bmark(R = rowsum(m, g), collapse = fsum(m, g))
+```
+
+```
+##   expression      min median mem_alloc n_itr n_gc total_time
+## 1          R   5.25ms  5.6ms    7.87MB   327   12      1.84s
+## 2   collapse 901.92µs 1.13ms    7.71MB  1395   52      1.58s
+```
+
+``` r
+###################################################
+### code chunk number 56: bench_flights_setup
+###################################################
+fastverse_extend(nycflights23, dplyr, data.table); setDTthreads(4)
+```
+
+```
+## -- Attaching extension packages -------------------------- fastverse 0.3.4 --
+```
+
+```
+## v nycflights23 0.2.0     v dplyr        1.1.4
+```
+
+```
+## -- Conflicts --------------------------------------- fastverse_conflicts() --
+## x dplyr::between()   masks data.table::between()
+## x dplyr::count()     masks kit::count()
+## x dplyr::filter()    masks stats::filter()
+## x dplyr::first()     masks data.table::first()
+## x dplyr::intersect() masks base::intersect()
+## x dplyr::lag()       masks stats::lag()
+## x dplyr::last()      masks data.table::last()
+## x dplyr::setdiff()   masks base::setdiff()
+## x dplyr::setequal()  masks base::setequal()
+## x dplyr::union()     masks base::union()
+```
+
+``` r
+list(flights, airports, airlines, planes, weather) |> sapply(nrow)
+```
+
+```
+## [1] 435352   1255     14   4840  26207
+```
+
+``` r
+flights |> fselect(month, day, origin, dest) |> fnunique()
+```
+
+```
+## [1] 75899
+```
+
+``` r
+###################################################
+### code chunk number 57: bench_flights_summarise
+###################################################
+vars <- .c(dep_delay, arr_delay, air_time, distance, hour, minute)
+bmark(dplyr = flights |> group_by(month, day, origin, dest) |>
+        summarise(across(all_of(vars), sum), .groups = "drop"),
+      data.table = qDT(flights)[, lapply(.SD, sum), .SDcols = vars,
+                                by = .(month, day, origin, dest)],
+      collapse = flights |> fgroup_by(month, day, origin, dest) |>
+        get_vars(vars) |> fsum())
+```
+
+```
+## Warning: Some expressions had a GC in every iteration; so filtering is
+## disabled.
+```
+
+```
+##   expression      min   median mem_alloc n_itr n_gc total_time
+## 1      dplyr 356.01ms 476.71ms    50.5MB     5   45      2.19s
+## 2 data.table   7.53ms   8.52ms    20.8MB   215   21      2.01s
+## 3   collapse   3.16ms    3.5ms     9.2MB   481   21         2s
+```
+
+``` r
+###################################################
+### code chunk number 58: bench_flights_summarise_2
+###################################################
+bmark(dplyr_mean = flights |> group_by(month, day, origin, dest) |>
+        summarise(across(all_of(vars), mean), .groups = "drop"),
+      data.table_mean = qDT(flights)[, lapply(.SD, mean), .SDcols = vars,
+                                     by = .(month, day, origin, dest)],
+      collapse_mean = flights |> fgroup_by(month, day, origin, dest) |>
+        get_vars(vars) |> fmean())
+```
+
+```
+## Warning: Some expressions had a GC in every iteration; so filtering is
+## disabled.
+```
+
+```
+##        expression    min median mem_alloc n_itr n_gc total_time
+## 1      dplyr_mean  1.13s   1.2s   48.57MB     2   42       2.4s
+## 2 data.table_mean 7.44ms 8.24ms   18.93MB   207   21         2s
+## 3   collapse_mean 3.07ms  3.5ms    9.11MB   493   17         2s
+```
+
+``` r
+bmark(dplyr_median = flights |> group_by(month, day, origin, dest) |>
+        summarise(across(all_of(vars), median), .groups = "drop"),
+      data.table_median = qDT(flights)[, lapply(.SD, median), .SDcols = vars,
+                                       by = .(month, day, origin, dest)],
+      collapse_median = flights |> fgroup_by(month, day, origin, dest) |>
+        get_vars(vars) |> fmedian())
+```
+
+```
+## Warning: Some expressions had a GC in every iteration; so filtering is
+## disabled.
+```
+
+```
+##          expression     min  median mem_alloc n_itr n_gc total_time
+## 1      dplyr_median   3.99s   3.99s    52.8MB     1   76      3.99s
+## 2 data.table_median 21.44ms 22.57ms    18.9MB    86    9      2.02s
+## 3   collapse_median  9.65ms 10.32ms    11.1MB   182   13      2.01s
+```
+
+``` r
+###################################################
+### code chunk number 59: bench_flights_summarise_3
+###################################################
+bmark(dplyr = flights |> group_by(month, day, origin, dest) |>
+        summarise(rng = max(arr_delay) - min(arr_delay), .groups = "drop"),
+      data.table = qDT(flights)[, .(rng = max(arr_delay) - min(arr_delay)),
+                                by = .(month, day, origin, dest)],
+      collapse = flights |> fgroup_by(month, day, origin, dest) |>
+        fsummarise(rng = fmax(arr_delay) - fmin(arr_delay)))
+```
+
+```
+## Warning: Some expressions had a GC in every iteration; so filtering is
+## disabled.
+```
+
+```
+##   expression     min  median mem_alloc n_itr n_gc total_time
+## 1      dplyr 90.09ms 95.76ms   20.18MB    20   36      2.05s
+## 2 data.table 56.83ms 60.32ms    5.77MB    34   18      2.05s
+## 3   collapse  5.22ms  5.61ms     6.8MB   333   11         2s
+```
+
+``` r
+###################################################
+### code chunk number 60: bench_flights_join_setup
+###################################################
+flights |> join(weather, on = c("origin", "time_hour")) |>
+  join(planes, on = "tailnum") |> join(airports, on = c(dest = "faa")) |>
+  join(airlines, on = "carrier") |> dim() |>
+  capture.output() |> substr(1, 76) |> cat(sep = "\n")
+```
+
+```
+## left join: flights[origin, time_hour] 434526/435352 (99.8%) <21.94:1st> weat
+## duplicate columns: year, month, day, hour => renamed using suffix '_weather'
+## left join: x[tailnum] 424068/435352 (97.4%) <87.62:1st> planes[tailnum] 4840
+## duplicate columns: year => renamed using suffix '_planes' for y
+## left join: x[dest] 435352/435352 (100%) <3689.42:1st> airports[faa] 118/1255
+## left join: x[carrier] 435352/435352 (100%) <31096.57:1st> airlines[carrier] 
+## duplicate columns: name => renamed using suffix '_airlines' for y
+## [1] 435352     48
+```
+
+``` r
+###################################################
+### code chunk number 61: bench_flights_join
+###################################################
+bmark(
+  dplyr_joins = flights |>
+    left_join(weather, by = c("origin", "time_hour"), multiple = "first") |>
+    left_join(planes, by = "tailnum", multiple = "first") |>
+    left_join(airports, by = c(dest = "faa"), multiple = "first") |>
+    left_join(airlines, by = "carrier", multiple = "first"),
+
+  data.table_joins = qDT(airlines)[qDT(airports)[qDT(planes)[qDT(weather)[qDT(flights), on = c("origin", "time_hour"), mult = "first"], on = "tailnum", mult = "first"], on = c("faa" = "dest"), mult = "first"], on = "carrier", mult = "first"],
+
+  collapse_joins = flights |>
+    join(weather, on = c("origin", "time_hour"), verbose = 0) |>
+    join(planes, on = "tailnum", verbose = 0) |>
+    join(airports, on = c("dest" = "faa"), verbose = 0) |>
+    join(airlines, on = "carrier", verbose = 0)
+)
+```
+
+```
+## Warning: Some expressions had a GC in every iteration; so filtering is
+## disabled.
+```
+
+```
+##         expression     min  median mem_alloc n_itr n_gc total_time
+## 1      dplyr_joins 134.9ms 143.3ms   559.4MB    13   24      2.08s
+## 2 data.table_joins  96.9ms 169.5ms     491MB    14   31      2.04s
+## 3   collapse_joins    10ms  12.6ms    89.7MB   133   27      2.01s
+```
+
+``` r
+###################################################
+### code chunk number 62: bench_pivot_long
+###################################################
+bmark(tidyr = tidyr::pivot_longer(flights, cols = vars),
+      data.table = qDT(flights) |> melt(measure = vars),
+      collapse = pivot(flights, values = vars))
+```
+
+```
+## Warning: Using an external vector in selections was deprecated in tidyselect 1.1.0.
+## ℹ Please use `all_of()` or `any_of()` instead.
+##   # Was:
+##   data %>% select(vars)
+## 
+##   # Now:
+##   data %>% select(all_of(vars))
+## 
+## See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
+##   expression    min median mem_alloc n_itr n_gc total_time
+## 1      tidyr   57ms 59.2ms     254MB     6   32      356ms
+## 2 data.table   43ms 44.4ms     209MB    14   22      619ms
+## 3   collapse 13.6ms 14.5ms     209MB    32   57      466ms
+```
+
+``` r
+###################################################
+### code chunk number 63: bench_pivot_wide
+###################################################
+bmark(tidyr = tidyr::pivot_wider(flights, id_cols = .c(month, day, dest),
+                                 names_from = "origin", values_from = vars, values_fn = sum),
+      data.table = dcast(qDT(flights), month + day + dest ~ origin,
+                         value.var = vars, fun = sum),
+      collapse_fsum = pivot(flights, .c(month, day, dest), vars,
+                            "origin", how = "wider", FUN = fsum),
+      collapse_itnl = pivot(flights, .c(month, day, dest), vars,
+                            "origin", how = "wider", FUN = "sum"))
+```
+
+```
+## Warning: Some expressions had a GC in every iteration; so filtering is
+## disabled.
+```
+
+```
+##      expression      min   median mem_alloc n_itr n_gc total_time
+## 1         tidyr  352.6ms  379.9ms     143MB     5   31      2.02s
+## 2    data.table 221.74ms 225.33ms    21.7MB     9   29      2.06s
+## 3 collapse_fsum   5.64ms   7.01ms    39.1MB   239   29         2s
+## 4 collapse_itnl   3.76ms   4.44ms    12.4MB   378   10         2s
+```
+
+``` r
+###################################################
+### code chunk number 64: reset_options
+###################################################
+options(r_opts)
+set_collapse(oldopts)
+
+###################################################
+### Print Session Information
+###################################################
+
+sessionInfo()
+```
+
+```
+## R version 4.4.3 (2025-02-28)
+## Platform: aarch64-apple-darwin20
+## Running under: macOS Sequoia 15.3.1
+## 
+## Matrix products: default
+## BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: Europe/Berlin
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] dplyr_1.1.4         nycflights23_0.2.0  collapse_2.1.1.9000
+## [4] kit_0.0.19          magrittr_2.0.3      data.table_1.17.0  
+## [7] fastverse_0.3.4    
+## 
+## loaded via a namespace (and not attached):
+##  [1] vctrs_0.6.5       cli_3.6.4         knitr_1.50        rlang_1.1.5      
+##  [5] xfun_0.52         stringi_1.8.7     bench_1.1.4       purrr_1.0.4      
+##  [9] generics_0.1.3    glue_1.8.0        janitor_2.2.1     snakecase_0.11.1 
+## [13] evaluate_1.0.3    tibble_3.2.1      profmem_0.6.0     lifecycle_1.0.4  
+## [17] stringr_1.5.1     compiler_4.4.3    Rcpp_1.0.14       timechange_0.3.0 
+## [21] pkgconfig_2.0.3   tidyr_1.3.1       rstudioapi_0.17.1 R6_2.6.1         
+## [25] tidyselect_1.2.1  pillar_1.10.1     parallel_4.4.3    withr_3.0.2      
+## [29] tools_4.4.3       matrixStats_1.5.0 lubridate_1.9.4
+```
+
