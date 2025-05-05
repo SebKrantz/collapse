@@ -12,7 +12,7 @@
 ###################################################
 
 rm(list = ls()); gc()
-options(prompt = "R> ", continue = "+  ", width = 77, digits = 4, useFancyQuotes = FALSE, warn = 1)
+r_opts <- options(prompt = "R> ", continue = "+  ", width = 77, digits = 4, useFancyQuotes = FALSE, warn = 1)
 
 # Loading libraries and installing if unavailable
 if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
@@ -25,7 +25,7 @@ pkg <- c("bench", "dplyr", "tidyr", "matrixStats", "janitor")
 if(!all(avail <- is_installed(pkg))) install.packages(pkg[!avail])
 
 # Reset collapse options (if set)
-set_collapse(nthreads = 1L, remove = NULL, stable.algo = TRUE, sort = TRUE,
+oldopts <- set_collapse(nthreads = 1L, remove = NULL, stable.algo = TRUE, sort = TRUE,
              digits = 2L, stub = TRUE, verbose = 1L, mask = NULL, na.rm = TRUE)
 
 # For presentation: removing whitespace around labels
@@ -550,6 +550,12 @@ bmark(tidyr = tidyr::pivot_wider(flights, id_cols = .c(month, day, dest),
                             "origin", how = "wider", FUN = fsum),
       collapse_itnl = pivot(flights, .c(month, day, dest), vars,
                             "origin", how = "wider", FUN = "sum"))
+
+###################################################
+### code chunk number 64: reset_options
+###################################################
+options(r_opts)
+set_collapse(oldopts)
 
 ###################################################
 ### Print Session Information
