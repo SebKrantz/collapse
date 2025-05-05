@@ -907,7 +907,7 @@ Last but not least, \pkg{collapse} users are encouraged to also familiarize them
 %% -- Optional special unnumbered sections -------------------------------------
 
 \section*{Computational details}
-The results in this paper were obtained using \proglang{R} \citep{R} 4.4.3 with \pkg{collapse} 2.1.2, \pkg{data.table} 1.17.0, \pkg{dplyr} 1.1.4, \pkg{tidyr} 1.3.1, \pkg{matrixStats} 1.5.0, \pkg{fastverse} 0.3.4, and \pkg{bench} 1.1.4 \citep{rbench}. All packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at https://CRAN.R-project.org/. The benchmark was run on an Apple MacBook Pro (2024) with 48GB M4 Pro chip. Packages were compiled from source using Apple Clang version 17.0.0 with OpenMP enabled and the -O2 flag. \newline
+The results in this paper were obtained using \proglang{R} \citep{R} 4.4.3 with \pkg{collapse} 2.1.2, \pkg{data.table} 1.17.0, \pkg{dplyr} 1.1.4, \pkg{tidyr} 1.3.1, \pkg{matrixStats} 1.5.0, \pkg{fastverse} 0.3.4, \pkg{nycflights23} 0.2.0, and \pkg{bench} 1.1.4 \citep{rbench}. All packages used are available from the Comprehensive \proglang{R} Archive Network (CRAN) at https://CRAN.R-project.org/. The benchmark was run on an Apple MacBook Pro (2024) with 48GB M4 Pro chip. Packages were compiled from source using Apple Clang version 17.0.0 with OpenMP enabled and the -O2 flag. \newline
 
 The \fct{bmark} function used for benchmarking is defined as follows:
 \begin{Code}

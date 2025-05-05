@@ -19,9 +19,9 @@ if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
 options(fastverse.styling = FALSE)
 library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
 # Package versions used in the article:
-# fastverse 0.3.4, collapse 2.1.2, data.table 1.17.0,
+# fastverse 0.3.4, collapse 2.1.2, data.table 1.17.0, nycflights23 0.2.0,
 # bench 1.1.4, dplyr 1.1.4, tidyr 1.3.1, matrixStats 1.5.0, janitor 2.2.0
-pkg <- c("bench", "dplyr", "tidyr", "matrixStats", "janitor")
+pkg <- c("bench", "dplyr", "tidyr", "matrixStats", "janitor", "nycflights23")
 if(!all(avail <- is_installed(pkg))) install.packages(pkg[!avail])
 
 # Reset collapse options (if set)
