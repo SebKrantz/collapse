@@ -41,7 +41,7 @@ vlabels(GGDC10S) <- trimws(vlabels(GGDC10S))
 
 # This is the benchmark function (janitor 2.2.0 is used)
 bmark <- function(...) {
-  bench::mark(..., min_time = 2, check = FALSE) |> janitor::clean_names() |>
+  bench::mark(..., min_time = 3, check = FALSE) |> janitor::clean_names() |>
   fselect(expression, min, median, mem_alloc, n_itr, n_gc, total_time) |>
   fmutate(expression = names(expression)) |> dapply(as.character) |> qDF()
 }
@@ -912,7 +912,7 @@ The results in this paper were obtained using \proglang{R} \citep{R} 4.4.3 with 
 The \fct{bmark} function used for benchmarking is defined as follows:
 \begin{Code}
 bmark <- function(...) {
-  bench::mark(..., min_time = 2, check = FALSE) |>
+  bench::mark(..., min_time = 3, check = FALSE) |>
     janitor::clean_names() |>
     fselect(expression, min, median, mem_alloc, n_itr, n_gc, total_time) |>
     fmutate(expression = names(expression)) |>
