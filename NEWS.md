@@ -1,8 +1,8 @@
-# collapse 2.1.1.9000
+# collapse 2.1.2
 
 * `na_insert()` has new argument `set` to do this by reference. 
 
-* Some moderate performance gains to `gsplit()`/`BY()` and `pivot()`.
+* Some moderate performance improvements to `gsplit()`/`BY()` and `pivot()`.
 
 # collapse 2.1.1
 
