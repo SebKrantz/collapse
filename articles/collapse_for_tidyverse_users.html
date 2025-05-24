@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,9 +64,9 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2025-04-21</h4>
+            <h4 data-toc-skip class="date">2025-05-24</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/development/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.1.2/vignettes/collapse_for_tidyverse_users.Rmd" class="external-link"><code>vignettes/collapse_for_tidyverse_users.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_for_tidyverse_users.Rmd</code></div>
     </div>
 
@@ -258,7 +258,8 @@ vectorized execution wherever they are used. E.g.</p>
 <span><span class="co"># 2   6 34.24286</span></span>
 <span><span class="co"># 3   8 29.60000</span></span></code></pre></div>
 <p>calculates a grouped mean of <code>mpg</code> but adds the overall
-minimum of <code>qsec</code> to the result, whereas</p>
+minimum of <code>qsec</code> to the result, i.e., it is equivalent to
+<code>fmean(mpg, g = cyl) + min(qsec)</code>. On the other hand</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mtcars</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="../reference/fmean.html">fmean</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="../reference/fmin_fmax.html">fmin</a></span><span class="op">(</span><span class="va">qsec</span><span class="op">)</span><span class="op">)</span> <span class="co"># Vectorized</span></span>
 <span><span class="co">#   cyl      mpg</span></span>
@@ -280,14 +281,20 @@ detailed examples. This <em>eager vectorization</em> approach is
 intentional as it allows users to vectorize complex expressions and fall
 back to base R if this is not desired. <a href="https://andrewghazi.github.io/posts/collapse_is_sick/sick.html" class="external-link">This
 blog post</a> by Andrew Ghazi provides an excellent example of computing
-a p-value test statistic by groups.</p>
-<p>To take full advantage of <em>collapse</em>, it is highly recommended
-to use the <em>Fast Statistical Functions</em> as much as possible. You
-can also set <code>set_collapse(mask = "all")</code> to replace
-statistical functions in base R like <code>sum</code> and
-<code>mean</code> with the collapse versions (toggling vectorized
-execution in all cases), but this may affect other parts of your code<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;When doing this, make sure to refer to base R functions
-explicitly using &lt;code&gt;::&lt;/code&gt; e.g. &lt;code&gt;&lt;a href="https://rdrr.io/r/base/mean.html" class="external-link"&gt;base::mean&lt;/a&gt;&lt;/code&gt;.&lt;/p&gt;'><sup>2</sup></a>.</p>
+a p-value test statistic by groups. <em>Note</em> that only expressions
+typed out can be vectorized; expressions inside functions such as
+<code>mean_plus_min &lt;- function(x) fmean(x) + fmin(x)</code> are not
+vectorized.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;&lt;em&gt;collapse&lt;/em&gt; can only read what you type,
+e.g. &lt;code&gt;exp &amp;lt;- substitute(fmean(mpg) + min(mpg))&lt;/code&gt;, then
+&lt;code&gt;all_funs(exp)&lt;/code&gt; gives &lt;code&gt;c("+", "fmean", "min")&lt;/code&gt;,
+and &lt;code&gt;any(all_funs(exp) %in% .FAST_STAT_FUN)&lt;/code&gt; returns
+&lt;code&gt;TRUE&lt;/code&gt;, signifying to &lt;code&gt;&lt;a href="../reference/fsummarise.html"&gt;fsummarise()&lt;/a&gt;&lt;/code&gt; that the
+expression should be executed only once with the grouping object passed
+to the &lt;code&gt;g&lt;/code&gt; argument of &lt;code&gt;&lt;a href="../reference/fmean.html"&gt;fmean()&lt;/a&gt;&lt;/code&gt;, instead of it
+being executed once for every group.&lt;/p&gt;'><sup>2</sup></a> To take full advantage of
+<em>collapse</em>, it is thus highly recommended to use the <em>Fast
+Statistical Functions</em> as much as possible.</p>
+<!-- To take full advantage of *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect other parts of your code^[When doing this, make sure to refer to base R functions explicitly using `::` e.g. `base::mean`.]. -->
 </div>
 <div class="section level2">
 <h2 id="writing-efficient-code">Writing Efficient Code<a class="anchor" aria-label="anchor" href="#writing-efficient-code"></a>
