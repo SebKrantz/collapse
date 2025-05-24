@@ -1,4 +1,4 @@
-# collapse 2.1.1.9000
+# collapse 2.1.2
 
 * `na_insert()` has new argument `set` to do this by reference. 
 
