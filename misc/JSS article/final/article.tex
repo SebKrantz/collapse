@@ -89,7 +89,7 @@
 %
 \href{https://sebkrantz.github.io/collapse/}{\pkg{collapse}} is a large \proglang{C/C++}-based \proglang{R} package that provides an integrated suite of statistical and data manipulation functions.\footnote{Website: https://sebkrantz.github.io/collapse/. Linecount (v2.1.2): \proglang{R}: 13,785, \proglang{C}: 19,013, \proglang{C++}: 9,844. \hphantom{aaa.}Exported namespace: 392 objects, of which 238 functions (excl. methods and shorthands), and 2 datasets.}
 % Most of these statistical functions are vectorized along multiple dimensions (notably along groups and columns) and perform high-cardinality operations\footnote{With many columns and/or groups relative to data size.} very efficiently.
-Its core functionality includes a rich set of S3 generic (grouped, weighted) statistical functions for vectors, matrices, and data frames, which provide efficient low-level vectorizations, OpenMP multithreading, and skip missing values by default (\code{na.rm = TRUE}). It also provides powerful data manipulation functions, such as vectorized and verbose hash-joins or fast (aggregation, recast) pivots, functions and classes for indexed (time-aware) computations on time series and panel data, recursive tools to deal with nested data, and advanced descriptive statistical tools. This functionality is supported by efficient algorithms for grouping, ordering, deduplication, and matching callable at both \proglang{R} and \proglang{C} levels. It also includes efficient object converters, functions for memory efficient \proglang{R} programming, such as (grouped) transformation and math by reference, and helper functions to handle variable labels, attributes, and missing data. \pkg{collapse} is \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{class-agnostic}, providing statistical operations for vectors, matrices, and data frames/lists, and seamlessly supporting extensions to these objects popular in the \proglang{R} ecosystem such as \class{units}, \class{integer64}, \class{xts}, \class{tibble}, \class{data.table}, \class{sf}, and \class{pdata.frame}. It is also globally and interactively configurable, allowing changing defaults of key function arguments, such as the \code{na.rm} arguments to statistical functions or \code{sort} arguments to grouping algorithms (default \code{TRUE}), and modifying the package namespace to mask equivalent but less performant base \proglang{R}/\pkg{tidyverse} functions.\footnote{\pkg{collapse}'s namespace is fully compatible with base \proglang{R} and the \pkg{tidyverse} \citep{rtidyverse}, but can be interactively modified to mask/overwrite key functions with the much faster \pkg{collapse} equivalents. See Section~\ref{sec:glob_opt}.\vspace{-5mm}} % \newline
+Its core functionality includes a rich set of S3 generic (grouped, weighted) statistical functions for vectors, matrices, and data frames, which provide efficient low-level vectorizations, OpenMP multithreading, and skip missing values by default (\code{na.rm = TRUE}). It also provides powerful data manipulation functions, such as vectorized and verbose hash-joins or fast (aggregation, recast) pivots, functions and classes for indexed (time-aware) computations on time series and panel data, recursive tools to deal with nested data, and advanced descriptive statistical tools. This functionality is supported by efficient algorithms for grouping, ordering, deduplication, and matching callable at both \proglang{R} and \proglang{C} levels. It also includes efficient object converters, functions for memory efficient \proglang{R} programming, such as (grouped) transformation and math by reference, and helper functions to handle variable labels, attributes, and missing data. \pkg{collapse} is \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{class-agnostic}, providing statistical operations for vectors, matrices, and data frames/lists, and seamlessly supporting extensions to these objects popular in the \proglang{R} ecosystem such as \class{units}, \class{integer64}, \class{xts}, \class{tibble}, \class{data.table}, \class{sf}, and \class{pdata.frame}. It is globally and interactively configurable, allowing changes to defaults of key function arguments, such as the \code{na.rm} arguments to statistical functions or \code{sort} arguments to grouping algorithms (default \code{TRUE}), and modification of the package namespace to mask equivalent but less performant base \proglang{R}/\pkg{tidyverse} functions.\footnote{\pkg{collapse}'s namespace is fully compatible with base \proglang{R} and the \pkg{tidyverse} \citep{rtidyverse}, but can be interactively modified to mask/overwrite key functions with the much faster \pkg{collapse} equivalents. See Section~\ref{sec:glob_opt}.\vspace{-5mm}} % \newline
 
 Why combine all of these features in a package? The short answer is to make computations in \proglang{R} as flexible and powerful as possible. The more elaborate answer is to (1) facilitate complex data transformation, exploration, and computing tasks in \proglang{R}; (2) increase the performance and memory efficiency of \proglang{R} programs; % \footnote{Principally by avoiding \proglang{R}-level repetition such as applying \proglang{R} functions across columns/groups using a split-apply-combine logic, but also by avoiding object conversions and the need for certain classes to do certain things, such as converting matrices to \class{data.frame} or \class{data.table} just to compute statistics by groups.}
 and (3) create a new foundation package for statistics and data transformation that implements successful ideas in the \proglang{R} ecosystem and other programming environments in a stable, high performance, and broadly compatible manner.\footnote{Such ideas include \pkg{tidyverse} syntax, vectorized aggregations (\pkg{data.table}), data transformation by reference (\proglang{Python}, \pkg{pandas}), vectorized and verbose joins (\pkg{polars}, \proglang{STATA}: \citet{STATA}), indexed time series and panel data (\pkg{xts}, \pkg{plm}), summary statistics for panel data (\proglang{STATA}), variable labels (\proglang{STATA}), recast pivots (\pkg{reshape2}), etc...} \newline
@@ -112,12 +112,12 @@ R> .COLLAPSE_TOPICS
 \end{Sinput}
 \begin{Soutput}
  [1] "collapse-documentation"     "fast-statistical-functions"
- [3] "fast-grouping-ordering"     "fast-data-manipulation"    
- [5] "quick-conversion"           "advanced-aggregation"      
- [7] "data-transformations"       "time-series-panel-series"  
- [9] "list-processing"            "summary-statistics"        
-[11] "recode-replace"             "efficient-programming"     
-[13] "small-helpers"              "collapse-options"          
+ [3] "fast-grouping-ordering"     "fast-data-manipulation"
+ [5] "quick-conversion"           "advanced-aggregation"
+ [7] "data-transformations"       "time-series-panel-series"
+ [9] "list-processing"            "summary-statistics"
+[11] "recode-replace"             "efficient-programming"
+[13] "small-helpers"              "collapse-options"
 \end{Soutput}
 \begin{Sinput}
 R> help("collapse-documentation")
@@ -144,8 +144,8 @@ R> fmean(iris$Sepal.Length)
 R> fmean(num_vars(iris))
 \end{Sinput}
 \begin{Soutput}
-Sepal.Length  Sepal.Width Petal.Length  Petal.Width 
-       5.843        3.057        3.758        1.199 
+Sepal.Length  Sepal.Width Petal.Length  Petal.Width
+       5.843        3.057        3.758        1.199
 \end{Soutput}
 \begin{Sinput}
 R> identical(fmean(num_vars(iris)), fmean(as.matrix(num_vars(iris))))
@@ -157,8 +157,8 @@ R> identical(fmean(num_vars(iris)), fmean(as.matrix(num_vars(iris))))
 R> fmean(iris$Sepal.Length, g = iris$Species)
 \end{Sinput}
 \begin{Soutput}
-    setosa versicolor  virginica 
-     5.006      5.936      6.588 
+    setosa versicolor  virginica
+     5.006      5.936      6.588
 \end{Soutput}
 \begin{Sinput}
 R> fmean(num_vars(iris), g = iris$Species, nthreads = 4)
@@ -226,8 +226,8 @@ setosa       0.2965      0.3706       0.1483           0
 R> fscale(iris$Sepal.Length, g = iris$Species) |> fsd(iris$Species)
 \end{Sinput}
 \begin{Soutput}
-    setosa versicolor  virginica 
-         1          1          1 
+    setosa versicolor  virginica
+         1          1          1
 \end{Soutput}
 \end{Schunk}
 %
@@ -239,10 +239,10 @@ R> fscale(iris$Sepal.Length, g = iris$Species) |> fsd(iris$Species)
 R> fndistinct(wlddev)
 \end{Sinput}
 \begin{Soutput}
-country   iso3c    date    year  decade  region  income    OECD   PCGDP 
-    216     216      61      61       7       7       4       2    9470 
- LIFEEX    GINI     ODA     POP 
-  10548     368    7832   12877 
+country   iso3c    date    year  decade  region  income    OECD   PCGDP
+    216     216      61      61       7       7       4       2    9470
+ LIFEEX    GINI     ODA     POP
+  10548     368    7832   12877
 \end{Soutput}
 \end{Schunk}
 Below, I track changes in Life Expectancy at the country level, computing the range, average change per year, and correlation with GDP per Capita in log-differences\footnote{\fct{Dlog} is a shorthand for \code{fdiff(log(x))} in \pkg{collapse}, \fct{pwcor} wraps \code{cor(..., use = "pairwise.complete.obs")}.} while also saving the latest measurements.\footnote{Note that \fct{fsummarise} never re-groups data, making a call to \fct{fungroup} redundant.} The \fct{collap} function called at the end to aggregate the country-level statistics across income groups is a convenience function for mixed-type aggregation.\footnote{See also \href{https://sebkrantz.github.io/Rblog/2021/01/09/advanced-data-aggregation/}{this blog post on aggregating survey data using \pkg{collapse}} which showcases more aspects of the \fct{collap} function using real census data.} By default, it uses \fct{fmean} for numeric data and \fct{fmode} for categorical data, here also applying population weights such that the most populous country in each group is kept.
@@ -465,9 +465,9 @@ R> fgrowth(airmiles) |> round(2)
 \end{Sinput}
 \begin{Soutput}
 Time Series:
-Start = 1937 
-End = 1960 
-Frequency = 1 
+Start = 1937
+End = 1960
+Frequency = 1
  [1]    NA 16.50 42.29 54.03 31.65  2.38 15.23 33.29 54.36 76.92  2.71 -2.10
 [13] 12.91 18.51 32.03 18.57 17.82 13.61 18.19 12.83 13.32  0.01 15.49  4.25
 \end{Soutput}
@@ -606,7 +606,7 @@ R> exportsi |> G() |> head(5)
 4 c1 s1 2005  44.98
 5 c1 s1 2006 277.76
 
-Indexed by:  c.s [1] | y [5 (10)] 
+Indexed by:  c.s [1] | y [5 (10)]
 \end{Soutput}
 \begin{Sinput}
 R> exportsi |> findex() |> print(2)
@@ -615,7 +615,7 @@ R> exportsi |> findex() |> print(2)
     c.s    y
 1 c1.s1 2002
 2 c1.s1 2003
----                
+---
 499 c10.s10 2007
 500 c10.s10 2009
 
@@ -681,7 +681,7 @@ R> BY(vi, ix(vi)$c.s, data.table::frollmean, 5) |> head(10)
 \begin{Soutput}
  [1]     NA     NA     NA     NA 0.5853 0.5986 0.4861 0.6267 0.6092     NA
 
-Indexed by:  c.s [2] | y [9 (10)] 
+Indexed by:  c.s [2] | y [9 (10)]
 \end{Soutput}
 \end{Schunk}
 % Last but not least, the performance of these classes is second to none.\footnote{See the \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{useR 2022 presentation} slide 40 for a small benchmark.}
@@ -941,8 +941,8 @@ R> head(dr <- pivot(data, c("Country", "Year"),
 R> vlabels(dr)[3:6]
 \end{Sinput}
 \begin{Soutput}
-   Sectorcode        Sector            VA           EMP 
-           NA            NA "Value Added"  "Employment" 
+   Sectorcode        Sector            VA           EMP
+           NA            NA "Value Added"  "Employment"
 \end{Soutput}
 \end{Schunk}
 %
@@ -1085,12 +1085,12 @@ Further useful functions include \fct{has\_elem} to check for the existence of e
 R> varying(wlddev, ~ iso3c)
 \end{Sinput}
 \begin{Soutput}
-      country          date          year        decade        region 
-        FALSE          TRUE          TRUE          TRUE         FALSE 
-       income          OECD         PCGDP        LIFEEX          GINI 
-        FALSE         FALSE          TRUE          TRUE          TRUE 
-          ODA           POP  center_PCGDP center_LIFEEX 
-         TRUE          TRUE          TRUE          TRUE 
+      country          date          year        decade        region
+        FALSE          TRUE          TRUE          TRUE         FALSE
+       income          OECD         PCGDP        LIFEEX          GINI
+        FALSE         FALSE          TRUE          TRUE          TRUE
+          ODA           POP  center_PCGDP center_LIFEEX
+         TRUE          TRUE          TRUE          TRUE
 \end{Soutput}
 \end{Schunk}
 %
@@ -1440,7 +1440,7 @@ duplicate columns: year, month, day, hour => renamed using suffix '_weather'
 left join: x[tailnum] 424068/435352 (97.4%) <87.62:1st> planes[tailnum] 4840
 duplicate columns: year => renamed using suffix '_planes' for y
 left join: x[dest] 435352/435352 (100%) <3689.42:1st> airports[faa] 118/1255
-left join: x[carrier] 435352/435352 (100%) <31096.57:1st> airlines[carrier] 
+left join: x[carrier] 435352/435352 (100%) <31096.57:1st> airlines[carrier]
 duplicate columns: name => renamed using suffix '_airlines' for y
 [1] 435352     48
 \end{Soutput}
