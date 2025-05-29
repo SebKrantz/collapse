@@ -33,7 +33,7 @@ vlabels(GGDC10S) <- trimws(vlabels(GGDC10S))
 
 # This is the benchmark function
 bmark <- function(...) {
-  bench::mark(..., min_time = 2, check = FALSE) |> janitor::clean_names() |>
+  bench::mark(..., min_time = 3, check = FALSE) |> janitor::clean_names() |>
   fselect(expression, min, median, mem_alloc, n_itr, n_gc, total_time) |>
   fmutate(expression = names(expression)) |> dapply(as.character) |> qDF()
 }
@@ -53,7 +53,7 @@ fmean(iris$Sepal.Length)
 fmean(num_vars(iris))
 identical(fmean(num_vars(iris)), fmean(as.matrix(num_vars(iris))))
 fmean(iris$Sepal.Length, g = iris$Species)
-fmean(num_vars(iris), g = iris$Species, nthreads = 4)
+fmean(num_vars(iris), g = iris$Species)
 
 
 ###################################################
@@ -71,7 +71,7 @@ BY(num_vars(iris), g = iris$Species, FUN = mad) |> head(1)
 ###################################################
 ### code chunk number 6: fscale
 ###################################################
-fscale(iris$Sepal.Length, g = iris$Species) |> fsd(iris$Species)
+fscale(iris$Sepal.Length, g = iris$Species) |> fsd(g = iris$Species)
 
 
 ###################################################
@@ -135,7 +135,7 @@ str(g <- GRP(wlddev, ~ income + OECD))
 ###################################################
 add_vars(g$groups,
          get_vars(wlddev, "country") |> fmode(g, wlddev$POP, use = FALSE),
-         get_vars(wlddev, c("PCGDP", "LIFEEX")) |> fmean(g, wlddev$POP, use = F),
+         get_vars(wlddev, c("PCGDP", "LIFEEX")) |> fmean(g, wlddev$POP, use = FALSE),
          get_vars(wlddev, "POP") |> fsum(g, use = FALSE))
 
 
@@ -156,7 +156,7 @@ bmark(collapse = collapse::fsummarise(mtcars, sum = sum(mpg)),
 ###################################################
 ### code chunk number 16: ts_example
 ###################################################
-fgrowth(airmiles) |> round(2)
+fgrowth(airmiles, n = 10, power = 1/10) |> na.omit() |> round(1)
 
 
 ###################################################
@@ -196,7 +196,7 @@ identical(A, B)
 ### code chunk number 21: indexing
 ###################################################
 exportsi <- exports |> findex_by(c, s, y)
-exportsi |> G() |> head(5)
+exportsi |> G(0:1) |> head(5)
 exportsi |> findex() |> print(2)
 
 
@@ -219,7 +219,7 @@ lm(v_ld ~ L(v_ld, 1:2), exportsi) |> summary() |> coef() |> round(3)
 ###################################################
 ### code chunk number 24: rollmean
 ###################################################
-BY(vi, ix(vi)$c.s, data.table::frollmean, 5) |> head(10)
+BY(vi, findex(vi)$c.s, data.table::frollmean, 5) |> head(10)
 
 
 ###################################################
@@ -321,20 +321,20 @@ head(dr_agg <- pivot(data, "Country", c("AGR", "MIN", "MAN"), how = "r",
 ###################################################
 ### code chunk number 38: list_proc
 ###################################################
-dl <- GGDC10S |> rsplit( ~ Country + Variable)
-dl$ARG$EMP$AGR[1:12]
+d_list <- GGDC10S |> rsplit( ~ Country + Variable)
+d_list$ARG$EMP$AGR[1:12]
 
 
 ###################################################
 ### code chunk number 39: list_proc_2
 ###################################################
-result <- list()
+results <- list()
 for (country in c("ARG", "BRA", "CHL")) {
   for (variable in c("EMP", "VA")) {
     m <- lm(log(AGR+1) ~ log(MIN+1) + log(MAN+1) + Year,
-            data = dl[[country]][[variable]])
-    result[[country]][[variable]] <- list(model = m, BIC = BIC(m),
-                                          summary = summary(m))
+            data = d_list[[country]][[variable]])
+    results[[country]][[variable]] <- list(model = m, BIC = BIC(m),
+                                           summary = summary(m))
   }
 }
 
@@ -342,26 +342,26 @@ for (country in c("ARG", "BRA", "CHL")) {
 ###################################################
 ### code chunk number 40: list_proc_3
 ###################################################
-str(r_sq_l <- result |> get_elem("r.squared"))
-rowbind(r_sq_l, idcol = "Country", return = "data.frame")
+str(r_sq <- results |> get_elem("r.squared"))
+rowbind(r_sq, idcol = "Country", return = "data.frame")
 
 
 ###################################################
 ### code chunk number 41: list_proc_3.5
 ###################################################
-r_sq_l |> t_list() |> rowbind(idcol = "Variable", return = "data.frame")
+r_sq |> t_list() |> rowbind(idcol = "Variable", return = "data.frame")
 
 
 ###################################################
 ### code chunk number 42: list_proc_4
 ###################################################
-result$ARG$EMP$summary$coefficients
+results$ARG$EMP$summary$coefficients
 
 
 ###################################################
 ### code chunk number 43: list_proc_5
 ###################################################
-result |> get_elem("coefficients") |> get_elem(is.matrix) |>
+results |> get_elem("coefficients") |> get_elem(is.matrix) |>
   unlist2d(idcols = c("Country", "Variable"),
            row.names = "Covariate") |> head(3)
 
@@ -388,14 +388,14 @@ qsu(LIFEEXi)
 ###################################################
 ### code chunk number 47: qsu_2
 ###################################################
-qsu(wlddev, by = LIFEEX ~ income, w = ~ POP)
+wlda15 <- wlddev |> fsubset(year >= 2015) |> fgroup_by(iso3c) |> flast()
+qsu(wlda15, by = LIFEEX ~ income, w = ~ POP)
 
 
 ###################################################
 ### code chunk number 48: descr
 ###################################################
-wlda15 <- wlddev |> fsubset(year >= 2015) |> fgroup_by(iso3c) |> flast()
-wlda15 |> descr(by = income + LIFEEX ~ OECD)
+descr(wlda15, by = income + LIFEEX ~ OECD, w = ~ replace_na(POP / 1e6))
 
 
 ###################################################
@@ -430,11 +430,11 @@ set.seed(101)
 int <- 1:1000; g_int <- sample.int(1000, 1e7, replace = TRUE)
 char <- c(letters, LETTERS, month.abb, month.name)
 g_char <- sample(char <- outer(char, char, paste0), 1e7, TRUE)
-bmark(base_int = unique(g_int), collapse_int = funique(g_int))
-bmark(base_char = unique(g_char), collapse_char = funique(g_char))
-bmark(base_int = match(g_int, int), collapse_int = fmatch(g_int, int))
-bmark(base_char = match(g_char, char), data.table_char =
-        chmatch(g_char, char), collapse_char = fmatch(g_char, char))
+bmark(base = unique(g_int), collapse = funique(g_int))
+bmark(base = unique(g_char), collapse = funique(g_char))
+bmark(base = match(g_int, int), collapse = fmatch(g_int, int))
+bmark(base = match(g_char, char), data.table =
+        chmatch(g_char, char), collapse = fmatch(g_char, char))
 
 
 ###################################################
@@ -442,16 +442,16 @@ bmark(base_char = match(g_char, char), data.table_char =
 ###################################################
 set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 4)
 m <- matrix(rnorm(1e7), ncol = 1000)
-bmark(R = colSums(m), collapse = fsum(m))
-bmark(R = colMeans(m), collapse = fmean(m))
-bmark(MS = matrixStats::colMedians(m), collapse = fmedian(m))
+bmark(base = colSums(m), collapse = fsum(m))
+bmark(base = colMeans(m), collapse = fmean(m))
+bmark(matrixStats = matrixStats::colMedians(m), collapse = fmedian(m))
 
 
 ###################################################
 ### code chunk number 55: bench_2.1
 ###################################################
 g <- sample.int(1e3, 1e4, TRUE)
-bmark(R = rowsum(m, g), collapse = fsum(m, g))
+bmark(base = rowsum(m, g), collapse = fsum(m, g))
 
 
 ###################################################
@@ -550,6 +550,7 @@ bmark(tidyr = tidyr::pivot_wider(flights, id_cols = .c(month, day, dest),
                             "origin", how = "wider", FUN = fsum),
       collapse_itnl = pivot(flights, .c(month, day, dest), vars,
                             "origin", how = "wider", FUN = "sum"))
+
 
 ###################################################
 ### code chunk number 64: reset_options

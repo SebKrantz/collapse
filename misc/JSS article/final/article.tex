@@ -16,7 +16,8 @@
 \hyphenation{mod-i-fi-ca-tions ma-nip-u-la-tion trans-for-ma-tion per-for-mance de-vel-op-ment
              ef-fi-cient in-tro-duces ca-pa-bil-i-ties gen-er-al-iz-ing en-abling pro-gram-ming
              com-pu-ta-tions eval-u-at-ed fa-cil-i-tate im-ple-men-ta-tions re-place-ment
-             sub-set-ting de-com-po-si-tion al-go-rith-mic en-hanced mul-ti-ple coun-tries com-pu-ta-tion-al}
+             sub-set-ting de-com-po-si-tion al-go-rith-mic en-hanced mul-ti-ple coun-tries
+             com-pu-ta-tion-al par-tic-u-lar-ly com-po-nents}
 \usepackage[english]{babel}
 % \sloppy
 % \usepackage{microtype}
@@ -99,14 +100,14 @@
 %
 \href{https://sebkrantz.github.io/collapse/}{\pkg{collapse}} is a large \proglang{C/C++}-based \proglang{R} package that provides an integrated suite of statistical and data manipulation functions.\footnote{Website: https://sebkrantz.github.io/collapse/. Linecount (v2.1.2): \proglang{R}: 13,785, \proglang{C}: 19,013, \proglang{C++}: 9,844. \hphantom{aaa.}Exported namespace: 392 objects, of which 238 functions (excl. methods and shorthands), and 2 datasets.}
 % Most of these statistical functions are vectorized along multiple dimensions (notably along groups and columns) and perform high-cardinality operations\footnote{With many columns and/or groups relative to data size.} very efficiently.
-Core functionality includes a rich set of S3 generic (grouped, weighted) statistical functions for vectors, matrices, and data frames, which provide efficient low-level vectorizations, OpenMP multithreading, and skip missing values by default (\code{na.rm = TRUE}). It also provides powerful data manipulation functions, such as vectorized and verbose hash-joins or fast (aggregation, recast) pivots, functions and classes for indexed (time-aware) computations on time series and panel data, recursive tools to deal with nested data, and advanced descriptive statistical tools. This functionality is powered by efficient algorithms for grouping, ordering, deduplication, and matching callable at both \proglang{R} and \proglang{C} levels. The package also includes efficient object converters, functions for memory efficient \proglang{R} programming, such as (grouped) transformation and math by reference, and helper functions to handle variable labels, attributes, and missing data. \pkg{collapse} is \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{class-agnostic}, providing statistical operations on vectors, matrices, and data frames/lists, and seamlessly supporting extensions to these objects popular in the \proglang{R} ecosystem such as \class{units}, \class{integer64}, \class{xts}, \class{tibble}, \class{data.table}, \class{sf}, and \class{pdata.frame}. It is globally and interactively configurable, allowing changes to defaults of key function arguments, such as \code{na.rm} arguments to statistical functions or \code{sort} arguments to grouping algorithms (default \code{TRUE}), and modifications to the namespace to mask/replace equivalent but less performant base \proglang{R}/\pkg{tidyverse} functions.\footnote{\pkg{collapse}'s namespace is fully compatible with base \proglang{R} and the \pkg{tidyverse} \citep{rtidyverse}, but can be interactively modified to mask/overwrite key functions with the much faster \pkg{collapse} equivalents. See Section~\ref{sec:glob_opt}.\vspace{-5mm}} % \newline
+Core functionality includes a rich set of S3 generic (grouped, weighted) statistical functions for vectors, matrices, and data frames, which provide efficient low-level vectorizations, OpenMP multithreading, and skip missing values by default (\code{na.rm = TRUE}). It also provides powerful data manipulation functions, including vectorized and verbose hash-joins and fast (aggregation, recast) pivots, functions and classes for indexed (time-aware) computations on time series and panel data, recursive tools to deal with nested data, and advanced descriptive statistical tools. This functionality is powered by efficient algorithms for grouping, ordering, deduplication, and matching callable at both \proglang{R} and \proglang{C} levels. The package also includes efficient object converters, functions for memory efficient \proglang{R} programming, such as (grouped) transformation and math by reference, and helper functions to handle variable labels, attributes, and missing data. \pkg{collapse} is \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{class-agnostic}, providing statistical operations on vectors, matrices, and data frames/lists, and seamlessly supporting extensions to these objects popular in the \proglang{R} ecosystem such as \class{units}, \class{integer64}, \class{xts}, \class{tibble}, \class{data.table}, \class{sf}, and \class{pdata.frame}. It is globally and interactively configurable, allowing changes to defaults of key function arguments, such as \code{na.rm} arguments to statistical functions or \code{sort} arguments to grouping algorithms (default \code{TRUE}), and modifications of the namespace to mask/replace equivalent but less performant base \proglang{R}/\pkg{tidyverse} functions.\footnote{\pkg{collapse}'s namespace is fully compatible with base \proglang{R} and the \pkg{tidyverse} \citep{rtidyverse}, but can be interactively modified to mask/overwrite key functions with the much faster \pkg{collapse} equivalents. See Section~\ref{sec:glob_opt}.\vspace{-5mm}} % \newline
 
 Why combine all of these features in a package? The short answer is to make computations in \proglang{R} as flexible and powerful as possible. The more elaborate answer is to (1) facilitate complex data transformation, exploration, and computing tasks in \proglang{R}; (2) increase the performance and memory efficiency of \proglang{R} programs; % \footnote{Principally by avoiding \proglang{R}-level repetition such as applying \proglang{R} functions across columns/groups using a split-apply-combine logic, but also by avoiding object conversions and the need for certain classes to do certain things, such as converting matrices to \class{data.frame} or \class{data.table} just to compute statistics by groups.}
 and (3) create a new foundation package for statistics and data manipulation that implements many successful ideas in the \proglang{R} ecosystem and other programming environments in a stable, high performance, and broadly compatible manner.\footnote{Such ideas include \pkg{tidyverse} syntax, vectorized aggregations (\pkg{data.table}), data transformation by reference (\pkg{pandas}), vectorized and verbose joins (\pkg{polars}, \proglang{STATA}: \citet{STATA}), indexed time/panel series (\pkg{xts}, \pkg{plm}), summary statistics for panel data (\proglang{STATA}), variable labels (\proglang{STATA}), recast pivots (\pkg{reshape2}), etc...} \newline
 
 \proglang{R} already has a large and tested data manipulation and statistical computing ecosystem. Notably, the \pkg{tidyverse} \citep{rtidyverse} provides a consistent toolkit for data manipulation in R, centered around the \class{tibble} \citep{rtibble} object and tidy data principles \citep{rtidydata}. \pkg{data.table} \citep{rdatatable} provides an enhanced high-performance data frame with parsimonious syntax. \pkg{sf} \citep{rsf} provides a data frame for spatial data and supporting functionality. \pkg{tsibble} \citep{rtsibble} and \pkg{xts} \citep{rxts} provide classes and operations for time series data, the former via an enhanced \class{tibble}, the latter through an efficient matrix-based class. Econometric packages like \pkg{plm} \citep{rplm} and \pkg{fixest} \citep{rfixest} also provide solutions to deal with panel data and irregularity in the time dimension. Packages like \pkg{matrixStats} \citep{rmatrixstats} and \pkg{Rfast} \citep{rfast} offer fast statistical calculations along the rows and columns of matrices as well as faster statistical procedures. \pkg{DescTools} \citep{rdesctools} provides a wide variety of descriptive statistics, including weighted versions. \pkg{survey} \citep{rsurvey} offers computations on complex surveys. \pkg{labelled} \citep{rlabelled} provides tools to deal with labelled data. Packages like \pkg{tidyr} \citep{rtidyr}, \pkg{purrr} \citep{rpurrr} and \pkg{rrapply} \citep{rrapply} provide functions to deal with nested or messy data. \newline
 
-\pkg{collapse} relates to and integrates key elements from these projects. It offers \pkg{tidyverse}-like data manipulation at the speed and stability of \pkg{data.table} for any data frame-like object. It can turn any vector/matrix/data frame into a time-aware indexed series or frame and perform operations such as lagging, differencing, scaling or centering, encompassing and enhancing core manipulation functionality of \pkg{plm}, \pkg{fixest}, and \pkg{xts}. It also performs fast (grouped, weighted) statistical computations along the columns of matrix-like objects, complementing and enhancing \pkg{matrixStats} and \pkg{Rfast}. Its low-level vectorizations and workhorse algorithms are accessible at the \proglang{R} and \proglang{C}-levels, unlike \pkg{data.table}, where most vectorizations and algorithms are internal. It also supports variable labels and intelligently preserves attributes of all objects, complementing \pkg{labelled}. It provides novel recursive tools to deal with nested data, enhancing \pkg{tidyr}, \pkg{purrr}, and \pkg{rrapply}. Finally, it provides a small but consistent and powerful set of descriptive statistical tools, yielding sufficient detail for most data exploration purposes, requiring users to invoke packages like \pkg{DescTools} or \pkg{survey} only for specialized statistics. \newline
+\pkg{collapse} relates to and integrates key elements from these projects. It offers \pkg{tidyverse}-like data manipulation at the speed and stability of \pkg{data.table} for any data frame-like object. It can turn any vector/matrix/data frame into a time-aware indexed series or frame and perform operations such as lagging, differencing, scaling or centering, encompassing and enhancing core manipulation functionality of \pkg{plm}, \pkg{fixest}, and \pkg{xts}. It also performs fast (grouped, weighted) statistical computations along the columns of matrix-like objects, complementing and enhancing \pkg{matrixStats} and \pkg{Rfast}. Its low-level vectorizations and workhorse algorithms are accessible at the \proglang{R} and \proglang{C}-levels, unlike \pkg{data.table}, where most vectorizations and algorithms are internal. It also supports variable labels and intelligently preserves the attributes of all objects, complementing \pkg{labelled}. It provides novel recursive tools to deal with nested data, enhancing \pkg{tidyr}, \pkg{purrr}, and \pkg{rrapply}. Finally, it provides a small but consistent and powerful set of descriptive statistical tools, yielding sufficient detail for most data exploration purposes, requiring users to invoke packages like \pkg{DescTools} or \pkg{survey} only for specialized statistics. \newline
 
 In summary, \pkg{collapse} is a new foundation package for advanced statistical computing and data transformation in \proglang{R} that integrates seamlessly with the ecosystem and offers outstanding speed and memory efficiency. Thus, many core tasks can be done with \pkg{collapse}, and easily extended by specialized packages, yielding more lightweight, faster, and shorter \proglang{R} programs. \newline
 % TODO: Need examples of this
@@ -114,7 +115,7 @@ In summary, \pkg{collapse} is a new foundation package for advanced statistical 
 Other programming environments such as \proglang{Python} and \proglang{Julia} by now also offer computationally very powerful libraries for tabular data such as \pkg{DataFrames.jl} \citep{jldataframes}, \pkg{Polars} \citep{pypolars}, and \pkg{Pandas} \citep{mckinney2010pandas, pypandas}, and supporting numerical libraries such as \pkg{Numpy} \citep{pynumpy}, or \pkg{StatsBase.jl} \citep{jlstatsbase}. % \pkg{NaNStatistics.jl} \citep{jlnanstatistics}
 In comparison with these, \pkg{collapse} offers a class-agnostic approach bridging the divide between data frames and atomic structures, has more advanced statistical capabilities,\footnote{Such as weighted statistics, including several (weighted) quantile and mode estimators, support for fully time-aware computations on irregular series/panels, scaling and centering, advanced (grouped, weighted, panel-decomposed) descriptive statistics etc., all supporting missing values and vectors/matrices/data frames.} supports recast pivots and recursive operations on lists, variable labels, verbosity for critical operations such as joins, and is extensively globally configurable. In short, it is very useful for complex statistical workflows, rich datasets (e.g., surveys), and for integrating with different parts of the \proglang{R} ecosystem. On the other hand, \pkg{collapse}, for the most part, does not offer a sub-column-level parallel architecture and is thus not extremely competitive with top frameworks, including \pkg{data.table}, on aggregating billion-row datasets with few columns.\footnote{As can be seen in the \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks}: \pkg{collapse} is highly competitive on the 10-100 million observations datasets, but deteriorates in performance at larger data sizes. There may be performance improvements for very "long data" in the future, but, at present, the treatment of columns as fundamental units of computation (in most cases) is a tradeoff for the highly flexible class-agnostic architecture.} Its vectorization capabilities are also limited to the statistical functions it provides and not, like \pkg{DataFrames.jl}, to any \proglang{Julia} function. However, as demonstrated in Section~\ref{sec:integration}, vectorized statistical functions can be combined to calculate more complex statistics in a vectorized way. \newline
 
-The package has a built-in structured \href{https://sebkrantz.github.io/collapse/reference/index.html}{documentation} facilitating its use. This documentation includes a central \href{https://sebkrantz.github.io/collapse/reference/collapse-documentation.html}{overview page} linking to all other documentation pages and supplementary topic pages which briefly describe related functionality. The names of these extra pages are collected in a global macro \code{.COLLAPSE\_TOPICS} and can be called directly with \code{help()}:
+The package comes with a built-in structured \href{https://sebkrantz.github.io/collapse/reference/index.html}{documentation} facilitating its use. This includes a central \href{https://sebkrantz.github.io/collapse/reference/collapse-documentation.html}{overview page} linking to all other documentation pages and a set of supplementary topic pages which briefly summarize related functionality. The names of these extra pages are collected in a global macro \code{.COLLAPSE\_TOPICS} and can be called directly with \code{help()}:
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -134,7 +135,7 @@ R> help("collapse-documentation")
 \end{Sinput}
 \end{Schunk}
 %
-This article does not fully present \pkg{collapse}, but the following sections introduce its key components, starting with (\ref{sec:fast_stat_fun}) the \emph{Fast Statistical Functions} and their (\ref{sec:integration}) integration with data manipulation functions; (\ref{sec:ts_ps}) architecture for time series and panel data; (\ref{sec:join_pivot}) table joins and pivots; (\ref{sec:list_proc}) list processing functions; (\ref{sec:summ_stat}) descriptive tools; and (\ref{sec:glob_opt}) global options. Section~\ref{sec:bench} provides a small benchmark, Section~\ref{sec:conclusion} concludes. For deeper engagement with \pkg{collapse}, consult the \href{https://sebkrantz.github.io/collapse/articles/collapse_documentation.html}{documentation and resources}, including \href{https://sebkrantz.github.io/collapse/articles/index.html}{vignettes}/\href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse\%20cheat\%20sheet/collapse_cheat_sheet.pdf}{cheatsheet}/\href{https://sebkrantz.github.io/Rblog/}{blog}/\href{https://www.youtube.com/watch?v=OwWT1-dSEts}{talk} $+$ \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{slides}.
+While this article cannot fully present \pkg{collapse}, the following sections introduce its key features, starting with (\ref{sec:fast_stat_fun}) the \emph{Fast Statistical Functions} and their (\ref{sec:integration}) integration with data manipulation functions; (\ref{sec:ts_ps}) architecture for time series and panel data; (\ref{sec:join_pivot}) table joins and pivots; (\ref{sec:list_proc}) list processing functions; (\ref{sec:summ_stat}) descriptive tools; and (\ref{sec:glob_opt}) global options. Section~\ref{sec:bench} provides a small benchmark, Section~\ref{sec:conclusion} concludes. For deeper engagement with \pkg{collapse}, consult the \href{https://sebkrantz.github.io/collapse/articles/collapse_documentation.html}{documentation resources}, including \href{https://sebkrantz.github.io/collapse/articles/index.html}{vignettes}, \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse\%20cheat\%20sheet/collapse_cheat_sheet.pdf}{cheatsheet}, \href{https://sebkrantz.github.io/Rblog/}{blog}, and \href{https://www.youtube.com/watch?v=OwWT1-dSEts}{talk}$+$\href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{slides}.
 %
 \section{Fast statistical functions} \label{sec:fast_stat_fun}
 %
@@ -171,7 +172,7 @@ R> fmean(iris$Sepal.Length, g = iris$Species)
      5.006      5.936      6.588 
 \end{Soutput}
 \begin{Sinput}
-R> fmean(num_vars(iris), g = iris$Species, nthreads = 4)
+R> fmean(num_vars(iris), g = iris$Species)
 \end{Sinput}
 \begin{Soutput}
            Sepal.Length Sepal.Width Petal.Length Petal.Width
@@ -221,7 +222,7 @@ R> fmean(iris$Sepal.Length, g = iris$Species, TRA = "fill")[c(1:5, 51:55)]
 %\code{TRA()} is called internally in the \emph{Fast Statistical Functions}, the \code{TRA} argument is passed to \code{FUN}. Thus \code{fmean(x, g, w, TRA = "-")} is equivalent to \code{TRA(x, fmean(x, g, w), "-", g)}.
 Additionally, a \code{set} argument can be passed to \emph{Fast Statistical Functions} to toggle transformation by reference. For example \code{fmean(iris$Sepal.Length, g = iris$Species, TRA = "fill", set = TRUE)} would modify \code{Sepal.Length} in-place and return it invisibly. \newline
 
-Having grouping and data transformation functionality directly built into generic statistical functions facilitates and speeds up many common operations. It also avoids the need to convert atomic objects to data frames for grouped aggregations or transformations. The \href{https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html}{\emph{Fast Statistical Functions}} are complemented by a smaller set of \href{https://sebkrantz.github.io/collapse/reference/data-transformations.html}{\emph{Data Transformation Functions}}, including \fct{TRA}, infix functions such as \code{\%r+\%}, \code{\%c+\%}, \code{\%+=\%} and \fct{setop} for row/column-wise arithmetic operations (by reference), \fct{dapply} to apply functions across rows or columns of matrices/data frames, \fct{BY} for general split-apply-combine computing, and specialized functions such as \fct{fscale} or \fct{f[hd]within} for (grouped, weighted) scaling and centering:
+Having grouping and data transformation functionality directly built into generic statistical functions facilitates and speeds up many common operations. It notably avoids the need to convert atomic objects to data frames for grouped aggregations or transformations. The \href{https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html}{\emph{Fast Statistical Functions}} are complemented by a smaller set of \href{https://sebkrantz.github.io/collapse/reference/data-transformations.html}{\emph{Data Transformation Functions}}, including \fct{TRA}, infix functions such as \code{\%r+\%}, \code{\%c+\%}, \code{\%+=\%} and \fct{setop} for row/column-wise arithmetic operations (by reference), \fct{dapply} to apply functions across rows or columns of matrices/data frames, \fct{BY} for general split-apply-combine computing, and specialized functions such as \fct{fscale} or \fct{f[hd]within} for (grouped, weighted) scaling and centering:
 \begin{Schunk}
 \begin{Sinput}
 R> BY(num_vars(iris), g = iris$Species, FUN = mad) |> head(1)
@@ -275,9 +276,7 @@ R> wlddev |> fgroup_by(country, income) |>
 4         China Upper middle income 60   27      0.45   0.00077     76  8749
 \end{Soutput}
 \end{Schunk}
-With the exception of \code{pwcor(Dlog(LIFEEX), Dlog(PCGDP))}, which is evaluated for every country, all other expressions in \fct{fsummarise} and also the final \fct{collap} call are fully vectorized, i.e., \emph{Fast Statistical and Transformation Functions} are evaluated only once with grouping information passed to their \code{g} arguments. Using subtraction by reference in the range is more memory efficient as the executed expression is equivalent to \code{fmax(LIFFEX, country) \%-=\% fmin(LIFFEX, country)}. \fct{across} here directly invokes \fct{flast.data.frame} on the subset of columns.
-%
-\emph{Fast Statistical Functions} also have a method for grouped data, hence \fct{fsummarise} is not always needed. Below, I average the data with population weights.\footnote{Functions like \fct{fmean}, when called on a grouped data frame with weights, by default (\code{keep.w = TRUE}) sum the weights column and retain it after the grouping columns to permit further weighted operations. \vspace{-10mm}}
+With the exception of \code{pwcor(Dlog(LIFEEX), Dlog(PCGDP))}, which is evaluated for every country, all other expressions in \fct{fsummarise} and also the final \fct{collap} call are fully vectorized, i.e., \emph{Fast Statistical and Transformation Functions} are evaluated only once with grouping information passed to their \code{g} arguments. Using subtraction by reference in the range is more memory efficient as the executed expression is equivalent to \code{fmax(LIFFEX, country) \%-=\% fmin(LIFFEX, country)}. \fct{across} directly invokes \fct{flast.data.frame} on the subset of columns. \emph{Fast Statistical Functions} also have a method for grouped data, thus \fct{fsummarise} is not always needed. Below, I average recent data with population weights.\footnote{Functions like \fct{fmean}, when called on a grouped data frame with weights, by default (\code{keep.w = TRUE}) sum the weights column and retain it after the grouping columns to permit further weighted operations. \vspace{-10mm}}
 \begin{Schunk}
 \begin{Sinput}
 R> wlddev |> fsubset(year >= 2015, income, PCGDP:POP) |>
@@ -291,9 +290,9 @@ R> wlddev |> fsubset(year >= 2015, income, PCGDP:POP) |>
 4 Upper middle income 1.318e+10  8168  75.51 41.68  -86630117
 \end{Soutput}
 \end{Schunk}
-Emplyoing the \emph{Fast Statistical Functions} directly often results in more efficient code. For example, computing population shares for each year as \code{fmutate(wlddev, POP\_share = fsum(\\POP, year, TRA = "/"))} is considerably more efficient than \code{wlddev |> fgroup_by(year) |> fmutate(POP\_share = fsum(POP, TRA = "/")) |> fungroup()}, which in turn is more efficient than using \code{POP / fsum(POP)} (extra full-length allocation) or \code{proportions(POP)} (slow split-apply-combine evaluation logic) inside the grouped \fct{fmutate} call. \newline
+Emplyoing the \emph{Fast Statistical Functions} directly often results in more efficient code. For example, computing population shares for each year as \code{fmutate(wlddev, POP\_share = fsum\\(POP, year, TRA = "/"))} is considerably more efficient than \code{wlddev |> fgroup_by(year) |> fmutate(POP\_share = fsum(POP, TRA = "/")) |> fungroup()}, which in turn is more efficient than using \code{POP / fsum(POP)} (extra full-length allocation) or \code{proportions(POP)} (slow split-apply-combine evaluation logic) inside the grouped \fct{fmutate} call. \newline
 
-\pkg{collapse} thus offers several ways to reach the same outcome. This may be confusing at first, but all options can be distinguished in terms of efficiency. It is thus helpful to be mindful of computer resources and attempt to craft minimalistic solutions to complex problems. For example, I recently combined multiple spatial datasets on points of interest (POIs) and needed to deduplicate them. I decided to keep the richest source for each location and POI type/category. After creating comparable POI confidence, location, and type indicators, my deduplication expression ended up being a single line of the form \code{fsubset(data, source == fmode(source, list(location, type), confidence, "fill"))}---which retains POIs from the confidence-weighted most frequent (richest) source by location and type. This is efficient because it avoids materializing intermediate datasets and relegates all computations to \fct{fmode}---\emph{Fast Statistical Functions} internal grouped logic is highly optimized.
+\pkg{collapse} thus offers several ways to reach the same outcome. This may be confusing at first, but all options can be distinguished in terms of efficiency. Hence, it is helpful to think about computer resources and attempt to craft minimalistic solutions to complex problems. For example, I recently combined multiple spatial datasets on points of interest (POIs) and needed to deduplicate them. I decided to keep the richest source for each location and POI type/category. After creating comparable POI confidence, location, and type indicators, my deduplication expression ended up being a single line of the form \code{fsubset(data, source == fmode(source, list(location, type), confidence, "fill"))}---which retains POIs from the confidence-weighted most frequent (richest) source by location and type. This is efficient because it avoids materializing intermediate datasets and relegates all computations to \fct{fmode}---\emph{Fast Statistical Functions} call a highly optimized internal grouping algorithm.
 %
 \subsection{Vectorizations for advanced tasks} \label{ssec:vfat}
 %
@@ -321,7 +320,7 @@ R> wlddev |> collap(POP ~ region + year, FUN = fsum) |>
 \end{Soutput}
 \end{Schunk}
 %
-When \fct{fsummarise} evaluates an expression involving \emph{Fast Statistical Functions}, it sets their \code{g} argument with a grouping (\class{GRP}) object that is directly handed to \proglang{C/C++}, and also sets \code{use.g.names = FALSE}. Hence, weights (\code{w}) becomes the second positional argument. Similarly, \fct{fmutate} sets \code{g} and \code{TRA = "fill"}, which can be overwritten by the user (here with \code{TRA = "-"}). The expression \code{fsum(x, dmy) \%/=\% fsum(dmy, dmy)} amounts to \code{cov(x, y)/var(y)}, but is vectorized across groups and memory efficient---leveraging the weights (\code{w}) argument to \fct{fsum} to compute products (\code{v * dmy} and \code{dmy * dmy}) on the fly and division by reference (\code{\%/=\%}) to avoid an additional allocation. In a 2023 \href{https://sebkrantz.github.io/Rblog/2023/04/12/collapse-and-the-fastverse-reflecting-the-past-present-and-future/}{blog post}, I forecasted high-resolution population estimates for South Africa like this. Using 1 $km^2$ \href{https://www.worldpop.org/}{WorldPop} data available for years 2014-2020, I ran 1.6 million cell-regressions and obtained 2 forecasts for 2021 and 2022 in less than 0.3 seconds on my M1 Mac. Another neat example from the community, shared by Andrew Ghazi in a \href{https://andrewghazi.github.io/posts/collapse\_is\_sick/sick.html}{blog post}, vectorizes an expression to compute the $p$~value, \code{2 * pt(abs(fmean(x) * sqrt(6) / fsd(x)), 5, lower.tail = FALSE)}, across 300,000 groups for a simulation study, yielding a 70x performance increase over \pkg{dplyr}. \newline
+When \fct{fsummarise} evaluates an expression involving \emph{Fast Statistical Functions}, it sets their \code{g} argument with a grouping (\class{GRP}) object that is directly handed to \proglang{C/C++}, and also sets \code{use.g.names = FALSE}. Hence, weights (\code{w}) becomes the second positional argument. Similarly, \fct{fmutate} sets \code{g} and \code{TRA = "fill"}, which can be overwritten by the user (here with \code{TRA = "-"}). The expression \code{fsum(x, dmy) \%/=\% fsum(dmy, dmy)} amounts to \code{cov(x, y)/var(y)}, but is vectorized across groups and memory efficient---leveraging the weights (\code{w}) argument to \fct{fsum} to compute products (\code{v * dmy} and \code{dmy * dmy}) internally and division by reference (\code{\%/=\%}) to avoid an additional allocation. In a 2023 \href{https://sebkrantz.github.io/Rblog/2023/04/12/collapse-and-the-fastverse-reflecting-the-past-present-and-future/}{blog post}, I forecasted high-resolution population estimates for South Africa like this. Using 1 $km^2$ \href{https://www.worldpop.org/}{WorldPop} data available for years 2014-2020, I ran 1.6 million cell-regressions and obtained 2 forecasts for 2021 and 2022 in less than 0.3 seconds on my M1 Mac. Another neat example from the community, shared by Andrew Ghazi in a \href{https://andrewghazi.github.io/posts/collapse\_is\_sick/sick.html}{blog post}, vectorizes an expression to compute the $p$~value, \code{2 * pt(abs(fmean(x) * sqrt(6) / fsd(x)), 5, lower.tail = FALSE)}, across 300,000 groups for a simulation study, yielding a 70x performance increase over \pkg{dplyr}. \newline
 % The eager vectorization approach of \pkg{collapse} here replaces \code{fmean(x)} and \code{fsd(x)} by their grouped versions and evaluates the entire expression once rather than 300k times as in \pkg{dplyr}. \newline
 
 \pkg{collapse} also vectorizes advanced statistics. The following calculates a weighted set of summary statistics by groups, with weighted quantiles type 8 following \citet{hyndman1996sample}.\footnote{\pkg{collapse} computes weighted quantiles in a theoretically consistent way, see \href{https://sebkrantz.github.io/collapse/reference/fquantile.html}{fquantile} for details.}
@@ -349,7 +348,7 @@ R> wlddev |> fsubset(is.finite(POP)) |> fgroup_by(region) |>
 \end{Soutput}
 \end{Schunk}
 %
-Weighted quantiles have a sub-column level parallel implementation,\footnote{Use \code{set\_collapse(nthreads = \#)} or the \code{nthreads} arguments to \fct{fnth}/\fct{fmedian}/\fct{fmode} (default 1).} and, as shown above, can harness an (optional) optimization utilizing an overall ordering vector (combining groups and the data column) to avoid repeated sorting of the same elements within groups. % \newline
+Weighted quantiles have a sub-column level parallel implementation,\footnote{Use \code{set\_collapse(nthreads = \#)} or set the \code{nthreads} arguments of \fct{fnth}/\fct{fmedian} (default 1).} and, as shown above, can also harness an (optional) optimization via an overall ordering vector---combining groups with the data column to avoid repeated sorting of the same elements by different functions. % \newline
 %
 % This code is very fast because data does not need to be split by groups. Under the hood it is principally a syntax translation to the low-level API introduced above.\footnote{\fct{fgroup\_by} creates a \class{GRP} object from the \code{income} column, attaches it as an attribute, and \fct{fsummarise}/\fct{across} fetches it and passes it to the \code{g} arguments of the \emph{Fast Statistical Functions} set as a keyword argument (and sets \code{use.g.names = FALSE}).
 %
@@ -427,21 +426,23 @@ R> add_vars(wlddev) <- get_vars(wlddev, c("PCGDP", "LIFEEX")) |>
 %
 % For (higher-dimensional) centering, \pkg{collapse} also has specialized function(s) \fct{f[hd]within} with additional options, and \fct{fscale} supports various scaling and centering operations.\newline
 
-The lower-level API is useful for package development and standard-evaluation programming, as further elucidated in the \href{https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html}{vignette on developing with \pkg{collapse}}. Users should note that \pkg{collapse} does not provide metaprogramming capabilities in its non-standard evaluation functions---such as \href{https://rlang.r-lib.org/reference/topic-quosure.html}{quosures} or \href{https://dplyr.tidyverse.org/articles/programming.html}{indirection} familiar to \pkg{tidyverse} users. Instead, it has standard-evaluation equivalents to some of these functions which typically end with a \code{v} for 'variables', such as \fct{collapv}, \fct{fslicev}, \fct{ftransformv}, etc. In other cases, including those typically handled by \fct{fsummarise} or \fct{fmutate}, users need to use the lower-level API for programming, or resort to \fct{substitute} and friends. The main reason for not providing higher-level metaprogramming capabilities is to keep all functions as simple as possible. It also compels users to think deeply about their programs and devise more efficient solutions. \newline
+The lower-level API is useful for package development and standard-evaluation programming, as further elucidated in the \href{https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html}{vignette on developing with \pkg{collapse}}. Users should note that \pkg{collapse} does not provide metaprogramming capabilities in its non-standard evaluation functions---such as \href{https://rlang.r-lib.org/reference/topic-quosure.html}{quosures} or \href{https://dplyr.tidyverse.org/articles/programming.html}{indirection} familiar to \pkg{tidyverse} users. Instead, it has standard-evaluation equivalents to some of these functions which typically end with a \code{v} for 'variables', such as \fct{collapv}, \fct{fslicev}, \fct{ftransformv}, etc. In other cases, including those typically handled by \fct{fsummarise} or \fct{fmutate}, users need to use the lower-level API for programming, or resort to \fct{substitute} and friends. The main reason for not providing higher-level metaprogramming capabilities is to keep all functions as simple as possible. It also compels users to think more deeply about their programs and devise more efficient solutions. \newline
 
-These metaprogramming restrictions are vindicated by internally complex data manipulation functions producing greater overheads that can noticeably add up in larger scripts:\footnote{\fct{bmark} is a slim wrapper around \fct{bench::mark}. See the Computational details section.}
+As the small benchmark below illustrates, \pkg{dplyr}'s internally more complex data manipulation functions produce much greater overheads, which can noticeably add-up in longer scripts.\footnote{\fct{bmark} is a slim wrapper around \fct{bench::mark}. See the Computational details section.}
+%
 \begin{Schunk}
 \begin{Sinput}
-R>  bmark(collapse = collapse::fsummarise(mtcars, sum = sum(mpg)),
-+         dplyr = dplyr::summarise(mtcars, sum = sum(mpg)))
+R> bmark(collapse = collapse::fsummarise(wlddev, mean = fmean(PCGDP)),
++        dplyr = dplyr::summarise(wlddev, mean = fmean(PCGDP)))
 \end{Sinput}
 \begin{Soutput}
   expression      min   median mem_alloc n_itr n_gc total_time
-1   collapse   3.81µs   4.22µs        0B  2235    0     9.91ms
-2      dplyr 239.44µs 275.77µs    1.92KB    33    0    10.35ms
+1   collapse   6.68µs   8.86µs        0B  9999    1       94ms
+2      dplyr 210.82µs 248.66µs    2.15KB  9455   29       2.9s
 \end{Soutput}
 \end{Schunk}
-Grouped programming using 'GRP' objects and \emph{Fast Statistical Functions} is also particularly powerful with vectors and matrices. For example, in the \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{useR 2022 presentation}, I aggregate 32 global input-output tables stored as matrices (\code{x}) from the country to the region level using a single grouping object (\code{g}) and expressions of the form \code{x |> fsum(g) |> t() |> fsum(g) |> t()}---computing 44.7 million sums crunching 5.7GB of data in $\sim$0.3 seconds on my M1.\footnote{Another recent application with vectors involved numerically optimizing a parameter $a$ in an equation of the form $\sum_i x_{ij}^a\ \forall j\in J$ so as to minimize the deviation from a target $y_j$ where there are $J$ groups (1 million in my case)---see the first example in \href{https://sebkrantz.github.io/Rblog/2023/04/12/collapse-and-the-fastverse-reflecting-the-past-present-and-future/}{this blog post} for an illustration.}
+%
+Grouped programming using 'GRP' objects and \emph{Fast Statistical Functions} is also particularly powerful with vectors and matrices. For example, in the \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{useR 2022 presentation}, I aggregate 32 global input-output tables stored as matrices (\code{x}) from the country to the region level using a single grouping object (\code{g}) and expressions like \code{x |> fsum(g) |> t() |> fsum(g) |> t()}---computing 45 million sums crunching 5.7GB of data in $\sim$0.3 seconds on my M1.\footnote{Another recent application with vectors involved numerically optimizing a parameter $a$ in an equation of the form $\sum_i x_{ij}^a\ \forall j\in J$ so as to minimize the deviation from a target $y_j$ where there are $J$ groups (1 million in my case)---see the first example in \href{https://sebkrantz.github.io/Rblog/2023/04/12/collapse-and-the-fastverse-reflecting-the-past-present-and-future/}{this blog post} for an illustration.}
 %On an M1 Mac using 4 threads, this computation, involving 44.7 million summations and 2.6 million weighted means, takes only 0.33 seconds.\footnote{Another recent example involved numerically optimizing a parameter $a$ in an equation of the form $y_j = \sum_i x_{ij}^a\ \forall j\in J$ where there are $J$ groups (1 million in my case), and the optimal value of $a$ is determined by the proximity of the aggregated vector \textbf{y} to another vector \textbf{z}. Thus each iteration of the numerical routine raises the vector \textbf{x} to a different power ($a$), sums it in 1 million groups ($j$) to generate \textbf{y}, and computes the Euclidean distance to \textbf{z} (using \code{collapse::fdist}). Without grouping objects and vectorization, this would have been difficult to handle within reasonable computing times (of a few seconds on the M1).}
 %
 \newpage
@@ -465,24 +466,25 @@ Grouped programming using 'GRP' objects and \emph{Fast Statistical Functions} is
 \end{tabular}
 \caption{\label{tab:TSfun} Time series and panel data architecture.}
 \end{table}
-%
 \subsection{Ad-hoc computations}
 %
-Time series functions such as \fct{fgrowth} to compute growth rates are S3 generic and can be applied to most time series classes. In addition to a \code{g} argument for grouped computation, these functions also have a \code{t} argument for indexation. If \code{t} is a plain numeric vector or a factor, it is coerced to integer and interpreted as time steps.\footnote{This is premised on the observation that the most common form of temporal identifier is a plain numeric vector representing calendar years. Users need to manually call \code{timeid()} on plain numeric vectors with decimals to yield an appropriate integer representation. If \code{t} is a numeric time object (e.g., \class{Date}, \class{POSIXct}, etc.), then it is internally passed through \code{timeid()} which computes the greatest common divisor (GCD) and generates an integer time-id. For the GCD approach to work, \code{t} must have an appropriate class, e.g., for monthly/quarterly data, \code{zoo::yearmon()/zoo::yearqtr()} should be used instead of \class{Date} or \class{POSIXct}.} But first, a basic example:
+Time series functions such as \fct{fgrowth} to compute growth rates are S3 generic and can be applied to most time series classes. In addition to a \code{g} argument for grouping, these functions also have a \code{t} argument for indexation. But first, I provide a basic example of computing the annualized 10-year growth rates in miles flown by airlines in the USA from 1937-1960.
 %
 \begin{Schunk}
 \begin{Sinput}
-R> fgrowth(airmiles) |> round(2)
+R> fgrowth(airmiles, n = 10, power = 1/10) |> na.omit() |> round(1)
 \end{Sinput}
 \begin{Soutput}
 Time Series:
-Start = 1937 
+Start = 1947 
 End = 1960 
 Frequency = 1 
- [1]    NA 16.50 42.29 54.03 31.65  2.38 15.23 33.29 54.36 76.92  2.71 -2.10
-[13] 12.91 18.51 32.03 18.57 17.82 13.61 18.19 12.83 13.32  0.01 15.49  4.25
+ [1] 31.0 28.7 25.7 22.5 22.5 24.3 24.6 22.6 19.4 14.2 15.3 15.5 15.8 14.3
 \end{Soutput}
 \end{Schunk}
+%
+The results show that the flight volume as been growing steadily but at a decreasing rate. \newline
+
 To illustrate the full capabilities of these time series functions, I generate a sector-level trade dataset of export values (v) by country (c), sector (s), and year (y). Like many detailed trade datasets, it is unbalanced---not all sectors/products are exported by country c in all years.
 \begin{Schunk}
 \begin{Sinput}
@@ -492,7 +494,7 @@ R> exports <- expand.grid(y = 2001:2010, c = paste0("c", 1:10),
 +    colorder(c, s) |> fsubset(-sample.int(1e3, 500))
 \end{Sinput}
 \end{Schunk}
-The following extracts one country-sector series from the \code{exports} dataset. It is irregular, missing years 2003 and 2006.\footnote{\code{\%=\%} is an infix operator for the \fct{massign} function in \pkg{collapse} which is a multivariate version of \fct{assign}.} Indexation using the \code{t} argument then allows for correct (time-aware) computations in this context without the need to 'expand' the data/fill gaps.
+The following extracts one country-sector series from the \code{exports} dataset. It is irregular, missing years 2003 and 2006.\footnote{\code{\%=\%} is an infix operator for the \fct{massign} function in \pkg{collapse} which is a multivariate version of \fct{assign}.} Indexation using the \code{t} argument still allows for correct (time-aware) computations in this context without the need to 'expand' the data/fill gaps.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -520,6 +522,8 @@ R> fgrowth(v, -1:3, t = y) |> head(4)
 \end{Soutput}
 \end{Schunk}
 %
+If \code{t} is a plain numeric vector or factor as in this case, it is coerced to integer and interpreted as time steps.\footnote{This is premised on the observation that the most common form of temporal identifier is a plain numeric vector representing calendar years. Users should manually call \code{timeid()} on plain vectors with decimals.} Time objects like \class{Date} or \class{POSIXct} on the other hand are internally passed through \fct{timeid} to generate an appropriate integer representation of them.\footnote{\fct{timeid} divides by the greatest common divisor (GCD) and subtracts the minimum to generate an integer-id (starting form 1). For this approach to work, \code{t} must have an appropriate class, e.g., for monthly/quarterly data, \code{zoo::yearmon()/zoo::yearqtr()} should be used instead of \class{Date} or \class{POSIXct}.} \newline
+
 Functions \code{flag()/fdiff()/fgrowth()} also have associated 'operators' \code{L()/D()/G()} to facilitate their use inside formulas and provide an enhanced data frame interface for convenient ad-hoc computations. With panel data, \code{t} can be omitted, but this requires sorted data with consecutive groups. %\footnote{This is because a group-lag is computed in a single pass, requiring all group elements to be consecutive.}
 Below, I demonstrate two ways to compute a sequence of lagged growth rates using either \code{G()} or \fct{fgrowth} and \fct{tfm}---a shorthand for \fct{ftransform}.\footnote{Several key functions in \pkg{collapse} have syntactic shorthands. The \code{list(v = v)} is needed here to prevent \fct{fgrowth} from creating a matrix with the growth rates, ensuring that the \class{list} method applies.}
 %
@@ -544,7 +548,7 @@ R> tfm(exports, fgrowth(list(v = v), -1:2, g = list(c, s), t = y)) |> head(3)
 \end{Soutput}
 \end{Schunk}
 %
-These functions and operators are also integrated with \fct{fgroup\_by} and \fct{fmutate} for vectorized computations. But, as mentioned earlier, ad-hoc grouping is always more efficient.
+These functions and operators are also integrated with \fct{fgroup\_by} and \fct{fmutate} for vectorized computations. As mentioned earlier, ad-hoc grouping is always more efficient.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -584,7 +588,7 @@ R> identical(A, B)
 \subsection{Indexed series and frames}
 %
 For more complex use cases, indexation is convenient. \pkg{collapse} supports \pkg{plm}'s \class{pseries} and \class{pdata.frame} classes through dedicated methods. Flexibility and performance considerations lead
-to the creation of new classes \class{indexes\_series} and \class{indexed\_frame} which inherit from the former. Any data frame-like object can become an \class{indexed\_frame} and behave as usual for other operations. The technical implementation of these classes is described in the \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html#class-agnostic-grouped-and-indexed-data-frames}{vignette on object handling} and, in more detail, in the \href{https://sebkrantz.github.io/collapse/reference/indexing.html}{documentation}. Their basic syntax is:
+to the creation of new classes \class{indexes\_series} and \class{indexed\_frame} which inherit from the former. Any data frame-like object can become an \class{indexed\_frame} and behave as usual for other operations. The technical implementation of these classes is described in the \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html#class-agnostic-grouped-and-indexed-data-frames}{vignette on object handling} and, in more detail, in the \href{https://sebkrantz.github.io/collapse/reference/indexing.html}{documentation}. Their basic usage is:
 %
 \begin{Code}
 data_ix <- findex_by(data, id1, ..., time)
@@ -593,7 +597,7 @@ index_df <- findex(data_ix)
 \end{Code}
 %
 Data can be indexed using one or more indexing variables. Unlike \class{pdata.frame}, an \\ \class{indexed\_frame} is a deeply indexed structure---every series inside the frame is already an \class{indexes\_series}. A comprehensive set of \href{https://sebkrantz.github.io/collapse/reference/indexing.html}{methods for subsetting and manipulation}, and applicable \class{pseries} and \class{pdata.frame} methods for time series and transformation functions like \code{flag()/L()} ensure that these objects behave in a time-/panel-aware manner in any caller environment (\fct{with}, \fct{lm}, etc.). % A basic demonstration with World Bank panel data showcases the flexibility of these classes.
-Indexation can be undone using \code{unindex()} and redone with \code{reindex()} and a suitable \class{index\_df}. \class{indexes\_series} can be atomic vectors or matrices (including objects such as \class{ts} or \class{xts}) and can be created directly using \code{reindex()}.
+Indexation can be undone using \code{unindex()} and redone with \code{reindex()} and a suitable \class{index\_df}. \class{indexes\_series} can be atomic vectors or matrices (including \class{ts} or \class{xts}) and can also be created directly using \code{reindex()}.
 %
 \begin{Code}
 data <- unindex(data_ix)
@@ -601,21 +605,21 @@ data_ix <- reindex(data, index = index_df)
 indexed_series <- reindex(vec/mat, index = vec/index_df)
 \end{Code}
 %
-It is worth highlighting that the flexibility of this architecture is new to the \proglang{R} ecosystem: A \class{pdata.frame} or \class{fixest\_panel} only works inside \pkg{plm}/\pkg{fixest} estimation functions.\footnote{And, in the case of \pkg{fixest}, inside \pkg{data.table} due to dedicated methods.} Time series classes like \class{xts} and \class{tsibble} also do not provide deeply indexed structures or native handling of irregularity in basic operations. \class{indexed\_series} and \class{indexed\_frame}, on the other hand, work 'anywhere', and can be superimposed on any suitable object, as long as \pkg{collapse}'s functions (\code{flag()/L()}, etc.) are used to perform the time-based computations. \newline
+It is worth highlighting that the flexibility of this architecture is new to the \proglang{R} ecosystem: A \class{pdata.frame} or \class{fixest\_panel} only works inside \pkg{plm}/\pkg{fixest} estimation functions.\footnote{And, in the case of \pkg{fixest}, inside \pkg{data.table} due to dedicated methods.} Time series classes like \class{xts} and \class{tsibble} also do not provide deeply indexed structures or native handling of irregularity in basic operations. \class{indexed\_series} and \class{indexed\_frame}, on the other hand, work 'anywhere', and can be superimposed on any suitable object as long as \pkg{collapse}'s functions (\code{flag()/L()}, etc.) are used to perform the time-based computations. \newline
 
-An example using the \code{exports} data follows. \emph{Note} that data need not be sorted for indexing.
+An example follows using the \code{exports} data. \emph{Note} that data can be unsorted for indexation.
 \begin{Schunk}
 \begin{Sinput}
 R> exportsi <- exports |> findex_by(c, s, y)
-R> exportsi |> G() |> head(5)
+R> exportsi |> G(0:1) |> head(5)
 \end{Sinput}
 \begin{Soutput}
-   c  s    y   G1.v
-1 c1 s1 2002     NA
-2 c1 s1 2003  22.17
-3 c1 s1 2004 -68.24
-4 c1 s1 2005  44.98
-5 c1 s1 2006 277.76
+   c  s    y      v   G1.v
+1 c1 s1 2002 0.5525     NA
+2 c1 s1 2003 0.6749  22.17
+3 c1 s1 2004 0.2144 -68.24
+4 c1 s1 2005 0.3108  44.98
+5 c1 s1 2006 1.1740 277.76
 
 Indexed by:  c.s [1] | y [5 (10)] 
 \end{Soutput}
@@ -670,7 +674,7 @@ c2.s1   NA   NA     NA     NA     NA    NA     NA     NA 0.759     NA
 c3.s1   NA   NA -0.441  1.196     NA    NA     NA -0.348 0.348     NA
 \end{Soutput}
 \end{Schunk}
-\fct{psmat}, for panel-series to matrix, generates a matrix/array from panel data. Thanks to deep indexation, indexed computations work inside arbitrary data masking environments:
+\fct{psmat}, for panel-series to matrix, generates a matrix or array from panel data. Thanks to deep indexation, indexed computations work inside arbitrary data masking environments:
 \begin{Schunk}
 \begin{Sinput}
 R> settransform(exportsi, v_ld = Dlog(v))
@@ -683,11 +687,11 @@ L(v_ld, 1:2)L1   -0.349      0.115  -3.042    0.004
 L(v_ld, 1:2)L2   -0.033      0.154  -0.215    0.831
 \end{Soutput}
 \end{Schunk}
-Indexed series/frames also support transformation such as grouped scaling with \fct{fscale} or demeaning with \fct{fwithin}. Functions \fct{psacf}/\fct{pspacf}/\fct{psccf} provide panel-data autocorrelation functions, which are computed using group-scaled and suitably lagged panel-series. The \class{index\_df} attached to these objects can also be used with other general tools such as \code{collapse::BY()} to perform grouped computations using 3rd-party functions. For example, below I compute a 5-year rolling average (\fct{ix} abbreviates \fct{findex}).
+Indexed series/frames also support transformations such as grouped scaling with \fct{fscale} or demeaning with \fct{fwithin}. Functions \fct{psacf}/\fct{pspacf}/\fct{psccf} provide panel-data autocorrelation functions, which are computed using group-scaled and suitably lagged panel-series. The \class{index\_df} attached to these objects can also be used with other general tools such as \fct{collapse::BY} to perform grouped computations using third-party functions: %For example, below I compute a 5-year rolling average ().
 %
 \begin{Schunk}
 \begin{Sinput}
-R> BY(vi, ix(vi)$c.s, data.table::frollmean, 5) |> head(10)
+R> BY(vi, findex(vi)$c.s, data.table::frollmean, 5) |> head(10)
 \end{Sinput}
 \begin{Soutput}
  [1]     NA     NA     NA     NA 0.5853 0.5986 0.4861 0.6267 0.6092     NA
@@ -695,11 +699,12 @@ R> BY(vi, ix(vi)$c.s, data.table::frollmean, 5) |> head(10)
 Indexed by:  c.s [2] | y [9 (10)] 
 \end{Soutput}
 \end{Schunk}
-% Last but not least, the performance of these classes is second to none.\footnote{See the \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{useR 2022 presentation} slide 40 for a small benchmark.}
+%
+Last but not least, the computational performance of these classes is second to none.\footnote{See, e.g., the small benchmark presented on slide 40 of the \href{https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022\%20presentation/collapse_useR2022_final.pdf}{useR 2022 presentation}.}
 %
 \section{Table joins and pivots} \label{sec:join_pivot}
 %
-Among all \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html}{data manipulation functions} \pkg{collapse} provides, its implementations of table \href{https://sebkrantz.github.io/collapse/reference/join.html}{joins} and \href{https://sebkrantz.github.io/collapse/reference/pivot.html}{pivots} are particularly noteworthy since they offer several new features, including rich verbosity for table joins, pivots supporting variable labels, and recast pivots. Both implementations provide outstanding computational performance, syntax, and memory efficiency.
+Among its suite of \href{https://sebkrantz.github.io/collapse/reference/fast-data-manipulation.html}{data manipulation functions}, \pkg{collapse}'s implementations of table \href{https://sebkrantz.github.io/collapse/reference/join.html}{joins} and \href{https://sebkrantz.github.io/collapse/reference/pivot.html}{pivots} are particularly noteworthy since they offer several new features, including rich verbosity for table joins, pivots supporting variable labels, and recast pivots. Both implementations also offer outstanding computational performance, syntax, and memory efficiency.
 %
 \subsection{Joins}
 %
@@ -709,7 +714,7 @@ join(x, y, on = NULL, how = "left", suffix = NULL, validate = "m:m",
   multiple = FALSE, sort = FALSE, keep.col.order = TRUE, verbose = 1,
   drop.dup.cols = FALSE, require = NULL, column = NULL, attr = NULL, ...)
 \end{Code}
-It defaults to left join and only takes first matches from \code{y} (\code{multiple = FALSE}), thus, it simply adds columns to \code{x}, which is efficient and sufficient/desired in many cases. By default (\code{verbose = 1}), it prints information about the join operation and number of records joined. \newline
+It defaults to left join and only takes first matches from \code{y} (\code{multiple = FALSE}). Thus, it simply adds columns to \code{x}, which is efficient and sufficient/desired in many cases. By default (\code{verbose = 1}), it prints information about the join operation and number of records joined. \newline
 
 To demonstrate \fct{join}, I generate a small database for a bachelor in economics curriculum. It has a \code{teacher} table of 4 teachers (\code{id}: PK) and a linked (\code{id}: FK) \code{course} table of 5 courses.
 %
@@ -731,7 +736,7 @@ left join: teacher[id] 3/4 (75%) <1:1st> course[id] 3/5 (60%)
 \end{Soutput}
 \end{Schunk}
 %
-Users can request the generation of a \code{.join} column (\code{column = "name"/TRUE}), akin to \proglang{STATA}'s \code{\_merge} column, to indicate the origin of records in the joined table---useful with a full join:
+Users can request the generation of a \code{.join} column (\code{column = "name"/TRUE}) akin to \proglang{STATA}'s \code{\_merge} column to indicate the origin of records in the joined table---useful with a full join:
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -767,7 +772,7 @@ List of 3
   ..- attr(*, "N.distinct")= int 4
 \end{Soutput}
 \end{Schunk}
-Users can also invoke the \code{validate} argument to examine the uniqueness of the join keys in either table: passing a '1' produces an error if the key is not unique.
+Users can also invoke the \code{validate} argument to examine the uniqueness of the join keys in either table: passing a '1' produces an error if the respective key is not unique.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -793,7 +798,7 @@ Matched 75.0% of records in table teacher (x), but 80.0% is required
 \end{Soutput}
 \end{Schunk}
 %
-A few further particularities are worth highlighting. First, \fct{join} is class-agnostic and preserves the attributes of \code{x} (any list-based object). It supports 6 different join operations (\code{"left"}, \code{"right"}, \code{"inner"}, \code{"full"}, \code{"semi"}, or \code{"anti"} join). This demonstrates the latter:
+A few further particularities are worth highlighting. First, \fct{join} is class-agnostic and preserves the attributes of \code{x} (any list-based object). It supports 6 different join operations (\code{"left"}, \code{"right"}, \code{"inner"}, \code{"full"}, \code{"semi"}, or \code{"anti"}). This demonstrates the latter two:
 \begin{Schunk}
 \begin{Sinput}
 R> for (h in c("semi", "anti")) join(teacher, course, how = h) |> print()
@@ -809,7 +814,10 @@ anti join: teacher[id] 3/4 (75%) <1:1st> course[id] 3/5 (60%)
 1  4  Carl  67   Trade
 \end{Soutput}
 \end{Schunk}
-By default (\code{sort = FALSE}), the order of rows in \code{x} is preserved. Setting \code{sort = TRUE} sorts all records in the joined table by the keys.\footnote{This is done using a separate sort-merge-join algorithm, so it is faster than performing a hash join (using \fct{fmatch}) followed by sorting, particularly if the data is already sorted on the keys. } The join relationship is indicated inside the \code{<>} as the number of records joined from each table divided by the number of unique matches. % In multi-match settings, this will be reflected by few records from \code{y} being used.
+By default (\code{sort = FALSE}), the order of rows in \code{x} is preserved. Setting \code{sort = TRUE} sorts all records in the joined table by the keys.\footnote{This is done using a separate sort-merge-join algorithm, so it is faster than performing a hash join using \fct{fmatch} followed by sorting, particularly if the data is already sorted on the keys. } The join relationship is indicated inside the \code{<>} as the number of records joined from each table divided by the number of unique matches. % In multi-match settings, this will be reflected by few records from \code{y} being used.
+\newpage
+\fct{join}'s handling of duplicate columns in both tables is also rather special. By default (\code{suffix = NULL}), \fct{join} extracts the name of the \code{y} table and appends \code{y}-columns with it. % \code{x}-columns are not renamed.
+%
 \begin{Schunk}
 \begin{Sinput}
 R> course$names <- teacher$names[course$id]
@@ -825,7 +833,8 @@ duplicate columns: names => renamed using suffix '_course' for y
 4  3   Bob  42   Stats        1   Stats I          Bob
 \end{Soutput}
 \end{Schunk}
-As shown above, \fct{join}'s handling of duplicate columns in both tables is rather special. By default (\code{suffix = NULL}), \fct{join} extracts the name of the \code{y} table and appends \code{y}-columns with it. \code{x}-columns are not renamed. This is congruent to the principle of adding columns to \code{x} and altering this table as little as possible. Alternatively, option \code{drop.dup.cols = "x"/"y"} can be used to remove duplicate columns from either \code{x} or \code{y} before the join operation.
+%
+This is congruent to the principle of adding columns to \code{x} in the default first-match left join by altering this table as little as possible. Alternatively, option \code{drop.dup.cols = "x"/"y"} can be used to remove duplicate columns from either \code{x} or \code{y} before the join operation.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -843,7 +852,7 @@ duplicate columns: names => dropped from y
 \end{Soutput}
 \end{Schunk}
 %
-A final noteworthy feature is that \fct{fmatch} has a built-in overidentification check, which warns if more key columns than necessary to identify the records are provided. This check only triggers with 3+ id columns as for efficiency reasons the first two ids are hashed jointly.
+A final noteworthy feature is that \fct{fmatch} has a built-in overidentification check, which warns if more key columns than necessary to identify the records are provided. This check only triggers with 3+ id columns as for efficiency reasons the first two ids are jointly hashed.
 
 \fct{join} is thus a highly efficient, versatile, and verbose implementation of table joins for \proglang{R}.
 %
@@ -851,7 +860,7 @@ A final noteworthy feature is that \fct{fmatch} has a built-in overidentificatio
 %
 The reshaping/pivoting functionality of both commercial and open-source software is also presently unsatisfactory for complex datasets such as surveys or disaggregated production, trade, or financial sector data, where variable names resemble codes and variable labels are essential to making sense of the data. Such datasets can presently only be reshaped by losing these labels or manual efforts to retain them. Modern \proglang{R} packages also offer different reshaping functions, such as \fct{data.table::melt}/\fct{tidyr::pivot\_longer} to combine columns and \fct{data.table::dcast}/\fct{tidyr::pivot\_wider} to expand them, requiring users to learn both. Since the depreciation of \pkg{reshape(2)} \citep{rreshape2}, there is also no modern replacement for \code{reshape2::recast()}, requiring \proglang{R} users to consecutively call two functions. \newline
 
-\code{collapse::pivot} provides a class-agnostic implementation of reshaping for \proglang{R} that addresses these shortcomings. It has a single intuitive syntax to perform 'longer', 'wider', and 'recast' pivots and supports complex labelled data without loss of information. Its basic syntax is:
+\fct{collapse::pivot} provides a class-agnostic implementation of reshaping for \proglang{R} that addresses these shortcomings. It has a single intuitive syntax to perform 'longer', 'wider', and 'recast' pivots and supports complex labelled data without loss of information. Its basic syntax is: \newpage
 %
 \begin{Code}
 pivot(data, ids = NULL, values = NULL, names = NULL, labels = NULL,
@@ -899,7 +908,7 @@ R> head(dl <- pivot(data, ids = 1:4, names = list("Sectorcode", "Value"),
 %
 \fct{pivot} only requires essential information and intelligently guesses the rest. For example, the same result could have been obtained by specifying \code{values = c("AGR", "MIN", "MAN")} instead of \code{ids = 1:4}. An exact reverse operation can also be specified as \code{pivot(dl, 1:4, "Value", "Sectorcode", "Sector", how = "wider")}, where \code{dl} is the long data. \newline
 
-The second option is a wider pivot with \code{how = "wider"}. Here, \code{names} and \code{labels} can be used to select columns containing the names of new columns and their labels.\footnote{If multiple columns are selected, they are combined using \code{"\_"} for names and \code{" - "} for labels.} Note below how the labels are combined with existing labels such that also this operation is without loss of information. It is, however, a destructive operation---with 2 or more columns selected through \code{values}, \fct{pivot} is not able to reverse it. Further arguments like \code{na.rm}, \code{fill}, \code{drop}, \code{sort}, and \code{transpose} can be used to control the casting process/output.
+The second option is a wider pivot with \code{how = "wider"}. Here, \code{names} and \code{labels} can be used to select columns containing the names of new columns and their labels.\footnote{If multiple columns are selected, they are combined using \code{"\_"} for names and \code{" - "} for labels. \vspace{-5mm}} Note below how the labels are combined with existing labels such that also this operation is without loss of information. It is, however, a destructive operation, as with two or more columns selected through \code{values}, \fct{pivot} is not able to reverse it. Further arguments like \code{na.rm}, \code{fill}, \code{drop}, \code{sort}, and \code{transpose} can be invoked to control the casting process/output.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -931,7 +940,7 @@ R> namlab(dw)
 \end{Soutput}
 \end{Schunk}
 %
-For the recast pivot (\code{how = "recast"}), unless a column named \code{variable} exists in the data, the source and (optionally) destination of variable names needs to be specified using a list passed to \code{names}, and similarly for \code{labels}. Again, taking along labels is entirely optional---omitting either the labels-list's \code{from} or \code{to} element will omit the respective operation.
+For the recast pivot (\code{how = "recast"}), unless a column named \code{variable} exists in the data, the source and (optionally) destination of variable names needs to be specified using a list passed to \code{names}, and similarly for \code{labels}. Again, taking along labels is entirely optional---omitting either the labels-list's \code{from} or \code{to} elements will omit the respective operation.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -959,7 +968,7 @@ R> vlabels(dr)[3:6]
 %
 This (\code{dr}) is the tidy format \citep{rtidydata} where each variable is a separate column. It is analytically more useful, e.g., to compute labor productivity as \code{settransform(dr, LP = VA / EMP)} or to estimate a panel-regression with sector fixed-effects. The recast pivot is thus a natural operation to change data representation. As with the other pivots, it preserves all information and can be reversed by simply swapping the contents of the \code{from} and \code{to} keywords. \newline
 
-\fct{pivot} also supports fast aggregation pivots, the default being \code{FUN = "last"}, which simply overwrites values in appearance order if the combination of \code{ids} and \code{names} does not fully identify the data. The latter can be checked with \code{check.dups = TRUE}. A small number extremely fast internal aggregation functions, \code{"first", "last", "sum", "mean", "min", "max",} and \code{"count"} operate 'on the fly' while reshaping. \fct{pivot} also supports \emph{Fast Statistical Functions}, which will yield vectorized aggregations, but require a deep copy of the columns aggregated which is avoided by the internal functions. The following example performs aggregation across years with the internal mean function during a recast pivot.
+\fct{pivot} also supports fast aggregation pivots, the default being \code{FUN = "last"}, which simply overwrites values in appearance order if the combination of \code{ids} and \code{names} does not fully identify the data. The latter can be checked with \code{check.dups = TRUE}. A small number extremely fast internal aggregation functions: \code{"first", "last", "sum", "mean", "min", "max",} and \code{"count"}, operate 'on the fly' during reshaping. \fct{pivot} also supports \emph{Fast Statistical Functions}, which will yield vectorized aggregations, but requires a deep copy of the columns aggregated which is avoided by the internal functions. The following example performs aggregation across years with the internal mean function during a recast pivot.
 \begin{Schunk}
 \begin{Sinput}
 R> head(dr_agg <- pivot(data, "Country", c("AGR", "MIN", "MAN"),
@@ -980,42 +989,42 @@ The \href{https://sebkrantz.github.io/collapse/reference/pivot.html#ref-examples
 %
 \section{List processing} \label{sec:list_proc}
 %
-Often in programming, nested structures are needed. A typical use case involves running statistical procedures for multiple configurations of variables and parameters and saving multiple objects (such as a model predictions and performance statistics) in a list. Nested data is also often the result of web scraping or web APIs. A typical use case in development involves serving different data according to user choices. Except for certain recursive functions in packages such as \pkg{purr}, \pkg{tidyr}, or \pkg{rrapply}, \proglang{R} lacks a general recursive toolkit to create, query, and tidy nested data. \pkg{collapse}'s \href{https://sebkrantz.github.io/collapse/reference/list-processing.html}{list processing functions} attempt to provide a basic toolkit. \newline
+Often in programming, nested structures are needed. A typical use case involves running statistical procedures for multiple configurations of variables and parameters and saving multiple objects, such as a model predictions and performance statistics, in a list. Nested data is also often the result of web scraping or web APIs. A typical use case in development involves serving different data according to user choices. Except for certain recursive functions in packages such as \pkg{purr}, \pkg{tidyr}, or \pkg{rrapply}, \proglang{R} lacks a general recursive toolkit to create, query, and tidy nested data. \pkg{collapse}'s \href{https://sebkrantz.github.io/collapse/reference/list-processing.html}{list processing functions} attempt to provide a basic toolkit. \newline
 
-To create nested data, \fct{rsplit} generalizes \fct{split} and (recursively) splits up data frame-like objects into (nested) lists. For example, we can split the \code{GGDC10S} data by country and variable, such that, for example, agricultural employment in Argentina can be accessed as:\footnote{If a nested structure is not needed, \code{flatten = TRUE} lets \fct{rsplit} operate like a faster version of \fct{split}.}
+To create nested data, \fct{rsplit} generalizes \fct{split} and (recursively) splits up data frame-like objects into (nested) lists. For example, we can split the \code{GGDC10S} data by country and variable, such that agricultural employment in Argentina can be accessed as:\footnote{If a nested structure is not needed, \code{flatten = TRUE} lets \fct{rsplit} operate like a faster version of \fct{split}.} \newpage
 %
 \begin{Schunk}
 \begin{Sinput}
-R> dl <- GGDC10S |> rsplit( ~ Country + Variable)
-R> dl$ARG$EMP$AGR[1:12]
+R> d_list <- GGDC10S |> rsplit( ~ Country + Variable)
+R> d_list$ARG$EMP$AGR[1:12]
 \end{Sinput}
 \begin{Soutput}
  [1] 1800 1835 1731 2030 1889 1843 1789 1724 1678 1725 1650 1553
 \end{Soutput}
 \end{Schunk}
 %
-This is a convenient data representation for \emph{Shiny Apps} where we can let the user choose data (e.g., \code{dl[[input$country]][[input$variable]][[input$sector]]}) without expensive subsetting operations. As mentioned, such data representation can also be the result of an API call parsing JSON or a nested loop or \fct{lapply} call. Below, I write a nested loop running a regression of agriculture on mining and manuacturing output and employment.
+This is a convenient data representation for \emph{Shiny Apps} where we can let the user choose data (e.g., \code{d_list[[input$country]][[input$variable]][[input$sector]]}) without expensive subsetting operations. As mentioned, such data representation can also be the result of an API call parsing JSON or a nested loop or \fct{lapply} call. Below, I write a nested loop running a regression of agriculture on mining and manuacturing output and employment.
 \begin{Schunk}
 \begin{Sinput}
-R> result <- list()
+R> results <- list()
 R> for (country in c("ARG", "BRA", "CHL")) {
 +    for (variable in c("EMP", "VA")) {
 +      m <- lm(log(AGR+1) ~ log(MIN+1) + log(MAN+1) + Year,
-+              data = dl[[country]][[variable]])
-+      result[[country]][[variable]] <- list(model = m, BIC = BIC(m),
-+                                            summary = summary(m))
++              data = d_list[[country]][[variable]])
++      results[[country]][[variable]] <- list(model = m, BIC = BIC(m),
++                                             summary = summary(m))
 +    }
 +  }
 \end{Sinput}
 \end{Schunk}
-This programming may not be ideal for this particular use case as I could have used data frame-based tools and saved the result in a column.\footnote{E.g., \code{GGDC10S |> fgroup\_by(Country, Variable) |> fsummarise(result = my\_fun(lm(log(AGR+1) ~ log(MIN+1) + log(MAN+1) + Year)))} with \code{my\_fun <- function(m) list(list(m, BIC(m), summary(m)))}.}
-However, there are limits to such workflows. For example, I recently trained a complex ML model for different variables and parameters, which involved loading a different dataset at each iteration. Loops are useful in such cases, and lists a natural vehicle to structure complex outputs. The main issue with nested lists is that they are complex to query. What if we want to know just the $R^2$ of these 6 models? We would need to use, e.g., \code{result$ARG$EMP$summary$r.squared} for each model.\newline
+This programming may not be ideal for this particular use case as I could have used data frame-based tools and saved the result in a column.\footnote{E.g., \code{GGDC10S |> fgroup\_by(Country, Variable) |> fsummarise(results = my\_fun(lm(log(AGR+1) ~ log(MIN+1) + log(MAN+1) + Year)))} with \code{my\_fun <- function(m) list(list(m, BIC(m), summary(m)))}.}
+However, there are limits to such workflows. For example, I recently trained a complex ML model for different variables and parameters, while also loading a different dataset for each combination. Loops are useful in such cases, and lists a natural vehicle to structure complex outputs. The main issue with nested lists is that they are complex to query. What if we wanted to know the $R^2$ of these 6 models? We would need to use, e.g., \code{results$ARG$EMP$summary$r.squared} for each model.\newline
 
 This nested list-access problem was the main reason for creating \fct{get\_elem}: an efficient recursive list-filtering function which, by default, simplifies the list tree as much as possible.
 %
 \begin{Schunk}
 \begin{Sinput}
-R> str(r_sq_l <- result |> get_elem("r.squared"))
+R> str(r_sq <- results |> get_elem("r.squared"))
 \end{Sinput}
 \begin{Soutput}
 List of 3
@@ -1030,7 +1039,7 @@ List of 3
   ..$ VA : num 0.999
 \end{Soutput}
 \begin{Sinput}
-R> rowbind(r_sq_l, idcol = "Country", return = "data.frame")
+R> rowbind(r_sq, idcol = "Country", return = "data.frame")
 \end{Sinput}
 \begin{Soutput}
   Country    EMP     VA
@@ -1041,10 +1050,10 @@ R> rowbind(r_sq_l, idcol = "Country", return = "data.frame")
 \end{Schunk}
 %
 % Thus \code{get\_elem("R2")} returns the same nested list with the $R^2$ in all final nodes. Then \code{rowbind()} could be used to create a data frame:
-Note how the \code{"summary"} branch was eliminated since it is common to all final nodes; \code{result |> get\_elem("r.squared", keep.tree = TRUE)} could have been used to keep it. \fct{rowbind} then efficiently combines lists of lists. We can also apply \fct{t\_list} to turn the list inside-out:
+Note how the \code{"summary"} branch was eliminated since it is common to all final nodes; \code{results |> get\_elem("r.squared", keep.tree = TRUE)} could have been used to keep it. \fct{rowbind} then efficiently combines lists of lists. We can also apply \fct{t\_list} to turn the list inside-out:
 \begin{Schunk}
 \begin{Sinput}
-R> r_sq_l |> t_list() |> rowbind(idcol = "Variable", return = "data.frame")
+R> r_sq |> t_list() |> rowbind(idcol = "Variable", return = "data.frame")
 \end{Sinput}
 \begin{Soutput}
   Variable    ARG    BRA    CHL
@@ -1052,10 +1061,10 @@ R> r_sq_l |> t_list() |> rowbind(idcol = "Variable", return = "data.frame")
 2       VA 0.9996 0.9988 0.9991
 \end{Soutput}
 \end{Schunk}
-\fct{rowbind} is limited if \fct{get\_elem} returns a more nested or asymmetric list, potentially with vectors/arrays in the final nodes. Suppose we want to extract the coefficient matrices:
+\fct{rowbind} is limited if \fct{get\_elem} returns a more nested or asymmetric list, potentially with vectors/arrays in the final nodes. Suppose we wanted to extract the coefficient matrices:
 \begin{Schunk}
 \begin{Sinput}
-R> result$ARG$EMP$summary$coefficients
+R> results$ARG$EMP$summary$coefficients
 \end{Sinput}
 \begin{Soutput}
               Estimate Std. Error  t value  Pr(>|t|)
@@ -1069,7 +1078,7 @@ For such cases, \fct{unlist2d} provides a complete recursive generalization of \
 %
 \begin{Schunk}
 \begin{Sinput}
-R> result |> get_elem("coefficients") |> get_elem(is.matrix) |>
+R> results |> get_elem("coefficients") |> get_elem(is.matrix) |>
 +    unlist2d(idcols = c("Country", "Variable"),
 +             row.names = "Covariate") |> head(3)
 \end{Sinput}
@@ -1089,7 +1098,7 @@ Further useful functions include \fct{has\_elem} to check for the existence of e
 %
 \section{Summary statistics} \label{sec:summ_stat}
 %
-\pkg{collapse}'s \href{https://sebkrantz.github.io/collapse/reference/summary-statistics.html}{summary statistics functions} offer a parsimonious yet powerful toolkit to examine complex datasets. A particular focus has been on providing tools for examining longitudinal (panel) data. Recall the World Development panel dataset (\href{https://sebkrantz.github.io/collapse/reference/wlddev.html}{\code{wlddev}}) from Section~\ref{sec:integration}. The function \fct{varying} can be used to examine which of these variables are time-varying.
+\pkg{collapse}'s \href{https://sebkrantz.github.io/collapse/reference/summary-statistics.html}{summary statistics functions} offer a parsimonious yet powerful toolkit to examine complex datasets. A particular focus has been on providing tools to understand multilevel (panel) data. Recall the World Development panel dataset (\href{https://sebkrantz.github.io/collapse/reference/wlddev.html}{\code{wlddev}}) from Section~\ref{sec:integration}. The function \fct{varying} can be used to examine which of the variables are time-varying.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -1105,7 +1114,7 @@ R> varying(wlddev, ~ iso3c)
 \end{Soutput}
 \end{Schunk}
 %
-A related exercise is to decompose the variance of a panel series into variation between countries and variation within countries over time. Using the (de-)meaning functions \fct{fbetween}/ \fct{fwithin} supporting \class{indexed\_series} (see Table~\ref{tab:TSfun}), this is easily demonstrated:
+A related exercise is to decompose the variance of a panel series into variation between countries and variation within countries over time. Using the (de-)meaning functions \fct{fbetween}/ \fct{fwithin} supporting \class{indexed\_series} (Table~\ref{tab:TSfun}), this is easily demonstrated:
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -1131,7 +1140,7 @@ Within   56.3768  64.2963   6.0842  32.9068  84.4198
 \end{Soutput}
 \end{Schunk}
 %
-The decomposition above implies more variation in life expectancy between countries than within countries over time. It can also be computed for different subgroups and with sampling weights. \fct{qsu} also has a data frame method, and by default computes simple statistics:\footnote{The \code{pid} argument to \fct{qsu} can also be used to pass identifiers for panel-decomposition, e.g., \code{pid = ~ iso3c}. With indexed data, it is automatically set to the first column in the index (\code{effect = 1}).}
+The decomposition above implies more variation in life expectancy between countries than within countries over time. It can also be computed for different subgroups and with sampling weights. \fct{qsu} also has a data frame method, and by default computes simple statistics.\footnote{The \code{pid} argument to \fct{qsu} can also be used to manually pass identifiers for panel-decomposition, e.g., \code{pid = iso3c}. With indexed data, it is automatically set to the first column in the index (\code{effect = 1}).} Below, I take the latest post-2015 estimates and summarise LIFEEX by income groups with population weights. The \code{WeightSum} column thus records the total population in each group.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -1148,50 +1157,50 @@ Upper middle income  55  2.67050662e+09  75.9476  2.3895   58.735  80.279
 \end{Schunk}
 %
 % The output shows that the variation in life expectancy is significantly larger for non-OECD countries. For the latter the between- and within-country variation is approximately equal.\footnote{\fct{qsu} also has a convenient formula interface to perform these transformations in an ad-hoc fashion, e.g., the above can be obtained using \code{qsu(wlddev, LIFEEX $\sim$ OECD, $\sim$ iso3c, $\sim$ POP)}, without prior indexation.}
-For greater detail, \fct{descr} provides a rich (grouped, weighted) statistical description. It does not support panel-variance decompositions like \fct{qsu}, but also computes detailed (grouped, weighted) frequency tables for categorical data and is thus very useful with mixed-type data.
+For greater detail, \fct{descr} provides a rich (grouped, weighted) statistical description. It does not support panel-variance decompositions like \fct{qsu}, but also computes detailed frequency tables for categorical data. Below, I summarize income and LIFEEX by OECD membership, scaling the weights to limit printout and replacing missing weights with \code{0} (the default).\footnote{This is necessary in \fct{descr} because \fct{fquantile} does not support missing weights for non-missing \code{x}.\vspace{-5mm}}
 %
 \begin{Schunk}
 \begin{Sinput}
-R> descr(wlda15, by = income + LIFEEX ~ OECD)
+R> descr(wlda15, by = income + LIFEEX ~ OECD, w = ~ replace_na(POP / 1e6))
 \end{Sinput}
 \begin{Soutput}
-Dataset: wlda15, 2 Variables, N = 216
+Dataset: wlda15, 2 Variables, N = 216, WeightSum = 7620.902563
 Grouped by: OECD [2]
-         N   Perc
-FALSE  180  83.33
-TRUE    36  16.67
+         N   Perc  WeightSum   Perc
+FALSE  180  83.33    6311.15  82.81
+TRUE    36  16.67    1309.75  17.19
 -----------------------------------------------------------------------------
 income (factor): Income Level
-Statistics (N = 216)
-         N   Perc  Ndist
-FALSE  180  83.33      4
-TRUE    36  16.67      2
+Statistics (WeightSum = 7621, 0% NAs)
+       WeightSum   Perc  Ndist
+FALSE    6311.15  82.81      4
+TRUE     1309.75  17.19      2
 
-Table (Freq Perc)
-                       FALSE     TRUE    Total
-High income          45 25.0  34 94.4  79 36.6
-Upper middle income  58 32.2   2  5.6  60 27.8
-Lower middle income  47 26.1   0  0.0  47 21.8
-Low income           30 16.7   0  0.0  30 13.9
+Table (WeightSum Perc)
+                         FALSE       TRUE      Total
+Lower middle income  3064 48.5     0  0.0  3064 40.2
+Upper middle income  2460 39.0   211 16.1  2671 35.0
+High income            93  1.5  1099 83.9  1192 15.6
+Low income            695 11.0     0  0.0   695  9.1
 -----------------------------------------------------------------------------
 LIFEEX (numeric): Life expectancy at birth, total (years)
-Statistics (N = 200, 7.41% NAs)
-         N  Perc  Ndist   Mean    SD    Min    Max   Skew  Kurt
-FALSE  164    82    164  71.25  7.06  53.28  85.08   -0.5  2.61
-TRUE    36    18     36  80.83  2.55  75.05  84.36  -0.92  2.72
+Statistics (N = 199, 7.87% NAs)
+         N  Ndist  WeightSum   Perc   Mean    SD    Min    Max   Skew  Kurt
+FALSE  163    164    6310.41  82.81  71.14  5.77  53.28  85.08  -0.99  3.76
+TRUE    36     36    1309.75  17.19  80.32  2.77  75.05  84.36  -0.29  2.11
 
 Quantiles
           1%     5%    10%    25%    50%    75%    90%    95%    99%
-FALSE   54.3  58.38  61.25  66.43  72.56  76.68  78.93  80.88  83.77
-TRUE   75.12  75.83   76.8  79.04  81.77  82.63  83.21  83.54  84.13
+FALSE  54.69  59.38  63.67  69.64  71.71  76.89  76.91  76.91  77.94
+TRUE   75.07  75.14  76.03  78.77  80.86  82.86  83.61  84.05   84.3
 -----------------------------------------------------------------------------
 \end{Soutput}
 \end{Schunk}
 
 %
- It also has a \code{stepwise} argument to describe one variable at a time, allowing users to naturally 'step-through' the variables in a large dataset while spreading the computational burden. The \href{https://sebkrantz.github.io/collapse/reference/descr.html}{documentation} provides more details and examples. Both \fct{qsu} and \fct{descr} come with an \code{as.data.frame()} method for efficient tidying and easy further analysis. \newline
+\fct{descr} also has a \code{stepwise} argument to describe one variable at a time, allowing users to naturally 'step-through' the variables in a large dataset while spreading the computational burden. The \href{https://sebkrantz.github.io/collapse/reference/descr.html}{documentation} provides more details and examples. Both \fct{qsu} and \fct{descr} come with an \code{as.data.frame()} method for efficient tidying and easy further analysis. \newline
 
-A final noteworthy function from \pkg{collapse}'s descriptive statistics toolkit is \fct{qtab}, an enhanced drop-in replacement for \fct{table}. It is enhanced both in a statistical and a computational sense, providing a remarkable performance boost, an option \code{sort = FALSE} to preserve the first-appearance-order of vectors being cross-tabulated, support for frequency weights (\code{w}), and the ability to compute different statistics representing table entries using these weights---vectorized when using \emph{Fast Statistical Functions}, as demonstrated below.
+A final noteworthy function from \pkg{collapse}'s descriptive statistics toolkit is \fct{qtab}, an enhanced drop-in replacement for \fct{table}. It is enhanced both in a statistical and a computational sense, providing a remarkable performance boost, an option \code{sort = FALSE} to preserve the first-appearance-order of vectors being cross-tabulated, support for frequency weights (\code{w}), and the ability to compute different statistics representing table entries using these weights---vectorized when using \emph{Fast Statistical Functions} as demonstrated below.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -1207,7 +1216,7 @@ OECD    High income Low income Lower middle income Upper middle income
 This shows the total population (latest post-2015 estimates) in millions.
 \begin{Schunk}
 \begin{Sinput}
-R> wlda15 |> with(qtab(OECD, income, w = POP) / 1e6)
+R> wlda15 |> with(qtab(OECD, income, w = POP / 1e6))
 \end{Sinput}
 \begin{Soutput}
        income
@@ -1242,7 +1251,7 @@ OECD    High income Low income Lower middle income Upper middle income
 \end{Soutput}
 \end{Schunk}
 %
-\class{qtab} objects inherit the \class{table} class, thus all \class{table} methods apply. Apart from the above functions, \pkg{collapse} also provides functions \fct{pwcor}, \fct{pwcov}, and \fct{pwnobs} for convenient (pairwise, weighted) correlations, covariances, and observations counts, respectively.
+\class{qtab} objects inherit the \class{table} class, thus all \class{table} methods apply. Apart from the above summary functions, \pkg{collapse} also provides \fct{pwcor}, \fct{pwcov}, and \fct{pwnobs} for convenient (pairwise, weighted) correlations, covariances, and observations counts, respectively.
 %
 \section{Global options} \label{sec:glob_opt}
 %
@@ -1250,9 +1259,9 @@ OECD    High income Low income Lower middle income Upper middle income
 
 The current set of options comprises the default behavior for missing values (\code{na.rm} arguments in all statistical functions and algorithms), sorted grouping (\code{sort}), multithreading and algorithmic optimizations (\code{nthreads}, \code{stable.algo}), presentational settings (\code{stub}, \code{digits}, \code{verbose}), and, surpassing all else, the package namespace itself (\code{mask}, \code{remove}). \newline
 
-As evident from previous sections, \pkg{collapse} provides performance-improved or otherwise enhanced versions of functionality already present in base \proglang{R} (like the \emph{Fast Statistical Functions}, \fct{funique}, \fct{fmatch}, \fct{fsubset}, \fct{ftransform}, etc.) and other packages (esp. \pkg{dplyr} \citep{rdplyr}: \fct{fselect}, \fct{fsummarise}, \fct{fmutate}, \fct{frename}, etc.). The objective of being namespace compatible warrants such a naming convention, but this has a syntactical cost, particularly when \pkg{collapse} is the primary data manipulation package. \newline
+As evident from previous sections, \pkg{collapse} provides performance-improved or otherwise enhanced versions of functions already present in base \proglang{R} (like the \emph{Fast Statistical Functions}, \fct{funique}, \fct{fmatch}, \fct{fsubset}, \fct{ftransform}, etc.) or other packages (especially \pkg{dplyr} \citep{rdplyr}: \fct{fselect}, \fct{fsummarise}, \fct{fmutate}, \fct{frename}, etc.). The objective of being namespace compatible warrants such a naming convention, but this has a syntactical cost, particularly when \pkg{collapse} is used as the primary workhorse package. \newline
 
-To reduce this cost, \pkg{collapse}'s \code{mask} option allows masking existing \proglang{R} functions with the faster \pkg{collapse} versions by creating additional functions in the namespace and instantly exporting them. All \pkg{collapse} functions starting with 'f' can be passed to the option (with or without the 'f'), e.g., \code{set\_collapse(mask = c("subset", "transform"))} creates \code{subset <- fsubset} and \code{transform <- ftransform} and exports them. Special functions are \code{"n"}, \code{"table"/"qtab"}, and \code{"\%in\%"}, which create \code{n <- GRPN} (for use in \code{(f)summarise}/\code{(f)mutate}), \code{table <- qtab}, and replace \code{\%in\%} with a fast version using \fct{fmatch}, respectively. There are also several \href{https://sebkrantz.github.io/collapse/reference/collapse-options.html}{convenience keywords to mask related groups of functions}. The most powerful of these is \code{"all"}, which masks all f-functions and special functions, as shown below.
+To reduce this cost, \pkg{collapse}'s \code{mask} option allows masking existing \proglang{R} functions with the faster \pkg{collapse} versions by creating additional functions in the namespace and instantly exporting them. All \pkg{collapse} functions starting with an 'f' can be passed to the option (with or without the 'f'), e.g., \code{set\_collapse(mask = c("subset", "transform"))} creates \code{subset <- fsubset} and \code{transform <- ftransform} and exports them. Special functions are \code{"n"}, \code{"table"/"qtab"}, and \code{"\%in\%"}, which create \code{n <- GRPN} for use in \code{(f)summarise}/\code{(f)mutate}, \code{table <- qtab}, and replace \code{\%in\%} with a faster version based on \fct{fmatch}, respectively. There also exist several \href{https://sebkrantz.github.io/collapse/reference/collapse-options.html}{convenience keywords to mask related groups of functions}, such as \code{"manip"} (only data manipulation functions), or \code{"all"} (everything), as demonstrated below.
 %
 \begin{Code}
 set_collapse(mask = "all")
@@ -1276,7 +1285,7 @@ Such global powers confer responsibilities upon package developers, as further e
 %
 \section{Benchmark} \label{sec:bench}
 %
-This section provides several simple benchmarks to show that \pkg{collapse} provides best-in-\proglang{R} performance for statistics and data manipulation on moderately sized datasets. They are executed on a 2024 Apple MacBook Pro with 48GB M4 Pro chip. It also discusses results from \href{https://github.com/fastverse/fastverse/wiki/Benchmarks}{3rd party benchmarks} involving \pkg{collapse}. The first set of benchmarks show that \pkg{collapse} provides faster computationally intensive operations like unique values and matching on large integer and character vectors. It creates integer/character vectors of 10 million obs, with 1000 unique integers and 5776 unique strings, respectively, which are deduplicated/matched in the benchmark. These fast basic operations impact many critical components of the package. % These are serially implemented and critical in supporting more complex functionality. %These algorithms power much of its functionality, such as efficient factor generation with \fct{qF}, cross-tabulation with \fct{qtab}, \fct{join}'s, \fct{pivot}'s, etc.
+This section provides several simple benchmarks to show that \pkg{collapse} provides best-in-\proglang{R} performance for statistics and data manipulation on moderately sized datasets. They are executed on a 2024 Apple MacBook Pro with 48GB M4 Pro chip. It also discusses results from \href{https://github.com/fastverse/fastverse/wiki/Benchmarks}{third-party benchmarks} involving \pkg{collapse}. The first set of benchmarks show that \pkg{collapse} provides faster computationally intensive operations like unique values and matching on large integer and character vectors. It creates integer/character vectors of 10 million obs, with 1000 unique integers and 5776 unique strings, respectively, which are deduplicated/matched in the benchmark. These fast basic operations impact many critical components of the package. % These are serially implemented and critical in supporting more complex functionality. %These algorithms power much of its functionality, such as efficient factor generation with \fct{qF}, cross-tabulation with \fct{qtab}, \fct{join}'s, \fct{pivot}'s, etc.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -1284,86 +1293,86 @@ R> set.seed(101)
 R> int <- 1:1000; g_int <- sample.int(1000, 1e7, replace = TRUE)
 R> char <- c(letters, LETTERS, month.abb, month.name)
 R> g_char <- sample(char <- outer(char, char, paste0), 1e7, TRUE)
-R> bmark(base_int = unique(g_int), collapse_int = funique(g_int))
+R> bmark(base = unique(g_int), collapse = funique(g_int))
 \end{Sinput}
 \begin{Soutput}
-    expression    min median mem_alloc n_itr n_gc total_time
-1     base_int 46.5ms 46.5ms   166.2MB     1    0     46.5ms
-2 collapse_int 10.5ms 10.5ms    38.2MB     1    0     10.5ms
+  expression    min  median mem_alloc n_itr n_gc total_time
+1       base 42.8ms 44.08ms   166.2MB    30   30      1.33s
+2   collapse  5.6ms  8.27ms    38.2MB   303   38      2.59s
 \end{Soutput}
 \begin{Sinput}
-R> bmark(base_char = unique(g_char), collapse_char = funique(g_char))
+R> bmark(base = unique(g_char), collapse = funique(g_char))
 \end{Sinput}
 \begin{Soutput}
-     expression    min median mem_alloc n_itr n_gc total_time
-1     base_char 69.8ms 69.8ms   166.2MB     1    0     69.8ms
-2 collapse_char 20.6ms 20.6ms    38.2MB     1    0     20.6ms
+  expression    min median mem_alloc n_itr n_gc total_time
+1       base 70.2ms 71.5ms   166.2MB    19   21      1.36s
+2   collapse 15.5ms 18.8ms    38.2MB   140   17      2.61s
 \end{Soutput}
 \begin{Sinput}
-R> bmark(base_int = match(g_int, int), collapse_int = fmatch(g_int, int))
+R> bmark(base = match(g_int, int), collapse = fmatch(g_int, int))
 \end{Sinput}
 \begin{Soutput}
-    expression     min  median mem_alloc n_itr n_gc total_time
-1     base_int 27.28ms 27.28ms    76.3MB     1    1     27.3ms
-2 collapse_int  7.93ms  8.01ms    38.2MB     2    0       16ms
+  expression     min  median mem_alloc n_itr n_gc total_time
+1       base 17.26ms 18.07ms    76.3MB   111   37      2.02s
+2   collapse  7.56ms  8.16ms    38.2MB   289   41      2.36s
 \end{Soutput}
 \begin{Sinput}
-R> bmark(base_char = match(g_char, char), data.table_char =
-+        chmatch(g_char, char), collapse_char = fmatch(g_char, char))
+R> bmark(base = match(g_char, char), data.table =
++        chmatch(g_char, char), collapse = fmatch(g_char, char))
 \end{Sinput}
 \begin{Soutput}
-       expression    min median mem_alloc n_itr n_gc total_time
-1       base_char 72.4ms 72.4ms   114.5MB     1    0     72.4ms
-2 data.table_char 46.5ms 46.5ms    38.1MB     1    1     46.5ms
-3   collapse_char   29ms   29ms    38.1MB     1    0       29ms
+  expression    min median mem_alloc n_itr n_gc total_time
+1       base 52.7ms 54.8ms   114.5MB    27   25      1.49s
+2 data.table 32.9ms   34ms    38.1MB    73   13      2.48s
+3   collapse 16.2ms 17.1ms    38.1MB   143   23      2.46s
 \end{Soutput}
 \end{Schunk}
 %
-The second set below shows that \pkg{collapse}'s statistical functions are very efficient on aggregating a numeric matrix with 10,000 rows and 1000 columns. They are faster than base \proglang{R} even without multithreading, but using 4 threads in this case induces a sizeable difference.
+The second set below shows that \pkg{collapse}'s statistical functions are very efficient in aggregating a numeric matrix with 10,000 rows and 1000 columns. They are faster than base \proglang{R} even without multithreading, but using 4 threads in this case induces a sizeable difference.
 \begin{Schunk}
 \begin{Sinput}
 R> set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 4)
 R> m <- matrix(rnorm(1e7), ncol = 1000)
-R> bmark(R = colSums(m), collapse = fsum(m))
+R> bmark(base = colSums(m), collapse = fsum(m))
 \end{Sinput}
 \begin{Soutput}
-  expression      min   median mem_alloc n_itr n_gc total_time
-1          R   6.07ms   6.09ms    7.86KB     2    0     12.2ms
-2   collapse 311.31µs 345.01µs    7.86KB    28    0     10.1ms
+  expression     min   median mem_alloc n_itr n_gc total_time
+1       base   5.4ms   6.11ms    7.86KB   494    0         3s
+2   collapse   296µs 386.88µs    7.86KB  7172    0         3s
 \end{Soutput}
 \begin{Sinput}
-R> bmark(R = colMeans(m), collapse = fmean(m))
+R> bmark(base = colMeans(m), collapse = fmean(m))
 \end{Sinput}
 \begin{Soutput}
-  expression      min   median mem_alloc n_itr n_gc total_time
-1          R   6.22ms   6.22ms    7.86KB     2    0     12.4ms
-2   collapse 329.27µs 341.08µs    7.86KB    27    0     10.3ms
+  expression      min  median mem_alloc n_itr n_gc total_time
+1       base   5.43ms   5.9ms    7.86KB   505    0         3s
+2   collapse 303.24µs 377.2µs    7.86KB  7608    1      2.99s
 \end{Soutput}
 \begin{Sinput}
-R> bmark(MS = matrixStats::colMedians(m), collapse = fmedian(m))
+R> bmark(matrixStats = matrixStats::colMedians(m), collapse = fmedian(m))
 \end{Sinput}
 \begin{Soutput}
-  expression    min median mem_alloc n_itr n_gc total_time
-1         MS 77.5ms 77.5ms   86.04KB     1    0     77.5ms
-2   collapse 19.5ms 19.5ms    7.86KB     1    0     19.5ms
+   expression    min median mem_alloc n_itr n_gc total_time
+1 matrixStats 76.6ms 77.2ms   86.04KB    39    0      3.01s
+2    collapse 19.4ms 19.6ms    7.86KB   153    0         3s
 \end{Soutput}
 \end{Schunk}
 %
-Below, I also show a grouped version summing the columns within 1000 random groups.
+Below, I also benchmark a grouped version summing the columns within 1000 random groups.
 %
 \begin{Schunk}
 \begin{Sinput}
 R> g <- sample.int(1e3, 1e4, TRUE)
-R> bmark(R = rowsum(m, g), collapse = fsum(m, g))
+R> bmark(base = rowsum(m, g), collapse = fsum(m, g))
 \end{Sinput}
 \begin{Soutput}
-  expression    min median mem_alloc n_itr n_gc total_time
-1          R 6.04ms 6.29ms    7.85MB     2    0     12.6ms
-2   collapse  1.3ms 1.39ms    7.67MB     8    0     11.2ms
+  expression     min median mem_alloc n_itr n_gc total_time
+1       base   5.1ms 5.74ms    7.85MB   456   16      2.72s
+2   collapse 905.8µs  1.2ms    7.67MB  1781   54      2.39s
 \end{Soutput}
 \end{Schunk}
 %
-I now turn to basic operations on a medium sized real-world database recording all flights from New York City (EWR, JFK, and LGA) in 2023---provided by the \pkg{nycflights23} package. The \code{flights} table has 435k flights, and grouping it by day and route yields 76k unique trips.
+I now turn to basic operations on a medium-sized real-world database recording all flights from New York City (EWR, JFK, and LGA) in 2023---provided by the \pkg{nycflights23} package. The \code{flights} table has 435k flights, and grouping it by day and route yields 76k unique trips.
 %
 \begin{Schunk}
 \begin{Sinput}
@@ -1395,9 +1404,9 @@ R> bmark(dplyr = flights |> group_by(month, day, origin, dest) |>
 \end{Sinput}
 \begin{Soutput}
   expression      min   median mem_alloc n_itr n_gc total_time
-1      dplyr 369.09ms 369.09ms   48.56MB     1    6    369.1ms
-2 data.table   8.36ms   8.46ms   18.93MB     2    0     16.9ms
-3   collapse   4.24ms   4.29ms    9.11MB     3    0     12.9ms
+1      dplyr 374.95ms 499.62ms   48.56MB     7   65      3.33s
+2 data.table   7.32ms   9.35ms   18.93MB   282   28         3s
+3   collapse      3ms   3.93ms    9.11MB   670   31      3.01s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1406,15 +1415,15 @@ Below, I also benchmark the mean and median functions in the same way. It is evi
 \begin{Schunk}
 \begin{Soutput}
        expression    min median mem_alloc n_itr n_gc total_time
-1      dplyr_mean  1.28s  1.28s   48.56MB     1   23      1.28s
-2 data.table_mean  8.9ms 9.05ms   18.93MB     2    0    18.11ms
-3   collapse_mean 4.08ms 4.39ms    9.11MB     3    0    13.02ms
+1      dplyr_mean  1.24s   1.3s   48.56MB     3   74      4.05s
+2 data.table_mean 7.58ms 9.03ms   18.93MB   288   29      3.01s
+3   collapse_mean 3.14ms    4ms    9.11MB   650   31         3s
 \end{Soutput}
 \begin{Soutput}
          expression     min  median mem_alloc n_itr n_gc total_time
-1      dplyr_median   4.51s   4.51s    52.8MB     1   90      4.51s
-2 data.table_median 23.72ms 23.72ms    18.9MB     1    0    23.72ms
-3   collapse_median 11.54ms 11.54ms    11.1MB     1    0    11.54ms
+1      dplyr_median   4.46s   4.46s    52.8MB     1   76      4.46s
+2 data.table_median 22.12ms 23.58ms    18.9MB   123   14      3.02s
+3   collapse_median  9.37ms 10.83ms    11.1MB   247   18         3s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1430,10 +1439,10 @@ R> bmark(dplyr = flights |> group_by(month, day, origin, dest) |>
 +      fsummarise(rng = fmax(arr_delay) - fmin(arr_delay)))
 \end{Sinput}
 \begin{Soutput}
-  expression      min   median mem_alloc n_itr n_gc total_time
-1      dplyr 112.36ms 112.36ms   20.18MB     1    3    112.4ms
-2 data.table  63.78ms  63.78ms    5.77MB     1    1     63.8ms
-3   collapse   6.46ms   6.54ms     6.8MB     2    0     13.1ms
+  expression     min   median mem_alloc n_itr n_gc total_time
+1      dplyr 93.15ms 107.41ms   20.18MB    25   57      3.04s
+2 data.table 57.33ms  62.35ms    5.77MB    48   25      3.02s
+3   collapse  5.26ms   5.82ms     6.8MB   477   16         3s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1457,18 +1466,18 @@ duplicate columns: name => renamed using suffix '_airlines' for y
 \end{Soutput}
 \end{Schunk}
 %
-The verbosity of \fct{join} is essential to understanding what has happened here---how many records from each table were matched and which duplicate non-id columns were suffixed with the (default) \code{y}-table name. Normally, I would set \code{drop.dup.cols = "y"} as it seems not useful to preserve them here, but the other packages don't have this option. For the benchmark, I set \code{verbose = 0} in \pkg{collapse} and employ the fastest syntax for \pkg{dplyr} and \pkg{data.table}:\footnote{\code{left\_join(..., multiple = "first")} for \pkg{dplyr} and \code{y[x, on = ids, mult = "first"]} for \pkg{data.table}.}
+The verbosity of \fct{join} is essential to understanding what has happened here---how many records from each table were matched and which duplicate non-id columns were suffixed with the (default) \code{y}-table name. Usually, I would set \code{drop.dup.cols = "y"} as keeping them is not helpful in this case, but the other packages don't have this option. For the benchmark, I set \code{verbose = 0} in \pkg{collapse} and employ the fastest syntax for \pkg{dplyr} and \pkg{data.table}:\footnote{\code{left\_join(..., multiple = "first")} for \pkg{dplyr} and \code{y[x, on = ids, mult = "first"]} for \pkg{data.table}.}
 %
 \begin{Schunk}
 \begin{Soutput}
-        expression     min  median mem_alloc n_itr n_gc total_time
-1      dplyr_joins 172.7ms 172.7ms   558.9MB     1    2    172.7ms
-2 data.table_joins 204.5ms 204.5ms   490.4MB     1    1    204.5ms
-3   collapse_joins  59.1ms  59.1ms    89.7MB     1    2     59.1ms
+        expression      min  median mem_alloc n_itr n_gc total_time
+1      dplyr_joins 148.67ms 163.5ms   558.9MB    17   36      3.12s
+2 data.table_joins  109.4ms 197.5ms   490.4MB    16   31      3.08s
+3   collapse_joins   8.09ms  11.9ms    89.7MB   198   43         3s
 \end{Soutput}
 \end{Schunk}
 %
-Evidently, the vectorized hash join provided by \pkg{collapse} is 10x faster than \pkg{data.table} on this database, at a substantially lower memory footprint. It remains competitive on \href{https://duckdblabs.github.io/db-benchmark/}{big data}.\footnote{\pkg{data.table} joins utilize multithreaded radix-ordering---a very different logic more useful for big data.}
+Evidently, the vectorized hash join provided by \pkg{collapse} is 10x faster than \pkg{data.table} on this database, at a substantially lower memory footprint. It remains competitive on \href{https://duckdblabs.github.io/db-benchmark/}{big data}.\footnote{\pkg{data.table} joins utilize multithreaded radix-ordering---a very different logic more useful for big data.\vspace{-5mm}} \newline
 
 % \footnote{A lot may be said about benchmarking \pkg{collapse}, which would be beyond the scope of this article. Users should note, however, that its defaults (\code{na.rm = TRUE, sort = TRUE, stable.algo = TRUE, nthreads = 1}) cater to convenience rather than maximum performance. For maximum performance, set these 3 settings to \code{FALSE} and increase the number of threads. To also provide a minimalistic guide for \proglang{R} users seeking to understand the relative performance of \pkg{collapse} and \pkg{data.table}, reflecting current (spring 2024) developments: \pkg{collapse} has highly efficient algorithms for grouping and computing statistics, but presently does not provide sub-column level parallel grouping architecture. Simple statistics like \code{fmean()} are parallelized across columns and perform grouped computations in a single pass. More complex ones \code{fmedian(), fmode()} have group-level parallelism. \pkg{data.table}, on the other hand, has sub-column parallel grouping and also group-level parallel implementations for simple statistics such as \code{mean()}, but no parallelism for complex statistics such as \code{median()}. \pkg{data.table}'s \href{https://rdatatable.gitlab.io/data.table/reference/datatable-optimize.html}{GForce optimization} also only applies to simple statistics, not complex expressions or weighted statistics - as can be vectorized using \emph{Fast Statistical Functions} in \pkg{collapse}.}
 % Thus, if your data is moderately sized ($\leq$100mio. obs.), you have more than 1 column to compute on, you want to do complex statistical things, or if your processor is very fast (high single core speed), \pkg{collapse} is a great choice. On the other hand, if your data is really long ($>$100mio. obs.), you have only a few columns to compute on, you are computing simple statistics that \pkg{data.table} optimizes, and you have massive parallel compute, then \pkg{data.table} is a great choice. My recommendation: use both, just need to call \code{library(fastverse)}. Finally, let me note that \pkg{polars} uses optimized memory buffers based on \href{https://arrow.apache.org/}{Apache Arrow}, \href{https://pola.rs/posts/i-wrote-one-of-the-fastest-dataframe-libraries/}{multithreaded hash-based grouping, SIMD instructions and multithreading at the group-level}, and a \href{https://pola.rs/posts/polars_birds_eye_view/}{query optimizer} - all implemented in \proglang{Rust}, a thread-safe programming language. While some of these parallel algorithms could be ported to \pkg{collapse}, this is more challenging since \proglang{C}, and particularly \proglang{R}'s \proglang{C} API, is not thread safe - and it would still be lacking the benefits of Arrow memory buffers. At core, \proglang{R} is a 30-year old statistical language and not intended to work like an optimized database. \pkg{collapse} seamlessly integrates with \proglang{R}'s data structures; \pkg{polars}, at present, has nothing to do with them (and is therefore also not part of this benchmark).
@@ -1482,10 +1491,10 @@ R> bmark(tidyr = tidyr::pivot_longer(flights, cols = vars),
 +        collapse = pivot(flights, values = vars))
 \end{Sinput}
 \begin{Soutput}
-  expression     min  median mem_alloc n_itr n_gc total_time
-1      tidyr  82.7ms  82.7ms     251MB     1    2     82.7ms
-2 data.table 143.9ms 143.9ms     209MB     1    2    143.9ms
-3   collapse  17.7ms  17.7ms     209MB     1    0     17.7ms
+  expression    min median mem_alloc n_itr n_gc total_time
+1      tidyr 58.7ms 59.8ms     251MB     8   38   480.69ms
+2 data.table 35.2ms 38.5ms     209MB    38   27      1.46s
+3   collapse 13.6ms 16.6ms     209MB    63   64      1.04s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1506,14 +1515,14 @@ R> bmark(tidyr = tidyr::pivot_wider(flights, id_cols = .c(month, day, dest),
 \end{Sinput}
 \begin{Soutput}
      expression      min   median mem_alloc n_itr n_gc total_time
-1         tidyr 376.32ms 376.32ms   142.4MB     1    5    376.3ms
-2    data.table 237.61ms 237.61ms      21MB     1    4    237.6ms
-3 collapse_fsum    7.6ms   7.94ms    39.1MB     2    0     15.9ms
-4 collapse_itnl   5.05ms   5.08ms    12.4MB     2    0     10.2ms
+1         tidyr 376.05ms 400.31ms   142.4MB     8   65      3.33s
+2    data.table 221.19ms 228.87ms      21MB    13   43      3.13s
+3 collapse_fsum   5.64ms   7.45ms    39.1MB   324   27      3.01s
+4 collapse_itnl   3.78ms   4.83ms    12.4MB   556   17         3s
 \end{Soutput}
 \end{Schunk}
 %
-Again, \pkg{collapse} is fastest, as it offers full vectorization, either via \fct{fsum}, which translates to \code{fsum(x, g, TRA = "fill")} before pivoting and thus entails a full deep copy of the \code{vars} columns, or via an optimized internal sum function which sums values 'on the fly' during the reshaping process. \pkg{data.table} is not vectorized here but at least memory efficient. %\newline
+Again, \pkg{collapse} is fastest, as it offers full vectorization, either via \fct{fsum}, which translates to \code{fsum(x, g, TRA = "fill")} before pivoting and thus entails a full deep copy of the \code{vars} columns, or via the optimized internal sum function which sums values 'on the fly' during the reshaping process. \pkg{data.table} is not vectorized here but at least memory efficient. %\newline
 
 In summary, these benchmarks show that \pkg{collapse} provides outstanding performance and memory efficiency on a typical medium-sized real-world database popular in the \proglang{R} community.
 % %
@@ -1548,9 +1557,9 @@ In summary, these benchmarks show that \pkg{collapse} provides outstanding perfo
 %
 \subsection{Other benchmarks}
 %
-The \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks} compare many software packages for database-like operations using large datasets (big data) on a linux server. The January 2025 run distinguishes 6 packages that consistently achieve outstanding performances: \pkg{DuckDB}, \pkg{Polars}, \pkg{ClickHouse}, Apache \pkg{Datafusion}, \pkg{data.table}, and \pkg{collapse}. Of these, \pkg{DuckDB}, \pkg{ClickHouse}, and \pkg{Datafusion} are vectorized database (SQL) engines, and \pkg{Polars} is a Python/Rust DataFrame library and SQL engine. These four are supported by (semi-)commercial entities, leaving \pkg{data.table} as the only fully community-led project, and \pkg{collapse} as the only project that is single-authored and without financial support. The benchmarks show that \pkg{collapse} achieves the highest relative performance on 'smaller' datasets (10-100 million rows) and performing advanced operations. % \newline
+The \href{https://duckdblabs.github.io/db-benchmark/}{DuckDB Benchmarks} compare many software packages for database-like operations using large datasets (big data) on a linux server. The January 2025 run distinguishes 6 packages that consistently achieve outstanding performances: \pkg{DuckDB}, \pkg{Polars}, \pkg{ClickHouse}, Apache \pkg{Datafusion}, \pkg{data.table}, and \pkg{collapse}. Of these, \pkg{DuckDB}, \pkg{ClickHouse}, and \pkg{Datafusion} are vectorized database (SQL) engines, and \pkg{Polars} is a Python/Rust DataFrame library and SQL engine. These four are supported by (semi-)commercial entities, leaving \pkg{data.table} as the only fully community-led project, and \pkg{collapse} as the only project that is single-authored and without financial support. The benchmarks show that \pkg{collapse} achieves the highest relative performance on 'smaller' (10-100 million row) datasets and performing advanced operations. \newline
 
-Since June 2024, there is also an independent \href{https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#background}{database-like operations benchmark by Adrian Antico} using a windows server and executing scripts inside IDEs (VScode, Rstudio), on which \pkg{collapse} achieved the overall fastest runtimes. I also very recently started a \href{https://github.com/fastverse/fastverse/wiki/Benchmarks}{user-contributed benchmark Wiki} as part of the \href{https://fastverse.github.io/fastverse/}{fastverse project} promoting high-performance software for R, where users can freely contribute benchmarks involving, but not limited to, \pkg{fastverse} packages. These benchmarks align that \pkg{collapse} offers a computationally outstanding experience, particularly for medium-sized datasets, complex tasks, and on PCs/Macs. % \footnote{Reasons for the particularly strong performance of \pkg{collapse} on Windows may be that it is largely written in C and has limited multithreading in favor or highly efficient serial algorithms---there appear to be persistent obstacles to efficient (low-overhead) multithreading on Windows, implying that multithreaded query engines do not develop their full thrust on medium-sized ($\leq$100 million row) datasets.}
+Since June 2024, there is also an independent \href{https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#background}{database-like operations benchmark by Adrian Antico} using a windows server and executing scripts inside IDEs (VScode, Rstudio), on which \pkg{collapse} achieved the overall fastest runtimes. I also very recently started a \href{https://github.com/fastverse/fastverse/wiki/Benchmarks}{user-contributed benchmark Wiki} as part of the \href{https://fastverse.github.io/fastverse/}{fastverse project} promoting high-performance software for R, where users can freely contribute benchmarks involving, but not limited to, \pkg{fastverse} packages. These benchmarks agree that \pkg{collapse} offers a computationally outstanding experience, particularly for medium-sized datasets, complex tasks, and on users PCs/Macs---which typically have smaller memory and parallel computing resources but faster chips than servers. % \footnote{Reasons for the particularly strong performance of \pkg{collapse} on Windows may be that it is largely written in C and has limited multithreading in favor or highly efficient serial algorithms---there appear to be persistent obstacles to efficient (low-overhead) multithreading on Windows, implying that multithreaded query engines do not develop their full thrust on medium-sized ($\leq$100 million row) datasets.}
 
 \subsection{Limitations and outlook}
 
@@ -1562,13 +1571,13 @@ Despite these constraints, \pkg{collapse} provides very respectable performance 
 
 \section{Conclusion} \label{sec:conclusion}
 
-\pkg{collapse} was first released to CRAN in March 2020, and has grown and matured considerably over the course of 5 years. It has become a new foundation package for statistical computing and data transformation in \proglang{R}---one that is statistically advanced, class-agnostic, flexible, fast, lightweight, stable, and able to manipulate complex scientific data with ease. As such, it opens up new possibilities for statistics, data manipulation, and package development in \proglang{R}. \newline % It also sets an ambitious benchmark for high-quality software engineering on the language. \newline
+\pkg{collapse} was first released to CRAN in March 2020, and has grown and matured considerably over the course of 5 years. It has become a new foundation package for statistical computing and data transformation in \proglang{R}---one that is statistically advanced, class-agnostic, flexible, fast, lightweight, stable, and able to manipulate complex scientific data with ease. As such, it opens up new possibilities for statistics, research, production, and package development in \proglang{R}. \newline % It also sets an ambitious benchmark for high-quality software engineering on the language. \newline
 
-This article provided a quick guide to the package, articulating its key ideas and design principles and demonstrating all core features. At this point the API is stable---it has changed very little over the 5 years and no further changes are planned. Compatibility with \proglang{R} version 3.5.0 will be maintained for as long as possible. Minor new features are currently planned. \newline
+This article provides a quick guide to the package, articulating its key ideas and design principles and demonstrating all core features. At this point the API is stable---it has changed very little over the 5 years and no further changes are planned. Compatibility with \proglang{R} version 3.5.0 will be maintained for as long as possible. Minor new features are currently planned. \newline
 
 For deeper engagement with \pkg{collapse}, visit its \href{https://sebkrantz.github.io/collapse/index.html}{website} or start with the vignette summarizing all available \href{https://sebkrantz.github.io/collapse/articles/collapse_documentation.html}{documentation and resources}. Users can also follow \pkg{collapse} on \href{https://x.com/collapse_R}{Twitter/X} and \href{https://bsky.app/profile/rcollapse.bsky.social}{Bluesky} to be notified about major updates and participate in community discussions. \newline
 
-Last but not least, \pkg{collapse} users are encouraged to also familiarize themselves with the \href{https://fastverse.github.io/fastverse/}{\pkg{fastverse}},\footnote{Website: https://fastverse.github.io/fastverse/} a suite of complementary high-performance packages for statistical computing and data manipulation in \proglang{R} which offer more advanced tools in several statistical computing domains. The \pkg{fastverse} metapackage also provides a lightweight framework to jointly load and manage these packages, as well as to build customized and fully separate package verses.
+Finally, \pkg{collapse} users are also encouraged to familiarize themselves with the \href{https://fastverse.github.io/fastverse/}{\pkg{fastverse}},\footnote{Website: https://fastverse.github.io/fastverse/} a suite of complementary high-performance packages for statistical computing and data manipulation in \proglang{R} that offer more advanced tools in several statistical computing domains. The \pkg{fastverse} metapackage additionally provides a lightweight framework to jointly load and manage these packages, as well as to build customized and fully separate package verses.
 
 \newpage
 %% -- Optional special unnumbered sections -------------------------------------
