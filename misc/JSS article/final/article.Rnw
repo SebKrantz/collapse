@@ -729,8 +729,12 @@ Such global powers confer responsibilities upon package developers, as further e
 %
 This section provides several simple benchmarks to show that \pkg{collapse} provides best-in-\proglang{R} performance for statistics and data manipulation on moderately sized datasets. They are executed on a 2024 Apple MacBook Pro with 48GB M4 Pro chip. It also discusses results from \href{https://github.com/fastverse/fastverse/wiki/Benchmarks}{third-party benchmarks} involving \pkg{collapse}. The first set of benchmarks show that \pkg{collapse} provides faster computationally intensive operations like unique values and matching on large integer and character vectors. It creates integer/character vectors of 10 million obs, with 1000 unique integers and 5776 unique strings, respectively, which are deduplicated/matched in the benchmark. These fast basic operations impact many critical components of the package. % These are serially implemented and critical in supporting more complex functionality. %These algorithms power much of its functionality, such as efficient factor generation with \fct{qF}, cross-tabulation with \fct{qtab}, \fct{join}'s, \fct{pivot}'s, etc.
 %
+<<bench_pre_clear, echo=FALSE, include=FALSE>>=
+rm(list = setdiff(ls(), c("bmark", "vars", "r_opts", "oldopts")))
+invisible(gc())
+@
 <<bench_1, eval=TRUE>>=
-set.seed(101)
+set.seed(101);
 int <- 1:1000; g_int <- sample.int(1000, 1e7, replace = TRUE)
 char <- c(letters, LETTERS, month.abb, month.name)
 g_char <- sample(char <- outer(char, char, paste0), 1e7, TRUE)
@@ -822,6 +826,8 @@ flights |> join(weather, on = c("origin", "time_hour")) |>
 The verbosity of \fct{join} is essential to understanding what has happened here---how many records from each table were matched and which duplicate non-id columns were suffixed with the (default) \code{y}-table name. Usually, I would set \code{drop.dup.cols = "y"} as keeping them is not helpful in this case, but the other packages don't have this option. For the benchmark, I set \code{verbose = 0} in \pkg{collapse} and employ the fastest syntax for \pkg{dplyr} and \pkg{data.table}:\footnote{\code{left\_join(..., multiple = "first")} for \pkg{dplyr} and \code{y[x, on = ids, mult = "first"]} for \pkg{data.table}.}
 %
 <<bench_flights_join, eval=TRUE, cache=TRUE, echo=FALSE>>=
+rm(list = setdiff(ls(), c("bmark", "vars", "r_opts", "oldopts")))
+invisible(gc())
 bmark(
   dplyr_joins = flights |>
     left_join(weather, by = c("origin", "time_hour"), multiple = "first") |>
@@ -944,6 +950,8 @@ bmark <- function(...) {
 <<reset_options, echo=FALSE>>=
 options(r_opts)
 set_collapse(oldopts)
+rm(list = ls())
+gc()
 @
 
 

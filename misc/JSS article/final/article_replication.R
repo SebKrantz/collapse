@@ -426,7 +426,9 @@ wlda15 |> with(qtab(OECD, income, w = LIFEEX, wFUN = fmean,
 ###################################################
 ### code chunk number 53: bench_1
 ###################################################
-set.seed(101)
+rm(list = setdiff(ls(), c("bmark", "vars", "r_opts", "oldopts")))
+gc()
+set.seed(101);
 int <- 1:1000; g_int <- sample.int(1000, 1e7, replace = TRUE)
 char <- c(letters, LETTERS, month.abb, month.name)
 g_char <- sample(char <- outer(char, char, paste0), 1e7, TRUE)
@@ -514,6 +516,8 @@ flights |> join(weather, on = c("origin", "time_hour")) |>
 ###################################################
 ### code chunk number 61: bench_flights_join
 ###################################################
+rm(list = setdiff(ls(), c("bmark", "vars", "r_opts", "oldopts")))
+gc()
 bmark(
   dplyr_joins = flights |>
     left_join(weather, by = c("origin", "time_hour"), multiple = "first") |>
@@ -557,6 +561,7 @@ bmark(tidyr = tidyr::pivot_wider(flights, id_cols = .c(month, day, dest),
 ###################################################
 options(r_opts)
 set_collapse(oldopts)
+rm(list = ls()); gc()
 
 ###################################################
 ### Print Session Information

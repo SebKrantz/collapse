@@ -437,8 +437,8 @@ R> bmark(collapse = collapse::fsummarise(wlddev, mean = fmean(PCGDP)),
 \end{Sinput}
 \begin{Soutput}
   expression      min   median mem_alloc n_itr n_gc total_time
-1   collapse   6.68µs   8.86µs        0B  9999    1       94ms
-2      dplyr 210.82µs 248.66µs    2.15KB  9455   29       2.9s
+1   collapse   6.68µs   8.04µs    1.05KB  9999    1    83.59ms
+2      dplyr 215.13µs 254.04µs    1.54MB  9936   64      2.78s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1289,32 +1289,32 @@ This section provides several simple benchmarks to show that \pkg{collapse} prov
 %
 \begin{Schunk}
 \begin{Sinput}
-R> set.seed(101)
+R> set.seed(101);
 R> int <- 1:1000; g_int <- sample.int(1000, 1e7, replace = TRUE)
 R> char <- c(letters, LETTERS, month.abb, month.name)
 R> g_char <- sample(char <- outer(char, char, paste0), 1e7, TRUE)
 R> bmark(base = unique(g_int), collapse = funique(g_int))
 \end{Sinput}
 \begin{Soutput}
-  expression    min  median mem_alloc n_itr n_gc total_time
-1       base 42.8ms 44.08ms   166.2MB    30   30      1.33s
-2   collapse  5.6ms  8.27ms    38.2MB   303   38      2.59s
+  expression     min  median mem_alloc n_itr n_gc total_time
+1       base 45.15ms 48.17ms   166.2MB    62   62      3.02s
+2   collapse  5.52ms  7.74ms    38.2MB   371   75         3s
 \end{Soutput}
 \begin{Sinput}
 R> bmark(base = unique(g_char), collapse = funique(g_char))
 \end{Sinput}
 \begin{Soutput}
   expression    min median mem_alloc n_itr n_gc total_time
-1       base 70.2ms 71.5ms   166.2MB    19   21      1.36s
-2   collapse 15.5ms 18.8ms    38.2MB   140   17      2.61s
+1       base 71.9ms 73.4ms   166.2MB    41   41      3.02s
+2   collapse 14.8ms 17.7ms    38.2MB   165   33      3.01s
 \end{Soutput}
 \begin{Sinput}
 R> bmark(base = match(g_int, int), collapse = fmatch(g_int, int))
 \end{Sinput}
 \begin{Soutput}
   expression     min  median mem_alloc n_itr n_gc total_time
-1       base 17.26ms 18.07ms    76.3MB   111   37      2.02s
-2   collapse  7.56ms  8.16ms    38.2MB   289   41      2.36s
+1       base  17.1ms 17.58ms    76.3MB    79   78       1.4s
+2   collapse  7.48ms  8.12ms    38.2MB   260   70      2.11s
 \end{Soutput}
 \begin{Sinput}
 R> bmark(base = match(g_char, char), data.table =
@@ -1322,9 +1322,9 @@ R> bmark(base = match(g_char, char), data.table =
 \end{Sinput}
 \begin{Soutput}
   expression    min median mem_alloc n_itr n_gc total_time
-1       base 52.7ms 54.8ms   114.5MB    27   25      1.49s
-2 data.table 32.9ms   34ms    38.1MB    73   13      2.48s
-3   collapse 16.2ms 17.1ms    38.1MB   143   23      2.46s
+1       base 58.6ms 60.6ms   114.5MB    49   49      3.02s
+2 data.table 32.8ms 34.2ms    38.1MB    86   22      3.01s
+3   collapse 19.4ms 20.3ms    38.1MB   140   29         3s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1337,24 +1337,24 @@ R> bmark(base = colSums(m), collapse = fsum(m))
 \end{Sinput}
 \begin{Soutput}
   expression     min   median mem_alloc n_itr n_gc total_time
-1       base   5.4ms   6.11ms    7.86KB   494    0         3s
-2   collapse   296µs 386.88µs    7.86KB  7172    0         3s
+1       base   5.4ms   6.12ms    7.86KB   492    0      3.01s
+2   collapse 292.5µs 387.94µs    7.86KB  7352    1         3s
 \end{Soutput}
 \begin{Sinput}
 R> bmark(base = colMeans(m), collapse = fmean(m))
 \end{Sinput}
 \begin{Soutput}
-  expression      min  median mem_alloc n_itr n_gc total_time
-1       base   5.43ms   5.9ms    7.86KB   505    0         3s
-2   collapse 303.24µs 377.2µs    7.86KB  7608    1      2.99s
+  expression      min   median mem_alloc n_itr n_gc total_time
+1       base   5.69ms   6.02ms   32.09KB   499    0         3s
+2   collapse 285.24µs 393.35µs    7.86KB  7200    0         3s
 \end{Soutput}
 \begin{Sinput}
 R> bmark(matrixStats = matrixStats::colMedians(m), collapse = fmedian(m))
 \end{Sinput}
 \begin{Soutput}
    expression    min median mem_alloc n_itr n_gc total_time
-1 matrixStats 76.6ms 77.2ms   86.04KB    39    0      3.01s
-2    collapse 19.4ms 19.6ms    7.86KB   153    0         3s
+1 matrixStats 77.1ms   78ms    89.9KB    38    1      2.98s
+2    collapse 19.4ms 19.6ms    27.2KB   154    0      3.01s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1366,9 +1366,9 @@ R> g <- sample.int(1e3, 1e4, TRUE)
 R> bmark(base = rowsum(m, g), collapse = fsum(m, g))
 \end{Sinput}
 \begin{Soutput}
-  expression     min median mem_alloc n_itr n_gc total_time
-1       base   5.1ms 5.74ms    7.85MB   456   16      2.72s
-2   collapse 905.8µs  1.2ms    7.67MB  1781   54      2.39s
+  expression      min median mem_alloc n_itr n_gc total_time
+1       base   5.38ms 5.63ms    7.87MB   466   35      2.63s
+2   collapse 918.11µs 1.19ms    7.71MB  1714  127       2.2s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1404,9 +1404,9 @@ R> bmark(dplyr = flights |> group_by(month, day, origin, dest) |>
 \end{Sinput}
 \begin{Soutput}
   expression      min   median mem_alloc n_itr n_gc total_time
-1      dplyr 374.95ms 499.62ms   48.56MB     7   65      3.33s
-2 data.table   7.32ms   9.35ms   18.93MB   282   28         3s
-3   collapse      3ms   3.93ms    9.11MB   670   31      3.01s
+1      dplyr 356.33ms 490.66ms    50.5MB     7   69      3.24s
+2 data.table   7.37ms    8.5ms    20.8MB   315   33         3s
+3   collapse   3.21ms   3.78ms     9.2MB   696   27         3s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1415,15 +1415,15 @@ Below, I also benchmark the mean and median functions in the same way. It is evi
 \begin{Schunk}
 \begin{Soutput}
        expression    min median mem_alloc n_itr n_gc total_time
-1      dplyr_mean  1.24s   1.3s   48.56MB     3   74      4.05s
-2 data.table_mean 7.58ms 9.03ms   18.93MB   288   29      3.01s
-3   collapse_mean 3.14ms    4ms    9.11MB   650   31         3s
+1      dplyr_mean  1.14s  1.25s   48.57MB     3   69      3.69s
+2 data.table_mean  7.5ms 8.69ms   18.93MB   314   32      3.01s
+3   collapse_mean 3.27ms 3.93ms    9.11MB   643   27         3s
 \end{Soutput}
 \begin{Soutput}
          expression     min  median mem_alloc n_itr n_gc total_time
-1      dplyr_median   4.46s   4.46s    52.8MB     1   76      4.46s
-2 data.table_median 22.12ms 23.58ms    18.9MB   123   14      3.02s
-3   collapse_median  9.37ms 10.83ms    11.1MB   247   18         3s
+1      dplyr_median   4.21s   4.21s    52.8MB     1   84      4.21s
+2 data.table_median 21.92ms 23.71ms    18.9MB   122   13         3s
+3   collapse_median  9.37ms 10.57ms    11.1MB   255   13      3.01s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1439,10 +1439,10 @@ R> bmark(dplyr = flights |> group_by(month, day, origin, dest) |>
 +      fsummarise(rng = fmax(arr_delay) - fmin(arr_delay)))
 \end{Sinput}
 \begin{Soutput}
-  expression     min   median mem_alloc n_itr n_gc total_time
-1      dplyr 93.15ms 107.41ms   20.18MB    25   57      3.04s
-2 data.table 57.33ms  62.35ms    5.77MB    48   25      3.02s
-3   collapse  5.26ms   5.82ms     6.8MB   477   16         3s
+  expression     min  median mem_alloc n_itr n_gc total_time
+1      dplyr 91.78ms 107.7ms   20.18MB    27   55      3.14s
+2 data.table 55.02ms  67.2ms    5.77MB    45   27      3.05s
+3   collapse  5.17ms   5.7ms     6.8MB   491   14      3.01s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1470,10 +1470,10 @@ The verbosity of \fct{join} is essential to understanding what has happened here
 %
 \begin{Schunk}
 \begin{Soutput}
-        expression      min  median mem_alloc n_itr n_gc total_time
-1      dplyr_joins 148.67ms 163.5ms   558.9MB    17   36      3.12s
-2 data.table_joins  109.4ms 197.5ms   490.4MB    16   31      3.08s
-3   collapse_joins   8.09ms  11.9ms    89.7MB   198   43         3s
+        expression      min median mem_alloc n_itr n_gc total_time
+1      dplyr_joins 213.13ms  265ms   559.4MB    12   58      3.14s
+2 data.table_joins 173.31ms  229ms     491MB    14   62      3.14s
+3   collapse_joins   9.94ms   14ms    89.7MB   182  100      3.05s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1492,9 +1492,9 @@ R> bmark(tidyr = tidyr::pivot_longer(flights, cols = vars),
 \end{Sinput}
 \begin{Soutput}
   expression    min median mem_alloc n_itr n_gc total_time
-1      tidyr 58.7ms 59.8ms     251MB     8   38   480.69ms
-2 data.table 35.2ms 38.5ms     209MB    38   27      1.46s
-3   collapse 13.6ms 16.6ms     209MB    63   64      1.04s
+1      tidyr 72.4ms  134ms     254MB    25   54      3.12s
+2 data.table   43ms   59ms     209MB    45   34      3.11s
+3   collapse 14.1ms   25ms     209MB    77   91      3.02s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1515,10 +1515,10 @@ R> bmark(tidyr = tidyr::pivot_wider(flights, id_cols = .c(month, day, dest),
 \end{Sinput}
 \begin{Soutput}
      expression      min   median mem_alloc n_itr n_gc total_time
-1         tidyr 376.05ms 400.31ms   142.4MB     8   65      3.33s
-2    data.table 221.19ms 228.87ms      21MB    13   43      3.13s
-3 collapse_fsum   5.64ms   7.45ms    39.1MB   324   27      3.01s
-4 collapse_itnl   3.78ms   4.83ms    12.4MB   556   17         3s
+1         tidyr 365.57ms 404.26ms     143MB     8   62      3.25s
+2    data.table 222.76ms 231.33ms    21.7MB    13   44      3.08s
+3 collapse_fsum   6.31ms   8.45ms    39.1MB   269   68         3s
+4 collapse_itnl   4.03ms   5.19ms    12.4MB   513   38         3s
 \end{Soutput}
 \end{Schunk}
 %
@@ -1596,6 +1596,13 @@ bmark <- function(...) {
 }
 \end{Code}
 
+\begin{Schunk}
+\begin{Soutput}
+          used (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
+Ncells 1330529 71.1    3842589 205.3         NA  3842589 205.3
+Vcells 9393515 71.7   34009060 259.5      49152 81718535 623.5
+\end{Soutput}
+\end{Schunk}
 
 
 \section*{Acknowledgments}
