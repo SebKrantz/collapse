@@ -310,7 +310,7 @@ add_vars(wlddev) <- get_vars(wlddev, c("PCGDP", "LIFEEX")) |>
 %
 % For (higher-dimensional) centering, \pkg{collapse} also has specialized function(s) \fct{f[hd]within} with additional options, and \fct{fscale} supports various scaling and centering operations.\newline
 
-The lower-level API is useful for package development and standard-evaluation programming, as further elucidated in the \href{https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html}{vignette on developing with \pkg{collapse}}. Users should note that \pkg{collapse} does not provide metaprogramming capabilities in its non-standard evaluation functions---such as \href{https://rlang.r-lib.org/reference/topic-quosure.html}{quosures} or \href{https://dplyr.tidyverse.org/articles/programming.html}{indirection} familiar to \pkg{tidyverse} users. Instead, it has standard-evaluation equivalents to some of these functions which typically end with a \code{v} for 'variables', such as \fct{collapv}, \fct{fslicev}, \fct{ftransformv}, etc. In other cases, including those typically handled by \fct{fsummarise} or \fct{fmutate}, users need to use the lower-level API for programming, or resort to \fct{substitute} and friends. The main reason for not providing higher-level metaprogramming capabilities is to keep all functions as simple as possible. It also compels users to think more deeply about their programs and devise more efficient solutions. \newline
+The lower-level API is useful for package development and standard-evaluation programming, as further elucidated in the \href{https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html}{vignette on developing with \pkg{collapse}}. Users should note that \pkg{collapse} does not provide metaprogramming capabilities in its non-standard evaluation functions---such as \href{https://rlang.r-lib.org/reference/topic-quosure.html}{quosures} or \href{https://dplyr.tidyverse.org/articles/programming.html}{indirection} familiar to \pkg{tidyverse} users. Instead, it has standard-evaluation equivalents to some of these functions which typically end with a \code{v} for 'variables', such as \fct{collapv}, \fct{fslicev}, \fct{ftransformv}, etc. In other cases, including those typically handled by \fct{fsummarise} or \fct{fmutate}, users need to use the lower-level API for programming, or resort to \fct{substitute} and friends. The main reason for not providing higher-level metaprogramming capabilities is to keep all functions as simple as possible. It also compels users to think deeply about their programs and devise more efficient solutions. \newline
 
 As the small benchmark below illustrates, \pkg{dplyr}'s internally more complex data manipulation functions produce much greater overheads, which can noticeably add-up in longer scripts.\footnote{\fct{bmark} is a slim wrapper around \fct{bench::mark}. See the Computational details section.}
 %
@@ -528,7 +528,7 @@ A final noteworthy feature is that \fct{fmatch} has a built-in overidentificatio
 %
 The reshaping/pivoting functionality of both commercial and open-source software is also presently unsatisfactory for complex datasets such as surveys or disaggregated production, trade, or financial sector data, where variable names resemble codes and variable labels are essential to making sense of the data. Such datasets can presently only be reshaped by losing these labels or manual efforts to retain them. Modern \proglang{R} packages also offer different reshaping functions, such as \fct{data.table::melt}/\fct{tidyr::pivot\_longer} to combine columns and \fct{data.table::dcast}/\fct{tidyr::pivot\_wider} to expand them, requiring users to learn both. Since the depreciation of \pkg{reshape(2)} \citep{rreshape2}, there is also no modern replacement for \code{reshape2::recast()}, requiring \proglang{R} users to consecutively call two functions. \newline
 
-\fct{collapse::pivot} provides a class-agnostic implementation of reshaping for \proglang{R} that addresses these shortcomings. It has a single intuitive syntax to perform 'longer', 'wider', and 'recast' pivots and supports complex labelled data without loss of information. Its basic syntax is: \newpage
+\fct{collapse::pivot} provides a powerful new implementation of reshaping for \proglang{R} that addresses these shortcomings. It has a single intuitive syntax to perform 'longer', 'wider', and 'recast' pivots and supports complex labelled data without loss of information. Its basic syntax is: \newpage
 %
 \begin{Code}
 pivot(data, ids = NULL, values = NULL, names = NULL, labels = NULL,
@@ -951,7 +951,7 @@ bmark <- function(...) {
 options(r_opts)
 set_collapse(oldopts)
 rm(list = ls())
-gc()
+invisible(gc())
 @
 
 
