@@ -16,8 +16,14 @@ r_opts <- options(prompt = "R> ", continue = "+  ", width = 77, digits = 4, useF
 
 # Loading libraries and installing if unavailable
 if(!requireNamespace("fastverse", quietly = TRUE)) install.packages("fastverse")
+
+if(!requireNamespace("collapse", quietly = TRUE) || packageVersion("collapse") < "2.1.2") {
+  install.packages("collapse_2.1.2.tar.gz", type = "source", repos = NULL)
+}
+
 options(fastverse.styling = FALSE)
 library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
+
 # Package versions used in the article:
 # fastverse 0.3.4, collapse 2.1.2, data.table 1.17.0, nycflights23 0.2.0,
 # bench 1.1.4, dplyr 1.1.4, tidyr 1.3.1, matrixStats 1.5.0, janitor 2.2.0
@@ -149,8 +155,8 @@ add_vars(wlddev) <- get_vars(wlddev, c("PCGDP", "LIFEEX")) |>
 ###################################################
 ### code chunk number 15: fsumm_bench
 ###################################################
-bmark(collapse = collapse::fsummarise(mtcars, sum = sum(mpg)),
-      dplyr = dplyr::summarise(mtcars, sum = sum(mpg)))
+bmark(collapse = collapse::fsummarise(mtcars, mean = fmean(mpg)),
+      dplyr = dplyr::summarise(mtcars, mean = fmean(mpg)))
 
 
 ###################################################
@@ -241,7 +247,8 @@ join(teacher, course, how = "full", multiple = TRUE, column = TRUE)
 ###################################################
 ### code chunk number 27: joins_3
 ###################################################
-join(teacher, course, multiple = TRUE, attr = "jn") |> attr("jn") |> str(strict.width = "cut", width = 70)
+join(teacher, course, multiple = TRUE, attr = "jn") |> attr("jn") |>
+  str(strict.width = "cut", width = 70)
 
 
 ###################################################
@@ -297,7 +304,7 @@ head(dl <- pivot(data, ids = 1:4, names = list("Sectorcode", "Value"),
 ### code chunk number 35: pivot_wider
 ###################################################
 head(dw <- pivot(data, c("Country", "Year"), names = "Variable",
-                 labels = "Label", how = "w"))
+                 labels = "Label", how = "wider"))
 namlab(dw)
 
 
@@ -306,14 +313,14 @@ namlab(dw)
 ###################################################
 head(dr <- pivot(data, c("Country", "Year"),
                  names = list(from = "Variable", to = "Sectorcode"),
-                 labels = list(from = "Label", to = "Sector"), how = "r"))
+                 labels = list(from = "Label", to = "Sector"), how = "recast"))
 vlabels(dr)[3:6]
 
 
 ###################################################
 ### code chunk number 37: pivot_agg
 ###################################################
-head(dr_agg <- pivot(data, "Country", c("AGR", "MIN", "MAN"), how = "r",
+head(dr_agg <- pivot(data, "Country", c("AGR", "MIN", "MAN"), how = "recast",
                      names = list(from = "Variable", to = "Sectorcode"),
                      labels = list(from = "Label", to = "Sector"), FUN = "mean"))
 
@@ -407,7 +414,7 @@ wlda15 |> with(qtab(OECD, income))
 ###################################################
 ### code chunk number 50: qtab_2
 ###################################################
-wlda15 |> with(qtab(OECD, income, w = POP) / 1e6)
+wlda15 |> with(qtab(OECD, income, w = POP / 1e6))
 
 
 ###################################################
