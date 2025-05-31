@@ -296,7 +296,7 @@ Emplyoing the \emph{Fast Statistical Functions} directly often results in more e
 %
 \subsection{Vectorizations for advanced tasks} \label{ssec:vfat}
 %
-\fct{fsummarise} and \fct{fmutate} follow an eager vectorization approach, such that using any \emph{Fast Statistical Function} in an expression causes the entire expression to be vectorized (i.e., evaluated only once with \emph{Fast Statistical Function} returning grouped output). This only applies to visible expressions, \pkg{collapse} cannot read the contents of custom functions, thus such functions are always evaluated using split-apply-combine logic. This eager vectorization approach enables efficient grouped calculations of more complex statistics. Below, I forecast the population of each region via linear regression (\code{POP ~ year}) in a fully vectorized way.
+\fct{fsummarise} and \fct{fmutate} follow an eager vectorization approach, such that using any \emph{Fast Statistical Function} in an expression causes the entire expression to be vectorized (i.e., evaluated only once with \emph{Fast Statistical Functions} returning grouped output). This only applies to visible expressions, \pkg{collapse} cannot read the contents of custom functions, thus such functions are always evaluated using split-apply-combine logic. This eager vectorization approach enables efficient grouped calculations of more complex statistics. Below, I forecast the population of each region via linear regression (\code{POP ~ year}) in a fully vectorized way.
 %
 \begin{Schunk}
 \begin{Sinput}
