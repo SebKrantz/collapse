@@ -191,13 +191,13 @@ add_vars(g$groups,
 # 7   8  0  1  30.8 6.000000 299.50000 14.55000
 ```
 
-To be clear: nothing prevents you from using these wrappers - they are quite efficient - but if you want to change all inputs programmatically it makes sense to go down one level - your code will also become safer.^[If you do use `fgroup_by()` in a package use it with non-standard evaluation, i.e., `fgroup_by(cyl, vs, am)`. Don't do `ind <- c("cyl", "vs", "am")` and then `fgroup_by(ind)` as the data may contain a column called `ind`. For such cases use `group_by_vars(ind)`.]
+To be clear: nothing prevents you from using these wrappers - they are quite efficient - but if you want to change all inputs programmatically it makes sense to go down one level - your code will also become safer.^[If you do use `fgroup_by()` in a package use it with non-standard evaluation, e.g., `fgroup_by(cyl, vs, am)`. Don't do `ind <- c("cyl", "vs", "am")` and then `fgroup_by(ind)` as the data may contain a column called `ind`. For such cases use `group_by_vars(ind)`.]
 
 In general, think carefully about how to vectorize in a minimalistic and memory efficient way. You will find that you can craft very parsimonious and efficient code to solve complicated problems.
 
 For example, after merging multiple spatial datasets, I had some of the same map features (businesses) from multiple sources, and, unwilling to match features individually across data sources, I decided to keep the richest source covering each feature type and location. After creating a feature `importance` indicator comparable across sources, the deduplication expression ended up being a single line of the form: `fsubset(data, source == fmode(source, list(location, type), importance, "fill"))` - keep features from the importance-weighted most frequent source by location and type.
 
-If an effective *collapse* solution is not apparent, other packages may offer efficient solutions. Check out the [*fastverse*](https://fastverse.github.io/fastverse/) and its [suggested packages list](https://fastverse.github.io/fastverse/#suggested-extensions). For example if you want to efficiently replace multiple items in a vector, `kit::vswitch()/nswitch()` can be pretty magical. Also functions like `data.table::set()/rowid()` etc. are great, e.g., [recent issue](https://github.com/SebKrantz/collapse/issues/627): what is the *collapse* equivalent to a grouped `dplyr::slice_head(n)`? It would be `fsubset(data, data.table::rowid(id1, id2, ...) <= n)`.
+If an effective *collapse* solution is not apparent, other packages may offer efficient solutions. Check out the [*fastverse*](https://fastverse.github.io/fastverse/) and its [suggested packages list](https://fastverse.github.io/fastverse/#suggested-extensions). For example if you want to efficiently replace multiple items in a vector, `kit::vswitch()/nswitch()` can be pretty magical. Also functions like `data.table::set()/rowid()` etc. are great.
 
 
 ## Point 2: Think About Memory and Optimize
