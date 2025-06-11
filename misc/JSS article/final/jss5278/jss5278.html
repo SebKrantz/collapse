@@ -11,7 +11,7 @@
 
 
 
-<title>article_replication</title>
+<title>jss5278</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -366,14 +366,20 @@ display: none;
 
 rm(list = ls()); gc()</code></pre>
 <pre><code>##           used (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
-## Ncells 1417597 75.8    3842589 205.3         NA  3842589 205.3
-## Vcells 9520006 72.7   34009060 259.5      49152 81718535 623.5</code></pre>
+## Ncells 1510201 80.7    3842590 205.3         NA  3842590 205.3
+## Vcells 9683701 73.9   36617092 279.4      49152 81718535 623.5</code></pre>
 <pre class="r"><code>r_opts &lt;- options(prompt = &quot;R&gt; &quot;, continue = &quot;+  &quot;, width = 77, digits = 4, useFancyQuotes = FALSE, warn = 1)
 
 # Loading libraries and installing if unavailable
 if(!requireNamespace(&quot;fastverse&quot;, quietly = TRUE)) install.packages(&quot;fastverse&quot;)
+
+if(!requireNamespace(&quot;collapse&quot;, quietly = TRUE) || packageVersion(&quot;collapse&quot;) &lt; &quot;2.1.2&quot;) {
+  install.packages(&quot;collapse_2.1.2.tar.gz&quot;, type = &quot;source&quot;, repos = NULL)
+}
+
 options(fastverse.styling = FALSE)
 library(fastverse) # loads data.table, collapse, magrittr and kit (not used)
+
 # Package versions used in the article:
 # fastverse 0.3.4, collapse 2.1.2, data.table 1.17.0, nycflights23 0.2.0,
 # bench 1.1.4, dplyr 1.1.4, tidyr 1.3.1, matrixStats 1.5.0, janitor 2.2.0
@@ -560,11 +566,11 @@ add_vars(wlddev) &lt;- get_vars(wlddev, c(&quot;PCGDP&quot;, &quot;LIFEEX&quot;)
 ###################################################
 ### code chunk number 15: fsumm_bench
 ###################################################
-bmark(collapse = collapse::fsummarise(mtcars, sum = sum(mpg)),
-      dplyr = dplyr::summarise(mtcars, sum = sum(mpg)))</code></pre>
+bmark(collapse = collapse::fsummarise(mtcars, mean = fmean(mpg)),
+      dplyr = dplyr::summarise(mtcars, mean = fmean(mpg)))</code></pre>
 <pre><code>##   expression      min   median mem_alloc n_itr n_gc total_time
-## 1   collapse   3.32µs   4.51µs   13.28KB  9999    1     61.8ms
-## 2      dplyr 202.83µs 237.31µs    1.92KB  9971   29      2.44s</code></pre>
+## 1   collapse   4.67µs   5.17µs        0B  9999    1    54.15ms
+## 2      dplyr 199.14µs 220.87µs    1.92KB  9970   30      2.35s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 16: ts_example
 ###################################################
@@ -710,7 +716,8 @@ join(teacher, course, how = &quot;full&quot;, multiple = TRUE, column = TRUE)</c
 <pre class="r"><code>###################################################
 ### code chunk number 27: joins_3
 ###################################################
-join(teacher, course, multiple = TRUE, attr = &quot;jn&quot;) |&gt; attr(&quot;jn&quot;) |&gt; str(strict.width = &quot;cut&quot;, width = 70)</code></pre>
+join(teacher, course, multiple = TRUE, attr = &quot;jn&quot;) |&gt; attr(&quot;jn&quot;) |&gt;
+  str(strict.width = &quot;cut&quot;, width = 70)</code></pre>
 <pre><code>## left join: teacher[id] 3/4 (75%) &lt;1:1.33&gt; course[id] 4/5 (80%)
 ## List of 3
 ##  $ call   : language join(x = teacher, y = course, multiple = TRUE,&quot;..
@@ -802,7 +809,7 @@ head(dl &lt;- pivot(data, ids = 1:4, names = list(&quot;Sectorcode&quot;, &quot;
 ### code chunk number 35: pivot_wider
 ###################################################
 head(dw &lt;- pivot(data, c(&quot;Country&quot;, &quot;Year&quot;), names = &quot;Variable&quot;,
-                 labels = &quot;Label&quot;, how = &quot;w&quot;))</code></pre>
+                 labels = &quot;Label&quot;, how = &quot;wider&quot;))</code></pre>
 <pre><code>##   Country Year AGR_VA AGR_EMP MIN_VA MIN_EMP MAN_VA MAN_EMP
 ## 1     BWA 1964  16.30   152.1  3.494  1.9400 0.7366   2.420
 ## 2     BWA 1965  15.73   153.3  2.496  1.3263 1.0182   2.330
@@ -825,7 +832,7 @@ head(dw &lt;- pivot(data, c(&quot;Country&quot;, &quot;Year&quot;), names = &quo
 ###################################################
 head(dr &lt;- pivot(data, c(&quot;Country&quot;, &quot;Year&quot;),
                  names = list(from = &quot;Variable&quot;, to = &quot;Sectorcode&quot;),
-                 labels = list(from = &quot;Label&quot;, to = &quot;Sector&quot;), how = &quot;r&quot;))</code></pre>
+                 labels = list(from = &quot;Label&quot;, to = &quot;Sector&quot;), how = &quot;recast&quot;))</code></pre>
 <pre><code>##   Country Year Sectorcode      Sector    VA   EMP
 ## 1     BWA 1964        AGR Agriculture 16.30 152.1
 ## 2     BWA 1965        AGR Agriculture 15.73 153.3
@@ -839,7 +846,7 @@ head(dr &lt;- pivot(data, c(&quot;Country&quot;, &quot;Year&quot;),
 <pre class="r"><code>###################################################
 ### code chunk number 37: pivot_agg
 ###################################################
-head(dr_agg &lt;- pivot(data, &quot;Country&quot;, c(&quot;AGR&quot;, &quot;MIN&quot;, &quot;MAN&quot;), how = &quot;r&quot;,
+head(dr_agg &lt;- pivot(data, &quot;Country&quot;, c(&quot;AGR&quot;, &quot;MIN&quot;, &quot;MAN&quot;), how = &quot;recast&quot;,
                      names = list(from = &quot;Variable&quot;, to = &quot;Sectorcode&quot;),
                      labels = list(from = &quot;Label&quot;, to = &quot;Sector&quot;), FUN = &quot;mean&quot;))</code></pre>
 <pre><code>##   Country Sectorcode      Sector       VA      EMP
@@ -993,7 +1000,7 @@ wlda15 |&gt; with(qtab(OECD, income))</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 50: qtab_2
 ###################################################
-wlda15 |&gt; with(qtab(OECD, income, w = POP) / 1e6)</code></pre>
+wlda15 |&gt; with(qtab(OECD, income, w = POP / 1e6))</code></pre>
 <pre><code>##        income
 ## OECD    High income Low income Lower middle income Upper middle income
 ##   FALSE       93.01     694.89             3063.54             2459.71
@@ -1021,8 +1028,8 @@ wlda15 |&gt; with(qtab(OECD, income, w = LIFEEX, wFUN = fmean,
 rm(list = setdiff(ls(), c(&quot;bmark&quot;, &quot;vars&quot;, &quot;r_opts&quot;, &quot;oldopts&quot;)))
 gc()</code></pre>
 <pre><code>##           used (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
-## Ncells 1419625 75.9    3842589 205.3         NA  3842589 205.3
-## Vcells 9524533 72.7   34009060 259.5      49152 81718535 623.5</code></pre>
+## Ncells 1512011 80.8    3842590 205.3         NA  3842590 205.3
+## Vcells 9687339 74.0   36617092 279.4      49152 81718535 623.5</code></pre>
 <pre class="r"><code>set.seed(101);
 int &lt;- 1:1000; g_int &lt;- sample.int(1000, 1e7, replace = TRUE)
 char &lt;- c(letters, LETTERS, month.abb, month.name)
@@ -1031,24 +1038,24 @@ bmark(base = unique(g_int), collapse = funique(g_int))</code></pre>
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
 <pre><code>##   expression     min  median mem_alloc n_itr n_gc total_time
-## 1       base 45.61ms 48.14ms   166.2MB    62   62      3.05s
-## 2   collapse  6.42ms  9.46ms    38.2MB   309   44      3.01s</code></pre>
+## 1       base 44.09ms 46.54ms   166.2MB    63   63         3s
+## 2   collapse  6.15ms  9.23ms    38.2MB   333   48      3.01s</code></pre>
 <pre class="r"><code>bmark(base = unique(g_char), collapse = funique(g_char))</code></pre>
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
 <pre><code>##   expression    min median mem_alloc n_itr n_gc total_time
-## 1       base 71.6ms 74.1ms   166.2MB    40   40      3.09s
-## 2   collapse 14.4ms 17.6ms    38.2MB   162   23      3.02s</code></pre>
+## 1       base 69.8ms 71.8ms   166.2MB    42   42      3.01s
+## 2   collapse   14ms 17.1ms    38.2MB   169   24         3s</code></pre>
 <pre class="r"><code>bmark(base = match(g_int, int), collapse = fmatch(g_int, int))</code></pre>
 <pre><code>##   expression     min  median mem_alloc n_itr n_gc total_time
-## 1       base 17.12ms 18.22ms    76.3MB    87   57      1.63s
-## 2   collapse  7.41ms  8.18ms    38.2MB   275   55      2.27s</code></pre>
+## 1       base 16.26ms 17.18ms    76.3MB    99   61      1.71s
+## 2   collapse  6.96ms  7.58ms    38.2MB   302   50       2.3s</code></pre>
 <pre class="r"><code>bmark(base = match(g_char, char), data.table =
         chmatch(g_char, char), collapse = fmatch(g_char, char))</code></pre>
 <pre><code>##   expression    min median mem_alloc n_itr n_gc total_time
-## 1       base 63.9ms 65.2ms   114.5MB    21   22      1.37s
-## 2 data.table 33.1ms 34.3ms    38.1MB    70   15      2.41s
-## 3   collapse 22.7ms 23.5ms    38.1MB   103   20      2.43s</code></pre>
+## 1       base 49.4ms 51.1ms   114.5MB    22   34      1.12s
+## 2 data.table   32ms 33.1ms    38.1MB    74   15      2.45s
+## 3   collapse 14.7ms 15.7ms    38.1MB   148   30      2.32s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 54: bench_2
 ###################################################
@@ -1056,24 +1063,24 @@ set_collapse(na.rm = FALSE, sort = FALSE, nthreads = 4)
 m &lt;- matrix(rnorm(1e7), ncol = 1000)
 bmark(base = colSums(m), collapse = fsum(m))</code></pre>
 <pre><code>##   expression      min   median mem_alloc n_itr n_gc total_time
-## 1       base   5.42ms   6.11ms    7.86KB   494    0         3s
-## 2   collapse 304.71µs    359µs    7.86KB  8147    0         3s</code></pre>
+## 1       base   5.42ms   5.74ms    7.86KB   520    0         3s
+## 2   collapse 294.05µs 362.28µs    7.86KB  8182    0         3s</code></pre>
 <pre class="r"><code>bmark(base = colMeans(m), collapse = fmean(m))</code></pre>
 <pre><code>##   expression      min   median mem_alloc n_itr n_gc total_time
-## 1       base   5.64ms   6.02ms    7.86KB   501    0         3s
-## 2   collapse 299.14µs 378.51µs    7.86KB  7767    1      2.99s</code></pre>
+## 1       base   5.38ms   5.43ms    7.86KB   545    0         3s
+## 2   collapse 305.98µs 367.11µs    7.86KB  7804    1      2.99s</code></pre>
 <pre class="r"><code>bmark(matrixStats = matrixStats::colMedians(m), collapse = fmedian(m))</code></pre>
 <pre><code>##    expression    min median mem_alloc n_itr n_gc total_time
-## 1 matrixStats   77ms 77.2ms   86.04KB    39    0      3.02s
-## 2    collapse 19.4ms 19.6ms    7.86KB   154    0      3.01s</code></pre>
+## 1 matrixStats   72ms 73.5ms   86.04KB    41    0      3.03s
+## 2    collapse 19.2ms 19.6ms    7.86KB   153    0         3s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 55: bench_2.1
 ###################################################
 g &lt;- sample.int(1e3, 1e4, TRUE)
 bmark(base = rowsum(m, g), collapse = fsum(m, g))</code></pre>
-<pre><code>##   expression     min median mem_alloc n_itr n_gc total_time
-## 1       base   5.1ms 5.63ms    7.85MB   472   26      2.71s
-## 2   collapse 911.1µs 1.19ms    7.67MB  1945   79      2.39s</code></pre>
+<pre><code>##   expression      min median mem_alloc n_itr n_gc total_time
+## 1       base   5.09ms 5.57ms    7.85MB   490   20      2.75s
+## 2   collapse 908.48µs 1.17ms    7.67MB  1905   76      2.36s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 56: bench_flights_setup
 ###################################################
@@ -1094,10 +1101,10 @@ bmark(dplyr = flights |&gt; group_by(month, day, origin, dest) |&gt;
         get_vars(vars) |&gt; fsum())</code></pre>
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
-<pre><code>##   expression      min  median mem_alloc n_itr n_gc total_time
-## 1      dplyr 472.98ms 488.6ms   48.56MB     7   71      3.43s
-## 2 data.table   7.47ms   8.6ms   18.93MB   316   33      3.01s
-## 3   collapse   2.96ms   3.6ms    9.11MB   705   33         3s</code></pre>
+<pre><code>##   expression      min   median mem_alloc n_itr n_gc total_time
+## 1      dplyr 357.25ms  484.3ms   48.56MB     7   69      3.21s
+## 2 data.table   7.67ms   9.59ms   18.93MB   284   40      3.01s
+## 3   collapse   3.14ms   3.84ms    9.11MB   663   42         3s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 58: bench_flights_summarise_2
 ###################################################
@@ -1110,9 +1117,9 @@ bmark(dplyr_mean = flights |&gt; group_by(month, day, origin, dest) |&gt;
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
 <pre><code>##        expression    min median mem_alloc n_itr n_gc total_time
-## 1      dplyr_mean  1.13s  1.24s   48.56MB     3   70       3.7s
-## 2 data.table_mean 7.52ms 8.81ms   18.93MB   311   31         3s
-## 3   collapse_mean 3.12ms  3.6ms    9.11MB   734   39      3.01s</code></pre>
+## 1      dplyr_mean  1.16s  1.19s   48.56MB     3   70      3.65s
+## 2 data.table_mean 7.59ms 9.27ms   18.93MB   284   39         3s
+## 3   collapse_mean 3.07ms 3.84ms    9.11MB   658   41         3s</code></pre>
 <pre class="r"><code>bmark(dplyr_median = flights |&gt; group_by(month, day, origin, dest) |&gt;
         summarise(across(all_of(vars), median), .groups = &quot;drop&quot;),
       data.table_median = qDT(flights)[, lapply(.SD, median), .SDcols = vars,
@@ -1122,9 +1129,9 @@ bmark(dplyr_mean = flights |&gt; group_by(month, day, origin, dest) |&gt;
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
 <pre><code>##          expression     min  median mem_alloc n_itr n_gc total_time
-## 1      dplyr_median   4.75s   4.75s    52.8MB     1   81      4.75s
-## 2 data.table_median 21.87ms 23.21ms    18.9MB   121   13      3.01s
-## 3   collapse_median  9.61ms 11.14ms    11.1MB   256   15         3s</code></pre>
+## 1      dplyr_median   4.32s   4.32s    52.8MB     1  102      4.32s
+## 2 data.table_median 21.73ms 23.17ms    18.9MB   117   16      3.02s
+## 3   collapse_median  9.49ms 10.55ms    11.1MB   267   21      3.01s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 59: bench_flights_summarise_3
 ###################################################
@@ -1136,10 +1143,10 @@ bmark(dplyr = flights |&gt; group_by(month, day, origin, dest) |&gt;
         fsummarise(rng = fmax(arr_delay) - fmin(arr_delay)))</code></pre>
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
-<pre><code>##   expression      min   median mem_alloc n_itr n_gc total_time
-## 1      dplyr 100.73ms  112.8ms   20.18MB    26   54      3.09s
-## 2 data.table  62.15ms  69.99ms    5.77MB    42   32      3.09s
-## 3   collapse   5.36ms   6.01ms     6.8MB   466   11         3s</code></pre>
+<pre><code>##   expression     min   median mem_alloc n_itr n_gc total_time
+## 1      dplyr 89.84ms 105.25ms   20.18MB    26   59      3.17s
+## 2 data.table  55.4ms  58.58ms    5.77MB    51   26      3.01s
+## 3   collapse  5.34ms   5.86ms     6.8MB   476   22         3s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 60: bench_flights_join_setup
 ###################################################
@@ -1161,8 +1168,8 @@ flights |&gt; join(weather, on = c(&quot;origin&quot;, &quot;time_hour&quot;)) |
 rm(list = setdiff(ls(), c(&quot;bmark&quot;, &quot;vars&quot;, &quot;r_opts&quot;, &quot;oldopts&quot;)))
 gc()</code></pre>
 <pre><code>##           used (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
-## Ncells 1420068 75.9    3842590 205.3         NA  3842590 205.3
-## Vcells 9529888 72.8   59664261 455.3      49152 81718535 623.5</code></pre>
+## Ncells 1512387 80.8    3842590 205.3         NA  3842590 205.3
+## Vcells 9688147 74.0   49854626 380.4      49152 81718535 623.5</code></pre>
 <pre class="r"><code>bmark(
   dplyr_joins = flights |&gt;
     left_join(weather, by = c(&quot;origin&quot;, &quot;time_hour&quot;), multiple = &quot;first&quot;) |&gt;
@@ -1181,9 +1188,9 @@ gc()</code></pre>
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
 <pre><code>##         expression     min median mem_alloc n_itr n_gc total_time
-## 1      dplyr_joins 209.7ms  289ms   558.9MB    11   49       3.2s
-## 2 data.table_joins 167.6ms  218ms   490.4MB    14   46      3.09s
-## 3   collapse_joins  10.1ms   15ms    89.7MB   165  102      3.01s</code></pre>
+## 1      dplyr_joins   149ms  222ms   558.9MB    15   52      3.04s
+## 2 data.table_joins 245.9ms  258ms   490.4MB    12   49       3.1s
+## 3   collapse_joins  10.1ms   13ms    89.7MB   183   99      3.01s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 62: bench_pivot_long
 ###################################################
@@ -1193,9 +1200,9 @@ bmark(tidyr = tidyr::pivot_longer(flights, cols = vars),
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
 <pre><code>##   expression     min  median mem_alloc n_itr n_gc total_time
-## 1      tidyr 133.3ms 142.7ms     251MB    21   58         3s
-## 2 data.table 110.5ms 114.4ms     209MB    26   28      3.13s
-## 3   collapse  82.5ms  90.7ms     209MB    33   65      3.03s</code></pre>
+## 1      tidyr 132.8ms   140ms     251MB    21   41      3.02s
+## 2 data.table  37.4ms  48.8ms     209MB    47   35      3.01s
+## 3   collapse  13.9ms  27.7ms     209MB    72   87      3.09s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 63: bench_pivot_wide
 ###################################################
@@ -1209,11 +1216,11 @@ bmark(tidyr = tidyr::pivot_wider(flights, id_cols = .c(month, day, dest),
                             &quot;origin&quot;, how = &quot;wider&quot;, FUN = &quot;sum&quot;))</code></pre>
 <pre><code>## Warning: Some expressions had a GC in every iteration; so filtering is
 ## disabled.</code></pre>
-<pre><code>##      expression      min  median mem_alloc n_itr n_gc total_time
-## 1         tidyr 341.91ms 414.5ms   142.4MB     8   61      3.33s
-## 2    data.table  221.5ms 225.7ms      21MB    14   43       3.2s
-## 3 collapse_fsum      6ms   8.2ms    39.1MB   290   76      3.01s
-## 4 collapse_itnl   3.96ms   4.6ms    12.4MB   558   41         3s</code></pre>
+<pre><code>##      expression      min   median mem_alloc n_itr n_gc total_time
+## 1         tidyr 349.02ms 394.22ms   142.4MB     8   63      3.28s
+## 2    data.table 226.07ms 231.09ms      21MB    13   57      3.02s
+## 3 collapse_fsum   5.92ms   7.48ms    39.1MB   311   58         3s
+## 4 collapse_itnl   3.77ms   4.71ms    12.4MB   564   37         3s</code></pre>
 <pre class="r"><code>###################################################
 ### code chunk number 64: reset_options
 ###################################################
@@ -1221,8 +1228,8 @@ options(r_opts)
 set_collapse(oldopts)
 rm(list = ls()); gc()</code></pre>
 <pre><code>##           used (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)
-## Ncells 1420188 75.9    3842590 205.3         NA  3842590 205.3
-## Vcells 9525678 72.7   36617092 279.4      49152 81718535 623.5</code></pre>
+## Ncells 1512525 80.8    3842590 205.3         NA  3842590 205.3
+## Vcells 9688354 74.0   42341140 323.1      49152 87703454 669.2</code></pre>
 <pre class="r"><code>###################################################
 ### Print Session Information
 ###################################################
@@ -1251,14 +1258,16 @@ sessionInfo()</code></pre>
 ## [7] fastverse_0.3.4   
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] crayon_1.5.3      vctrs_0.6.5       knitr_1.50        cli_3.6.5        
-##  [5] xfun_0.52         rlang_1.1.6       stringi_1.8.7     bench_1.1.4      
-##  [9] purrr_1.0.4       generics_0.1.3    glue_1.8.0        janitor_2.2.1    
-## [13] evaluate_1.0.3    snakecase_0.11.1  tibble_3.2.1      profmem_0.6.0    
-## [17] lifecycle_1.0.4   stringr_1.5.1     compiler_4.4.3    Rcpp_1.0.14      
-## [21] timechange_0.3.0  pkgconfig_2.0.3   tidyr_1.3.1       rstudioapi_0.17.1
-## [25] R6_2.6.1          tidyselect_1.2.1  pillar_1.10.1     parallel_4.4.3   
-## [29] withr_3.0.2       tools_4.4.3       matrixStats_1.5.0 lubridate_1.9.4</code></pre>
+##  [1] compiler_4.4.3    crayon_1.5.3      tidyselect_1.2.1  Rcpp_1.0.14      
+##  [5] stringr_1.5.1     parallel_4.4.3    snakecase_0.11.1  tidyr_1.3.1      
+##  [9] fastmap_1.2.0     R6_2.6.1          commonmark_1.9.5  generics_0.1.3   
+## [13] knitr_1.50        tibble_3.2.1      janitor_2.2.1     lubridate_1.9.4  
+## [17] pillar_1.10.1     rlang_1.1.6       stringi_1.8.7     litedown_0.7     
+## [21] xfun_0.52         timechange_0.3.0  cli_3.6.5         withr_3.0.2      
+## [25] digest_0.6.37     rstudioapi_0.17.1 markdown_2.0      lifecycle_1.0.4  
+## [29] vctrs_0.6.5       bench_1.1.4       evaluate_1.0.3    glue_1.8.0       
+## [33] profmem_0.6.0     rmarkdown_2.29    purrr_1.0.4       htmltools_0.5.8.1
+## [37] matrixStats_1.5.0 tools_4.4.3       pkgconfig_2.0.3</code></pre>
 
 
 
