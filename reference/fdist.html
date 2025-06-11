@@ -116,15 +116,15 @@
 <span class="r-in"><span>  <span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, nthreads <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: milliseconds</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min       lq     mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y)  993.553 1006.673 1173.267 1029.572 1077.808</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2)  992.897 1005.607 1108.173 1024.139 1103.371</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 3002.922 3333.464 7242.209 4587.593 6972.911</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y) 1.002122 1.028259 1.348562 1.068050 1.556483</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2) 1.002532 1.021249 1.283232 1.045828 1.548631</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 3.250275 3.464951 7.630637 4.588208 6.400531</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3801.725   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    1930.813   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  125262.503   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    3.448100   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    2.632487   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  165.067968   100</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
