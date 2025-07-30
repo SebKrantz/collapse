@@ -18,9 +18,6 @@ irisDT <- qDT(ss(iris, 1:100))
 n <- 5L
 # copy <- identity
 
-# assignInNamespace("cedta.override", c(data.table:::cedta.override, "collapse"), "data.table")
-assignInNamespace("cedta.override", "collapse", "data.table")
-
 options(warn = 1L)
 
 test_that("creating columns and printing works after passing a data.table through collapse functions", {
