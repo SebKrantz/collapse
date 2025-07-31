@@ -8,24 +8,24 @@ message: 'To cite package "collapse" in publications use:'
 type: software
 license: GPL-2.0-or-later
 title: 'collapse: Advanced and Fast Data Transformation'
-version: 2.0.19
+version: 2.1.2
 identifiers:
 - type: doi
   value: 10.32614/CRAN.package.collapse
-abstract: A C/C++ based package for advanced data transformation and statistical computing
-  in R that is extremely fast, class-agnostic, robust and programmer friendly. Core
-  functionality includes a rich set of S3 generic grouped and weighted statistical
+abstract: A large C/C++-based package for advanced data transformation and statistical
+  computing in R that is extremely fast, class-agnostic, robust, and programmer friendly.
+  Core functionality includes a rich set of S3 generic grouped and weighted statistical
   functions for vectors, matrices and data frames, which provide efficient low-level
   vectorizations, OpenMP multithreading, and skip missing values by default. These
   are integrated with fast grouping and ordering algorithms (also callable from C),
   and efficient data manipulation functions. The package also provides a flexible
-  and rigorous approach to time series and panel data in R. It further includes fast
-  functions for common statistical procedures, detailed (grouped, weighted) summary
+  and rigorous approach to time series and panel data in R, fast functions for data
+  transformation and common statistical procedures, detailed (grouped, weighted) summary
   statistics, powerful tools to work with nested data, fast data object conversions,
   functions for memory efficient R programming, and helpers to effectively deal with
-  variable labels, attributes, and missing data. It is well integrated with base R
-  classes, 'dplyr'/'tibble', 'data.table', 'sf', 'units', 'plm' (panel-series and
-  data frames), and 'xts'/'zoo'.
+  variable labels, attributes, and missing data. It seamlessly supports base R objects/classes
+  as well as 'units', 'integer64', 'xts'/ 'zoo', 'tibble', 'grouped_df', 'data.table',
+  'sf', and 'pseries'/'pdata.frame'.
 authors:
 - family-names: Krantz
   given-names: Sebastian
@@ -45,7 +45,7 @@ preferred-citation:
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
 url: https://sebkrantz.github.io/collapse/
-date-released: '2025-01-06'
+date-released: '2025-05-24'
 contact:
 - family-names: Krantz
   given-names: Sebastian
@@ -76,7 +76,7 @@ references:
   - family-names: Krantz
     given-names: Sebastian
   year: '2025'
-  notes: R package version 2.0.19
+  notes: R package version 2.1.2
   doi: 10.5281/zenodo.8433090
   url: https://sebkrantz.github.io/collapse/
 - type: software
@@ -89,7 +89,7 @@ references:
     name: R Foundation for Statistical Computing
     address: Vienna, Austria
   year: '2025'
-  version: '>= 3.4.0'
+  version: '>= 3.5.0'
 - type: software
   title: Rcpp
   abstract: 'Rcpp: Seamless R and C++ Integration'
@@ -202,6 +202,10 @@ references:
   - family-names: Schwendinger
     given-names: Benjamin
     orcid: https://orcid.org/0000-0003-3315-8114
+  - family-names: Krylov
+    given-names: Ivan
+    email: ikrylov@disroot.org
+    orcid: https://orcid.org/0000-0002-0172-3812
   year: '2025'
   doi: 10.32614/CRAN.package.data.table
 - type: software
@@ -575,12 +579,14 @@ references:
   title: bit64
   abstract: 'bit64: A S3 Class for Vectors of 64bit Integers'
   notes: Suggests
-  url: https://github.com/truecluster/bit64
+  url: https://github.com/r-lib/bit64
   repository: https://CRAN.R-project.org/package=bit64
   authors:
+  - family-names: Chirico
+    given-names: Michael
+    email: michaelchirico4@gmail.com
   - family-names: Oehlschlägel
     given-names: Jens
-    email: Jens.Oehlschlaegel@truecluster.com
   year: '2025'
   doi: 10.32614/CRAN.package.bit64
 
