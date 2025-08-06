@@ -724,8 +724,8 @@ tochar <- function(x) if(is.character(x)) x else as.character(x)  # if(is.object
 # }
 
 switch_msg <- function(msg, which = NULL) {
-  if(is.null(which)) stop(msg)
-  switch(which, error = stop(msg), message = message(msg), warning = warning(msg))
+  if(is.null(which)) stop(msg, call. = FALSE)
+  switch(which, error = stop(msg, call. = FALSE), message = message(msg), warning = warning(msg, call. = FALSE))
 }
 
 unused_arg_action <- function(call, ...) {

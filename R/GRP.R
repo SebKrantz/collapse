@@ -103,8 +103,8 @@ GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, 
     if(inherits(X, "GRP")) return(X)
     if(is.null(by)) {
       by <- seq_along(unclass(X))
-      # This is so that fgroup_by(iris, Species = GRP(Species)) is possible.
-      if(length(by) == 1L && is.list(.subset2(X, 1L)) && inherits(.subset2(X, 1L), "GRP")) return(.subset2(X, 1L))
+      # # This is so that fgroup_by(iris, Species = GRP(Species)) is possible.
+      # if(length(by) == 1L && is.list(.subset2(X, 1L)) && inherits(.subset2(X, 1L), "GRP")) return(.subset2(X, 1L))
       namby <- attr(X, "names")
       if(is.null(namby)) attr(X, "names") <- namby <- paste0("Group.", by)
       o <- switchGRP(X, na.last, decreasing, return.groups || !use.group, TRUE, sort, use.group)

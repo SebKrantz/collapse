@@ -104,7 +104,7 @@ join <- function(x, y,
 
   if(multiple) {
     g <- groupv(if(rjoin) x[ixon] else y[iyon], group.sizes = TRUE)
-    if(verbose) mi <- m
+    mi <- m
     m <- multi_match(m, g)
     if(is.list(m)) {
       multiple <- 2L
@@ -122,8 +122,14 @@ join <- function(x, y,
     nx <- if(rjoin) attr(m, "N.distinct") else Nx - attr(m, "N.nomatch")
     ny <- if(rjoin) Ny - attr(m, "N.nomatch") else attr(m, "N.distinct")
     if(length(require)) {
-      if(length(require$x) && require$x > nx/Nx) switch_msg(sprintf("Matched %#.1f%% of records in table %s (x), but %#.1f%% is required", nx/Nx*100, x_name, require$x*100), require$fail)
-      if(length(require$y) && require$y > ny/Ny) switch_msg(sprintf("Matched %#.1f%% of records in table %s (y), but %#.1f%% is required", ny/Ny*100, y_name, require$y*100), require$fail)
+      if(length(require$x) && require$x > nx/Nx) {
+        msg <- sprintf("Matched %#.1f%% of records in table %s (x), but %#.1f%% is required", nx/Nx*100, x_name, require$x*100)
+        switch_msg(msg, require$fail)
+      }
+      if(length(require$y) && require$y > ny/Ny) {
+        msg <- sprintf("Matched %#.1f%% of records in table %s (y), but %#.1f%% is required", ny/Ny*100, y_name, require$y*100)
+        switch_msg(msg, require$fail)
+      }
     }
     if(verbose) {
       cin_x <- if(verbose == 2L) paste0(xon, ":", vclasses(x[ixon], FALSE)) else xon

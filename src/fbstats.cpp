@@ -182,7 +182,10 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
             if(max[k] < x[i]) max[k] = x[i];
           }
         }
-        for(int i = ng; i--; ) if(!std::isnan(M2[i])) M2[i] = sqrt(M2[i]/(sumw[i]-1));
+        for(int i = ng; i--; ) {
+          if(n[i] == 0) mean[i] = min[i] = max[i] = NA_REAL;
+          else if(!std::isnan(M2[i])) M2[i] = sqrt(M2[i]/(sumw[i]-1));
+        }
       }
       if(setn) {
         Rf_dimnamesgets(result, List::create(gn, get_stats_names(5+weights)));
@@ -329,9 +332,12 @@ NumericVector fbstatstemp(NumericVector x, bool ext = false, int ng = 0, Integer
            M4[k] += wg[i] * dn2;
          }
          for(int i = ng; i--; ) {
-           M4[i] = (sumw[i]*M4[i])/(M2[i]*M2[i]); // kurtosis // Excess kurtosis: - 3;
-           M3[i] = (sqrt(sumw[i])*M3[i]) / sqrt(pow(M2[i],3)); // Skewness
-           M2[i] = sqrt(M2[i]/(sumw[i]-1)); // Standard Deviation
+           if(n[i] == 0) mean[i] = min[i] = max[i] = M3[i] = M4[i] = NA_REAL;
+           else {
+             M4[i] = (sumw[i]*M4[i])/(M2[i]*M2[i]); // kurtosis // Excess kurtosis: - 3;
+             M3[i] = (sqrt(sumw[i])*M3[i]) / sqrt(pow(M2[i],3)); // Skewness
+             M2[i] = sqrt(M2[i]/(sumw[i]-1)); // Standard Deviation
+           }
          }
        }
        if(setn) {
