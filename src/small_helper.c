@@ -1,5 +1,5 @@
 #include "collapse_c.h"
-// #include "data.table.h"
+#include "data.table.h"
 // #ifndef USE_RINTERNALS
 // #define USE_RINTERNALS
 // #endif
@@ -653,5 +653,22 @@ SEXP unlock_collapse_namespace(SEXP env) {
   R_unLockBinding(install(".FAST_FUN_MOPS"), env);
   R_unLockBinding(install(".COLLAPSE_ALL_EXPORTS"), env);
   return CLP_FRAME_IS_LOCKED(env) == 0 ? ScalarLogical(1) : ScalarLogical(0);
+}
+
+
+SEXP integer64toREAL(SEXP x) {
+  int n = length(x);
+
+  SEXP out = PROTECT(allocVector(REALSXP, n));
+  double* restrict p_out = REAL(out);
+  const int64_t *p_x = INTEGER64_PTR_RO(x);
+
+  #pragma omp simd
+  for (int i = 0; i < n; ++i) {
+    p_out[i] = p_x[i] == NA_INTEGER64 ? NA_REAL : p_x[i];
+  }
+
+  UNPROTECT(1);
+  return out;
 }
 

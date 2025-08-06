@@ -33,10 +33,16 @@ SEXP match_single(SEXP x, SEXP table, SEXP nomatch) {
   }
   int tx = TYPEOF(x), tt = TYPEOF(table);
   // factor is between logical and integer
-  if(tx == INTSXP && isFactor(x)) tx -= 1;
-  if(tt == INTSXP && isFactor(table)) tt -= 1;
   if(tx == LGLSXP) tx = INTSXP;
+  else if(tx == INTSXP && isFactor(x)) tx -= 1;
+  else if(tx == REALSXP && isObject(x) && INHERITS(x, char_integer64) && !INHERITS(table, char_integer64)) {
+    PROTECT(x = integer64toREAL(x)); ++nprotect;
+  }
   if(tt == LGLSXP) tt = INTSXP;
+  else if(tt == INTSXP && isFactor(table)) tt -= 1;
+  else if(tt == REALSXP && isObject(table) && INHERITS(table, char_integer64) && !INHERITS(x, char_integer64)) {
+    PROTECT(table = integer64toREAL(table)); ++nprotect;
+  }
 
   if(tx != tt) {
     if(tx < tt) { // table could be integer, double, complex, character....
@@ -342,10 +348,16 @@ SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
   x = VECTOR_ELT(out, 0);
   table = VECTOR_ELT(out, 1);
   int tx = TYPEOF(x), tt = TYPEOF(table);
-  if(tx == INTSXP && isFactor(x)) tx -= 1;
-  if(tt == INTSXP && isFactor(table)) tt -= 1;
   if(tx == LGLSXP) tx = INTSXP;
+  else if(tx == INTSXP && isFactor(x)) tx -= 1;
+  else if(tx == REALSXP && isObject(x) && INHERITS(x, char_integer64) && !INHERITS(table, char_integer64)) {
+    PROTECT(x = integer64toREAL(x)); ++nprotect;
+  }
   if(tt == LGLSXP) tt = INTSXP;
+  else if(tt == INTSXP && isFactor(table)) tt -= 1;
+  else if(tt == REALSXP && isObject(table) && INHERITS(table, char_integer64) && !INHERITS(x, char_integer64)) {
+    PROTECT(table = integer64toREAL(table)); ++nprotect;
+  }
 
 
   if(tx != tt) {

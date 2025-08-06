@@ -1,6 +1,6 @@
 # collapse 2.1.2.9000
 
-* Various bug fixes (#772 and #779).
+* Various bug fixes (#769, #772 and #779).
 
 # collapse 2.1.2
 

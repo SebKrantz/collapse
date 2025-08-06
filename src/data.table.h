@@ -25,6 +25,12 @@
 // for use with bit64::integer64
 #define NA_INTEGER64  INT64_MIN
 #define MAX_INTEGER64 INT64_MAX
+#ifndef INTEGER64_PTR
+#define INTEGER64_PTR(x) ((int64_t*) REAL(x))
+#endif
+#ifndef INTEGER64_PTR_RO
+#define INTEGER64_PTR_RO(x) ((int64_t*) REAL_RO(x))
+#endif
 
 // init.c // https://stackoverflow.com/questions/1410563/what-is-the-difference-between-a-definition-and-a-declaration
 extern SEXP char_integer64;
