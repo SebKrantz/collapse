@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.2.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -282,7 +282,7 @@ wrappers. For example</p>
 are quite efficient - but if you want to change all inputs
 programmatically it makes sense to go down one level - your code will
 also become safer.<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;If you do use &lt;code&gt;&lt;a href="../reference/GRP.html"&gt;fgroup_by()&lt;/a&gt;&lt;/code&gt; in a package use
-it with non-standard evaluation, i.e.,
+it with non-standard evaluation, e.g.,
 &lt;code&gt;fgroup_by(cyl, vs, am)&lt;/code&gt;. Don’t do
 &lt;code&gt;ind &amp;lt;- c("cyl", "vs", "am")&lt;/code&gt; and then
 &lt;code&gt;fgroup_by(ind)&lt;/code&gt; as the data may contain a column called
@@ -306,10 +306,7 @@ its <a href="https://fastverse.github.io/fastverse/#suggested-extensions" class=
 packages list</a>. For example if you want to efficiently replace
 multiple items in a vector, <code>kit::vswitch()/nswitch()</code> can be
 pretty magical. Also functions like
-<code>data.table::set()/rowid()</code> etc. are great, e.g., <a href="https://github.com/SebKrantz/collapse/issues/627" class="external-link">recent
-issue</a>: what is the <em>collapse</em> equivalent to a grouped
-<code>dplyr::slice_head(n)</code>? It would be
-<code>fsubset(data, data.table::rowid(id1, id2, ...) &lt;= n)</code>.</p>
+<code>data.table::set()/rowid()</code> etc. are great.</p>
 </div>
 <div class="section level2">
 <h2 id="point-2-think-about-memory-and-optimize">Point 2: Think About Memory and Optimize<a class="anchor" aria-label="anchor" href="#point-2-think-about-memory-and-optimize"></a>
