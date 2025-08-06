@@ -1,3 +1,7 @@
+# collapse 2.1.2.9000
+
+* Various bug fixes (#772 and #779).
+
 # collapse 2.1.2
 
 * `na_insert()` has new argument `set` to do this by reference. 
