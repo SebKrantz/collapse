@@ -104,7 +104,7 @@ join <- function(x, y,
 
   if(multiple) {
     g <- groupv(if(rjoin) x[ixon] else y[iyon], group.sizes = TRUE)
-    if(verbose) mi <- m
+    mi <- m
     m <- multi_match(m, g)
     if(is.list(m)) {
       multiple <- 2L
