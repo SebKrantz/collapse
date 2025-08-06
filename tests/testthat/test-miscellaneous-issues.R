@@ -472,6 +472,9 @@ test_that("Misc bugs", {
   expect_visible(qsu(mtcars$mpg, mtcars$cyl, mtcars$vs, mtcars$wt, higher = TRUE))
   expect_visible(qsu(mtcars$mpg, mtcars$cyl, mtcars$vs, mtcars$wt, array = FALSE))
   expect_visible(qsu(mtcars$mpg, mtcars$cyl, mtcars$vs, mtcars$wt, higher = TRUE, array = FALSE))
+  df1 <- data.frame(x = 1:3, y = 4:6)
+  df2 <- data.frame(x = 2:5, z = 2:5)
+  expect_visible(join(df1, df2, require = list(x = 1, y = 1, fail = "message"), verbose = 0, multiple = TRUE))
 })
 
 
