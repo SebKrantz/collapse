@@ -114,6 +114,7 @@ SEXP replace_outliers(SEXP x, SEXP limits, SEXP value, SEXP single_limit, SEXP s
 SEXP na_locf(SEXP x, SEXP Rset);
 SEXP na_focb(SEXP x, SEXP Rset);
 SEXP multi_match(SEXP m, SEXP g);
+SEXP integer64toREAL(SEXP x);
 // fnobs rewritten in C:
 SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
