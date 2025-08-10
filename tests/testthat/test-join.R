@@ -146,5 +146,15 @@ d2 = mtcars |> fcompute(v2 = mpg, g = seq_len(32)+100)
 expect_true(all_identical(with(join(d1, d2, verbose = 0), list(v1, v2))))
 expect_true(all_identical(with(join(d1, d2, verbose = 0, sort = TRUE), list(v1, v2))))
 
+if(requireNamespace("bit64", quietly = TRUE)) test_that("join() works with integer64", {
+    t1 <- data.frame(id = 1:5)
+    t2 <- fmutate(t1, id = bit64::as.integer64(id))
+    for (h in c("l", "r", "i", "f")) {
+      expect_identical(fnrow(join(t1, t2, how = h, sort = FALSE, verbose = 0)), 5L)
+      expect_identical(fnrow(join(t2, t1, how = h, sort = FALSE, verbose = 0)), 5L)
+      expect_identical(fnrow(join(t1, t2, how = h, sort = TRUE, verbose = 0)), 5L)
+      expect_identical(fnrow(join(t2, t1, how = h, sort = TRUE, verbose = 0)), 5L)
+    }
+})
 
 set_collapse(opts)

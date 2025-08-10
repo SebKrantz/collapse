@@ -665,7 +665,7 @@ SEXP integer64toREAL(SEXP x) {
 
   #pragma omp simd
   for (int i = 0; i < n; ++i) {
-    p_out[i] = p_x[i] == NA_INTEGER64 ? NA_REAL : p_x[i];
+    p_out[i] = p_x[i] == NA_INTEGER64 ? NA_REAL : (double)p_x[i];
   }
 
   UNPROTECT(1);

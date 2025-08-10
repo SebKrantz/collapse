@@ -18,7 +18,7 @@ fslicev(x, cols = NULL, n = 1, how = "first", order.by = NULL,
   \item{x}{a matrix, data frame or list-like object, including 'grouped_df'.}
   \item{\dots}{for \code{fslice}: names or sequences of columns to group by - passed to \code{\link{fselect}}. If \code{x} is a matrix: atomic vectors to group \code{x}. Can be empty to operate on (un)grouped data. For \code{fslicev}: further arguments passed to \code{\link{GRP}} (such as \code{decreasing}, \code{na.last}, \code{method}). }
   \item{cols}{select columns to group by, using column names, indices, a logical vector or a selector function (e.g. \code{is_categorical}). It can also be a list of vectors, or, if \code{x} is a matrix, a single vector.}
-  \item{n}{integer or proportion (if < 1). Number of rows to select from each group. If a proportion is provided, it is converted to the equivalent number of rows.}
+  \item{n}{integer or proportion (if < 1). Number of rows to select from each group. If a proportion is provided, it is converted to the equivalent number of rows using \code{max(1, round(n * nrow(x)))} or \code{max(1, round(n * nrow(x) / N.groups))} for grouped data.}
   \item{how}{character. Method to select rows. One of:
     \itemize{
       \item \code{"first"}: select first \code{n} rows

@@ -351,14 +351,13 @@ SEXP coerce_single_to_equal_types(SEXP x, SEXP table) {
   if(tx == LGLSXP) tx = INTSXP;
   else if(tx == INTSXP && isFactor(x)) tx -= 1;
   else if(tx == REALSXP && isObject(x) && INHERITS(x, char_integer64) && !INHERITS(table, char_integer64)) {
-    PROTECT(x = integer64toREAL(x)); ++nprotect;
+    SET_VECTOR_ELT(out, 0, integer64toREAL(x)); x = VECTOR_ELT(out, 0);
   }
   if(tt == LGLSXP) tt = INTSXP;
   else if(tt == INTSXP && isFactor(table)) tt -= 1;
   else if(tt == REALSXP && isObject(table) && INHERITS(table, char_integer64) && !INHERITS(x, char_integer64)) {
-    PROTECT(table = integer64toREAL(table)); ++nprotect;
+    SET_VECTOR_ELT(out, 1, integer64toREAL(table)); table = VECTOR_ELT(out, 1);
   }
-
 
   if(tx != tt) {
     if(tx > tt) {
