@@ -62,7 +62,7 @@
 <dd><p>select columns to group by, using column names, indices, a logical vector or a selector function (e.g. <code>is_categorical</code>). It can also be a list of vectors, or, if <code>x</code> is a matrix, a single vector.</p></dd>
 
   <dt id="arg-n">n<a class="anchor" aria-label="anchor" href="#arg-n"></a></dt>
-<dd><p>integer or proportion (if &lt; 1). Number of rows to select from each group. If a proportion is provided, it is converted to the equivalent number of rows.</p></dd>
+<dd><p>integer or proportion (if &lt; 1). Number of rows to select from each group. If a proportion is provided, it is converted to the equivalent number of rows using <code>max(1, round(n * nrow(x)))</code> or <code>max(1, round(n * nrow(x) / N.groups))</code> for grouped data.</p></dd>
 
   <dt id="arg-how">how<a class="anchor" aria-label="anchor" href="#arg-how"></a></dt>
 <dd><p>character. Method to select rows. One of:</p><ul><li><p><code>"first"</code>: select first <code>n</code> rows</p></li>
