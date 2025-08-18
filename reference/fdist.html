@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,15 +116,15 @@
 <span class="r-in"><span>  <span class="fu">fdist</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, nthreads <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="op">(</span><span class="va">x</span><span class="op">-</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: milliseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min       lq     mean   median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y) 1.002122 1.028259 1.348562 1.068050 1.556483</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2) 1.002532 1.021249 1.283232 1.045828 1.548631</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 3.250275 3.464951 7.630637 4.588208 6.400531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    3.448100   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    2.632487   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  165.067968   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                       expr      min       lq     mean    median        uq</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                fdist(x, y)  926.559  928.076  941.230  932.1965  943.1845</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fdist(x, y, nthreads = 2)  925.616  928.117  943.289  931.2125  941.1550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       sqrt(sum((x - y)^2)) 2001.251 2074.784 2643.618 2123.3490 2510.6965</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1187.852   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  1189.738   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  5695.351   100</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
