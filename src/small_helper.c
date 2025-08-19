@@ -762,6 +762,7 @@ SEXP funlist(SEXP x) {
   }
 
   if(isObject(px[elem])) copyMostAttrib(px[elem], res);
+  R_Free(types);
   UNPROTECT(nprotect);
   return res;
 }
