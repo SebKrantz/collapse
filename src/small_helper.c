@@ -672,3 +672,96 @@ SEXP integer64toREAL(SEXP x) {
   return out;
 }
 
+SEXP funlist(SEXP x) {
+
+  if(TYPEOF(x) != VECSXP) return x;
+  int l = length(x);
+  if(l < 1) return R_NilValue;
+  if(l == 1) return VECTOR_ELT(x, 0);
+
+  int n = 0, nt = 0, mt = 0, elem = 0, nprotect = 0;
+  const SEXP *px = SEXPPTR_RO(x);
+  int *restrict types = (int*)R_Calloc(27, int);
+
+  // #pragma omp simd
+  for(int i = 0; i < l; ++i) {
+    n += length(px[i]);
+    ++types[TYPEOF(px[i])];
+  }
+  for(int i = 0; i < 27; ++i) {
+    if(types[i] > 0) {
+      mt = i; ++nt;
+    }
+  }
+
+  // If more than one type: need to coerce to largest type
+  if(nt > 1) {
+    SEXP y = PROTECT(allocVector(VECSXP, l)); ++nprotect;
+    for(int i = 0; i < l; ++i) {
+      if(TYPEOF(px[i]) == mt) {
+        elem = i;
+        SET_VECTOR_ELT(y, i, px[i]);
+      } else SET_VECTOR_ELT(y, i, coerceVector(px[i], mt));
+    }
+    px = SEXPPTR_RO(y);
+  }
+
+  // Now unlisting
+  SEXP res = PROTECT(allocVector(mt, n)); ++nprotect; n = 0;
+
+  switch(mt) {
+    case INTSXP:
+    case LGLSXP: {
+      int *pres = INTEGER(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const int *pxi = INTEGER_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    case REALSXP: {
+      double *pres = REAL(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const double *pxi = REAL_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    case STRSXP:
+    case VECSXP:
+    case EXPRSXP: {
+      SEXP *pres = SEXPPTR(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const SEXP *pxi = SEXPPTR_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    case CPLXSXP: {
+      Rcomplex *pres = COMPLEX(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const Rcomplex *pxi = COMPLEX_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    case RAWSXP: {
+      Rbyte *pres = RAW(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const Rbyte *pxi = RAW_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    default: error("unsupported type: %s", type2char(mt));
+  }
+
+  if(isObject(px[elem])) copyMostAttrib(px[elem], res);
+  UNPROTECT(nprotect);
+  return res;
+}
