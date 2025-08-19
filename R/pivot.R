@@ -1,4 +1,4 @@
-
+# TODO: 'to' in wider and recast pivot should be optional (if only one variable is pivoted -> should be able to set to = NULL).
 
 proc_names_longer <- function(x) {
   if(is.null(x)) return(list("variable", "value"))
@@ -313,7 +313,7 @@ pivot <- function(data,
           }
           value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, FUN, na.rm))
           if(length(labels)) value_cols <- lapply(value_cols, add_labels, labels)
-          value_cols <- unlist(if(transpose[1L]) t_list2(value_cols) else value_cols, FALSE, FALSE)
+          value_cols <- funlist(if(transpose[1L]) t_list2(value_cols) else value_cols)
           namv_res <- if(transpose[2L]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
           names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)
         } else {

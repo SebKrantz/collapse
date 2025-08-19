@@ -105,7 +105,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
     }
     names(res) <- nam
     res[[1L]] <- if(keep.group_vars) g$groups else NULL
-    res <- unlist(res, FALSE, use.names = TRUE)
+    res <- unlist(res, recursive = FALSE, use.names = TRUE)
     # replicating groups if more rows per computation...
     if(!all_eq(lr <- vlengths(res, FALSE))) {
       # if(!keep.group_vars) stop("all computations need to result in vectors of equal length")
@@ -136,7 +136,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
         } else e[[i]] <- as.call(list(quote(list), ei))
       }
       # return(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe))
-      res <- unlist(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe), FALSE, use.names = TRUE)
+      res <- unlist(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe), recursive = FALSE, use.names = TRUE)
     } else res <- eval(e, .data, pe)
     # return(res)
     if(!all_eq(lr <- vlengths(res, FALSE))) {

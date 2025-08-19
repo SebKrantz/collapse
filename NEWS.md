@@ -1,3 +1,7 @@
+# collapse 2.1.3.9000
+
+* *collapse* now has a custom internal version of `unlist()` with better attribute preservation capabilities and a slight speed improvement. Thanks @aidanhorn (#785).
+
 # collapse 2.1.3
 
 * Various bug fixes (#769, #772 and #779).

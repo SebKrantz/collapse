@@ -90,6 +90,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_lassign", (DL_FUNC) &lassign, 4},
   {"C_gwhich_first", (DL_FUNC) &gwhich_first, 3},
   {"C_gslice_multi", (DL_FUNC) &gslice_multi, 4},
+  {"C_funlist", (DL_FUNC) &funlist, 1},
   {"Cpp_seqid", (DL_FUNC) &_collapse_seqid, 7},
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 1},

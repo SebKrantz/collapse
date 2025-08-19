@@ -350,12 +350,12 @@ gsplit_single_apply <- function(x, g, ex, v, encl, unl = TRUE) {
   funexpr[[4]] <- NULL
   fun <- eval(funexpr, encl, baseenv())
   res <- lapply(gsplit(x, g), fun)
-  if(unl) copyMostAttributes(unlist(res, FALSE, FALSE), x) else res
+  if(unl) copyMostAttributes(funlist(res), x) else res
 }
 
 # Old version: more expensive...
 # gsplit_single_apply <- function(x, g, ex, v, encl)
-#   copyMostAttributes(unlist(lapply(gsplit(x, g), function(i) eval(ex, `names<-`(list(i), v), encl)), FALSE, FALSE), x)
+#   copyMostAttributes(funlist(lapply(gsplit(x, g), function(i) eval(ex, `names<-`(list(i), v), encl))), x)
 
 gsplit_multi_apply <- function(x, g, ex, encl, SD = FALSE) {
   sx <- seq_along(x)
@@ -510,12 +510,12 @@ do_across <- function(.cols = NULL, .fns, ..., .names = NULL, .apply = "auto", .
     # return(r)
     if(isFALSE(.transpose) || (is.character(.transpose) && !all_eq(vlengths(r, FALSE)))) {
       # stop("reached here")
-      res <- unlist(r, FALSE, use.names = TRUE) # need use.names= TRUE here
+      res <- unlist(r, recursive = FALSE, use.names = TRUE) # need use.names= TRUE here
       # return(list(res = res, r = r))
     } else {
-      res <- unlist(t_list2(r), FALSE, FALSE)
+      res <- funlist(t_list2(r))
       if(is.null(names(res)) && is.null(names))
-        names(res) <- unlist(t_list2(lapply(r, names)), FALSE, FALSE)
+        names(res) <- funlist(t_list2(lapply(r, names)))
     }
   }
   if(.summ) return(if(is.null(names)) res else `names<-`(res, names))
@@ -572,7 +572,7 @@ dots_apply_grouped <- function(d, g, f, dots) {
       if(is.null(names(mord)) && is.null(names(asl))) warning("If some arguments have the same length as the data (vectors) while others have length 1 (scalars), please ensure that at least one of the two have keywords e.g. argname = value. This is because the latter are passed to the 'MoreArgs' argument of .mapply, and thus the order in which arguments are passed to the function might be different from your top-level call. In particular, .mapply will first pass the vector valued arguments followed by the scalar valued ones.")
       FUN <- function(x) .mapply(f, c(list(gsplit(x, g)), asl), mord) # do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE, MoreArgs = mord), asl))
     } else FUN <- function(x) .mapply(f, c(list(gsplit(x, g)), asl), NULL) # do.call(mapply, c(list(f, gsplit(x, g), SIMPLIFY = FALSE, USE.NAMES = FALSE), asl))
-    return(lapply(d, function(y) copyMostAttributes(unlist(FUN(y), FALSE, FALSE), y)))
+    return(lapply(d, function(y) copyMostAttributes(funlist(FUN(y)), y)))
   }
   # No arguments to be split
   do.call(lapply, c(list(d, copysplaplfun, g, f), dots))
@@ -651,12 +651,12 @@ do_grouped_expr <- function(ei, nfun, .data, g, pe) {
   if(length(v) > 1L) {
     # Could include global environmental variables e.g. fmutate(data, new = mean(var) + q)
     namd <- names(.data)
-    if(length(wv <- na_rm(match(v, namd))) > 1L) return(unlist(gsplit_multi_apply(.data[wv], g, ei, pe), FALSE, FALSE))
+    if(length(wv <- na_rm(match(v, namd))) > 1L) return(funlist(gsplit_multi_apply(.data[wv], g, ei, pe)))
     return(gsplit_single_apply(.data[[wv]], g, ei, namd[wv], pe))
   }
   if(nfun == 1L) {
     res <- eval(othFUN_compute(ei), .data, pe)
-    return(copyMostAttributes(unlist(res, FALSE, FALSE), .data[[v]]))
+    return(copyMostAttributes(funlist(res), .data[[v]]))
   }
   gsplit_single_apply(.data[[v]], g, ei, v, pe)
 }
@@ -773,8 +773,8 @@ fmutate <- function(.data, ..., .keep = "all", .cols = NULL) {
   .data <- if(length(.keep) > 1L) keep_v(.data, c(.keep, nam[-1L])) else
     switch(.keep,
            all = .data,
-           used = keep_v(.data, c(namdata[namdata %in% c(if(gdfl) g$group.vars, unlist(lapply(e[-1L], all.vars), FALSE, FALSE), nam[-1L])], nam[-1L])),
-           unused = keep_v(.data, c(namdata[namdata %in% c(if(gdfl) g$group.vars, fsetdiff(namdata, unlist(lapply(e[-1L], all.vars), FALSE, FALSE)), nam[-1L])], nam[-1L])),
+           used = keep_v(.data, c(namdata[namdata %in% c(if(gdfl) g$group.vars, funlist(lapply(e[-1L], all.vars)), nam[-1L])], nam[-1L])),
+           unused = keep_v(.data, c(namdata[namdata %in% c(if(gdfl) g$group.vars, fsetdiff(namdata, funlist(lapply(e[-1L], all.vars))), nam[-1L])], nam[-1L])),
            none = keep_v(.data, c(if(gdfl) g$group.vars, nam[-1L])), # g$group.vars[g$group.vars %!in% nam[-1L]] -> inconsistent and inefficient...
            keep_v(.data, c(.keep, nam[-1L])))
 

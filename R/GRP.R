@@ -50,6 +50,8 @@ greorder <- function(x, g, ...) {
   .Call(C_greorder, x, g)
 }
 
+funlist <- function(x) .Call(C_funlist, x)
+
 G_guo <- function(g) {
   if(is.atomic(g)) {
     if(inherits(g, c("factor", "qG"))) {
@@ -584,7 +586,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   gs <- vlengths(gr, FALSE)
   id <- .Call(C_groups2GRP, gr, fnrow(X), gs)
   return(`oldClass<-`(list(N.groups = ng, # The C code here speeds up things a lot !!
-                        group.id = id,  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
+                        group.id = id,  # Old: rep(seq_len(ng), gs)[order(funlist(gr))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
                         group.sizes = gs,
                         groups = if(return.groups) g[-lg] else NULL, # better reclass afterwards ? -> Nope, this is only used in internal codes...
                         group.vars = names(g)[-lg],

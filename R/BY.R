@@ -42,7 +42,7 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]],
 
   } else { # Function does not assign names... or not using group names...
 
-    res <- unlist(res, FALSE, FALSE)
+    res <- funlist(res)
 
     if(length(res) == g[[1L]]) {
 
@@ -66,13 +66,13 @@ BY.default <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]],
 #   sx <- gsplit(x, g)
 #   if(length(sx) > 100000L && length(r1 <- match.fun(FUN)(sx[[1L]], ...)) == 1L)
 #     return(copyMostAttributes(vapply(sx, FUN, r1, ..., USE.NAMES = FALSE), x))
-#   copyMostAttributes(unlist(lapply(sx, FUN, ...), FALSE, FALSE), x)
+#   copyMostAttributes(funlist(lapply(sx, FUN, ...)), x)
 # }
 
-copysplaplfun <- function(x, g, FUN, ...) copyMostAttributes(unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE), x)
-copysplmaplfun <- function(x, g, FUN, asl, mord) copyMostAttributes(unlist(.mapply(FUN, c(list(gsplit(x, g)), asl), mord), FALSE, FALSE), x)
-splaplfun <- function(x, g, FUN, ...) unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE)
-splmaplfun <- function(x, g, FUN, asl, mord) unlist(.mapply(FUN, c(list(gsplit(x, g)), asl), mord), FALSE, FALSE)
+copysplaplfun <- function(x, g, FUN, ...) copyMostAttributes(funlist(lapply(gsplit(x, g), FUN, ...)), x)
+copysplmaplfun <- function(x, g, FUN, asl, mord) copyMostAttributes(funlist(.mapply(FUN, c(list(gsplit(x, g)), asl), mord)), x)
+splaplfun <- function(x, g, FUN, ...) funlist(lapply(gsplit(x, g), FUN, ...))
+splmaplfun <- function(x, g, FUN, asl, mord) funlist(.mapply(FUN, c(list(gsplit(x, g)), asl), mord))
 
 BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]], reorder = TRUE,
                           expand.wide = FALSE, parallel = FALSE, mc.cores = 1L,
@@ -163,7 +163,7 @@ BY.data.frame <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"
         reorder <- FALSE
       }
     } else { # function doesn't assign names, different options.
-      res1 <- unlist(res1, FALSE, FALSE)
+      res1 <- funlist(res1)
       if(length(res1) == g[[1L]]) rn <- GRPnames(g)
       else if(matl) {
         rn <- if(length(res1) == n && is.character(rownam) && rownam[1L] != "1" && (reorder || isTRUE(g$ordered[2L]))) rownam else NULL
@@ -286,7 +286,7 @@ BY.matrix <- function(x, g, FUN, ..., use.g.names = TRUE, sort = .op[["sort"]], 
         reorder <- FALSE
       }
     } else { # function doesn't assign names, different options.
-      res1 <- unlist(res1, FALSE, FALSE)
+      res1 <- funlist(res1)
       rn <- if(length(res1) == g[[1L]]) GRPnames(g) else
             if(length(res1) == n && (reorder || isTRUE(g$ordered[2L]))) dn[[1L]] else NULL
     }
