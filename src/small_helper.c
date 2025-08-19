@@ -681,9 +681,9 @@ SEXP funlist(SEXP x) {
 
   int n = 0, nt = 0, mt = 0, elem = 0, nprotect = 0;
   const SEXP *px = SEXPPTR_RO(x);
-  int *restrict types = (int*)R_Calloc(27, int);
 
-  // #pragma omp simd
+  // Sum lengths and determine maximum type
+  int *types = (int*)R_Calloc(27, int);
   for(int i = 0; i < l; ++i) {
     n += length(px[i]);
     ++types[TYPEOF(px[i])];
@@ -693,6 +693,7 @@ SEXP funlist(SEXP x) {
       mt = i; ++nt;
     }
   }
+  R_Free(types);
 
   // If more than one type: need to coerce to largest type
   if(nt > 1) {
@@ -762,7 +763,6 @@ SEXP funlist(SEXP x) {
   }
 
   if(isObject(px[elem])) copyMostAttrib(px[elem], res);
-  R_Free(types);
   UNPROTECT(nprotect);
   return res;
 }
