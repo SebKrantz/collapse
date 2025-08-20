@@ -16,7 +16,7 @@ void writeNA(SEXP v, const int from, const int n)
     memset(RAW(v)+from, 0, n*sizeof(Rbyte));
     break;
   case LGLSXP: {
-    Rboolean *vd = (Rboolean *)LOGICAL(v);
+    int *vd = (int *)LOGICAL(v);
     for (int i=from; i<=to; ++i) vd[i] = NA_LOGICAL;
   } break;
   case INTSXP: {
@@ -52,7 +52,7 @@ void writeNA(SEXP v, const int from, const int n)
 
 // Added, to replace memrecycle
 void writeValue(SEXP target, SEXP source, const int from, const int n) {
-  int tt = TYPEOF(target), coerce = TYPEOF(source) != tt, ls = LENGTH(source);
+  int tt = TYPEOF(target), coerce = TYPEOF(source) != tt, os = isObject(source), ls = LENGTH(source);
   if(coerce) source = PROTECT(coerceVector(source, tt));
   if(LENGTH(target) < n) error("Attempting to write %d elements to a vector of length %d", n, LENGTH(target));
   if(ls < n) {
@@ -64,7 +64,7 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
     case LGLSXP: {
-      Rboolean *vd = (Rboolean *)LOGICAL(target), value = (Rboolean)LOGICAL(source)[0];
+      int *vd = (int *)LOGICAL(target), value = (int)LOGICAL(source)[0];
       for (int i=from; i<=to; ++i) vd[i] = value;
     } break;
     case INTSXP: {
@@ -74,12 +74,13 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
     } break;
     case REALSXP: {
       if (INHERITS(target, char_integer64)) {
-      int64_t *vd = (int64_t *)REAL(target), value = (int64_t)REAL(source)[0];
-      for (int i=from; i<=to; ++i) vd[i] = value;
-    } else {
-      double *vd = REAL(target), value = REAL(source)[0];
-      for (int i=from; i<=to; ++i) vd[i] = value;
-    }
+        int64_t *vd = (int64_t *)REAL(target);
+        int64_t value = (coerce || os == 0) ? (int64_t)REAL(source)[0] : ((int64_t *)REAL(source))[0];
+        for (int i=from; i<=to; ++i) vd[i] = value;
+      } else {
+        double *vd = REAL(target), value = REAL(source)[0];
+        for (int i=from; i<=to; ++i) vd[i] = value;
+      }
     } break;
     case CPLXSXP: {
       Rcomplex *vd = COMPLEX(target), value = COMPLEX(source)[0];
@@ -101,11 +102,17 @@ void writeValue(SEXP target, SEXP source, const int from, const int n) {
       memcpy(INTEGER(target) + from, INTEGER(source), n * sizeof(int));
       break;
     case LGLSXP:
-      memcpy(LOGICAL(target) + from, LOGICAL(source), n * sizeof(Rboolean));
+      memcpy(LOGICAL(target) + from, LOGICAL(source), n * sizeof(int));
       break;
     case REALSXP: {
       if (INHERITS(target, char_integer64)) {
-        memcpy((int64_t *)REAL(target) + from, (int64_t *)REAL(source), n * sizeof(int64_t));
+        if(coerce || os == 0) {
+          int64_t *ptgt = (int64_t *)REAL(target) + from;
+          const double *ptcol = REAL_RO(source);
+          for(int i = 0; i != n; ++i) ptgt[i] = ptcol[i];
+        } else {
+          memcpy((int64_t *)REAL(target) + from, (int64_t *)REAL(source), n * sizeof(int64_t));
+        }
       } else {
         memcpy(REAL(target) + from, REAL(source), n * sizeof(double));
       }
@@ -172,14 +179,14 @@ void savetl(SEXP s)
     savedtl = (R_len_t *)tmp;
   }
   saveds[nsaved] = s;
-  savedtl[nsaved] = TRUELENGTH(s);
+  savedtl[nsaved] = TRULEN(s);
   nsaved++;
 }
 
 void savetl_end(void) {
   // Can get called if nothing has been saved yet (nsaved==0), or even if _init() hasn't been called yet (pointers NULL). Such
   // as to clear up before error. Also, it might be that nothing needed to be saved anyway.
-  for (int i=0; i<nsaved; i++) SET_TRUELENGTH(saveds[i],savedtl[i]);
+  for (int i=0; i<nsaved; i++) SET_TRULEN(saveds[i],savedtl[i]);
   free(saveds);  // possible free(NULL) which is safe no-op
   saveds = NULL;
   free(savedtl);
@@ -196,7 +203,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     error("use.names= should be TRUE, FALSE, or not used (\"check\" by default)");  // R levels converts "check" to NA
   if (!length(l)) return(l);
   if (TYPEOF(l) != VECSXP) error("Input to rbindlist must be a list. This list can contain data.tables, data.frames or plain lists.");
-  Rboolean usenames = LOGICAL(usenamesArg)[0];
+  int usenames = LOGICAL(usenamesArg)[0];
   const bool fill = LOGICAL(fillArg)[0];
   if (fill && usenames==NA_LOGICAL) {
     usenames=TRUE;
@@ -262,13 +269,13 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       if (isNull(li) || !LENGTH(li)) continue;
       const SEXP cn = getAttrib(li, R_NamesSymbol);
       if (!length(cn)) continue;
-      const SEXP *cnp = SEXPPTR(cn);
+      const SEXP *cnp = SEXPPTR_RO(cn);
       for (int j=0; j<thisncol; j++) {
         SEXP s = cnp[j];
-        if (TRUELENGTH(s)<0) continue;  // seen this name before
-        if (TRUELENGTH(s)>0) savetl(s);
+        if (TRULEN(s)<0) continue;  // seen this name before
+        if (TRULEN(s)>0) savetl(s);
         uniq[nuniq++] = s;
-        SET_TRUELENGTH(s,-nuniq);
+        SET_TRULEN(s,-nuniq);
       }
     }
     if (nuniq>0) {
@@ -281,7 +288,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     int *maxdup = (int *)calloc(nuniq, sizeof(int)); // the most number of dups for any name within one colname vector
     if (!counts || !maxdup) {
       // # nocov start
-      for (int i=0; i<nuniq; ++i) SET_TRUELENGTH(uniq[i], 0);
+      for (int i=0; i<nuniq; ++i) SET_TRULEN(uniq[i], 0);
       free(uniq); free(counts); free(maxdup);
       savetl_end();
       error("Failed to allocate nuniq=%d items working memory in rbindlist.c", nuniq);
@@ -293,11 +300,11 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       if (thisncol==0) continue;
       const SEXP cn = getAttrib(li, R_NamesSymbol);
       if (!length(cn)) continue;
-      const SEXP *cnp = SEXPPTR(cn);
+      const SEXP *cnp = SEXPPTR_RO(cn);
       memset(counts, 0, nuniq*sizeof(int));
       for (int j=0; j<thisncol; j++) {
         SEXP s = cnp[j];
-        counts[ -TRUELENGTH(s)-1 ]++;
+        counts[ -TRULEN(s)-1 ]++;
       }
       for (int u=0; u<nuniq; u++) {
         if (counts[u] > maxdup[u]) maxdup[u] = counts[u];
@@ -315,7 +322,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
     int *dupLink = (int *)malloc(ncol * sizeof(int)); // if a colname has occurred before (a dup) links from the 1st to the 2nd time in the final result, 2nd to 3rd, etc
     if (!colMapRaw || !uniqMap || !dupLink) {
       // # nocov start
-      for (int i=0; i<nuniq; ++i) SET_TRUELENGTH(uniq[i], 0);
+      for (int i=0; i<nuniq; ++i) SET_TRULEN(uniq[i], 0);
       free(uniq); free(counts); free(colMapRaw); free(uniqMap); free(dupLink);
       savetl_end();
       error("Failed to allocate ncol=%d items working memory in rbindlist.c", ncol);
@@ -333,11 +340,11 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
       if (!length(cn)) {
         for (int j=0; j<thisncol; j++) colMapRaw[i*ncol + j] = j;
       } else {
-        const SEXP *cnp = SEXPPTR(cn);
+        const SEXP *cnp = SEXPPTR_RO(cn);
         memset(counts, 0, nuniq*sizeof(int));
         for (int j=0; j<thisncol; j++) {
           SEXP s = cnp[j];
-          int w = -TRUELENGTH(s)-1;
+          int w = -TRULEN(s)-1;
           int wi = counts[w]++; // how many dups have we seen before of this name within this item
           if (uniqMap[w]==-1) {
             // first time seen this name across all items
@@ -354,7 +361,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         }
       }
     }
-    for (int i=0; i<nuniq; ++i) SET_TRUELENGTH(uniq[i], 0);  // zero out our usage of tl
+    for (int i=0; i<nuniq; ++i) SET_TRULEN(uniq[i], 0);  // zero out our usage of tl
     free(uniq); free(counts); free(uniqMap); free(dupLink);  // all local scope so no need to set to NULL
     savetl_end();  // restore R's usage
 
@@ -540,15 +547,15 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         //      c( a<c<b, c<b, 'c,b'   ) => a<c<b  because the regular factor/character items c and b exist in the ordered levels
         //      c( a<c<b, c<b, 'c,d'   ) => a<c<b<d  'd' from non-ordered item added on the end of longest ordered levels
         //      c( a<c<b, c<b<d<e )  => regular factor because this case isn't yet implemented. a<c<b<d<e would be possible in future (extending longest at the beginning or end)
-        const SEXP *sd = SEXPPTR(longestLevels);
+        const SEXP *sd = SEXPPTR_RO(longestLevels);
         nLevel = allocLevel = longestLen;
         levelsRaw = (SEXP *)malloc(nLevel * sizeof(SEXP));
         if (!levelsRaw) { savetl_end(); error("Failed to allocate working memory for %d ordered factor levels of result column %d", nLevel, idcol+j+1); }
         for (int k=0; k<longestLen; ++k) {
           SEXP s = sd[k];
-          if (TRUELENGTH(s)>0) savetl(s);
+          if (TRULEN(s)>0) savetl(s);
           levelsRaw[k] = s;
-          SET_TRUELENGTH(s,-k-1);
+          SET_TRULEN(s,-k-1);
         }
         for (int i=0; i<ll; ++i) {
           int w = usenames ? colMap[i*ncol + j] : j;
@@ -556,11 +563,11 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           SEXP thisCol = VECTOR_ELT(VECTOR_ELT(l, i), w);
           if (isOrdered(thisCol)) {
             SEXP levels = getAttrib(thisCol, R_LevelsSymbol);
-            const SEXP *levelsD = SEXPPTR(levels);
+            const SEXP *levelsD = SEXPPTR_RO(levels);
             const int n = length(levels);
             for (int k=0, last=0; k<n; ++k) {
               SEXP s = levelsD[k];
-              const int tl = TRUELENGTH(s);
+              const int tl = TRULEN(s);
               if (tl>=last) {  // if tl>=0 then also tl>=last because last<=0
                 if (tl>=0) {
                   snprintf(warnStr, sizeof(warnStr),   // not direct warning as we're inside tl region
@@ -595,12 +602,12 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
           SEXP thisCol = VECTOR_ELT(li, w);
           SEXP thisColStr = isFactor(thisCol) ? getAttrib(thisCol, R_LevelsSymbol) : (isString(thisCol) ? thisCol : VECTOR_ELT(coercedForFactor, i));
           const int n = length(thisColStr);
-          const SEXP *thisColStrD = SEXPPTR(thisColStr);  // D for data
+          const SEXP *thisColStrD = SEXPPTR_RO(thisColStr);  // D for data
           for (int k=0; k<n; ++k) {
             SEXP s = thisColStrD[k];
             if (s==NA_STRING ||             // remove NA from levels; test 1979 found by package emil when revdep testing 1.12.2 (#3473)
-                TRUELENGTH(s)<0) continue;  // seen this level before; handles removing dups from levels as well as finding unique of character columns
-            if (TRUELENGTH(s)>0) savetl(s);
+                TRULEN(s)<0) continue;  // seen this level before; handles removing dups from levels as well as finding unique of character columns
+            if (TRULEN(s)>0) savetl(s);
             if (allocLevel==nLevel) {       // including initial time when allocLevel==nLevel==0
               SEXP *tt = NULL;
               if (allocLevel<INT_MAX) {
@@ -611,7 +618,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
               if (tt==NULL) {
                 // # nocov start
                 // C spec states that if realloc() fails (above) the original block (levelsRaw) is left untouched: it is not freed or moved. We ...
-                for (int k=0; k<nLevel; k++) SET_TRUELENGTH(levelsRaw[k], 0);   // ... rely on that in this loop which uses levelsRaw.
+                for (int k=0; k<nLevel; k++) SET_TRULEN(levelsRaw[k], 0);   // ... rely on that in this loop which uses levelsRaw.
                 free(levelsRaw);
                 savetl_end();
                 error("Failed to allocate working memory for %d factor levels of result column %d when reading item %d of item %d", allocLevel, idcol+j+1, w+1, i+1);
@@ -619,7 +626,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
               }
               levelsRaw = tt;
             }
-            SET_TRUELENGTH(s,-(++nLevel));
+            SET_TRULEN(s,-(++nLevel));
             levelsRaw[nLevel-1] = s;
           }
           int *targetd = INTEGER(target);
@@ -628,7 +635,7 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
             if (length(thisCol)<=1) {
               // recycle length-1, or NA-fill length-0
               SEXP lev;
-              const int val = (length(thisCol)==1 && id[0]!=NA_INTEGER && (lev=thisColStrD[id[0]-1])!=NA_STRING) ? -TRUELENGTH(lev) : NA_INTEGER;
+              const int val = (length(thisCol)==1 && id[0]!=NA_INTEGER && (lev=thisColStrD[id[0]-1])!=NA_STRING) ? -TRULEN(lev) : NA_INTEGER;
               //                                                                                    ^^ #3915 and tests 2015.2-5
               for (int r=0; r<thisnrow; ++r) targetd[ansloc+r] = val;
             } else {
@@ -639,22 +646,22 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
                 // retain the position of NA level (if any) and the integer mappings to it
                 for (int k=0; k<n; ++k) {
                   SEXP s = thisColStrD[k];
-                  if (s!=NA_STRING && -TRUELENGTH(s)!=k+1) { hop=true; break; }
+                  if (s!=NA_STRING && -TRULEN(s)!=k+1) { hop=true; break; }
                 }
               } else {
                 for (int k=0; k<n; ++k) {
                   SEXP s = thisColStrD[k];
-                  if (s==NA_STRING || -TRUELENGTH(s)!=k+1) { hop=true; break; }
+                  if (s==NA_STRING || -TRULEN(s)!=k+1) { hop=true; break; }
                 }
               }
               if (hop) {
                 if (orderedFactor) {
                   for (int r=0; r<thisnrow; ++r)
-                    targetd[ansloc+r] = id[r]==NA_INTEGER ? NA_INTEGER : -TRUELENGTH(thisColStrD[id[r]-1]);
+                    targetd[ansloc+r] = id[r]==NA_INTEGER ? NA_INTEGER : -TRULEN(thisColStrD[id[r]-1]);
                 } else {
                   for (int r=0; r<thisnrow; ++r) {
                     SEXP lev;
-                    targetd[ansloc+r] = id[r]==NA_INTEGER || (lev=thisColStrD[id[r]-1])==NA_STRING ? NA_INTEGER : -TRUELENGTH(lev);
+                    targetd[ansloc+r] = id[r]==NA_INTEGER || (lev=thisColStrD[id[r]-1])==NA_STRING ? NA_INTEGER : -TRULEN(lev);
                   }
                 }
               } else {
@@ -662,18 +669,18 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
               }
             }
           } else {
-            const SEXP *sd = SEXPPTR(thisColStr);
+            const SEXP *sd = SEXPPTR_RO(thisColStr);
             if (length(thisCol)<=1) {
-              const int val = (length(thisCol)==1 && sd[0]!=NA_STRING) ? -TRUELENGTH(sd[0]) : NA_INTEGER;
+              const int val = (length(thisCol)==1 && sd[0]!=NA_STRING) ? -TRULEN(sd[0]) : NA_INTEGER;
               for (int r=0; r<thisnrow; ++r) targetd[ansloc+r] = val;
             } else {
-              for (int r=0; r<thisnrow; ++r) targetd[ansloc+r] = sd[r]==NA_STRING ? NA_INTEGER : -TRUELENGTH(sd[r]);
+              for (int r=0; r<thisnrow; ++r) targetd[ansloc+r] = sd[r]==NA_STRING ? NA_INTEGER : -TRULEN(sd[r]);
             }
           }
         }
         ansloc += thisnrow;
       }
-      for (int k=0; k<nLevel; ++k) SET_TRUELENGTH(levelsRaw[k], 0);
+      for (int k=0; k<nLevel; ++k) SET_TRULEN(levelsRaw[k], 0);
       savetl_end();
       if (warnStr[0]) warning("%s", warnStr);  // now savetl_end() has happened it's safe to call warning (could error if options(warn=2))
       copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
@@ -690,6 +697,8 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         setAttrib(target, R_ClassSymbol, ScalarString(char_factor));
       }
     } else {  // factor==false
+      // Needs to be here for integer64 class to be attached
+      copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
       for (int i=0; i < ll; ++i) {
         const int thisnrow = eachMax[i];
         if (thisnrow==0) continue;
@@ -712,7 +721,6 @@ SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg)
         }
         ansloc += thisnrow;
       }
-      copyMostAttrib(firstCol, target); // all but names,dim and dimnames; mainly for class. And if so, we want a copy here, not keepattr's SET_ATTRIB.
     }
   }
   UNPROTECT(nprotect);  // ans, coercedForFactor, thisCol

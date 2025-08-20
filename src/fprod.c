@@ -121,7 +121,7 @@ void fprod_int_g_impl(double *pout, int *px, int ng, int *pg, int narm, int l) {
 SEXP fprodC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
   int l = length(x), tx = TYPEOF(x), ng = asInteger(Rng),
     narm = asLogical(Rnarm), nprotect = 1;
-  if (l < 1) return tx == REALSXP ? x : ScalarReal(asReal(x)); // Prevents seqfault for numeric(0) #101
+  if (l < 1) return tx == REALSXP ? x : allocVector(REALSXP, 0); // Prevents seqfault for numeric(0) #101
   if(ng && l != length(g)) error("length(g) must match length(x)");
   if(tx == LGLSXP) tx = INTSXP;
   SEXP out = PROTECT(allocVector(REALSXP, ng == 0 ? 1 : ng));
@@ -226,9 +226,9 @@ SEXP fprodlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop) {
     UNPROTECT(1);
     return out;
   }
-  SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
+  SEXP out = PROTECT(allocVector(VECSXP, l));
   const SEXP *px = SEXPPTR_RO(x);
-  for(int j = 0; j != l; ++j) pout[j] = fprodC(px[j], Rng, g, w, Rnarm);
+  for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, fprodC(px[j], Rng, g, w, Rnarm));
   // if(ng == 0) for(int j = 0; j != l; ++j) copyMostAttrib(px[j], pout[j]);
   DFcopyAttr(out, x, ng);
   UNPROTECT(1);

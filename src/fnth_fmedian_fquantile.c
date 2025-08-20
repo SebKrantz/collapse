@@ -6,7 +6,8 @@
    https://en.wikipedia.org/wiki/Quantile#Estimating_quantiles_from_a_sample
    https://doi.org/10.2307/2684934
    https://aakinshin.net/posts/weighted-quantiles/
- At large, the weighted quantile algorithm is my own cooking [(C) 2022 Sebastian Krantz]
+   https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html
+   The weighted quantile algorithm follows Matthew Kay
 */
 
 // Adopted from data.table's quickselect.c
@@ -69,6 +70,9 @@ static double eps = 10 * DBL_EPSILON;
   case 3: /* upper element*/                                   \
     h = n*Q;                                                   \
     break;                                                     \
+  case 4: /* quantile type 4*/                                 \
+    h = n*Q - 1.0;                                             \
+    break;                                                     \
   case 5: /* quantile type 5*/                                 \
     h = n*Q - 0.5;                                             \
     break;                                                     \
@@ -82,50 +86,30 @@ static double eps = 10 * DBL_EPSILON;
     h = ((double)n + 1.0/4.0)*Q - 5.0/8.0;                     \
     break;                                                     \
   }
-/*
-case 4: // quantile type 4: not exact for weighted case, and also bad properties.
-  h = n*Q - 1.0;
-  break;
-*/
 
-// Weighted quantiles. Idea: make h dependent on sum of weights and average weight.
-#undef RETWQSWITCH
-#define RETWQSWITCH(sumw, mu)                                  \
-switch(ret) {                                                  \
-case 7: /* quantile type 7 */                                  \
-  h = (sumw - mu) * Q;                                         \
-  break;                                                       \
-case 1:                                                        \
-case 2:                                                        \
-case 3: /* average, lower or upper element (adjust algorithm)*/\
-  h = sumw * Q;                                                \
-  break;                                                       \
-case 5: /* quantile type 5*/                                   \
-  h = sumw * Q - 0.5*mu;                                       \
-  if(h < 0.0) h = 0.0;                                         \
-  break;                                                       \
-case 6: /* quantile type 6*/                                   \
-  h = (sumw + mu)*Q - mu;                                      \
-  if(h < 0.0) h = 0.0;                                         \
-  break;                                                       \
-case 8: /* quantile type 8 (best according to H&F 1986)*/      \
-  h = (sumw + 1.0/3.0 * mu)*Q - 2.0/3.0 * mu;                  \
-  if(h < 0.0) h = 0.0;                                         \
-  break;                                                       \
-case 9: /* quantile type 9*/                                   \
-  h = (sumw + 1.0/4.0 * mu)*Q - 5.0/8.0 * mu;                  \
-  if(h < 0.0) h = 0.0;                                         \
-  break;                                                       \
+// Weighted quantiles: https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html
+// Basically we add m to h
+#undef RETWQADDM
+#define RETWQADDM                                                \
+switch(ret) {                                                    \
+  case 7: /* quantile type 7 */                                  \
+    h += 1 - Q;                                                  \
+    break;                                                       \
+  case 4: /* quantile type 4*/                                   \
+    break;                                                       \
+  case 5: /* quantile type 5*/                                   \
+    h += 0.5;                                                    \
+    break;                                                       \
+  case 6: /* quantile type 6*/                                   \
+    h += Q;                                                      \
+    break;                                                       \
+  case 8: /* quantile type 8 (best according to H&F 1986)*/      \
+    h += 1.0/3.0 * (Q + 1);                                      \
+    break;                                                       \
+  case 9: /* quantile type 9*/                                   \
+    h += 1.0/4.0 * Q + 3.0/8.0;                                  \
+    break;                                                       \
 }
-/*
-case 4: // quantile type 4: does not give exact results
-  h = sumw * Q - mu;
-  break;
-*/
-/* Redundant? -> yes!
- if(h > sumw) h = sumw;
-*/
-
 
 
 // --------------------------------------------------------------------------
@@ -155,27 +139,6 @@ double iquickselect_elem(int *x, const int n, const unsigned int elem, double h)
 }
 
 #undef FQUANTILE_CORE
-/*
- Old Solution: full initial pass to get min and max.
-if(probs[0] == 0.0 || probs[np-1] == 1.0) {                                   \
-  x_min = x_max = x_cc[0];                                                    \
-  if(probs[0] == 0.0 && probs[np-1] == 1.0) {                                 \
-    for(unsigned int i = 1; i != l; ++i) {                                    \
-      if(x_cc[i] < x_min) x_min = x_cc[i];                                    \
-      if(x_cc[i] > x_max) x_max = x_cc[i];                                    \
-    }                                                                         \
-    pres[0] = x_min; pres[np-1] = x_max;                                      \
-  } else if(probs[0] == 0.0) {                                                \
-    for(unsigned int i = 1; i != l; ++i)                                      \
-      if(x_cc[i] < x_min) x_min = x_cc[i];                                    \
-      pres[0] = x_min;                                                        \
-  } else {                                                                    \
-    for(unsigned int i = 1; i != l; ++i)                                      \
-      if(x_cc[i] > x_min) x_min = x_cc[i];                                    \
-      pres[np-1] = x_max;                                                     \
-  }                                                                           \
-}                                                                             \
-*/
 #define FQUANTILE_CORE(QFUN)                                                  \
   double h, Q;                                                                \
   int ih = 0; /* To avoid -Wmaybe-uninitialized */                            \
@@ -219,36 +182,23 @@ for(int i = 0, ih; i < np; ++i) {                           \
   } else pres[i] = px[po[(int)((l-1)*Q)]];                  \
 }
 
-// Proper quantile weighting? At least it gives the same results for equal weights of any magnitude.
-// See: https://aakinshin.net/posts/weighted-quantiles/
-// And: https://en.wikipedia.org/wiki/Percentile#Weighted_percentile
+// Following https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html
 // Expects px and pw to be decremented by 1
 #undef WQUANTILE_CORE
 #define WQUANTILE_CORE                                \
-double Q, h, a, wb, b;                                \
+double Q, h;                                          \
+int j;                                                \
 for(int i = 0, k = 0; i < np; ++i) {                  \
   Q = probs[i];                                       \
   if(Q > 0.0 && Q < 1.0) {                            \
-    RETWQSWITCH(sumw, mu);                            \
-    a = h + eps;                                      \
-    while(wsum <= a) wsum += pw[po[k++]];             \
-    a = px[po[k == 0 ? 0 : k-1]];                     \
-    if(k == 0 || k == l || h == 0.0) {                \
-      pres[i] = a; continue;                          \
-    }                                                 \
-    wb = pw[po[k-1]];                                 \
-    /* If zero weights, need to move forward*/        \
-    if(pw[po[k]] == 0.0) {                            \
-    /* separate indices as possible: h < wsum(i-1) */ \
-      int kp = k+1;                                   \
-      while(kp < l && pw[po[kp]] == 0.0) ++kp;        \
-      if(kp == l) {                                   \
-        k = kp-1; pres[i] = a; continue;              \
-      }                                               \
-      b = px[po[kp]];                                 \
-    } else b = px[po[k]];                             \
-    h = (wsum - h) / wb;                              \
-    pres[i] = b + h * (a - b);                        \
+    h = sumw * Q + eps;                               \
+    while(wsum <= h) wsum += pw[po[k++]];             \
+    if(k > 0) wsum -= pw[po[--k]];                    \
+    h = k-1 + (h - wsum) / pw[po[k]];                 \
+    RETWQADDM;                                        \
+    j = (int)h; h -= j;                               \
+    pres[i] = (j >= l-1 || h < eps) ? px[po[j]] :     \
+            (1 - h) * px[po[j]] + h * px[po[j+1]];    \
   } else {  /* Since probs must be passed in order*/  \
     if(Q == 0.0) {                                    \
       while(pw[po[k]] == 0.0) ++k;                    \
@@ -266,7 +216,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
   if(TYPEOF(Rprobs) != REALSXP) error("probs needs to be a numeric vector");
   int tx = TYPEOF(x), n = length(x), np = length(Rprobs), narm = asLogical(Rnarm), ret = asInteger(Rtype), nprotect = 1;
   if(tx != REALSXP && tx != INTSXP && tx != LGLSXP) error("x needs to be numeric");
-  if(ret < 5 || ret > 9) error("fquantile only supports continuous quantile types 5-9. You requested type: %d", ret);
+  if(ret < 4 || ret > 9) error("fquantile only supports continuous quantile types 4-9. You requested type: %d", ret);
 
   SEXP res = PROTECT(allocVector(REALSXP, np));
   copyMostAttrib(x, res); // Consistent with other functions, and works for "units"
@@ -372,7 +322,7 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
           if(po[i] < 1 || po[i] > n) error("Some elements in o are outside of range [1, length(x)]");
       }
     } else  {
-      po = (int *) R_alloc(n, sizeof(int)); // Calloc ?
+      po = (int *) R_alloc(n, sizeof(int)); // R_Calloc ?
       num1radixsort(po, TRUE, FALSE, x);
     }
 
@@ -435,9 +385,6 @@ SEXP fquantileC(SEXP x, SEXP Rprobs, SEXP w, SEXP o, SEXP Rnarm, SEXP Rtype, SEX
         n = 0;
         goto wall0;
       }
-      double mu = pw[po[0]]; //  = sumw / (l - nw0);
-      int i = 0;
-      while(mu <= 0.0) mu = pw[po[++i]];
 
       if(tx == REALSXP) { // Numeric data
         double *px = REAL(x)-1;
@@ -497,43 +444,32 @@ double iquickselect(int *x, const int n, const int ret, const double Q) {
 // or quicksort at the group-level
 
 // Expects pw and po to be consistent
-double w_compute_h(const double *pw, const int *po, const int l, const int sorted, const int ret, const double Q) {
-  double sumw = 0.0, mu = 0.0, h = 0.0; /* To avoid -Wmaybe-uninitialized */
+double w_compute_h(const double *pw, const int *po, const int l, const int sorted, double Q) {
+  if(l == 0) return NA_REAL;
+  double sumw = 0.0;
   if(sorted) {
     #pragma omp simd reduction(+:sumw)
     for(int i = 0; i < l; ++i) sumw += pw[i];
-    if(sumw > eps) {
-      int i = 0;
-      mu = pw[0];
-      while(mu <= 0.0) mu = pw[++i];
-    }
   } else {
     #pragma omp simd reduction(+:sumw)
     for(int i = 0; i < l; ++i) sumw += pw[po[i]];
-    if(sumw > eps) {
-      int i = 0;
-      mu = pw[po[0]];
-      while(mu <= 0.0) mu = pw[po[++i]];
-    }
   }
   if(ISNAN(sumw)) error("Missing weights in order statistics are currently only supported if x is also missing");
   if(sumw < 0.0) error("Weights must be positive or zero");
-  if(mu == 0.0) return NA_REAL;
-  RETWQSWITCH(sumw, mu);
-  return h;
+  return Q * sumw;
 }
 
 // If no groups or sorted groups po is the ordering of x
 // Expects pointers px and pw to be decremented by one
 #undef WNTH_CORE
 #define WNTH_CORE                                                          \
-double wsum = pw[po[0]], wb, a;                                            \
+double wsum = pw[po[0]], wb;                                               \
 int k = 1;                                                                 \
 if(ret < 3) { /* lower (2), or average (1) element*/                       \
   while(wsum < h) wsum += pw[po[k++]];                                     \
-  a = px[po[k-1]];                                                         \
+  double a = px[po[k-1]];                                                  \
   if(ret == 2 || wsum > h+eps) return a;/* h = sumw * Q must be > 0 here */\
-  wsum = 2.0; wb = px[po[k]];                                              \
+  wb = px[po[k]]; wsum = 2.0;                                              \
   while(pw[po[k]] == 0.0) { /* l should never be reached, I tested it */   \
     wb += px[po[++k]]; ++wsum;                                             \
   }                                                                        \
@@ -541,50 +477,42 @@ if(ret < 3) { /* lower (2), or average (1) element*/                       \
 }                                                                          \
 wb = h + eps;                                                              \
 while(wsum <= wb) wsum += pw[po[k++]];                                     \
-a = px[po[k-1]];                                                           \
-if(ret == 3 || k == l || h == 0.0)                                         \
-  return a;                                                                \
-wb = pw[po[k-1]];                                                          \
-/* If zero weights, need to move forward*/                                 \
-while(k < l && pw[po[k]] == 0.0) ++k;                                      \
-if(k == l) return a;                                                       \
-h = (wsum - h) / wb;                                                       \
-wb = px[po[k]];                                                            \
-return wb + h * (a - wb);
+if(ret == 3) return px[po[k-1]];                                           \
+wsum -= pw[po[--k]];                                                       \
+h = k-1 + (h - wsum) / pw[po[k]];                                          \
+RETWQADDM;                                                                 \
+int j = (int)h; h -= j;                                                    \
+return (j >= l-1 || h < eps) ? px[po[j]] : (1 - h) * px[po[j]] + h * px[po[j+1]];
+
 
 // This is the same, just that the result is assigned. Needed for quicksort based implementations
 // Does not require incremented pointers (depending on the content of i_cc)
 #undef WNTH_CORE_QSORT
 #define WNTH_CORE_QSORT                                                      \
-double res, wsum = pw[i_cc[0]], wb, a;                                       \
+double res, wsum = pw[i_cc[0]], wb;                                          \
 int k = 1;                                                                   \
 if(ret < 3) { /* lower (2), or average (1) element*/                         \
   while(wsum < h) wsum += pw[i_cc[k++]];                                     \
-  a = x_cc[k-1];                                                             \
+  double a = x_cc[k-1];                                                      \
   if(ret == 2 || wsum > h+eps) res = a; /* h = sumw * Q must be > 0 here */  \
   else {                                                                     \
-    wsum = 2.0; wb = x_cc[k];                                                \
+    wb = x_cc[k]; wsum = 2.0;                                                \
     while(pw[i_cc[k]] == 0.0) { /* n should never be reached, I tested it */ \
       wb += x_cc[++k]; ++wsum;                                               \
     }                                                                        \
     res = (a + wb) / wsum;                                                   \
   }                                                                          \
 } else {                                                                     \
-  wb = h+eps;                                                                \
+  wb = h + eps;                                                              \
   while(wsum <= wb) wsum += pw[i_cc[k++]];                                   \
-  a = x_cc[k-1];                                                             \
-  if(ret == 3 || k == n || h == 0.0) {                                       \
-    res = a;                                                                 \
+  if(ret == 3) {                                                             \
+    res = x_cc[k-1];                                                         \
   } else {                                                                   \
-    wb = pw[i_cc[k-1]];                                                      \
-    /* If zero weights, need to move forward*/                               \
-    while(k < n && pw[i_cc[k]] == 0.0) ++k;                                  \
-    if(k == n) res = a;                                                      \
-    else {                                                                   \
-      h = (wsum - h) / wb;                                                   \
-      wb = x_cc[k];                                                          \
-      res = wb + h * (a - wb);                                               \
-    }                                                                        \
+    wsum -= pw[i_cc[--k]];                                                     \
+    h = k-1 + (h - wsum) / pw[i_cc[k]];                                        \
+    RETWQADDM;                                                               \
+    int j = (int)h; h -= j;                                                  \
+    res = (j >= n-1 || h < eps) ? x_cc[j] : (1 - h) * x_cc[j] + h * x_cc[j+1]; \
   }                                                                          \
 }
 
@@ -608,7 +536,7 @@ return (ret == 1) ? (a+b)/2.0 : a + h * (b - a); //  || Q == 0.5
 double nth_int(const int *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : sorted ? (double)px[0] : (double)px[po[0]-1];
 
-  int *x_cc = (int *) Calloc(l, int), n = 0;
+  int *x_cc = (int *) R_Calloc(l, int), n = 0;
   if(sorted) {
     // if(narm) {
       for(int i = 0; i != l; ++i) if(px[i] != NA_INTEGER) x_cc[n++] = px[i];
@@ -627,7 +555,7 @@ double nth_int(const int *restrict px, const int *restrict po, const int l, cons
   }
 
   double res = (narm == 0 && n != l) ? NA_REAL : iquickselect(x_cc, n, ret, Q);
-  Free(x_cc);
+  R_Free(x_cc);
   return res;
 }
 
@@ -649,7 +577,7 @@ double nth_int_noalloc(const int *restrict px, const int *restrict po, int *x_cc
 double nth_double(const double *restrict px, const int *restrict po, const int l, const int sorted, const int narm, const int ret, const double Q) {
   if(l <= 1) return l == 0 ? NA_REAL : sorted ? px[0] : px[po[0]-1];
 
-  double *x_cc = (double *) Calloc(l, double);
+  double *x_cc = (double *) R_Calloc(l, double);
   int n = 0;
 
   if(sorted) {
@@ -670,7 +598,7 @@ double nth_double(const double *restrict px, const int *restrict po, const int l
   }
 
   double res = (narm == 0 && n != l) ? NA_REAL : dquickselect(x_cc, n, ret, Q);
-  Free(x_cc);
+  R_Free(x_cc);
   return res;
 }
 
@@ -719,7 +647,7 @@ double w_nth_int_ord(const int *restrict px, const double *restrict pw, const in
     while(l != 0 && px[po[l-1]] == NA_INTEGER) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : (double)px[po[0]];
   } else if(px[po[l-1]] == NA_INTEGER) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, Q);
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -734,7 +662,7 @@ double w_nth_double_ord(const double *restrict px, const double *restrict pw, co
     while(l != 0 && ISNAN(px[po[l-1]])) --l;
     if(l <= 1) return (l == 0 || ISNAN(pw[po[0]])) ? NA_REAL : px[po[0]];
   } else if(ISNAN(px[po[l-1]])) return NA_REAL;
-  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, ret, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, po, l, 0, Q);
   if(ISNAN(h)) return NA_REAL;
   WNTH_CORE;
 }
@@ -749,7 +677,7 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
     return ISNAN(pw[po[0]]) ? NA_REAL : (double)px[po[0]-1];
   }
 
-  int *x_cc = (int *) Calloc(l, int), *i_cc = (int *) Calloc(l, int), n = 0; // TODO: alloc i_cc afterwards if narm ??
+  int *x_cc = (int *) R_Calloc(l, int), *i_cc = (int *) R_Calloc(l, int), n = 0; // TODO: alloc i_cc afterwards if narm ??
 
   if(sorted) { // both the pointers to x and w need to be suitably incremented for grouped execution.
     // if(narm) {
@@ -785,22 +713,22 @@ double w_nth_int_qsort(const int *restrict px, const double *restrict pw, const 
   }
 
   if(narm == 0 && n != l) {
-    Free(x_cc); Free(i_cc);
+    R_Free(x_cc); R_Free(i_cc);
     return NA_REAL;
   }
 
   // i_cc is one-indexed
   R_qsort_int_I(x_cc, i_cc, 1, n);
 
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, ret, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, Q);
   if(ISNAN(h)) {
-    Free(x_cc); Free(i_cc);
+    R_Free(x_cc); R_Free(i_cc);
     return NA_REAL;
   }
 
   WNTH_CORE_QSORT;
 
-  Free(x_cc); Free(i_cc);
+  R_Free(x_cc); R_Free(i_cc);
   return res;
 }
 
@@ -813,8 +741,8 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
     return ISNAN(pw[po[0]]) ? NA_REAL : px[po[0]-1];
   }
 
-  double *x_cc = (double *) Calloc(l, double);
-  int *i_cc = (int *) Calloc(l, int), n = 0; // TODO: alloc afterwards if narm ??
+  double *x_cc = (double *) R_Calloc(l, double);
+  int *i_cc = (int *) R_Calloc(l, int), n = 0; // TODO: alloc afterwards if narm ??
 
   if(sorted) {
     // if(narm) {
@@ -850,25 +778,25 @@ double w_nth_double_qsort(const double *restrict px, const double *restrict pw, 
   }
 
   if(narm == 0 && n != l) {
-    Free(x_cc); Free(i_cc);
+    R_Free(x_cc); R_Free(i_cc);
     return NA_REAL;
   }
 
   // i_cc is one-indexed
   R_qsort_I(x_cc, i_cc, 1, n);
 
-  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, ret, Q);
+  if(h == DBL_MIN) h = w_compute_h(pw, i_cc, n, 0, Q);
 
   if(ISNAN(h)) {
-    Free(x_cc);
-    Free(i_cc);
+    R_Free(x_cc);
+    R_Free(i_cc);
     return NA_REAL;
   }
 
   WNTH_CORE_QSORT;
 
-  Free(x_cc);
-  Free(i_cc);
+  R_Free(x_cc);
+  R_Free(i_cc);
   return res;
 }
 
@@ -1215,7 +1143,7 @@ int Rties2int(SEXP x) {
   int tx = TYPEOF(x);
   if(tx == INTSXP || tx == REALSXP || tx == LGLSXP) {
     int ret = asInteger(x);
-    if(ret < 1 || ret > 9 || ret == 4) error("ties must be 1, 2, 3 or 5-9, you supplied: %d", ret);
+    if(ret < 1 || ret > 9) error("ties must be 1-9, you supplied: %d", ret);
     return ret;
   }
   if(tx != STRSXP) error("ties must be integer or character");
@@ -1223,6 +1151,7 @@ int Rties2int(SEXP x) {
   if(strcmp(r, "mean") == 0) return 1;
   if(strcmp(r, "min") == 0) return 2;
   if(strcmp(r, "max") == 0) return 3;
+  if(strcmp(r, "q4") == 0) return 4;
   if(strcmp(r, "q5") == 0) return 5;
   if(strcmp(r, "q6") == 0) return 6;
   if(strcmp(r, "q7") == 0) return 7;
@@ -1279,15 +1208,15 @@ if(isNull(ord)) {                                                               
   pst = cgs + 1;                                                                                               \
   if((cond)) po = &l;                                                                                          \
   else {                                                                                                       \
-    int *restrict count = (int *) Calloc(ng+1, int);                                                           \
+    int *restrict count = (int *) R_Calloc(ng+1, int);                                                           \
     po = (int *) R_alloc(nrx, sizeof(int)); --po;                                                              \
     for(int i = 0; i != nrx; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;                                     \
-    Free(count);                                                                                               \
+    R_Free(count);                                                                                               \
   }                                                                                                            \
 } else {                                                                                                       \
   po = INTEGER(ord)-1;                                                                                         \
-  pst = INTEGER(getAttrib(ord, install("starts")));                                                            \
-  if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(ord, install("maxgrpn")));                          \
+  pst = INTEGER(getAttrib(ord, sym_starts));                                                            \
+  if(nthreads <= 1 && nullw) maxgrpn = asInteger(getAttrib(ord, sym_maxgrpn));                          \
 }
 
 
@@ -1304,7 +1233,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
   CHECK_PROB(l);
 
   // if(l < 1) return x;
-  if(l < 1 || (l == 1 && nullw)) return TYPEOF(x) == REALSXP ? x : ScalarReal(asReal(x));
+  if(l < 1 || (l == 1 && nullw)) return TYPEOF(x) == REALSXP ? x : l < 1 ? allocVector(REALSXP, 0) : ScalarReal(asReal(x));
 
   // First the simplest case
   if(nullg && nullw && nullo) return nth_impl(x, narm, ret, Q);
@@ -1365,10 +1294,10 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
       int *cgs = (int *) R_alloc(ng+2, sizeof(int)); cgs[1] = 1;
       for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i]; // TODO: get maxgrpn?
       pst = cgs;
-    } else pst = INTEGER(getAttrib(ord, install("starts")))-1;
+    } else pst = INTEGER(getAttrib(ord, sym_starts))-1;
     if(nullw && sorted) po = &l;
     else {
-      int *restrict count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) R_Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       if(nullw) {
         for(int i = 0; i != l; ++i) po[pst[pgv[i]] + count[pgv[i]]++] = i+1;
@@ -1379,7 +1308,7 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
           po[pst[tmp] + count[tmp]++] = pxo[i];
         }
       }
-      Free(count);
+      R_Free(count);
     }
     ++pst;
   }
@@ -1402,9 +1331,9 @@ SEXP fnthC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads
 #define COLWISE_NTH_LIST(FUN_NA, FUN, WFUN)                    \
 if(nullw) {                                                    \
   if(nthreads == 1) {                                          \
-    void *x_cc = Calloc(nrx, double);                          \
+    void *x_cc = R_Calloc(nrx, double);                          \
     for(int j = 0; j != l; ++j) pout[j] = FUN_NA(px[j], x_cc, narm, ret, Q); \
-    Free(x_cc);                                                \
+    R_Free(x_cc);                                                \
   } else {                                                     \
     _Pragma("omp parallel for num_threads(nthreads)")          \
     for(int j = 0; j < l; ++j) pout[j] = FUN(px[j], narm, ret, Q); \
@@ -1420,12 +1349,12 @@ if(nullw) {                                                    \
  * } else {
    #pragma omp parallel for num_threads(nthreads)
    for(int j = 0; j < l; ++j) {
-   int *pxo = (int *) Calloc(nrx, int);
+   int *pxo = (int *) R_Calloc(nrx, int);
    // num1radixsort(pxo, TRUE, FALSE, px[j]); // Probably cannot be parallelized, can try R_orderVector1()
    // R_orderVector1(pxo, nrx, px[j], TRUE, FALSE); // Also not thread safe, and also 0-indexed.
    // for(int i = 0; i < nrx; ++i) pxo[i] += 1;
    pout[j] = w_nth_ord_impl_dbl(px[j], pxo, pw, narm, ret, Q, h);
-   Free(pxo);
+   R_Free(pxo);
    }
   }
    */
@@ -1450,7 +1379,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   double *restrict pw = &Q, h = DBL_MIN;
   if(!nullw) {
     CHECK_WEIGHTS(nrx);
-    if(nullg && !narm) h = w_compute_h(pw+1, &l, nrx, 1, ret, Q); // if no missing value removal, h is the same for all columns
+    if(nullg && !narm) h = w_compute_h(pw+1, &l, nrx, 1, Q); // if no missing value removal, h is the same for all columns
   }
 
   if(nullg) { // No groups, multithreading across columns
@@ -1476,16 +1405,15 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
 
     CHECK_GROUPS(nrx, sorted);
 
-    SEXP *restrict pout = SEXPPTR(out);
     if(nullw) { // Parallelism at sub-column level
       if(nthreads <= 1) {
         void *x_cc = R_alloc(maxgrpn, sizeof(double));
-        for(int j = 0; j < l; ++j) pout[j] = nth_g_impl_noalloc(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, x_cc);
+        for(int j = 0; j < l; ++j) SET_VECTOR_ELT(out, j, nth_g_impl_noalloc(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, x_cc));
       } else {
-        for(int j = 0; j < l; ++j) pout[j] = nth_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+        for(int j = 0; j < l; ++j) SET_VECTOR_ELT(out, j, nth_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, Q, nthreads));
       }
     } else { // Parallelism at sub-column level
-      for(int j = 0; j < l; ++j) pout[j] = w_nth_g_qsort_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads);
+      for(int j = 0; j < l; ++j) SET_VECTOR_ELT(out, j, w_nth_g_qsort_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, Q, nthreads));
     }
   }
 
@@ -1516,10 +1444,10 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   } /* else {                                                                        \
       _Pragma("omp parallel for num_threads(nthreads)")                              \
       for(int j = 0; j < col; ++j) {                                                 \
-        int *pxo = (int *) Calloc(l, int);                                           \
+        int *pxo = (int *) R_Calloc(l, int);                                           \
         ORDFUN(pxo, TRUE, FALSE, l, px + j*l); // Currently cannot be parallelized   \
         pres[j] = WFUN(px + j*l - 1, pw, pxo, h, l, narm, ret, Q);                   \
-        Free(pxo);                                                                   \
+        R_Free(pxo);                                                                   \
       }                                                                              \
     }                                                                                \
   }                                                            \
@@ -1628,7 +1556,7 @@ SEXP fnthmC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
   double *restrict pw = &Q, h = DBL_MIN;
   if(!nullw) {
     CHECK_WEIGHTS(l);
-    if(nullg && !narm) h = w_compute_h(pw+1, &l, l, 1, ret, Q);
+    if(nullg && !narm) h = w_compute_h(pw+1, &l, l, 1, Q);
   }
 
   if(nullg) {

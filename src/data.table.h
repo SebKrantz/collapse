@@ -3,7 +3,10 @@
  and licensed under a Mozilla Public License 2.0 (MPL-2.0) license.
 */
 
-#define USE_RINTERNALS
+#ifndef DATATABLE_H  // Check if DATATABLE_H is not defined
+#define DATATABLE_H  // Define DATATABLE_H
+
+// #define USE_RINTERNALS
 #include "base_radixsort.h"
 // #include <stdint.h> // for uint64_t rather than unsigned long long
 #include <stdbool.h>
@@ -14,12 +17,20 @@
 #define IS_TRUE_OR_FALSE(x) (TYPEOF(x)==LGLSXP && LENGTH(x)==1 && LOGICAL(x)[0]!=NA_LOGICAL)
 #define SIZEOF(x) sizes[TYPEOF(x)]
 #define TYPEORDER(x) typeorder[x]
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
-#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
+
+// Needed for match.c and join.c
+#define NEED2UTF8(s) !(IS_ASCII(s) || (s)==NA_STRING || IS_UTF8(s))
+#define ENC2UTF8(s) (!NEED2UTF8(s) ? (s) : mkCharCE(translateCharUTF8(s), CE_UTF8))
 
 // for use with bit64::integer64
 #define NA_INTEGER64  INT64_MIN
 #define MAX_INTEGER64 INT64_MAX
+#ifndef INTEGER64_PTR
+#define INTEGER64_PTR(x) ((int64_t*) REAL(x))
+#endif
+#ifndef INTEGER64_PTR_RO
+#define INTEGER64_PTR_RO(x) ((int64_t*) REAL_RO(x))
+#endif
 
 // init.c // https://stackoverflow.com/questions/1410563/what-is-the-difference-between-a-definition-and-a-declaration
 extern SEXP char_integer64;
@@ -35,11 +46,6 @@ extern SEXP sym_index_df;
 extern SEXP sym_sf_column;
 extern SEXP SelfRefSymbol;
 extern SEXP sym_datatable_locked;
-// extern SEXP sym_inherits;
-// extern SEXP sym_maxgrpn;
-// extern SEXP sym_starts;
-// extern SEXP char_starts;
-// extern SEXP sym_collapse_DT_alloccol;
 
 // data.table_init.c
 SEXP collapse_init(SEXP mess);
@@ -52,6 +58,8 @@ extern size_t sizes[100];  // max appears to be FUNSXP = 99, see Rinternals.h
 extern size_t typeorder[100];
 
 // data.table_utils.c
+int need2utf8(SEXP x);
+SEXP coerceUtf8IfNeeded(SEXP x);
 SEXP setnames(SEXP x, SEXP nam);
 bool allNA(SEXP x, bool errorForBadType);
 SEXP allNAv(SEXP x, SEXP errorForBadType);
@@ -75,3 +83,4 @@ void writeValue(SEXP target, SEXP source, const int from, const int n);
 void savetl_init(void), savetl(SEXP s), savetl_end(void);
 SEXP rbindlist(SEXP l, SEXP usenamesArg, SEXP fillArg, SEXP idcolArg);
 
+#endif // End of DATATABLE_H guard

@@ -1,10 +1,10 @@
 \name{join}
 \alias{join}
 
-\title{Fast Table Joins}
+\title{Fast and Verbose Table Joins}
 
 \description{
-  Join two data frame like objects \code{x} and \code{y} \code{on} columns. Inspired by \emph{polars} and by default uses a vectorized hash join algorithm (workhorse function \code{\link{fmatch}}).
+  Join two data frame like objects \code{x} and \code{y} \code{on} columns. Inspired by \emph{polars} and by default uses a vectorized hash join algorithm (workhorse function \code{\link{fmatch}}), with several verbose options.
 }
 
 \usage{
@@ -18,6 +18,7 @@ join(x, y,
      keep.col.order = TRUE,
      drop.dup.cols = FALSE,
      verbose = .op[["verbose"]],
+     require = NULL,
      column = NULL,
      attr = NULL,
      \dots
@@ -47,7 +48,9 @@ join(x, y,
 
   \item{verbose}{integer. Prints information about the join. One of 0 (off), 1 (default, see Details) or 2 (additionally prints the classes of the \code{on} columns). \emph{Note:} \code{verbose > 0} or \code{validate != "m:m"} invoke the \code{count} argument to \code{\link{fmatch}}, so \code{verbose = 0} is slightly more efficient. }
 
-    \item{column}{(optional) name for an extra column to generate in the output indicating which dataset a record came from. \code{TRUE} calls this column \code{".join"} (inspired by STATA's '_merge' column). By default this column is generated as the last column, but, if \code{keep.col.order = FALSE}, it is placed after the 'on' columns. The column is a factor variable with levels corresponding to the dataset names (inferred from the input) or \code{"matched"} for matched records. Alternatively, it is possible to specify a list of 2, where the first element is the column name, and the second a length 3 (!) vector of levels e.g. \code{column = list("joined", c("x", "y", "x_y"))}, where \code{"x_y"} replaces \code{"matched"}. The column has an additional attribute \code{"on.cols"} giving the join columns corresponding to the factor levels. See Examples. }
+  \item{require}{(optional) named list of the form \code{list(x = 1, y = 0.5, fail = "warning")} (or \code{fail.with} if you want to be more expressive) giving proportions of records that need to be matched and the action if any requirement fails (\code{"message"}, \code{"warning"}, or \code{"error"}). Any elements of the list can be omitted, the default action is \code{"error"}.}
+
+  \item{column}{(optional) name for an extra column to generate in the output indicating which dataset a record came from. \code{TRUE} calls this column \code{".join"} (inspired by STATA's '_merge' column). By default this column is generated as the last column, but, if \code{keep.col.order = FALSE}, it is placed after the 'on' columns. The column is a factor variable with levels corresponding to the dataset names (inferred from the input) or \code{"matched"} for matched records. Alternatively, it is possible to specify a list of 2, where the first element is the column name, and the second a length 3 (!) vector of levels e.g. \code{column = list("joined", c("x", "y", "x_y"))}, where \code{"x_y"} replaces \code{"matched"}. The column has an additional attribute \code{"on.cols"} giving the join columns corresponding to the factor levels. See Examples. }
 
   \item{attr}{(optional) name for attribute providing information about the join performed (including the output of \code{\link{fmatch}}) to the result. \code{TRUE} calls this attribute \code{"join.match"}. \emph{Note:} this also invokes the \code{count} argument to \code{\link{fmatch}}.}
 
@@ -100,7 +103,7 @@ str(join(df1, df2, attr = TRUE))
 }
 
 \seealso{
-\code{\link{fmatch}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{fmatch}}, \code{\link{pivot}}, \link[=fast-data-manipulation]{Data Frame Manipulation}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 
 \keyword{manip}

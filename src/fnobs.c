@@ -18,7 +18,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int i = 0; i != l; ++i) if(px[i] != NA_STRING) ++n;
         break;
       }
@@ -48,7 +48,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int i = 0; i != l; ++i) if(px[i] != NA_STRING) ++pn[pg[i]];
         break;
       }
@@ -62,9 +62,7 @@ SEXP fnobsC(SEXP x, SEXP Rng, SEXP g) {
     if(!isObject(x)) {
       copyMostAttrib(x, n); // SHALLOW_DUPLICATE_ATTRIB(n, x);
     } else {
-      SEXP sym_label = PROTECT(install("label")); // PROTECT ??
       setAttrib(n, sym_label, getAttrib(x, sym_label));
-      UNPROTECT(1);
     }
     UNPROTECT(1);
     return n;
@@ -102,7 +100,7 @@ SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         for(int j = 0; j != col; ++j) {
           int nj = 0, end = l * j + l;
           for(int i = l * j; i != end; ++i) if(px[i] != NA_STRING) ++nj;
@@ -145,7 +143,7 @@ SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x)-l;
+        const SEXP *px = SEXPPTR_RO(x)-l;
         for(int j = 0; j != col; ++j) {
           pn += ng; px += l;
           for(int i = 0; i != l; ++i) if(px[i] != NA_STRING) ++pn[pg[i]];
@@ -181,11 +179,18 @@ SEXP fnobslC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop) {
     UNPROTECT(1);
     return out;
   } else {
-    SEXP out = PROTECT(allocVector(VECSXP, l)), *pout = SEXPPTR(out);
+    SEXP out = PROTECT(allocVector(VECSXP, l));
     const SEXP *px = SEXPPTR_RO(x);
-    for(int j = 0; j != l; ++j) pout[j] = fnobsC(px[j], Rng, g);
+    for(int j = 0; j != l; ++j) {
+      SEXP xj = px[j];
+      SET_VECTOR_ELT(out, j, fnobsC(xj, Rng, g));
+      if(!isObject(xj)) copyMostAttrib(xj, VECTOR_ELT(out, j));
+      else setAttrib(VECTOR_ELT(out, j), sym_label, getAttrib(xj, sym_label));
+    }
     DFcopyAttr(out, x, ng);
     UNPROTECT(1);
     return out;
   }
 }
+
+

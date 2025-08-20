@@ -2,55 +2,52 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/SebKrantz/collapse/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/SebKrantz/collapse/actions/workflows/R-CMD-check.yaml)
-[![collapse status badge](https://fastverse.r-universe.dev/badges/collapse)](https://fastverse.r-universe.dev)
+[![collapse status badge](https://fastverse.r-universe.dev/badges/collapse)](https://fastverse.r-universe.dev/collapse)
 [![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse) 
 [![cran checks](https://badges.cranchecks.info/worst/collapse.svg)](https://cran.r-project.org/web/checks/check_results_collapse.html)
-![downloads per month](http://cranlogs.r-pkg.org/badges/collapse?color=blue)
-![downloads](http://cranlogs.r-pkg.org/badges/grand-total/collapse?color=blue)
+![downloads per month](https://cranlogs.r-pkg.org/badges/collapse) <!-- ?color=blue -->
+![downloads](https://cranlogs.r-pkg.org/badges/grand-total/collapse) <!-- ?color=blue -->
  [![Conda Version](https://img.shields.io/conda/vn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
  [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://app.codecov.io/gh/SebKrantz/collapse?branch=master)
-[![minimal R version](https://img.shields.io/badge/R%3E%3D-3.3.0-6666ff.svg)](https://cran.r-project.org/)
+[![minimal R version](https://img.shields.io/badge/R%3E%3D-3.5.0-6666ff.svg)](https://cran.r-project.org/)
 [![dependencies](https://tinyverse.netlify.app/badge/collapse)](https://CRAN.R-project.org/package=collapse)
 [![DOI](https://zenodo.org/badge/172910283.svg)](https://zenodo.org/badge/latestdoi/172910283)
 [![arXiv](https://img.shields.io/badge/arXiv-2403.05038-0969DA.svg)](https://arxiv.org/abs/2403.05038)
 <!-- badges: end -->
 
-*collapse* is a C/C++ based package for data transformation and statistical computing in R. Its aims are:
+*collapse* is a large C/C++-based package for data transformation and statistical computing in R. It aims to:
 
-* To facilitate complex data transformation, exploration and computing tasks in R.
-* To help make R code fast, flexible, parsimonious and programmer friendly. 
+* Facilitate complex data transformation, exploration and computing tasks in R.
+* Help make R code fast, flexible, parsimonious and programmer friendly. 
 
-It further implements a [class-agnostic approach to R programming](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html), supporting base R, *tibble*, *grouped_df* (*tidyverse*), *data.table*, *sf*, *units*, *pseries*, *pdata.frame* (*plm*), and *xts*/*zoo*. 
+Its novel [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) supports all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
+
+
 
 **Key Features:**
 
 *  **Advanced statistical programming**: A full set of fast statistical functions 
         supporting grouped and weighted computations on vectors, matrices and 
-        data frames. Fast and programmable grouping, ordering, matching, unique values/rows, 
+        data frames. Fast and programmable grouping, ordering, matching, deduplication, 
         factor generation and interactions. 
         
 * **Fast data manipulation**: Fast and flexible functions for data 
-        manipulation, data object conversions, and memory efficient R programming.
+        manipulation, data object conversions and memory efficient R programming.
 
-*  **Advanced aggregation**: Fast and easy multi-data-type, multi-function, weighted and parallelized data aggregation.
+*  **Advanced aggregation**: Fast and easy multi-type, weighted and parallelized data aggregation.
 
-*  **Advanced transformations**: Fast row/column arithmetic, (grouped) replacing 
-        and sweeping out of statistics (by reference), (grouped, weighted) scaling/standardizing, 
-        (higher-dimensional) between (averaging) and (quasi-)within (demeaning) transformations.
+*  **Advanced transformations**: Fast row/column arithmetic, (grouped) sweeping out of statistics (by reference), 
+        (grouped, weighted) scaling and (higher-dimensional) centering and averaging.
 
-*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, (sequences of) lags/leads, and  (lagged/leaded, iterated, quasi-, log-) 
-        differences and (compounded) growth rates on (irregular) time series and panels. 
-        Multivariate auto-, partial- and cross-correlation functions for panel data. 
-        Panel data to (ts-)array conversions.
+*  **Advanced time-computations**: Fast and flexible indexed time series and panel data classes, lags/leads, 
+       differences and (compound) growth rates on (irregular) time series and panels, panel-autocorrelation functions and panel data to array conversions.
 
-*  **List processing**: Recursive list search, splitting, 
-        extraction/subsetting, apply, and generalized row-binding / unlisting to data frame.
+*  **List processing**: Recursive list search, filtering, splitting, apply and unlisting to data frame.
 
-* **Advanced data exploration**: Fast (grouped, weighted, panel-decomposed) 
-        summary statistics and descriptive tools.
+* **Advanced data exploration**: Fast (grouped, weighted, multi-level) descriptive statistical tools.
 
-*collapse* is written in C and C++ and only depends on *Rcpp*. Its algorithms are multiple times faster than base R's, [scale well to <= 1 billion obs](https://duckdblabs.github.io/db-benchmark/), and very efficient for complex tasks (e.g. quantiles, weighted stats, mode/counting/deduplication, joins). Optimized R code ensures minimal overheads and fast syntax evaluation. <!-- , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
+*collapse* is written in C and C++, with algorithms much faster than base R's, has extremely low evaluation overheads, scales well (benchmarks: [linux](https://duckdblabs.github.io/db-benchmark/) | [windows](https://github.com/AdrianAntico/Benchmarks?tab=readme-ov-file#benmark-results)), and excels on complex statistical tasks. <!--, such as weighted statistics, mode/counting/deduplication, joins, pivots, panel data.  Optimized R code ensures minimal evaluation overheads.  , but imports C/C++ functions from *fixest*, *weights*, *RcppArmadillo*, and *RcppEigen* for certain statistical tasks.  -->
 
 ## Installation
 
@@ -65,9 +62,9 @@ install.packages("collapse", repos = "https://fastverse.r-universe.dev")
 remotes::install_github("SebKrantz/collapse")
 
 # Install previous versions from the CRAN Archive (requires compilation)
-install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_1.9.6.tar.gz", 
+install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_2.0.19.tar.gz", 
                  repos = NULL, type = "source") 
-# Older stable versions: 1.8.9, 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
+# Older stable versions: 1.9.6, 1.8.9, 1.7.6, 1.6.5, 1.5.3, 1.4.2, 1.3.2, 1.2.1
 ```
 
 ## Documentation
@@ -83,7 +80,7 @@ In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/
 
 ### Article on arXiv
 
-An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* has been submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/) in March 2024. 
+An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* was submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/) in March 2024 and updated/revised in February 2025. 
 
 ### Presentation at [useR 2022](https://user2022.r-project.org)
 

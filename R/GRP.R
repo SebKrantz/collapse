@@ -22,7 +22,14 @@ switchGRP <- function(x, na.last = TRUE, decreasing = FALSE, starts = FALSE,
   .Call(C_radixsort, na.last, decreasing, starts, group.sizes, sort, z)
 }
 
-group <- function(x, starts = FALSE, group.sizes = FALSE) {
+group <- function(..., starts = FALSE, group.sizes = FALSE) {
+  x <- if(...length() == 1L) ..1 else list(...)
+  g <- .Call(C_group, x, starts, group.sizes)
+  oldClass(g) <- c("qG", "na.included")
+  g
+}
+
+groupv <- function(x, starts = FALSE, group.sizes = FALSE) {
   g <- .Call(C_group, x, starts, group.sizes)
   oldClass(g) <- c("qG", "na.included")
   g
@@ -42,6 +49,8 @@ greorder <- function(x, g, ...) {
   if(!(is.list(g) && inherits(g, "GRP"))) g <- GRP(g, return.groups = FALSE, call = FALSE, ...)
   .Call(C_greorder, x, g)
 }
+
+funlist <- function(x) .Call(C_funlist, x)
 
 G_guo <- function(g) {
   if(is.atomic(g)) {
@@ -96,6 +105,8 @@ GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, 
     if(inherits(X, "GRP")) return(X)
     if(is.null(by)) {
       by <- seq_along(unclass(X))
+      # # This is so that fgroup_by(iris, Species = GRP(Species)) is possible.
+      # if(length(by) == 1L && is.list(.subset2(X, 1L)) && inherits(.subset2(X, 1L), "GRP")) return(.subset2(X, 1L))
       namby <- attr(X, "names")
       if(is.null(namby)) attr(X, "names") <- namby <- paste0("Group.", by)
       o <- switchGRP(X, na.last, decreasing, return.groups || !use.group, TRUE, sort, use.group)
@@ -132,10 +143,10 @@ GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, 
   if(return.groups) {
       # if unit groups, don't subset rows...
       if(length(gs) == length(o) && (use.group || sorted)) {
-        ust <- NULL
+        ust <- st
         groups <- if(is.list(X)) .Call(C_subsetCols, X, by, FALSE) else `names<-`(list(X), namby)
       } else {
-        ust <- if(use.group || sorted) st else .Call(C_subsetVector, o, st, FALSE) # o[st]
+        ust <- if(use.group || sorted) st else if(length(gs) == length(o)) o else .Call(C_subsetVector, o, st, FALSE) # o[st]
         groups <- if(is.list(X)) .Call(C_subsetDT, X, ust, by, FALSE) else
           `names<-`(list(.Call(C_subsetVector, X, ust, FALSE)), namby) # subsetVector preserves attributes (such as "label")
       }
@@ -150,16 +161,16 @@ GRP.default <- function(X, by = NULL, sort = .op[["sort"]], decreasing = FALSE, 
                         groups = groups,
                         group.vars = namby,
                         ordered = c(ordered = sort, sorted = sorted),
-                        order = if(return.order && !use.group) .Call(C_setAttributes, o, ao) else NULL, # `attributes<-`(o, attributes(o)[-2L]) This does a shallow copy on newer R versions # `attr<-`(o, "group.sizes", NULL): This deep-copies it..
+                        order = if(return.order && !use.group) `attributes<-`(o, ao) else NULL, # `attributes<-`(o, attributes(o)[-2L]) This does a shallow copy on newer R versions # `attr<-`(o, "group.sizes", NULL): This deep-copies it..
                         group.starts = ust, # Does not need to be computed by group()
                         call = if(call) match.call() else NULL), "GRP"))
 }
 
 is_GRP <- function(x) inherits(x, "GRP")
-is.GRP <- function(x) {
-  .Deprecated(msg = "'is.GRP' was renamed to 'is_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
-  inherits(x, "GRP")
-}
+# is.GRP <- function(x) {
+#   .Deprecated(msg = "'is.GRP' was renamed to 'is_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
+#   inherits(x, "GRP")
+# }
 
 length.GRP <- function(x) length(x[[2L]])
 
@@ -277,10 +288,10 @@ as_factor_GRP <- function(x, ordered = FALSE, sep = ".") { # , ...
   f
 }
 
-as.factor_GRP <- function(x, ordered = FALSE) {
-  .Deprecated(msg = "'as.factor_GRP' was renamed to 'as_factor_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
-  as_factor_GRP(x, ordered)
-}
+# as.factor_GRP <- function(x, ordered = FALSE) {
+#   .Deprecated(msg = "'as.factor_GRP' was renamed to 'as_factor_GRP'. It will be removed end of 2023, see help('collapse-renamed').")
+#   as_factor_GRP(x, ordered)
+# }
 
 finteraction <- function(..., factor = TRUE, ordered = FALSE, sort = factor && .op[["sort"]], method = "auto", sep = ".") { # does it drop levels ? -> Yes !
   X <- if(...length() == 1L && is.list(..1)) ..1 else list(...)
@@ -495,6 +506,7 @@ print.invisible <- function(x, ...) cat("")
 `[[.GRP_df` <-  function(x, ...) UseMethod("[[", fungroup(x)) # function(x, ..., exact = TRUE) .subset2(x, ..., exact = exact)
 `[<-.GRP_df` <- function(x, ..., value) UseMethod("[<-", fungroup(x))
 `[[<-.GRP_df` <- function(x, ..., value) UseMethod("[[<-", fungroup(x))
+`names<-.GRP_df` <- function(x, value) `oldClass<-`(`names<-`(unclass(x), value), oldClass(x))
 
 # Produce errors...
 # print_GRP_df_core <- function(x) {
@@ -574,7 +586,7 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
   gs <- vlengths(gr, FALSE)
   id <- .Call(C_groups2GRP, gr, fnrow(X), gs)
   return(`oldClass<-`(list(N.groups = ng, # The C code here speeds up things a lot !!
-                        group.id = id,  # Old: rep(seq_len(ng), gs)[order(unlist(gr, FALSE, FALSE))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
+                        group.id = id,  # Old: rep(seq_len(ng), gs)[order(funlist(gr))], # .Internal(radixsort(TRUE, FALSE, FALSE, TRUE, .Internal(unlist(gr, FALSE, FALSE))))
                         group.sizes = gs,
                         groups = if(return.groups) g[-lg] else NULL, # better reclass afterwards ? -> Nope, this is only used in internal codes...
                         group.vars = names(g)[-lg],
@@ -585,10 +597,10 @@ GRP.grouped_df <- function(X, ..., return.groups = TRUE, call = TRUE) {
 }
 
 is_qG <- function(x) is.integer(x) && inherits(x, "qG")
-is.qG <- function(x) {
-  .Deprecated(msg = "'is.qG' was renamed to 'is_qG'. It will be removed end of 2023, see help('collapse-renamed').")
-  inherits(x, "qG")
-}
+# is.qG <- function(x) {
+#   .Deprecated(msg = "'is.qG' was renamed to 'is_qG'. It will be removed end of 2023, see help('collapse-renamed').")
+#   inherits(x, "qG")
+# }
 
 na_rm2 <- function(x, sort) {
   if(sort) return(if(is.na(x[length(x)])) x[-length(x)] else x)
@@ -687,10 +699,10 @@ as_factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
   return(`attributes<-`(x, list(levels = groups, class = clx)))
 }
 
-as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
-  .Deprecated(msg = "'as.factor_qG' was renamed to 'as_factor_qG'. It will be removed end of 2023, see help('collapse-renamed').")
-  as_factor_qG(x, ordered, na.exclude)
-}
+# as.factor_qG <- function(x, ordered = FALSE, na.exclude = TRUE) {
+#   .Deprecated(msg = "'as.factor_qG' was renamed to 'as_factor_qG'. It will be removed end of 2023, see help('collapse-renamed').")
+#   as_factor_qG(x, ordered, na.exclude)
+# }
 
 qF <- function(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]], drop = FALSE,
                keep.attr = TRUE, method = "auto") {
@@ -732,6 +744,7 @@ qG <- function(x, ordered = FALSE, na.exclude = TRUE, sort = .op[["sort"]],
         ax <- if(return.groups) list(N.groups = attr(x, "N.groups"), groups = attr(x, "groups"), class = newclx) else
           list(N.groups = attr(x, "N.groups"), class = newclx)
       }
+      if(identical(ax, attributes(x))) return(x)
       return(`attributes<-`(x, ax))
     }
     newclx <- c(if(ordered) "ordered", "qG", "na.included")
@@ -871,13 +884,13 @@ fduplicated <- function(x, all = FALSE) {
   if(all) {
     g <- .Call(C_group, x, FALSE, FALSE)
     ng <- attr(g, "N.groups")
-    if(ng == length(g)) return(.Call(C_alloc, FALSE, length(g), TRUE))
+    if(ng == length(g)) return(logical(length(g)))
     gs <- .Call(C_fwtabulate, g, NULL, ng, FALSE)
     return(.Call(C_subsetVector, gs != 1L, g, FALSE))
   }
   g <- .Call(C_group, x, TRUE, FALSE)
   starts <- attr(g, "starts")
-  if(length(starts) == length(g)) return(.Call(C_alloc, FALSE, length(g), TRUE))
+  if(length(starts) == length(g)) return(logical(length(g)))
   .Call(C_setcopyv, .Call(C_alloc, TRUE, length(g), TRUE), starts, FALSE, FALSE, TRUE, TRUE)
 }
 

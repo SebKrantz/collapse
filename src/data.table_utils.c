@@ -6,20 +6,38 @@
 #include "data.table.h"
 
 
+int need2utf8(SEXP x) {
+  const int xlen = length(x);
+  const SEXP *xd = STRING_PTR_RO(x);
+  if (xlen <= 1) return xlen == 1 ? NEED2UTF8(xd[0]) : 0;
+  for (int i = 0, t = xlen < 1000 ? xlen : 1000; i < t; ++i) if(NEED2UTF8(xd[i])) return 1;
+  return NEED2UTF8(xd[xlen/4]) || NEED2UTF8(xd[xlen/2]) || NEED2UTF8(xd[(int)(xlen/1.3333)]) || NEED2UTF8(xd[xlen-1]);
+}
+
+SEXP coerceUtf8IfNeeded(SEXP x) {
+  if (!need2utf8(x)) return(x);
+  const int xlen = length(x);
+  SEXP ans = PROTECT(allocVector(STRSXP, xlen));
+  const SEXP *xd = STRING_PTR_RO(x);
+  for (int i=0; i<xlen; i++) SET_STRING_ELT(ans, i, ENC2UTF8(xd[i]));
+  UNPROTECT(1);
+  return(ans);
+}
+
+
 SEXP setnames(SEXP x, SEXP nam) {
   if(TYPEOF(nam) != STRSXP) error("names need to be character typed");
   if(INHERITS(x, char_datatable)) {
-    int n = TRUELENGTH(x), l = LENGTH(nam);
+    int n = TRULEN(x), l = LENGTH(nam);
     if(n < l) { // error("Invalid data.table (underallocated), use qDT(data) to make valid.");
       setAttrib(x, R_NamesSymbol, nam);
       // setselfref(x);
       return x;
     }
-    SEXP newnam = PROTECT(allocVector(STRSXP, n)),
-      *pnn = SEXPPTR(newnam), *pn = SEXPPTR(nam);
-    for(int i = 0; i < l; ++i) pnn[i] = pn[i];
-    SETLENGTH(newnam, l);
-    SET_TRUELENGTH(newnam, n);
+    SEXP newnam = PROTECT(allocVector(STRSXP, n));
+    memcpy(SEXPPTR(newnam), SEXPPTR_RO(nam), l*sizeof(SEXP));
+    SET_LEN(newnam, l);
+    SET_TRULEN(newnam, n);
     setAttrib(x, R_NamesSymbol, newnam);
     setselfref(x);
     UNPROTECT(1);
@@ -58,7 +76,7 @@ bool allNA(SEXP x, bool errorForBadType) {
     }
     return true;
   case STRSXP: {
-    const SEXP *xd = SEXPPTR(x);
+    const SEXP *xd = SEXPPTR_RO(x);
     for (int i=0; i != n; ++i)    if (xd[i]!=NA_STRING) {
       return false;
     }
@@ -159,7 +177,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
         for (int j=0; j != n; ++j) ians[j] += (iv[j] == NA_INTEGER);
       } break;
       case STRSXP: {
-        const SEXP *sv = SEXPPTR(v);
+        const SEXP *sv = SEXPPTR_RO(v);
         for (int j=0; j != n; ++j) ians[j] += (sv[j] == NA_STRING);
       } break;
       case REALSXP: {
@@ -204,7 +222,7 @@ SEXP dt_na(SEXP x, SEXP cols, SEXP Rprop, SEXP Rcount) {
         for (int j=0; j != n; ++j) ians[j] |= (iv[j] == NA_INTEGER);
       } break;
       case STRSXP: {
-        const SEXP *sv = SEXPPTR(v);
+        const SEXP *sv = SEXPPTR_RO(v);
         for (int j=0; j != n; ++j) ians[j] |= (sv[j] == NA_STRING);
       } break;
       case REALSXP: {
@@ -241,16 +259,21 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
   int *xstart = INTEGER(xstartArg), *xlen = INTEGER(xlenArg), *xorder = INTEGER(xorderArg);
   n = length(xorderArg);
   ng = length(xstartArg);
+  if(n > 0 && n == ng && asInteger(dns) == 1) return xorderArg;
   SEXP ans = PROTECT(allocVector(INTSXP, n));
   int *ians = INTEGER(ans);
   if(n > 0) {
     switch(asInteger(dns)) {
     case 0: // Not Sorted
       k=1;
-      for (i = 0; i != ng; i++) {
-        for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
-          ians[xorder[j]-1] = k;
-        k++;
+      if(n == ng) {
+        for (i = 0; i != n; i++) ians[xorder[i]-1] = i+1;
+      } else {
+        for (i = 0; i != ng; i++) {
+          for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
+            ians[xorder[j]-1] = k;
+          k++;
+        }
       }
       break;
     case 1: // Sorted
@@ -260,7 +283,7 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
         k++;
       }
       break;
-    case 2: // This is basically run-length type group-id
+    case 2: // This is basically run-length type group-id: currently not used in collapse!
       for (i = 0; i != ng; i++) {
         k=1;
         for (j = xstart[i]-1, end = xstart[i]+xlen[i]-1; j < end; j++)
@@ -271,7 +294,7 @@ SEXP frankds(SEXP xorderArg, SEXP xstartArg, SEXP xlenArg, SEXP dns) {
     }
   }
   UNPROTECT(1);
-  return(ans);
+  return ans;
 }
 
 // from data.table_assign.c:
@@ -284,7 +307,7 @@ SEXP setcolorder(SEXP x, SEXP o) {
 
   // Double-check here at C level that o[] is a strict permutation of 1:ncol. Reordering columns by reference makes no
   // difference to generations/refcnt so we can write behind barrier in this very special case of strict permutation.
-  bool *seen = Calloc(ncol, bool);
+  bool *seen = R_Calloc(ncol, bool);
   for (int i=0; i != ncol; ++i) {
     if (od[i]==NA_INTEGER || od[i]<1 || od[i]>ncol)
       error("Internal error: o passed to Csetcolorder contains an NA or out-of-bounds");  // # nocov
@@ -292,9 +315,9 @@ SEXP setcolorder(SEXP x, SEXP o) {
       error("Internal error: o passed to Csetcolorder contains a duplicate");             // # nocov
     seen[od[i]-1] = true;
   }
-  Free(seen);
+  R_Free(seen);
 
-  SEXP *tmp = Calloc(ncol, SEXP), *namesd = SEXPPTR(names);
+  SEXP *tmp = R_Calloc(ncol, SEXP), *namesd = SEXPPTR(names);
   const SEXP *xd = SEXPPTR_RO(x);
   for (int i=0; i != ncol; ++i) tmp[i] = xd[od[i]-1];
   for (int i=0; i != ncol; ++i) SET_VECTOR_ELT(x, i, tmp[i]);
@@ -304,7 +327,7 @@ SEXP setcolorder(SEXP x, SEXP o) {
   for (int i=0; i != ncol; ++i) tmp[i] = namesd[od[i]-1];
   memcpy(namesd, tmp, ncol*sizeof(SEXP));
   // No need to change key (if any); sorted attribute is column names not positions
-  Free(tmp);
+  R_Free(tmp);
   return(R_NilValue);
 }
 

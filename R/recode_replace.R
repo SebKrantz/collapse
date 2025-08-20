@@ -156,9 +156,8 @@ recode_char <- function(X, ..., default = NULL, missing = NULL, regex = FALSE,
         } else {
           repfun <- function(y) if(is.character(y)) {
             z <- scv(y, 1L, y[1L], vind1 = TRUE) # Copy
-            y <- scv(y, nam[1L], default, set, TRUE)
-            scv(y, nam[1L], args[[1L]], TRUE)
-            for(i in seqarg[-1L]) scv(y, grepl(nam[i], z, ignore.case, FALSE, fixed), args[[i]], TRUE, vind1 = TRUE)
+            y <- scv(y, seq_along(y), default, set, vind1 = TRUE)  # Initialize all to default
+            for(i in seqarg) scv(y, grepl(nam[i], z, ignore.case, FALSE, fixed), args[[i]], TRUE, vind1 = TRUE)
             y
           } else y
         }

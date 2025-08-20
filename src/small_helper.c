@@ -1,9 +1,9 @@
 #include "collapse_c.h"
-// #include "data.table.h"
+#include "data.table.h"
 // #ifndef USE_RINTERNALS
 // #define USE_RINTERNALS
 // #endif
-#include "base_radixsort.h"
+// #include "base_radixsort.h"
 #include <math.h>
 
 void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
@@ -23,14 +23,14 @@ void matCopyAttr(SEXP out, SEXP x, SEXP Rdrop, int ng) {
       SET_VECTOR_ELT(dn, 1, cn);
       dimnamesgets(out, dn);
     }
-    if(OBJECT(x) == 0) copyMostAttrib(x, out);
+    if(!isObject(x)) copyMostAttrib(x, out);
     UNPROTECT(nprotect);
   }
 }
 
 void DFcopyAttr(SEXP out, SEXP x, int ng) {
   SHALLOW_DUPLICATE_ATTRIB(out, x);
-  if(OBJECT(x) != 0) { // No attributes for plain lists
+  if(isObject(x)) { // No attributes for plain lists
     if(ng == 0) {
       setAttrib(out, R_RowNamesSymbol, ScalarInteger(1));
     } else {
@@ -82,6 +82,8 @@ SEXP falloc(SEXP value, SEXP n, SEXP simplify)  {
     }
     default: {
       SEXP *pout = SEXPPTR(out);
+      if(asLogical(simplify) && tval == VECSXP && length(value) == 1)
+        value = VECTOR_ELT(value, 0);
       for(int i = 0; i != l; ++i) pout[i] = value;
       break;
     }
@@ -153,6 +155,79 @@ SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill) {
   return out;
 }
 
+SEXP gwhich_first(SEXP x, SEXP g, SEXP target) {
+  if(!inherits(g, "GRP")) error("Internal error: g must be an object of class 'GRP'.");
+  const int ng = asInteger(VECTOR_ELT(g, 0)), *pg = INTEGER_RO(VECTOR_ELT(g, 1)), l = length(VECTOR_ELT(g, 1));
+  if(l != length(x)) error("length(x) must match length(g).");
+  if(ng != length(target)) error("length(target) must match number of groups.");
+  if(TYPEOF(x) != TYPEOF(target)) error("x is of type %s whereas target is of type %s.", type2char(TYPEOF(x)), type2char(TYPEOF(target)));
+
+  SEXP res = PROTECT(allocVector(INTSXP, ng));
+  if(ng == 0) {
+    UNPROTECT(1);
+    return res;
+  }
+  memset(INTEGER(res), 0, ng*sizeof(int));
+  int *pres = INTEGER(res)-1;
+
+  switch(TYPEOF(x)) {
+    case INTSXP:
+    case LGLSXP: {
+      const int *px = INTEGER_RO(x), *pt = INTEGER_RO(target)-1;
+      for(int i = 0; i != l; ++i) if(pres[pg[i]] == 0 && px[i] == pt[pg[i]]) pres[pg[i]] = i+1;
+      break;
+    }
+    case REALSXP: {
+      const double *px = REAL_RO(x), *pt = REAL_RO(target)-1;
+      for(int i = 0; i != l; ++i) if(pres[pg[i]] == 0 && px[i] == pt[pg[i]]) pres[pg[i]] = i+1;
+      break;
+    }
+    case STRSXP: {
+      const SEXP *px = STRING_PTR_RO(x), *pt = STRING_PTR_RO(target)-1;
+      for(int i = 0; i != l; ++i) if(pres[pg[i]] == 0 && px[i] == pt[pg[i]]) pres[pg[i]] = i+1;
+      break;
+    }
+    default: error("Unsupported type %s", type2char(TYPEOF(x)));
+  }
+
+  UNPROTECT(1);
+  return res;
+}
+
+SEXP gslice_multi(SEXP g, SEXP o, SEXP Rn, SEXP first)  {
+  if(!inherits(g, "GRP")) error("Internal error: g must be an object of class 'GRP'.");
+  const int n = asInteger(Rn), ng = asInteger(VECTOR_ELT(g, 0)), l = length(VECTOR_ELT(g, 1)),
+    *pg = INTEGER_RO(VECTOR_ELT(g, 1)), *pgs = INTEGER_RO(VECTOR_ELT(g, 2));
+
+  int lvec = 0;
+  #pragma omp simd reduction(+:lvec)
+  for(int i = 0; i < ng; ++i) lvec += n <= pgs[i] ? n : pgs[i];
+
+  SEXP res = PROTECT(allocVector(INTSXP, lvec));
+  int *sizes = (int*)R_Calloc(ng+1, int);
+  int *pres = INTEGER(res);
+
+  if(isNull(o)) {
+    if(asLogical(first)) {
+      for(int i = 0, k = 0; i != l; ++i) if(n > sizes[pg[i]]++) pres[k++] = i+1;
+    } else {
+      for(int i = l, k = lvec; i--; ) if(n > sizes[pg[i]]++) pres[--k] = i+1;
+    }
+  } else {
+    if(length(o) != l) error("length(o) must match length(g)");
+    const int *po = INTEGER(o);
+    if(asLogical(first)) {
+      for(int i = 0, k = 0; i != l; ++i) if(n > sizes[pg[po[i]-1]]++) pres[k++] = po[i];
+    } else {
+      for(int i = l, k = lvec; i--; ) if(n > sizes[pg[po[i]-1]]++) pres[--k] = po[i];
+    }
+  }
+
+  R_Free(sizes);
+  UNPROTECT(1);
+  return res;
+}
+
 // SEXP CasChar(SEXP x) {
 //  return coerceVector(x, STRSXP);
 // }
@@ -169,7 +244,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
     return R_NilValue;
   }
   if(length(rhs) != n) error("length(lhs) must be equal to length(rhs)");
-  SEXP *plhs = SEXPPTR(lhs);
+  const SEXP *plhs = SEXPPTR_RO(lhs);
   switch(TYPEOF(rhs)) { // installTrChar translates to native encoding, installChar does the same now, but also is available on older systems.
     case REALSXP: {
       double *prhs = REAL(rhs);
@@ -188,7 +263,7 @@ SEXP multiassign(SEXP lhs, SEXP rhs, SEXP envir) {
       break;
     }
     case STRSXP: {
-      SEXP *prhs = SEXPPTR(rhs);
+      const SEXP *prhs = SEXPPTR_RO(rhs);
       for(int i = 0; i < n; ++i) {
         SEXP nam = installChar(plhs[i]);
         defineVar(nam, ScalarString(prhs[i]), envir);
@@ -565,10 +640,6 @@ SEXP fnrowC(SEXP x) {
   return ScalarInteger(INTEGER(dim)[0]);
 }
 
-
-#define MYEFL(x) (((SEXPREC_partial *)(x))->sxpinfo.gp)
-#define MYSEFL(x,v)	((((SEXPREC_partial *)(x))->sxpinfo.gp)=(v))
-
 // Taken from: https://github.com/r-lib/rlang/blob/main/src/internal/env.c
 #define CLP_FRAME_LOCK_MASK (1 << 14)
 #define CLP_FRAME_IS_LOCKED(e) (MYEFL(e) & CLP_FRAME_LOCK_MASK)
@@ -584,3 +655,114 @@ SEXP unlock_collapse_namespace(SEXP env) {
   return CLP_FRAME_IS_LOCKED(env) == 0 ? ScalarLogical(1) : ScalarLogical(0);
 }
 
+
+SEXP integer64toREAL(SEXP x) {
+  int n = length(x);
+
+  SEXP out = PROTECT(allocVector(REALSXP, n));
+  double* restrict p_out = REAL(out);
+  const int64_t *p_x = INTEGER64_PTR_RO(x);
+
+  #pragma omp simd
+  for (int i = 0; i < n; ++i) {
+    p_out[i] = p_x[i] == NA_INTEGER64 ? NA_REAL : (double)p_x[i];
+  }
+
+  UNPROTECT(1);
+  return out;
+}
+
+SEXP funlist(SEXP x) {
+
+  if(TYPEOF(x) != VECSXP) return x;
+  int l = length(x);
+  if(l < 1) return R_NilValue;
+  if(l == 1) return VECTOR_ELT(x, 0);
+
+  int n = 0, nt = 0, mt = 0, elem = 0, nprotect = 0;
+  const SEXP *px = SEXPPTR_RO(x);
+  int *restrict types = (int*)R_Calloc(27, int);
+
+  // #pragma omp simd
+  for(int i = 0; i < l; ++i) {
+    n += length(px[i]);
+    ++types[TYPEOF(px[i])];
+  }
+  for(int i = 0; i < 27; ++i) {
+    if(types[i] > 0) {
+      mt = i; ++nt;
+    }
+  }
+
+  // If more than one type: need to coerce to largest type
+  if(nt > 1) {
+    SEXP y = PROTECT(allocVector(VECSXP, l)); ++nprotect;
+    for(int i = 0; i < l; ++i) {
+      if(TYPEOF(px[i]) == mt) {
+        elem = i;
+        SET_VECTOR_ELT(y, i, px[i]);
+      } else SET_VECTOR_ELT(y, i, coerceVector(px[i], mt));
+    }
+    px = SEXPPTR_RO(y);
+  }
+
+  // Now unlisting
+  SEXP res = PROTECT(allocVector(mt, n)); ++nprotect; n = 0;
+
+  switch(mt) {
+    case INTSXP:
+    case LGLSXP: {
+      int *pres = INTEGER(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const int *pxi = INTEGER_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    case REALSXP: {
+      double *pres = REAL(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const double *pxi = REAL_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    case STRSXP:
+    case VECSXP:
+    case EXPRSXP: {
+      SEXP *pres = SEXPPTR(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const SEXP *pxi = SEXPPTR_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    case CPLXSXP: {
+      Rcomplex *pres = COMPLEX(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const Rcomplex *pxi = COMPLEX_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    case RAWSXP: {
+      Rbyte *pres = RAW(res);
+      for(int i = 0; i != l; ++i) {
+        nt = length(px[i]);
+        const Rbyte *pxi = RAW_RO(px[i]);
+        for (int j = 0; j != nt; ++j) pres[n++] = pxi[j];
+      }
+      break;
+    }
+    default: error("unsupported type: %s", type2char(mt));
+  }
+
+  if(isObject(px[elem])) copyMostAttrib(px[elem], res);
+  R_Free(types);
+  UNPROTECT(nprotect);
+  return res;
+}

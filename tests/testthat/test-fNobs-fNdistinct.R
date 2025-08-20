@@ -13,7 +13,7 @@ dataNA <- na_insert(data)
 m <- as.matrix(data)
 mNA <- as.matrix(dataNA)
 data$LC <- as.list(data$PCGDP)
-dataNA$LC <- lapply(na_insert(data["LC"])[[1]], function(x) if(is.na(x)) NULL else x)
+dataNA$LC <- lapply(na_insert(data["LC"][[1]]), function(x) if(is.na(x)) NULL else x)
 
 bsum <- base::sum
 Nobs <- function(x) if(is.list(x)) bsum(lengths(x) > 0L) else bsum(!is.na(x))

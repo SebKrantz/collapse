@@ -61,7 +61,7 @@ void writeValueByIndex(SEXP target, SEXP source, const int from, SEXP index) {
 SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
   if(TYPEOF(data) != VECSXP) error("pivot_long: input data is of type '%s', but needs to be a list", type2char(TYPEOF(data)));
   const int l = length(data);
-  if(l == 1) return VECTOR_ELT(data, 0);
+  if(l == 1 && isNull(ind) && !asLogical(idcol)) return VECTOR_ELT(data, 0);
   if(l == 0) error("pivot_long: input data needs to have 1 or more columns. Current number of columns: 0");
 
   const SEXP *pd = SEXPPTR_RO(data), *pind = pd;
@@ -73,9 +73,9 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
   }
 
   int max_type = 0, distinct_types = 0, len = 0;
-  for (int j = 0, tj, tj_first = TYPEOF(pd[0]), oj, oj_first = OBJECT(pd[0]); j != l; ++j) {
+  for (int j = 0, tj, tj_first = TYPEOF(pd[0]), oj, oj_first = isObject(pd[0]); j != l; ++j) {
     tj = TYPEOF(pd[j]);
-    oj = OBJECT(pd[j]);
+    oj = isObject(pd[j]);
     len += length(pind[j]);
     if(tj > max_type) max_type = tj;
     if(tj != tj_first || oj != oj_first) distinct_types = 1;
@@ -101,7 +101,7 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
 
   if(distinct_types == 0) {
     copyMostAttrib(pd[0], res);
-    // setAttrib(res, install("label"), R_NilValue); // better to keep, this is also used for id-columns if na.rm = TRUE
+    // setAttrib(res, sym_label, R_NilValue); // better to keep, this is also used for id-columns if na.rm = TRUE
   }
 
   // Add ID column
@@ -119,7 +119,8 @@ SEXP pivot_long(SEXP data, SEXP ind, SEXP idcol) {
         pid += end; ++v;
       }
     } else {
-      SEXP *restrict pid = SEXPPTR(id_column), *pnam = SEXPPTR(names);
+      SEXP *restrict pid = SEXPPTR(id_column);
+      const SEXP *pnam = SEXPPTR_RO(names);
       for (int j = 0, end = 0; j != l; ++j) {
         SEXP namj = pnam[j];
         end = length(pind[j]); // SIMD??
@@ -186,7 +187,7 @@ switch(aggfun) {                                                                
       for(int i = 0; i != l; ++i) if(NONMISSCHECK) TYPEACC(pout[pid[i]])[pix[i]-1] += pc[i]; \
   } break;                                                                                 \
   case 5: { /* mean: no multithreading because possible race condition */                  \
-    int *restrict count = (int*)Calloc(nr*nc+1, int);                                      \
+    int *restrict count = (int*)R_Calloc(nr*nc+1, int);                                      \
     tdef *meani = TYPEACC(pout[1]);                                                        \
     for(int i = 0; i != l; ++i) {                                                          \
       if(NONMISSCHECK) {                                                                   \
@@ -199,7 +200,7 @@ switch(aggfun) {                                                                
         meani[pix[i]] += (pc[i] - meani[pix[i]]) / ++count[(pid[i]-1)*nr+pix[i]];          \
       }                                                                                    \
     }                                                                                      \
-    Free(count);                                                                           \
+    R_Free(count);                                                                           \
   } break;                                                                                 \
   case 6: { /* min: no multithreading because possible race condition */                   \
     tdef *mini = TYPEACC(pout[1]);                                                         \
@@ -227,10 +228,9 @@ switch(aggfun) {                                                                
 // TODO: How to check for duplicate rows?
 SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEXP Raggfun, SEXP Rnarm) {
 
-  SEXP sym_ng = install("N.groups");
   const int *restrict pix = INTEGER_RO(index), *restrict pid = INTEGER_RO(id), l = length(index),
-    nr = asInteger(getAttrib(index, sym_ng)),
-    nc = asInteger(getAttrib(id, sym_ng)), tx = TYPEOF(column), aggfun = aggFUNtI(Raggfun);
+    nr = asInteger(getAttrib(index, sym_n_groups)),
+    nc = asInteger(getAttrib(id, sym_n_groups)), tx = TYPEOF(column), aggfun = aggFUNtI(Raggfun);
   int narm = asInteger(Rnarm);
   if(l != length(id)) error("Internal error: length(index) must match length(id)");
   if(l != length(column)) error("Internal error: length(index) must match length(column)");
@@ -240,7 +240,8 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
   if(l < 100000) nthreads = 1; // No improvements from multithreading on small data.
   if(nthreads > max_threads) nthreads = max_threads;
 
-  SEXP out = PROTECT(allocVector(VECSXP, nc)), *restrict pout = SEXPPTR(out)-1;
+  SEXP out = PROTECT(allocVector(VECSXP, nc));
+  const SEXP *restrict pout = SEXPPTR_RO(out)-1;
 
   SEXP out1;
   if(aggfun < 3 || aggfun > 4) {
@@ -275,9 +276,9 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
     case LGLSXP: {
       const int *restrict pc = INTEGER_RO(column);
       if(aggfun <= 3) {
-        AGGFUN_SWITCH_CAT(INTEGER, pc[i] != NA_INTEGER);
+        AGGFUN_SWITCH_CAT(INT_DATAPTR, pc[i] != NA_INTEGER);
       } else {
-        AGGFUN_SWITCH_NUM(int, INTEGER, pc[i] != NA_INTEGER, ISMISS_INTDBL);
+        AGGFUN_SWITCH_NUM(int, INT_DATAPTR, pc[i] != NA_INTEGER, ISMISS_INTDBL);
       }
       break;
     }
@@ -290,9 +291,9 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
       //   pout_i[pix[i]] = pc[i];
       // }
       if(aggfun <= 3) {
-        AGGFUN_SWITCH_CAT(REAL, NISNAN(pc[i]));
+        AGGFUN_SWITCH_CAT(DBL_DATAPTR, NISNAN(pc[i]));
       } else {
-        AGGFUN_SWITCH_NUM(double, REAL, NISNAN(pc[i]), ISNAN);
+        AGGFUN_SWITCH_NUM(double, DBL_DATAPTR, NISNAN(pc[i]), ISNAN);
       }
       break;
     }
@@ -316,14 +317,14 @@ SEXP pivot_wide(SEXP index, SEXP id, SEXP column, SEXP fill, SEXP Rnthreads, SEX
     case STRSXP: {
       const SEXP *restrict pc = SEXPPTR_RO(column);
       if(aggfun > 3) error("Cannot aggregate character column with sum, mean, min, or max.");
-      AGGFUN_SWITCH_CAT(SEXPPTR, pc[i] != NA_STRING);
+      AGGFUN_SWITCH_CAT(SEXP_DATAPTR, pc[i] != NA_STRING);
       break;
     }
     case VECSXP:
     case EXPRSXP: {
       const SEXP *restrict pc = SEXPPTR_RO(column);
       if(aggfun > 3) error("Cannot aggregate list column with sum, mean, min, or max.");
-      AGGFUN_SWITCH_CAT(SEXPPTR, length(pc[i]) != 0);
+      AGGFUN_SWITCH_CAT(SEXP_DATAPTR, length(pc[i]) != 0);
       break;
     }
     default: error("Unsupported SEXP type: '%s'", type2char(tx));

@@ -3,6 +3,7 @@
 \.fsrc$
 \.o$
 \.so$
+^CONTRIBUTING\.md$
 ^README\.md$
 ^README\.Rmd$
 ^cran-comments\.md$

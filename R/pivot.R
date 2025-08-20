@@ -1,4 +1,4 @@
-
+# TODO: 'to' in wider and recast pivot should be optional (if only one variable is pivoted -> should be able to set to = NULL).
 
 proc_names_longer <- function(x) {
   if(is.null(x)) return(list("variable", "value"))
@@ -175,6 +175,7 @@ pivot <- function(data,
              warning("duplicated id values detected: there are ", ng, " unique id-combinations, but the data has ", fnrow(data),
                      " rows. This means you have on average ", round(fnrow(data)/ng, 1), " duplicates per id-combination. ",
                      "Consider adding additional ids or aggregating your data (e.g. using collap()) before applying pivot().")
+          if(length(vd)) {
           if(na.rm) {
             cc <- lapply(vd, whichNA, invert = TRUE) # TODO: could do this all internally using a single vector
             # cc_vec <- c_to_vec(cc)
@@ -184,7 +185,7 @@ pivot <- function(data,
             # value_col <- .Call(C_pivot_long, vd, cc, FALSE) # Csv(c_to_vec(data[values]), cc_vec)
             # variable_col <- rep(if(factor[1L]) seq_along(values) else nam[values], vlengths(cc))
           } else {
-            id_cols <- .Call(C_rbindlist, alloc(data[ids], length(values)), FALSE, FALSE, NULL) # .Call(C_subsetDT, data, rep.int(seq_len(n), length(values)), ids, FALSE)
+            id_cols <- .Call(C_rbindlist, alloc(data[ids], length(values), FALSE), FALSE, FALSE, NULL) # .Call(C_subsetDT, data, rep.int(seq_len(n), length(values)), ids, FALSE)
             # This is faster than .Call(C_pivot_long, vd, NULL) because rep() is slow...
             value_cols <- .Call(C_pivot_long, vd, NULL, TRUE) # .Call(C_rbindlist, lapply(vd, list), FALSE, FALSE, "id")
             # value_col <- .Call(C_pivot_long, vd, NULL)   # c_to_vec(data[values])
@@ -227,6 +228,7 @@ pivot <- function(data,
             oldClass(value_cols[[1L]]) <- "factor" # c("factor", "na.included")
           } else if(length(labels)) value_cols[[1L]] <- duplAttributes(Csv(nam[values], value_cols[[1L]]), value_cols[[1L]])
           res <- c(id_cols, value_cols)
+          } else res <- data[ids]
         }
 
     } else {
@@ -260,7 +262,7 @@ pivot <- function(data,
           names <- seq_along(names) + length(ids)
           values <- seq_along(values) + length(ids) + length(names)
           if(length(labels)) labels <- seq_along(labels) + length(ids) + length(names) + length(values)
-          data <- na_omit(data, cols = values)
+          data <- na_omit(data, cols = values, prop = 1)
         }
         # (3) Compute ID Columns
         if(sort[1L]) {
@@ -270,7 +272,7 @@ pivot <- function(data,
           g <- g[[2L]]
           attr(g, "N.groups") <- ng
         } else { # Could also use GRP(), but this avoids computing a potentially large and redundant group sizes vector
-          g <- group(data[ids], starts = TRUE)
+          g <- groupv(data[ids], starts = TRUE)
           id_cols <- .Call(C_subsetDT, data, attr(g, "starts"), ids, FALSE)
         }
         # (4) Compute Names and Labels Columns
@@ -306,17 +308,17 @@ pivot <- function(data,
           namv <- names(data)[values]
           attributes(data) <- NULL
           if(!is.character(FUN)) {
-            data[values] <- apply_external_FUN(data[values], group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+            data[values] <- apply_external_FUN(data[values], group(g, g_v), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
             FUN <- "last"
           }
           value_cols <- lapply(data[values], function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, FUN, na.rm))
           if(length(labels)) value_cols <- lapply(value_cols, add_labels, labels)
-          value_cols <- unlist(if(transpose[1L]) t_list2(value_cols) else value_cols, FALSE, FALSE)
+          value_cols <- funlist(if(transpose[1L]) t_list2(value_cols) else value_cols)
           namv_res <- if(transpose[2L]) t(outer(names, namv, paste, sep = "_")) else outer(namv, names, paste, sep = "_")
           names(value_cols) <- if(transpose[1L]) namv_res else t(namv_res)
         } else {
           if(!is.character(FUN)) {
-            data[[values]] <- apply_external_FUN(data[[values]], group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+            data[[values]] <- apply_external_FUN(data[[values]], group(g, g_v), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
             FUN <- "last"
           }
           value_cols <- .Call(C_pivot_wide, g, g_v, data[[values]], fill, nthreads, FUN, na.rm)
@@ -356,7 +358,7 @@ pivot <- function(data,
             g <- g[[2L]]
             attr(g, "N.groups") <- ng
           } else { # Could also use GRP(), but this avoids computing a potentially large and redundant group sizes vector
-            g <- group(data[ids], starts = TRUE)
+            g <- groupv(data[ids], starts = TRUE)
             id_cols <- .Call(C_subsetDT, data, attr(g, "starts"), ids, FALSE)
           }
         } else {
@@ -396,11 +398,11 @@ pivot <- function(data,
           attributes(vd) <- NULL
         }
         if(!is.character(FUN)) {
-          vd <- apply_external_FUN(vd, group(list(g, g_v)), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
+          vd <- apply_external_FUN(vd, group(g, g_v), FUN, FUN.args, l1orlst(as.character(substitute(FUN))))
           FUN <- "last"
         }
         value_cols <- lapply(vd, function(x) .Call(C_pivot_wide, g, g_v, x, fill, nthreads, FUN, na.rm))
-        if(length(id_cols)) id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols)), FALSE, FALSE, NULL)
+        if(length(id_cols)) id_cols <- .Call(C_rbindlist, alloc(id_cols, length(value_cols), FALSE), FALSE, FALSE, NULL)
         value_cols <- .Call(C_rbindlist, value_cols, FALSE, FALSE, names[[2L]]) # Final column is "variable" name
 
         names(value_cols) <- c(names[[2L]], names1)
@@ -409,9 +411,11 @@ pivot <- function(data,
 
         # (6) Missing Value Removal
         if(na.rm) { # TODO: better way???
-          cc <- whichv(missing_cases(value_cols), FALSE)
-          value_cols <- .Call(C_subsetDT, value_cols, cc, seq_along(value_cols), FALSE)
-          id_cols <- .Call(C_subsetDT, id_cols, cc, seq_along(id_cols), FALSE)
+          cc <- whichv(missing_cases(value_cols, prop = 1), FALSE)
+          if(length(cc) != fnrow(value_cols)) {
+            value_cols <- .Call(C_subsetDT, value_cols, cc, seq_along(value_cols), FALSE)
+            id_cols <- .Call(C_subsetDT, id_cols, cc, seq_along(id_cols), FALSE)
+          }
         }
 
         # (7) Properly deal with variable names and labels

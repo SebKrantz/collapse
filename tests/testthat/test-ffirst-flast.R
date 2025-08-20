@@ -21,7 +21,7 @@ dataNA <- na_insert(data)
 m <- as.matrix(data)
 mNA <- as.matrix(dataNA)
 data$LC <- as.list(data$PCGDP)
-dataNA$LC <- lapply(na_insert(data["LC"])[[1]], function(x) if(is.na(x)) NULL else x)
+dataNA$LC <- lapply(na_insert(data["LC"][[1]]), function(x) if(is.na(x)) NULL else x)
 
 basefirst <- function(x, na.rm = FALSE) {
   if(is.list(x)) return(if(na.rm) x[which(lengths(x) > 0L)[1L]] else x[1L])

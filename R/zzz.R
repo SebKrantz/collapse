@@ -1,3 +1,4 @@
+.datatable.aware <- TRUE
 
 do_collapse_mask <- function(clpns, mask) {
   if(!is.character(mask)) stop("Option collapse_mask needs to be character typed")
@@ -13,7 +14,7 @@ do_collapse_mask <- function(clpns, mask) {
   }
   # This now does the preprocessing (interpreting keywords and changing internal optimization flags as required)
   if(any(mask == "all")) mask <- c("helper", "manip", "special", "fast-fun", if(length(mask) > 1L) mask[mask != "all"] else NULL)
-  manipfun <- c("fsubset", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fsummarize", "fmutate", "frename", "findex_by", "findex")
+  manipfun <- c("fsubset", "fslice", "fslicev", "ftransform", "ftransform<-", "ftransformv", "fcompute", "fcomputev", "fselect", "fselect<-", "fgroup_by", "fgroup_vars", "fungroup", "fsummarise", "fsummarize", "fmutate", "frename", "findex_by", "findex")
   helperfun <- c("fdroplevels", "finteraction", "fnlevels", "fmatch", "funique", "fnunique", "fduplicated", "fcount", "fcountv", "fquantile", "frange", "fdist", "fnrow", "fncol") # , "fdim": Problem of infinite recursion...
   specialfun <- c("n", "table", "%in%")
   if(any(mask == "helper")) mask <- unique.default(c(helperfun, mask[mask != "helper"]))

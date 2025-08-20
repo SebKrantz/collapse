@@ -161,8 +161,8 @@ mctl <- function(X, names = FALSE, return = "list") {
          stop("Unknown return option!"))
 }
 
-psmatCpp <- function(x, g, t = NULL, transpose = FALSE) {
-    .Call(Cpp_psmat, x, g, t, transpose)
+psmatCpp <- function(x, g, t = NULL, transpose = FALSE, fill = NULL) {
+    .Call(Cpp_psmat, x, g, t, transpose, fill)
 }
 
 qFCpp <- function(x, ordered = TRUE, na_exclude = TRUE, keep_attr = TRUE, ret = 1L) {

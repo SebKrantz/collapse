@@ -14,7 +14,7 @@ int ndistinct_int(const int *restrict px, const int *restrict po, const int l, c
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
 
   if(sorted) {
     for (int i = 0; i != l; ++i) {
@@ -49,14 +49,14 @@ int ndistinct_int(const int *restrict px, const int *restrict po, const int l, c
     }
   }
 
-  Free(h);
+  R_Free(h);
   if(narm == 0) ndist += anyNA;
   return ndist;
 }
 
 int ndistinct_fct(const int *restrict px, const int *restrict po, const int l, const int nlev, const int sorted, const int narm) {
   if(l == 1) return !(narm && px[sorted ? 0 : po[0]-1] == NA_INTEGER);
-  int *restrict h = (int*)Calloc(nlev+1, int);
+  int *restrict h = (int*)R_Calloc(nlev+1, int);
   int ndist = 0, anyNA = narm; // Ensures breaking works if narm = TRUE or FALSE
   if(sorted) {
     for (int i = 0, xi; i != l; ++i) {
@@ -84,7 +84,7 @@ int ndistinct_fct(const int *restrict px, const int *restrict po, const int l, c
     }
   }
   if(narm == 0) ndist += anyNA;
-  Free(h);
+  R_Free(h);
   return ndist;
 }
 
@@ -136,7 +136,7 @@ int ndistinct_double(const double *restrict px, const int *restrict po, const in
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   union uno tpv;
   double xi;
 
@@ -176,7 +176,7 @@ int ndistinct_double(const double *restrict px, const int *restrict po, const in
   }
 
 
-  Free(h);
+  R_Free(h);
   if(narm == 0) ndist += anyNA;
   return ndist;
 }
@@ -190,7 +190,7 @@ int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int 
     M *= 2;
     K++;
   }
-  int *restrict h = (int*)Calloc(M, int); // Table to save the hash values, table has size M
+  int *restrict h = (int*)R_Calloc(M, int); // Table to save the hash values, table has size M
   SEXP xi;
 
   if(sorted) {
@@ -226,7 +226,7 @@ int ndistinct_string(const SEXP *restrict px, const int *restrict po, const int 
     }
   }
 
-  Free(h);
+  R_Free(h);
   if(narm == 0) ndist += anyNA;
   return ndist;
 }
@@ -242,7 +242,7 @@ int ndistinct_impl_int(SEXP x, int narm) {
       return isFactor(x) ? ndistinct_fct(INTEGER(x), &l, l, nlevels(x), 1, narm) :
                            ndistinct_int(INTEGER(x), &l, l, 1, narm);
     case LGLSXP: return ndistinct_logi(LOGICAL(x), &l, l, 1, narm);
-    case STRSXP: return ndistinct_string(SEXPPTR(x), &l, l, 1, narm);
+    case STRSXP: return ndistinct_string(SEXPPTR_RO(x), &l, l, 1, narm);
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 }
@@ -291,7 +291,7 @@ SEXP ndistinct_g_impl(SEXP x, const int ng, const int *restrict pgs, const int *
         break;
       }
       case STRSXP: {
-        const SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_string(px + pst[gr]-1, po, pgs[gr], 1, narm);
@@ -330,7 +330,7 @@ SEXP ndistinct_g_impl(SEXP x, const int ng, const int *restrict pgs, const int *
         break;
       }
       case STRSXP: {
-        const SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int gr = 0; gr < ng; ++gr)
           pres[gr] = pgs[gr] == 0 ? 0 : ndistinct_string(px, po + pst[gr]-1, pgs[gr], 0, narm);
@@ -354,28 +354,26 @@ SEXP fndistinctC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rnthreads) {
   int sorted = LOGICAL(pg[5])[1] == 1, ng = INTEGER(pg[0])[0], *restrict pgs = INTEGER(pg[2]), *restrict po, *restrict pst,
     l = length(x), nthreads = asInteger(Rnthreads);
   if(l != length(pg[1])) error("length(g) must match length(x)");
+  if(l < 1) return ScalarInteger(0);
   if(isNull(o)) {
     int *cgs = (int *) R_alloc(ng+2, sizeof(int)), *restrict pgv = INTEGER(pg[1]); cgs[1] = 1;
     for(int i = 0; i != ng; ++i) cgs[i+2] = cgs[i+1] + pgs[i];
     pst = cgs + 1;
     if(sorted) po = &l;
     else {
-      int *restrict count = (int *) Calloc(ng+1, int);
+      int *restrict count = (int *) R_Calloc(ng+1, int);
       po = (int *) R_alloc(l, sizeof(int)); --po;
       for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-      ++po; Free(count);
+      ++po; R_Free(count);
     }
   } else {
     po = INTEGER(o);
-    pst = INTEGER(getAttrib(o, install("starts")));
+    pst = INTEGER(getAttrib(o, sym_starts));
   }
   if(nthreads > max_threads) nthreads = max_threads;
   PROTECT(res = ndistinct_g_impl(x, ng, pgs, po, pst, sorted, asLogical(Rnarm), nthreads));
-  if(OBJECT(x) == 0) copyMostAttrib(x, res);
-  else {
-    SEXP sym_label = install("label");
-    setAttrib(res, sym_label, getAttrib(x, sym_label));
-  }
+  if(!isObject(x)) copyMostAttrib(x, res);
+  else setAttrib(res, sym_label, getAttrib(x, sym_label));
   UNPROTECT(1);
   return res;
 }
@@ -399,7 +397,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
     UNPROTECT(1);
     return out;
   } else {
-    SEXP out = PROTECT(allocVector(VECSXP, l)), sym_label = PROTECT(install("label")), *restrict pout = SEXPPTR(out);
+    SEXP out = PROTECT(allocVector(VECSXP, l)), *restrict pout = SEXPPTR(out);
     const SEXP *restrict px = SEXPPTR_RO(x);
     if(isNull(g)) {
       if(nthreads <= 1) {
@@ -412,7 +410,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       // Not thread safe and thus taken out
       for(int j = 0; j != l; ++j) {
         SEXP xj = px[j];
-        if(OBJECT(xj) == 0) copyMostAttrib(xj, pout[j]);
+        if(!isObject(xj)) copyMostAttrib(xj, pout[j]);
         else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
       }
       DFcopyAttr(out, x, /*ng=*/0);
@@ -426,25 +424,25 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
         pst = cgs + 1;
         if(sorted) po = &l;
         else {
-          int *restrict count = (int *) Calloc(ng+1, int);
+          int *restrict count = (int *) R_Calloc(ng+1, int);
           po = (int *) R_alloc(gl, sizeof(int)); --po;
           for(int i = 0; i != gl; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-          ++po; Free(count);
+          ++po; R_Free(count);
         }
       } else {
         po = INTEGER(o);
-        pst = INTEGER(getAttrib(o, install("starts")));
+        pst = INTEGER(getAttrib(o, sym_starts));
       }
       for(int j = 0; j != l; ++j) {
         SEXP xj = px[j];
         if(length(xj) != gl) error("length(g) must match nrow(x)");
         pout[j] = ndistinct_g_impl(xj, ng, pgs, po, pst, sorted, narm, nthreads);
-        if(OBJECT(xj) == 0) copyMostAttrib(xj, pout[j]);
+        if(!isObject(xj)) copyMostAttrib(xj, pout[j]);
         else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
       }
       DFcopyAttr(out, x, ng);
     }
-    UNPROTECT(2);
+    UNPROTECT(1);
     return out;
   }
 }
@@ -484,7 +482,7 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
         break;
       }
       case STRSXP: {
-        SEXP *px = SEXPPTR(x);
+        const SEXP *px = SEXPPTR_RO(x);
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < col; ++j)
           pres[j] = ndistinct_string(px + j*l, &l, l, 1, narm);
@@ -511,14 +509,14 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       pst = cgs + 1;
       if(sorted) po = &l;
       else {
-        int *restrict count = (int *) Calloc(ng+1, int);
+        int *restrict count = (int *) R_Calloc(ng+1, int);
         po = (int *) R_alloc(l, sizeof(int)); --po;
         for(int i = 0; i != l; ++i) po[cgs[pgv[i]] + count[pgv[i]]++] = i+1;
-        ++po; Free(count);
+        ++po; R_Free(count);
       }
     } else {
       po = INTEGER(o);
-      pst = INTEGER(getAttrib(o, install("starts")));
+      pst = INTEGER(getAttrib(o, sym_starts));
     }
 
     if(sorted) { // Sorted
@@ -555,11 +553,11 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           break;
         }
         case STRSXP: {
-          SEXP *px = SEXPPTR(x);
+          const SEXP *px = SEXPPTR_RO(x);
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
-            SEXP *pxj = px + j * l;
+            const SEXP *pxj = px + j * l;
             for(int gr = 0; gr < ng; ++gr)
               pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_string(pxj + pst[gr]-1, po, pgs[gr], 1, narm);
           }
@@ -602,11 +600,11 @@ SEXP fndistinctmC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
           break;
         }
         case STRSXP: {
-          SEXP *px = SEXPPTR(x);
+          const SEXP *px = SEXPPTR_RO(x);
           #pragma omp parallel for num_threads(nthreads)
           for(int j = 0; j < col; ++j) {
             int jng = j * ng;
-            SEXP *pxj = px + j * l;
+            const SEXP *pxj = px + j * l;
             for(int gr = 0; gr < ng; ++gr)
               pres[jng + gr] = pgs[gr] == 0 ? 0 : ndistinct_string(pxj, po + pst[gr]-1, pgs[gr], 0, narm);
           }

@@ -1,5 +1,6 @@
 \name{group}
 \alias{group}
+\alias{groupv}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Fast Hash-Based Grouping
@@ -8,12 +9,14 @@ Fast Hash-Based Grouping
 \code{group()} scans the rows of a data frame (or atomic vector / list of atomic vectors), assigning to each unique row an integer id - starting with 1 and proceeding in first-appearance order of the rows. The function is written in C and optimized for R's data structures. It is the workhorse behind functions like \code{\link{GRP}} / \code{\link{fgroup_by}}, \code{\link{collap}}, \code{\link{qF}}, \code{\link{qG}}, \code{\link{finteraction}} and \code{\link{funique}}, when called with argument \code{sort = FALSE}.
 }
 \usage{
-group(x, starts = FALSE, group.sizes = FALSE)
+group(\dots, starts = FALSE, group.sizes = FALSE)
+
+groupv(x, starts = FALSE, group.sizes = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{an atomic vector or data frame / list of equal-length atomic vectors.
-}
+  \item{\dots}{comma separated atomic vectors to group. Also supports a single list of vectors for backward compatibility.}
+  \item{x}{an atomic vector or data frame / list of equal-length atomic vectors.}
   \item{starts}{logical. If \code{TRUE}, an additional attribute \code{"starts"} is attached giving a vector of group starts (= index of first-occurrence of unique rows).
 }
   \item{group.sizes}{
@@ -33,11 +36,11 @@ The Hash Function and inspiration was taken from the excellent \emph{kit} packag
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{GRPid}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
+\code{\link{radixorder}}, \code{\link{GRPid}}, \link[=fast-grouping-ordering]{Fast Grouping and Ordering}, \link[=collapse-documentation]{Collapse Overview}
 }
 \examples{
 # Let's replicate what funique does
-g <- group(wlddev, starts = TRUE)
+g <- groupv(wlddev, starts = TRUE)
 if(attr(g, "N.groups") == fnrow(wlddev)) wlddev else
    ss(wlddev, attr(g, "starts"))
 

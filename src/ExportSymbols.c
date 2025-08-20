@@ -68,7 +68,7 @@ static const R_CallMethodDef CallEntries[] = {
   {"Cpp_fvarsdl", (DL_FUNC) &_collapse_fvarsdlCpp, 9},
   {"Cpp_mrtl", (DL_FUNC) &_collapse_mrtl, 3},
   {"Cpp_mctl", (DL_FUNC) &_collapse_mctl, 3},
-  {"Cpp_psmat", (DL_FUNC) &_collapse_psmatCpp, 4},
+  {"Cpp_psmat", (DL_FUNC) &_collapse_psmatCpp, 5},
   {"Cpp_qF", (DL_FUNC) &_collapse_qFCpp, 5},
   {"Cpp_sortunique", (DL_FUNC) &_collapse_sortuniqueCpp, 1},
   {"Cpp_fdroplevels", (DL_FUNC) &_collapse_fdroplevelsCpp, 2},
@@ -88,6 +88,9 @@ static const R_CallMethodDef CallEntries[] = {
   {"C_gsplit", (DL_FUNC) &gsplit, 3},
   {"C_greorder", (DL_FUNC) &greorder, 2},
   {"C_lassign", (DL_FUNC) &lassign, 4},
+  {"C_gwhich_first", (DL_FUNC) &gwhich_first, 3},
+  {"C_gslice_multi", (DL_FUNC) &gslice_multi, 4},
+  {"C_funlist", (DL_FUNC) &funlist, 1},
   {"Cpp_seqid", (DL_FUNC) &_collapse_seqid, 7},
   {"Cpp_groupid", (DL_FUNC) &_collapse_groupid, 5},
   {"C_collapse_init", (DL_FUNC) &collapse_init, 1},
@@ -166,6 +169,7 @@ void R_init_collapse(DllInfo *dll) {
   R_RegisterCCallable("collapse", "cp_range", (DL_FUNC) &frange);              // frange()
   R_RegisterCCallable("collapse", "cp_dist", (DL_FUNC) &fdist);                // fdist()
   R_RegisterCCallable("collapse", "cp_quantile", (DL_FUNC) &fquantileC);       // .quantile()
+  R_RegisterCCallable("collapse", "cp_match", (DL_FUNC) &fmatchC);             // fmatch()
   R_RegisterCCallable("collapse", "cp_group", (DL_FUNC) &groupVec);            // group(): main hash-based grouping function: for atomic vectors and data frames
   R_RegisterCCallable("collapse", "cp_group_at", (DL_FUNC) &groupAtVec);       // qG(.., sort = FALSE): same but only works with atomic vectors and has option to keep missing values
   R_RegisterCCallable("collapse", "cp_unique", (DL_FUNC) &funiqueC);           // funique.default()

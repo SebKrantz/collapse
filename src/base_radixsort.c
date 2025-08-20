@@ -123,7 +123,7 @@ static void savetl(SEXP s)
 #undef warning
 // since it can be turned to error via warn = 2
 #define warning(...) Do not use warning in this file
-/* use malloc/realloc (not Calloc/Realloc) so we can trap errors
+/* use malloc/realloc (not R_Calloc/R_Realloc) so we can trap errors
  and call savetl_end() before the error(). */
 
 static void growstack(uint64_t newlen)
@@ -647,14 +647,14 @@ static
     return (u.ull ^ mask);
   }
 
-static Rboolean dnan(void *p, int i)
+static int dnan(void *p, int i)
 {
   u.d = ((double *) p)[i];
   return (ISNAN(u.d));
 }
 
 static unsigned long long (*twiddle) (void *, int, int);
-static Rboolean(*is_nan) (void *, int);
+static int(*is_nan) (void *, int);
 // the size of the arg type (4 or 8). Just 8 currently until iradix is
 // merged in.
 static size_t colSize = 8;
@@ -931,7 +931,7 @@ static int StrCmp(SEXP x, SEXP y)            // also used by bmerge and chmatch
 void checkEncodings(SEXP x) // static
 {
   cetype_t ce;
-  SEXP *px = SEXPPTR(x);
+  const SEXP *px = SEXPPTR_RO(x);
   int i, lx = length(x);
   for (i = 0; i != lx && px[i] == NA_STRING; ++i);
 
@@ -1650,7 +1650,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   o = INTEGER(ans);
   if (n > 0)
     o[0] = -1;
-  xd = DATAPTR(x);
+  xd = DPTR(x);
 
   stackgrps = narg > 1 || retGrp;
 
@@ -1744,7 +1744,7 @@ SEXP Cradixsort(SEXP NA_last, SEXP decreasing, SEXP RETstrt, SEXP RETgs, SEXP SO
   for (int col = 2; col <= narg; col++) {
     x = CAR(args);
     args = CDR(args);
-    xd = DATAPTR(x);
+    xd = DPTR(x);
     ngrp = gsngrp[flip];
     if (ngrp == n && nalast != 0)
       break;
@@ -2062,7 +2062,7 @@ void num1radixsort(int *o, Rboolean NA_last, Rboolean decreasing, SEXP x) {
   gsmaxalloc = n;
 
   if (n > 0) o[0] = -1;
-  xd = DATAPTR(x);
+  xd = DPTR(x);
 
   switch(TYPEOF(x)) {
   case INTSXP:

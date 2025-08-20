@@ -1,5 +1,4 @@
-#include <R.h>
-#include <Rinternals.h>
+#include "collapse_c.h"
 
 // See https://github.com/wch/r-source/blob/079f863446b5414dd96f3c29d519e4a654146364/src/main/memory.c
 // and https://github.com/wch/r-source/blob/80e410a786324e0e472a25481d5dd28db8285330/src/main/attrib.c
@@ -14,7 +13,7 @@ SEXP setAttributes(SEXP x, SEXP a) {
 
 SEXP setattributes(SEXP x, SEXP a) {
   SET_ATTRIB(x, coerceVector(a, LISTSXP));
-  // SET_OBJECT(x, TYPEOF(x)); // if(OBJECT(a))  // This does not work with ts-matrices! could also make compatible with S4 objects !
+  // SET_OOBJ(x, TYPEOF(x)); // if(OOBJ(a))  // This does not work with ts-matrices! could also make compatible with S4 objects !
   classgets(x, getAttrib(x, R_ClassSymbol));
   return R_NilValue;
 }
@@ -67,13 +66,12 @@ SEXP duplAttributes(SEXP x, SEXP y) { // also look at data.table's keepattribute
 SEXP copyMostAttributes(SEXP x, SEXP y) {
   int tx = TYPEOF(x);
   // -> This is about the best we can do: unlist() does not preserve dates, and we don't want to create malformed factors
-  // if(TYPEOF(x) == TYPEOF(y) && (OBJECT(x) == OBJECT(y) || (!inherits(y, "factor") && !(length(x) != length(y) && inherits(y, "ts")))))
-  if(tx == TYPEOF(y) && (OBJECT(x) == OBJECT(y) || tx != INTSXP || inherits(y, "IDate") || inherits(y, "ITime")) && !(length(x) != length(y) && inherits(y, "ts"))) {
+  // if(TYPEOF(x) == TYPEOF(y) && (OOBJ(x) == OOBJ(y) || (!inherits(y, "factor") && !(length(x) != length(y) && inherits(y, "ts")))))
+  if(tx == TYPEOF(y) && (isObject(x) == isObject(y) || tx != INTSXP || inherits(y, "IDate") || inherits(y, "ITime")) && !(length(x) != length(y) && inherits(y, "ts"))) {
     copyMostAttrib(y, x);
     return x;
   }
   // In any case we can preserve variable labels..
-  SEXP sym_label = install("label");
   SEXP lab = getAttrib(y, sym_label);
   if(TYPEOF(lab) != NILSXP) setAttrib(x, sym_label, lab);
   return x;
@@ -111,7 +109,7 @@ SEXP CcopyMostAttrib(SEXP to, SEXP from) {
   if(TYPEOF(to) == VECSXP) {
     SEXP res = PROTECT(shallow_duplicate(to));
     copyMostAttrib(from, res);
-    if(isFrame(from) && length(VECTOR_ELT(to, 0)) != length(VECTOR_ELT(from, 0)))
+    if(inherits(from, "data.frame") && length(VECTOR_ELT(to, 0)) != length(VECTOR_ELT(from, 0)))
        setAttrib(res, R_RowNamesSymbol, getAttrib(to, R_RowNamesSymbol));
     UNPROTECT(1);
     return res;

@@ -34,9 +34,9 @@ smr_funi_simple <- function(i, data, .data_, funs, aplvec, ce, ...) {
     names(value) <- names(.data_)
   } else if(any(nami == .FAST_STAT_FUN_POLD)) {
     if(missing(...)) return(unclass(.FUN_(.data_, drop = FALSE)))
-    fcal <- as.call(c(list(as.name(nami), quote(.data_)), as.list(substitute(list(...))[-1L])))
+    fcal <- as.call(c(list(quote(.FUN_), quote(.data_)), as.list(substitute(list(...))[-1L])))
     fcal$drop <- FALSE
-    return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
+    return(unclass(eval(fcal, c(list(.data_ = .data_, .FUN_ = .FUN_), data), ce)))
   } else {
     value <- if(missing(...)) .FUN_(.data_) else
       do.call(.FUN_, c(list(.data_), eval(substitute(list(...)), data, ce)), envir = ce)
@@ -57,9 +57,9 @@ smr_funi_grouped <- function(i, data, .data_, funs, aplvec, ce, ...) {
     names(value) <- names(.data_)
   } else if(any(nami == .FAST_STAT_FUN_POLD)) {
     if(missing(...)) return(unclass(.FUN_(.data_, g = g, use.g.names = FALSE)))
-    fcal <- as.call(c(list(as.name(nami), quote(.data_), g = quote(.g_)), as.list(substitute(list(...))[-1L])))
+    fcal <- as.call(c(list(quote(.FUN_), quote(.data_), g = quote(.g_)), as.list(substitute(list(...))[-1L])))
     fcal$use.g.names <- FALSE
-    return(unclass(eval(fcal, c(list(.data_ = .data_), data), ce)))
+    return(unclass(eval(fcal, c(list(.data_ = .data_, .FUN_ = .FUN_), data), ce)))
   } else {
     value <- dots_apply_grouped_bulk(.data_, g, .FUN_, if(missing(...)) NULL else eval(substitute(list(...)), data, ce))
     value <- .Call(C_rbindlist, unclass(value), FALSE, FALSE, NULL)
@@ -105,7 +105,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
     }
     names(res) <- nam
     res[[1L]] <- if(keep.group_vars) g$groups else NULL
-    res <- unlist(res, FALSE, use.names = TRUE)
+    res <- unlist(res, recursive = FALSE, use.names = TRUE)
     # replicating groups if more rows per computation...
     if(!all_eq(lr <- vlengths(res, FALSE))) {
       # if(!keep.group_vars) stop("all computations need to result in vectors of equal length")
@@ -136,7 +136,7 @@ fsummarise <- function(.data, ..., keep.group_vars = TRUE, .cols = NULL) {
         } else e[[i]] <- as.call(list(quote(list), ei))
       }
       # return(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe))
-      res <- unlist(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe), FALSE, use.names = TRUE)
+      res <- unlist(eval(e, c(.data, list(.do_across = do_across, .smr_funi_simple = smr_funi_simple)), pe), recursive = FALSE, use.names = TRUE)
     } else res <- eval(e, .data, pe)
     # return(res)
     if(!all_eq(lr <- vlengths(res, FALSE))) {

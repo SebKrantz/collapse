@@ -22,6 +22,11 @@ for (sort in c(FALSE, TRUE)) {
   expect_identical(join(df1, df2, how = "full", sort = sort), merge(df1, df2, all = TRUE))
 }
 
+expect_identical(names(join(df1, df2, on = "id2", how = "full", keep.col.order = FALSE, column = TRUE))[1:2], c("id2", ".join"))
+expect_identical(names(join(df1, df2, on = "id2", how = "full", keep.col.order = FALSE, column = TRUE, multiple = TRUE))[1:2], c("id2", ".join"))
+expect_identical(names(join(df1, df2, on = "id2", how = "right", keep.col.order = FALSE, column = TRUE))[1:2], c("id2", ".join"))
+expect_identical(names(join(df1, df2, on = "id2", how = "right", keep.col.order = FALSE, column = TRUE, multiple = TRUE))[1:2], c("id2", ".join"))
+
 # Different types of joins
 # https://github.com/SebKrantz/collapse/issues/503
 x1 = data.frame(
@@ -141,5 +146,15 @@ d2 = mtcars |> fcompute(v2 = mpg, g = seq_len(32)+100)
 expect_true(all_identical(with(join(d1, d2, verbose = 0), list(v1, v2))))
 expect_true(all_identical(with(join(d1, d2, verbose = 0, sort = TRUE), list(v1, v2))))
 
+if(requireNamespace("bit64", quietly = TRUE)) test_that("join() works with integer64", {
+    t1 <- data.frame(id = 1:5)
+    t2 <- fmutate(t1, id = bit64::as.integer64(id))
+    for (h in c("l", "r", "i", "f")) {
+      expect_identical(fnrow(join(t1, t2, how = h, sort = FALSE, verbose = 0)), 5L)
+      expect_identical(fnrow(join(t2, t1, how = h, sort = FALSE, verbose = 0)), 5L)
+      expect_identical(fnrow(join(t1, t2, how = h, sort = TRUE, verbose = 0)), 5L)
+      expect_identical(fnrow(join(t2, t1, how = h, sort = TRUE, verbose = 0)), 5L)
+    }
+})
 
 set_collapse(opts)

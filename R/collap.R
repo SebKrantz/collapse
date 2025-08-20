@@ -251,7 +251,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
     custom_names <- lapply(custom, names)
     custom <- lapply(custom, cols2int, X, nam) # could integrate below, but then reorder doesn't work !
 
-    # if(autorn) give.names <- fanyDuplicated(unlist(custom, FALSE, FALSE))
+    # if(autorn) give.names <- fanyDuplicated(funlist(custom))
     #lx <- length(X)
     # custom <- lapply(custom, function(x) if(is.numeric(x) && bmax(abs(x)) <= lx)
     #                          x else if(is.character(x)) ckmatch(x, nam) else
@@ -268,7 +268,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
                                          fFUN[i], parallel, mc.cores, w = w, ...)[[1L]])
     }
     # Better to do this check afterwards, because custom names may make column names unique...
-    if(autorn && widel) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
+    if(autorn && widel) give.names <- fanyDuplicated(funlist(lapply(res[[ind]], attr, "names")))
     if(!widel || give.names) names(res[[ind]]) <- namFUN
 
     if(keep.col.order && return != 2L) { # && widel
@@ -459,7 +459,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
                            fFUN[i], parallel, mc.cores, w = w, ...)[[1L]])
     }
     # Better to do this check afterwards, because custom names may make column names unique...
-    if(autorn && widel) give.names <- fanyDuplicated(unlist(lapply(res[[ind]], attr, "names"), FALSE, FALSE))
+    if(autorn && widel) give.names <- fanyDuplicated(funlist(lapply(res[[ind]], attr, "names")))
     if(!widel || give.names) names(res[[ind]]) <- namFUN
 
     if(keep.col.order && return != 2L) {

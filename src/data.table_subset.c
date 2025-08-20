@@ -16,7 +16,7 @@ static void finalizer(SEXP p)
   p = R_ExternalPtrTag(p);
   if (!isString(p)) error("Internal error: finalizer's ExternalPtr doesn't see names in tag"); // # nocov
   l = LENGTH(p);
-  tl = TRUELENGTH(p);
+  tl = TRULEN(p);
   if (l<0 || tl<l) error("Internal error: finalizer sees l=%d, tl=%d",l,tl); // # nocov
   n = tl-l;
   if (n==0) {
@@ -26,7 +26,7 @@ static void finalizer(SEXP p)
   }
   x = PROTECT(allocVector(INTSXP, 50));  // 50 so it's big enough to be on LargeVector heap. See NodeClassSize in memory.c:allocVector
   // INTSXP rather than VECSXP so that GC doesn't inspect contents after LENGTH (thanks to Karl Miller, Jul 2015)
-  SETLENGTH(x,50+n*2*sizeof(void *)/4);  // 1*n for the names, 1*n for the VECSXP itself (both are over allocated).
+  SET_LEN(x,50+n*2*sizeof(void *)/4);  // 1*n for the names, 1*n for the VECSXP itself (both are over allocated).
   UNPROTECT(1);
   return;
 }
@@ -80,10 +80,10 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   // where n is set to truelength (i.e. a shallow copy only with no size change)
   int protecti=0;
   SEXP newdt = PROTECT(allocVector(VECSXP, n)); protecti++;   // to do, use growVector here?
-  SET_ATTRIB(newdt, shallow_duplicate(ATTRIB(dt)));
-  SET_OBJECT(newdt, OBJECT(dt));
-  if(IS_S4_OBJECT(dt)) newdt = asS4(newdt, TRUE, 1);  // To support S4 objects that include data.table
-  //SHALLOW_DUPLICATE_ATTRIB(newdt, dt);  // SHALLOW_DUPLICATE_ATTRIB would be a bit neater but is only available from R 3.3.0
+  SHALLOW_DUPLICATE_ATTRIB(newdt, dt);  // SHALLOW_DUPLICATE_ATTRIB would be a bit neater but is only available from R 3.3.0
+  // if(IS_S4_OBJECT(dt)) {
+  //   newdt = PROTECT(asS4(newdt, TRUE, 1)); protecti++;  // To support S4 objects that include data.table
+  // }
 
   // TO DO: keepattr() would be faster, but can't because shallow isn't merely a shallow copy. It
   //        also increases truelength. Perhaps make that distinction, then, and split out, but marked
@@ -94,26 +94,27 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   // We copy all attributes that refer to column names so that calling setnames on either
   // the original or the shallow copy doesn't break anything.
   SEXP index = PROTECT(getAttrib(dt, sym_index)); protecti++;
-  setAttrib(newdt, sym_index, shallow_duplicate(index));
+  if(length(index)) setAttrib(newdt, sym_index, shallow_duplicate(index));
 
   SEXP sorted = PROTECT(getAttrib(dt, sym_sorted)); protecti++;
-  setAttrib(newdt, sym_sorted, duplicate(sorted));
+  if(length(sorted)) setAttrib(newdt, sym_sorted, duplicate(sorted));
 
   SEXP names = PROTECT(getAttrib(dt, R_NamesSymbol)); protecti++;
   SEXP newnames = PROTECT(allocVector(STRSXP, n)); protecti++;
 
-  const SEXP *pdt = SEXPPTR_RO(dt), *pnam = SEXPPTR(names);
-  SEXP *pnewdt = SEXPPTR(newdt), *pnnam = SEXPPTR(newnames);
-
   const int l = isNull(cols) ? LENGTH(dt) : length(cols);
   if (isNull(cols)) {
-    for (int i=0; i != l; ++i) pnewdt[i] = pdt[i];
+    // for (int i=0; i != l; ++i) pnewdt[i] = pdt[i];
+    memcpy(SEXPPTR(newdt), SEXPPTR_RO(dt), l*sizeof(SEXP));
     if (length(names)) {
       if (length(names) < l) error("Internal error: length(names)>0 but <length(dt)"); // # nocov
-      for (int i=0; i != l; ++i) pnnam[i] = pnam[i];
+      // for (int i=0; i != l; ++i) pnnam[i] = pnam[i];
+      memcpy(SEXPPTR(newnames), SEXPPTR_RO(names), l*sizeof(SEXP));
     }
     // else an unnamed data.table is valid e.g. unname(DT) done by ggplot2, and .SD may have its names cleared in dogroups, but shallow will always create names for data.table(NULL) which has 100 slots all empty so you can add to an empty data.table by reference ok.
   } else {
+    const SEXP *pdt = SEXPPTR_RO(dt), *pnam = SEXPPTR_RO(names);
+    SEXP *pnewdt = SEXPPTR(newdt), *pnnam = SEXPPTR(newnames);
     int *pcols = INTEGER(cols);
     for (int i=0; i != l; ++i) pnewdt[i] = pdt[pcols[i]-1];
     if (length(names)) {
@@ -125,10 +126,10 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   setAttrib(newdt, R_NamesSymbol, newnames);
   // setAttrib appears to change length and truelength, so need to do that first _then_ SET next,
   // otherwise (if the SET were were first) the 100 tl is assigned to length.
-  SETLENGTH(newnames,l);
-  SET_TRUELENGTH(newnames,n);
-  SETLENGTH(newdt,l);
-  SET_TRUELENGTH(newdt,n);
+  SET_LEN(newnames,l);
+  SET_TRULEN(newnames,n);
+  SET_LEN(newdt,l);
+  SET_TRULEN(newdt,n);
   setselfref(newdt);
   UNPROTECT(protecti);
   return(newdt);
@@ -140,7 +141,7 @@ SEXP Calloccol(SEXP dt) // , SEXP Rn
   R_len_t tl, n, l;
   l = LENGTH(dt);
   n = l + 100; // asInteger(GetOption1(sym_collapse_DT_alloccol));  // asInteger(Rn);
-  tl = TRUELENGTH(dt);
+  tl = TRULEN(dt);
   // R <= 2.13.2 and we didn't catch uninitialized tl somehow
   if (tl < 0) error("Internal error, tl of class is marked but tl<0."); // # nocov
   // better disable these...
@@ -153,8 +154,8 @@ SEXP Calloccol(SEXP dt) // , SEXP Rn
     return shallow(dt, R_NilValue, n); // usual case (increasing alloc)
 
 //  SEXP nam = PROTECT(getAttrib(dt, R_NamesSymbol));
-//  if(LENGTH(nam) != l) SETLENGTH(nam, l);
-//  SET_TRUELENGTH(nam, n);
+//  if(LENGTH(nam) != l) SET_LEN(nam, l);
+//  SET_TRULEN(nam, n);
 //  setselfref(dt); // better, otherwise may be invalid !!
 //  UNPROTECT(1);
 //  return(dt);
@@ -215,7 +216,8 @@ void subsetVectorRaw(SEXP ans, SEXP source, SEXP idx, const bool anyNA)
       // TODO - discuss with Luke Tierney. Produce benchmarks on integer/double to see if it's worth making a safe
     //        API interface for package use for STRSXP.
     // Aside: setkey() is a separate special case (a permutation) and does do this in parallel without using SET_*.
-    SEXP *restrict sp = SEXPPTR(source)-1, *restrict ap = SEXPPTR(ans);
+    const SEXP *restrict sp = SEXPPTR_RO(source)-1;
+    SEXP *restrict ap = SEXPPTR(ans);
     PARLOOP(NA_STRING);
   } break;
   case VECSXP : {
@@ -411,7 +413,7 @@ SEXP extendIntVec(SEXP x, int len, int val) {
 
 SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   if(TYPEOF(x) != VECSXP) error("x is not a list.");
-  int l = LENGTH(x), nprotect = 3, oxl = OBJECT(x) != 0;
+  int l = LENGTH(x), nprotect = 3, oxl = isObject(x);
   if(l == 0) return x; //  ncol == 0 -> Nope, need emty selections such as cat_vars(mtcars) !!
   PROTECT_INDEX ipx;
   PROTECT_WITH_INDEX(cols = convertNegAndZeroIdx(cols, ScalarInteger(l), ScalarLogical(FALSE)), &ipx);
@@ -423,7 +425,7 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   // sf data frames: Need to add sf_column
   if(oxl && asLogical(checksf) && INHERITS(x, char_sf)) {
     int sfcoln = NA_INTEGER, sf_col_sel = 0;
-    SEXP *pnam = SEXPPTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+    const SEXP *pnam = SEXPPTR_RO(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
     for(int i = l; i--; ) {
       if(pnam[i] == sfcol) {
         sfcoln = i + 1;
@@ -445,9 +447,10 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
   }
   SEXP ans = PROTECT(allocVector(VECSXP, ncol));
   const SEXP *px = SEXPPTR_RO(x);
-  SEXP *pans = SEXPPTR(ans);
+  // SEXP *pans = SEXPPTR(ans);
   for(int i = 0; i != ncol; ++i) {
-    pans[i] = px[pcols[i]-1]; // SET_VECTOR_ELT(ans, i, VECTOR_ELT(x, pcols[i]-1));
+    // pans[i] = px[pcols[i]-1];
+    SET_VECTOR_ELT(ans, i, px[pcols[i]-1]);
   }
   if(!isNull(nam)) {
     SEXP tmp = PROTECT(allocVector(STRSXP, ncol));
@@ -482,7 +485,7 @@ SEXP subsetCols(SEXP x, SEXP cols, SEXP checksf) { // SEXP fretall
 */
 
 SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
-    int nprotect=0, oxl = OBJECT(x) != 0;
+    int nprotect=0, oxl = isObject(x);
     if (!isNewList(x)) error("Internal error. Argument 'x' to CsubsetDT is type '%s' not 'list'", type2char(TYPEOF(rows))); // # nocov
       if (!length(x)) return x;  // return empty list
 
@@ -511,7 +514,7 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
       if(oxl && INHERITS(x, char_sf)) {
         int sfcoln = NA_INTEGER, sf_col_sel = 0;
         SEXP nam = PROTECT(getAttrib(x, R_NamesSymbol));
-        SEXP *pnam = SEXPPTR(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
+        const SEXP *pnam = SEXPPTR_RO(nam), sfcol = asChar(getAttrib(x, sym_sf_column));
         for(int i = l; i--; ) {
           if(pnam[i] == sfcol) {
             sfcoln = i + 1;
@@ -544,18 +547,19 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
   // class is also copied here which retains superclass name in class vector as has been the case for many years; e.g. tests 1228.* for #5296
 
   // This is because overalloc.. creating columns by reference stuff..
-  // SET_TRUELENGTH(ans, LENGTH(ans));
-  // SETLENGTH(ans, LENGTH(cols));
+  // SET_TRULEN(ans, LENGTH(ans));
+  // SET_LEN(ans, LENGTH(cols));
   int ansn;
   const SEXP *px = SEXPPTR_RO(x);
-  SEXP *pans = SEXPPTR(ans);
+  // SEXP *pans = SEXPPTR(ans);
 
   if (isNull(rows)) {
     ansn = nrow;
     for (int i = 0; i != ncol; ++i) {
       SEXP thisCol = px[pcols[i]-1];
       checkCol(thisCol, pcols[i], nrow, x);
-      pans[i] = thisCol; // copyAsPlain(thisCol) -> No deep copy
+      // pans[i] = thisCol; // copyAsPlain(thisCol) -> No deep copy
+      SET_VECTOR_ELT(ans, i, thisCol);
       // materialize the column subset as we have always done for now, until REFCNT is on by default in R (TODO)
     }
   } else {
@@ -574,8 +578,8 @@ SEXP subsetDT(SEXP x, SEXP rows, SEXP cols, SEXP checkrows) { // , SEXP fastret
   if(TYPEOF(colnam) == STRSXP) {
     PROTECT(colnam);
     SEXP tmp = PROTECT(allocVector(STRSXP, ncol)); nprotect++;
-    // SET_TRUELENGTH(tmp, LENGTH(tmp));
-    // SETLENGTH(tmp, LENGTH(cols));
+    // SET_TRULEN(tmp, LENGTH(tmp));
+    // SET_LEN(tmp, LENGTH(cols));
     setAttrib(ans, R_NamesSymbol, tmp);
     subsetVectorRaw(tmp, colnam, cols, /*anyNA=*/false);
     UNPROTECT(1);

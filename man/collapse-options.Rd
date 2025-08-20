@@ -44,7 +44,7 @@ get_collapse(opts = NULL)
 
   \tab\tab There are also a couple of convenience keywords that you can use to mask groups of functions: \cr\cr
 
-\tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr\cr
+\tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, fslice, fslicev, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr\cr
 \tab\tab - \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{fmatch}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. \cr\cr % fdim not because of infinite recursion
 \tab\tab - \code{"special"} exports \code{n()}, \code{table()} and \code{\%in\%}. See above. \cr\cr
 \tab\tab - \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See also Note. \cr\cr
@@ -83,7 +83,7 @@ Setting keywords "fast-fun", "fast-stat-fun", "fast-trfm-fun" or "all" with \cod
 
 \emph{Note} also that masking does not change documentation links, so you need to look up the f- version of a function to get the right documentation.
 
-A safe way to set options affecting startup behavior is by using a \code{\link{.Rprofile}} file in your user or project directory (see also \href{https://www.statmethods.net/interface/customizing.html}{here}, the user-level file is located at \code{file.path(Sys.getenv("HOME"), ".Rprofile")} and can be edited using \code{file.edit(Sys.getenv("HOME"), ".Rprofile")}), or by using a \href{https://fastverse.github.io/fastverse/articles/fastverse_intro.html#custom-fastverse-configurations-for-projects}{\code{.fastverse}} configuration file in the project directory.
+A safe way to set options affecting startup behavior is by using a \code{\link{.Rprofile}} file in your user or project directory (see also \href{https://www.datacamp.com/doc/r/customizing}{here}, the user-level file is located at \code{file.path(Sys.getenv("HOME"), ".Rprofile")} and can be edited using \code{file.edit(Sys.getenv("HOME"), ".Rprofile")}), or by using a \href{https://fastverse.github.io/fastverse/articles/fastverse_intro.html#custom-fastverse-configurations-for-projects}{\code{.fastverse}} configuration file in the project directory.
 
 \code{options("collapse_remove")} does in fact remove functions from the namespace and cannot be reversed by \code{set_collapse(remove = NULL)} once the package is loaded. It is only reversed by re-loading \emph{collapse}.
 }

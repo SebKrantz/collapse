@@ -17,10 +17,10 @@ pwnobs <- function(X) {
   N.mat
 }
 
-pwNobs <- function(X) {
-  .Deprecated(msg = "'pwNobs' was renamed to 'pwnobs'. It will be removed end of 2023, see help('collapse-renamed').")
-  pwnobs(X)
-}
+# pwNobs <- function(X) {
+#   .Deprecated(msg = "'pwNobs' was renamed to 'pwnobs'. It will be removed end of 2023, see help('collapse-renamed').")
+#   pwnobs(X)
+# }
 # corr.p <- function(r, n) {
 #   if (n < 3L) return(1)
 #   df <- n - 2L

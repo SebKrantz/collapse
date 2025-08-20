@@ -1,0 +1,577 @@
+---
+title: "Developing with collapse"
+subtitle: "Or: How to Code Efficiently in R"
+author: "Sebastian Krantz"
+date: "2024-12-30"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+
+vignette: >
+  %\VignetteIndexEntry{developing with collapse}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+<style type="text/css">
+pre {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 500px;
+}
+</style>
+
+
+
+
+
+
+## Introduction
+
+*collapse* offers an integrated suite of C/C++-based statistical and data manipulation functions, many low-level tools for memory efficient programming, and a [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) that seamlessly supports vectors, matrices, and data frame-like objects. These features make it an ideal backend for high-performance statistical packages. This vignette is meant to provide some recommendations for developing with *collapse*. It is complementary to the earlier [blog post on programming with *collapse*](https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/) which readers are also encouraged to consult. The vignette adds 3 important points for writing efficient R/*collapse* code.
+
+## Point 1: Be Minimalistic in Computations
+
+*collapse* supports different types of R objects (vectors, matrices, data frames + variants) and it can perform grouped operations on them using different types of grouping information (plain vectors, 'qG'^[Alias for quick-group.] objects, factors, 'GRP' objects, grouped or indexed data frames). Grouping can be sorted or unsorted. A key for very efficient code is to use the minimal required operations/objects to get the job done.
+
+Suppose you want to sum an object `x` by groups using a grouping vector `g`. If the grouping is only needed once, this should be done using the internal grouping of `fsum()` without creating external grouping objects - `fsum(x, g)` for aggregation and `fsum(x, g, TRA = "fill")` for expansion:
+
+
+```r
+fmean(mtcars$mpg, mtcars$cyl)
+#        4        6        8 
+# 26.66364 19.74286 15.10000
+fmean(mtcars$mpg, mtcars$cyl, TRA = "fill")
+#  [1] 19.74286 19.74286 26.66364 19.74286 15.10000 19.74286 15.10000 26.66364 26.66364 19.74286
+# [11] 19.74286 15.10000 15.10000 15.10000 15.10000 15.10000 15.10000 26.66364 26.66364 26.66364
+# [21] 26.66364 15.10000 15.10000 15.10000 15.10000 26.66364 26.66364 26.66364 15.10000 19.74286
+# [31] 15.10000 26.66364
+```
+
+The expansion case is very efficient because it internally uses unsorted grouping. Apart from the default sorted aggregation, these functions efficiently convert your input `g` into the minimally required information.
+
+In the aggregation case, we can improve performance by also using unsorted grouping, e.g., `fsum(x, qF(g, sort = FALSE))` or `fsum(x, qG(g, sort = FALSE), use.g.names = FALSE)` if the group-names are not needed. It is advisable to also set argument `na.exclude = FALSE` in `qF()`/`qG()` to add a class 'na.included' which precludes internal missing value checks in `fsum()` and friends. If `g` is a plain vector or the first-appearance order of groups should be kept even if `g` is a factor, use `group(g)` instead of `qG(g, sort = FALSE, na.exclude = FALSE)`.^[`group()` directly calls a C-based hashing algorithm which works for all types of vectors and lists of vectors/data frames. Missing values are treated as distinct elements.] Set `use.g.names = FALSE` if not needed (can abbreviate as `use = FALSE`), and, if your data has no missing values, set `na.rm = FALSE` for maximum performance.
+
+
+```r
+x <- rnorm(1e7) # 10 million random obs
+g <- sample.int(1e6, 1e7, TRUE) # 1 Million random groups
+oldopts <- set_collapse(na.rm = FALSE) # No missing values: maximum performance
+microbenchmark::microbenchmark(
+  internal = fsum(x, g),
+  internal_expand = fsum(x, g, TRA = "fill"),
+  qF1 = fsum(x, qF(g, sort = FALSE)),
+  qF2 = fsum(x, qF(g, sort = FALSE, na.exclude = FALSE)),
+  qG1 = fsum(x, qG(g, sort = FALSE), use = FALSE),
+  qG2 = fsum(x, qG(g, sort = FALSE, na.exclude = FALSE), use = FALSE),
+  group = fsum(x, group(g), use = FALSE), # Same as above basically
+  GRP1 = fsum(x, GRP(g)), 
+  GRP2 = fsum(x, GRP(g, sort = FALSE)), 
+  GRP3 = fsum(x, GRP(g, sort = FALSE, return.groups = FALSE), use = FALSE)
+)
+# Unit: milliseconds
+#             expr       min        lq      mean    median        uq      max neval
+#         internal 119.62078 124.61575 133.51499 129.24721 136.84295 187.9376   100
+#  internal_expand  87.45751  93.53473 101.63398  97.34573 105.04102 195.5121   100
+#              qF1  98.40816 101.62102 110.80120 105.03839 112.72224 265.5931   100
+#              qF2  86.75518  89.82823 100.47122  93.89814 103.04776 194.9115   100
+#              qG1  88.38563  92.44846 103.28242  97.29579 105.35159 202.8058   100
+#              qG2  72.94851  76.86912  87.05558  79.43137  86.15307 262.4734   100
+#            group  74.08335  77.19435  87.62058  82.58726  90.61506 162.0318   100
+#             GRP1 145.13799 149.54178 163.89938 154.71379 164.11361 297.5056   100
+#             GRP2  95.83557  99.05297 109.58577 103.34950 112.50322 266.9996   100
+#             GRP3  82.56629  86.15699  97.54058  90.40781  98.05956 328.7744   100
+```
+
+Factors and 'qG' objects are efficient inputs to all statistical/transformation functions except for `fmedian()`, `fnth()`, `fmode()`, `fndistinct()`, and split-apply-combine operations using `BY()`/`gsplit()`. For repeated grouped operations involving those, it makes sense to create 'GRP' objects using `GRP()`. These objects are more expensive to create but provide more complete information.^[See `?GRP`, in particular the 'Value' section.] If sorting is not needed, set `sort = FALSE`, and if aggregation or the unique groups/names are not needed set `return.groups = FALSE`.
+
+
+```r
+f <- qF(g); f2 <- qF(g, na.exclude = FALSE)
+gg <- group(g) # Same as qG(g, sort = FALSE, na.exclude = FALSE)
+grp <- GRP(g)
+# Simple functions: factors are efficient inputs
+microbenchmark::microbenchmark(
+  factor = fsum(x, f),
+  factor_nona = fsum(x, f2),
+  qG_nona = fsum(x, gg),
+  qG_nona_nonam = fsum(x, gg, use = FALSE),
+  GRP = fsum(x, grp),
+  GRP_nonam = fsum(x, grp, use = FALSE)
+)
+# Unit: milliseconds
+#           expr      min       lq     mean   median       uq      max neval
+#         factor 16.02514 16.49498 17.50705 17.11619 18.16497 21.72975   100
+#    factor_nona 12.72911 13.15124 14.41943 13.87850 15.03540 23.27144   100
+#        qG_nona 14.30178 14.95450 20.48179 15.67930 17.34989 57.15597   100
+#  qG_nona_nonam 11.57118 12.00423 13.12157 12.49071 13.61801 23.31219   100
+#            GRP 12.83345 13.08907 14.45512 13.95154 15.21594 21.46473   100
+#      GRP_nonam 12.67589 13.22139 14.15271 13.76600 14.84057 20.36359   100
+
+# Complex functions: more information helps
+microbenchmark::microbenchmark(
+  qG = fmedian(x, gg, use = FALSE),
+  GRP = fmedian(x, grp, use = FALSE), times = 10)
+# Unit: milliseconds
+#  expr      min       lq     mean   median       uq      max neval
+#    qG 258.4450 261.9357 267.2520 264.2608 267.4161 297.1552    10
+#   GRP 191.8623 193.0631 196.0935 193.4358 194.6245 210.3685    10
+set_collapse(oldopts)
+```
+
+Why not always use `group()` for unsorted grouping with simple functions? You can do that, but `qF()`/`qG()` are a bit smarter when it comes to handling input factors/'qG' objects whereas `group()` hashes every vector:
+
+
+```r
+microbenchmark::microbenchmark(
+  factor_factor = qF(f),
+  # This checks NA's and adds 'na.included' class -> full deep copy
+  factor_factor2 = qF(f, na.exclude = FALSE), 
+  # NA checking costs.. incurred in fsum() and friends
+  check_na = collapse:::is.nmfactor(f), 
+  check_na2 = collapse:::is.nmfactor(f2),
+  factor_qG = qF(gg),
+  qG_factor = qG(f),
+  qG_qG = qG(gg),
+  group_factor = group(f),
+  group_qG = group(gg)
+)
+# Unit: nanoseconds
+#            expr      min         lq        mean     median         uq      max neval
+#   factor_factor     1107     2562.5     6925.31     7298.0     9676.0    19270   100
+#  factor_factor2  5926960  6147663.0  6898849.83  6235136.5  6421686.5 15325349   100
+#        check_na  3440474  3503880.5  3525056.59  3513597.5  3524770.0  3927185   100
+#       check_na2      287     1496.5     3325.10     3341.5     4243.5     9922   100
+#       factor_qG     2583    11644.0    15105.63    15887.5    18614.0    31898   100
+#       qG_factor     1927     4284.5    10171.28     9614.5    13796.5    50799   100
+#           qG_qG     1476     2583.0     6674.39     6498.5     8897.0    23124   100
+#    group_factor 16066629 16300165.0 17378151.76 16489011.0 16858872.0 54181582   100
+#        group_qG 13824175 14194917.5 15083957.81 14347396.5 14700345.0 22289117   100
+```
+
+Only in rare cases are grouped/indexed data frames created with `fgroup_by()`/`findex_by()` needed in package code. Likewise, functions like `fsummarise()`/`fmutate()` are essentially wrappers. For example
+
+
+```r
+mtcars |>
+  fgroup_by(cyl, vs, am) |>
+  fsummarise(mpg = fsum(mpg),
+             across(c(carb, hp, qsec), fmean))
+#   cyl vs am   mpg     carb        hp     qsec
+# 1   4  0  1  26.0 2.000000  91.00000 16.70000
+# 2   4  1  0  68.7 1.666667  84.66667 20.97000
+# 3   4  1  1 198.6 1.428571  80.57143 18.70000
+# 4   6  0  1  61.7 4.666667 131.66667 16.32667
+# 5   6  1  0  76.5 2.500000 115.25000 19.21500
+# 6   8  0  0 180.6 3.083333 194.16667 17.14250
+# 7   8  0  1  30.8 6.000000 299.50000 14.55000
+```
+
+is the same as (again `use = FALSE` abbreviates `use.g.names = FALSE`)
+
+
+```r
+g <- GRP(mtcars, c("cyl", "vs", "am"))
+
+add_vars(g$groups,
+  get_vars(mtcars, "mpg") |> fsum(g, use = FALSE),
+  get_vars(mtcars, c("carb", "hp", "qsec")) |> fmean(g, use = FALSE)
+)
+#   cyl vs am   mpg     carb        hp     qsec
+# 1   4  0  1  26.0 2.000000  91.00000 16.70000
+# 2   4  1  0  68.7 1.666667  84.66667 20.97000
+# 3   4  1  1 198.6 1.428571  80.57143 18.70000
+# 4   6  0  1  61.7 4.666667 131.66667 16.32667
+# 5   6  1  0  76.5 2.500000 115.25000 19.21500
+# 6   8  0  0 180.6 3.083333 194.16667 17.14250
+# 7   8  0  1  30.8 6.000000 299.50000 14.55000
+```
+
+To be clear: nothing prevents you from using these wrappers - they are quite efficient - but if you want to change all inputs programmatically it makes sense to go down one level - your code will also become safer.^[If you do use `fgroup_by()` in a package use it with non-standard evaluation, e.g., `fgroup_by(cyl, vs, am)`. Don't do `ind <- c("cyl", "vs", "am")` and then `fgroup_by(ind)` as the data may contain a column called `ind`. For such cases use `group_by_vars(ind)`.]
+
+In general, think carefully about how to vectorize in a minimalistic and memory efficient way. You will find that you can craft very parsimonious and efficient code to solve complicated problems.
+
+For example, after merging multiple spatial datasets, I had some of the same map features (businesses) from multiple sources, and, unwilling to match features individually across data sources, I decided to keep the richest source covering each feature type and location. After creating a feature `importance` indicator comparable across sources, the deduplication expression ended up being a single line of the form: `fsubset(data, source == fmode(source, list(location, type), importance, "fill"))` - keep features from the importance-weighted most frequent source by location and type.
+
+If an effective *collapse* solution is not apparent, other packages may offer efficient solutions. Check out the [*fastverse*](https://fastverse.github.io/fastverse/) and its [suggested packages list](https://fastverse.github.io/fastverse/#suggested-extensions). For example if you want to efficiently replace multiple items in a vector, `kit::vswitch()/nswitch()` can be pretty magical. Also functions like `data.table::set()/rowid()` etc. are great.
+
+
+## Point 2: Think About Memory and Optimize
+
+R programs are inefficient for 2 principal reasons: (1) operations are not vectorized; (2) too many intermediate objects/copies are created. *collapse*'s vectorized statistical functions help with (1), but it also provides many [efficient programming functions](https://sebkrantz.github.io/collapse/reference/efficient-programming.html) to deal with (2).
+
+One source of inefficiency in R code is the widespread use of logical vectors. For example
+
+
+```r
+x <- abs(round(rnorm(1e6)))
+x[x == 0] <- NA
+```
+
+where `x == 0` creates a logical vector of 1 million elements just to indicate to R which elements of `x` are `0`. In *collapse*, `setv(x, 0, NA)` is the efficient equivalent. This also works if we don't want to replace with `NA` but with another vector `y`:
+
+```r
+y <- rnorm(1e6)
+setv(x, NA, y) # Replaces missing x with y
+```
+is much better than
+
+```r
+x[is.na(x)] <- y[is.na(x)]
+```
+`setv()` is quite versatile and also works with indices and logical vectors instead of elements to search for. You can also invert the query by setting `invert = TRUE`.
+
+In more complex workflows, we may wish to save the logical vector, e.g., `xmiss <- is.na(x)`, and use it repeatedly. One aspect to note here is that logical vectors are inefficient for subsetting compared to indices:
+
+
+```r
+xNA <- na_insert(x, prop = 0.4)
+xmiss <- is.na(xNA)
+ind <- which(xmiss)
+bench::mark(x[xmiss], x[ind])
+# # A tibble: 2 × 6
+#   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+# 1 x[xmiss]     3.34ms   3.58ms      269.    8.39MB     4.21
+# 2 x[ind]     771.74µs 972.11µs     1025.    3.05MB     6.61
+```
+
+Thus, indices are always preferable. With *collapse*, they can be created directly using `whichNA(xNA)` in this case, or `whichv(x, 0)` for `which(x == 0)` or any other number. Also here there exist an `invert = TRUE` argument covering the `!=` case. For convenience, infix operators `x %==% 0` and `x %!=% 0` wrap `whichv(x, 0)` and `whichv(x, 0, invert = TRUE)`, respectively.
+
+Similarly, `fmatch()` supports faster matching with associated operators `%iin%` and `%!iin%` which also return indices, e.g., `letters %iin% c("a", "b")` returns `1:2`. This can also be used in subsetting:
+
+
+```r
+bench::mark(
+  `%in%` = fsubset(wlddev, iso3c %in% c("USA", "DEU", "ITA", "GBR")),
+  `%iin%` = fsubset(wlddev, iso3c %iin% c("USA", "DEU", "ITA", "GBR"))
+)
+# # A tibble: 2 × 6
+#   expression      min   median `itr/sec` mem_alloc `gc/sec`
+#   <bch:expr> <bch:tm> <bch:tm>     <dbl> <bch:byt>    <dbl>
+# 1 %in%        146.8µs  165.7µs     6008.     3.8MB     2.12
+# 2 %iin%        17.3µs   23.6µs    39878.   130.4KB    23.9
+```
+
+Likewise, `anyNA(), allNA(), anyv()` and `allv()` help avoid expressions like `any(x == 0)` in favor of `anyv(x, 0)`. Other convenience functions exist such as `na_rm(x)` for the common `x[!is.na(x)]` expression which is extremely inefficient.
+
+Another hint here particularly for data frame subsetting is the `ss()` function, which has an argument `check = FALSE` to avoid checks on indices (small effect with this data size):
+
+
+```r
+ind <- wlddev$iso3c %!iin% c("USA", "DEU", "ITA", "GBR")
+microbenchmark::microbenchmark(
+  withcheck = ss(wlddev, ind),
+  nocheck = ss(wlddev, ind, check = FALSE)
+)
+# Unit: microseconds
+#       expr    min       lq     mean   median       uq     max neval
+#  withcheck 48.749 106.6615 124.4366 122.1595 143.8895 256.619   100
+#    nocheck 47.355 105.5750 126.9225 119.6380 150.8595 344.113   100
+```
+
+Another common source of inefficiencies is copies produced in statistical operations. For example
+
+
+```r
+x <- rnorm(100); y <- rnorm(100); z <- rnorm(100)
+res <- x + y + z # Creates 2 copies
+```
+
+For this particular case `res <- kit::psum(x, y, z)` offers an efficient solution^[In general, also see other packages, in particular *kit* and *data.table* for useful programming functions.]. A more general solution is
+
+
+```r
+res <- x + y
+res %+=% z
+```
+
+*collapse*'s `%+=%`, `%-=%`, `%*=%` and `%/=%` operators are wrappers around the `setop()` function which also works with matrices and data frames.^[*Note* that infix operators do not obey the rules of arithmetic but are always evaluated from left to right.] This function also has a `rowwise` argument for operations between vectors and matrix/data.frame rows:
+
+
+```r
+m <- qM(mtcars)
+setop(m, "*", seq_col(m), rowwise = TRUE)
+head(m / qM(mtcars))
+#                   mpg cyl disp hp drat wt qsec  vs  am gear carb
+# Mazda RX4           1   2    3  4    5  6    7 NaN   9   10   11
+# Mazda RX4 Wag       1   2    3  4    5  6    7 NaN   9   10   11
+# Datsun 710          1   2    3  4    5  6    7   8   9   10   11
+# Hornet 4 Drive      1   2    3  4    5  6    7   8 NaN   10   11
+# Hornet Sportabout   1   2    3  4    5  6    7 NaN NaN   10   11
+# Valiant             1   2    3  4    5  6    7   8 NaN   10   11
+```
+
+Some functions like `na_locf()`/`na_focb()` also have `set = TRUE` arguments to perform operations by reference.^[Note that `na_locf()`/`na_focb()` are not vectorized across groups, thus, if using them in a grouped `fmutate()` call, adding `set = TRUE` will save some memory on intermediate objects.] There is also `setTRA()` for (grouped) transformations by reference, wrapping `TRA(..., set = TRUE)`. Since `TRA` is added as an argument to all [*Fast Statistical Functions*](https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html), `set = TRUE` can be passed down to modify by reference. For example:
+
+```r
+fmedian(iris$Sepal.Length, iris$Species, TRA = "fill", set = TRUE)
+```
+Is the same as `setTRA(iris$Sepal.Length, fmedian(iris$Sepal.Length, iris$Species), "fill", iris$Species)`, replacing the values of the `Sepal.Length` vector with its species median by reference:
+
+```r
+head(iris)
+#   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+# 1            5         3.5          1.4         0.2  setosa
+# 2            5         3.0          1.4         0.2  setosa
+# 3            5         3.2          1.3         0.2  setosa
+# 4            5         3.1          1.5         0.2  setosa
+# 5            5         3.6          1.4         0.2  setosa
+# 6            5         3.9          1.7         0.4  setosa
+```
+This `set` argument can be invoked anywhere, also inside `fmutate()` calls with/without groups. This can also be done in combination with other transformations (sweeping operations). For example, the following turns the columns of the matrix into proportions.
+
+
+```r
+fsum(m, TRA = "/", set = TRUE)
+fsum(m) # Check
+#  mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
+#    1    1    1    1    1    1    1    1    1    1    1
+```
+
+In summary, think what is really needed to complete a task and keep things to a minimum in terms of both computations and memory. Let's do a final exercise in this regard and create a hyper-efficient function for univariate linear regression by groups:
+
+
+```r
+greg <- function(y, x, g) {
+  g <- group(g)
+  dmx <- fmean(x, g, TRA = "-", na.rm = FALSE)
+  (fsum(y, g, dmx, use = FALSE, na.rm = FALSE) %/=%
+   fsum(dmx, g, dmx, use = FALSE, na.rm = FALSE))
+}
+
+# Test
+y <- rnorm(1e7)
+x <- rnorm(1e7)
+g <- sample.int(1e6, 1e7, TRUE)
+
+microbenchmark::microbenchmark(greg(y, x, g), group(g))
+# Unit: milliseconds
+#           expr       min        lq     mean    median        uq      max neval
+#  greg(y, x, g) 131.39639 138.68961 153.1586 145.78243 161.48137 305.5862   100
+#       group(g)  62.41733  64.80468  72.2558  68.87266  73.21657 153.1643   100
+```
+
+The expression computed by `greg()` amounts to `sum(y * (x - mean(x)))/sum((x - mean(x))^2)` for each group, which is equivalent to `cov(x, y)/var(x)`, but very efficient, requiring exactly one full copy of `x` to create a group-demeaned vector, `dmx`, and then using the `w` (weights) argument to `fsum()` to sum the products (`y * dmx` and `dmx * dmx`) on the fly, including a division by reference avoiding an additional copy. One cannot do much better coding a grouped regression directly in C.
+
+
+## Point 3: Internally Favor Primitive R Objects and Functions
+
+This partly reiterates Point 1 but now with a focus on internal data representation rather than grouping and computing. The point could also be bluntly stated as: 'vectors, matrices and lists are good, data frames and complex objects are bad'.
+
+Many frameworks seem to imply the opposite - the *tidyverse* encourages you to cast your data as a tidy tibble, and *data.table* offers you a more efficient data frame. But these objects are internally complex, and, in the case of *data.table*, only efficient because of the internal C-level algorithms for large-data manipulation. You should always take a step back to ask yourself: for the statistical software I am writing, do I need this complexity? Complex objects require complex methods to manipulate them, thus, when using them, you incur the cost of everything that goes on in these methods. Vectors, matrices, and lists are much more efficient in R and *collapse* provides you with many options to manipulate them directly.
+
+It may surprise you to hear that, internally, *collapse* does not use data frame-like objects at all. Instead, such objects are cast to lists using `unclass(data)`, `class(data) <- NULL`, or `attributes(data) <- NULL`. This is advisable if you want to write fast package code for data frame-like objects. 
+
+The benchmark below illustrates that basically everything you do on a *data.frame* is more expensive than on the equivalent list.
+
+
+```r
+l <- unclass(mtcars)
+nam <- names(mtcars)
+microbenchmark::microbenchmark(names(mtcars), attr(mtcars, "names"), names(l),
+               names(mtcars) <- nam, attr(mtcars, "names") <- nam, names(l) <- nam,
+               mtcars[["mpg"]], .subset2(mtcars, "mpg"), l[["mpg"]],
+               mtcars[3:8], .subset(mtcars, 3:8), l[3:8],
+               ncol(mtcars), length(mtcars), length(unclass(mtcars)), length(l),
+               nrow(mtcars), length(.subset2(mtcars, 1L)), length(l[[1L]]))
+# Unit: nanoseconds
+#                          expr  min   lq    mean median     uq   max neval
+#                 names(mtcars)  164  205  240.26    246  246.0   410   100
+#         attr(mtcars, "names")   41   82  109.88     82  123.0  1476   100
+#                      names(l)    0    0   24.60     41   41.0    82   100
+#          names(mtcars) <- nam  451  492  651.90    656  697.0  3321   100
+#  attr(mtcars, "names") <- nam  287  369  480.52    451  492.0  4346   100
+#               names(l) <- nam  164  246  276.34    246  287.0   533   100
+#               mtcars[["mpg"]] 2009 2091 2363.65   2173 2296.0 15539   100
+#       .subset2(mtcars, "mpg")   41   41   68.88     82   82.0   164   100
+#                    l[["mpg"]]   41   82   78.31     82   82.0   205   100
+#                   mtcars[3:8] 5166 5371 5607.98   5453 5576.0 15908   100
+#          .subset(mtcars, 3:8)  246  246  321.03    287  328.0  2788   100
+#                        l[3:8]  246  287  305.45    287  328.0   492   100
+#                  ncol(mtcars) 1025 1107 1200.07   1189 1230.0  2255   100
+#                length(mtcars)  164  205  249.28    246  266.5   492   100
+#       length(unclass(mtcars))  123  164  176.71    164  164.0   861   100
+#                     length(l)    0    0   18.86      0   41.0   287   100
+#                  nrow(mtcars) 1025 1107 1239.84   1148 1230.0  6642   100
+#  length(.subset2(mtcars, 1L))   41   82  113.57     82  123.0  1845   100
+#               length(l[[1L]])   41   82  100.45     82  123.0   492   100
+```
+
+
+By means of further illustration, let's recreate the `pwnobs()` function in *collapse* which counts pairwise missing values. The list method is written in R. A basic implementation is:^[By Point 2 this implementation is not ideal because I am creating two logical vectors for each iteration of the inner loop, but I currently don't see any way to write this more efficiently.]
+
+
+```r
+pwnobs_list <- function(X) {
+    dg <- fnobs(X)
+    n <- ncol(X)
+    nr <- nrow(X)
+    N.mat <- diag(dg)
+    for (i in 1:(n - 1L)) {
+        miss <- is.na(X[[i]])
+        for (j in (i + 1L):n) N.mat[i, j] <- N.mat[j, i] <- nr - sum(miss | is.na(X[[j]]))
+    }
+    rownames(N.mat) <- names(dg)
+    colnames(N.mat) <- names(dg)
+    N.mat
+}
+
+mtcNA <- na_insert(mtcars, prop = 0.2)
+pwnobs_list(mtcNA)
+#      mpg cyl disp hp drat wt qsec vs am gear carb
+# mpg   26  20   20 20   20 20   21 22 21   21   22
+# cyl   20  26   21 20   22 21   22 22 22   23   20
+# disp  20  21   26 22   22 23   22 22 21   21   22
+# hp    20  20   22 26   21 23   22 20 20   21   21
+# drat  20  22   22 21   26 23   21 21 20   21   21
+# wt    20  21   23 23   23 26   22 21 21   20   20
+# qsec  21  22   22 22   21 22   26 22 20   22   20
+# vs    22  22   22 20   21 21   22 26 20   23   21
+# am    21  22   21 20   20 21   20 20 26   20   21
+# gear  21  23   21 21   21 20   22 23 20   26   20
+# carb  22  20   22 21   21 20   20 21 21   20   26
+```
+
+Now with the above tips we can optimize this as follows:
+
+```r
+pwnobs_list_opt <- function(X) {
+    dg <- fnobs.data.frame(X)
+    class(X) <- NULL
+    n <- length(X)
+    nr <- length(X[[1L]])
+    N.mat <- diag(dg)
+    for (i in 1:(n - 1L)) {
+        miss <- is.na(X[[i]])
+        for (j in (i + 1L):n) N.mat[i, j] <- N.mat[j, i] <- nr - sum(miss | is.na(X[[j]]))
+    }
+    dimnames(N.mat) <- list(names(dg), names(dg))
+    N.mat
+}
+
+identical(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
+# [1] TRUE
+
+microbenchmark::microbenchmark(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
+# Unit: microseconds
+#                    expr     min       lq      mean  median      uq     max neval
+#      pwnobs_list(mtcNA) 153.217 160.1255 185.09696 179.744 215.004 241.654   100
+#  pwnobs_list_opt(mtcNA)  27.429  31.1600  33.38507  32.964  35.137  45.387   100
+```
+
+Evidently, the optimized function is 6x faster on this (small) dataset and we have changed nothing to the loops doing the computation. With larger data the difference is less stark, but you never know what's going on in methods you have not written and how they scale. My advice is: try to avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code. If the latter is your intent the [vignette on *collapse*'s object handling](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) will also be helpful. 
+
+If you only use *collapse* functions this discussion is void - all *collapse* functions designed for data frames, including `join()`, `pivot()`, `fsubset()`, etc., internally handle your data as a list and are equally efficient on data frames and lists. However, if you want to use base R semantics (`[`, etc.) alongside *collapse* and other functions, it makes sense to unclass incoming data frame-like objects and reclass them at the end. 
+ 
+ If you don't want to internally convert data frames to lists, at least use functions `.subset()`, `.subset2()`, or `collapse::get_vars()` to efficiently extract columns and `attr()` to extract/set attributes. With matrices, use `dimnames()` directly instead of `rownames()` and `colnames()` which wrap it.
+
+Also avoid `as.data.frame()` and friends to coerce/recreate data frame-like objects. It is quite easy to construct a *data.frame* from a list:
+
+
+```r
+attr(l, "row.names") <- .set_row_names(length(l[[1L]]))
+class(l) <- "data.frame"
+head(l, 2)
+#   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+# 1  21   6  160 110  3.9 2.620 16.46  0  1    4    4
+# 2  21   6  160 110  3.9 2.875 17.02  0  1    4    4
+```
+
+You can also use *collapse* functions `qDF()`, `qDT()` and `qTBL()` to efficiently convert/create *data.frame*'s, *data.table*'s, and *tibble*'s:
+
+
+```r
+library(data.table)
+library(tibble)
+microbenchmark::microbenchmark(qDT(mtcars), as.data.table(mtcars),
+                               qTBL(mtcars), as_tibble(mtcars))
+# Unit: microseconds
+#                   expr    min     lq     mean  median      uq      max neval
+#            qDT(mtcars)  2.952  3.280  6.35705  3.5670  3.8130  269.534   100
+#  as.data.table(mtcars) 34.194 36.572 44.93641 37.4535 39.2985  697.410   100
+#           qTBL(mtcars)  2.419  2.583  3.19267  2.8700  2.9930   38.704   100
+#      as_tibble(mtcars) 48.257 49.569 71.56304 50.4095 52.5005 2050.533   100
+
+l <- unclass(mtcars)
+microbenchmark::microbenchmark(qDF(l), as.data.frame(l), as.data.table(l), as_tibble(l))
+# Unit: microseconds
+#              expr     min       lq      mean   median      uq     max neval
+#            qDF(l)   1.722   2.2140   4.51779   2.4600   2.747 199.424   100
+#  as.data.frame(l) 210.412 225.1515 242.65973 248.3370 254.569 301.186   100
+#  as.data.table(l)  70.889  77.2030  90.30086  83.0045  88.683 798.393   100
+#      as_tibble(l)  55.350  61.8690  68.20924  67.0760  72.898 139.769   100
+```
+
+*collapse* also provides functions like `setattrib()`, `copyMostAttrib()`, etc., to efficiently attach attributes again. So another efficient workflow for general data frame-like objects is to save the attributes `ax <- attributes(data)`, manipulate it as a list `attributes(data) <- NULL`, modify `ax$names` and `ax$row.names` as needed and then use `setattrib(data, ax)` before returning.
+
+## Some Notes on Global Options
+
+*collapse* has its own set of global options which can be set using `set_collapse()` and retrieved using `get_collapse()`.^[This is done mainly for efficiency reasons, but also do implement advanced options such as namespace masking (options `mask` and `remove`). The options are stored in an internal environment called `.op` visible in the documentation of some functions such as `fmean()` when used to set argument defaults.] This confers responsibilities upon package developers as setting these options inside a package also affects how *collapse* behaves outside of your package. 
+
+In general, the same rules apply as for setting other R options through `options()` or `par()`: they need to be reset using `on.exit()` so that the user choices are unaffected even if your package function breaks. For example, if you want a block of code multithreaded and without missing value skipping for maximum performance: 
+
+
+```r
+fast_function <- function(x, ...) {
+  
+  # Your code...
+
+  oldopts <- set_collapse(nthreads = 4, na.rm = FALSE)
+  on.exit(set_collapse(oldopts)) 
+  
+  # Multithreaded code...
+}
+```
+
+Namespace masking (options `mask` and `remove`) should not be set inside packages because it may have unintended side-effects for the user (e.g., *collapse* appears at the top of the `search()` path afterwards).
+
+Conversely, user choices in `set_collapse()` also affect your package code, except for namespace masking as you should specify explicitly which *collapse* functions you are using (e.g., via `importFrom("collapse", "fmean")` in NAMESPACE or `collapse::fmean()` in your code). 
+
+Particularly options `na.rm`, `nthreads`, and `sort`, if set by the user, will impact your code, unless you explicitly set the targeted arguments (e.g., `nthreads` and `na.rm` in statistical functions like `fmean()`, and `sort` arguments in grouping functions like `GRP()`/`qF()`/`qG()`/`fgroup_by()`). 
+
+My general view is that this is not necessary - if the user sets `set_collapse(na.rm = FALSE)` because data has no missing values, then it is good if that also speeds up your package functions. However, if your package code generates missing values and expects *collapse* functions to skip them you should take care of this using either `set_collapse()` + `on.exit()` or explicitly setting `na.rm = TRUE` in all relevant functions. 
+
+Also watch out for internally-grouped aggregations using [*Fast Statistical Functions*](https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html), which are affected by global defaults:
+
+
+```r
+fmean(mtcars$mpg, mtcars$cyl)
+#        4        6        8 
+# 26.66364 19.74286 15.10000
+oldopts <- set_collapse(sort = FALSE)
+fmean(mtcars$mpg, mtcars$cyl)
+#        6        4        8 
+# 19.74286 26.66364 15.10000
+```
+
+Statistical functions do not have `sort` arguments, thus, if it is crucial that the output remains sorted, ensure that a sorted factor, 'qG', or 'GRP' object is passed:
+
+
+```r
+fmean(mtcars$mpg, qF(mtcars$cyl, sort = TRUE))
+#        4        6        8 
+# 26.66364 19.74286 15.10000
+set_collapse(oldopts)
+```
+
+Of course, you can also check which options the user has set and adjust your code, e.g. 
+
+
+```r
+# Your code ...
+if(!get_collapse("sort")) {
+  oldopts <- set_collapse(sort = TRUE)
+  on.exit(set_collapse(oldopts)) 
+}
+# Critical code ...
+```
+
+## Conclusion
+
+*collapse* can become a game-changer for your statistical software development in R, enabling you to write programs that effectively run like C while accomplishing complex statistical/data tasks with few lines of code. This however requires taking a closer look at the package, in particular the [documentation](https://sebkrantz.github.io/collapse/reference/collapse-documentation.html), and following the advice given in this vignette.
+

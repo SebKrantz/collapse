@@ -371,7 +371,14 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
                                  ncol = 2, dimnames =  list(NULL, c("Min", "Max")))),
                     quote = FALSE, right = TRUE, print.gap = 2)
     } else {
-      if(perc) stat <- cbind(stat[, 1L, drop = FALSE], Perc = stat[, 1L]/bsum(stat[, 1L])*100, stat[, -1L, drop = FALSE])
+      if(perc) {
+        if(wsuml && ncol(stat) > 4L) { # If weights and non-character
+          ncolf <- 1:(2L + (dimnames(stat)[[2L]][2L] == "Ndist"))
+          stat <- if(wsuml) cbind(stat[, ncolf, drop = FALSE], Perc = stat[, "WeightSum"]/bsum(stat[, "WeightSum"])*100, stat[, -ncolf, drop = FALSE])
+        } else {
+          stat <- cbind(stat[, 1L, drop = FALSE], Perc = stat[, 1L]/bsum(stat[, 1L])*100, stat[, -1L, drop = FALSE])
+        }
+      }
       print.qsu(stat, digits)
     }
     if(length(xi) > 3L) { # Table or quantiles

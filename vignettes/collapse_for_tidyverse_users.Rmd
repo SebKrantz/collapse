@@ -40,14 +40,14 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 
 The [*tidyverse*](https://www.tidyverse.org/) set of packages provides a rich, expressive, and consistent syntax for data manipulation in R centering on the *tibble* object and tidy data principles (each observation is a row, each variable is a column). 
 
-*collapse* fully supports the *tibble* object and provides many *tidyverse*-like functions for data manipulation. It can thus be used to write *tidyverse*-like data manipulation code that, thanks to low-level vectorization of many statistical operations and optimized R code, typically runs much faster than native *tidyverse* code (in addition to being much more lightweight in dependencies). 
+*collapse* fully supports the *tibble* object and provides many *tidyverse*-like functions for data manipulation. It can thus be used to write *tidyverse*-like data manipulation code that, thanks to low-level vectorization of many statistical operations and optimized R code, typically runs much faster than native *tidyverse* code, in addition to being much more lightweight in dependencies. 
 
 Its aim is not to create a faster *tidyverse*, i.e., it does not implements all aspects of the rich *tidyverse* grammar or changes to it^[Notably, tidyselect, lambda expressions, and many of the smaller helper functions are left out.], and also takes inspiration from other leading data manipulation libraries to serve broad aims of performance, parsimony, complexity, and robustness in data manipulation for R. 
 
 
 ## Namespace and Global Options
 
-*collapse* data manipulation functions familiar to *tidyverse* users include `fselect`, `fgroup_by`, `fsummarise`, `fmutate`, `across`, `frename`, and `fcount`. Other functions like `fsubset`, `ftransform`, and `get_vars` are inspired by base R, while again other functions like `join`, `pivot`, `roworder`, `colorder`, `rowbind`, etc. are inspired by other data manipulation libraries such as *data.table* and *polars*. 
+*collapse* data manipulation functions familiar to *tidyverse* users include `fselect`, `fgroup_by`, `fsummarise`, `fmutate`, `across`, `frename`, `fslice`, and `fcount`. Other functions like `fsubset`, `ftransform`, and `get_vars` are inspired by base R, while again other functions like `join`, `pivot`, `roworder`, `colorder`, `rowbind`, etc. are inspired by other data manipulation libraries such as *data.table* and *polars*. 
 
 By virtue of the f- prefixes, the *collapse* namespace has no conflicts with the *tidyverse*, and these functions can easily be substituted in a *tidyverse* workflow. 
 
@@ -58,7 +58,7 @@ library(collapse)
 set_collapse(mask = "manip") # version >= 2.0.0 
 ```
 
-makes available functions `select`, `group_by`, `summarise`, `mutate`, `rename`, `count`, `subset`, and `transform` in the *collapse* namespace and detaches and re-attaches the package, such that the following code is executed by *collapse*:
+makes available functions `select`, `group_by`, `summarise`, `mutate`, `rename`, `count`, `subset`, `slice`, and `transform` in the *collapse* namespace and detaches and re-attaches the package, such that the following code is executed by *collapse*:
 
 ```{r}
 mtcars |>
@@ -121,18 +121,18 @@ Another thing to be aware of when using *Fast Statistical Functions* inside data
 mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + min(qsec)) # Vectorized
 ```
 
-calculates a grouped mean of `mpg` but adds the overall minimum of `qsec` to the result, whereas 
+calculates a grouped mean of `mpg` but adds the overall minimum of `qsec` to the result, i.e., it is equivalent to `fmean(mpg, g = cyl) + min(qsec)`. On the other hand 
 
 ```{r}
 mtcars |> group_by(cyl) |> summarise(mpg = fmean(mpg) + fmin(qsec)) # Vectorized
 mtcars |> group_by(cyl) |> summarise(mpg = mean(mpg) + min(qsec))   # Not vectorized
 ```
 
-both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) / fmin(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
+both give the mean + the minimum within each group, but calculated in different ways: the former is equivalent to `fmean(mpg, g = cyl) + fmin(qsec, g = cyl)`, whereas the latter is equal to `sapply(gsplit(mpg, cyl), function(x) mean(x) + min(x))`. 
 
-See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. 
+See `?fsummarise` and `?fmutate` for more detailed examples. This *eager vectorization* approach is intentional as it allows users to vectorize complex expressions and fall back to base R if this is not desired. [This blog post](https://andrewghazi.github.io/posts/collapse_is_sick/sick.html) by Andrew Ghazi provides an excellent example of computing a p-value test statistic by groups. *Note* that only expressions typed out can be vectorized; expressions inside functions such as `mean_plus_min <- function(x) fmean(x) + fmin(x)` are not vectorized.^[*collapse* can only read what you type, e.g. `exp <- substitute(fmean(mpg) + min(mpg))`, then `all_funs(exp)` gives `c("+", "fmean", "min")`, and `any(all_funs(exp) %in% .FAST_STAT_FUN)` returns `TRUE`, signifying to `fsummarise()` that the expression should be executed only once with the grouping object passed to the `g` argument of `fmean()`, instead of it being executed once for every group.] To take full advantage of *collapse*, it is thus highly recommended to use the *Fast Statistical Functions* as much as possible.
 
-To take full advantage of *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect other parts of your code^[When doing this, make sure to refer to base R functions explicitly using `::` e.g. `base::mean`.]. 
+<!-- To take full advantage of *collapse*, it is highly recommended to use the *Fast Statistical Functions* as much as possible. You can also set `set_collapse(mask = "all")` to replace statistical functions in base R like `sum` and `mean` with the collapse versions (toggling vectorized execution in all cases), but this may affect other parts of your code^[When doing this, make sure to refer to base R functions explicitly using `::` e.g. `base::mean`.]. -->
 
 ## Writing Efficient Code
 
@@ -168,6 +168,101 @@ mtcars |>
 
 Setting these options globally using `set_collapse(sort = FALSE, nthreads = 3, na.rm = FALSE)` avoids the need to set them repeatedly.
 
+### Using Internal Grouping 
+
+Another key to writing efficient code with *collapse* is to avoid `fgroup_by()` where possible, especially for mutate operations. *collapse* does not implement `.by` arguments to manipulation functions like *dplyr*, but instead allows ad-hoc grouped transformations through its statistical functions. For example, the easiest and fastest way to computed the median of `mpg` by `cyl`, `vs`, and `am` is
+
+```{r}
+mtcars |>
+  mutate(mpg_median = fmedian(mpg, list(cyl, vs, am), TRA = "fill")) |> 
+  head(3)
+```
+
+For the common case of averaging and centering data, *collapse* also provides functions `fbetween()` for averaging and `fwithin()` for centering, i.e., `fbetween(mpg, list(cyl, vs, am))` is the same as `fmean(mpg, list(cyl, vs, am), TRA = "fill")`. There is also `fscale()` for (grouped) scaling and centering. 
+
+This also applies to multiple columns, where we can use `fmutate(across(...))` or `ftransformv()`, i.e. 
+
+```{r}
+mtcars |>
+  mutate(across(c(mpg, disp, qsec), fmedian, list(cyl, vs, am), TRA = "fill")) |> 
+  head(2)
+
+# Or 
+mtcars |>
+  transformv(c(mpg, disp, qsec), fmedian, list(cyl, vs, am), TRA = "fill") |> 
+  head(2)
+```
+
+Of course, if we want to apply different functions using the same grouping, `fgroup_by()` is sensible, but for mutate operations it also has the argument `return.groups = FALSE`, which avoids materializing the unique grouping columns, saving some memory. 
+
+```{r}
+mtcars |>
+  group_by(cyl, vs, am, return.groups = FALSE) |> 
+  mutate(mpg_median = fmedian(mpg), 
+         mpg_mean = fmean(mpg), # Or fbetween(mpg)
+         mpg_demean = fwithin(mpg), # Or fmean(mpg, TRA = "-")
+         mpg_scale = fscale(mpg), 
+         .keep = "used") |>
+  ungroup() |>
+  head(3)
+```
+
+The `TRA` argument supports a whole array of operations, see `?TRA`. For example `fsum(mtcars, TRA = "/")` turns the column vectors into proportions. As an application of this, consider a generated dataset of sector-level exports.
+
+```{r, include = FALSE}
+set.seed(101)
+```
+```{r}
+# c = country, s = sector, y = year, v = value
+exports <- expand.grid(c = paste0("c", 1:8), s = paste0("s", 1:8), y = 1:15) |>
+           mutate(v = round(abs(rnorm(length(c), mean = 5)), 2)) |>
+           subset(-sample.int(length(v), 360)) # Making it unbalanced and irregular
+head(exports)
+nrow(exports)
+```
+
+It is very easy then to compute Balassa's (1965) Revealed Comparative Advantage (RCA) index, which is the share of a sector in country exports divided by the share of the sector in world exports. An index above 1 indicates that a RCA of country c in sector s. 
+
+```{r}
+# Computing Balassa's (1965) RCA index: fast and memory efficient
+# settfm() modifies exports and assigns it back to the global environment
+settfm(exports, RCA = fsum(v, list(c, y), TRA = "/") %/=% fsum(fsum(v, y, TRA = "/"), list(s, y), TRA = "fill", set = TRUE))
+```
+
+Note that this involved a single expression with two different grouped operations, which is only possible by incorporating grouping into statistical functions themselves. Let's summarise this dataset using `pivot()` to aggregate the RCA index across years. Here `"mean"` calls a highly efficient internal mean function. 
+
+```{r}
+pivot(exports, ids = "c", values = "RCA", names = "s", 
+      how = "wider", FUN = "mean", sort = TRUE)
+```
+
+We may also wish to investigate the growth rate of RCA. This can be done using `fgrowth()`. Since the panel is irregular, i.e., not every sector is observed in every year, it is critical to also supply the time variable. 
+
+```{r}
+exports |> 
+  mutate(RCA_growth = fgrowth(RCA, g = list(c, s), t = y)) |> 
+  pivot(ids = "c", values = "RCA_growth", names = "s", 
+        how = "wider", FUN = fmedian, sort = TRUE)
+```
+
+Lastly, since the panel is unbalanced, we may wish to create an RCA index for only the last year, but balance the dataset a bit more by taking the last available trade within the last three years. This can be done using a single subset call
+
+```{r}
+# Taking the latest observation within the last 3 years
+exports_latest <- subset(exports, y > 12 & y == fmax(y, list(c, s), "fill"), -y)
+# How many sectors do we observe for each country in the last 3 years?
+with(exports_latest, fndistinct(s, c))
+```
+
+We can then compute the RCA index on this data
+
+```{r}
+exports_latest |>
+    mutate(RCA = fsum(v, c, TRA = "/") %/=% fsum(proportions(v), s, TRA = "fill")) |>
+    pivot("c", "RCA", "s", how = "wider", sort = TRUE)
+```
+
+To summarise, *collapse* provides many options for ad-hoc or limited grouping, which are faster than a full `fgroup_by()`, and also syntactically efficient. Further efficiency gains are possible using operations by reference, e.g., `%/=%` instead of `/` to avoid an intermediate copy. It is also possible to transform by reference using fast statistical functions by passing the `set = TRUE` argument, e.g., `with(mtcars, fmean(mpg, cyl, TRA = "fill", set = TRUE))` replaces `mpg` by its group-averaged version (the transformed vector is returned invisibly). 
 
 ## Conclusion 
 

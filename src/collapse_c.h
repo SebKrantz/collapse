@@ -1,3 +1,6 @@
+#ifndef COLLAPSE_H  // Check if COLLAPSE_H is not defined
+#define COLLAPSE_H  // Define COLLAPSE_H
+
 #ifdef _OPENMP
   #include <omp.h>
   #define OMP_NUM_PROCS omp_get_num_procs()
@@ -12,16 +15,21 @@
 #include <R.h>
 #include <Rinternals.h>
 #include <stdbool.h>
+#include "internal/R_defn.h"
 
-#define SEXPPTR(x) ((SEXP *)DATAPTR(x))  // to avoid overhead of looped VECTOR_ELT
-#define SEXPPTR_RO(x) ((const SEXP *)DATAPTR_RO(x))  // to avoid overhead of looped VECTOR_ELT
-
+#undef NISNAN
 #define NISNAN(x) ((x) == (x))  // opposite of ISNAN for doubles
 // Faster than Rinternals version (which uses math library version)
 #undef ISNAN
 #define ISNAN(x) ((x) != (x))
 
+// Initialized in data.table_init.c
 extern int max_threads;
+extern SEXP sym_label;
+extern SEXP sym_starts;
+extern SEXP sym_maxgrpn;
+extern SEXP sym_n_groups;
+extern SEXP sym_group_sizes;
 
 // from base_radixsort.h (with significant modifications)
 SEXP Cradixsort(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -68,6 +76,8 @@ SEXP CcopyAttrib(SEXP to, SEXP from);
 SEXP CcopyMostAttrib(SEXP to, SEXP from);
 SEXP copyMostAttributes(SEXP to, SEXP from);
 SEXP lassign(SEXP x, SEXP s, SEXP rows, SEXP fill);
+SEXP gwhich_first(SEXP x, SEXP g, SEXP target);
+SEXP gslice_multi(SEXP g, SEXP o, SEXP Rn, SEXP first);
 SEXP groups2GRP(SEXP x, SEXP lx, SEXP gs);
 SEXP gsplit(SEXP x, SEXP gobj, SEXP toint);
 SEXP greorder(SEXP x, SEXP gobj);
@@ -104,6 +114,8 @@ SEXP replace_outliers(SEXP x, SEXP limits, SEXP value, SEXP single_limit, SEXP s
 SEXP na_locf(SEXP x, SEXP Rset);
 SEXP na_focb(SEXP x, SEXP Rset);
 SEXP multi_match(SEXP m, SEXP g);
+SEXP integer64toREAL(SEXP x);
+SEXP funlist(SEXP x);
 // fnobs rewritten in C:
 SEXP fnobsC(SEXP x, SEXP Rng, SEXP g);
 SEXP fnobsmC(SEXP x, SEXP Rng, SEXP g, SEXP Rdrop);
@@ -175,3 +187,4 @@ SEXP nth_impl(SEXP x, int narm, int ret, double Q);
 SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q);
 SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h);
 
+#endif // End of COLLAPSE_H guard

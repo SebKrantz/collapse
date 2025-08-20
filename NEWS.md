@@ -1,3 +1,117 @@
+# collapse 2.1.3.9000
+
+* *collapse* now has a custom internal version of `unlist()` with better attribute preservation capabilities and a slight speed improvement. Thanks @aidanhorn (#785).
+
+# collapse 2.1.3
+
+* Various bug fixes (#769, #772 and #779).
+
+# collapse 2.1.2
+
+* `na_insert()` has new argument `set` to do this by reference. 
+
+* Some moderate performance improvements to `gsplit()`/`BY()` and `pivot()`.
+
+# collapse 2.1.1
+
+* `alloc(list(1), 2)` now gives `list(1, 1)` instead of `list(list(1), list(1))`, which can still be generated with `alloc(list(1), 2, simplify = FALSE)`. This change also affects `ftransform()`/`fmutate()`, making, e.g., `fmutate(data, y = list(1))` consistent with `dplyr::mutate(data, y = list(1))`. Thanks @MattAFiedler (#753). 
+
+* `fslice()` now works with *sf* data frames. 
+
+# collapse 2.1.0
+
+*collapse* 2.1.0, released in March 2025, introduces a fast slicing function, an improved weighted quantile algorithm, a few convenience features, and removes some legacy functions from the package. 
+
+### Potentially breaking changes
+
+* Functions `pwNobs`, `as.factor_GRP`, `as.factor_qG`, `is.GRP`, `is.qG`, `is.unlistable`, `is.categorical`, `is.Date`, `as.numeric_factor`, `as.character_factor`, and `Date_vars`, which were renamed in v1.6.0 by either replacing '.' with '_' or using all lower-case letters, and depreciated since then, are now finally removed from the package.
+
+* `num_vars()` (and thus also `cat_vars()` and `collap()`) were changed to a simpler C-definition of numeric data types which is more in-line with `is.numeric()`: `is_numeric_C <- function(x) typeof(x) %in% c("integer", "double") && !inherits(x, c("factor", "Date", "POSIXct", "yearmon", "yearqtr"))`. The previous definition was: `is_numeric_C_old <- function(x) typeof(x) %in% c("integer", "double") && (!is.object(x) || inherits(x, c("ts", "units", "integer64")))`. Thus, the definition changed from including only certain classes to excluding the most important classes. Thanks @maouw for flagging this (#727).
+
+### Bug Fixes
+
+* Fixed some issues using *collapse* and the *tidyverse* together, particularly regarding tidyverse methods for 'grouped_df' - thanks @NicChr (#645).
+
+* More consistent handling of zero-length inputs - they are now also returned in `fmean()` and `fmedian()`/`fnth()` instead of returning `NA` (#628).
+
+
+### Additions
+
+* Added function `fslice()`: a fast alternative to `dplyr::slice_[head|tail|min|max]` that also works with matrices. Thanks @alinacherkas for the proposal and initial implementation (#725).
+
+* Added function `groupv()` as programmers version of `group()`, or rather, `groupv()` is now identical to the former `group()`, and `group()` now supports multiple vectors as input e.g. `group(v1, v2)`. This is done for convenience and consistency with `radixorder[v]()`. For backwards compatibility, `group()` also supports a single list as input.
+
+* `join()` has a new argument `require` allowing the user to generate messages or errors if the join operation is not successful enough: 
+
+``` r
+join(df1, df2, require = list(x = 0.8, fail = "warning"))
+#> Warning: Matched 75.0% of records in table df1 (x), but 80.0% is required
+#> left join: df1[id1, id2] 3/4 (75%) <1:1st> df2[id1, id2] 3/4 (75%)
+#>   id1 id2 name age salary      dept
+#> 1   1   a John  35  60000        IT
+#> 2   1   b Jane  28     NA      <NA>
+#> 3   2   b  Bob  42  55000 Marketing
+#> 4   3   c Carl  50  70000     Sales
+```
+
+* `psmat()` now has a `fill` argument to fill empty slots in matrix/array with other elements (default `NULL`/`NA`). 
+
+### Improvements
+
+* The weighted quantile algorithm in `fquantile()`/`fnth()` was improved to a more theoretically sound method following [excellent notes](https://htmlpreview.github.io/?https://github.com/mjskay/uncertainty-examples/blob/master/weighted-quantiles.html) by [Matthew Kay](https://github.com/mjskay). It now also supports quantile type 4, but it does not skip zero weights anymore, as the new algorithm makes it difficult to skip them 'on the fly'. *Note* that the existing *collapse* algorithm [already had very good](https://github.com/mjskay/uncertainty-examples/issues/2) properties after a bug fix in v2.0.17, but the new algorithm is more exact and also faster.
+
+* The *collapse* [**arXiv article**](https://arxiv.org/abs/2403.05038) has been updated and significantly enhanced. It is an excellent resource to get an overview of the package.  
+
+### Notes
+
+* On CRAN, collapse R dependency was changed to >= 4.1.0 to be able to use the base pipe in examples without generating a NOTE on R CMD check (another absolutely unnecessary restriction). The package depends on R >= 3.5.0 and the DESCRIPTION file on GitHub/R-universe will continue to reflect this.  
+
+
+# collapse 2.0.19
+
+* `fmatch(factor(NA), NA)` now gives `1` instead of `NA`. Thanks @NicChr (#675).
+
+* New developer focused vignette on [developing with *collapse*](https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html).
+
+* Fixed minor CRAN issues (#676, #702). 
+
+* Fixed bug with integer64 types in `rowbind()`. Thanks @arthurgailes for reporting and @aitap for providing a fix (#697). 
+
+* *collapse* now also has a Bluesky account at https://bsky.app/profile/rcollapse.bsky.social.
+
+# collapse 2.0.18
+
+* Cases in `pivot(..., how = "longer")` with no `values` columns now no longer give an error. Thanks @alvarocombo for flagging this (#663).
+
+* Fixed bug in `qF(c(4L, 1L, NA), sort = FALSE)`: hash function failure due to a coding bug. Thanks @mayer79 for flagging this (#666).
+
+* If `x` is already a `qG` object of the right properties, calling `qG(x)` now does not copy `x` anymore. Thanks @mayer79 (https://github.com/mayer79/effectplots/issues/11).
+
+# collapse 2.0.17
+
+* In `GRP.default()`, the `"group.starts"` attribute is always returned, even if there is only one group or every observation is its own group. Thanks @JamesThompsonC (#631).  
+
+* Fixed a bug in `pivot()` if `na.rm = TRUE` and `how = "wider"|"recast"` and there are multiple `value` columns with different missingness patterns. In this case `na_omit(values)` was applied with default settings to the original (long) value columns, implying potential loss of information. The fix applies `na_omit(values, prop = 1)`, i.e., only removes completely missing rows. 
+* `qDF()/qDT()/qTBL()` now allow a length-2 vector of names to `row.names.col` if `X` is a named atomic vector, e.g., `qDF(fmean(mtcars), c("cars", "mean"))` gives the same as `pivot(fmean(mtcars, drop = FALSE), names = list("car", "mean"))`. 
+
+* Added a subsection on using internal (ad-hoc) grouping to the *collapse* for *tidyverse* users vignette.  
+
+* `qsu()` now adds a `WeightSum` column giving the sum of (non-zero or missing) weights if the `w` argument is used. Thanks @mayer79 for suggesting (#650). For panel data (`pid`) the 'Between' sum of weights is also simply the number of groups, and the 'Within' sum of weights is the 'Overall' sum of weights divided by the number of groups.   
+
+* Fixed an inaccuracy in `fquantile()/fnth()` with weights: As per documentation the target sum is `sumwp = (sum(w) - min(w)) * p`, however, in practice, the weight of the minimum element of `x` was used instead of the minimum weight. Since the smallest element in the sample usually has a small weight this was unnoticed for a long while, but thanks to @Jahnic-kb now reported and fixed (#659). 
+
+* Fixed a bug in `recode_char()` when `regex = TRUE` and the `default` argument was used. Thanks @alinacherkas for both reporting and fixing (#654).
+
+# collapse 2.0.16
+
+* Fixes an installation bug on some Linux systems (conflicting types) (#613). 
+
+* *collapse* now enforces string encoding in `fmatch()` / `join()`, which caused problems if strings being matched had different encodings (#566, #579, and #618). To avoid noticeable performance implications, checks are done heuristically, i.e., the first, 25th, 50th and 75th percentile and last string of a character vector are checked, and if not UTF8, the entire vector is internally coerced to UTF8 strings *before* the matching process. In general, character vectors in R can contain strings of different encodings, but this is not the case with most regular data. For performance reasons, *collapse* assumes that character vectors are uniform in terms of string encoding. Heterogeneous strings should be coerced using tools like `stringi::stri_trans_general(x, "latin-ascii")`.
+
+* Fixes a bug using qualified names for fast statistical functions inside `across()` (#621, thanks @alinacherkas). 
+
+* *collapse* now depends on R >= 3.4.0 due to the enforcement of `STRICT_R_HEADERS = 1` from R v4.5.0. In particular R API functions were renamed `Calloc -> R_Calloc` and `Free -> R_Free`.
+
 # collapse 2.0.15
 
 * Some changes on the C-side to move the package closer to C API compliance (demanded by R-Core). One notable change is that `gsplit()` no longer supports S4 objects (because `SET_S4_OBJECT` is not part of the API and `asS4()` is too expensive for tight loops). I cannot think of a single example where it would be necessary to split an S4 object, but if you do have applications please file an issue. 

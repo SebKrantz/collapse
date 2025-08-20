@@ -225,12 +225,11 @@ test_that("0-length vectors give expected output", {
   funs <- .c(fsum, fprod, fmean, fmedian, fmin, fmax, fnth, fcumsum, fbetween, fwithin, fscale)
   for(i in funs) {
     FUN <- match.fun(i)
-    if(i %!in% .c(fsum, fmin, fmax, fcumsum, fprod, fmean, fmedian, fnth)) {
+    if(i %!in% .c(fsum, fmin, fmax, fcumsum)) {
       expect_true(all_identical(FUN(numeric(0)), FUN(integer(0)), numeric(0)))
     } else {
       expect_identical(FUN(numeric(0)), numeric(0))
-      if(i %in% .c(fmean, fprod, fnth, fmedian)) expect_identical(FUN(integer(0)), NA_real_)
-      else expect_identical(FUN(integer(0)), integer(0))
+      expect_identical(FUN(integer(0)), integer(0))
     }
   }
   funs <- .c(fmode, ffirst, flast)
@@ -322,10 +321,10 @@ test_that("functions using welfords method properly deal with zero weights", {
     expect_equal(unattrib(fsd(x = c(2, 1, 3), g = g, w = c(0, 1, 1), na.rm = FALSE)), sqrt(2))
     expect_equal(unattrib(fscale(x = c(2, 1, 0), g = g, w = c(1, 1, 0), na.rm = TRUE)), (c(2, 1, 0)-1.5)/sqrt(0.5))
     expect_equal(unattrib(fscale(x = c(2, 1, 3), g = g, w = c(0, 1, 1), na.rm = FALSE)), (c(2, 1, 3)-2)/sqrt(2))
-    expect_equal(unattrib(qsu(x = c(2, 1, 0), g = g, w = c(1, 1, 0))), c(2, 1.5, sqrt(0.5), 1, 2))
-    expect_equal(unattrib(qsu(x = c(2, 1, 3), g = g, w = c(0, 1, 1))), c(2, 2, sqrt(2), 1, 3))
-    expect_equal(unattrib(qsu(x = c(2, 1, 0), g = g, w = c(1, 1, 0), higher = TRUE))[1:5], c(2, 1.5, sqrt(0.5), 1, 2))
-    expect_equal(unattrib(qsu(x = c(2, 1, 3), g = g, w = c(0, 1, 1), higher = TRUE))[1:5], c(2, 2, sqrt(2), 1, 3))
+    expect_equal(unattrib(qsu(x = c(2, 1, 0), g = g, w = c(1, 1, 0)))[-2L], c(2, 1.5, sqrt(0.5), 1, 2))
+    expect_equal(unattrib(qsu(x = c(2, 1, 3), g = g, w = c(0, 1, 1)))[-2L], c(2, 2, sqrt(2), 1, 3))
+    expect_equal(unattrib(qsu(x = c(2, 1, 0), g = g, w = c(1, 1, 0), higher = TRUE))[c(1L, 3:6)], c(2, 1.5, sqrt(0.5), 1, 2))
+    expect_equal(unattrib(qsu(x = c(2, 1, 3), g = g, w = c(0, 1, 1), higher = TRUE))[c(1L, 3:6)], c(2, 2, sqrt(2), 1, 3))
 
   }
 })
@@ -464,5 +463,19 @@ test_that("fmedian ties handled properly with weights", {
   expect_equal(c(fmedian(x, w = w, ties = "mean"), fmedian(x, w = w, ties = "min"), fmedian(x, w = w, ties = "max")),
                c(2.5, 2, 3))
 })
+
+test_that("Misc bugs", {
+  expect_visible(qF(c(4L, 1L, NA), sort = FALSE))
+  expect_equal(fmatch(factor(NA, exclude = NULL), NA), 1L) # #675
+  expect_equal(fmatch(factor(NA), NA), 1L)
+  expect_visible(qsu(mtcars$mpg, mtcars$cyl, mtcars$vs, mtcars$wt))
+  expect_visible(qsu(mtcars$mpg, mtcars$cyl, mtcars$vs, mtcars$wt, higher = TRUE))
+  expect_visible(qsu(mtcars$mpg, mtcars$cyl, mtcars$vs, mtcars$wt, array = FALSE))
+  expect_visible(qsu(mtcars$mpg, mtcars$cyl, mtcars$vs, mtcars$wt, higher = TRUE, array = FALSE))
+  df1 <- data.frame(x = 1:3, y = 4:6)
+  df2 <- data.frame(x = 2:5, z = 2:5)
+  expect_visible(join(df1, df2, require = list(x = 1, y = 1, fail = "message"), verbose = 0, multiple = TRUE))
+})
+
 
 options(warn = 1)

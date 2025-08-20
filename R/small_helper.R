@@ -116,7 +116,7 @@ pasteclass <- function(x) if(length(cx <- class(x)) > 1L) paste(cx, collapse = "
 
 vclasses <- function(X, use.names = TRUE) {
   if(is.atomic(X)) return(pasteclass(X))
-  vapply(X, pasteclass, character(1L), USE.NAMES = use.names) # unattrib(X): no names
+  vapply(X, pasteclass, "", USE.NAMES = use.names) # unattrib(X): no names
 }
 
 # https://github.com/wch/r-source/blob/4a409a1a244d842a3098d2783c5b63c9661fc6be/src/main/util.c
@@ -156,7 +156,7 @@ vtypes <- function(X, use.names = TRUE) {
   res <- R_types[.Call(C_vtypes, X, 0L)]
   if(use.names) names(res) <- attr(X, "names")
   res
-  # vapply(X, typeof, character(1L)) # unattrib(X): no names
+  # vapply(X, typeof, "") # unattrib(X): no names
 }
 
 vlengths <- function(X, use.names = TRUE) .Call(C_vlengths, X, use.names)
@@ -165,9 +165,9 @@ namlab <- function(X, class = FALSE, attrn = "label", N = FALSE, Ndistinct = FAL
   if(!is.list(X)) stop("namlab only works with lists")
   res <- list(Variable = attr(X, "names"))
   attributes(X) <- NULL
-  if(class) res$Class <- vapply(X, pasteclass, character(1), USE.NAMES = FALSE)
+  if(class) res$Class <- vapply(X, pasteclass, "", USE.NAMES = FALSE)
   if(N) res$N <- fnobs.data.frame(X)
-  if(Ndistinct) res$Ndist <- fndistinct.data.frame(X)
+  if(Ndistinct) res$Ndist <- fndistinct.data.frame(X, na.rm = TRUE)
   res$Label <- vlabels(X, attrn, FALSE)
   attr(res, "row.names") <- c(NA_integer_, -length(X))
   oldClass(res) <- "data.frame"
@@ -318,16 +318,16 @@ addAttributes <- function(x, a) .Call(C_setAttributes, x, c(attributes(x), a))
 
 
 is_categorical <- function(x) !is.numeric(x)
-is.categorical <- function(x) {
-  .Deprecated(msg = "'is.categorical' was renamed to 'is_categorical'. It will be removed end of 2023, see help('collapse-renamed').")
-  !is.numeric(x)
-}
+# is.categorical <- function(x) {
+#   .Deprecated(msg = "'is.categorical' was renamed to 'is_categorical'. It will be removed end of 2023, see help('collapse-renamed').")
+#   !is.numeric(x)
+# }
 
 is_date <- function(x) inherits(x, c("Date","POSIXlt","POSIXct"))
-is.Date <- function(x) {
-  .Deprecated(msg = "'is.Date' was renamed to 'is_date'. It will be removed end of 2023, see help('collapse-renamed').")
-  inherits(x, c("Date","POSIXlt","POSIXct"))
-}
+# is.Date <- function(x) {
+#   .Deprecated(msg = "'is.Date' was renamed to 'is_date'. It will be removed end of 2023, see help('collapse-renamed').")
+#   inherits(x, c("Date","POSIXlt","POSIXct"))
+# }
 
 # more consistent with base than na_rm
 # na.rm <- function(x) { # cpp version available, but not faster !
@@ -445,17 +445,24 @@ na_omit <- function(X, cols = NULL, na.attr = FALSE, prop = 0, ...) {
   res
 }
 
-na_insert <- function(X, prop = 0.1, value = NA) {
+na_insert <- function(X, prop = 0.1, value = NA, set = FALSE) {
   if(is.list(X)) {
     n <- fnrow(X)
     nmiss <- floor(n * prop)
-    res <- duplAttributes(lapply(unattrib(X), function(y) `[<-`(y, sample.int(n, nmiss), value = value)), X)
+    if(set) {
+      lapply(unattrib(X), function(y) scv(y, sample.int(n, nmiss), value, TRUE))
+      return(invisible(X))
+    }
+    res <- duplAttributes(lapply(unattrib(X), function(y) scv(y, sample.int(n, nmiss), value)), X)
     return(if(inherits(X, "data.table")) alc(res) else res)
   }
   if(!is.atomic(X)) stop("X must be an atomic vector, array or data.frame")
   l <- length(X)
-  X[sample.int(l, floor(l * prop))] <- value
-  X
+  if(set) {
+    scv(X, sample.int(l, floor(l * prop)), value, TRUE)
+    return(invisible(X))
+  }
+  return(scv(X, sample.int(l, floor(l * prop)), value))
 }
 
 fdapply <- function(X, FUN, ...) duplAttributes(lapply(`attributes<-`(X, NULL), FUN, ...), X)
@@ -521,15 +528,15 @@ as_character_factor <- function(X, keep.attr = TRUE) {
   res
 }
 
-as.numeric_factor <- function(X, keep.attr = TRUE) {
-  .Deprecated(msg = "'as.numeric_factor' was renamed to 'as_numeric_factor'. It will be removed end of 2023, see help('collapse-renamed').")
-  as_numeric_factor(X, keep.attr)
-}
-
-as.character_factor <- function(X, keep.attr = TRUE) {
-  .Deprecated(msg = "'as.character_factor' was renamed to 'as_character_factor'. It will be removed end of 2023, see help('collapse-renamed').")
-  as_character_factor(X, keep.attr)
-}
+# as.numeric_factor <- function(X, keep.attr = TRUE) {
+#   .Deprecated(msg = "'as.numeric_factor' was renamed to 'as_numeric_factor'. It will be removed end of 2023, see help('collapse-renamed').")
+#   as_numeric_factor(X, keep.attr)
+# }
+#
+# as.character_factor <- function(X, keep.attr = TRUE) {
+#   .Deprecated(msg = "'as.character_factor' was renamed to 'as_character_factor'. It will be removed end of 2023, see help('collapse-renamed').")
+#   as_character_factor(X, keep.attr)
+# }
 
 
 setRnDF <- function(df, nm) `attr<-`(df, "row.names", nm)
@@ -715,6 +722,11 @@ tochar <- function(x) if(is.character(x)) x else as.character(x)  # if(is.object
 #   nc <- nchar(args)
 #   substr(args, 2, nc) # 3, nc-1 for no brackets !
 # }
+
+switch_msg <- function(msg, which = NULL) {
+  if(is.null(which)) stop(msg, call. = FALSE)
+  switch(which, error = stop(msg, call. = FALSE), message = message(msg), warning = warning(msg, call. = FALSE))
+}
 
 unused_arg_action <- function(call, ...) {
   wo <- switch(getOption("collapse_unused_arg_action"), none = 0L, message = 1L, warning = 2L, error = 3L,

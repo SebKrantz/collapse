@@ -35,7 +35,9 @@ qDF <- function(X, row.names.col = FALSE, keep.attr = FALSE, class = "data.frame
       }
     } else {
       res <- list(nam, `names<-`(X, NULL))
-      names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", l1orlst(as.character(substitute(X))))
+      names(res) <- if(length(row.names.col) == 2L) row.names.col else c(
+                    if(is.character(row.names.col)) row.names.col[1L] else "row.names",
+                    l1orlst(as.character(substitute(X))))
       attr(res, "row.names") <- .set_row_names(length(X))
     }
     return(`oldClass<-`(res, if(length(class)) class else "data.frame"))
@@ -103,7 +105,8 @@ qDT_raw <- function(X, row.names.col, keep.attr, DT_class, X_nam) {
       res <- `names<-`(list(X), X_nam)
     } else {
       res <- list(nam, `names<-`(X, NULL))
-      names(res) <- c(if(is.character(row.names.col)) row.names.col[1L] else "row.names", X_nam)
+      names(res) <- if(length(row.names.col) == 2L) row.names.col else c(
+        if(is.character(row.names.col)) row.names.col[1L] else "row.names", X_nam)
     }
     attr(res, "row.names") <- .set_row_names(length(X))
     return(`oldClass<-`(res, DT_class))

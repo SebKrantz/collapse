@@ -8,6 +8,7 @@ template:
   bootstrap: 5
   bootswatch: sandstone # Also good: flatly, yeti, simplex, superhero, zephyr
   theme: ayu-dark # Or: ayu-mirage
+  math-rendering: katex
   bslib:
     primary: "#1e2124" # "#202224" # "#242424" # "#003254"
     code-color: "#004573" # "#9c0027" # "#004d80" # b3002d
@@ -26,6 +27,7 @@ navbar:
     - blog
     right:
     - search
+    - bluesky
     - twitter
     - github
   components:
@@ -41,6 +43,10 @@ navbar:
     blog:
       text: Blog
       href: https://sebkrantz.github.io/Rblog/
+    bluesky:
+      icon: fa-bluesky
+      href: https://bsky.app/profile/rcollapse.bsky.social
+      aria-label: BlueSky
     twitter:
       icon: fa-twitter
       href: https://twitter.com/collapse_R
@@ -87,11 +93,12 @@ reference:
   - seqid
   - timeid
 - title: Fast Data Manipulation
-  desc: Fast and flexible select, replace, add, subset, transform, sort/reorder, rename/relabel, bind, join and pivot/reshape data / data frame columns.
+  desc: Fast and flexible select, replace, add, subset, slice, transform, sort/reorder, rename/relabel, bind, join and pivot/reshape data / data frame columns.
   contents:
   - fast-data-manipulation
   - fselect-get_vars-add_vars
   - fsubset
+  - fslice
   - fsummarise
   - ftransform
   - across
@@ -212,6 +219,7 @@ articles:
   - collapse_for_tidyverse_users
   - collapse_and_sf
   - collapse_object_handling
+  - developing_with_collapse
 - title: Legacy (Pre v1.7)
   desc: Vignettes that cover functionality of versions <1.7. These
     remain very useful, but do not cover newer features.
