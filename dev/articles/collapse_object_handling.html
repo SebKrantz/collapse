@@ -67,7 +67,7 @@ Scenes of Class-Agnostic R Programming</h3>
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2025-08-19</h4>
+            <h4 data-toc-skip class="date">2025-08-20</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_object_handling.Rmd</code></div>
@@ -196,12 +196,12 @@ to preserve attributes in all cases except where it is likely to break
 something, beholding the way most commonly used R classes and objects
 behave. The most likely operations that break something are when
 aggregating matrices which have a class (such as
-<em>mts</em>/<em>xts</em>) or univariate time series (<em>ts</em>), when
-data is to be replaced by another object, or when applying an unknown
-function to a vector by groups and assembling the result with
-<code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>. In the latter cases, particular attention is paid
-to integer vectors and factors, as we often count something generating
-integers, and malformed factors need to be avoided.</p>
+<em>mts</em>/<em>xts</em>) or univariate time series (<em>ts</em>), or
+when data is to be replaced by another object.
+<!-- , or when applying an unknown function to a vector by groups and assembling the result with `unlist()`.-->
+In the latter case, particular attention is paid to integer vectors and
+factors, as we often count something generating integers, and malformed
+factors need to be avoided.</p>
 <p>The following section provides some further details for some
 <em>collapse</em> functions and supported classes.</p>
 </div>
