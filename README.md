@@ -80,7 +80,7 @@ In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/
 
 ### Article on arXiv
 
-An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* was submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/) in March 2024 and updated/revised in February 2025. 
+An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* is forthcoming at [Journal of Statistical Software](https://www.jstatsoft.org/). 
 
 ### Presentation at [useR 2022](https://user2022.r-project.org)
 
