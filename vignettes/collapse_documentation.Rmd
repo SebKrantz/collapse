@@ -36,8 +36,7 @@ An up-to-date (v2.0) [cheatsheet](<https://raw.githubusercontent.com/SebKrantz/c
 
 ## Article on arXiv
 
-An [article](https://arxiv.org/abs/2403.05038) on *collapse* (v2.0.10) has been submitted to the [Journal of Statistical Software](https://www.jstatsoft.org/) in March 2024. 
-
+An [article](https://arxiv.org/abs/2403.05038) on *collapse* is forthcoming at [Journal of Statistical Software](https://www.jstatsoft.org/). 
 
 ## useR 2022 Presentation and Slides
 
