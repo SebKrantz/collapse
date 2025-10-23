@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,9 +66,9 @@ Scenes of Class-Agnostic R Programming</h3>
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2025-08-18</h4>
+            <h4 data-toc-skip class="date">2025-10-23</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.1.4/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_object_handling.Rmd</code></div>
     </div>
 
@@ -187,54 +187,20 @@ attributes of <code>x</code> are copied except for the ‘class’ and
 possibility that <code>x</code> may have important information attached
 to it which should be preserved in data transformations, such as a
 <code>"label"</code> attribute.</p>
-<p>Another rather complex case arises when manipulating data with
-<em>collapse</em> using base R functions,
-e.g. <code>BY(mtcars$mpg, mtcars$cyl, mad)</code> or
-<code>mtcars |&gt; fgroup_by(cyl, vs, am) |&gt; fsummarise(mad_mpg = mad(mpg))</code>.
-In this case, <em>collapse</em> internally uses base R functions
-<code>lapply</code> and <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>, following efficient
-splitting with <code><a href="../reference/GRP.html">gsplit()</a></code> (which preserves all attributes).
-Concretely, the result is computed as
-<code>y = unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE)</code>,
-where in the examples <code>x</code> is <code>mtcars$mpg</code>,
-<code>g</code> is the grouping variable(s), <code>FUN = mad</code>, and
-<code>y</code> is <code>mad(x)</code> in each group. To follow its
-policy of attribute preservation as closely as possible,
-<em>collapse</em> then calls an internal function
-<code>y_final = copyMostAttributes(y, x)</code>, which copies the
-attributes of <code>x</code> to <code>y</code> if both are deemed
-compatible<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Concretely, attributes are copied
-&lt;code&gt;if (typeof(x) == typeof(y) &amp;amp;&amp;amp; (identical(class(x), class(y)) || typeof(y) != "integer" || inherits(x, c("IDate", "ITime"))) &amp;amp;&amp;amp; !(length(x) != length(y) &amp;amp;&amp;amp; inherits(x, "ts")))&lt;/code&gt;.
-The first part of the condition is easy: if &lt;code&gt;x&lt;/code&gt; and
-&lt;code&gt;y&lt;/code&gt; are of different data types we do not copy attributes.
-The second condition states that to copy attributes we also need to
-ensure that &lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt; are either or the same
-class or &lt;code&gt;y&lt;/code&gt; is not integer or &lt;code&gt;x&lt;/code&gt; is not an
-integer-based date or time (= classes provided by &lt;em&gt;data.table&lt;/em&gt;).
-The main reason for this clause is to guard against cases where we are
-counting something on an integer-based variable such as a factor
-e.g. &lt;code&gt;BY(factor, group, function(x) length(unique(x)))&lt;/code&gt;. The
-case where the result is also a factor
-e.g. &lt;code&gt;BY(factor, group, function(x) x[1])&lt;/code&gt; is dealt with
-because &lt;code&gt;&lt;a href="https://rdrr.io/r/base/unlist.html" class="external-link"&gt;unlist()&lt;/a&gt;&lt;/code&gt; preserves factors, so
-&lt;code&gt;identical(class(x), class(y))&lt;/code&gt; is &lt;code&gt;TRUE&lt;/code&gt;. The
-last part of the expression again guards against reducing the length of
-univariate time series and then copying the attributes.&lt;/p&gt;'><sup>2</sup></a> (<span class="math inline">\approx</span>
-of the same data type). If they are deemed incompatible,
-<code>copyMostAttributes</code> still checks if <code>x</code> has a
-<code>"label"</code> attribute and copies that one to
-<code>y</code>.</p>
+<!--
+Another rather complex case arises when manipulating data with *collapse* using base R functions, e.g. `BY(mtcars$mpg, mtcars$cyl, mad)` or `mtcars |> fgroup_by(cyl, vs, am) |> fsummarise(mad_mpg = mad(mpg))`. In this case, *collapse* internally uses base R functions `lapply` and `unlist()`, following efficient splitting with `gsplit()` (which preserves all attributes). Concretely, the result is computed as `y = unlist(lapply(gsplit(x, g), FUN, ...), FALSE, FALSE)`, where in the examples `x` is `mtcars$mpg`, `g` is the grouping variable(s), `FUN = mad`, and `y` is `mad(x)` in each group. To follow its policy of attribute preservation as closely as possible, *collapse* then calls an internal function `y_final = copyMostAttributes(y, x)`, which copies the attributes of `x` to `y` if both are deemed compatible^[Concretely, attributes are copied `if (typeof(x) == typeof(y) && (identical(class(x), class(y)) || typeof(y) != "integer" || inherits(x, c("IDate", "ITime"))) && !(length(x) != length(y) && inherits(x, "ts")))`. The first part of the condition is easy: if `x` and `y` are of different data types we do not copy attributes. The second condition states that to copy attributes we also need to ensure that `x` and `y` are either or the same class or `y` is not integer or `x` is not an integer-based date or time (= classes provided by *data.table*). The main reason for this clause is to guard against cases where we are counting something on an integer-based variable such as a factor e.g. `BY(factor, group, function(x) length(unique(x)))`. The case where the result is also a factor e.g. `BY(factor, group, function(x) x[1])` is dealt with because `unlist()` preserves factors, so `identical(class(x), class(y))` is `TRUE`. The last part of the expression again guards against reducing the length of univariate time series and then copying the attributes.] ($\approx$ of the same data type). If they are deemed incompatible, `copyMostAttributes` still checks if `x` has a `"label"` attribute and copies that one to `y`. 
+-->
 <p>So to summarize the general principles: <em>collapse</em> just tries
 to preserve attributes in all cases except where it is likely to break
 something, beholding the way most commonly used R classes and objects
 behave. The most likely operations that break something are when
 aggregating matrices which have a class (such as
-<em>mts</em>/<em>xts</em>) or univariate time series (<em>ts</em>), when
-data is to be replaced by another object, or when applying an unknown
-function to a vector by groups and assembling the result with
-<code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code>. In the latter cases, particular attention is paid
-to integer vectors and factors, as we often count something generating
-integers, and malformed factors need to be avoided.</p>
+<em>mts</em>/<em>xts</em>) or univariate time series (<em>ts</em>), or
+when data is to be replaced by another object.
+<!-- , or when applying an unknown function to a vector by groups and assembling the result with `unlist()`.-->
+In the latter case, particular attention is paid to integer vectors and
+factors, as we often count something generating integers, and malformed
+factors need to be avoided.</p>
 <p>The following section provides some further details for some
 <em>collapse</em> functions and supported classes.</p>
 </div>
@@ -371,7 +337,7 @@ columns by reference (e.g. <code>DT[, new := 1]</code>),
 allocated to be able to add columns without taking a shallow copy of the
 &lt;em&gt;data.table&lt;/em&gt;, and an &lt;code&gt;".internal.selfref"&lt;/code&gt; attribute
 containing an external pointer is used to check if any shallow copy was
-made using base R commands like &lt;code&gt;&amp;lt;-&lt;/code&gt;.&lt;/p&gt;'><sup>3</sup></a>.
+made using base R commands like &lt;code&gt;&amp;lt;-&lt;/code&gt;.&lt;/p&gt;'><sup>2</sup></a>.
 <em>collapse</em> copied some C code from <em>data.table</em> to do the
 overallocation and generate the <code>".internal.selfref"</code>
 attribute, so that <code><a href="../reference/quick-conversion.html">qDT()</a></code> creates a valid and fully
@@ -419,14 +385,14 @@ assigns a class attribute as follows</p>
 <p>In words: a class <code>"GRP_df"</code> is added in front, followed
 by the classes of the original object<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Removing
 &lt;code&gt;c("GRP_df", "grouped_df", "data.frame")&lt;/code&gt; if present to avoid
-duplicate classes and allowing grouped data to be re-grouped.&lt;/p&gt;'><sup>4</sup></a>, followed by <code>"grouped_df"</code> and
+duplicate classes and allowing grouped data to be re-grouped.&lt;/p&gt;'><sup>3</sup></a>, followed by <code>"grouped_df"</code> and
 finally <code>"data.frame"</code>, if present. The <code>"GRP_df"</code>
 class is for dealing appropriately with the object through methods for
 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and subsetting (<code>[</code>, <code>[[</code>),
 e.g. <code>print.GRP_df</code> fetches the grouping object, prints
 <code>fungroup(.X)</code><a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content='&lt;p&gt;Which reverses the changes of &lt;code&gt;&lt;a href="../reference/GRP.html"&gt;fgroup_by()&lt;/a&gt;&lt;/code&gt;
 so that the print method for the original object &lt;code&gt;.X&lt;/code&gt; is
-called.&lt;/p&gt;'><sup>5</sup></a>, and then prints a summary of the grouping.
+called.&lt;/p&gt;'><sup>4</sup></a>, and then prints a summary of the grouping.
 <code>[.GRP_df</code> works similarly: it saves the groups, calls
 <code>[</code> on <code>fungroup(.X)</code>, and attaches the groups
 again if the result is a list with the same number of rows. So
@@ -471,7 +437,7 @@ matrix of any class can become an <em>indexed_series</em>.</p>
 one, two or more variables in the index to support both time series and
 complex panels, natively deal with irregularity in time<a class="footnote-ref" tabindex="0" data-bs-toggle="popover" data-bs-content="&lt;p&gt;This is done through the creation of a time-factor in
 the &lt;em&gt;index_df&lt;/em&gt; attribute whose levels represent time steps, i.e.,
-the factor will have unused levels for gaps in time.&lt;/p&gt;"><sup>6</sup></a>, and provide a rich
+the factor will have unused levels for gaps in time.&lt;/p&gt;"><sup>5</sup></a>, and provide a rich
 set of methods for subsetting and manipulation which also subset the
 <em>index_df</em> attribute, including internal methods for
 <code><a href="../reference/fsubset.html">fsubset()</a></code>, <code><a href="../reference/funique.html">funique()</a></code>, <code>roworder(v)</code>
