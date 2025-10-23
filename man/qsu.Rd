@@ -99,6 +99,9 @@ A vector, matrix, array or list of matrices of summary statistics. All matrices 
 }
 \note{
 In weighted summaries, observations with missing or zero weights are skipped, and thus do not affect any of the calculated statistics, including the observation count. This also implies that a logical vector passed to \code{w} can be used to efficiently summarize a subset of the data.
+
+If weights \code{w} are used together with \code{pid}, transformed data is computed using weighted individual means i.e. weighted \bold{\code{xi.}} and weighted \bold{\code{x..}}. Weighted statistics are subsequently computed on this weighted-transformed data.
+
 }
 \references{
 Welford, B. P. (1962). Note on a method for calculating corrected sums of squares and products. \emph{Technometrics}. 4 (3): 419-420. doi:10.2307/1266577.
@@ -106,9 +109,6 @@ Welford, B. P. (1962). Note on a method for calculating corrected sums of square
 % \author{
 %%  ~~who you are~~
 % }
-\note{
-If weights \code{w} are used together with \code{pid}, transformed data is computed using weighted individual means i.e. weighted \bold{\code{xi.}} and weighted \bold{\code{x..}}. Weighted statistics are subsequently computed on this weighted-transformed data.
-}
 
 %% ~Make other sections like Warning with \section{Warning }{\dots.} ~
 
