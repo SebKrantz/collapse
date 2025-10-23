@@ -678,27 +678,17 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
           SEXP xj = px[j], outj;
           SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ng));
           if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
-          if (TYPEOF(xj) != REALSXP) {
-            if (TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP)
-              error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
-            if (dup == 0) {
-              x = PROTECT(shallow_duplicate(x));
-              ++nprotect;
-              px = SEXPPTR_RO(x);
-              dup = 1;
-            }
-            SEXP rx = PROTECT(coerceVector(xj, REALSXP)); // protect the coerced vector
-            SET_VECTOR_ELT(x, j, rx); // store it in the list
-            UNPROTECT(1); // rx now reachable via x, safe to unprotect
-            // refresh px after SET_VECTOR_ELT because underlying list storage can change
-            px = SEXPPTR_RO(x);
+          if(TYPEOF(xj) != REALSXP) {
+            if(TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
+            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; dup = 1;}
+            SET_VECTOR_ELT(x, j, coerceVector(xj, REALSXP));
+            px = SEXPPTR_RO(x); // Fix suggested by ChatGPT
           }
         }
-        px = SEXPPTR_RO(x); // After the loop and before the #pragma omp section, refresh px once more:
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < l; ++j) fsum_weights_g_impl(REAL(pout[j]), REAL(px[j]), ng, pg, pw, narm, nrx);
       } else {
-        for(int j = 0; j != l; ++j) pout[j] = fsum_wg_impl(px[j], ng, pg, pw, narm);
+        for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, fsum_wg_impl(px[j], ng, pg, pw, narm));
       }
     }
   }
