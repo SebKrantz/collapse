@@ -577,14 +577,15 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
           if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
           if(TYPEOF(xj) != REALSXP) {
             if(TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
-            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; px = SEXPPTR_RO(x); dup = 1;}
+            if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; dup = 1;}
             SET_VECTOR_ELT(x, j, coerceVector(xj, REALSXP));
+            px = SEXPPTR_RO(x); // Fix suggested by ChatGPT
           }
         }
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < l; ++j) fmean_weights_g_impl(REAL(pout[j]), REAL(px[j]), ng, pg, pw, narm, nrx);
       } else {
-        for(int j = 0; j != l; ++j) pout[j] = fmean_wg_impl(px[j], ng, pg, pw, narm);
+        for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, fmean_wg_impl(px[j], ng, pg, pw, narm));
       }
     }
   }

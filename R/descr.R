@@ -300,7 +300,7 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
         t <- unclass(xi[[4L]])
         if(length(t) <= n) {
           if(perc) print.default(cb(t, round(t/bsum(t)*100, digits)), right = TRUE, print.gap = 2, quote = FALSE) else
-            print.table(ct(t))
+            print.table(ct(t), digits = digits)
         } else {
           t1 <- t[seq_len(n)]
           st <- bsum(t)
@@ -310,7 +310,7 @@ print_descr_default <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
             print.default(cb(c(t1, rem), round(c(pct, 100-bsum(pct)), digits)), right = TRUE, print.gap = 2, quote = FALSE)
             # cat("...\n")
           } else {
-            print.table(ct(c(t1, rem)))
+            print.table(ct(c(t1, rem)), digits = digits)
             # cat("...\n")
           }
           if(summary) {
@@ -398,7 +398,7 @@ print_descr_grouped <- function(x, n = 14, perc = TRUE, digits = 2, t.table = TR
           if(perc) pct <- tab %r/% st * 100 # dimnames(tab)[[2L]] <- paste0(dimnames(tab)[[2L]], "\nFreq  Perc")
         }
         if(perc) {
-          tab <- duplAttributes(paste(tab, format(pct, digits = digits, justify = "right")), tab)
+          tab <- duplAttributes(paste(format(tab, digits = digits, justify = "right"), format(pct, digits = digits, justify = "right")), tab)
           print.default(if(t.table) tab else t(tab), right = TRUE, print.gap = 2, quote = FALSE)
         } else print.table(if(t.table) tab else t(tab), digits = digits)
         if(summary && nrow(t) > n) {
