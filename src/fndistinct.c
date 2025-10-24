@@ -436,7 +436,7 @@ SEXP fndistinctlC(SEXP x, SEXP g, SEXP Rnarm, SEXP Rdrop, SEXP Rnthreads) {
       for(int j = 0; j != l; ++j) {
         SEXP xj = px[j];
         if(length(xj) != gl) error("length(g) must match nrow(x)");
-        pout[j] = ndistinct_g_impl(xj, ng, pgs, po, pst, sorted, narm, nthreads);
+        SET_VECTOR_ELT(out, j, ndistinct_g_impl(xj, ng, pgs, po, pst, sorted, narm, nthreads));
         if(!isObject(xj)) copyMostAttrib(xj, pout[j]);
         else setAttrib(pout[j], sym_label, getAttrib(xj, sym_label));
       }

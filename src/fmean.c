@@ -565,7 +565,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < l; ++j) fmean_g_omp_impl(px[j], DPTR(pout[j]), ng, pg, pgs, narm);
       } else {
-        for(int j = 0; j != l; ++j) pout[j] = fmean_g_impl(px[j], ng, pg, pgs, narm);
+        for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, fmean_g_impl(px[j], ng, pg, pgs, narm));
       }
     } else {
       double *restrict pw = REAL(w);

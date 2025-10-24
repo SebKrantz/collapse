@@ -24,8 +24,8 @@ pad(X, i, value = NA, method = c("auto", "xpos", "vpos"))
   \item{method}{
  an integer or string specifying the use of \code{i}. The options are:
       \tabular{lllll}{\emph{ Int. }   \tab\tab \emph{ String }   \tab\tab \emph{ Description }  \cr
-                 1 \tab\tab "auto" \tab\tab automatic method selection: If \code{i} is positive integer and \code{length(i) == NROW(X)} or if \code{i} is logical and \code{sum(i) == NROW(X)}, choose method "xpos", else choose "vpos". \cr\cr\cr
-                 1 \tab\tab "xpos"   \tab\tab \code{i} is a vector of positive integers or a logical vector giving the positions of the the elements / rows of \code{X}. \code{values}'s are inserted where there are gaps / \code{FALSE} values in \code{i}. \cr\cr\cr
+                 1 \tab\tab "auto" \tab\tab automatic method selection: If \code{i} is positive integer and \code{length(i) == NROW(X)} or if \code{i} is logical and \code{sum(i) == NROW(X)}, choose method "xpos", else choose "vpos". \cr \tab\tab\tab\tab \cr \tab\tab\tab\tab \cr
+                 1 \tab\tab "xpos"   \tab\tab \code{i} is a vector of positive integers or a logical vector giving the positions of the the elements / rows of \code{X}. \code{values}'s are inserted where there are gaps / \code{FALSE} values in \code{i}. \cr \tab\tab\tab\tab \cr \tab\tab\tab\tab \cr
                  2 \tab\tab "vpos" \tab\tab \code{i} is a vector of positive / negative integers or a logical vector giving the positions at which \code{values}'s / rows should be inserted into \code{X}.
   }
 }

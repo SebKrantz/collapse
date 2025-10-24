@@ -973,9 +973,9 @@ SEXP fmodelC(SEXP x, SEXP g, SEXP w, SEXP Rnarm, SEXP Rret, SEXP Rnthreads) {
         pst = INTEGER(getAttrib(o, sym_starts));
       }
       if(nullw) { // Parallelism at sub-column level
-        for(int j = 0; j < l; ++j) pout[j] = mode_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, nthreads);
+        for(int j = 0; j < l; ++j) SET_VECTOR_ELT(out, j, mode_g_impl(px[j], ng, pgs, po, pst, sorted, narm, ret, nthreads));
       } else { // Parallelism at sub-column level
-        for(int j = 0; j < l; ++j) pout[j] = w_mode_g_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, nthreads);
+        for(int j = 0; j < l; ++j) SET_VECTOR_ELT(out, j, w_mode_g_impl(px[j], pw, ng, pgs, po, pst, sorted, narm, ret, nthreads));
       }
     }
   }

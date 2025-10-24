@@ -38,7 +38,7 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 
 *collapse* is a C/C++ based package for data transformation and statistical computing in R that aims to enable greater performance and statistical complexity in data manipulation tasks and offers a stable, class-agnostic, and lightweight API. It is part of the core [*fastverse*](https://fastverse.github.io/fastverse/), a suite of lightweight packages with similar objectives. 
 
-The [*tidyverse*](https://www.tidyverse.org/) set of packages provides a rich, expressive, and consistent syntax for data manipulation in R centering on the *tibble* object and tidy data principles (each observation is a row, each variable is a column). 
+The [*tidyverse*](https://tidyverse.org/) set of packages provides a rich, expressive, and consistent syntax for data manipulation in R centering on the *tibble* object and tidy data principles (each observation is a row, each variable is a column). 
 
 *collapse* fully supports the *tibble* object and provides many *tidyverse*-like functions for data manipulation. It can thus be used to write *tidyverse*-like data manipulation code that, thanks to low-level vectorization of many statistical operations and optimized R code, typically runs much faster than native *tidyverse* code, in addition to being much more lightweight in dependencies. 
 
