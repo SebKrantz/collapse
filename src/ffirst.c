@@ -230,8 +230,7 @@ SEXP ffirstlC(SEXP x, SEXP Rng, SEXP g, SEXP gst, SEXP Rnarm) {
   // return ffirst_impl(VECTOR_ELT(x, 0), ng, g, narm, pgl);
   SEXP out = PROTECT(allocVector(VECSXP, l));
   const SEXP *px = SEXPPTR_RO(x);
-  SEXP *pout = SEXPPTR(out);
-  for(int j = 0; j != l; ++j) pout[j] = ffirst_impl(px[j], ng, g, narm, pgl);
+  for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, ffirst_impl(px[j], ng, g, narm, pgl));
   DFcopyAttr(out, x, ng);
   UNPROTECT(nprotect);
   return out;

@@ -189,8 +189,7 @@ SEXP flastlC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
   } else pgl = &l;
   SEXP out = PROTECT(allocVector(VECSXP, l));
   const SEXP *px = SEXPPTR_RO(x);
-  SEXP *pout = SEXPPTR(out);
-  for(int j = 0; j != l; ++j) pout[j] = flast_impl(px[j], ng, g, narm, pgl);
+  for(int j = 0; j != l; ++j) SET_VECTOR_ELT(out, j, flast_impl(px[j], ng, g, narm, pgl));
   DFcopyAttr(out, x, ng);
   UNPROTECT(nprotect);
   return out;
