@@ -29,7 +29,7 @@
                  \code{\link{pwcor}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise (weighted) correlations \cr
                  \code{\link{pwcov}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise (weighted) covariances \cr
                  \code{\link{pwnobs}} \tab\tab No methods, for matrices or data frames \tab\tab Pairwise observation counts \cr
-                \code{\link{varying}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab\tab Fast variation check \cr
+                \code{\link{varying}} \tab\tab \code{default, matrix, data.frame, pseries, pdata.frame, grouped_df} \tab\tab Fast variation check
 %                \code{\link{fFtest}} \tab\tab No methods, its a standalone test to which data needs to be supplied.  \tab\tab Fast F-test of exclusion restrictions in linear models (with factors variables) \cr
 }
 }

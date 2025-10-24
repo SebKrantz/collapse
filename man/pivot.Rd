@@ -37,19 +37,19 @@ pivot(data,               # Summary of Documentation:
   \item{values}{columns containing the data to be reshaped. Specified like \code{ids}.
 }
   \item{names}{names of columns to generate, or retrieve variable names from:
-        \tabular{lll}{\code{ how }   \tab\tab \emph{ Description }  \cr\cr
-                 \code{"longer"}  \tab\tab list of names for the variable and value column in the long format, respectively. If \code{NULL}, \code{list("variable", "value")} will be chosen. Alternatively, a named list length 1 or 2 can be provided using "variable"/"value" as keys e.g. \code{list(value = "data_col")}.   \cr\cr
-                 \code{ "wider"} \tab\tab column(s) containing names of the new variables. Specified using a vector of column names, indices, a logical vector or selector function e.g. \code{is.character}. Multiple columns will be combined using \code{\link{finteraction}} with \code{"_"} as separator.  \cr\cr
-                 \code{ "recast"}   \tab\tab (named) list with the following elements: [[1]]/[["from"]] - column(s) containing names of the new variables, specified as in \code{"wider"}; [[2]]/[["to"]] - name of the variable to generate containing old column names. If \code{NULL}, \code{list("variable", "variable")} will be chosen.   \cr
+        \tabular{lll}{\code{ how }   \tab\tab \emph{ Description }  \cr \tab\tab \cr
+                 \code{"longer"}  \tab\tab list of names for the variable and value column in the long format, respectively. If \code{NULL}, \code{list("variable", "value")} will be chosen. Alternatively, a named list length 1 or 2 can be provided using "variable"/"value" as keys e.g. \code{list(value = "data_col")}.   \cr \tab\tab \cr
+                 \code{ "wider"} \tab\tab column(s) containing names of the new variables. Specified using a vector of column names, indices, a logical vector or selector function e.g. \code{is.character}. Multiple columns will be combined using \code{\link{finteraction}} with \code{"_"} as separator.  \cr \tab\tab \cr
+                 \code{ "recast"}   \tab\tab (named) list with the following elements: [[1]]/[["from"]] - column(s) containing names of the new variables, specified as in \code{"wider"}; [[2]]/[["to"]] - name of the variable to generate containing old column names. If \code{NULL}, \code{list("variable", "variable")} will be chosen.
                  }
 
 }
   \item{labels}{
 names of columns to generate, or retrieve variable labels from:
-        \tabular{lll}{\code{ how }   \tab\tab \emph{ Description }  \cr\cr
-                 \code{"longer"}  \tab\tab A string specifying the name of the column to store labels - retrieved from the data using \code{vlabels(values)}. \code{TRUE} will create a column named \code{"label"}. Alternatively, a (named) list with two elements: [[1]]/[["name"]] - the name of the labels column; [[2]]/[["new"]] - a (named) character vector of new labels for the 'variable', 'label' and 'value' columns in the long-format frame. See Examples.   \cr\cr
-                 \code{ "wider"} \tab\tab column(s) containing labels of the new variables. Specified using a vector of column names, indices, a logical vector or selector function e.g. \code{is.character}. Multiple columns will be combined using \code{\link{finteraction}} with \code{" - "} as separator.  \cr\cr
-                 \code{ "recast"}   \tab\tab (named) list with the following elements: [[1]]/[["from"]] - column(s) containing labels for the new variables, specified as in \code{"wider"}; [[2]]/[["to"]] - name of the variable to generate containing old labels; [[3]]/[["new"]] - a (named) character vector of new labels for the generated 'variable' and 'label' columns. If [[1]]/[["from"]] is not supplied, this can also include labels for new variables. Omitting one of the elements via a named list or setting it to \code{NULL} in a list of 3 will omit the corresponding operation i.e. either not saving existing labels or not assigning new ones.  \cr
+        \tabular{lll}{\code{ how }   \tab\tab \emph{ Description }  \cr \tab\tab \cr
+                 \code{"longer"}  \tab\tab A string specifying the name of the column to store labels - retrieved from the data using \code{vlabels(values)}. \code{TRUE} will create a column named \code{"label"}. Alternatively, a (named) list with two elements: [[1]]/[["name"]] - the name of the labels column; [[2]]/[["new"]] - a (named) character vector of new labels for the 'variable', 'label' and 'value' columns in the long-format frame. See Examples.   \cr \tab\tab \cr
+                 \code{ "wider"} \tab\tab column(s) containing labels of the new variables. Specified using a vector of column names, indices, a logical vector or selector function e.g. \code{is.character}. Multiple columns will be combined using \code{\link{finteraction}} with \code{" - "} as separator.  \cr \tab\tab \cr
+                 \code{ "recast"}   \tab\tab (named) list with the following elements: [[1]]/[["from"]] - column(s) containing labels for the new variables, specified as in \code{"wider"}; [[2]]/[["to"]] - name of the variable to generate containing old labels; [[3]]/[["new"]] - a (named) character vector of new labels for the generated 'variable' and 'label' columns. If [[1]]/[["from"]] is not supplied, this can also include labels for new variables. Omitting one of the elements via a named list or setting it to \code{NULL} in a list of 3 will omit the corresponding operation i.e. either not saving existing labels or not assigning new ones.
                  }
 }
   \item{how}{

@@ -22,51 +22,51 @@ get_collapse(opts = NULL)
 \item{\dots}{either comma separated options, or a single list of options. The available options are:
 
   \tabular{lll}{
-    \code{na.rm} \tab\tab logical, default \code{TRUE}. Sets the default for statistical algorithms such as the \link[=fast-statistical-functions]{Fast Statistical Functions} to skip missing values. If your data does not have missing values, or only in rare cases, it is recommended to change this to \code{FALSE} for performance gains. \emph{Note} that this does not affect other (non-statistical) uses of \code{na.rm} arguments, such as in \code{\link{pivot}}. \cr\cr\cr\cr
+    \code{na.rm} \tab\tab logical, default \code{TRUE}. Sets the default for statistical algorithms such as the \link[=fast-statistical-functions]{Fast Statistical Functions} to skip missing values. If your data does not have missing values, or only in rare cases, it is recommended to change this to \code{FALSE} for performance gains. \emph{Note} that this does not affect other (non-statistical) uses of \code{na.rm} arguments, such as in \code{\link{pivot}}. \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
 
-    \code{sort} \tab\tab logical, default \code{TRUE}. Sets the default for grouping operations to be sorted. This also applies to factor generation using \code{\link{qF}} and tabulation with \code{\link{qtab}}, but excludes other uses of \code{sort} arguments where grouping is not the objective (such as in \code{\link{funique}} or \code{\link{pivot}}). In general, sorted grouping (internally using \code{\link{radixorder}}) is slower than hash-based direct grouping (internally using \code{\link{group}}). However, if data is pre-sorted, sorted grouping is slightly faster. In general, if records don't need to be sorted or you want to maintain their first-appearance order, changing this to \code{FALSE} is recommended and often brings substantial performance gains. \emph{Note} that this also affects internal grouping applied when atomic vectors (except for factors) or lists are passed to \code{g} arguments in \link[=fast-statistical-functions]{Fast Statistical Functions}. \cr\cr\cr\cr
+    \code{sort} \tab\tab logical, default \code{TRUE}. Sets the default for grouping operations to be sorted. This also applies to factor generation using \code{\link{qF}} and tabulation with \code{\link{qtab}}, but excludes other uses of \code{sort} arguments where grouping is not the objective (such as in \code{\link{funique}} or \code{\link{pivot}}). In general, sorted grouping (internally using \code{\link{radixorder}}) is slower than hash-based direct grouping (internally using \code{\link{group}}). However, if data is pre-sorted, sorted grouping is slightly faster. In general, if records don't need to be sorted or you want to maintain their first-appearance order, changing this to \code{FALSE} is recommended and often brings substantial performance gains. \emph{Note} that this also affects internal grouping applied when atomic vectors (except for factors) or lists are passed to \code{g} arguments in \link[=fast-statistical-functions]{Fast Statistical Functions}. \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
 
-    \code{nthreads} \tab\tab integer, default 1. Sets the default for OpenMP multithreading, available in certain statistical and data manipulation functions. Setting values greater than 1 is strongly recommended with larger datasets. \cr\cr\cr\cr
+    \code{nthreads} \tab\tab integer, default 1. Sets the default for OpenMP multithreading, available in certain statistical and data manipulation functions. Setting values greater than 1 is strongly recommended with larger datasets. \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
 
-    \code{stable.algo} \tab\tab logical, default \code{TRUE}. Option passed to \code{\link[=fvar]{fvar()/fsd()}} and \code{\link[=qsu]{qsu()}}. \code{FALSE} enables one-pass standard deviation calculation, which is very fast, but might incur catastrophic cancellation if numbers are large and the variance is small. see \code{\link{fvar}} for details. \cr\cr\cr\cr
+    \code{stable.algo} \tab\tab logical, default \code{TRUE}. Option passed to \code{\link[=fvar]{fvar()/fsd()}} and \code{\link[=qsu]{qsu()}}. \code{FALSE} enables one-pass standard deviation calculation, which is very fast, but might incur catastrophic cancellation if numbers are large and the variance is small. see \code{\link{fvar}} for details. \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
 
-    \code{stub} \tab\tab logical, default \code{TRUE}. Controls whether \link[=.OPERATOR_FUN]{transformation operators} (\code{.OPERATOR_FUN}) such as \code{\link{W}}, \code{\link{L}}, \code{\link{STD}} etc. add prefixes to transformed columns of matrix and data.frame-like objects. \cr\cr\cr\cr
+    \code{stub} \tab\tab logical, default \code{TRUE}. Controls whether \link[=.OPERATOR_FUN]{transformation operators} (\code{.OPERATOR_FUN}) such as \code{\link{W}}, \code{\link{L}}, \code{\link{STD}} etc. add prefixes to transformed columns of matrix and data.frame-like objects. \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
 
-    \code{verbose} \tab\tab integer, default \code{1}. Print additional (diagnostic) information or messages when executing code. Currently only used in \code{\link{join}} and \code{\link{roworder}}. \cr\cr\cr\cr
+    \code{verbose} \tab\tab integer, default \code{1}. Print additional (diagnostic) information or messages when executing code. Currently only used in \code{\link{join}} and \code{\link{roworder}}. \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
 
-    \code{digits} \tab\tab integer, default \code{2}. Number of digits to print, e.g. in \code{\link{descr}} or \code{\link{pwcor}}. \cr\cr\cr\cr
+    \code{digits} \tab\tab integer, default \code{2}. Number of digits to print, e.g. in \code{\link{descr}} or \code{\link{pwcor}}. \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
 
-    \code{mask} \tab\tab character, default \code{NULL}. Allows masking existing base R/dplyr functions with faster \emph{collapse} versions, by creating additional functions in the namespace and instantly exporting them: \cr\cr
+    \code{mask} \tab\tab character, default \code{NULL}. Allows masking existing base R/dplyr functions with faster \emph{collapse} versions, by creating additional functions in the namespace and instantly exporting them: \cr \tab\tab \cr
 
-    \tab\tab For example \code{set_collapse(mask = "unique")} (or, equivalently, \code{set_collapse(mask = "funique")}) will create \code{unique <- funique} in the \emph{collapse} namespace, export \code{unique()}, and silently detach and attach the namespace again so R can find it - all in millisecond. Thus calling \code{unique()} afterwards uses the \emph{collapse} version - which is many times faster. \code{funique} remains available and you can still call \code{base::unique} explicitly. \cr\cr
+    \tab\tab For example \code{set_collapse(mask = "unique")} (or, equivalently, \code{set_collapse(mask = "funique")}) will create \code{unique <- funique} in the \emph{collapse} namespace, export \code{unique()}, and silently detach and attach the namespace again so R can find it - all in millisecond. Thus calling \code{unique()} afterwards uses the \emph{collapse} version - which is many times faster. \code{funique} remains available and you can still call \code{base::unique} explicitly. \cr \tab\tab \cr
 
-  \tab\tab All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels"))} creates \code{subset <- fsubset}, \code{transform <- ftransform} etc. Special functions are \code{"n"} and \code{"table"/"qtab"}, and \code{"\%in\%"}, which create \code{n <- GRPN} (for use in \code{(f)summarise}/\code{(f)mutate}), \code{table <- qtab}, and replace \code{\%in\%} with a fast version using \code{\link{fmatch}}, respectively. \cr\cr
+  \tab\tab All \emph{collapse} functions starting with 'f' can be passed to the option (with or without the 'f') e.g. \code{set_collapse(mask = c("subset", "transform", "droplevels"))} creates \code{subset <- fsubset}, \code{transform <- ftransform} etc. Special functions are \code{"n"} and \code{"table"/"qtab"}, and \code{"\%in\%"}, which create \code{n <- GRPN} (for use in \code{(f)summarise}/\code{(f)mutate}), \code{table <- qtab}, and replace \code{\%in\%} with a fast version using \code{\link{fmatch}}, respectively. \cr \tab\tab \cr
 
-  \tab\tab There are also a couple of convenience keywords that you can use to mask groups of functions: \cr\cr
+  \tab\tab There are also a couple of convenience keywords that you can use to mask groups of functions: \cr \tab\tab \cr
 
-\tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, fslice, fslicev, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr\cr
-\tab\tab - \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{fmatch}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. \cr\cr % fdim not because of infinite recursion
-\tab\tab - \code{"special"} exports \code{n()}, \code{table()} and \code{\%in\%}. See above. \cr\cr
-\tab\tab - \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See also Note. \cr\cr
-\tab\tab - \code{"fast-stat-fun"} adds the functions contained in the macro: \code{.FAST_STAT_FUN}. See also Note. \cr\cr
-\tab\tab - \code{"fast-trfm-fun"} adds the functions contained in: \code{setdiff(.FAST_FUN, .FAST_STAT_FUN)}. See also Note. \cr\cr
-\tab\tab - \code{"all"} turns on all of the above.\cr\cr
+\tab\tab - \code{"manip"} adds data manipulation functions: \code{fsubset, fslice, fslicev, ftransform, ftransform<-, ftransformv, fcompute, fcomputev, fselect, fselect<-, fgroup_by, fgroup_vars, fungroup, fsummarise, fsummarize, fmutate, frename, findex_by, findex}. \cr \tab\tab \cr
+\tab\tab - \code{"helper"} adds the functions: \code{fdroplevels}, \code{finteraction}, \code{fmatch}, \code{funique}, \code{fnunique}, \code{fduplicated}, \code{fcount}, \code{fcountv}, \code{fquantile}, \code{frange}, \code{fdist}, \code{fnlevels}, \code{fnrow} and \code{fncol}. \cr \tab\tab \cr % fdim not because of infinite recursion
+\tab\tab - \code{"special"} exports \code{n()}, \code{table()} and \code{\%in\%}. See above. \cr \tab\tab \cr
+\tab\tab - \code{"fast-fun"} adds the functions contained in the macro: \code{.FAST_FUN}. See also Note. \cr \tab\tab \cr
+\tab\tab - \code{"fast-stat-fun"} adds the functions contained in the macro: \code{.FAST_STAT_FUN}. See also Note. \cr \tab\tab \cr
+\tab\tab - \code{"fast-trfm-fun"} adds the functions contained in: \code{setdiff(.FAST_FUN, .FAST_STAT_FUN)}. See also Note. \cr \tab\tab \cr
+\tab\tab - \code{"all"} turns on all of the above.\cr \tab\tab \cr
 
 
-\tab\tab The re-attaching of the namespace places \emph{collapse} at the top of the search path (after the global environment), implying that all its exported functions will take priority over other libraries. Users can use \code{fastverse::fastverse_conflicts()} to check which functions are masked following \code{set_collapse(mask = ...)}. The option can be changed at any time with immediate effect. Using \code{set_collapse(mask = NULL)} removes all masked functions from the namespace, and can also be called simply to place \emph{collapse} at the top of the search path. \cr\cr\cr\cr\cr\cr
+\tab\tab The re-attaching of the namespace places \emph{collapse} at the top of the search path (after the global environment), implying that all its exported functions will take priority over other libraries. Users can use \code{fastverse::fastverse_conflicts()} to check which functions are masked following \code{set_collapse(mask = ...)}. The option can be changed at any time with immediate effect. Using \code{set_collapse(mask = NULL)} removes all masked functions from the namespace, and can also be called simply to place \emph{collapse} at the top of the search path. \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
 
  \code{remove} \tab\tab character, default \code{NULL}. Similar to 'mask': allows removing functions from the exported namespace (they are still in the namespace, just no longer exported). All \emph{collapse} functions can be passed here. This argument is always evaluated after 'mask', thus you can also remove masked functions again i.e. after setting a keyword which masks a bunch of functions. There are also a couple of convenience keywords you can specify to bulk-remove certain functions:
-\cr\cr
+\cr \tab\tab \cr
 
-\tab\tab - \code{"shorthand"} removes function shorthands: \code{gv, gv<-, av, av<-, nv, nv<-, gvr, gvr<-, itn, ix, slt, slt<-, sbt, gby, iby, mtt, smr, tfm, tfmv, tfm<-, settfm, settfmv, rnm}. \cr\cr
-\tab\tab - \code{"infix"} removes infix functions: \code{\%!=\%, \%[!]in\%, \%[!]iin\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.\cr\cr
-\tab\tab - \code{"operator"} removes functions contained in the macro: \code{.OPERATOR_FUN}.\cr\cr
-\tab\tab - \code{"old"} removes depreciated functions contained in the macro: \code{.COLLAPSE_OLD}.\cr\cr
+\tab\tab - \code{"shorthand"} removes function shorthands: \code{gv, gv<-, av, av<-, nv, nv<-, gvr, gvr<-, itn, ix, slt, slt<-, sbt, gby, iby, mtt, smr, tfm, tfmv, tfm<-, settfm, settfmv, rnm}. \cr \tab\tab \cr
+\tab\tab - \code{"infix"} removes infix functions: \code{\%!=\%, \%[!]in\%, \%[!]iin\%, \%*=\%, \%+=\%, \%-=\%, \%/=\%, \%=\%, \%==\%, \%c*\%, \%c+\%, \%c-\%, \%c/\%, \%cr\%, \%r*\%, \%r+\%, \%r-\%, \%r/\%, \%rr\%}.\cr \tab\tab \cr
+\tab\tab - \code{"operator"} removes functions contained in the macro: \code{.OPERATOR_FUN}.\cr \tab\tab \cr
+\tab\tab - \code{"old"} removes depreciated functions contained in the macro: \code{.COLLAPSE_OLD}.\cr \tab\tab \cr
 
 
 \tab\tab Like 'mask', the option is alterable and reversible. Specifying \code{set_collapse(remove = NULL)} restores the exported namespace. Also like 'mask', this option silently detaches and attaches \emph{collapse} again, ensuring that it is at the top of the search path.
 
- \cr\cr\cr\cr\cr\cr
+ % \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr \tab\tab \cr
   }
 }
 \item{opts}{character. A vector of options to receive from \code{.op}, or \code{NULL} for a list of all options.}
