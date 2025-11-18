@@ -103,7 +103,7 @@ A reshaped data frame with the same class and attributes (except for 'names'/'ro
 }
 
 \note{
-Leaving either 'ids' or 'values' empty will assign all other columns (except for \code{"variable"} if \code{how = "wider"|"recast"}) to the non-specified argument. It is also possible to leave both empty, e.g. for complete melting if \code{how = "wider"} or data transposition if \code{how = "recast"} (similar to \code{data.table::transpose} but supporting multiple names columns and variable labels). See Examples.
+Leaving either 'ids' or 'values' empty will assign all other columns (except for \code{"variable"} if \code{how = "wider"|"recast"}) to the non-specified argument. It is also possible to leave both empty, e.g. for complete melting if \code{how = "longer"} or data transposition if \code{how = "recast"} (similar to \code{data.table::transpose} but supporting multiple names columns and variable labels). See Examples.
 
 \code{pivot} currently does not support concurrently melting/pivoting longer to multiple columns. See \code{data.table::melt} or \code{pivot_longer} from \emph{tidyr} or \emph{tidytable} for an efficient alternative with this feature. It is also possible to achieve this with just a little bit of programming. An example is provided below. % Currently I don't see a 'complete' (like \code{pivot_longer}) way of including this feature in the API, and in general I don't see this as a very well-defined operation. But I am open to suggestions.
 }
