@@ -1,3 +1,7 @@
+# collapse 2.1.5
+
+* Fixed small bugs/strange behavior in `collap()` when `g` was passed externally (as columns or *GRP* object). E.g., in `collap(x, g, w = ~ col)`, where `g` is a *GRP* object, the weights were aggregated twice: once using `FUN` (incorrect) and once using `wFUN`. 
+
 # collapse 2.1.4
 
 * *collapse* now has a custom internal version of `unlist()` with better attribute preservation capabilities and a slight speed improvement. Thanks @aidanhorn (#785).

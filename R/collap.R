@@ -119,8 +119,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
   # identifying by and cols
   vl <- TRUE
-  bycalll <- is.call(by)
-  if(bycalll) {
+  if(is.call(by)) {
     if(length(by) == 3L) {
       v <- ckmatch(all.vars(by[[2L]]), nam)
       numby <- ckmatch(all.vars(by[[3L]]), nam)
@@ -130,22 +129,26 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
     }
     by <- GRP.default(X, numby, sort, decreasing, na.last, keep.by, return.order, method, call = FALSE)
   } else if(is.atomic(by)) {
-    numby <- 1L
+    numby <- 0L
     if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2int(cols, X, nam)
     by <- GRP.default(`names<-`(list(by), l1orlst(as.character(substitute(by)))), NULL, sort, decreasing, na.last, keep.by, return.order, method, call = FALSE)
   } else {
     if(ncustoml) if(is.null(cols)) vl <- FALSE else v <- cols2int(cols, X, nam)
-    if(!is_GRP(by)) {
-      numby <- seq_along(unclass(by))
-      by <- GRP.default(by, numby, sort, decreasing, na.last, keep.by, return.order, method, call = FALSE)
-    } else numby <- seq_along(by[[5L]])
+    if(!is_GRP(by)) by <- GRP.default(by, NULL, sort, decreasing, na.last, keep.by, return.order, method, call = FALSE)
+    numby <- rep(0L, length(by[[5L]]))
+    if(keep.by && !vl && any(m <- nam %in% by[[5L]])) {
+      v <- whichv(m, FALSE)
+      vl <- TRUE
+    }
   }
 
   if(!nwl) {
     if(is.call(w)) {
       namw <- all.vars(w)
       numw <- ckmatch(namw, nam)
-      if(vl && ncustoml) v <- fsetdiff(v, numw) # v[v != numw]
+      if(ncustoml) if(vl) v <- fsetdiff(v, numw) else { # v[v != numw]
+        v <- nam %!iin% namw; vl <- TRUE
+      }
       w <- eval(w[[2L]], X, attr(w, ".Environment")) # w <- X[[numw]]
     } else if(keep.w) {
       numw <- 0L # length(X) + 1L
@@ -230,7 +233,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
     }
 
 
-    if(keep.col.order && widel) o <- forder.int(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby,
+    if(keep.col.order && widel) o <- forder.int(c(if(keep.by) numby else NULL,
                                                   if(nul) rep(nu,length(FUN)) else NULL,
                                                   if(nnul) rep(nnu,length(catFUN)) else NULL))
 
@@ -273,7 +276,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
 
     if(keep.col.order && return != 2L) { # && widel
       o <- unlist(custom, use.names = FALSE)
-      o <- forder.int(c(if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, if(widel) o else unique.default(o)))
+      o <- forder.int(c(if(keep.by) numby else NULL, if(widel) o else unique.default(o)))
     }
   }
 
@@ -304,7 +307,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
             lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
         }
         res <- rbindlist_factor(res)
-        if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(!keep.by) NULL else if(!bycalll) rep(0L,length(numby)) else numby, nu, nnu)) else c(1L, o + 1L)
+        if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(keep.by) numby else NULL, nu, nnu)) else c(1L, o + 1L)
       }
     # } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
@@ -427,7 +430,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
                  if(nnul) X[nnu] else NULL, w = w, ...)
     }
 
-    if(keep.col.order && widel) o <- forder.int(c(if(!keep.by) NULL else numby,
+    if(keep.col.order && widel) o <- forder.int(c(if(keep.by) numby else NULL,
                                                   if(nul) rep(nu,length(FUN)) else NULL,
                                                   if(nnul) rep(nnu,length(catFUN)) else NULL))
 
@@ -464,7 +467,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
 
     if(keep.col.order && return != 2L) {
       o <- unlist(custom, use.names = FALSE)
-      o <- forder.int(c(if(!keep.by) NULL else numby, if(widel) o else unique.default(o)))
+      o <- forder.int(c(if(keep.by) numby else NULL, if(widel) o else unique.default(o)))
     }
   }
 
@@ -494,7 +497,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
             lapply(res[-c(nid, 1L)], function(e) c(res[[1L]], res[[nid]], e))
         }
         res <- rbindlist_factor(res)
-        if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(!keep.by) NULL else numby, nu, nnu)) else c(1L, o + 1L)
+        if(keep.col.order)  o <- if(ncustoml) forder.int(c(0L, if(keep.by) numby else NULL, nu, nnu)) else c(1L, o + 1L)
       }
     # } else message("return options other than 'wide' are only meaningful if multiple functions are used!")
   }
