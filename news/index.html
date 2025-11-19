@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,9 +32,13 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/SebKrantz/collapse/blob/v2.1.5/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.1.5" id="collapse-215">collapse 2.1.5<a class="anchor" aria-label="anchor" href="#collapse-215"></a></h2>
+<ul><li>Fixed small bugs/strange behavior in <code><a href="../reference/collap.html">collap()</a></code> when <code>g</code> was passed externally (as columns or <em>GRP</em> object). E.g., in <code>collap(x, g, w = ~ col)</code>, where <code>g</code> is a <em>GRP</em> object, the weights were aggregated twice: once using <code>FUN</code> (incorrect) and once using <code>wFUN</code>.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.4" id="collapse-214">collapse 2.1.4<a class="anchor" aria-label="anchor" href="#collapse-214"></a></h2><p class="text-muted">CRAN release: 2025-10-24</p>
 <ul><li><p><em>collapse</em> now has a custom internal version of <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code> with better attribute preservation capabilities and a slight speed improvement. Thanks <a href="https://github.com/aidanhorn" class="external-link">@aidanhorn</a> (<a href="https://github.com/SebKrantz/collapse/issues/785" class="external-link">#785</a>).</p></li>

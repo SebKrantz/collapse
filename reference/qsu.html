@@ -9,7 +9,7 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -169,14 +169,11 @@ It computes a set of 7 statistics (nobs, mean, sd, min, max, skewness and kurtos
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p>In weighted summaries, observations with missing or zero weights are skipped, and thus do not affect any of the calculated statistics, including the observation count. This also implies that a logical vector passed to <code>w</code> can be used to efficiently summarize a subset of the data.</p>
+<p>If weights <code>w</code> are used together with <code>pid</code>, transformed data is computed using weighted individual means i.e. weighted <b><code>xi.</code></b> and weighted <b><code>x..</code></b>. Weighted statistics are subsequently computed on this weighted-transformed data.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Welford, B. P. (1962). Note on a method for calculating corrected sums of squares and products. <em>Technometrics</em>. 4 (3): 419-420. doi:10.2307/1266577.</p>
-    </div>
-    <div class="section level2">
-    <h2 id="note-1">Note<a class="anchor" aria-label="anchor" href="#note-1"></a></h2>
-    <p>If weights <code>w</code> are used together with <code>pid</code>, transformed data is computed using weighted individual means i.e. weighted <b><code>xi.</code></b> and weighted <b><code>x..</code></b>. Weighted statistics are subsequently computed on this weighted-transformed data.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
