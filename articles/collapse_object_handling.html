@@ -66,7 +66,7 @@ Scenes of Class-Agnostic R Programming</h3>
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2025-11-19</h4>
+            <h4 data-toc-skip class="date">2025-11-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_object_handling.Rmd</code></div>
@@ -295,25 +295,25 @@ perform an indexed lag on <em>xts</em>/<em>zoo</em>. For example:
 <div class="section level4">
 <h4 id="support-for-sf-and-units">Support for <em>sf</em> and <em>units</em><a class="anchor" aria-label="anchor" href="#support-for-sf-and-units"></a>
 </h4>
-<p><em>collapse</em> internally supports <em>sf</em> by seeking to avoid
-their undue destruction through removal of the ‘geometry’ column in data
-manipulation operations. This is simply implemented through an
-additional check in the C programs used to subset columns of data: if
-the object is an <em>sf</em> data frame, the ‘geometry’ column is added
-to the column selection. Other functions like <code><a href="../reference/funique.html">funique()</a></code> or
-<code><a href="../reference/roworder.html">roworder()</a></code> have internal facilities to avoid sorting or
-grouping on the ‘geometry’ column. Again other functions like
-<code><a href="../reference/descr.html">descr()</a></code> and <code><a href="../reference/qsu.html">qsu()</a></code> simply omit the geometry
-column in their statistical calculations. A short <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html">vignette</a>
+<p><em>collapse</em> internally supports <em>sf</em> data frames by
+seeking to avoid their undue destruction through removal of the
+‘geometry’ column in data manipulation operations. This is simply
+implemented through an additional check in the C programs used to subset
+columns of data: if the object is an <em>sf</em> data frame, the
+‘geometry’ column is added to the column selection. Other functions like
+<code><a href="../reference/funique.html">funique()</a></code> or <code><a href="../reference/roworder.html">roworder()</a></code> have internal
+facilities to avoid sorting or grouping on the ‘geometry’ column. Again
+other functions like <code><a href="../reference/descr.html">descr()</a></code> and <code><a href="../reference/qsu.html">qsu()</a></code> simply
+omit the geometry column in their statistical calculations. A short <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html">vignette</a>
 describes the integration of <em>collapse</em> and <em>sf</em> in a bit
 more detail. In summary: <em>collapse</em> supports <em>sf</em> by
 seeking to appropriately deal with the ‘geometry’ column. It cannot
 perform geometrical operations. For example, after subsetting with
 <code><a href="../reference/fsubset.html">fsubset()</a></code>, the bounding box attribute of the geometry is
 unaltered and likely too large.</p>
-<p>Regarding <em>units</em> objects, all relevant functions also have
-simple methods of the form
-<code>FUN.units &lt;- function(x, ...) copyMostAttrib(if(is.matrix(x)) FUN.matrix(x, ...), x) else FUN.default(x, ....)</code>.
+<p>To preserve <em>units</em> objects used in the <em>sf</em> ecosystem,
+all relevant functions also have simple methods of the form
+<code>FUN.units &lt;- function(x, ...) if(is.matrix(x)) copyMostAttrib(FUN.matrix(x, ...), x) else FUN.default(x, ....)</code>.
 According to the general principles, the default method preserves the
 units class, whereas the matrix method does not if <code>FUN</code>
 aggregates the data. The use of <code><a href="../reference/small-helpers.html">copyMostAttrib()</a></code>, which
