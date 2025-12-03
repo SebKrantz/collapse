@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <Rcpp/Lighter>
 using namespace Rcpp;
 
 // NOTE: Special case is set_mean = -Inf, which is when on the R side mean = "overall.mean"

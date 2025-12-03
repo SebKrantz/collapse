@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <Rcpp/Lightest>
 using namespace Rcpp;
 
 // Note: More comments are in fvar.cpp (C++ folder, not on GitHub)
