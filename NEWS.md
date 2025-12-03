@@ -1,3 +1,7 @@
+# collapse 2.1.5.9000
+
+* Faster installation from source thanks to the `#include <Rcpp/Lighter>` option in *Rcpp* which loads only part of the header files. Thanks @eddelbuettel for the hint. 
+
 # collapse 2.1.5
 
 * Fixed small bugs/strange behavior in `collap()` when `g` was passed externally (as columns or *GRP* object). E.g., in `collap(x, g, w = ~ col)`, where `g` is a *GRP* object, the weights were aggregated twice: once using `FUN` (incorrect) and once using `wFUN`. 

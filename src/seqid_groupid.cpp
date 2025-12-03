@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <Rcpp/Lightest>
 using namespace Rcpp;
 
 // TODO: Optimize !

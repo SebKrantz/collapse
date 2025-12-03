@@ -1,4 +1,4 @@
-#include <Rcpp.h>
+#include <Rcpp/Lighter>
 using namespace Rcpp;
 
 // Notes:
