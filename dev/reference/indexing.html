@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.3.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -626,7 +626,7 @@
 <span class="r-in"><span><span class="fu">plm</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/plm/man/plm.html" class="external-link">plm</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="fu">to_plm</span><span class="op">(</span><span class="va">wldi</span><span class="op">)</span>, effect <span class="op">=</span> <span class="st">"time"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Model Formula: G(PCGDP, 5, p = 1/5) ~ L(G(LIFEEX, 5, p = 1/5), c(0, 5))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x13dce02f0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x151f6f198&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Coefficients:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))-- L(G(LIFEEX, 5, p = 1/5), c(0, 5))L5 </span>
@@ -635,17 +635,18 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With country and time fixed effects via fixest</span></span></span>
 <span class="r-in"><span><span class="fu">fixest</span><span class="fu">::</span><span class="fu"><a href="https://lrberge.github.io/fixest/reference/feols.html" class="external-link">feols</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">PCGDP</span>, <span class="fl">5</span>, p<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span> <span class="op">~</span> <span class="fu"><a href="flag.html">L</a></span><span class="op">(</span><span class="fu"><a href="fgrowth.html">G</a></span><span class="op">(</span><span class="va">LIFEEX</span>, <span class="fl">5</span>, p<span class="op">=</span><span class="fl">1</span><span class="op">/</span><span class="fl">5</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span>, <span class="va">wldi</span>, fixef <span class="op">=</span> <span class="fu"><a href="small-helpers.html">.c</a></span><span class="op">(</span><span class="va">iso3c</span>, <span class="va">year</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> NOTE: 5,596 observations removed because of NA values (LHS: 4,720, RHS: 3,522).</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> NOTES: 5,596 observations removed because of NA values (LHS: 4,720, RHS: 3,522).</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>        1/0 fixed-effect singleton was removed (1 observation).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> OLS estimation, Dep. Var.: G(PCGDP, 5, p = 1/5)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Observations: 7,580</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Fixed-effects: iso3c: 192,  year: 50</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Standard-errors: Clustered (iso3c) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Observations: 7,579</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Fixed-effects: iso3c: 191,  year: 50</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Standard-errors: IID </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                     Estimate Std. Error t value   Pr(&gt;|t|)    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))-- 0.392178   0.104398 3.75657 2.2867e-04 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))L5 0.476969   0.112195 4.25125 3.3228e-05 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))-- 0.392178   0.063312 6.19434 6.1690e-10 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> L(G(LIFEEX, 5, p = 1/5), c(0, 5))L5 0.476969   0.063383 7.52515 5.8931e-14 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> RMSE: 3.05102     Adj. R2: 0.279618</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> RMSE: 3.05122     Adj. R2: 0.279712</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 Within R2: 0.019289</span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span>  </span></span>
 <span class="r-in"><span><span class="co"># Running a robust MM regression without fixed effects</span></span></span>

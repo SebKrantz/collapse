@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.3.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,9 +36,18 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="2.1.3.9000" id="collapse-2139000">collapse 2.1.3.9000<a class="anchor" aria-label="anchor" href="#collapse-2139000"></a></h2>
-<ul><li>
-<em>collapse</em> now has a custom internal version of <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code> with better attribute preservation capabilities and a slight speed improvement. Thanks <a href="https://github.com/aidanhorn" class="external-link">@aidanhorn</a> (<a href="https://github.com/SebKrantz/collapse/issues/785" class="external-link">#785</a>).</li>
+<h2 class="pkg-version" data-toc-text="2.1.5.9000" id="collapse-2159000">collapse 2.1.5.9000<a class="anchor" aria-label="anchor" href="#collapse-2159000"></a></h2>
+<ul><li><p>Fixed bug in <code>pivot(..., how = "wider", FUN = "sum")</code> (using internal sum function) when columns to aggregate were integer typed. Thanks <a href="https://github.com/ummel" class="external-link">@ummel</a> (<a href="https://github.com/SebKrantz/collapse/issues/803" class="external-link">#803</a>).</p></li>
+<li><p>Faster installation from source thanks to the <code>#include &lt;Rcpp/Lighter&gt;</code> option in <em>Rcpp</em> which loads only part of the header files. Thanks <a href="https://github.com/eddelbuettel" class="external-link">@eddelbuettel</a> for the hint.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.1.5" id="collapse-215">collapse 2.1.5<a class="anchor" aria-label="anchor" href="#collapse-215"></a></h2><p class="text-muted">CRAN release: 2025-11-19</p>
+<ul><li>Fixed small bugs/strange behavior in <code><a href="../reference/collap.html">collap()</a></code> when <code>g</code> was passed externally (as columns or <em>GRP</em> object). E.g., in <code>collap(x, g, w = ~ col)</code>, where <code>g</code> is a <em>GRP</em> object, the weights were aggregated twice: once using <code>FUN</code> (incorrect) and once using <code>wFUN</code>.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="2.1.4" id="collapse-214">collapse 2.1.4<a class="anchor" aria-label="anchor" href="#collapse-214"></a></h2><p class="text-muted">CRAN release: 2025-10-24</p>
+<ul><li><p><em>collapse</em> now has a custom internal version of <code><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist()</a></code> with better attribute preservation capabilities and a slight speed improvement. Thanks <a href="https://github.com/aidanhorn" class="external-link">@aidanhorn</a> (<a href="https://github.com/SebKrantz/collapse/issues/785" class="external-link">#785</a>).</p></li>
+<li><p>Fixes (<a href="https://github.com/SebKrantz/collapse/issues/794" class="external-link">#794</a>) – thanks <a href="https://github.com/kendonB" class="external-link">@kendonB</a> for reporting and making an effort to create a reprex.</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="2.1.3" id="collapse-213">collapse 2.1.3<a class="anchor" aria-label="anchor" href="#collapse-213"></a></h2><p class="text-muted">CRAN release: 2025-08-18</p>

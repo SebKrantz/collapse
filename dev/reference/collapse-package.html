@@ -13,7 +13,7 @@ It also implements a class-agnostic approach to data manipulation in R, supporti
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.3.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -543,9 +543,9 @@ It also implements a class-agnostic approach to data manipulation in R, supporti
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/joshuaulrich/microbenchmark/" class="external-link">microbenchmark</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f1</span><span class="op">)</span>, <span class="fu"><a href="fmean.html">fmean</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># A minor difference, larger on larger data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               expr    min      lq     mean  median      uq     max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 12.218 12.8740 16.00845 13.0995 13.5505 148.051   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 11.890 12.3205 18.17612 12.7510 13.0995 440.422   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               expr   min    lq    mean median     uq    max neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f1) 3.895 4.141 4.30746  4.264 4.4075  5.904   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  fmean(mtcars, f2) 3.731 3.936 4.38577  4.059 4.1820 34.645   100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="qF.html">finteraction</a></span><span class="op">(</span><span class="va">cyl</span>, <span class="va">vs</span>, <span class="va">am</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Efficient interactions of vectors and/or factors</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 6.0.1 6.0.1 4.1.1 6.1.0 8.0.0 6.1.0 8.0.0 4.1.0 4.1.0 6.1.0 6.1.0 8.0.0</span>
@@ -631,12 +631,12 @@ It also implements a class-agnostic approach to data manipulation in R, supporti
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/microbenchmark/man/microbenchmark.html" class="external-link">microbenchmark</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/sweep.html" class="external-link">sweep</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fl">2</span>, <span class="va">sds</span>, <span class="st">"/"</span><span class="op">)</span><span class="op">)</span> <span class="co"># A remarkable performance gain..</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Unit: microseconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min       lq      mean  median       uq</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.255   3.2800   8.56326   4.346   8.0565</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 312.174 340.3205 533.15949 368.713 488.6175</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       max neval</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   147.149   100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  3375.325   100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                        expr     min      lq      mean   median       uq     max</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       TRA(mtcars, sds, "/")   2.050   2.542   3.18898   2.8905   3.4645  13.202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  sweep(mtcars, 2, sds, "/") 289.255 302.252 314.71641 308.1765 315.4950 586.505</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  neval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    100</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sds</span> <span class="op">&lt;-</span> <span class="fu"><a href="fvar_fsd.html">fsd</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">f2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="TRA.html">TRA</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">sds</span>, <span class="st">"/"</span>, <span class="va">f2</span><span class="op">)</span><span class="op">)</span> <span class="co"># Groupd scaling (if sd's not needed: fsd(mtcars, f2, TRA = "/"))</span></span></span>

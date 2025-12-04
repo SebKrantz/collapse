@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.3.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">2.1.5.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,7 +58,7 @@
 <dd><p>a scalar value to be replicated and inserted into <code>X</code> at positions / rows given by <code>i</code>. Default is <code>NA</code>.</p></dd>
 
   <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>an integer or string specifying the use of <code>i</code>. The options are:</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td>"auto"</td><td></td><td>automatic method selection: If <code>i</code> is positive integer and <code>length(i) == NROW(X)</code> or if <code>i</code> is logical and <code>sum(i) == NROW(X)</code>, choose method "xpos", else choose "vpos".</td></tr><tr><td>1</td><td></td><td>"xpos"</td><td></td><td><code>i</code> is a vector of positive integers or a logical vector giving the positions of the the elements / rows of <code>X</code>. <code>values</code>'s are inserted where there are gaps / <code>FALSE</code> values in <code>i</code>.</td></tr><tr><td>2</td><td></td><td>"vpos"</td><td></td><td><code>i</code> is a vector of positive / negative integers or a logical vector giving the positions at which <code>values</code>'s / rows should be inserted into <code>X</code>.</td></tr></table></dd>
+<dd><p>an integer or string specifying the use of <code>i</code>. The options are:</p><table class="table table"><tr><td><em> Int. </em></td><td></td><td><em> String </em></td><td></td><td><em> Description </em></td></tr><tr><td>1</td><td></td><td>"auto"</td><td></td><td>automatic method selection: If <code>i</code> is positive integer and <code>length(i) == NROW(X)</code> or if <code>i</code> is logical and <code>sum(i) == NROW(X)</code>, choose method "xpos", else choose "vpos".</td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td>1</td><td></td><td>"xpos"</td><td></td><td><code>i</code> is a vector of positive integers or a logical vector giving the positions of the the elements / rows of <code>X</code>. <code>values</code>'s are inserted where there are gaps / <code>FALSE</code> values in <code>i</code>.</td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td>"vpos"</td><td></td><td><code>i</code> is a vector of positive / negative integers or a logical vector giving the positions at which <code>values</code>'s / rows should be inserted into <code>X</code>.</td></tr></table></dd>
 
 </dl></div>
     <div class="section level2">
