@@ -478,4 +478,29 @@ test_that("Misc bugs", {
 })
 
 
+test_that("Pivot with integers", { #803
+
+  iris_long <- pivot(iris, "Species")
+  iris_long$value <- round(iris_long$value)  # Double
+  iris_long$value_int = as.integer(iris_long$value)  # Integer
+
+  for (f in c("sum", "mean")) {
+  expect_equal(
+    pivot(
+      data = iris_long,
+      ids = "Species",
+      values = "value",
+      how = "wider",  # Pivoting to wide format
+      FUN = "sum"
+    ),
+    pivot(
+      data = iris_long,
+      ids = "Species",
+      values = "value_int",
+      how = "wider",  # Pivoting to wide format
+      FUN = "sum"
+    ))
+  }
+})
+
 options(warn = 1)
