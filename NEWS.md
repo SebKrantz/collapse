@@ -1,5 +1,7 @@
 # collapse 2.1.5.9000
 
+* Fixed bug in `pivot(..., how = "wider", FUN = "sum")` (using internal sum function) when columns to aggregate were integer typed. Thanks @ummel (#803). 
+
 * Faster installation from source thanks to the `#include <Rcpp/Lighter>` option in *Rcpp* which loads only part of the header files. Thanks @eddelbuettel for the hint. 
 
 # collapse 2.1.5
