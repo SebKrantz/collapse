@@ -7,11 +7,6 @@
 [![cran checks](https://badges.cranchecks.info/worst/collapse.svg)](https://cran.r-project.org/web/checks/check_results_collapse.html)
 ![downloads per month](https://cranlogs.r-pkg.org/badges/collapse) <!-- ?color=blue -->
 ![downloads](https://cranlogs.r-pkg.org/badges/grand-total/collapse) <!-- ?color=blue -->
-<!-- 
-[![CRAN use](https://jangorecki.gitlab.io/rdeps/collapse/CRAN_usage.svg?sanitize=true)](https://cran.r-project.org/package=collapse)
-[![CRAN indirect](https://jangorecki.gitlab.io/rdeps/collapse/indirect_usage.svg?sanitize=true)](https://cran.r-project.org/package=collapse)
-[![BioConductor use](https://jangorecki.gitlab.io/rdeps/collapse/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=collapse)
--->
  [![Conda Version](https://img.shields.io/conda/vn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
  [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://app.codecov.io/gh/SebKrantz/collapse?branch=master)
