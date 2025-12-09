@@ -43,7 +43,7 @@ preferred-citation:
   year: '2024'
   url: https://arxiv.org/abs/2403.05038
 repository: https://CRAN.R-project.org/package=collapse
-repository-code: https://github.com/SebKrantz/collapse
+repository-code: https://github.com/fastverse/collapse
 url: https://fastverse.github.io/collapse/
 date-released: '2025-05-24'
 contact:

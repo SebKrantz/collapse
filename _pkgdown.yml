@@ -53,7 +53,7 @@ navbar:
       aria-label: Twitter
     github:
       icon: fa-github
-      href: https://github.com/SebKrantz/collapse
+      href: https://github.com/fastverse/collapse
       aria-label: GitHub
 
 reference:

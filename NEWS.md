@@ -678,7 +678,7 @@ For example, take the `.OPERATOR_FUN` such as `W()` for within-transforming/cent
 
 * Ensured that `BY.grouped_df` always (by default) returns grouping columns in aggregations i.e. `iris |> gby(Species) |> nv() |> BY(sum)` now gives the same as `iris |> gby(Species) |> nv() |> fsum()`.
 
-* A `.` was added to the first argument of functions `fselect`, `fsubset`, `colorder` and `fgroup_by`, i.e. `fselect(x, ...) -> fselect(.x, ...)`. The reason for this is that over time I added the option to select-rename columns e.g. `fselect(mtcars, cylinders = cyl)`, which was not offered when these functions were created. This presents problems if columns should be renamed into `x`, e.g. `fselect(mtcars, x = cyl)` failed, see [#221](https://github.com/SebKrantz/collapse/issues/221). Renaming the first argument to `.x` somewhat guards against such situations. I think this change is worthwhile to implement, because it makes the package more robust going forward, and usually the first argument of these functions is never invoked explicitly. I really hope this breaks nobody's code. 
+* A `.` was added to the first argument of functions `fselect`, `fsubset`, `colorder` and `fgroup_by`, i.e. `fselect(x, ...) -> fselect(.x, ...)`. The reason for this is that over time I added the option to select-rename columns e.g. `fselect(mtcars, cylinders = cyl)`, which was not offered when these functions were created. This presents problems if columns should be renamed into `x`, e.g. `fselect(mtcars, x = cyl)` failed, see [#221](https://github.com/fastverse/collapse/issues/221). Renaming the first argument to `.x` somewhat guards against such situations. I think this change is worthwhile to implement, because it makes the package more robust going forward, and usually the first argument of these functions is never invoked explicitly. I really hope this breaks nobody's code. 
 
 * Added a function `GRPN` to make it easy to add a column of group sizes e.g. `mtcars %>% fgroup_by(cyl,vs,am) %>% ftransform(Sizes = GRPN(.))` or `mtcars %>% ftransform(Sizes = GRPN(list(cyl, vs, am)))` or `GRPN(mtcars, by = ~cyl+vs+am)`. 
 
@@ -933,7 +933,7 @@ This is done in a very careful manner, the others will stick around for a long w
 
 * The plot method for panel series matrices and arrays `plot.psmat` was improved slightly. It now supports custom colours and drawing of a grid. 
 
-* `settransform` and `settransformv` can now be called without attaching the package e.g. `collapse::settransform(data, ...)`. These errored before when *collapse* is not loaded because they are simply wrappers around `data <- ftransform(data, ...)`. I'd like to note from a [discussion](https://github.com/SebKrantz/collapse/issues/136) that avoiding shallow copies with `<-` (e.g. via `:=`) does not appear to yield noticeable performance gains. Where *data.table* is faster on big data this mostly has to do with parallelism and sometimes with algorithms, generally not memory efficiency.
+* `settransform` and `settransformv` can now be called without attaching the package e.g. `collapse::settransform(data, ...)`. These errored before when *collapse* is not loaded because they are simply wrappers around `data <- ftransform(data, ...)`. I'd like to note from a [discussion](https://github.com/fastverse/collapse/issues/136) that avoiding shallow copies with `<-` (e.g. via `:=`) does not appear to yield noticeable performance gains. Where *data.table* is faster on big data this mostly has to do with parallelism and sometimes with algorithms, generally not memory efficiency.
 
 * Functions `setAttrib`, `copyAttrib` and `copyMostAttrib` only make a shallow copy of lists, not of atomic vectors (which amounts to doing a full copy and is inefficient). Thus atomic objects are now modified in-place. 
 
@@ -995,7 +995,7 @@ A small patch for 1.5.0 that:
 
 ### Bug Fixes
 
-* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/SebKrantz/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fnobs`, `fndistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real_`.
+* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/fastverse/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fnobs`, `fndistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real_`.
 
 ### Changes to Functionality
 

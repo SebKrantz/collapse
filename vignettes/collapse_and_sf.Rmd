@@ -488,7 +488,7 @@ plot(slt(pnc_ag, AREA_Ag))
 ```
 
 <div class="figure">
-<img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/vignettes/figure/AREA_Ag-1.png" alt="plot of chunk AREA_Ag" width="100%" />
+<img src="https://raw.githubusercontent.com/fastverse/collapse/master/vignettes/figure/AREA_Ag-1.png" alt="plot of chunk AREA_Ag" width="100%" />
 </div>
 
 ## Indexing

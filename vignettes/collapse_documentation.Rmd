@@ -32,7 +32,7 @@ Reading `help("collapse-package")` and `help("collapse-documentation")` is the m
 
 ## Cheatsheet
 
-An up-to-date (v2.0) [cheatsheet](<https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf>) compactly summarizes the package. 
+An up-to-date (v2.0) [cheatsheet](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf>) compactly summarizes the package. 
 
 ## Article on arXiv
 
@@ -40,7 +40,7 @@ An [article](https://arxiv.org/abs/2403.05038) on *collapse* is forthcoming at [
 
 ## useR 2022 Presentation and Slides
 
-I have presented collapse (v1.8) in some level of detail at useR 2022. A 2h video recording that provides a quite comprehensive introduction is available [here](<https://www.youtube.com/watch?v=OwWT1-dSEts>). The corresponding slides are available [here](<https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>).
+I have presented collapse (v1.8) in some level of detail at useR 2022. A 2h video recording that provides a quite comprehensive introduction is available [here](<https://www.youtube.com/watch?v=OwWT1-dSEts>). The corresponding slides are available [here](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>).
 
 ## Vignettes
 

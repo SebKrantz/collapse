@@ -404,7 +404,7 @@ fgroup_by <- function(.X, ..., sort = .op[["sort"]], decreasing = FALSE, na.last
     e <- eval(dots, .X, parent.frame())
     name <- names(e)
     vars <- all.vars(dots, unique = FALSE)
-    # If something else than NSE cols is supplied, see https://github.com/SebKrantz/collapse/issues/320
+    # If something else than NSE cols is supplied, see https://github.com/fastverse/collapse/issues/320
     # Note: doesn't support fgroup_by(mtcars, cyl / vs), but ok, this should be named...
     # fgroup_by(mtcars, c("cyl", "vs")) gives vars == character(0)
     if(length(e) == 1L && is.null(name) && (length(vars) != 1L || !anyv(names(.X), vars))) { # !is.symbol(dots[[2L]]) || length(e[[1L]]) != length(.X[[1L]]) || is.function(e[[1L]] # Fixes #320

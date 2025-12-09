@@ -31,7 +31,7 @@ seqid(x, o = NULL, del = 1L, start = 1L, na.skip = FALSE,
 
 }
 \details{
-\code{seqid} was created primarily as a workaround to deal with problems of computing lagged values, differences and growth rates on irregularly spaced time series and panels before \emph{collapse} version 1.5.0 (\href{https://github.com/SebKrantz/collapse/issues/26}{#26}). Now \code{flag}, \code{fdiff} and \code{fgrowth} natively support irregular data so this workaround is superfluous, except for iterated differencing which is not yet supported with irregular data.
+\code{seqid} was created primarily as a workaround to deal with problems of computing lagged values, differences and growth rates on irregularly spaced time series and panels before \emph{collapse} version 1.5.0 (\href{https://github.com/fastverse/collapse/issues/26}{#26}). Now \code{flag}, \code{fdiff} and \code{fgrowth} natively support irregular data so this workaround is superfluous, except for iterated differencing which is not yet supported with irregular data.
 
 % panels because they do not pre-compute an ordering of the data but directly compute the ordering from the supplied id and time variables while providing errors for gaps and repeated time values. see \code{\link{flag}} for computational details.
 

@@ -1,7 +1,7 @@
 # collapse <img src='man/figures/logo.png' width="150px" align="right" />
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/SebKrantz/collapse/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/SebKrantz/collapse/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/fastverse/collapse/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fastverse/collapse/actions/workflows/R-CMD-check.yaml)
 [![collapse status badge](https://fastverse.r-universe.dev/badges/collapse)](https://fastverse.r-universe.dev/collapse)
 [![CRAN status](https://www.r-pkg.org/badges/version/collapse)](https://cran.r-project.org/package=collapse) 
 [![cran checks](https://badges.cranchecks.info/worst/collapse.svg)](https://cran.r-project.org/web/checks/check_results_collapse.html)
@@ -64,7 +64,7 @@ install.packages("collapse")
 install.packages("collapse", repos = "https://fastverse.r-universe.dev")
 
 # Install a stable development version from GitHub (requires compilation)
-remotes::install_github("SebKrantz/collapse")
+remotes::install_github("fastverse/collapse")
 
 # Install previous versions from the CRAN Archive (requires compilation)
 install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collapse_2.0.19.tar.gz", 
@@ -80,8 +80,8 @@ In addition there are several [vignettes](<https://fastverse.github.io/collapse/
 
 ### Cheatsheet
 
-<a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page1.png" width="330"/></a>  <!-- height="227" 294 -->
-<a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page2.png" width="330"/></a> 
+<a href="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/preview/page1.png" width="330"/></a>  <!-- height="227" 294 -->
+<a href="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf"><img src="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/preview/page2.png" width="330"/></a> 
 
 ### Article on arXiv
 
@@ -90,7 +90,7 @@ An [**article**](https://arxiv.org/abs/2403.05038) on *collapse* is forthcoming 
 ### Presentation at [useR 2022](https://user2022.r-project.org)
 
 [**Video Recording**](<https://www.youtube.com/watch?v=OwWT1-dSEts>) | 
-[**Slides**](<https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>)
+[**Slides**](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>)
 
 ## Example Usage
 This provides a simple set of examples introducing some important features of *collapse*. It should be easy to follow for readers familiar with R. 

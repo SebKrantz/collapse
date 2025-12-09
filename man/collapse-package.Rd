@@ -120,7 +120,7 @@ The package is coded both in C and C++ and built with \emph{Rcpp}, but also uses
 }
 \section{Developing / Bug Reporting}{
 \itemize{
-\item Please report issues at \url{https://github.com/SebKrantz/collapse/issues}.
+\item Please report issues at \url{https://github.com/fastverse/collapse/issues}.
 \item Please send pull-requests to the 'development' branch of the repository.
 }
 }
