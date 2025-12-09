@@ -1,5 +1,7 @@
 # collapse 2.1.5.9000
 
+* The repo has moved to `fastverse/collapse`, for better visibility and maintenance. Selected people now have access to the repo through the organization account and may respond to issues or submit fixes. 
+
 * Fixed bug in `pivot(..., how = "wider", FUN = "sum")` (using internal sum function) when columns to aggregate were integer typed. Thanks @ummel (#803). 
 
 * Faster installation from source thanks to the `#include <Rcpp/Lighter>` option in *Rcpp* which loads only part of the header files. Thanks @eddelbuettel for the hint. 
@@ -83,7 +85,7 @@ join(df1, df2, require = list(x = 0.8, fail = "warning"))
 
 * `fmatch(factor(NA), NA)` now gives `1` instead of `NA`. Thanks @NicChr (#675).
 
-* New developer focused vignette on [developing with *collapse*](https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html).
+* New developer focused vignette on [developing with *collapse*](https://fastverse.github.io/collapse/articles/developing_with_collapse.html).
 
 * Fixed minor CRAN issues (#676, #702). 
 
@@ -185,7 +187,7 @@ join(df1, df2, require = list(x = 0.8, fail = "warning"))
 
 # collapse 2.0.13
 
-* *collapse* now explicitly supports *xts*/*zoo* and *units* objects and concurrently removes an additional check in the `.default` method of statistical functions that called the matrix method if `is.matrix(x) && !inherits(x, "matrix")`. This was a smart solution to account for the fact that *xts* objects are matrix-based but don't inherit the `"matrix"` class, thus wrongly calling the default method. The same is the case for *units*, but here, my recent more intensive engagement with spatial data convinced me that this should be changed. For one, under the previous heuristic solution, it was not possible to call the default method on a *units* matrix, e.g., `fmean.default(st_distance(points_sf))` called `fmean.matrix()` and yielded a vector. This should not be the case. Secondly, aggregation e.g. `fmean(st_distance(points_sf))` or `fmean(st_distance(points_sf), g = group_vec)` yielded a plain numeric object that lost the *units* class (in line with the [general attribute handling principles](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html#general-principles)). Therefore, I have now decided to remove the heuristic check within the default methods, and explicitly support *zoo* and *units* objects. For [*Fast Statistical Functions*](https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html), the methods are `FUN.zoo <- function(x, ...) if(is.matrix(x)) FUN.matrix(x, ...) else FUN.default(x, ...)` and `FUN.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(FUN.matrix(x, ...), x) else FUN.default(x, ...)`. While the behavior for *xts*/*zoo* remains the same, the behavior for *units* is enhanced, as now the class is preserved in aggregations (the [`.default` method preserves attributes except for *ts*](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html#general-principles)), and it is possible to manually invoke the `.default` method on a units matrix and obtain an aggregate statistic. This change may impact computations on other matrix based classes which don't inherit from `"matrix"` (*mts* does inherit from `"matrix"`, and I am not aware of any other affected classes, but user code like `m <- matrix(rnorm(25), 5); class(m) <- "bla"; fmean(m)` will now yield a scalar instead of a vector. Such code must be adjusted to either `class(m) <- c("bla", "matrix")` or `fmean.matrix(m)`). Overall, the change makes *collapse* behave in a more standard and predictable way, and enhances its support for *units* objects central in the *sf* ecosystem. 
+* *collapse* now explicitly supports *xts*/*zoo* and *units* objects and concurrently removes an additional check in the `.default` method of statistical functions that called the matrix method if `is.matrix(x) && !inherits(x, "matrix")`. This was a smart solution to account for the fact that *xts* objects are matrix-based but don't inherit the `"matrix"` class, thus wrongly calling the default method. The same is the case for *units*, but here, my recent more intensive engagement with spatial data convinced me that this should be changed. For one, under the previous heuristic solution, it was not possible to call the default method on a *units* matrix, e.g., `fmean.default(st_distance(points_sf))` called `fmean.matrix()` and yielded a vector. This should not be the case. Secondly, aggregation e.g. `fmean(st_distance(points_sf))` or `fmean(st_distance(points_sf), g = group_vec)` yielded a plain numeric object that lost the *units* class (in line with the [general attribute handling principles](https://fastverse.github.io/collapse/articles/collapse_object_handling.html#general-principles)). Therefore, I have now decided to remove the heuristic check within the default methods, and explicitly support *zoo* and *units* objects. For [*Fast Statistical Functions*](https://fastverse.github.io/collapse/reference/fast-statistical-functions.html), the methods are `FUN.zoo <- function(x, ...) if(is.matrix(x)) FUN.matrix(x, ...) else FUN.default(x, ...)` and `FUN.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(FUN.matrix(x, ...), x) else FUN.default(x, ...)`. While the behavior for *xts*/*zoo* remains the same, the behavior for *units* is enhanced, as now the class is preserved in aggregations (the [`.default` method preserves attributes except for *ts*](https://fastverse.github.io/collapse/articles/collapse_object_handling.html#general-principles)), and it is possible to manually invoke the `.default` method on a units matrix and obtain an aggregate statistic. This change may impact computations on other matrix based classes which don't inherit from `"matrix"` (*mts* does inherit from `"matrix"`, and I am not aware of any other affected classes, but user code like `m <- matrix(rnorm(25), 5); class(m) <- "bla"; fmean(m)` will now yield a scalar instead of a vector. Such code must be adjusted to either `class(m) <- c("bla", "matrix")` or `fmean.matrix(m)`). Overall, the change makes *collapse* behave in a more standard and predictable way, and enhances its support for *units* objects central in the *sf* ecosystem. 
 
 * `fquantile()` now also preserves the attributes of the input, in line with `quantile()`. 
 
@@ -350,7 +352,7 @@ HDB(mtcars, mpg ~ carb*qF(cyl) + qF(vs) + qF(am))
 
 # collapse 1.9.6
 
-* New vignette on [*collapse*'s Handling of R Objects](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html): provides an overview of collapse’s (internal) class-agnostic R programming framework.
+* New vignette on [*collapse*'s Handling of R Objects](https://fastverse.github.io/collapse/articles/collapse_object_handling.html): provides an overview of collapse’s (internal) class-agnostic R programming framework.
 
 * `print.descr()` with groups and option `perc = TRUE` (the default) also shows percentages of the group frequencies for each variable. 
 
@@ -678,7 +680,7 @@ For example, take the `.OPERATOR_FUN` such as `W()` for within-transforming/cent
 
 * Ensured that `BY.grouped_df` always (by default) returns grouping columns in aggregations i.e. `iris |> gby(Species) |> nv() |> BY(sum)` now gives the same as `iris |> gby(Species) |> nv() |> fsum()`.
 
-* A `.` was added to the first argument of functions `fselect`, `fsubset`, `colorder` and `fgroup_by`, i.e. `fselect(x, ...) -> fselect(.x, ...)`. The reason for this is that over time I added the option to select-rename columns e.g. `fselect(mtcars, cylinders = cyl)`, which was not offered when these functions were created. This presents problems if columns should be renamed into `x`, e.g. `fselect(mtcars, x = cyl)` failed, see [#221](https://github.com/SebKrantz/collapse/issues/221). Renaming the first argument to `.x` somewhat guards against such situations. I think this change is worthwhile to implement, because it makes the package more robust going forward, and usually the first argument of these functions is never invoked explicitly. I really hope this breaks nobody's code. 
+* A `.` was added to the first argument of functions `fselect`, `fsubset`, `colorder` and `fgroup_by`, i.e. `fselect(x, ...) -> fselect(.x, ...)`. The reason for this is that over time I added the option to select-rename columns e.g. `fselect(mtcars, cylinders = cyl)`, which was not offered when these functions were created. This presents problems if columns should be renamed into `x`, e.g. `fselect(mtcars, x = cyl)` failed, see [#221](https://github.com/fastverse/collapse/issues/221). Renaming the first argument to `.x` somewhat guards against such situations. I think this change is worthwhile to implement, because it makes the package more robust going forward, and usually the first argument of these functions is never invoked explicitly. I really hope this breaks nobody's code. 
 
 * Added a function `GRPN` to make it easy to add a column of group sizes e.g. `mtcars %>% fgroup_by(cyl,vs,am) %>% ftransform(Sizes = GRPN(.))` or `mtcars %>% ftransform(Sizes = GRPN(list(cyl, vs, am)))` or `GRPN(mtcars, by = ~cyl+vs+am)`. 
 
@@ -933,7 +935,7 @@ This is done in a very careful manner, the others will stick around for a long w
 
 * The plot method for panel series matrices and arrays `plot.psmat` was improved slightly. It now supports custom colours and drawing of a grid. 
 
-* `settransform` and `settransformv` can now be called without attaching the package e.g. `collapse::settransform(data, ...)`. These errored before when *collapse* is not loaded because they are simply wrappers around `data <- ftransform(data, ...)`. I'd like to note from a [discussion](https://github.com/SebKrantz/collapse/issues/136) that avoiding shallow copies with `<-` (e.g. via `:=`) does not appear to yield noticeable performance gains. Where *data.table* is faster on big data this mostly has to do with parallelism and sometimes with algorithms, generally not memory efficiency.
+* `settransform` and `settransformv` can now be called without attaching the package e.g. `collapse::settransform(data, ...)`. These errored before when *collapse* is not loaded because they are simply wrappers around `data <- ftransform(data, ...)`. I'd like to note from a [discussion](https://github.com/fastverse/collapse/issues/136) that avoiding shallow copies with `<-` (e.g. via `:=`) does not appear to yield noticeable performance gains. Where *data.table* is faster on big data this mostly has to do with parallelism and sometimes with algorithms, generally not memory efficiency.
 
 * Functions `setAttrib`, `copyAttrib` and `copyMostAttrib` only make a shallow copy of lists, not of atomic vectors (which amounts to doing a full copy and is inefficient). Thus atomic objects are now modified in-place. 
 
@@ -995,7 +997,7 @@ A small patch for 1.5.0 that:
 
 ### Bug Fixes
 
-* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/SebKrantz/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fnobs`, `fndistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real_`.
+* Segfaults in several *Fast Statistical Functions* when passed `numeric(0)` are fixed (thanks to @eshom and @acylam, [#101](https://github.com/fastverse/collapse/issues/101)). The default behavior is that all *collapse* functions return `numeric(0)` again, except for `fnobs`, `fndistinct` which return `0L`, and `fvar`, `fsd` which return `NA_real_`.
 
 ### Changes to Functionality
 
@@ -1008,7 +1010,7 @@ A small patch for 1.5.0 that:
 
 <!-- Missing value removal is still done using *data.table* source code, so these functions are now equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. -->
 
-* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>). This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
+* Vignettes were outsourced to the [website](<https://fastverse.github.io/collapse/articles/index.html>). This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
 
 <!-- , and also made available as PDF versions for download there -->
 
@@ -1020,7 +1022,7 @@ A small patch for 1.5.0 that:
 
 * Added function `allNA` for atomic vectors. 
 
-* New vignette about using *collapse* together with *data.table*, available [online](<https://sebkrantz.github.io/collapse/articles/index.html>).
+* New vignette about using *collapse* together with *data.table*, available [online](<https://fastverse.github.io/collapse/articles/index.html>).
 
 ### Improvements
 

@@ -42,7 +42,7 @@ This vignette focuses on the integration of *collapse* and the popular *plm* ('L
 
 - To learn more about *collapse*, see the 'Introduction to *collapse*' vignette or the built-in structured documentation available under `help("collapse-documentation")` after installing the package. In addition `help("collapse-package")` provides a compact set of examples for quick-start.
 
-- Documentation and vignettes can also be viewed [online](<https://sebkrantz.github.io/collapse/>).
+- Documentation and vignettes can also be viewed [online](<https://fastverse.github.io/collapse/>).
 
 ***
 

@@ -132,7 +132,7 @@ It also offers a flexible, class-agnostic, approach to data transformation in R:
 
 \emph{collapse} provides full control to the user for statistical programming - with several ways to reach the same outcome and rich optimization possibilities. It is globally configurable using \code{set\_collapse()} which includes algorithm defaults, multithreading, and the exported namespace (see below).  \\ [0.8em]
 
-Calling \code{help("collapse-documentation")} brings up a detailed documentation, which is also available \href{https://sebkrantz.github.io/collapse/reference/index.html}{online}. See also the \href{https://fastverse.github.io/fastverse/}{\emph{fastverse}} package/project for a recommended set of complimentary packages and easy package management.
+Calling \code{help("collapse-documentation")} brings up a detailed documentation, which is also available \href{https://fastverse.github.io/collapse/reference/index.html}{online}. See also the \href{https://fastverse.github.io/fastverse/}{\emph{fastverse}} package/project for a recommended set of complimentary packages and easy package management.
 %}
 
 \hrrule
@@ -397,7 +397,7 @@ collap(wlddev, country + PCGDP + LIFEEX ~ income, w = ~ POP)
 \vspace{-5mm}
 \textcolor{lightgray}{\hrulefill}\\
 {\scriptsize \vspace{-0.5mm}
- Page 1 of 2 \hfill \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA}\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 2.0.3\ \textbullet\ Updated: 2023-10
+ Page 1 of 2 \hfill \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA}\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://fastverse.github.io/collapse/}{fastverse.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/fastverse/collapse}{github.com/fastverse/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 2.0.3\ \textbullet\ Updated: 2023-10
 }
 
 
@@ -691,7 +691,7 @@ wlddev |>
 \vspace{-5.5mm}
 \textcolor{lightgray}{\hrulefill}\\
 {\scriptsize \vspace{-0.5mm}
- Page 2 of 2 \hfill \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA}\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://sebkrantz.github.io/collapse/}{sebkrantz.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/SebKrantz/collapse}{github.com/SebKrantz/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 2.0.3\ \textbullet\ Updated: 2023-10
+ Page 2 of 2 \hfill \href{https://creativecommons.org/licenses/by-sa/4.0/}{CC-BY-SA}\ Sebastian Krantz\ \textbullet\ Learn more at \href{https://fastverse.github.io/collapse/}{fastverse.github.io/collapse}\ \textbullet\ Source code at \href{https://github.com/fastverse/collapse}{github.com/fastverse/collapse}\ \textbullet\ Updates announced at \href{https://twitter.com/collapse\_R}{twitter.com/collapse\_R} - \#rcollapse\ \textbullet\ Cheatsheet created for \emph{collapse} version 2.0.3\ \textbullet\ Updated: 2023-10
 }
 
 \end{document}

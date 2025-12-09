@@ -31,8 +31,8 @@ Description: A large C/C++-based package for advanced data transformation and
     helpers to effectively deal with variable labels, attributes, and missing data. It 
     seamlessly supports base R objects/classes as well as 'units', 'integer64', 'xts'/
     'zoo', 'tibble', 'grouped_df', 'data.table', 'sf', and 'pseries'/'pdata.frame'.
-URL: https://sebkrantz.github.io/collapse/, https://github.com/SebKrantz/collapse
-BugReports: https://github.com/SebKrantz/collapse/issues
+URL: https://fastverse.github.io/collapse/, https://github.com/fastverse/collapse
+BugReports: https://github.com/fastverse/collapse/issues
 License: GPL (>= 2) | file LICENSE
 Encoding: UTF-8
 LazyData: true

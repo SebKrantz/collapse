@@ -218,7 +218,7 @@ collap <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, wF
       return(res)
     } # fastest using res list ?? or better combine at the end ??
 
-    # Fixes https://github.com/SebKrantz/collapse/issues/185
+    # Fixes https://github.com/fastverse/collapse/issues/185
     if(widel && !give.names && ((length(nu) == 1L && !nnul && length(FUN) > 1L) || (length(nnu) == 1L && !nul && length(catFUN) > 1L))) {
        names(X) <- NULL
        give.names <- TRUE
@@ -416,7 +416,7 @@ collapv <- function(X, by, FUN = fmean, catFUN = fmode, cols = NULL, w = NULL, w
       return(res)
     }
 
-    # Fixes https://github.com/SebKrantz/collapse/issues/185
+    # Fixes https://github.com/fastverse/collapse/issues/185
     if(widel && !give.names && ((length(nu) == 1L && !nnul && length(FUN) > 1L) || (length(nnu) == 1L && !nul && length(catFUN) > 1L))) {
       names(X) <- NULL
       give.names <- TRUE
