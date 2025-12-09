@@ -48,7 +48,7 @@
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://bsky.app/profile/rcollapse.bsky.social" aria-label="BlueSky"><span class="fa fa-bluesky"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/fastverse/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul>
 </div>
 
@@ -67,9 +67,9 @@ Scenes of Class-Agnostic R Programming</h3>
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2025-12-04</h4>
+            <h4 data-toc-skip class="date">2025-12-09</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/fastverse/collapse/blob/master/vignettes/collapse_object_handling.Rmd" class="external-link"><code>vignettes/collapse_object_handling.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_object_handling.Rmd</code></div>
     </div>
 
@@ -77,7 +77,7 @@ Krantz</h4>
     
 <p>This much-requested vignette provides some details about how
 <em>collapse</em> deals with various R objects. It is principally a
-digest of cumulative details provided in the <a href="https://sebkrantz.github.io/collapse/news/index.html">NEWS</a> for
+digest of cumulative details provided in the <a href="https://fastverse.github.io/collapse/news/index.html">NEWS</a> for
 various releases since v1.4.0.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
@@ -92,8 +92,8 @@ support for base R classes and data types (<em>logical</em>,
 <em>grouped_df</em>, <em>xts</em>/<em>zoo</em>, <em>pseries</em>,
 <em>pdata.frame</em>, <em>units</em>, and <em>sf</em> (no geometric
 operations).</p>
-<p>It also introduces <a href="https://sebkrantz.github.io/collapse/reference/GRP.html"><em>GRP_df</em></a>
-as a more performant and class-agnostic grouped data frame, and <a href="https://sebkrantz.github.io/collapse/reference/indexing.html"><em>indexed_series</em>
+<p>It also introduces <a href="https://fastverse.github.io/collapse/reference/GRP.html"><em>GRP_df</em></a>
+as a more performant and class-agnostic grouped data frame, and <a href="https://fastverse.github.io/collapse/reference/indexing.html"><em>indexed_series</em>
 and <em>indexed_frame</em></a> classes as modern class-agnostic
 successors of <em>pseries</em>, <em>pdata.frame</em>. These objects
 inherit the classes they succeed and are handled through
@@ -118,7 +118,7 @@ type (<code><a href="https://rdrr.io/r/base/typeof.html" class="external-link">t
 R objects: atomic vectors, matrices, and lists - which are often assumed
 to be data frames. Most data manipulation functions in
 <em>collapse</em>, like <code><a href="../reference/ftransform.html">fmutate()</a></code>, only support lists,
-whereas statistical functions - like the S3 generic <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
+whereas statistical functions - like the S3 generic <a href="https://fastverse.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
 Statistical Functions</em></a> like <code><a href="../reference/fmean.html">fmean()</a></code> - generally
 support all 3 types of objects.</p>
 <p>S3 generic functions initially dispatch to <code>.default</code>,
@@ -138,14 +138,14 @@ lists from the original object to the result object. A shallow copy is
 memory-efficient and means we are copying the list containing the
 attributes in memory, but not the attributes themselves. Whenever I talk
 about copying attributes, I mean a shallow copy, not a deep copy. You
-can perform shallow copies with &lt;a href="https://sebkrantz.github.io/collapse/reference/small-helpers.html"&gt;helper
+can perform shallow copies with &lt;a href="https://fastverse.github.io/collapse/reference/small-helpers.html"&gt;helper
 functions&lt;/a&gt; &lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;copyAttrib()&lt;/a&gt;&lt;/code&gt; or
 &lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;copyMostAttrib()&lt;/a&gt;&lt;/code&gt;, and directly set attribute lists using
 &lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;setAttrib()&lt;/a&gt;&lt;/code&gt; or &lt;code&gt;&lt;a href="../reference/small-helpers.html"&gt;setattrib()&lt;/a&gt;&lt;/code&gt;.&lt;/p&gt;'><sup>1</sup></a>.</p>
 <p>Another simple case for matrices and lists arises when a statistical
 operation reduces them to a single dimension such as
 <code>fmean(x)</code>, where, under the <code>drop = TRUE</code> default
-of <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
+of <a href="https://fastverse.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
 Statistical Functions</em></a>, all attributes apart from (column-)names
 are dropped and a (named) vector of means is returned.</p>
 <p>For atomic vectors, a statistical operation like
@@ -165,9 +165,9 @@ does not have a ‘class’ attribute. For atomic vectors, attributes are
 retained if <code>!inherits(x, "ts")</code>, as aggregating a time
 series will break the class. This also applies to columns in a data
 frame being aggregated.</p>
-<p>When data is transformed using statistics as provided by the <a href="https://sebkrantz.github.io/collapse/reference/TRA.html"><code>TRA()</code>
+<p>When data is transformed using statistics as provided by the <a href="https://fastverse.github.io/collapse/reference/TRA.html"><code>TRA()</code>
 function</a> e.g. <code>TRA(x, STATS, operation, groups)</code> and the
-like-named argument to the <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
+like-named argument to the <a href="https://fastverse.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
 Statistical Functions</em></a>, operations that simply modify the input
 (<code>x</code>) in a statistical sense (<code>"replace_na"</code>,
 <code>"-"</code>, <code>"-+"</code>, <code>"/"</code>, <code>"+"</code>,
@@ -211,7 +211,7 @@ factors need to be avoided.</p>
 <div class="section level4">
 <h4 id="object-conversions">Object Conversions<a class="anchor" aria-label="anchor" href="#object-conversions"></a>
 </h4>
-<p><a href="https://sebkrantz.github.io/collapse/reference/quick-conversion.html">Quick
+<p><a href="https://fastverse.github.io/collapse/reference/quick-conversion.html">Quick
 conversion functions</a> <code>qDF</code>, <code>qDT</code>,
 <code><a href="../reference/quick-conversion.html">qTBL()</a></code> and <code>qM</code> (to create data.frame’s,
 <em>data.table</em>’s, <em>tibble</em>’s and matrices from arbitrary R
@@ -231,7 +231,7 @@ i.e. <code>qM(EuStockMarkets, keep.attr = TRUE)</code>.</p>
 <div class="section level4">
 <h4 id="selecting-columns-by-data-type">Selecting Columns by Data Type<a class="anchor" aria-label="anchor" href="#selecting-columns-by-data-type"></a>
 </h4>
-<p>Functions <a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html"><code>num_vars()</code>,
+<p>Functions <a href="https://fastverse.github.io/collapse/reference/select_replace_vars.html"><code>num_vars()</code>,
 <code>cat_vars()</code> (the opposite of <code>num_vars()</code>),
 <code>char_vars()</code> etc.</a> are implemented in C to avoid the need
 to check data frame columns by applying an R function such as
@@ -254,7 +254,7 @@ statistical operations on complex data.</p>
 <div class="section level4">
 <h4 id="parsing-of-time-ids">Parsing of Time-IDs<a class="anchor" aria-label="anchor" href="#parsing-of-time-ids"></a>
 </h4>
-<p><a href="https://sebkrantz.github.io/collapse/reference/time-series-panel-series.html"><em>Time
+<p><a href="https://fastverse.github.io/collapse/reference/time-series-panel-series.html"><em>Time
 Series Functions</em></a> <code>flag</code>, <code>fdiff</code>,
 <code>fgrowth</code> and <code>psacf/pspacf/psccf</code> (and the
 operators <code>L/F/D/Dlog/G</code>) have a <code>t</code> argument to
@@ -305,7 +305,7 @@ columns of data: if the object is an <em>sf</em> data frame, the
 <code><a href="../reference/funique.html">funique()</a></code> or <code><a href="../reference/roworder.html">roworder()</a></code> have internal
 facilities to avoid sorting or grouping on the ‘geometry’ column. Again
 other functions like <code><a href="../reference/descr.html">descr()</a></code> and <code><a href="../reference/qsu.html">qsu()</a></code> simply
-omit the geometry column in their statistical calculations. A short <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html">vignette</a>
+omit the geometry column in their statistical calculations. A short <a href="https://fastverse.github.io/collapse/articles/collapse_and_sf.html">vignette</a>
 describes the integration of <em>collapse</em> and <em>sf</em> in a bit
 more detail. In summary: <em>collapse</em> supports <em>sf</em> by
 seeking to appropriately deal with the ‘geometry’ column. It cannot
@@ -359,16 +359,16 @@ this case,
 <code>res2 &lt;- DT |&gt; fgroup_by(id) |&gt; fmean() |&gt; qDT()</code>
 can be used to avoid the warning. This, to me, seems a reasonable
 trade-off between flexibility and performance. More details and examples
-are provided in the <a href="https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html"><em>collapse</em>
+are provided in the <a href="https://fastverse.github.io/collapse/articles/collapse_and_data.table.html"><em>collapse</em>
 and <em>data.table</em> vignette</a>.</p>
 </div>
 <div class="section level4">
 <h4 id="class-agnostic-grouped-and-indexed-data-frames">Class-Agnostic Grouped and Indexed Data Frames<a class="anchor" aria-label="anchor" href="#class-agnostic-grouped-and-indexed-data-frames"></a>
 </h4>
 <p>As indicated in the introductory remarks, <em>collapse</em> provides
-a fast <a href="https://sebkrantz.github.io/collapse/reference/GRP.html">class-agnostic
+a fast <a href="https://fastverse.github.io/collapse/reference/GRP.html">class-agnostic
 grouped data frame</a> created with <code><a href="../reference/GRP.html">fgroup_by()</a></code>, and fast
-<a href="https://sebkrantz.github.io/collapse/reference/indexing.html">class-agnostic
+<a href="https://fastverse.github.io/collapse/reference/indexing.html">class-agnostic
 indexed time series and panel data</a>, created with
 <code><a href="../reference/indexing.html">findex_by()</a></code>/<code><a href="../reference/indexing.html">reindex()</a></code>. Class-agnostic means
 that the object that is grouped/indexed continues to behave as before
@@ -444,7 +444,7 @@ set of methods for subsetting and manipulation which also subset the
 <code><a href="../reference/fsubset.html">fsubset()</a></code>, <code><a href="../reference/funique.html">funique()</a></code>, <code>roworder(v)</code>
 and <code><a href="../reference/efficient-programming.html">na_omit()</a></code>. So <em>indexed_frame</em> and
 <em>indexed_series</em> is a rich and general structure permitting fully
-time-aware computations on nearly any R object. See <a href="https://sebkrantz.github.io/collapse/reference/indexing.html"><code>?indexing</code></a>
+time-aware computations on nearly any R object. See <a href="https://fastverse.github.io/collapse/reference/indexing.html"><code>?indexing</code></a>
 for more information.</p>
 </div>
 </div>
@@ -465,7 +465,7 @@ with your simple new class.</p>
 <p>The main disadvantage is that the general principles and exemptions
 are hard-coded in C and thus may not work with specific classes. A
 prominent example where <em>collapse</em> simply fails is
-<em>lubridate</em>’s <em>interval</em> class (<a href="https://github.com/SebKrantz/collapse/issues/186" class="external-link">#186</a>, <a href="https://github.com/SebKrantz/collapse/issues/418" class="external-link">#418</a>), which
+<em>lubridate</em>’s <em>interval</em> class (<a href="https://github.com/fastverse/collapse/issues/186" class="external-link">#186</a>, <a href="https://github.com/fastverse/collapse/issues/418" class="external-link">#418</a>), which
 has a <code>"starts"</code> attribute of the same length as the data
 that is preserved but not subset in <em>collapse</em> operations.</p>
 </div>

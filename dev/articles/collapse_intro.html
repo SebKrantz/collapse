@@ -48,7 +48,7 @@
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://bsky.app/profile/rcollapse.bsky.social" aria-label="BlueSky"><span class="fa fa-bluesky"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/fastverse/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul>
 </div>
 
@@ -69,7 +69,7 @@ Krantz</h4>
             
             <h4 data-toc-skip class="date">2021-06-27</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_intro.Rmd" class="external-link"><code>vignettes/collapse_intro.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/fastverse/collapse/blob/master/vignettes/collapse_intro.Rmd" class="external-link"><code>vignettes/collapse_intro.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_intro.Rmd</code></div>
     </div>
 
@@ -113,7 +113,7 @@ set of examples for quick-start. A cheat sheet is available at <a href="https://
 <em>dplyr</em> / <em>tidyverse</em> users), and on the integration of
 <em>collapse</em> with the <em>plm</em> package (+ some advanced
 programming with panel data).</p></li>
-<li><p>Documentation and vignettes can also be viewed <a href="https://sebkrantz.github.io/collapse/">online</a>.</p></li>
+<li><p>Documentation and vignettes can also be viewed <a href="https://fastverse.github.io/collapse/">online</a>.</p></li>
 </ul>
 <!-- - All benchmarks are run with a Windows 8.1 laptop, 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung 850 EVO SSD.  --><hr>
 <div class="section level2">
@@ -176,7 +176,7 @@ covering 216 countries for up to 61 years (1960-2020). It is a balanced
 balanced panel with <span class="math inline">216 \times 61 =
 13176</span> observations. –&gt;</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sebkrantz.github.io/collapse/">collapse</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fastverse.github.io/collapse/">collapse</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">wlddev</span><span class="op">)</span></span>
 <span><span class="co">#       country iso3c       date year decade     region     income  OECD PCGDP LIFEEX GINI       ODA</span></span>
 <span><span class="co"># 1 Afghanistan   AFG 1961-01-01 1960   1960 South Asia Low income FALSE    NA 32.446   NA 116769997</span></span>
@@ -3398,7 +3398,7 @@ section).</p>
 <span><span class="co">#  $ ODA   : 'psmat' num [1:216, 1:61] NA 116769997 -390000 NA NA ...</span></span>
 <span></span>
 <span><span class="co"># Using unlist2d, can generate a data.frame</span></span>
-<span><span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">psml</span>, idcols <span class="op">=</span> <span class="st">"Variable"</span>, row.names <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
+<span><span class="fu"><a href="../reference/unlist2d.html">unlist2d</a></span><span class="op">(</span><span class="va">psml</span>, idcols <span class="op">=</span> <span class="st">"Variable"</span>, row.names <span class="op">=</span> <span class="st">"Country"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html" class="external-link">gv</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">head</span></span>
 <span><span class="co">#   Variable Country 1960 1961 1962 1963 1964 1965 1966 1967</span></span>
 <span><span class="co"># 1    PCGDP     ABW   NA   NA   NA   NA   NA   NA   NA   NA</span></span>
 <span><span class="co"># 2    PCGDP     AFG   NA   NA   NA   NA   NA   NA   NA   NA</span></span>
@@ -4064,9 +4064,9 @@ these transformations to all sectors:</p>
 <code class="sourceCode R"><span><span class="co"># Taking logs</span></span>
 <span><span class="fu"><a href="../reference/ftransform.html">settransformv</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>, <span class="va">log</span><span class="op">)</span></span>
 <span><span class="co"># Projecting out country FE and cubic trends from complete cases</span></span>
-<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">Year</span>, <span class="fl">3</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html" class="external-link">gv</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fhdbetween_fhdwithin.html">HDW</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span> <span class="fu"><a href="../reference/qF.html">qF</a></span><span class="op">(</span><span class="va">Country</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly</a></span><span class="op">(</span><span class="va">Year</span>, <span class="fl">3</span><span class="op">)</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co"># Scaling</span></span>
-<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fscale.html">STD</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span> <span class="va">Country</span>, cols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>, keep.by <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html" class="external-link">gv</a></span><span class="op">(</span><span class="va">data</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fscale.html">STD</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span> <span class="va">Country</span>, cols <span class="op">=</span> <span class="fl">3</span><span class="op">:</span><span class="fl">8</span>, keep.by <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Check the plot</span></span>
 <span><span class="fu"><a href="../reference/psmat.html">psmat</a></span><span class="op">(</span><span class="va">data</span>, <span class="op">~</span> <span class="va">Country</span>, <span class="op">~</span> <span class="va">Year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="va">plot</span></span></code></pre></div>

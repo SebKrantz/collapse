@@ -20,7 +20,7 @@
 <meta property="og:title" content="Advanced and Fast Data Transformation in R">
 <meta name="description" content="A large C/C++-based package for advanced data transformation and statistical computing in R that is extremely fast, class-agnostic, robust, and programmer friendly. Core functionality includes a rich set of S3 generic grouped and weighted statistical functions for vectors, matrices and data frames, which provide efficient low-level vectorizations, OpenMP multithreading, and skip missing values by default. These are integrated with fast grouping and ordering algorithms (also callable from C), and efficient data manipulation functions. The package also provides a flexible and rigorous approach to time series and panel data in R, fast functions for data transformation and common statistical procedures, detailed (grouped, weighted) summary statistics, powerful tools to work with nested data, fast data object conversions, functions for memory efficient R programming, and helpers to effectively deal with variable labels, attributes, and missing data. It seamlessly supports base R objects/classes as well as units, integer64, xts/ zoo, tibble, grouped_df, data.table, sf, and pseries/pdata.frame.">
 <meta property="og:description" content="A large C/C++-based package for advanced data transformation and statistical computing in R that is extremely fast, class-agnostic, robust, and programmer friendly. Core functionality includes a rich set of S3 generic grouped and weighted statistical functions for vectors, matrices and data frames, which provide efficient low-level vectorizations, OpenMP multithreading, and skip missing values by default. These are integrated with fast grouping and ordering algorithms (also callable from C), and efficient data manipulation functions. The package also provides a flexible and rigorous approach to time series and panel data in R, fast functions for data transformation and common statistical procedures, detailed (grouped, weighted) summary statistics, powerful tools to work with nested data, fast data object conversions, functions for memory efficient R programming, and helpers to effectively deal with variable labels, attributes, and missing data. It seamlessly supports base R objects/classes as well as units, integer64, xts/ zoo, tibble, grouped_df, data.table, sf, and pseries/pdata.frame.">
-<meta property="og:image" content="https://sebkrantz.github.io/collapse/logo.png">
+<meta property="og:image" content="https://fastverse.github.io/collapse/logo.png">
 <meta name="robots" content="noindex">
 </head>
 <body>
@@ -51,7 +51,7 @@
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://bsky.app/profile/rcollapse.bsky.social" aria-label="BlueSky"><span class="fa fa-bluesky"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/fastverse/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul>
 </div>
 
@@ -71,7 +71,7 @@
 <li>Facilitate complex data transformation, exploration and computing tasks in R.</li>
 <li>Help make R code fast, flexible, parsimonious and programmer friendly.</li>
 </ul>
-<p>Its novel <a href="https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html">class-agnostic architecture</a> supports all basic R objects and their popular extensions, including <em>units</em>, <em>integer64</em>, <em>xts</em>/<em>zoo</em>, <em>tibble</em>, <em>grouped_df</em>, <em>data.table</em>, <em>sf</em>, <em>pseries</em> and <em>pdata.frame</em>.</p>
+<p>Its novel <a href="https://fastverse.github.io/collapse/articles/collapse_object_handling.html">class-agnostic architecture</a> supports all basic R objects and their popular extensions, including <em>units</em>, <em>integer64</em>, <em>xts</em>/<em>zoo</em>, <em>tibble</em>, <em>grouped_df</em>, <em>data.table</em>, <em>sf</em>, <em>pseries</em> and <em>pdata.frame</em>.</p>
 <p><strong>Key Features:</strong></p>
 <ul>
 <li><p><strong>Advanced statistical programming</strong>: A full set of fast statistical functions supporting grouped and weighted computations on vectors, matrices and data frames. Fast and programmable grouping, ordering, matching, deduplication, factor generation and interactions.</p></li>
@@ -94,7 +94,7 @@
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"collapse"</span>, repos <span class="op">=</span> <span class="st">"https://fastverse.r-universe.dev"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Install a stable development version from GitHub (requires compilation)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"SebKrantz/collapse"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"fastverse/collapse"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Install previous versions from the CRAN Archive (requires compilation)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"https://cran.r-project.org/src/contrib/Archive/collapse/collapse_2.0.19.tar.gz"</span>, </span>
@@ -104,12 +104,12 @@
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p><em>collapse</em> installs with a built-in structured <a href="https://sebkrantz.github.io/collapse/reference/collapse-documentation.html">documentation</a>, implemented via a set of separate help pages. Calling <code><a href="reference/collapse-documentation.html">help('collapse-documentation')</a></code> brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages.</p>
-<p>In addition there are several <a href="https://sebkrantz.github.io/collapse/articles/index.html">vignettes</a>, among them one on <a href="https://sebkrantz.github.io/collapse/articles/collapse_documentation.html">Documentation and Resources</a>.</p>
+<p><em>collapse</em> installs with a built-in structured <a href="https://fastverse.github.io/collapse/reference/collapse-documentation.html">documentation</a>, implemented via a set of separate help pages. Calling <code><a href="reference/collapse-documentation.html">help('collapse-documentation')</a></code> brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages.</p>
+<p>In addition there are several <a href="https://fastverse.github.io/collapse/articles/index.html">vignettes</a>, among them one on <a href="https://fastverse.github.io/collapse/articles/collapse_documentation.html">Documentation and Resources</a>.</p>
 <div class="section level3">
 <h3 id="cheatsheet">Cheatsheet<a class="anchor" aria-label="anchor" href="#cheatsheet"></a>
 </h3>
-<p><a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf" class="external-link"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page1.png" width="330"></a> <!-- height="227" 294 --> <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf" class="external-link"><img src="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/preview/page2.png" width="330"></a></p>
+<p><a href="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf" class="external-link"><img src="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/preview/page1.png" width="330"></a> <!-- height="227" 294 --> <a href="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf" class="external-link"><img src="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/preview/page2.png" width="330"></a></p>
 </div>
 <div class="section level3">
 <h3 id="article-on-arxiv">Article on arXiv<a class="anchor" aria-label="anchor" href="#article-on-arxiv"></a>
@@ -120,7 +120,7 @@
 <h3 id="presentation-at-user-2022">Presentation at <a href="https://user2022.r-project.org" class="external-link">useR 2022</a>
 <a class="anchor" aria-label="anchor" href="#presentation-at-user-2022"></a>
 </h3>
-<p><a href="https://www.youtube.com/watch?v=OwWT1-dSEts" class="external-link"><strong>Video Recording</strong></a> | <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf" class="external-link"><strong>Slides</strong></a></p>
+<p><a href="https://www.youtube.com/watch?v=OwWT1-dSEts" class="external-link"><strong>Video Recording</strong></a> | <a href="https://raw.githubusercontent.com/fastverse/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf" class="external-link"><strong>Slides</strong></a></p>
 </div>
 </div>
 <div class="section level2">
@@ -129,7 +129,7 @@
 This provides a simple set of examples introducing some important features of <em>collapse</em>. It should be easy to follow for readers familiar with R.
 <details><summary><b><a style="cursor: pointer;">Click here to expand </a></b>
 </summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://sebkrantz.github.io/collapse/">collapse</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fastverse.github.io/collapse/">collapse</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"iris"</span><span class="op">)</span>            <span class="co"># iris dataset in base R</span></span>
 <span><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">iris</span><span class="op">$</span><span class="va">Sepal.Length</span>  <span class="co"># Vector</span></span>
 <span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/select_replace_vars.html">num_vars</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span>     <span class="co"># Saving numeric variables (could also be a matrix, statistical functions are S3 generic)</span></span>
@@ -249,8 +249,8 @@ This provides a simple set of examples introducing some important features of <e
 <span>       sd <span class="op">=</span> <span class="st">"within.sd"</span><span class="op">)</span>                 <span class="co"># and group sd's to fsd(fwithin(d, g, w), w = w)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/select_replace_vars.html">get_vars</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>                      <span class="co"># Use get_vars for fast selecting data.frame columns, gv is shortcut</span></span>
-<span><span class="fu"><a href="reference/fhdbetween_fhdwithin.html">fhdbetween</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="co"># Linear prediction with factors and continuous covariates</span></span>
-<span><span class="fu"><a href="reference/fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Linear partialling out factors and continuous covariates</span></span>
+<span><span class="fu"><a href="reference/fhdbetween_fhdwithin.html">fhdbetween</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html" class="external-link">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html" class="external-link">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="co"># Linear prediction with factors and continuous covariates</span></span>
+<span><span class="fu"><a href="reference/fhdbetween_fhdwithin.html">fhdwithin</a></span><span class="op">(</span><span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html" class="external-link">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://sebkrantz.github.io/collapse/reference/select_replace_vars.html" class="external-link">gv</a></span><span class="op">(</span><span class="va">iris</span>, <span class="fl">3</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Linear partialling out factors and continuous covariates</span></span>
 <span></span>
 <span><span class="co"># This again opens up new possibilities for data manipulation...</span></span>
 <span><span class="va">iris</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  </span>
@@ -332,7 +332,7 @@ This provides a simple set of examples introducing some important features of <e
 <span><span class="fu"><a href="reference/pwcor_pwcov_pwnobs.html">pwcor</a></span><span class="op">(</span><span class="fu"><a href="reference/fbetween_fwithin.html">W</a></span><span class="op">(</span><span class="va">pdata</span>, keep.ids <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>, P <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>   <span class="co"># Within-correlations</span></span></code></pre></div>
 </details><p>
 </p>
-<p>Evaluated and more extensive sets of examples are provided on the <a href="https://sebkrantz.github.io/collapse/reference/collapse-package.html">package page</a> (also accessible from R by calling <code>example('collapse-package')</code>), and further in the <a href="https://sebkrantz.github.io/collapse/articles/index.html">vignettes</a> and <a href="https://sebkrantz.github.io/collapse/reference/index.html">documentation</a>.</p>
+<p>Evaluated and more extensive sets of examples are provided on the <a href="https://fastverse.github.io/collapse/reference/collapse-package.html">package page</a> (also accessible from R by calling <code>example('collapse-package')</code>), and further in the <a href="https://fastverse.github.io/collapse/articles/index.html">vignettes</a> and <a href="https://fastverse.github.io/collapse/reference/index.html">documentation</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
@@ -344,8 +344,8 @@ This provides a simple set of examples introducing some important features of <e
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=collapse" class="external-link">View on CRAN</a></li>
-<li><a href="https://github.com/SebKrantz/collapse/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/SebKrantz/collapse/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/fastverse/collapse/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/fastverse/collapse/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -382,7 +382,7 @@ This provides a simple set of examples introducing some important features of <e
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/SebKrantz/collapse/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/SebKrantz/collapse/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/fastverse/collapse/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/fastverse/collapse/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://fastverse.r-universe.dev/collapse" class="external-link"><img src="https://fastverse.r-universe.dev/badges/collapse" alt="collapse status badge"></a></li>
 <li><a href="https://cran.r-project.org/package=collapse" class="external-link"><img src="https://www.r-pkg.org/badges/version/collapse" alt="CRAN status"></a></li>
 <li><a href="https://cran.r-project.org/web/checks/check_results_collapse.html" class="external-link"><img src="https://badges.cranchecks.info/worst/collapse.svg" alt="cran checks"></a></li>

@@ -48,7 +48,7 @@
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://bsky.app/profile/rcollapse.bsky.social" aria-label="BlueSky"><span class="fa fa-bluesky"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/fastverse/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul>
 </div>
 
@@ -69,7 +69,7 @@ Krantz</h4>
             
             <h4 data-toc-skip class="date">2024-12-30</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/developing_with_collapse.Rmd" class="external-link"><code>vignettes/developing_with_collapse.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/fastverse/collapse/blob/master/vignettes/developing_with_collapse.Rmd" class="external-link"><code>vignettes/developing_with_collapse.Rmd</code></a></small>
       <div class="d-none name"><code>developing_with_collapse.Rmd</code></div>
     </div>
 
@@ -90,7 +90,7 @@ pre[class] {
 </h2>
 <p><em>collapse</em> offers an integrated suite of C/C++-based
 statistical and data manipulation functions, many low-level tools for
-memory efficient programming, and a <a href="https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html">class-agnostic
+memory efficient programming, and a <a href="https://fastverse.github.io/collapse/articles/collapse_object_handling.html">class-agnostic
 architecture</a> that seamlessly supports vectors, matrices, and data
 frame-like objects. These features make it an ideal backend for
 high-performance statistical packages. This vignette is meant to provide
@@ -314,7 +314,7 @@ pretty magical. Also functions like
 <p>R programs are inefficient for 2 principal reasons: (1) operations
 are not vectorized; (2) too many intermediate objects/copies are
 created. <em>collapse</em>’s vectorized statistical functions help with
-(1), but it also provides many <a href="https://sebkrantz.github.io/collapse/reference/efficient-programming.html">efficient
+(1), but it also provides many <a href="https://fastverse.github.io/collapse/reference/efficient-programming.html">efficient
 programming functions</a> to deal with (2).</p>
 <p>One source of inefficiency in R code is the widespread use of logical
 vectors. For example</p>
@@ -427,7 +427,7 @@ are not vectorized across groups, thus, if using them in a grouped
 some memory on intermediate objects.&lt;/p&gt;'><sup>7</sup></a> There is also <code><a href="../reference/TRA.html">setTRA()</a></code> for
 (grouped) transformations by reference, wrapping
 <code>TRA(..., set = TRUE)</code>. Since <code>TRA</code> is added as an
-argument to all <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
+argument to all <a href="https://fastverse.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
 Statistical Functions</em></a>, <code>set = TRUE</code> can be passed
 down to modify by reference. For example:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -609,7 +609,7 @@ With larger data the difference is less stark, but you never know what’s
 going on in methods you have not written and how they scale. My advice
 is: try to avoid them, use simple objects and take full control over
 your code. This also makes your code more robust and you can create
-class-agnostic code. If the latter is your intent the <a href="https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html">vignette
+class-agnostic code. If the latter is your intent the <a href="https://fastverse.github.io/collapse/articles/collapse_object_handling.html">vignette
 on <em>collapse</em>’s object handling</a> will also be helpful.</p>
 <p>If you only use <em>collapse</em> functions this discussion is void -
 all <em>collapse</em> functions designed for data frames, including
@@ -719,7 +719,7 @@ However, if your package code generates missing values and expects
 using either <code><a href="../reference/collapse-options.html">set_collapse()</a></code> + <code><a href="https://rdrr.io/r/base/on.exit.html" class="external-link">on.exit()</a></code> or
 explicitly setting <code>na.rm = TRUE</code> in all relevant
 functions.</p>
-<p>Also watch out for internally-grouped aggregations using <a href="https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
+<p>Also watch out for internally-grouped aggregations using <a href="https://fastverse.github.io/collapse/reference/fast-statistical-functions.html"><em>Fast
 Statistical Functions</em></a>, which are affected by global
 defaults:</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
@@ -755,7 +755,7 @@ adjust your code, e.g. </p>
 software development in R, enabling you to write programs that
 effectively run like C while accomplishing complex statistical/data
 tasks with few lines of code. This however requires taking a closer look
-at the package, in particular the <a href="https://sebkrantz.github.io/collapse/reference/collapse-documentation.html">documentation</a>,
+at the package, in particular the <a href="https://fastverse.github.io/collapse/reference/collapse-documentation.html">documentation</a>,
 and following the advice given in this vignette.</p>
 </div>
 
