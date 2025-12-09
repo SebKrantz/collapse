@@ -44,7 +44,7 @@ preferred-citation:
   url: https://arxiv.org/abs/2403.05038
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/SebKrantz/collapse
-url: https://sebkrantz.github.io/collapse/
+url: https://fastverse.github.io/collapse/
 date-released: '2025-05-24'
 contact:
 - family-names: Krantz
@@ -78,7 +78,7 @@ references:
   year: '2025'
   notes: R package version 2.1.2
   doi: 10.5281/zenodo.8433090
-  url: https://sebkrantz.github.io/collapse/
+  url: https://fastverse.github.io/collapse/
 - type: software
   title: 'R: A Language and Environment for Statistical Computing'
   notes: Depends

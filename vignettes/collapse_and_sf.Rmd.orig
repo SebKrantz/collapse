@@ -183,7 +183,7 @@ plot(slt(pnc_ag, AREA_Ag))
 
 ## Indexing
 
-*sf* data frames can also become [*indexed frames*](https://sebkrantz.github.io/collapse/reference/indexing.html) (spatio-temporal panels):
+*sf* data frames can also become [*indexed frames*](https://fastverse.github.io/collapse/reference/indexing.html) (spatio-temporal panels):
 
 ```{r, eval=NMAC}
 pnc <- pnc |> findex_by(CNTY_ID, Year)

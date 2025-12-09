@@ -83,7 +83,7 @@ join(df1, df2, require = list(x = 0.8, fail = "warning"))
 
 * `fmatch(factor(NA), NA)` now gives `1` instead of `NA`. Thanks @NicChr (#675).
 
-* New developer focused vignette on [developing with *collapse*](https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html).
+* New developer focused vignette on [developing with *collapse*](https://fastverse.github.io/collapse/articles/developing_with_collapse.html).
 
 * Fixed minor CRAN issues (#676, #702). 
 
@@ -185,7 +185,7 @@ join(df1, df2, require = list(x = 0.8, fail = "warning"))
 
 # collapse 2.0.13
 
-* *collapse* now explicitly supports *xts*/*zoo* and *units* objects and concurrently removes an additional check in the `.default` method of statistical functions that called the matrix method if `is.matrix(x) && !inherits(x, "matrix")`. This was a smart solution to account for the fact that *xts* objects are matrix-based but don't inherit the `"matrix"` class, thus wrongly calling the default method. The same is the case for *units*, but here, my recent more intensive engagement with spatial data convinced me that this should be changed. For one, under the previous heuristic solution, it was not possible to call the default method on a *units* matrix, e.g., `fmean.default(st_distance(points_sf))` called `fmean.matrix()` and yielded a vector. This should not be the case. Secondly, aggregation e.g. `fmean(st_distance(points_sf))` or `fmean(st_distance(points_sf), g = group_vec)` yielded a plain numeric object that lost the *units* class (in line with the [general attribute handling principles](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html#general-principles)). Therefore, I have now decided to remove the heuristic check within the default methods, and explicitly support *zoo* and *units* objects. For [*Fast Statistical Functions*](https://sebkrantz.github.io/collapse/reference/fast-statistical-functions.html), the methods are `FUN.zoo <- function(x, ...) if(is.matrix(x)) FUN.matrix(x, ...) else FUN.default(x, ...)` and `FUN.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(FUN.matrix(x, ...), x) else FUN.default(x, ...)`. While the behavior for *xts*/*zoo* remains the same, the behavior for *units* is enhanced, as now the class is preserved in aggregations (the [`.default` method preserves attributes except for *ts*](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html#general-principles)), and it is possible to manually invoke the `.default` method on a units matrix and obtain an aggregate statistic. This change may impact computations on other matrix based classes which don't inherit from `"matrix"` (*mts* does inherit from `"matrix"`, and I am not aware of any other affected classes, but user code like `m <- matrix(rnorm(25), 5); class(m) <- "bla"; fmean(m)` will now yield a scalar instead of a vector. Such code must be adjusted to either `class(m) <- c("bla", "matrix")` or `fmean.matrix(m)`). Overall, the change makes *collapse* behave in a more standard and predictable way, and enhances its support for *units* objects central in the *sf* ecosystem. 
+* *collapse* now explicitly supports *xts*/*zoo* and *units* objects and concurrently removes an additional check in the `.default` method of statistical functions that called the matrix method if `is.matrix(x) && !inherits(x, "matrix")`. This was a smart solution to account for the fact that *xts* objects are matrix-based but don't inherit the `"matrix"` class, thus wrongly calling the default method. The same is the case for *units*, but here, my recent more intensive engagement with spatial data convinced me that this should be changed. For one, under the previous heuristic solution, it was not possible to call the default method on a *units* matrix, e.g., `fmean.default(st_distance(points_sf))` called `fmean.matrix()` and yielded a vector. This should not be the case. Secondly, aggregation e.g. `fmean(st_distance(points_sf))` or `fmean(st_distance(points_sf), g = group_vec)` yielded a plain numeric object that lost the *units* class (in line with the [general attribute handling principles](https://fastverse.github.io/collapse/articles/collapse_object_handling.html#general-principles)). Therefore, I have now decided to remove the heuristic check within the default methods, and explicitly support *zoo* and *units* objects. For [*Fast Statistical Functions*](https://fastverse.github.io/collapse/reference/fast-statistical-functions.html), the methods are `FUN.zoo <- function(x, ...) if(is.matrix(x)) FUN.matrix(x, ...) else FUN.default(x, ...)` and `FUN.units <- function(x, ...) if(is.matrix(x)) copyMostAttrib(FUN.matrix(x, ...), x) else FUN.default(x, ...)`. While the behavior for *xts*/*zoo* remains the same, the behavior for *units* is enhanced, as now the class is preserved in aggregations (the [`.default` method preserves attributes except for *ts*](https://fastverse.github.io/collapse/articles/collapse_object_handling.html#general-principles)), and it is possible to manually invoke the `.default` method on a units matrix and obtain an aggregate statistic. This change may impact computations on other matrix based classes which don't inherit from `"matrix"` (*mts* does inherit from `"matrix"`, and I am not aware of any other affected classes, but user code like `m <- matrix(rnorm(25), 5); class(m) <- "bla"; fmean(m)` will now yield a scalar instead of a vector. Such code must be adjusted to either `class(m) <- c("bla", "matrix")` or `fmean.matrix(m)`). Overall, the change makes *collapse* behave in a more standard and predictable way, and enhances its support for *units* objects central in the *sf* ecosystem. 
 
 * `fquantile()` now also preserves the attributes of the input, in line with `quantile()`. 
 
@@ -350,7 +350,7 @@ HDB(mtcars, mpg ~ carb*qF(cyl) + qF(vs) + qF(am))
 
 # collapse 1.9.6
 
-* New vignette on [*collapse*'s Handling of R Objects](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html): provides an overview of collapse’s (internal) class-agnostic R programming framework.
+* New vignette on [*collapse*'s Handling of R Objects](https://fastverse.github.io/collapse/articles/collapse_object_handling.html): provides an overview of collapse’s (internal) class-agnostic R programming framework.
 
 * `print.descr()` with groups and option `perc = TRUE` (the default) also shows percentages of the group frequencies for each variable. 
 
@@ -1008,7 +1008,7 @@ A small patch for 1.5.0 that:
 
 <!-- Missing value removal is still done using *data.table* source code, so these functions are now equipped for large and complex linear prediction and partialling-out problems. To fully utilize them users must install *fixest*. -->
 
-* Vignettes were outsourced to the [website](<https://sebkrantz.github.io/collapse/articles/index.html>). This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
+* Vignettes were outsourced to the [website](<https://fastverse.github.io/collapse/articles/index.html>). This nearly halves the size of the source package, and should induce users to appreciate the built-in documentation. The website also makes for much more convenient reading and navigation of these book-style vignettes. 
 
 <!-- , and also made available as PDF versions for download there -->
 
@@ -1020,7 +1020,7 @@ A small patch for 1.5.0 that:
 
 * Added function `allNA` for atomic vectors. 
 
-* New vignette about using *collapse* together with *data.table*, available [online](<https://sebkrantz.github.io/collapse/articles/index.html>).
+* New vignette about using *collapse* together with *data.table*, available [online](<https://fastverse.github.io/collapse/articles/index.html>).
 
 ### Improvements
 

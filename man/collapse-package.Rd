@@ -12,12 +12,12 @@ Advanced and Fast Data Transformation
 \item To help make R code fast, flexible, parsimonious and programmer friendly. % \emph{collapse} is a fast  %to facilitate (advanced) data manipulation in R   % To achieve the latter,
 % collapse provides a broad set.. -> Nah, its not a misc package
 }
-It also implements a \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{class-agnostic approach} to data manipulation in R, supporting all major classes.
+It also implements a \href{https://fastverse.github.io/collapse/articles/collapse_object_handling.html}{class-agnostic approach} to data manipulation in R, supporting all major classes.
 
 }
 \section{Getting Started}{
-Read the short \href{https://sebkrantz.github.io/collapse/articles/collapse_documentation.html}{vignette} on documentation resources, and check out the built-in \link[=collapse-documentation]{documentation}.  % A careful consideration of the \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{cheat sheet} is recommended for quick starters.
-% or read the \href{https://sebkrantz.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. % All vignettes can be accessed on the \href{https://sebkrantz.github.io/collapse/}{package website}. A cheatsheet is available \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
+Read the short \href{https://fastverse.github.io/collapse/articles/collapse_documentation.html}{vignette} on documentation resources, and check out the built-in \link[=collapse-documentation]{documentation}.  % A careful consideration of the \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{cheat sheet} is recommended for quick starters.
+% or read the \href{https://fastverse.github.io/collapse/articles/collapse_intro.html}{introductory vignette}. % All vignettes can be accessed on the \href{https://fastverse.github.io/collapse/}{package website}. A cheatsheet is available \href{https://raw.githubusercontent.com/SebKrantz/cheatsheets/master/collapse.pdf}{here}. A compact introduction for quick-starters is provided in the examples section below.
 }
 
 
@@ -81,7 +81,7 @@ The statistical functions in \emph{collapse} are S3 generic with core methods fo
 
 % attributes of atomic objects are preserved if the dimensions are unaltered by the computation, and data frame attributes are always preserved,
 
- Functions and core methods seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes). See the \href{https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html}{vignette} on \emph{collapse}'s handling of R objects.
+ Functions and core methods seek to preserve object attributes (including column attributes such as variable labels), ensuring flexibility and effective workflows with a very broad range of R objects (including most time-series classes). See the \href{https://fastverse.github.io/collapse/articles/collapse_object_handling.html}{vignette} on \emph{collapse}'s handling of R objects.
 
  Missing values are efficiently skipped at C/C++ level. The package default is \code{na.rm = TRUE}. This can be changed using \code{\link[=set_collapse]{set_collapse(na.rm = FALSE)}}. Missing weights are generally supported. % Core functionality and all statistical functions / computations are tested with > 20,000 unit tests for Base R equivalence, exempting some improvements (e.g. \code{fsum(NA, na.rm = TRUE)} evaluates to \code{NA}, not 0 (unless \code{fill = TRUE}), similarly for \code{fmin} and \code{fmax}; no \code{NaN} values are generated from computations involving \code{NA} values). %Generic functions provide some \link[=collapse-options]{security} against silent swallowing of arguments.
 
@@ -90,7 +90,7 @@ The statistical functions in \emph{collapse} are S3 generic with core methods fo
  %A global \code{option("collapse_unused_arg_action")} can be set to regulate the behavior when unused arguments are passed to a generic function. The default is to issue a warning.
 
 
-\emph{collapse} installs with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % The \href{https://sebkrantz.github.io/collapse/articles/index.html}{vignettes} are complimentary and also follow a more structured approach. % and \code{base/stats}. % extra methods warrant, provide ?
+\emph{collapse} installs with a built-in hierarchical \link[=collapse-documentation]{documentation} facilitating the use of the package. % The \href{https://fastverse.github.io/collapse/articles/index.html}{vignettes} are complimentary and also follow a more structured approach. % and \code{base/stats}. % extra methods warrant, provide ?
 
 %Apart from general performance considerations, \emph{collapse} excels at applications involving fast panel data transformations and techniques, fast weighted computations (e.g. weighted aggregation), fast programming and aggregation with categorical and mixed-type data, fast programming with (multivariate) time series, and programming with lists of data objects.
 

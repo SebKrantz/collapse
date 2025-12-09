@@ -7,6 +7,11 @@
 [![cran checks](https://badges.cranchecks.info/worst/collapse.svg)](https://cran.r-project.org/web/checks/check_results_collapse.html)
 ![downloads per month](https://cranlogs.r-pkg.org/badges/collapse) <!-- ?color=blue -->
 ![downloads](https://cranlogs.r-pkg.org/badges/grand-total/collapse) <!-- ?color=blue -->
+<!-- 
+[![CRAN use](https://jangorecki.gitlab.io/rdeps/collapse/CRAN_usage.svg?sanitize=true)](https://cran.r-project.org/package=collapse)
+[![CRAN indirect](https://jangorecki.gitlab.io/rdeps/collapse/indirect_usage.svg?sanitize=true)](https://cran.r-project.org/package=collapse)
+[![BioConductor use](https://jangorecki.gitlab.io/rdeps/collapse/BioC_usage.svg?sanitize=true)](https://cran.r-project.org/package=collapse)
+-->
  [![Conda Version](https://img.shields.io/conda/vn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
  [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/r-collapse.svg)](https://anaconda.org/conda-forge/r-collapse)
 [![Codecov test coverage](https://codecov.io/gh/SebKrantz/collapse/branch/master/graph/badge.svg)](https://app.codecov.io/gh/SebKrantz/collapse?branch=master)
@@ -21,7 +26,7 @@
 * Facilitate complex data transformation, exploration and computing tasks in R.
 * Help make R code fast, flexible, parsimonious and programmer friendly. 
 
-Its novel [class-agnostic architecture](https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html) supports all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
+Its novel [class-agnostic architecture](https://fastverse.github.io/collapse/articles/collapse_object_handling.html) supports all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
 
 
 
@@ -69,9 +74,9 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 
 ## Documentation
 
-*collapse* installs with a built-in structured [documentation](<https://sebkrantz.github.io/collapse/reference/collapse-documentation.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages. 
+*collapse* installs with a built-in structured [documentation](<https://fastverse.github.io/collapse/reference/collapse-documentation.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages. 
 
-In addition there are several [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>), among them one on [Documentation and Resources](https://sebkrantz.github.io/collapse/articles/collapse_documentation.html).
+In addition there are several [vignettes](<https://fastverse.github.io/collapse/articles/index.html>), among them one on [Documentation and Resources](https://fastverse.github.io/collapse/articles/collapse_documentation.html).
 
 ### Cheatsheet
 
@@ -300,7 +305,7 @@ pwcor(W(pdata, keep.ids = FALSE), P = TRUE)   # Within-correlations
 </details>
 <p> </p>
 
-Evaluated and more extensive sets of examples are provided on the [package page](<https://sebkrantz.github.io/collapse/reference/collapse-package.html>) (also accessible from R by calling `example('collapse-package')`), and further in the [vignettes](<https://sebkrantz.github.io/collapse/articles/index.html>) and  [documentation](<https://sebkrantz.github.io/collapse/reference/index.html>).
+Evaluated and more extensive sets of examples are provided on the [package page](<https://fastverse.github.io/collapse/reference/collapse-package.html>) (also accessible from R by calling `example('collapse-package')`), and further in the [vignettes](<https://fastverse.github.io/collapse/articles/index.html>) and  [documentation](<https://fastverse.github.io/collapse/reference/index.html>).
 
 ## Citation
 
