@@ -1,8 +1,11 @@
 # collapse 2.1.5.9000
 
-* The repo has moved to `fastverse/collapse`, for better visibility and maintenance. Selected people now have access to the repo through the organization account and may respond to issues or submit fixes. 
+* The repo has moved to `fastverse/collapse` and the website to [fastverse.org/collapse](https://fastverse.org/collapse/)---for better visibility and maintenance. Appropriate redirects from the old repo/site have been implemented.
+  Selected people now have access to the repo through the organization account and may respond to issues or submit fixes. 
 
-* Fixed bug in `pivot(..., how = "wider", FUN = "sum")` (using internal sum function) when columns to aggregate were integer typed. Thanks @ummel (#803). 
+* Fixed a bug in `pivot(..., how = "wider", FUN = "sum")` (using internal sum function) when columns to aggregate were integer typed. Thanks @ummel (#803). 
+
+* Fixed a bug in `roworderv(..., neworder = indices)`, which segfaulted if `indices` were out of range. Thanks @JanMarvin (#807). 
 
 * Faster installation from source thanks to the `#include <Rcpp/Lighter>` option in *Rcpp* which loads only part of the header files. Thanks @eddelbuettel for the hint. 
 

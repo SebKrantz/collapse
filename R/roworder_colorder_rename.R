@@ -45,7 +45,9 @@ posord <- function(sq, o, pos) switch(pos,
                                       stop("pos must be 'front', 'end', 'exchange' or 'after'."))
 
 roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.last = TRUE, pos = "front", verbose = .op[["verbose"]]) {
-  if(is.null(neworder)) {
+  ncheck <- is.null(neworder)
+  if(ncheck) {
+    check <- FALSE
     if(is.null(cols)) {
       if(inherits(X, "sf")) {
         Xo <- X
@@ -64,7 +66,7 @@ roworderv <- function(X, cols = NULL, neworder = NULL, decreasing = FALSE, na.la
     if(length(neworder) != fnrow(X)) neworder <- posord(seq_row(X), neworder, pos)
   }
   rn <- attr(X, "row.names")
-  res <- .Call(C_subsetDT, X, neworder, seq_along(unclass(X)), FALSE)
+  res <- .Call(C_subsetDT, X, neworder, seq_along(unclass(X)), !ncheck)
   if(!(is.numeric(rn) || is.null(rn) || rn[1L] == "1")) attr(res, "row.names") <- Csv(rn, neworder)
   clx <- oldClass(X)
   if(any(clx == "pdata.frame")) {
