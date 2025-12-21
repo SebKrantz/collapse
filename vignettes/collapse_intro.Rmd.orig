@@ -70,7 +70,7 @@ This vignette demonstrates these two points and introduces all main features of 
 
 - The two other vignettes focus on the integration of *collapse* with *dplyr* workflows (recommended for *dplyr* / *tidyverse* users), and on the integration of *collapse* with the *plm* package (+ some advanced programming with panel data).
 
-- Documentation and vignettes can also be viewed [online](<https://fastverse.github.io/collapse/>).
+- Documentation and vignettes can also be viewed [online](<https://fastverse.org/collapse/>).
 
 <!-- - All benchmarks are run with a Windows 8.1 laptop, 2x 2.2 GHZ Intel i5 processor, 8GB DDR3 RAM and a Samsung 850 EVO SSD.  -->
 

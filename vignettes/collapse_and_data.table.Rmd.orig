@@ -58,7 +58,7 @@ set.seed(101)
 -->
 This vignette focuses on using *collapse* with the popular *data.table* package by Matt Dowle and Arun Srinivasan. In contrast to *dplyr* and *plm* whose methods ('grouped_df', 'pseries', 'pdata.frame') *collapse* supports, the integration between *collapse* and *data.table* is hidden in the 'data.frame' methods and *collapse*'s C code.
 
-From version 1.6.0 *collapse* seamlessly handles *data.tables*, permitting reference operations (`set*`, `:=`) on data tables created with collapse (`qDT`) or returned from *collapse*'s data manipulation functions (= all functions except `.FAST_FUN`, `.OPERATOR_FUN`, `BY` and `TRA`, see the [NEWS](<https://fastverse.github.io/collapse/news/index.html#collapse-1-6-0-2021-06-28>) for details on the low-level integration). Apart from *data.table* reference semantics, both packages work similarly on the C/C++ side of things, and nicely complement each other in functionality.
+From version 1.6.0 *collapse* seamlessly handles *data.tables*, permitting reference operations (`set*`, `:=`) on data tables created with collapse (`qDT`) or returned from *collapse*'s data manipulation functions (= all functions except `.FAST_FUN`, `.OPERATOR_FUN`, `BY` and `TRA`, see the [NEWS](<https://fastverse.org/collapse/news/index.html#collapse-1-6-0-2021-06-28>) for details on the low-level integration). Apart from *data.table* reference semantics, both packages work similarly on the C/C++ side of things, and nicely complement each other in functionality.
 
 ## Overview of Both Packages
 
@@ -415,7 +415,7 @@ In summary: The list processing features, statistical capabilities and efficient
 
 ## Additional Benchmarks
 
-See [here](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>) or [here](<https://fastverse.github.io/collapse/reference/fsum.html#benchmark>).
+See [here](<https://sebkrantz.github.io/Rblog/2020/08/31/welcome-to-collapse/>) or [here](<https://fastverse.org/collapse/reference/fsum.html#benchmark>).
 
 These are all run on a 2 core laptop, so I honestly don't know how *collapse* scales on powerful multi-core machines. My own limited computational resources are part of the reason I did not opt for a thread-parallel package from the start. But a multi-core version of *collapse* will eventually be released, maybe by end of 2021.
 

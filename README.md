@@ -21,7 +21,7 @@
 * Facilitate complex data transformation, exploration and computing tasks in R.
 * Help make R code fast, flexible, parsimonious and programmer friendly. 
 
-Its novel [class-agnostic architecture](https://fastverse.github.io/collapse/articles/collapse_object_handling.html) supports all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
+Its novel [class-agnostic architecture](https://fastverse.org/collapse/articles/collapse_object_handling.html) supports all basic R objects and their popular extensions, including *units*, *integer64*, *xts*/*zoo*, *tibble*, *grouped_df*, *data.table*, *sf*, *pseries* and *pdata.frame*. 
 
 
 
@@ -69,9 +69,9 @@ install.packages("https://cran.r-project.org/src/contrib/Archive/collapse/collap
 
 ## Documentation
 
-*collapse* installs with a built-in structured [documentation](<https://fastverse.github.io/collapse/reference/collapse-documentation.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages. 
+*collapse* installs with a built-in structured [documentation](<https://fastverse.org/collapse/reference/collapse-documentation.html>), implemented via a set of separate help pages. Calling `help('collapse-documentation')` brings up the the top-level documentation page, providing an overview of the entire package and links to all other documentation pages. 
 
-In addition there are several [vignettes](<https://fastverse.github.io/collapse/articles/index.html>), among them one on [Documentation and Resources](https://fastverse.github.io/collapse/articles/collapse_documentation.html).
+In addition there are several [vignettes](<https://fastverse.org/collapse/articles/index.html>), among them one on [Documentation and Resources](https://fastverse.org/collapse/articles/collapse_documentation.html).
 
 ### Cheatsheet
 
@@ -300,7 +300,7 @@ pwcor(W(pdata, keep.ids = FALSE), P = TRUE)   # Within-correlations
 </details>
 <p> </p>
 
-Evaluated and more extensive sets of examples are provided on the [package page](<https://fastverse.github.io/collapse/reference/collapse-package.html>) (also accessible from R by calling `example('collapse-package')`), and further in the [vignettes](<https://fastverse.github.io/collapse/articles/index.html>) and  [documentation](<https://fastverse.github.io/collapse/reference/index.html>).
+Evaluated and more extensive sets of examples are provided on the [package page](<https://fastverse.org/collapse/reference/collapse-package.html>) (also accessible from R by calling `example('collapse-package')`), and further in the [vignettes](<https://fastverse.org/collapse/articles/index.html>) and  [documentation](<https://fastverse.org/collapse/reference/index.html>).
 
 ## Citation
 
