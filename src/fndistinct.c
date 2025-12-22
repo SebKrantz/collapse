@@ -146,7 +146,7 @@ int ndistinct_double(const double *restrict px, const int *restrict po, const in
         anyNA = 1;
         continue;
       }
-      tpv.d = px[i];
+      tpv.d = px[i] + 0.0; // to avoid -0.0 and 0.0 being different
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         if(REQUAL(px[h[id]-1], px[i])) goto rbls;
@@ -163,7 +163,7 @@ int ndistinct_double(const double *restrict px, const int *restrict po, const in
         anyNA = 1;
         continue;
       }
-      tpv.d = xi;
+      tpv.d = xi + 0.0;
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         if(REQUAL(px[po[h[id]-1]-1], xi)) goto rbl;

@@ -32,7 +32,7 @@ pre[class] {
 
 ## Introduction
 
-*collapse* offers an integrated suite of C/C++-based statistical and data manipulation functions, many low-level tools for memory efficient programming, and a [class-agnostic architecture](https://fastverse.github.io/collapse/articles/collapse_object_handling.html) that seamlessly supports vectors, matrices, and data frame-like objects. These features make it an ideal backend for high-performance statistical packages. This vignette is meant to provide some recommendations for developing with *collapse*. It is complementary to the earlier [blog post on programming with *collapse*](https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/) which readers are also encouraged to consult. The vignette adds 3 important points for writing efficient R/*collapse* code.
+*collapse* offers an integrated suite of C/C++-based statistical and data manipulation functions, many low-level tools for memory efficient programming, and a [class-agnostic architecture](https://fastverse.org/collapse/articles/collapse_object_handling.html) that seamlessly supports vectors, matrices, and data frame-like objects. These features make it an ideal backend for high-performance statistical packages. This vignette is meant to provide some recommendations for developing with *collapse*. It is complementary to the earlier [blog post on programming with *collapse*](https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/) which readers are also encouraged to consult. The vignette adds 3 important points for writing efficient R/*collapse* code.
 
 ## Point 1: Be Minimalistic in Computations
 
@@ -197,12 +197,12 @@ In general, think carefully about how to vectorize in a minimalistic and memory 
 
 For example, after merging multiple spatial datasets, I had some of the same map features (businesses) from multiple sources, and, unwilling to match features individually across data sources, I decided to keep the richest source covering each feature type and location. After creating a feature `importance` indicator comparable across sources, the deduplication expression ended up being a single line of the form: `fsubset(data, source == fmode(source, list(location, type), importance, "fill"))` - keep features from the importance-weighted most frequent source by location and type.
 
-If an effective *collapse* solution is not apparent, other packages may offer efficient solutions. Check out the [*fastverse*](https://fastverse.github.io/fastverse/) and its [suggested packages list](https://fastverse.github.io/fastverse/#suggested-extensions). For example if you want to efficiently replace multiple items in a vector, `kit::vswitch()/nswitch()` can be pretty magical. Also functions like `data.table::set()/rowid()` etc. are great.
+If an effective *collapse* solution is not apparent, other packages may offer efficient solutions. Check out the [*fastverse*](https://fastverse.org/fastverse/) and its [suggested packages list](https://fastverse.org/fastverse/#suggested-extensions). For example if you want to efficiently replace multiple items in a vector, `kit::vswitch()/nswitch()` can be pretty magical. Also functions like `data.table::set()/rowid()` etc. are great.
 
 
 ## Point 2: Think About Memory and Optimize
 
-R programs are inefficient for 2 principal reasons: (1) operations are not vectorized; (2) too many intermediate objects/copies are created. *collapse*'s vectorized statistical functions help with (1), but it also provides many [efficient programming functions](https://fastverse.github.io/collapse/reference/efficient-programming.html) to deal with (2).
+R programs are inefficient for 2 principal reasons: (1) operations are not vectorized; (2) too many intermediate objects/copies are created. *collapse*'s vectorized statistical functions help with (1), but it also provides many [efficient programming functions](https://fastverse.org/collapse/reference/efficient-programming.html) to deal with (2).
 
 One source of inefficiency in R code is the widespread use of logical vectors. For example
 
@@ -306,7 +306,7 @@ head(m / qM(mtcars))
 # Valiant             1   2    3  4    5  6    7   8 NaN   10   11
 ```
 
-Some functions like `na_locf()`/`na_focb()` also have `set = TRUE` arguments to perform operations by reference.^[Note that `na_locf()`/`na_focb()` are not vectorized across groups, thus, if using them in a grouped `fmutate()` call, adding `set = TRUE` will save some memory on intermediate objects.] There is also `setTRA()` for (grouped) transformations by reference, wrapping `TRA(..., set = TRUE)`. Since `TRA` is added as an argument to all [*Fast Statistical Functions*](https://fastverse.github.io/collapse/reference/fast-statistical-functions.html), `set = TRUE` can be passed down to modify by reference. For example:
+Some functions like `na_locf()`/`na_focb()` also have `set = TRUE` arguments to perform operations by reference.^[Note that `na_locf()`/`na_focb()` are not vectorized across groups, thus, if using them in a grouped `fmutate()` call, adding `set = TRUE` will save some memory on intermediate objects.] There is also `setTRA()` for (grouped) transformations by reference, wrapping `TRA(..., set = TRUE)`. Since `TRA` is added as an argument to all [*Fast Statistical Functions*](https://fastverse.org/collapse/reference/fast-statistical-functions.html), `set = TRUE` can be passed down to modify by reference. For example:
 
 ```r
 fmedian(iris$Sepal.Length, iris$Species, TRA = "fill", set = TRUE)
@@ -464,7 +464,7 @@ microbenchmark::microbenchmark(pwnobs_list(mtcNA), pwnobs_list_opt(mtcNA))
 #  pwnobs_list_opt(mtcNA)  27.429  31.1600  33.38507  32.964  35.137  45.387   100
 ```
 
-Evidently, the optimized function is 6x faster on this (small) dataset and we have changed nothing to the loops doing the computation. With larger data the difference is less stark, but you never know what's going on in methods you have not written and how they scale. My advice is: try to avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code. If the latter is your intent the [vignette on *collapse*'s object handling](https://fastverse.github.io/collapse/articles/collapse_object_handling.html) will also be helpful. 
+Evidently, the optimized function is 6x faster on this (small) dataset and we have changed nothing to the loops doing the computation. With larger data the difference is less stark, but you never know what's going on in methods you have not written and how they scale. My advice is: try to avoid them, use simple objects and take full control over your code. This also makes your code more robust and you can create class-agnostic code. If the latter is your intent the [vignette on *collapse*'s object handling](https://fastverse.org/collapse/articles/collapse_object_handling.html) will also be helpful. 
 
 If you only use *collapse* functions this discussion is void - all *collapse* functions designed for data frames, including `join()`, `pivot()`, `fsubset()`, etc., internally handle your data as a list and are equally efficient on data frames and lists. However, if you want to use base R semantics (`[`, etc.) alongside *collapse* and other functions, it makes sense to unclass incoming data frame-like objects and reclass them at the end. 
  
@@ -536,7 +536,7 @@ Particularly options `na.rm`, `nthreads`, and `sort`, if set by the user, will i
 
 My general view is that this is not necessary - if the user sets `set_collapse(na.rm = FALSE)` because data has no missing values, then it is good if that also speeds up your package functions. However, if your package code generates missing values and expects *collapse* functions to skip them you should take care of this using either `set_collapse()` + `on.exit()` or explicitly setting `na.rm = TRUE` in all relevant functions. 
 
-Also watch out for internally-grouped aggregations using [*Fast Statistical Functions*](https://fastverse.github.io/collapse/reference/fast-statistical-functions.html), which are affected by global defaults:
+Also watch out for internally-grouped aggregations using [*Fast Statistical Functions*](https://fastverse.org/collapse/reference/fast-statistical-functions.html), which are affected by global defaults:
 
 
 ```r
@@ -573,5 +573,5 @@ if(!get_collapse("sort")) {
 
 ## Conclusion
 
-*collapse* can become a game-changer for your statistical software development in R, enabling you to write programs that effectively run like C while accomplishing complex statistical/data tasks with few lines of code. This however requires taking a closer look at the package, in particular the [documentation](https://fastverse.github.io/collapse/reference/collapse-documentation.html), and following the advice given in this vignette.
+*collapse* can become a game-changer for your statistical software development in R, enabling you to write programs that effectively run like C while accomplishing complex statistical/data tasks with few lines of code. This however requires taking a closer look at the package, in particular the [documentation](https://fastverse.org/collapse/reference/collapse-documentation.html), and following the advice given in this vignette.
 

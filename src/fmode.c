@@ -311,7 +311,7 @@ double mode_double(const double *restrict px, const int *restrict po, const int 
     for(; i < l; ++i) {
       val = px[i];
       if(ISNAN(val) && narm) continue;
-      tpv.d = val;
+      tpv.d = val + 0.0;
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         index = h[id]-1;
@@ -340,7 +340,7 @@ double mode_double(const double *restrict px, const int *restrict po, const int 
     for(; i < l; ++i) {
       val = px[po[i]-1];
       if(ISNAN(val) && narm) continue;
-      tpv.d = val;
+      tpv.d = val + 0.0;
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         index = h[id]-1;
@@ -393,7 +393,7 @@ double w_mode_double(const double *restrict px, const double *restrict pw, const
     for(; i < l; ++i) {
       val = px[i];
       if(ISNAN(pw[i]) || (ISNAN(val) && narm)) continue;
-      tpv.d = val;
+      tpv.d = val + 0.0;
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         index = h[id]-1;
@@ -424,7 +424,7 @@ double w_mode_double(const double *restrict px, const double *restrict pw, const
       oi = po[i]-1;
       val = px[oi];
       if(ISNAN(pw[oi]) || (ISNAN(val) && narm)) continue;
-      tpv.d = val;
+      tpv.d = val + 0.0;
       id = HASH(tpv.u[0] + tpv.u[1], K);
       while(h[id]) {
         index = h[id]-1;

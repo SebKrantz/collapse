@@ -44,7 +44,7 @@ preferred-citation:
   url: https://arxiv.org/abs/2403.05038
 repository: https://CRAN.R-project.org/package=collapse
 repository-code: https://github.com/fastverse/collapse
-url: https://fastverse.github.io/collapse/
+url: https://fastverse.org/collapse/
 date-released: '2025-05-24'
 contact:
 - family-names: Krantz
@@ -78,7 +78,7 @@ references:
   year: '2025'
   notes: R package version 2.1.5.9000
   doi: 10.5281/zenodo.8433090
-  url: https://fastverse.github.io/collapse/
+  url: https://fastverse.org/collapse/
 - type: software
   title: 'R: A Language and Environment for Statistical Computing'
   notes: Depends
@@ -166,7 +166,7 @@ references:
   abstract: 'fastverse: A Suite of High-Performance Packages for Statistics and Data
     Manipulation'
   notes: Suggests
-  url: https://fastverse.github.io/fastverse/
+  url: https://fastverse.org/fastverse/
   repository: https://CRAN.R-project.org/package=fastverse
   authors:
   - family-names: Krantz

@@ -61,7 +61,7 @@ This vignette focuses on the integration of *collapse* and the popular *dplyr* p
 
 - The 'Introduction to *collapse*' vignette provides a thorough introduction to the package and a built-in structured documentation is available under `help("collapse-documentation")` after installing the package. In addition `help("collapse-package")` provides a compact set of examples for quick-start. 
 
-- Documentation and vignettes can also be viewed [online](<https://fastverse.github.io/collapse/>).
+- Documentation and vignettes can also be viewed [online](<https://fastverse.org/collapse/>).
 
 ***
 

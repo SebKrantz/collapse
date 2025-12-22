@@ -36,7 +36,7 @@ knitr::opts_chunk$set(error = FALSE, message = FALSE, warning = FALSE,
 ```
 
 
-*collapse* is a C/C++ based package for data transformation and statistical computing in R that aims to enable greater performance and statistical complexity in data manipulation tasks and offers a stable, class-agnostic, and lightweight API. It is part of the core [*fastverse*](https://fastverse.github.io/fastverse/), a suite of lightweight packages with similar objectives. 
+*collapse* is a C/C++ based package for data transformation and statistical computing in R that aims to enable greater performance and statistical complexity in data manipulation tasks and offers a stable, class-agnostic, and lightweight API. It is part of the core [*fastverse*](https://fastverse.org/fastverse/), a suite of lightweight packages with similar objectives. 
 
 The [*tidyverse*](https://tidyverse.org/) set of packages provides a rich, expressive, and consistent syntax for data manipulation in R centering on the *tibble* object and tidy data principles (each observation is a row, each variable is a column). 
 
@@ -74,7 +74,7 @@ mtcars |>
 
 A key feature of *collapse* is that it not only provides functions for data manipulation, but also a full set of statistical functions and algorithms to speed up statistical calculations and perform more complex statistical operations (e.g. involving weights or time series data). 
 
-Notably among these, the [*Fast Statistical Functions*](https://fastverse.github.io/collapse/reference/fast-statistical-functions.html) is a consistent set of S3-generic statistical functions providing fully vectorized statistical operations in R. 
+Notably among these, the [*Fast Statistical Functions*](https://fastverse.org/collapse/reference/fast-statistical-functions.html) is a consistent set of S3-generic statistical functions providing fully vectorized statistical operations in R. 
 
 Specifically, operations such as calculating the mean via the S3 generic `fmean()` function are vectorized across columns and groups and may also involve weights or transformations of the original data:
 
@@ -266,9 +266,9 @@ To summarise, *collapse* provides many options for ad-hoc or limited grouping, w
 
 ## Conclusion 
 
-*collapse* enhances R both statistically and computationally and is a good option for *tidyverse* users searching for more efficient and lightweight solutions to data manipulation and statistical computing problems in R. For more information, I recommend starting with the short vignette on [*Documentation Resources*](https://fastverse.github.io/collapse/articles/collapse_documentation.html). 
+*collapse* enhances R both statistically and computationally and is a good option for *tidyverse* users searching for more efficient and lightweight solutions to data manipulation and statistical computing problems in R. For more information, I recommend starting with the short vignette on [*Documentation Resources*](https://fastverse.org/collapse/articles/collapse_documentation.html). 
 
-R users willing to write efficient/lightweight code and completely replace the *tidyverse* in their workflow are also encouraged to closely examine the [*fastverse*](https://fastverse.github.io/fastverse/) suite of packages. *collapse* alone may not always suffice, but 99% of *tidyverse* code can be replaced with an efficient and lightweight *fastverse* solution. 
+R users willing to write efficient/lightweight code and completely replace the *tidyverse* in their workflow are also encouraged to closely examine the [*fastverse*](https://fastverse.org/fastverse/) suite of packages. *collapse* alone may not always suffice, but 99% of *tidyverse* code can be replaced with an efficient and lightweight *fastverse* solution. 
 
 ```{r, echo=FALSE}
 options(oldopts)
