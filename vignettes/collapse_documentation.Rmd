@@ -16,7 +16,7 @@ vignette: >
 1. To facilitate complex data transformation, exploration and computing tasks in R.
 2. To help make R code fast, flexible, parsimonious and programmer friendly. 
 
-Documentation comes in 6 different forms:
+Documentation comes in 7 different forms:
 
 ## Built-In Structured Documentation
 
@@ -30,17 +30,27 @@ The package page under `help("collapse-package")` provides some general informat
 
 Reading `help("collapse-package")` and `help("collapse-documentation")` is the most comprehensive way to get acquainted with the package. `help("collapse-documentation")` is always the most up-to-date resource.
 
+## DeepWiki
+
+[DeepWiki](https://deepwiki.com/) is an AI-powered platform designed to automatically generate structured, interactive documentation for software repositories, primarily on GitHub. Developed by [Cognition AI](https://cognition.ai/)—the same laboratory behind the autonomous AI engineer [Devin](https://devin.ai/)—it serves as a dynamic, "Wikipedia-like" encyclopedia for codebases.
+
+While not more comprehensive or accurate than the structured documentation, it is great to learn more about the internal structure of *collapse* and use a chatbot (Devin) to ask questions about or write code using *collapse*. 
+
+You can access the *collapse* DeepWiki [here](https://deepwiki.com/fastverse/collapse).
+
 ## Cheatsheet
 
 An up-to-date (v2.0) [cheatsheet](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf>) compactly summarizes the package. 
 
 ## Article on arXiv
 
-An [article](https://arxiv.org/abs/2403.05038) on *collapse* is forthcoming at [Journal of Statistical Software](https://www.jstatsoft.org/). 
+An [article](https://arxiv.org/abs/2403.05038) on *collapse* is forthcoming at [Journal of Statistical Software](https://www.jstatsoft.org/) in early 2026. 
 
-## useR 2022 Presentation and Slides
+## Presentations and Slides
 
-I have presented collapse (v1.8) in some level of detail at useR 2022. A 2h video recording that provides a quite comprehensive introduction is available [here](<https://www.youtube.com/watch?v=OwWT1-dSEts>). The corresponding slides are available [here](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>).
+- I have presented *collapse* (v1.8) in some level of detail at useR 2022. A 2h video recording that provides a quite comprehensive introduction is available [here](<https://www.youtube.com/watch?v=OwWT1-dSEts>). The corresponding slides are available [here](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>).
+
+- I have recently presented *collapse* (v2.1) and the *fastverse* at a workshop on "[Speeding Up Empirical Research: Tools and Techniques for Fast Computing](https://www.bportugal.pt/en/evento/workshop-speeding-empirical-research-tools-and-techniques-fast-computing-bplim)" organized by the Bank of Portugal in December 2025. My 45-minute talk focused on two advanced applications in international trade and spatial network analysis/package development. You can find the materials (slides and recording) [here](https://github.com/BPLIM/Workshops/tree/master/BPLIM2025).
 
 ## Vignettes
 
