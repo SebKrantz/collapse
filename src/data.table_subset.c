@@ -8,29 +8,6 @@
 
 // selfref stuff is taken from data.tables assign.c
 
-static void finalizer(SEXP p)
-{
-  SEXP x;
-  R_len_t n, l, tl;
-  if(!R_ExternalPtrAddr(p)) error("Internal error: finalizer hasn't received an ExternalPtr"); // # nocov
-  p = R_ExternalPtrTag(p);
-  if (!isString(p)) error("Internal error: finalizer's ExternalPtr doesn't see names in tag"); // # nocov
-  l = LENGTH(p);
-  tl = TRULEN(p);
-  if (l<0 || tl<l) error("Internal error: finalizer sees l=%d, tl=%d",l,tl); // # nocov
-  n = tl-l;
-  if (n==0) {
-    // gc's ReleaseLargeFreeVectors() will have reduced R_LargeVallocSize by the correct amount
-    // already, so nothing to do (but almost never the case).
-    return;
-  }
-  x = PROTECT(allocVector(INTSXP, 50));  // 50 so it's big enough to be on LargeVector heap. See NodeClassSize in memory.c:allocVector
-  // INTSXP rather than VECSXP so that GC doesn't inspect contents after LENGTH (thanks to Karl Miller, Jul 2015)
-  SET_LEN(x,50+n*2*sizeof(void *)/4);  // 1*n for the names, 1*n for the VECSXP itself (both are over allocated).
-  UNPROTECT(1);
-  return;
-}
-
 void setselfref(SEXP x) {
   SEXP p;
   // Store pointer to itself so we can detect if the object has been copied. See
@@ -46,7 +23,6 @@ void setselfref(SEXP x) {
         R_NilValue
     ))
   ));
-  R_RegisterCFinalizerEx(p, finalizer, FALSE);
   UNPROTECT(2);
 
   /*
@@ -128,8 +104,10 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   // otherwise (if the SET were were first) the 100 tl is assigned to length.
   SET_LEN(newnames,l);
   SET_TRULEN(newnames,n);
+  SET_GROWABLE_BIT(newnames);
   SET_LEN(newdt,l);
   SET_TRULEN(newdt,n);
+  SET_GROWABLE_BIT(newdt);
   setselfref(newdt);
   UNPROTECT(protecti);
   return(newdt);
