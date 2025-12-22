@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">collapse</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.1.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,7 +47,7 @@
 </form></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://bsky.app/profile/rcollapse.bsky.social" aria-label="BlueSky"><span class="fa fa-bluesky"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://twitter.com/collapse_R" aria-label="Twitter"><span class="fa fa-twitter"></span></a></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/SebKrantz/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/fastverse/collapse" aria-label="GitHub"><span class="fa fa-github"></span></a></li>
       </ul>
 </div>
 
@@ -64,9 +64,9 @@
                         <h4 data-toc-skip class="author">Sebastian
 Krantz</h4>
             
-            <h4 data-toc-skip class="date">2025-11-27</h4>
+            <h4 data-toc-skip class="date">2025-12-22</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/SebKrantz/collapse/blob/master/vignettes/collapse_documentation.Rmd" class="external-link"><code>vignettes/collapse_documentation.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/fastverse/collapse/blob/v2.1.6/vignettes/collapse_documentation.Rmd" class="external-link"><code>vignettes/collapse_documentation.Rmd</code></a></small>
       <div class="d-none name"><code>collapse_documentation.Rmd</code></div>
     </div>
 
@@ -80,7 +80,7 @@ tasks in R.</li>
 <li>To help make R code fast, flexible, parsimonious and programmer
 friendly.</li>
 </ol>
-<p>Documentation comes in 6 different forms:</p>
+<p>Documentation comes in 7 different forms:</p>
 <div class="section level2">
 <h2 id="built-in-structured-documentation">Built-In Structured Documentation<a class="anchor" aria-label="anchor" href="#built-in-structured-documentation"></a>
 </h2>
@@ -95,7 +95,7 @@ functions work together.</p>
 <p>Thus <em>collapse</em> comes with a fully structured hierarchical
 documentation which you can browse within R - and that provides
 everything necessary to fully understand the package. The Documentation
-is also available <a href="https://sebkrantz.github.io/collapse/reference/collapse-documentation.html">online</a>.</p>
+is also available <a href="https://fastverse.org/collapse/reference/collapse-documentation.html">online</a>.</p>
 <p>The package page under <code><a href="../reference/collapse-package.html">help("collapse-package")</a></code> provides
 some general information about the package and its design philosophy, as
 well as a compact set of examples covering important functionality.</p>
@@ -106,60 +106,84 @@ way to get acquainted with the package.
 up-to-date resource.</p>
 </div>
 <div class="section level2">
+<h2 id="deepwiki">DeepWiki<a class="anchor" aria-label="anchor" href="#deepwiki"></a>
+</h2>
+<p><a href="https://deepwiki.com/" class="external-link">DeepWiki</a> is an AI-powered
+platform designed to automatically generate structured, interactive
+documentation for software repositories, primarily on GitHub. Developed
+by <a href="https://cognition.ai/" class="external-link">Cognition AI</a>—the same laboratory
+behind the autonomous AI engineer <a href="https://devin.ai/" class="external-link">Devin</a>—it serves as a dynamic,
+“Wikipedia-like” encyclopedia for codebases.</p>
+<p>While not more comprehensive or accurate than the structured
+documentation, it is great to learn more about the internal structure of
+<em>collapse</em> and use a chatbot (Devin) to ask questions about or
+write code using <em>collapse</em>.</p>
+<p>You can access the <em>collapse</em> DeepWiki <a href="https://deepwiki.com/fastverse/collapse" class="external-link">here</a>.</p>
+</div>
+<div class="section level2">
 <h2 id="cheatsheet">Cheatsheet<a class="anchor" aria-label="anchor" href="#cheatsheet"></a>
 </h2>
-<p>An up-to-date (v2.0) <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf" class="external-link">cheatsheet</a>
+<p>An up-to-date (v2.0) <a href="https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf" class="external-link">cheatsheet</a>
 compactly summarizes the package.</p>
 </div>
 <div class="section level2">
 <h2 id="article-on-arxiv">Article on arXiv<a class="anchor" aria-label="anchor" href="#article-on-arxiv"></a>
 </h2>
 <p>An <a href="https://arxiv.org/abs/2403.05038" class="external-link">article</a> on
-<em>collapse</em> is forthcoming at <a href="https://www.jstatsoft.org/" class="external-link">Journal of Statistical
-Software</a>.</p>
+<em>collapse</em> is forthcoming at <a href="https://www.jstatsoft.org/" class="external-link">Journal of Statistical Software</a> in
+early 2026.</p>
 </div>
 <div class="section level2">
-<h2 id="user-2022-presentation-and-slides">useR 2022 Presentation and Slides<a class="anchor" aria-label="anchor" href="#user-2022-presentation-and-slides"></a>
+<h2 id="presentations-and-slides">Presentations and Slides<a class="anchor" aria-label="anchor" href="#presentations-and-slides"></a>
 </h2>
-<p>I have presented collapse (v1.8) in some level of detail at useR
-2022. A 2h video recording that provides a quite comprehensive
+<ul>
+<li><p>I have presented <em>collapse</em> (v1.8) in some level of detail
+at useR 2022. A 2h video recording that provides a quite comprehensive
 introduction is available <a href="https://www.youtube.com/watch?v=OwWT1-dSEts" class="external-link">here</a>. The
-corresponding slides are available <a href="https://raw.githubusercontent.com/SebKrantz/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf" class="external-link">here</a>.</p>
+corresponding slides are available <a href="https://raw.githubusercontent.com/fastverse/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf" class="external-link">here</a>.</p></li>
+<li><p>I have recently presented <em>collapse</em> (v2.1) and the
+<em>fastverse</em> at a workshop on “<a href="https://www.bportugal.pt/en/evento/workshop-speeding-empirical-research-tools-and-techniques-fast-computing-bplim" class="external-link">Speeding
+Up Empirical Research: Tools and Techniques for Fast Computing</a>”
+organized by the Bank of Portugal in December 2025. My 45-minute talk
+focused on two advanced applications in international trade and spatial
+network analysis/package development. You can find the materials (slides
+and recording) <a href="https://github.com/BPLIM/Workshops/tree/master/BPLIM2025" class="external-link">here</a>.</p></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="vignettes">Vignettes<a class="anchor" aria-label="anchor" href="#vignettes"></a>
 </h2>
 <p>Updated vignettes are</p>
 <ul>
-<li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_for_tidyverse_users.html"><strong><em>collapse</em>
+<li><p><a href="https://fastverse.org/collapse/articles/collapse_for_tidyverse_users.html"><strong><em>collapse</em>
 for <em>tidyverse</em> Users</strong></a>: A quick introduction to
 <em>collapse</em> for <em>tidyverse</em> users</p></li>
-<li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_and_sf.html"><strong><em>collapse</em>
+<li><p><a href="https://fastverse.org/collapse/articles/collapse_and_sf.html"><strong><em>collapse</em>
 and <em>sf</em></strong></a>: Shows how collapse can be used to
 efficiently manipulate <em>sf</em> data frames</p></li>
-<li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_object_handling.html"><strong><em>collapse</em>’s
+<li><p><a href="https://fastverse.org/collapse/articles/collapse_object_handling.html"><strong><em>collapse</em>’s
 Handling of R Objects</strong></a>: A quick view behind the scenes of
 class-agnostic R programming</p></li>
-<li><p><a href="https://sebkrantz.github.io/collapse/articles/developing_with_collapse.html"><strong>Developing
+<li><p><a href="https://fastverse.org/collapse/articles/developing_with_collapse.html"><strong>Developing
 with <em>collapse</em></strong></a>: How to write efficient statistical
 packages using R and <em>collapse</em></p></li>
 </ul>
-<p>The other vignettes (only available <a href="https://sebkrantz.github.io/collapse/articles/index.html">online</a>)
-do not cover major features introduced in versions &gt;= 1.7, but
-contain much useful information and examples:</p>
+<p>The other vignettes (only available <a href="https://fastverse.org/collapse/articles/index.html">online</a>) do
+not cover major features introduced in versions &gt;= 1.7, but contain
+much useful information and examples:</p>
 <ul>
-<li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_intro.html"><strong>Introduction
+<li><p><a href="https://fastverse.org/collapse/articles/collapse_intro.html"><strong>Introduction
 to <em>collapse</em> </strong></a>: Introduces key features in a
 structured way</p></li>
-<li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_and_dplyr.html"><strong><em>collapse</em>
+<li><p><a href="https://fastverse.org/collapse/articles/collapse_and_dplyr.html"><strong><em>collapse</em>
 and <em>dplyr</em> </strong></a>: Demonstrates the integration of
 collapse with <em>dplyr</em> / <em>tidyverse</em> workflows and
 associated performance improvements</p></li>
-<li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_and_plm.html"><strong><em>collapse</em>
+<li><p><a href="https://fastverse.org/collapse/articles/collapse_and_plm.html"><strong><em>collapse</em>
 and <em>plm</em></strong></a>: Demonstrates the integration of collapse
 with <em>plm</em> and shows examples of efficient programming with panel
 data</p></li>
-<li><p><a href="https://sebkrantz.github.io/collapse/articles/collapse_and_data.table.html"><strong><em>collapse</em>
+<li><p><a href="https://fastverse.org/collapse/articles/collapse_and_data.table.html"><strong><em>collapse</em>
 and <em>data.table</em></strong></a>: Shows how collapse and
 <em>data.table</em> may be used together in a harmonious way</p></li>
 </ul>
@@ -172,7 +196,7 @@ linked to <a href="https://www.r-bloggers.com/" class="external-link">Rbloggers.
 I introduced <em>collapse</em> with some compact posts covering central
 functionality. Among these, the post about <a href="https://sebkrantz.github.io/Rblog/2020/09/13/programming-with-collapse/" class="external-link">programming
 with <em>collapse</em></a> is useful for developers. <!--
-A recent post about [*collapse* and the *fastverse*](https://sebkrantz.github.io/Rblog/2023/04/12/collapse-and-the-fastverse-reflecting-the-past-present-and-future/) also provides a broader contextualization and reflective outlook for the *collapse* and [*fastverse*](https://fastverse.github.io/fastverse/) projects. 
+A recent post about [*collapse* and the *fastverse*](https://sebkrantz.github.io/Rblog/2023/04/12/collapse-and-the-fastverse-reflecting-the-past-present-and-future/) also provides a broader contextualization and reflective outlook for the *collapse* and [*fastverse*](https://fastverse.org/fastverse/) projects. 
 --></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
