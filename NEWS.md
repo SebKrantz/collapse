@@ -1,7 +1,9 @@
-# collapse 2.1.5.9000
+# collapse 2.1.6
 
 * The repo has moved to `fastverse/collapse` and the website to [fastverse.org/collapse](https://fastverse.org/collapse/)---for better visibility and maintenance. Appropriate redirects from the old repo/site have been implemented.
   Selected people now have access to the repo through the organization account and may respond to issues or submit fixes. 
+
+* Added new AI-generated interactive/chattable [DeepWiki documentation](https://deepwiki.com/fastverse/collapse).
 
 * *collapse* now treats `-0` and `0` as the same value in hash functions (`funique()`, `group()`, `fmatch()`, `fndistinct()`, `fmode()`, and all higher-level derivatives). This is implemented by adding a value of `0.0` to double values before hashing them, and has a small (~3%) performance penalty when hashing doubles. It is implemented in synch with an [equivalent change in *Rcpp*](https://github.com/RcppCore/Rcpp/issues/1340). Thanks @mayer79 for reporting and helping with benchmarking the performance implications (#648). 
 
@@ -10,6 +12,8 @@
 * Fixed a bug in `roworderv(..., neworder = indices)`, which segfaulted if `indices` were out of range. Thanks @JanMarvin (#807). 
 
 * Faster installation from source thanks to the `#include <Rcpp/Lighter>` option in *Rcpp* which loads only part of the header files. Thanks @eddelbuettel for the hint. 
+
+* Consistency with internal updates to *data.table*. Thanks @aitap (https://github.com/fastverse/collapse/pull/809, https://github.com/Rdatatable/data.table/issues/7497).
 
 # collapse 2.1.5
 
