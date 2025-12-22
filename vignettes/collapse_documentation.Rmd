@@ -38,19 +38,13 @@ While not more comprehensive or accurate than the structured documentation, it i
 
 You can access the *collapse* DeepWiki [here](https://deepwiki.com/fastverse/collapse).
 
-## Cheatsheet
-
-An up-to-date (v2.0) [cheatsheet](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf>) compactly summarizes the package. 
-
 ## Article on arXiv
 
-An [article](https://arxiv.org/abs/2403.05038) on *collapse* is forthcoming at [Journal of Statistical Software](https://www.jstatsoft.org/) in early 2026. 
+An [article](https://arxiv.org/abs/2403.05038) on *collapse* is forthcoming at [Journal of Statistical Software](https://www.jstatsoft.org/) in early 2026. If you want to 'read something concise' about *collapse*, this is the best place to start. 
 
-## Presentations and Slides
+## Cheatsheet
 
-- I have presented *collapse* (v1.8) in some level of detail at useR 2022. A 2h video recording that provides a quite comprehensive introduction is available [here](<https://www.youtube.com/watch?v=OwWT1-dSEts>). The corresponding slides are available [here](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>).
-
-- I have recently presented *collapse* (v2.1) and the *fastverse* at a workshop on "[Speeding Up Empirical Research: Tools and Techniques for Fast Computing](https://www.bportugal.pt/en/evento/workshop-speeding-empirical-research-tools-and-techniques-fast-computing-bplim)" organized by the Bank of Portugal in December 2025. My 45-minute talk focused on two advanced applications in international trade and spatial network analysis/package development. You can find the materials (slides and recording) [here](https://github.com/BPLIM/Workshops/tree/master/BPLIM2025).
+A fairly up-to-date (v2.0) [cheatsheet](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/collapse%20cheat%20sheet/collapse_cheat_sheet.pdf>) compactly summarizes the package. 
 
 ## Vignettes
 
@@ -82,3 +76,9 @@ I maintain a [blog](<https://sebkrantz.github.io/Rblog/>) linked to [Rbloggers.c
 <!--
 A recent post about [*collapse* and the *fastverse*](https://sebkrantz.github.io/Rblog/2023/04/12/collapse-and-the-fastverse-reflecting-the-past-present-and-future/) also provides a broader contextualization and reflective outlook for the *collapse* and [*fastverse*](https://fastverse.org/fastverse/) projects. 
 -->
+
+## Presentations and Slides
+
+- I have presented *collapse* (v1.8) in some level of detail at useR 2022. A 2h video recording that provides a quite comprehensive introduction is available [here](<https://www.youtube.com/watch?v=OwWT1-dSEts>). The corresponding slides are available [here](<https://raw.githubusercontent.com/fastverse/collapse/master/misc/useR2022%20presentation/collapse_useR2022_final.pdf>).
+
+- I have recently presented *collapse* (v2.1) and the *fastverse* at a workshop on "[Speeding Up Empirical Research: Tools and Techniques for Fast Computing](https://www.bportugal.pt/en/evento/workshop-speeding-empirical-research-tools-and-techniques-fast-computing-bplim)" organized by the Bank of Portugal in December 2025. My 45-minute talk focused on two advanced applications in international trade and spatial network analysis/package development. You can find the materials (slides and recording) [here](https://github.com/BPLIM/Workshops/tree/master/BPLIM2025).
