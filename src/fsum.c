@@ -354,7 +354,7 @@ SEXP fsumC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rnthrea
                fsum_weights_omp_impl(px, pw, narm, l, nthreads);
     } else fsum_weights_g_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts")))
     copyMostAttrib(x, out); // For example "Units" objects...
   UNPROTECT(nprotect);
   return out;
@@ -502,7 +502,7 @@ SEXP fsum_impl_SEXP(SEXP x, int narm, int nthreads) {
   return ScalarReal(fsum_impl_dbl(x, narm, nthreads));
   // This is not thread safe... need to do separate serial loop
   // SEXP res = ScalarReal(fsum_impl_dbl(x, narm, nthreads));
-  // if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
+  // if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) {
   //   PROTECT(res);
   //   copyMostAttrib(x, res);
   //   UNPROTECT(1);
@@ -529,7 +529,7 @@ SEXP fsum_w_impl_SEXP(SEXP x, double *pw, int narm, int nthreads) {
   return ScalarReal(fsum_w_impl_dbl(x, pw, narm, nthreads));
   // This is not thread safe... need to do separate serial loop
   // SEXP res = ScalarReal(fsum_w_impl_dbl(x, pw, narm, nthreads));
-  // if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) {
+  // if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) {
   //   PROTECT(res);
   //   copyMostAttrib(x, res);
   //   UNPROTECT(1);
@@ -557,7 +557,7 @@ SEXP fsum_g_impl(SEXP x, const int ng, const int *pg, int narm) {
     default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
@@ -587,7 +587,7 @@ SEXP fsum_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
   SEXP res = PROTECT(allocVector(REALSXP, ng));
   fsum_weights_g_impl(REAL(res), REAL(x), ng, pg, pw, narm, l);
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(nprotect);
   return res;
 }
@@ -650,7 +650,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
     // Needed because including it in an OpenMP loop together with ScalarReal() is not thread safe
     for(int j = 0; j < l; ++j) {
       SEXP xj = px[j];
-      if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts")))
+      if(ANY_ATTRIB(xj) && !(isObject(xj) && inherits(xj, "ts")))
         copyMostAttrib(xj, pout[j]);
     }
   } else {
@@ -663,7 +663,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
         for(int j = 0; j != l; ++j) {
           SEXP xj = px[j], outj;
           SET_VECTOR_ELT(out, j, outj = allocVector(TYPEOF(px[j]) == REALSXP ? REALSXP : INTSXP, ng));
-          if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
+          if(ANY_ATTRIB(xj) && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
         }
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < l; ++j) fsum_g_omp_impl(px[j], DPTR(pout[j]), ng, pg, narm);
@@ -677,7 +677,7 @@ SEXP fsumlC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm, SEXP fill, SEXP Rdrop,
         for(int j = 0, dup = 0; j != l; ++j) {
           SEXP xj = px[j], outj;
           SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ng));
-          if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
+          if(ANY_ATTRIB(xj) && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
           if(TYPEOF(xj) != REALSXP) {
             if(TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
             if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; dup = 1;}

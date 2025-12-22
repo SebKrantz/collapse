@@ -155,7 +155,7 @@ SEXP fprodC(SEXP x, SEXP Rng, SEXP g, SEXP w, SEXP Rnarm) {
     } else px = REAL(x);
     fprod_weights_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts")))
     copyMostAttrib(x, out); // For example "Units" objects...
   UNPROTECT(nprotect);
   return out;

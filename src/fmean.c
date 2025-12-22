@@ -274,7 +274,7 @@ SEXP fmeanC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rnthread
               fmean_weights_omp_impl(px, pw, narm, l, nthreads);
     } else fmean_weights_g_impl(REAL(out), px, ng, INTEGER(g), pw, narm, l);
   }
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts")))
      copyMostAttrib(x, out); // For example "Units" objects...
   UNPROTECT(nprotect);
   return out;
@@ -444,7 +444,7 @@ SEXP fmean_g_impl(SEXP x, const int ng, const int *pg, const int *pgs, int narm)
     default: error("Unsupported SEXP type: '%s'", type2char(TYPEOF(x)));
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
@@ -475,7 +475,7 @@ SEXP fmean_wg_impl(SEXP x, const int ng, const int *pg, double *pw, int narm) {
   SEXP res = PROTECT(allocVector(REALSXP, ng));
   fmean_weights_g_impl(REAL(res), REAL(x), ng, pg, pw, narm, l);
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(nprotect);
   return res;
 }
@@ -536,7 +536,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
     // Needed because including it in an OpenMP loop together with ScalarReal() is not thread safe
     for(int j = 0; j < l; ++j) {
       SEXP xj = px[j];
-      if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts")))
+      if(ANY_ATTRIB(xj) && !(isObject(xj) && inherits(xj, "ts")))
         copyMostAttrib(xj, pout[j]);
     }
   } else {
@@ -560,7 +560,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
         for(int j = 0; j != l; ++j) {
           SEXP xj = px[j], outj;
           SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ng));
-          if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
+          if(ANY_ATTRIB(xj) && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
         }
         #pragma omp parallel for num_threads(nthreads)
         for(int j = 0; j < l; ++j) fmean_g_omp_impl(px[j], DPTR(pout[j]), ng, pg, pgs, narm);
@@ -574,7 +574,7 @@ SEXP fmeanlC(SEXP x, SEXP Rng, SEXP g, SEXP gs, SEXP w, SEXP Rnarm, SEXP Rdrop, 
         for(int j = 0, dup = 0; j != l; ++j) {
           SEXP xj = px[j], outj;
           SET_VECTOR_ELT(out, j, outj = allocVector(REALSXP, ng));
-          if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
+          if(ANY_ATTRIB(xj) && !(isObject(xj) && inherits(xj, "ts"))) copyMostAttrib(xj, outj);
           if(TYPEOF(xj) != REALSXP) {
             if(TYPEOF(xj) != INTSXP && TYPEOF(xj) != LGLSXP) error("Unsupported SEXP type: '%s'", type2char(TYPEOF(xj)));
             if(dup == 0) {x = PROTECT(shallow_duplicate(x)); ++nprotect; dup = 1;}

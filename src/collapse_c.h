@@ -23,6 +23,10 @@
 #undef ISNAN
 #define ISNAN(x) ((x) != (x))
 
+#ifndef ANY_ATTRIB
+#define ANY_ATTRIB(x) (ATTTR(x) != R_NilValue)
+#endif
+
 // Initialized in data.table_init.c
 extern int max_threads;
 extern SEXP sym_label;

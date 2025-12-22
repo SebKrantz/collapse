@@ -51,7 +51,7 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
         default: error("Unsupported SEXP type!");
       }
     }
-    if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+    if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts")))
       copyMostAttrib(x, out);
     if(!isNull(getAttrib(x, R_NamesSymbol)))
       namesgets(out, ScalarString(STRING_ELT(getAttrib(x, R_NamesSymbol), j)));
@@ -152,7 +152,7 @@ SEXP flast_impl(SEXP x, int ng, SEXP g, int narm, int *gl) {
       default: error("Unsupported SEXP type!");
       }
     }
-    if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+    if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts")))
       copyMostAttrib(x, out);
     UNPROTECT(1);
     return out;

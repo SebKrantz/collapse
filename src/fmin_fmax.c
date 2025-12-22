@@ -160,7 +160,7 @@ SEXP fminC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
     break;
   default: error("Unsupported SEXP type");
   }
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts")))
     copyMostAttrib(x, out);
   UNPROTECT(1);
   return out;
@@ -234,7 +234,7 @@ SEXP fmaxC(SEXP x, SEXP Rng, SEXP g, SEXP Rnarm) {
     break;
   default: error("Unsupported SEXP type");
   }
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts")))
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts")))
     copyMostAttrib(x, out);
   UNPROTECT(1);
   return out;
