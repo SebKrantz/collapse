@@ -104,10 +104,10 @@ static SEXP shallow(SEXP dt, SEXP cols, R_len_t n)
   // otherwise (if the SET were were first) the 100 tl is assigned to length.
   SET_LEN(newnames,l);
   SET_TRULEN(newnames,n);
-  SET_GROWABLE_BIT(newnames);
+  SET_GROWBL_BIT(newnames);
   SET_LEN(newdt,l);
   SET_TRULEN(newdt,n);
-  SET_GROWABLE_BIT(newdt);
+  SET_GROWBL_BIT(newdt);
   setselfref(newdt);
   UNPROTECT(protecti);
   return(newdt);
