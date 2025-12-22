@@ -195,4 +195,10 @@ typedef union { VECTOR_SEXPREC s; double align; } SEXPREC_ALIGN;
 //   return DATAPTR(x);
 // }
 
+/* Growable vector support */
+#undef GROW_MSK
+#define GROW_MSK ((unsigned short)(1<<5))
+#undef SET_GROWBL_BIT
+#define SET_GROWBL_BIT(x) (((x)->sxpinfo.gp) |= GROW_MSK)
+
 #endif // End of R_DEFINITIONS_H guard

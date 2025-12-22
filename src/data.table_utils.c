@@ -38,7 +38,7 @@ SEXP setnames(SEXP x, SEXP nam) {
     memcpy(SEXPPTR(newnam), SEXPPTR_RO(nam), l*sizeof(SEXP));
     SET_LEN(newnam, l);
     SET_TRULEN(newnam, n);
-    SET_GROWABLE_BIT(newnam);
+    SET_GROWBL_BIT(newnam);
     setAttrib(x, R_NamesSymbol, newnam);
     setselfref(x);
     UNPROTECT(1);
