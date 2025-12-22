@@ -6,13 +6,13 @@
 
 
 SEXP setAttributes(SEXP x, SEXP a) {
-  SET_ATTRIB(x, coerceVector(a, LISTSXP));
+  SET_ATTTR(x, coerceVector(a, LISTSXP));
   classgets(x, getAttrib(x, R_ClassSymbol)); // forcing class after attribute copy !!
   return x;
 }
 
 SEXP setattributes(SEXP x, SEXP a) {
-  SET_ATTRIB(x, coerceVector(a, LISTSXP));
+  SET_ATTTR(x, coerceVector(a, LISTSXP));
   // SET_OOBJ(x, TYPEOF(x)); // if(OOBJ(a))  // This does not work with ts-matrices! could also make compatible with S4 objects !
   classgets(x, getAttrib(x, R_ClassSymbol));
   return R_NilValue;
@@ -81,13 +81,13 @@ SEXP copyMostAttributes(SEXP x, SEXP y) {
 SEXP CsetAttrib(SEXP object, SEXP a) {
   if(TYPEOF(object) == VECSXP) {
     SEXP res = PROTECT(shallow_duplicate(object));
-    SET_ATTRIB(res, coerceVector(a, LISTSXP));
+    SET_ATTTR(res, coerceVector(a, LISTSXP));
     classgets(res, getAttrib(res, R_ClassSymbol));
     UNPROTECT(1);
     return res;
   }
   SEXP res = object;
-  SET_ATTRIB(res, coerceVector(a, LISTSXP));
+  SET_ATTTR(res, coerceVector(a, LISTSXP));
   classgets(res, getAttrib(res, R_ClassSymbol));
   return res;
 }

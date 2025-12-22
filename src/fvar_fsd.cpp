@@ -1,6 +1,10 @@
 #include <Rcpp/Lightest>
 using namespace Rcpp;
 
+#ifndef ANY_ATTRIB
+#define ANY_ATTRIB(x) (ATTRIB(x) != R_NilValue)
+#endif
+
 // Note: More comments are in fvar.cpp (C++ folder, not on GitHub)
 
 // [[Rcpp::export]]
@@ -42,7 +46,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           if(sd) M2 = sqrt(M2);
           if(std::isnan(M2)) M2 = NA_REAL;
         }
-        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
+        if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
           SEXP out = Rf_ScalarReal(M2);
           Rf_copyMostAttrib(x, out);
           return out;
@@ -82,7 +86,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
             Rf_copyMostAttrib(x, M2);
           return M2;
         } else {
@@ -117,7 +121,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
             Rf_copyMostAttrib(x, M2);
           return M2;
         }
@@ -160,7 +164,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           if(sd) M2 = sqrt(M2);
           if(std::isnan(M2)) M2 = NA_REAL;
         }
-        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
+        if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
           SEXP out = Rf_ScalarReal(M2);
           Rf_copyMostAttrib(x, out);
           return out;
@@ -202,7 +206,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
             Rf_copyMostAttrib(x, M2);
           return M2;
         } else {
@@ -239,7 +243,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               }
             }
           }
-          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
             Rf_copyMostAttrib(x, M2);
           return M2;
         }
@@ -280,7 +284,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           if(sd) sq_sum = sqrt(sq_sum);
           if(std::isnan(sq_sum)) sq_sum = NA_REAL;
         }
-        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
+        if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
           SEXP out = Rf_ScalarReal((double)sq_sum);
           Rf_copyMostAttrib(x, out);
           return out;
@@ -315,7 +319,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
             Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         } else {
@@ -367,7 +371,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
             Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         }
@@ -407,7 +411,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
           if(sd) sq_sum = sqrt(sq_sum);
           if(std::isnan(sq_sum)) sq_sum = NA_REAL;
         }
-        if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
+        if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts"))) {
           SEXP out = Rf_ScalarReal((double)sq_sum);
           Rf_copyMostAttrib(x, out);
           return out;
@@ -442,7 +446,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
             Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         } else {
@@ -473,7 +477,7 @@ NumericVector fvarsdCpp(const NumericVector& x, int ng = 0, const IntegerVector&
               if(std::isnan(sq_sum[i])) sq_sum[i] = NA_REAL;
             }
           }
-          if(ATTRIB(x) != R_NilValue && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
+          if(ANY_ATTRIB(x) && !(Rf_isObject(x) && Rf_inherits(x, "ts")))
             Rf_copyMostAttrib(x, sq_sum);
           return sq_sum;
         }

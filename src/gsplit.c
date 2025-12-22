@@ -19,7 +19,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
   } else { // Allocate split vectors and copy attributes and object bits
     SEXP x1 = PROTECT(allocVector(tx, 1));
     copyMostAttrib(x, x1);
-    SEXP ax = ATTRIB(x1);
+    SEXP ax = ATTTR(x1);
     if(length(ax) == 1 && TAG(ax) == sym_label) ax = R_NilValue;
     int ox = OOBJ(x);
     // FAZIT: Need to use SET_VECTOR_ELT!! pres[i] = allocVector() doesn't work!!
@@ -27,7 +27,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       for(int i = 0; i != ng; ++i) { // , s4o = IS_S4_OBJECT(x)
         SEXP resi;
         SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i]));
-        SET_ATTRIB(resi, ax);
+        SET_ATTTR(resi, ax);
         SET_OOBJ(resi, ox);
         // if(s4o) SET_S4_OBJECT(resi);
       }
@@ -35,7 +35,7 @@ SEXP gsplit(SEXP x, SEXP gobj, SEXP toint) {
       for(int i = 0; i != ng; ++i) {
         SEXP resi;
         SET_VECTOR_ELT(res, i, resi = allocVector(tx, pgs[i])); // SET_ATTRIB(pres[i] = allocVector(tx, pgs[i]), ax);
-        SET_ATTRIB(resi, ax);
+        SET_ATTTR(resi, ax);
       }
     } else if(ox != 0) { // Is this even possible? Object bits but no attributes?
       for(int i = 0; i != ng; ++i) { // , s4o = IS_S4_OBJECT(x)

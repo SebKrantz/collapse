@@ -819,7 +819,7 @@ SEXP nth_impl_plain(SEXP x, int narm, int ret, double Q) {
 
 SEXP nth_impl(SEXP x, int narm, int ret, double Q) {
   if(length(x) <= 1) return x;
-  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts")))
+  if(!ANY_ATTRIB(x) || (isObject(x) && inherits(x, "ts")))
      return nth_impl_plain(x, narm, ret, Q);
   SEXP res = PROTECT(nth_impl_plain(x, narm, ret, Q));
   copyMostAttrib(x, res);
@@ -878,7 +878,7 @@ SEXP nth_ord_impl(SEXP x, int *pxo, int narm, int ret, double Q) {
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 
-  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts"))) return res;
+  if(!ANY_ATTRIB(x) || (isObject(x) && inherits(x, "ts"))) return res;
   PROTECT(res); // Needed ??
   copyMostAttrib(x, res);
   UNPROTECT(1);
@@ -901,7 +901,7 @@ SEXP w_nth_ord_impl_plain(SEXP x, int *pxo, double *pw, int narm, int ret, doubl
 // Expects pointer pw to be decremented by 1
 SEXP w_nth_ord_impl(SEXP x, int *pxo, double *pw, int narm, int ret, double Q, double h) {
   if(length(x) <= 1) return x;
-  if(ATTRIB(x) == R_NilValue || (isObject(x) && inherits(x, "ts")))
+  if(!ANY_ATTRIB(x) || (isObject(x) && inherits(x, "ts")))
      return w_nth_ord_impl_plain(x, pxo, pw, narm, ret, Q, h);
   SEXP res = PROTECT(w_nth_ord_impl_plain(x, pxo, pw, narm, ret, Q, h));
   copyMostAttrib(x, res);
@@ -970,7 +970,7 @@ SEXP nth_g_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted, int nar
     }
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
@@ -1013,7 +1013,7 @@ SEXP nth_g_impl_noalloc(SEXP x, int ng, int *pgs, int *po, int *pst, int sorted,
     }
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
@@ -1045,7 +1045,7 @@ SEXP nth_g_ord_impl(SEXP x, int ng, int *pgs, int *po, int *pst, int narm, int r
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
@@ -1077,7 +1077,7 @@ SEXP w_nth_g_ord_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst, i
     default: error("Not Supported SEXP Type: '%s'", type2char(TYPEOF(x)));
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
@@ -1130,7 +1130,7 @@ SEXP w_nth_g_qsort_impl(SEXP x, double *pw, int ng, int *pgs, int *po, int *pst,
     }
   }
 
-  if(ATTRIB(x) != R_NilValue && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
+  if(ANY_ATTRIB(x) && !(isObject(x) && inherits(x, "ts"))) copyMostAttrib(x, res);
   UNPROTECT(1);
   return res;
 }
@@ -1397,7 +1397,7 @@ SEXP fnthlC(SEXP x, SEXP p, SEXP g, SEXP w, SEXP Rnarm, SEXP Rdrop, SEXP Rret, S
     // Needed because including it in an OpenMP loop together with ScalarReal() is not thread safe
     for(int j = 0; j != l; ++j) {
       SEXP xj = px[j];
-      if(ATTRIB(xj) != R_NilValue && !(isObject(xj) && inherits(xj, "ts")))
+      if(ANY_ATTRIB(xj) && !(isObject(xj) && inherits(xj, "ts")))
         copyMostAttrib(xj, pout[j]);
     }
 
