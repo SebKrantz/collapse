@@ -67,7 +67,7 @@
 <dd><p>numeric. A vector of (frequency) weights.</p></dd>
 
   <dt id="arg-formula">formula<a class="anchor" aria-label="anchor" href="#arg-formula"></a></dt>
-<dd><p>a 2-part formula: <code>y ~ exc | X</code>, where both <code>exc</code> and <code>X</code> are expressions connected with <code>+</code>, and <code>X</code> can be omitted. <em>Note</em> that other operators (<code>:</code>, <code>*</code>, <code>^</code>, <code>-</code>, etc.) are not supported, you can interact variables using standard functions like <code><a href="https://sebkrantz.github.io/collapse/reference/qF.html" class="external-link">finteraction/itn</a></code> or <code><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">magrittr::multiply_by</a></code> inside the formula e.g. <code>log(y) ~ x1 + itn(x2, x3) | x4</code> or <code>log(y) ~ x1 + multiply_by(x2, x3) | x4</code>.</p></dd>
+<dd><p>a 2-part formula: <code>y ~ exc | X</code>, where both <code>exc</code> and <code>X</code> are expressions connected with <code>+</code>, and <code>X</code> can be omitted. <em>Note</em> that other operators (<code>:</code>, <code>*</code>, <code>^</code>, <code>-</code>, etc.) are not supported, you can interact variables using standard functions like <code><a href="https://fastverse.org/collapse/reference/qF.html">finteraction/itn</a></code> or <code><a href="https://magrittr.tidyverse.org/reference/aliases.html" class="external-link">magrittr::multiply_by</a></code> inside the formula e.g. <code>log(y) ~ x1 + itn(x2, x3) | x4</code> or <code>log(y) ~ x1 + multiply_by(x2, x3) | x4</code>.</p></dd>
 
  <dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
 <dd><p>a named list or data frame.</p></dd>
