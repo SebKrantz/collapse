@@ -232,6 +232,7 @@ test_that("GRP <> factor conversions run seamlessly", {
 # could also do qG to GRP, but qG is same as factor.. and is a programmers function anyway..
 
 test_that("qF and qG work as intended", {
+  withr::local_locale(c(LC_COLLATE = "C"))
 
   af <- lapply(wlddev2, function(x) as.factor(x))
   expect_equal(af[!fact_vars(wlddev2, "logical")], lapply(gv(wlddev2, !fact_vars(wlddev2, "logical")), function(x) unlab(qF(x, method = "radix"))))
