@@ -30,8 +30,10 @@ _snaps
 ^\.DS_Store$
 ^revdep$
 \.orig$
+\.DS_store$
+.DS_store
+testthat-problems.rds
 vignettes/figure
 vignettes/cache
-
 
 
